@@ -34,7 +34,7 @@ to the chip via SWD. We used the
 probe. There is a [version 2](http://1bitsquared.com/collections/frontpage/products/black-magic-probe)
 out there now. We haven't test it, but it should also work.
 
-The following gdb commands will load the load the binary firmware:
+The following `gdb` commands will load the firmware into the nRF51:
 
 ```
 set gnutarget elf32-littlearm
@@ -53,22 +53,28 @@ load _build/nsec16_badge_s110.elf
 quit
 ```
 
+The stm32 can be flashed in a similar fashion, although you will want to
+`load stm32f072cb.elf` only.
+
 You can also use the (more expensive) STLink, but we do not have the hardware
 to test instructions for it.
 
 ### Via USB
 
-The stm32 can be flashed by holding the "program" button behind the badge while
-plugging the USB in. FIXME: More details to come.
+The stm32 can also be flashed by holding the "program" button behind the badge
+while pressing the "reset" button. The stm32 will boot a specific bootloader
+that  implements the DFU interface.
+
+FIXME: More details to come.
 
 ## Compiling
 
 There is a `Makefile` for each micro-controller, but here are some stuff you'll
 need to make it work.
 
-### Getting the right compiler
+### Getting the toolchain
 
-To compile the badge firmware from source, your gcc need to be capable
+To compile the badge firmware from source, your gcc need to be able
 generating `armv6-m` code and link with the nano variant of
 [newlib](https://sourceware.org/newlib/).
 
@@ -79,9 +85,14 @@ brew tap marc-etienne/stm32
 brew install arm-none-eabi-gcc
 ```
 
-On Arch Linux, the package is named `arm-none-eabi-gcc`. On Debian Jessie,
-install `gcc-arm-none-eabi` and `libnewlib-arm-none-eabi`. On Ubuntu, check the
-the [GNU ARM Embedded Toolchain PPA](https://launchpad.net/~team-gcc-arm-embedded/+archive/ubuntu/ppa).
+On Arch Linux, you will need the package
+[arm-none-eabi-gcc](https://www.archlinux.org/packages/community/x86_64/arm-none-eabi-gcc/),
+[arm-none-eabi-newlib](https://www.archlinux.org/packages/community/any/arm-none-eabi-newlib/)
+and [arm-none-eabi-gdb](https://www.archlinux.org/packages/community/x86_64/arm-none-eabi-gdb/).
+
+On Debian Jessie, install `gcc-arm-none-eabi` and `libnewlib-arm-none-eabi`.
+
+On Ubuntu, check the the [GNU ARM Embedded Toolchain PPA](https://launchpad.net/~team-gcc-arm-embedded/+archive/ubuntu/ppa).
 
 Pre-built packages are also available for Windows, Linux and OS X here:
 https://launchpad.net/gcc-arm-embedded.
@@ -100,4 +111,9 @@ that's the one that was on the badges. Also note: the SoftDevice isn't free
 software. The licence agreement (`s110_nrf51822_7.0.0_licence_agreement.pdf`)
 will be downloaded as well.
 
-The stm32 requires the FIXME.
+The stm32 requires the STM32CUBE library. You can download and extract the library
+by typing `make cube` in the stm32 directory. The license forbid the usage of the
+the linkerscript using another toolchain than the one from
+`Atollic TrueSTUDIO(R) product`. You have been warned that you might get sued if
+you use this linker script!
+

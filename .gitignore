@@ -2,4 +2,8 @@ nrf51/_build
 nrf51/*.jlink
 nrf51/images/*.c
 nrf51/nordicsdk
+stm32/build
+stm32/obj
+stm32/dep
+stm32/cube
 xcuserdata
