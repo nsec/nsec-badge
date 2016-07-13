@@ -1,0 +1,491 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A71061D41CEBAD1D005564B4 /* controls.c in Sources */ = {isa = PBXBuildFile; fileRef = A71061D21CEBAD1D005564B4 /* controls.c */; };
+		A71061D51CEBAD1D005564B4 /* controls.h in Headers */ = {isa = PBXBuildFile; fileRef = A71061D31CEBAD1D005564B4 /* controls.h */; };
+		A71061D81CECB3DD005564B4 /* touch_button.c in Sources */ = {isa = PBXBuildFile; fileRef = A71061D61CECB3DD005564B4 /* touch_button.c */; };
+		A71061D91CECB3DD005564B4 /* touch_button.h in Headers */ = {isa = PBXBuildFile; fileRef = A71061D71CECB3DD005564B4 /* touch_button.h */; };
+		A73AA4D11CDE969B006C4C08 /* animal_care.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4CF1CDE969B006C4C08 /* animal_care.c */; };
+		A73AA4D21CDE969B006C4C08 /* animal_care.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4D01CDE969B006C4C08 /* animal_care.h */; };
+		A73AA4D61CE355C0006C4C08 /* menu.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4D41CE355C0006C4C08 /* menu.c */; };
+		A73AA4D71CE355C0006C4C08 /* menu.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4D51CE355C0006C4C08 /* menu.h */; };
+		A73AA4DA1CE61DB9006C4C08 /* nsec_conf_schedule.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4D81CE61DB9006C4C08 /* nsec_conf_schedule.c */; };
+		A73AA4DB1CE61DB9006C4C08 /* nsec_conf_schedule.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4D91CE61DB9006C4C08 /* nsec_conf_schedule.h */; };
+		A73AA4DE1CE812D3006C4C08 /* status_bar.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4DC1CE812D3006C4C08 /* status_bar.c */; };
+		A73AA4DF1CE812D3006C4C08 /* status_bar.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4DD1CE812D3006C4C08 /* status_bar.h */; };
+		A73AA4E21CEAD266006C4C08 /* nsec_settings.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4E01CEAD266006C4C08 /* nsec_settings.c */; };
+		A73AA4E31CEAD266006C4C08 /* nsec_settings.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4E11CEAD266006C4C08 /* nsec_settings.h */; };
+		A73AA4E61CEADEA6006C4C08 /* battery.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4E41CEADEA6006C4C08 /* battery.c */; };
+		A73AA4E71CEADEA6006C4C08 /* battery.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4E51CEADEA6006C4C08 /* battery.h */; };
+		A73AA4E91CEADF2D006C4C08 /* battery_manager.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4E81CEADF2D006C4C08 /* battery_manager.c */; };
+		A76F84EF1CD17E8200637E8B /* ble_hid.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84EE1CD17E8200637E8B /* ble_hid.c */; };
+		A76F84F11CD4414700637E8B /* ble_vendor_service.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84F01CD4414700637E8B /* ble_vendor_service.c */; };
+		A76F84F31CD4416800637E8B /* ble_device_info.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84F21CD4416800637E8B /* ble_device_info.c */; };
+		A77F8E151C023A3C00B8BE75 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = A7E745701BF8FDF3008533EE /* main.c */; };
+		A77F8E241C023A3C00B8BE75 /* ssd1306.c in Sources */ = {isa = PBXBuildFile; fileRef = A7E745851BF8FDF3008533EE /* ssd1306.c */; };
+		A77F8E2B1C02BB9800B8BE75 /* ble_device.c in Sources */ = {isa = PBXBuildFile; fileRef = A77F8E2A1C02BB9800B8BE75 /* ble_device.c */; };
+		A7F7F11B1CD854DF007B5F9A /* ble_battery.c in Sources */ = {isa = PBXBuildFile; fileRef = A7F7F11A1CD854DF007B5F9A /* ble_battery.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A71061D21CEBAD1D005564B4 /* controls.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = controls.c; path = nrf51/controls.c; sourceTree = "<group>"; };
+		A71061D31CEBAD1D005564B4 /* controls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = controls.h; path = nrf51/controls.h; sourceTree = "<group>"; };
+		A71061D61CECB3DD005564B4 /* touch_button.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = touch_button.c; path = nrf51/touch_button.c; sourceTree = "<group>"; };
+		A71061D71CECB3DD005564B4 /* touch_button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = touch_button.h; path = nrf51/touch_button.h; sourceTree = "<group>"; };
+		A71061DA1CED06D0005564B4 /* app_glue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = app_glue.h; path = nrf51/app_glue.h; sourceTree = "<group>"; };
+		A73AA4CF1CDE969B006C4C08 /* animal_care.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = animal_care.c; path = nrf51/animal_care.c; sourceTree = "<group>"; };
+		A73AA4D01CDE969B006C4C08 /* animal_care.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = animal_care.h; path = nrf51/animal_care.h; sourceTree = "<group>"; };
+		A73AA4D41CE355C0006C4C08 /* menu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = menu.c; path = nrf51/menu.c; sourceTree = "<group>"; };
+		A73AA4D51CE355C0006C4C08 /* menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = menu.h; path = nrf51/menu.h; sourceTree = "<group>"; };
+		A73AA4D81CE61DB9006C4C08 /* nsec_conf_schedule.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nsec_conf_schedule.c; path = nrf51/nsec_conf_schedule.c; sourceTree = "<group>"; };
+		A73AA4D91CE61DB9006C4C08 /* nsec_conf_schedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nsec_conf_schedule.h; path = nrf51/nsec_conf_schedule.h; sourceTree = "<group>"; };
+		A73AA4DC1CE812D3006C4C08 /* status_bar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = status_bar.c; path = nrf51/status_bar.c; sourceTree = "<group>"; };
+		A73AA4DD1CE812D3006C4C08 /* status_bar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = status_bar.h; path = nrf51/status_bar.h; sourceTree = "<group>"; };
+		A73AA4E01CEAD266006C4C08 /* nsec_settings.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nsec_settings.c; path = nrf51/nsec_settings.c; sourceTree = "<group>"; };
+		A73AA4E11CEAD266006C4C08 /* nsec_settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nsec_settings.h; path = nrf51/nsec_settings.h; sourceTree = "<group>"; };
+		A73AA4E41CEADEA6006C4C08 /* battery.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = battery.c; path = nrf51/battery.c; sourceTree = "<group>"; };
+		A73AA4E51CEADEA6006C4C08 /* battery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = battery.h; path = nrf51/battery.h; sourceTree = "<group>"; };
+		A73AA4E81CEADF2D006C4C08 /* battery_manager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = battery_manager.c; path = nrf51/battery_manager.c; sourceTree = "<group>"; };
+		A76F84EE1CD17E8200637E8B /* ble_hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_hid.c; path = nrf51/ble/ble_hid.c; sourceTree = "<group>"; };
+		A76F84F01CD4414700637E8B /* ble_vendor_service.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_vendor_service.c; path = nrf51/ble/ble_vendor_service.c; sourceTree = "<group>"; };
+		A76F84F21CD4416800637E8B /* ble_device_info.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_device_info.c; path = nrf51/ble/ble_device_info.c; sourceTree = "<group>"; };
+		A76F84F41CD443F100637E8B /* nsec_ble_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nsec_ble_internal.h; path = nrf51/ble/nsec_ble_internal.h; sourceTree = "<group>"; };
+		A77F8E101C023A2300B8BE75 /* libdummy_target.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdummy_target.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A77F8E291C02B82000B8BE75 /* nsec_ble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nsec_ble.h; path = nrf51/ble/nsec_ble.h; sourceTree = "<group>"; };
+		A77F8E2A1C02BB9800B8BE75 /* ble_device.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_device.c; path = nrf51/ble/ble_device.c; sourceTree = "<group>"; };
+		A7E745701BF8FDF3008533EE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = nrf51/main.c; sourceTree = "<group>"; };
+		A7E745731BF8FDF3008533EE /* boards.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = boards.h; path = nrf51/boards.h; sourceTree = "<group>"; };
+		A7E745781BF8FDF3008533EE /* glcdfont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = glcdfont.h; path = nrf51/glcdfont.h; sourceTree = "<group>"; };
+		A7E745851BF8FDF3008533EE /* ssd1306.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ssd1306.c; path = nrf51/ssd1306.c; sourceTree = "<group>"; };
+		A7E745861BF8FDF3008533EE /* ssd1306.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ssd1306.h; path = nrf51/ssd1306.h; sourceTree = "<group>"; };
+		A7F7F11A1CD854DF007B5F9A /* ble_battery.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_battery.c; path = nrf51/ble/ble_battery.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A77F8E0D1C023A2300B8BE75 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A769BA5C1BF8FD3D00D00E5D = {
+			isa = PBXGroup;
+			children = (
+				A7E7458C1BF8FE07008533EE /* nrf51 */,
+				A77F8E111C023A2300B8BE75 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A77F8E111C023A2300B8BE75 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A77F8E101C023A2300B8BE75 /* libdummy_target.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A77F8E281C02B7D800B8BE75 /* ble */ = {
+			isa = PBXGroup;
+			children = (
+				A77F8E291C02B82000B8BE75 /* nsec_ble.h */,
+				A76F84F41CD443F100637E8B /* nsec_ble_internal.h */,
+				A77F8E2A1C02BB9800B8BE75 /* ble_device.c */,
+				A76F84F01CD4414700637E8B /* ble_vendor_service.c */,
+				A76F84F21CD4416800637E8B /* ble_device_info.c */,
+				A76F84EE1CD17E8200637E8B /* ble_hid.c */,
+				A7F7F11A1CD854DF007B5F9A /* ble_battery.c */,
+			);
+			name = ble;
+			sourceTree = "<group>";
+		};
+		A7E7458C1BF8FE07008533EE /* nrf51 */ = {
+			isa = PBXGroup;
+			children = (
+				A77F8E281C02B7D800B8BE75 /* ble */,
+				A7E745701BF8FDF3008533EE /* main.c */,
+				A73AA4E81CEADF2D006C4C08 /* battery_manager.c */,
+				A73AA4E41CEADEA6006C4C08 /* battery.c */,
+				A73AA4E51CEADEA6006C4C08 /* battery.h */,
+				A73AA4D41CE355C0006C4C08 /* menu.c */,
+				A73AA4D51CE355C0006C4C08 /* menu.h */,
+				A7E745731BF8FDF3008533EE /* boards.h */,
+				A7E745781BF8FDF3008533EE /* glcdfont.h */,
+				A7E745851BF8FDF3008533EE /* ssd1306.c */,
+				A7E745861BF8FDF3008533EE /* ssd1306.h */,
+				A73AA4CF1CDE969B006C4C08 /* animal_care.c */,
+				A73AA4D01CDE969B006C4C08 /* animal_care.h */,
+				A73AA4D81CE61DB9006C4C08 /* nsec_conf_schedule.c */,
+				A73AA4D91CE61DB9006C4C08 /* nsec_conf_schedule.h */,
+				A73AA4DC1CE812D3006C4C08 /* status_bar.c */,
+				A73AA4DD1CE812D3006C4C08 /* status_bar.h */,
+				A73AA4E01CEAD266006C4C08 /* nsec_settings.c */,
+				A73AA4E11CEAD266006C4C08 /* nsec_settings.h */,
+				A71061D21CEBAD1D005564B4 /* controls.c */,
+				A71061D31CEBAD1D005564B4 /* controls.h */,
+				A71061D61CECB3DD005564B4 /* touch_button.c */,
+				A71061D71CECB3DD005564B4 /* touch_button.h */,
+				A71061DA1CED06D0005564B4 /* app_glue.h */,
+			);
+			name = nrf51;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A77F8E0E1C023A2300B8BE75 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A73AA4E71CEADEA6006C4C08 /* battery.h in Headers */,
+				A73AA4E31CEAD266006C4C08 /* nsec_settings.h in Headers */,
+				A71061D91CECB3DD005564B4 /* touch_button.h in Headers */,
+				A73AA4DB1CE61DB9006C4C08 /* nsec_conf_schedule.h in Headers */,
+				A73AA4D21CDE969B006C4C08 /* animal_care.h in Headers */,
+				A73AA4DF1CE812D3006C4C08 /* status_bar.h in Headers */,
+				A71061D51CEBAD1D005564B4 /* controls.h in Headers */,
+				A73AA4D71CE355C0006C4C08 /* menu.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXLegacyTarget section */
+		A7E7458D1BF8FE4A008533EE /* badge16 */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "-l -c \"make $(ACTION)\"";
+			buildConfigurationList = A7E7458E1BF8FE4A008533EE /* Build configuration list for PBXLegacyTarget "badge16" */;
+			buildPhases = (
+			);
+			buildToolPath = bash;
+			buildWorkingDirectory = nrf51;
+			dependencies = (
+			);
+			name = badge16;
+			passBuildSettingsInEnvironment = 0;
+			productName = badge16;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXNativeTarget section */
+		A77F8E0F1C023A2300B8BE75 /* dummy_target */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A77F8E141C023A2300B8BE75 /* Build configuration list for PBXNativeTarget "dummy_target" */;
+			buildPhases = (
+				A77F8E0C1C023A2300B8BE75 /* Sources */,
+				A77F8E0D1C023A2300B8BE75 /* Frameworks */,
+				A77F8E0E1C023A2300B8BE75 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = dummy_target;
+			productName = dummy_target;
+			productReference = A77F8E101C023A2300B8BE75 /* libdummy_target.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A769BA5D1BF8FD3D00D00E5D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				TargetAttributes = {
+					A77F8E0F1C023A2300B8BE75 = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
+					A7E7458D1BF8FE4A008533EE = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
+				};
+			};
+			buildConfigurationList = A769BA601BF8FD3D00D00E5D /* Build configuration list for PBXProject "nsec16" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A769BA5C1BF8FD3D00D00E5D;
+			productRefGroup = A77F8E111C023A2300B8BE75 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A7E7458D1BF8FE4A008533EE /* badge16 */,
+				A77F8E0F1C023A2300B8BE75 /* dummy_target */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A77F8E0C1C023A2300B8BE75 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A73AA4E21CEAD266006C4C08 /* nsec_settings.c in Sources */,
+				A71061D81CECB3DD005564B4 /* touch_button.c in Sources */,
+				A77F8E151C023A3C00B8BE75 /* main.c in Sources */,
+				A7F7F11B1CD854DF007B5F9A /* ble_battery.c in Sources */,
+				A73AA4DE1CE812D3006C4C08 /* status_bar.c in Sources */,
+				A73AA4D61CE355C0006C4C08 /* menu.c in Sources */,
+				A73AA4E61CEADEA6006C4C08 /* battery.c in Sources */,
+				A77F8E2B1C02BB9800B8BE75 /* ble_device.c in Sources */,
+				A73AA4D11CDE969B006C4C08 /* animal_care.c in Sources */,
+				A71061D41CEBAD1D005564B4 /* controls.c in Sources */,
+				A77F8E241C023A3C00B8BE75 /* ssd1306.c in Sources */,
+				A73AA4E91CEADF2D006C4C08 /* battery_manager.c in Sources */,
+				A76F84EF1CD17E8200637E8B /* ble_hid.c in Sources */,
+				A76F84F11CD4414700637E8B /* ble_vendor_service.c in Sources */,
+				A76F84F31CD4416800637E8B /* ble_device_info.c in Sources */,
+				A73AA4DA1CE61DB9006C4C08 /* nsec_conf_schedule.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A769BA611BF8FD3D00D00E5D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		A769BA621BF8FD3D00D00E5D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		A77F8E121C023A2300B8BE75 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = armv7;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/nrf51/nordicsdk/Include/**";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-DNRF51",
+					"-DSVCALL_AS_NORMAL_FUNCTION",
+					"-DSPI_MASTER_0_ENABLE",
+					"-DNRF51822_QFAA_CA",
+					"-DBLE_STACK_SUPPORT_REQD",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos9.2;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = armv7;
+			};
+			name = Debug;
+		};
+		A77F8E131C023A2300B8BE75 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = armv7;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/nrf51/nordicsdk/Include/**";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = (
+					"-DNRF51",
+					"-DSVCALL_AS_NORMAL_FUNCTION",
+					"-DSPI_MASTER_0_ENABLE",
+					"-DNRF51822_QFAA_CA",
+					"-DBLE_STACK_SUPPORT_REQD",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos9.2;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = armv7;
+			};
+			name = Release;
+		};
+		A7E7458F1BF8FE4A008533EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A7E745901BF8FE4A008533EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A769BA601BF8FD3D00D00E5D /* Build configuration list for PBXProject "nsec16" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A769BA611BF8FD3D00D00E5D /* Debug */,
+				A769BA621BF8FD3D00D00E5D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A77F8E141C023A2300B8BE75 /* Build configuration list for PBXNativeTarget "dummy_target" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A77F8E121C023A2300B8BE75 /* Debug */,
+				A77F8E131C023A2300B8BE75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A7E7458E1BF8FE4A008533EE /* Build configuration list for PBXLegacyTarget "badge16" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7E7458F1BF8FE4A008533EE /* Debug */,
+				A7E745901BF8FE4A008533EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A769BA5D1BF8FD3D00D00E5D /* Project object */;
+}
