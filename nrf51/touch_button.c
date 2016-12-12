@@ -12,7 +12,7 @@
 
 #include <nrf51.h>
 #include <nrf_gpio.h>
-#include <spi_slave.h>
+#include <nrf_drv_spis.h>
 #include <app_error.h>
 #include <app_timer.h>
 
@@ -20,6 +20,8 @@
 #include "boards.h"
 #include "controls.h"
 
+
+static const nrf_drv_spis_t spis = NRF_DRV_SPIS_INSTANCE(1);
 
 #define TX_BUF_SIZE   2
 #define RX_BUF_SIZE   2
@@ -34,7 +36,7 @@ static uint32_t last_event_received_time;
 
 void touch_on_event(enum touch_event event, enum touch_button button) {
     uint32_t event_received_time, event_received_diff;
-    app_timer_cnt_get(&event_received_time);
+    event_received_time = app_timer_cnt_get();
     app_timer_cnt_diff_compute(event_received_time, last_event_received_time, &event_received_diff);
     last_event_received_time = event_received_time;
     if(event_received_diff < 3000) {
@@ -80,10 +82,10 @@ static void spi_slave_buffers_init(uint8_t * const p_tx_buf,
     }
 }
 
-static void spi_slave_event_handle(spi_slave_evt_t event) {
+static void spi_slave_event_handle(nrf_drv_spis_event_t event) {
     uint32_t err_code;
 
-    if (event.evt_type == SPI_SLAVE_XFER_DONE) {
+    if (event.evt_type == NRF_DRV_SPIS_XFER_DONE) {
         // Check if buffer size is the same as amount of received data
         APP_ERROR_CHECK_BOOL(event.rx_amount == RX_BUF_SIZE);
 
@@ -94,35 +96,32 @@ static void spi_slave_event_handle(spi_slave_evt_t event) {
         touch_on_event(m_rx_buf[0], m_rx_buf[1]);
 
         // Reset buffers
-        err_code = spi_slave_buffers_set(m_tx_buf, m_rx_buf, sizeof(m_tx_buf), sizeof(m_rx_buf));
+        err_code = nrf_drv_spis_buffers_set(&spis, m_tx_buf, sizeof(m_tx_buf), m_rx_buf, sizeof(m_rx_buf));
         APP_ERROR_CHECK(err_code);
     }
 }
 
 uint32_t touch_init(void) {
     uint32_t err_code;
-    spi_slave_config_t spi_slave_config;
+    nrf_drv_spis_config_t spi_slave_config;
 
-    err_code = spi_slave_evt_handler_register(spi_slave_event_handle);
-    APP_ERROR_CHECK(err_code);
+    spi_slave_config.miso_pin         = SPIS_MISO_PIN;
+    spi_slave_config.mosi_pin         = SPIS_MOSI_PIN;
+    spi_slave_config.sck_pin          = SPIS_SCK_PIN;
+    spi_slave_config.csn_pin          = SPIS_CSN_PIN;
+    spi_slave_config.mode             = NRF_DRV_SPIS_MODE_0;
+    spi_slave_config.bit_order        = NRF_DRV_SPIS_BIT_ORDER_MSB_FIRST;
+    spi_slave_config.def              = DEF_CHARACTER;
+    spi_slave_config.orc              = ORC_CHARACTER;
 
-    spi_slave_config.pin_miso         = SPIS_MISO_PIN;
-    spi_slave_config.pin_mosi         = SPIS_MOSI_PIN;
-    spi_slave_config.pin_sck          = SPIS_SCK_PIN;
-    spi_slave_config.pin_csn          = SPIS_CSN_PIN;
-    spi_slave_config.mode             = SPI_MODE_0;
-    spi_slave_config.bit_order        = SPIM_MSB_FIRST;
-    spi_slave_config.def_tx_character = DEF_CHARACTER;
-    spi_slave_config.orc_tx_character = ORC_CHARACTER;
-
-    err_code = spi_slave_init(&spi_slave_config);
+    err_code = nrf_drv_spis_init(&spis, &spi_slave_config, spi_slave_event_handle);
     APP_ERROR_CHECK(err_code);
 
     spi_slave_buffers_init(m_tx_buf, m_rx_buf, (uint16_t)TX_BUF_SIZE);
 
-    err_code = spi_slave_buffers_set(m_tx_buf, m_rx_buf, sizeof(m_tx_buf), sizeof(m_rx_buf));
+    err_code = nrf_drv_spis_buffers_set(&spis, m_tx_buf, sizeof(m_tx_buf), m_rx_buf, sizeof(m_rx_buf));
     APP_ERROR_CHECK(err_code);
-    app_timer_cnt_get(&last_event_received_time);
+    last_event_received_time = app_timer_cnt_get();
 
     return NRF_SUCCESS;
 }

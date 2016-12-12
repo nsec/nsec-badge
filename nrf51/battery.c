@@ -13,6 +13,8 @@
 #include <nordic_common.h>
 #include <nrf_gpio.h>
 #include <nrf_delay.h>
+#include <nrf_nvic.h>
+#include <app_util_platform.h>
 #include <softdevice_handler.h>
 
 #include "battery.h"
@@ -108,7 +110,7 @@ void battery_init() {
     err_code = sd_nvic_ClearPendingIRQ(ADC_IRQn);
     APP_ERROR_CHECK(err_code);
 
-    err_code = sd_nvic_SetPriority(ADC_IRQn, NRF_APP_PRIORITY_LOW);
+    err_code = sd_nvic_SetPriority(ADC_IRQn, APP_IRQ_PRIORITY_LOW);
     APP_ERROR_CHECK(err_code);
 
     err_code = sd_nvic_EnableIRQ(ADC_IRQn);

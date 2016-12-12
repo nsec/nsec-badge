@@ -25,7 +25,6 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt);
 static void _nsec_ble_advertising_start(void);
 
 static void _nsec_ble_get_default_sec_params(ble_gap_sec_params_t * params) {
-    params->timeout      = 30;
     params->bond         = 0;
     params->mitm         = 0;
     params->io_caps      = BLE_GAP_IO_CAPS_NONE;
@@ -68,9 +67,11 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
             ble_gap_sec_params_t sec_params = p_ble_evt->evt.gap_evt.params.sec_params_request.peer_params;
             sec_params.mitm = 0;
             sec_params.bond = 0;
+            ble_gap_sec_keyset_t sec_keyset;
+            memset(&sec_keyset, 0, sizeof(ble_gap_sec_keyset_t));
             //_nsec_ble_get_default_sec_params(&sec_params);
             //APP_ERROR_CHECK(sd_ble_gap_sec_params_reply(conn, BLE_GAP_SEC_STATUS_SUCCESS, &p_ble_evt->evt.gap_evt.params.sec_params_request.peer_params));
-            APP_ERROR_CHECK(sd_ble_gap_sec_params_reply(conn, BLE_GAP_SEC_STATUS_SUCCESS, &sec_params));
+            APP_ERROR_CHECK(sd_ble_gap_sec_params_reply(conn, BLE_GAP_SEC_STATUS_SUCCESS, &sec_params, &sec_keyset));
             }
             break;
 
@@ -79,14 +80,14 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
             //ble_gap_enc_info_t enc;
             //p_ble_evt->evt.gap_evt.params.sec_info_request.div;
             if(_nsec_ble_is_enabled) {
-                APP_ERROR_CHECK(sd_ble_gap_sec_info_reply(conn, NULL, NULL));
+                APP_ERROR_CHECK(sd_ble_gap_sec_info_reply(conn, NULL, NULL, NULL));
             }
             }
             break;
 
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             const uint16_t conn = p_ble_evt->evt.gatts_evt.conn_handle;
-            APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(conn, NULL, 0));
+            APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(conn, NULL, 0, 0));
             }
             break;
     }
@@ -94,11 +95,14 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
 
 static void _nsec_ble_softdevice_init() {
     ble_enable_params_t ble_enable_params;
+    extern uint32_t __data_start__;
+    volatile uint32_t ram_start = (uint32_t) &__data_start__;
+    uint32_t ram_start_copy = ram_start;
 
     memset(&ble_enable_params, 0, sizeof(ble_enable_params));
 
     ble_enable_params.gatts_enable_params.service_changed = 1;
-    APP_ERROR_CHECK(sd_ble_enable(&ble_enable_params));
+    APP_ERROR_CHECK(sd_ble_enable(&ble_enable_params, &ram_start_copy));
 }
 
 /**@brief Function for the GAP initialization.
@@ -157,12 +161,9 @@ static void _nsec_ble_advertising_init(void)
         }
     }
 
-    uint8_t flags[] = { BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE };
-
     advdata.name_type               = BLE_ADVDATA_NO_NAME;
     advdata.include_appearance      = false;
-    advdata.flags.size              = sizeof(flags) / sizeof(flags[0]);
-    advdata.flags.p_data            = flags;
+    advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
     advdata.uuids_complete.uuid_cnt = uuid_count;
     advdata.uuids_complete.p_uuids  = adv_uuids;
 

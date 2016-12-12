@@ -10,7 +10,7 @@
 #include <app_scheduler.h>
 #include <app_error.h>
 #include <app_button.h>
-#include <app_timer.h>
+#include <app_timer_appsh.h>
 #include <app_gpiote.h>
 #include <app_uart.h>
 
@@ -51,7 +51,7 @@ void wdt_init(void)
     NRF_WDT->TASKS_START = 1;           //Start the Watchdog timer
 }
 
-void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name) {
+void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     nrf_gpio_cfg_output(LED_RED);
     nrf_gpio_cfg_output(LED_GREEN);
     nrf_gpio_pin_set(LED_RED);
@@ -61,7 +61,8 @@ void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p
     
     if(!error_displayed) {
         char error_msg[128];
-        snprintf(error_msg, sizeof(error_msg), "%s:%u -> error 0x%08x\r\n", p_file_name, (unsigned int)line_num, (unsigned int)error_code);
+        error_info_t * err_info = (error_info_t *) info;
+        snprintf(error_msg, sizeof(error_msg), "%s:%u -> error 0x%08x\r\n", err_info->p_file_name, (unsigned int)err_info->line_num, (unsigned int)err_info->err_code);
         puts(error_msg);
         gfx_setCursor(0, 0);
         gfx_puts(error_msg);
@@ -108,7 +109,7 @@ static void timers_init(void) {
     uint32_t err_code;
 
     // Initialize timer module.
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, 10 /* APP_TIMER_MAX_TIMERS */, 16 /* APP_TIMER_OP_QUEUE_SIZE */, true /* USE SCHEDULER */);
+    APP_TIMER_INIT(APP_TIMER_PRESCALER, 16 /* APP_TIMER_OP_QUEUE_SIZE */, app_timer_evt_schedule);
 
     // Create timers.
     err_code = app_timer_create(&m_heartbeat_timer_id,
@@ -124,8 +125,13 @@ void sys_evt_dispatch(uint32_t evt_id) {
 static void softdevice_init(void) {
     uint32_t err_code;
 
+    nrf_clock_lf_cfg_t clock_cfg = {
+        .source = NRF_CLOCK_LF_SRC_RC,
+        .rc_ctiv = 16,
+        .rc_temp_ctiv = 2,
+    };
     // Initialize the SoftDevice handler module.
-   SOFTDEVICE_HANDLER_INIT(NRF_CLOCK_LFCLKSRC_RC_250_PPM_1000MS_CALIBRATION, false);
+    SOFTDEVICE_HANDLER_INIT(&clock_cfg, false);
 
     // Register with the SoftDevice handler module for events.
     err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);

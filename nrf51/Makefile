@@ -1,60 +1,101 @@
-# List all source files the application uses.
-APPLICATION_SRCS  = $(notdir $(wildcard *.c))
-
-APPLICATION_SRCS += app_timer.c
-APPLICATION_SRCS += app_button.c
-APPLICATION_SRCS += app_scheduler.c
-APPLICATION_SRCS += app_fifo.c
-APPLICATION_SRCS += app_gpiote.c
-APPLICATION_SRCS += app_uart_fifo.c
-APPLICATION_SRCS += ble_srv_common.c
-APPLICATION_SRCS += ble_conn_params.c
-APPLICATION_SRCS += ble_advdata.c
-APPLICATION_SRCS += nrf_delay.c
-APPLICATION_SRCS += softdevice_handler.c
-APPLICATION_SRCS += spi_master.c
-APPLICATION_SRCS += ble_dis.c
-
-APPLICATION_SRCS += $(notdir $(wildcard ble/*.c))
-SOURCE_PATHS += ble
-
-APPLICATION_SRCS += nordicsdk/Source/ble/ble_services/ble_hids.c
-APPLICATION_SRCS += nordicsdk/Source/ble/ble_services/ble_bas.c
-APPLICATION_SRCS += nordicsdk/Source/spi_slave/spi_slave.c
-SOURCE_PATHS += nordicsdk/Source/ble/ble_services/
-SOURCE_PATHS += nordicsdk/Source/spi_slave/
-
 PROJECT_NAME = nsec16_badge
+OUTPUT_DIRECTORY := _build
+SDK_PATH = nordicsdk
 
-LIBRARY_PATHS += "."
+SRC_FILES  = $(notdir $(wildcard *.c))
+SRC_FILES += $(wildcard ble/*.c)
+SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf51.S
+SRC_FILES += $(SDK_PATH)/toolchain/system_nrf51.c
+SRC_FILES += $(SDK_PATH)/libraries/timer/app_timer.c
+SRC_FILES += $(SDK_PATH)/libraries/scheduler/app_scheduler.c
+SRC_FILES += $(SDK_PATH)/libraries/timer/app_timer_appsh.c
+SRC_FILES += $(SDK_PATH)/libraries/button/app_button.c
+SRC_FILES += $(SDK_PATH)/libraries/fifo/app_fifo.c
+SRC_FILES += $(SDK_PATH)/libraries/gpiote/app_gpiote.c
+SRC_FILES += $(SDK_PATH)/libraries/uart/app_uart_fifo.c
+SRC_FILES += $(SDK_PATH)/libraries/util/app_util_platform.c
+SRC_FILES += $(SDK_PATH)/libraries/util/app_error.c
+SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
+SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
+SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
+SRC_FILES += $(SDK_PATH)/softdevice/common/softdevice_handler/softdevice_handler.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/common/nrf_drv_common.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_slave/nrf_drv_spis.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/spi_5W_master.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
+SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
+SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_hids/ble_hids.c
+SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_bas/ble_bas.c
+
+INC_FOLDERS  = .
+INC_FOLDERS += $(SDK_PATH)
+INC_FOLDERS += $(SDK_PATH)/toolchain
+INC_FOLDERS += $(SDK_PATH)/toolchain/gcc
+INC_FOLDERS += $(SDK_PATH)/toolchain/cmsis/include
+INC_FOLDERS += $(SDK_PATH)/device
+INC_FOLDERS += $(SDK_PATH)/softdevice/common/softdevice_handler
+INC_FOLDERS += $(SDK_PATH)/softdevice/s130/headers
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/common
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/gpiote
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/hal
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/delay
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/spi_master
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/spi_slave
+INC_FOLDERS += $(SDK_PATH)/libraries/util
+INC_FOLDERS += $(SDK_PATH)/libraries/timer
+INC_FOLDERS += $(SDK_PATH)/libraries/button
+INC_FOLDERS += $(SDK_PATH)/libraries/scheduler
+INC_FOLDERS += $(SDK_PATH)/libraries/fifo
+INC_FOLDERS += $(SDK_PATH)/libraries/gpiote
+INC_FOLDERS += $(SDK_PATH)/libraries/uart
+INC_FOLDERS += $(SDK_PATH)/libraries/log
+INC_FOLDERS += $(SDK_PATH)/libraries/log/src
+INC_FOLDERS += $(SDK_PATH)/ble/common
+INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_bas
+INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_dis
+INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_hids
+INC_FOLDERS += $(SDK_PATH)/serialization/common/transport/ser_phy/config
 
 DEVICE = NRF51
-BOARD = BOARD_PCA10000
-#SEGGER_SERIAL =
 
-SDK_PATH = nordicsdk/
+USE_SOFTDEVICE = s130
+SOFTDEVICE = $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex
 
-# Using s110 softdevice with pach for version 7
-USE_SOFTDEVICE = s110
-SOFTDEVICE = $(SDK_PATH)s110_nrf51822_7.0.0/s110_nrf51822_7.0.0_softdevice.hex
-
-TEMPLATE_PATH = nrf51-pure-gcc-setup/template/
-#TOOLCHAIN_PATH = /opt/gcc-arm-none-eabi/bin/
-#TOOLCHAIN_PATH = /usr/bin/
-#TOOLCHAIN_PATH =
+TEMPLATE_PATH = $(SDK_PATH)/toolchain/gcc/
 
 CFLAGS += -DDEBUG -g3 -Os
 LDFLAGS += -g3
 ASMFLAGS += -DDEBUG -g3 -Os
 
-CFLAGS += -DNRF51822_QFAA_CA -DSPI_MASTER_0_ENABLE -D__HEAP_SIZE=0 -D__STACK_SIZE=2048 -D PROD
+CFLAGS += -DNRF51
+CFLAGS += -DNRF51822_QFAA_CA
+CFLAGS += -DNRF51822
+CFLAGS += -DSPI_MASTER_0_ENABLE
+CFLAGS += -DPROD
+CFLAGS += -DSOFTDEVICE_PRESENT
+CFLAGS += -DBLE_STACK_SUPPORT_REQD
+CFLAGS += -DNRF_SD_BLE_API_VERSION=2
+CFLAGS += -DS130
 CFLAGS += -flto -ffunction-sections -fdata-sections -fno-builtin -fno-omit-frame-pointer -Os
 LDFLAGS += --specs=nano.specs -lc -lnosys -Wl,--gc-sections -fno-omit-frame-pointer -Os
+LDFLAGS += -mthumb -mabi=aapcs
+LDFLAGS += -mcpu=cortex-m0
+LDFLAGS += -L $(TEMPLATE_PATH) -L $(SDK_PATH)/softdevice/s130/toolchain/armgcc
+LDFLAGS += -T armgcc_s130_nrf51822_xxaa.ld
 
-GDB_PORT_NUMBER = 2331
+ASMFLAGS += -x assembler-with-cpp
+ASMFLAGS += -DSWI_DISABLE0
+ASMFLAGS += -DSOFTDEVICE_PRESENT
+ASMFLAGS += -DNRF51
+ASMFLAGS += -DNRF51822
+ASMFLAGS += -DS130
+ASMFLAGS += -DBLE_STACK_SUPPORT_REQD
+ASMFLAGS += -DNRF_SD_BLE_API_VERSION=2
+
 TERMINAL = dup
 
-include $(TEMPLATE_PATH)Makefile
+include $(TEMPLATE_PATH)/Makefile.common
+$(call define_target, $(PROJECT_NAME))
 
 %_bitmap.c: %.png
 	python gen_image.py -i $< -o $@
@@ -62,24 +103,22 @@ include $(TEMPLATE_PATH)Makefile
 bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard images/*.png))
 
 $(SDK_PATH):
-	wget http://developer.nordicsemi.com/nRF5_SDK/nRF51_SDK_v6.x.x/nrf51_sdk_v6_1_0_b2ec2e6.zip
-	unzip nrf51_sdk_v6_1_0_b2ec2e6.zip nrf51822/*
-	mv nrf51822 $(SDK_PATH)
-	rm nrf51_sdk_v6_1_0_b2ec2e6.zip
+	wget http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v12.x.x/nRF5_SDK_12.1.0_0d23e2a.zip
+	unzip nRF5_SDK_12.1.0_0d23e2a.zip components/*
+	mv components $(SDK_PATH)
+	# TODO add the patch for Makefile.posix
+	rm nRF5_SDK_12.1.0_0d23e2a.zip
 
-_build/s110_nrf51822_7.0.0_softdevice.hex:
-	mkdir -p _build
-	wget http://www.nordicsemi.com/eng/nordic/download_resource/48420/8/56824997 -O s110_nrf51822_7.0.0.zip
-	unzip -n s110_nrf51822_7.0.0.zip s110_nrf51822_7.0.0_licence_agreement.pdf
-	unzip -n s110_nrf51822_7.0.0.zip -d _build/ s110_nrf51822_7.0.0_softdevice.hex
-	rm s110_nrf51822_7.0.0.zip
-	echo "Please read s110_nrf51822_7.0.0_licence_agreement.pdf"
+$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex:
+	mkdir -p $(OUTPUT_DIRECTORY)
+	wget https://www.nordicsemi.com/eng/nordic/download_resource/53724/11/92034807 -O s130_nrf51_2.0.1.zip
+	unzip -n s130_nrf51_2.0.1.zip s130_nrf51_2.0.1_license-agreement.txt
+	unzip -n s130_nrf51_2.0.1.zip -d $(OUTPUT_DIRECTORY) s130_nrf51_2.0.1_softdevice.hex
+	rm s130_nrf51_2.0.1.zip
+	echo "Please read s130_nrf51_2.0.1_license-agreement.txt"
 
-_build/s110_nrf51822_7.0.0.elf: _build/s110_nrf51822_7.0.0_softdevice.hex
-	arm-none-eabi-objcopy -I ihex -O elf32-littlearm \
-		_build/s110_nrf51822_7.0.0_softdevice.hex \
-		_build/s110_nrf51822_7.0.0_softdevice.elf
 
-gdb: debug-gdbinit
-	$(TERMINAL) "$(JLINKGDBSERVER) -port $(GDB_PORT_NUMBER)"
+$(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
+	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@
 
+all: $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.elf $(PROJECT_NAME)

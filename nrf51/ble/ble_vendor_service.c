@@ -94,8 +94,8 @@ static void _nsec_ble_vendor_evt_handler(ble_evt_t * p_ble_evt) {
         case BLE_GATTS_EVT_WRITE: {
             nsec_ble_characteristic_list_item_t * charac_item = NULL;
             for(int i = 0; i < NSEC_BLE_LIMIT_MAX_VENDOR_CHAR_COUNT; i++) {
-                if(_nsec_ble_vendor_services_characteristics[i].definition.char_uuid == p_ble_evt->evt.gatts_evt.params.write.context.char_uuid.uuid &&
-                   _nsec_ble_vendor_services_characteristics[i].service->sd_ble_handle == p_ble_evt->evt.gatts_evt.params.write.context.srvc_handle) {
+                if(_nsec_ble_vendor_services_characteristics[i].definition.char_uuid == p_ble_evt->evt.gatts_evt.params.write.uuid.uuid &&
+                   _nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle == p_ble_evt->evt.gatts_evt.params.write.handle) {
                     charac_item = &_nsec_ble_vendor_services_characteristics[i];
                     break;
                 }
@@ -190,7 +190,12 @@ int nsec_ble_set_charateristic_value(nsec_ble_service_handle service, uint16_t c
     }
 
     // TODO: Check if everything was written
-    APP_ERROR_CHECK(sd_ble_gatts_value_set(charac_handle->sd_ble_handle.value_handle, 0, &value_size, value));
+    ble_gatts_value_t gatts_value = {
+        .p_value = value,
+        .len = value_size,
+        .offset = 0
+    };
+    APP_ERROR_CHECK(sd_ble_gatts_value_set(BLE_CONN_HANDLE_INVALID, charac_handle->sd_ble_handle.value_handle, &gatts_value));
     return 0;
 }
 

@@ -21,7 +21,7 @@ All text above, and the splash screen below must be included in any redistributi
 
 #include <app_error.h>
 #include <app_util_platform.h>
-#include <spi_master.h>
+#include <spi_5W_master.h>
 #include <nrf51.h>
 #include <nrf_error.h>
 #include <nrf_gpio.h>
@@ -49,7 +49,7 @@ typedef enum {
 static volatile bool m_transfer_completed = false;
 
 void spi_master_0_event_handler(spi_master_evt_t spi_master_evt) {
-    switch (spi_master_evt.evt_type) {
+    switch (spi_master_evt.type) {
         case SPI_MASTER_EVT_TRANSFER_COMPLETED:
             m_transfer_completed = true;
             break;
@@ -63,14 +63,15 @@ void spi_init() {
     uint32_t err_code;
 
     //Configure SPI master.
-    spi_master_config_t spi_config = SPI_MASTER_INIT_DEFAULT;
+    spi_master_config_t spi_config;
     spi_config.SPI_Freq = SPI_FREQUENCY_FREQUENCY_M1;
     spi_config.SPI_Pin_SCK = OLED_CLK;
-    spi_config.SPI_Pin_MISO = SPI_PIN_DISCONNECTED;
+    spi_config.SPI_Pin_MISO = 0xFFFFFFFF;
     spi_config.SPI_Pin_MOSI = OLED_DATA;
     spi_config.SPI_Pin_SS = OLED_CS;
-    spi_config.SPI_CONFIG_ORDER = SPI_CONFIG_ORDER_MsbFirst;
-    spi_config.SPI_PriorityIRQ = APP_IRQ_PRIORITY_HIGH;
+    spi_config.SPI_ORDER = SPI_CONFIG_ORDER_MsbFirst;
+    spi_config.SPI_CPOL = SPI_CONFIG_CPOL_ActiveHigh;
+    spi_config.SPI_CPHA = SPI_CONFIG_CPHA_Leading;
     err_code = spi_master_open(SPI_MASTER_0, &spi_config);
     APP_ERROR_CHECK(err_code);
     spi_master_evt_handler_reg(SPI_MASTER_0, spi_master_0_event_handler);
