@@ -1,0 +1,10 @@
+diff -ur toolchain/gcc/Makefile.posix toolchain/gcc/Makefile.posix
+--- toolchain/gcc/Makefile.posix	2016-10-04 14:09:14.000000000 -0400
++++ toolchain/gcc/Makefile.posix	2016-11-18 14:00:06.000000000 -0500
+@@ -1,3 +1,3 @@
+-GNU_INSTALL_ROOT := /usr/local/gcc-arm-none-eabi-4_9-2015q3
+-GNU_VERSION := 4.9.3
+-GNU_PREFIX := arm-none-eabi
++GNU_PREFIX ?= arm-none-eabi
++GNU_INSTALL_ROOT ?= $(shell dirname $(shell dirname $(shell which $(GNU_PREFIX)-gcc)))
++GNU_VERSION ?= $(shell "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-gcc" -dumpversion)

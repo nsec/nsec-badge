@@ -106,7 +106,7 @@ $(SDK_PATH):
 	wget http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v12.x.x/nRF5_SDK_12.1.0_0d23e2a.zip
 	unzip nRF5_SDK_12.1.0_0d23e2a.zip components/*
 	mv components $(SDK_PATH)
-	# TODO add the patch for Makefile.posix
+	patch -p0 -d nordicsdk < nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
 	rm nRF5_SDK_12.1.0_0d23e2a.zip
 
 $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex:
