@@ -94,7 +94,7 @@ ASMFLAGS += -DNRF_SD_BLE_API_VERSION=2
 
 TERMINAL = dup
 
-include $(TEMPLATE_PATH)/Makefile.common
+-include $(TEMPLATE_PATH)/Makefile.common
 $(call define_target, $(PROJECT_NAME))
 
 %_bitmap.c: %.png
