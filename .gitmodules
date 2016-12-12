@@ -1,3 +1,0 @@
-[submodule "src/nrf51-pure-gcc-setup"]
-	path = nrf51/nrf51-pure-gcc-setup
-	url = https://github.com/hlnd/nrf51-pure-gcc-setup.git
