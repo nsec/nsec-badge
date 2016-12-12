@@ -79,7 +79,9 @@ const char animal_unlock_password[] = "L33t h4x0r k3y";
 #define DRAW_BITMAP(x, y, image) \
     gfx_drawBitmapBg(x, y, image ## _bitmap, image ## _bitmap_width, image ## _bitmap_height, WHITE, BLACK);
 
+#ifndef MIN
 #define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
 
 void animal_state_reset(void) {
     strncpy(animal_state.name, "Scriptkitty", sizeof(animal_state.name));
