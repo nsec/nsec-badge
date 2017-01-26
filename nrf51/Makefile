@@ -80,8 +80,8 @@ CFLAGS += -flto -ffunction-sections -fdata-sections -fno-builtin -fno-omit-frame
 LDFLAGS += --specs=nano.specs -lc -lnosys -Wl,--gc-sections -fno-omit-frame-pointer -Os
 LDFLAGS += -mthumb -mabi=aapcs
 LDFLAGS += -mcpu=cortex-m0
-LDFLAGS += -L $(TEMPLATE_PATH) -L $(SDK_PATH)/softdevice/s130/toolchain/armgcc
-LDFLAGS += -T armgcc_s130_nrf51822_xxaa.ld
+LDFLAGS += -L $(TEMPLATE_PATH)
+LDFLAGS += -T nsec_badge.ld
 
 ASMFLAGS += -x assembler-with-cpp
 ASMFLAGS += -DSWI_DISABLE0
