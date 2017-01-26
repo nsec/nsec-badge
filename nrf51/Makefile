@@ -109,9 +109,6 @@ $(SDK_PATH):
 	patch -p0 -d nordicsdk < nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
 	rm nRF5_SDK_12.1.0_0d23e2a.zip
 
-$(OUTPUT_DIRECTORY):
-	mkdir -p $(OUTPUT_DIRECTORY)
-
 $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex: $(OUTPUT_DIRECTORY)
 	wget https://www.nordicsemi.com/eng/nordic/download_resource/53724/11/92034807 -O s130_nrf51_2.0.1.zip
 	unzip -n s130_nrf51_2.0.1.zip s130_nrf51_2.0.1_license-agreement.txt
