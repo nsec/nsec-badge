@@ -39,6 +39,7 @@
 		A71061D61CECB3DD005564B4 /* touch_button.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = touch_button.c; path = nrf51/touch_button.c; sourceTree = "<group>"; };
 		A71061D71CECB3DD005564B4 /* touch_button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = touch_button.h; path = nrf51/touch_button.h; sourceTree = "<group>"; };
 		A71061DA1CED06D0005564B4 /* app_glue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = app_glue.h; path = nrf51/app_glue.h; sourceTree = "<group>"; };
+		A71DC8481E3D223100954B55 /* sdk_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdk_config.h; path = nrf51/sdk_config.h; sourceTree = "<group>"; };
 		A73AA4CF1CDE969B006C4C08 /* animal_care.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = animal_care.c; path = nrf51/animal_care.c; sourceTree = "<group>"; };
 		A73AA4D01CDE969B006C4C08 /* animal_care.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = animal_care.h; path = nrf51/animal_care.h; sourceTree = "<group>"; };
 		A73AA4D41CE355C0006C4C08 /* menu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = menu.c; path = nrf51/menu.c; sourceTree = "<group>"; };
@@ -135,6 +136,7 @@
 				A71061D61CECB3DD005564B4 /* touch_button.c */,
 				A71061D71CECB3DD005564B4 /* touch_button.h */,
 				A71061DA1CED06D0005564B4 /* app_glue.h */,
+				A71DC8481E3D223100954B55 /* sdk_config.h */,
 			);
 			name = nrf51;
 			sourceTree = "<group>";
@@ -304,7 +306,7 @@
 		A77F8E121C023A2300B8BE75 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = armv7;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -339,8 +341,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/nrf51/nordicsdk/**";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/nrf51/nordicsdk/**",
+					"$(SRCROOT)/nrf51",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -349,9 +353,11 @@
 					"-DSPI_MASTER_0_ENABLE",
 					"-DNRF51822_QFAA_CA",
 					"-DBLE_STACK_SUPPORT_REQD",
+					"-D__INLINE=inline",
+					"-mfloat-abi=soft",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos9.2;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = armv7;
@@ -361,7 +367,7 @@
 		A77F8E131C023A2300B8BE75 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = armv7;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -390,8 +396,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/nrf51/nordicsdk/**";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/nrf51/nordicsdk/**",
+					"$(SRCROOT)/nrf51",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = (
 					"-DNRF51",
@@ -399,9 +407,11 @@
 					"-DSPI_MASTER_0_ENABLE",
 					"-DNRF51822_QFAA_CA",
 					"-DBLE_STACK_SUPPORT_REQD",
+					"-D__INLINE=inline",
+					"-mfloat-abi=soft",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos9.2;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = armv7;
