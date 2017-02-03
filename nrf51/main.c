@@ -220,7 +220,7 @@ int main() {
     touch_init();
     gfx_setTextBackgroundColor(WHITE, BLACK);
 
-    application_timers_start();
+    //application_timers_start();
     nsec_battery_manager_init();
 
     nsec_ble_init(g_device_id);
