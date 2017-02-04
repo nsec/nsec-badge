@@ -17,11 +17,12 @@ All text above, and the splash screen below must be included in any redistributi
 *********************************************************************/
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <app_error.h>
 #include <app_util_platform.h>
-#include <spi_5W_master.h>
+#include <nrf_drv_spi.h>
 #include <nrf51.h>
 #include <nrf_error.h>
 #include <nrf_gpio.h>
@@ -46,51 +47,31 @@ typedef enum {
 /*
  * SPI stuff
  */
-static volatile bool m_transfer_completed = false;
+static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(0);
 
-void spi_master_0_event_handler(spi_master_evt_t spi_master_evt) {
-    switch (spi_master_evt.type) {
-        case SPI_MASTER_EVT_TRANSFER_COMPLETED:
-            m_transfer_completed = true;
-            break;
-        default:
-            // Do nothing.
-            break;
-    }
+static void spi_init() {
+    nrf_drv_spi_config_t spi_config;
+
+    spi_config.frequency = NRF_DRV_SPI_FREQ_1M;
+    spi_config.sck_pin = OLED_CLK;
+    spi_config.miso_pin = NRF_DRV_SPI_PIN_NOT_USED;
+    spi_config.mosi_pin = OLED_DATA;
+    spi_config.ss_pin = OLED_CS;
+    spi_config.bit_order = NRF_DRV_SPI_BIT_ORDER_MSB_FIRST;
+    spi_config.mode = NRF_DRV_SPI_MODE_0;
+    spi_config.irq_priority = APP_IRQ_PRIORITY_LOW;
+    spi_config.orc = 0xFF;
+
+    APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, NULL));
 }
 
-void spi_init() {
-    uint32_t err_code;
-
-    //Configure SPI master.
-    spi_master_config_t spi_config;
-    spi_config.SPI_Freq = SPI_FREQUENCY_FREQUENCY_M1;
-    spi_config.SPI_Pin_SCK = OLED_CLK;
-    spi_config.SPI_Pin_MISO = 0xFFFFFFFF;
-    spi_config.SPI_Pin_MOSI = OLED_DATA;
-    spi_config.SPI_Pin_SS = OLED_CS;
-    spi_config.SPI_ORDER = SPI_CONFIG_ORDER_MsbFirst;
-    spi_config.SPI_CPOL = SPI_CONFIG_CPOL_ActiveHigh;
-    spi_config.SPI_CPHA = SPI_CONFIG_CPHA_Leading;
-    err_code = spi_master_open(SPI_MASTER_0, &spi_config);
-    APP_ERROR_CHECK(err_code);
-    spi_master_evt_handler_reg(SPI_MASTER_0, spi_master_0_event_handler);
-}
-
-uint8_t spi_master_tx(uint8_t * const p_tx_data, const uint16_t len) {
-    m_transfer_completed = false;
-
-    uint32_t err_code = spi_master_send_recv(SPI_MASTER_0, p_tx_data, len, NULL, 0);
-    APP_ERROR_CHECK(err_code);
-
-    while(1) {
-        if (m_transfer_completed) {
-            m_transfer_completed = false;
-            break;
-        }
+static void spi_master_tx(const uint8_t * p_tx_data, uint16_t len) {
+    while(len > 0) {
+        const uint8_t packet_len = MIN(len, UINT8_MAX);
+        APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, p_tx_data, packet_len, NULL, 0));
+        len -= packet_len;
+        p_tx_data += packet_len;
     }
-
-    return 1;
 }
 
 /*
