@@ -238,8 +238,7 @@ int main() {
     while (true) {
         app_sched_execute();
 
-        uint32_t err_code = sd_app_evt_wait();
-        APP_ERROR_CHECK(err_code);
+        APP_ERROR_CHECK(sd_app_evt_wait());
     }
 
     return 0;
