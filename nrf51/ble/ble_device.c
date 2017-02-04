@@ -99,10 +99,16 @@ static void _nsec_ble_softdevice_init() {
     volatile uint32_t ram_start = (uint32_t) &__data_start__;
     uint32_t ram_start_copy = ram_start;
 
-    memset(&ble_enable_params, 0, sizeof(ble_enable_params));
+    softdevice_enable_get_default_config(0, 1, &ble_enable_params);
 
-    ble_enable_params.gatts_enable_params.service_changed = 1;
+    ble_enable_params.common_enable_params.vs_uuid_count = 2;
+#if DEBUG_PRINT_RAM_USAGE
+    ram_start_copy = 0;
+    sd_ble_enable(&ble_enable_params, &ram_start_copy);
+    APP_ERROR_CHECK(ram_start_copy - ram_start);
+#else
     APP_ERROR_CHECK(sd_ble_enable(&ble_enable_params, &ram_start_copy));
+#endif
 }
 
 /**@brief Function for the GAP initialization.
