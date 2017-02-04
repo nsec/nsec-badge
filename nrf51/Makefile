@@ -109,6 +109,7 @@ $(SDK_PATH):
 	unzip nRF5_SDK_12.1.0_0d23e2a.zip components/*
 	mv components $(SDK_PATH)
 	patch -p0 -d nordicsdk < nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
+	patch -p0 -d nordicsdk < nordic-sdk-makefile-fix-object-depends-on-src.patch
 	rm nRF5_SDK_12.1.0_0d23e2a.zip
 
 $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex: $(OUTPUT_DIRECTORY)

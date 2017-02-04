@@ -1,0 +1,12 @@
+diff -ur toolchain/gcc/Makefile.common toolchain/gcc/Makefile.common
+--- toolchain/gcc/Makefile.common	2017-02-01 00:18:38.000000000 -0500
++++ toolchain/gcc/Makefile.common	2017-02-02 14:09:16.000000000 -0500
+@@ -63,7 +63,7 @@
+     $(OUTPUT_DIRECTORY)/$(strip $(1))_$(notdir $(src_file)).o) \
+   $(eval $(strip $(1))_dependencies += $(obj_file:.o=.d)) \
+   $(call bind_obj_with_src, $(obj_file), $(src_file)) \
+-  $(eval $(obj_file): Makefile) \
++  $(eval $(obj_file): $(src_file) Makefile) \
+   $(obj_file))
+ endef
+ 
