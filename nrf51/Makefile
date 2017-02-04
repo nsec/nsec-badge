@@ -94,6 +94,8 @@ ASMFLAGS += -DNRF_SD_BLE_API_VERSION=2
 
 TERMINAL = dup
 
+TARGETS=$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.elf $(PROJECT_NAME)
+
 -include $(TEMPLATE_PATH)/Makefile.common
 $(call define_target, $(PROJECT_NAME))
 
@@ -119,5 +121,3 @@ $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex: $(OUTPUT_DIRECTORY)
 
 $(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
 	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@
-
-all: $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.elf $(PROJECT_NAME)
