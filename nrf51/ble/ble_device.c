@@ -131,10 +131,10 @@ static void _nsec_ble_gap_params_init(char * device_name)
 
     memset(&gap_conn_params, 0, sizeof(gap_conn_params));
 
-    gap_conn_params.min_conn_interval = MSEC_TO_UNITS(20, UNIT_1_25_MS);
-    gap_conn_params.max_conn_interval = MSEC_TO_UNITS(40, UNIT_1_25_MS);
-    gap_conn_params.slave_latency     = 5;
-    gap_conn_params.conn_sup_timeout  = MSEC_TO_UNITS(300, UNIT_10_MS);
+    gap_conn_params.min_conn_interval = MSEC_TO_UNITS(400, UNIT_1_25_MS);
+    gap_conn_params.max_conn_interval = MSEC_TO_UNITS(650, UNIT_1_25_MS);
+    gap_conn_params.slave_latency     = 0;
+    gap_conn_params.conn_sup_timeout  = MSEC_TO_UNITS(4000, UNIT_10_MS);
 
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
     APP_ERROR_CHECK(err_code);
