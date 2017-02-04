@@ -39,9 +39,10 @@ void touch_on_event(enum touch_event event, enum touch_button button) {
     event_received_time = app_timer_cnt_get();
     app_timer_cnt_diff_compute(event_received_time, last_event_received_time, &event_received_diff);
     last_event_received_time = event_received_time;
-    if(event_received_diff < 3000) {
-        return;
-    }
+    // Disable ratelimiting for now because app_timer_cnt_get() always returns 0
+    // if(event_received_diff < 3000) {
+    //    return;
+    // }
 
     if(event == TOUCH_EVENT_DOWN) {
         button_t button_pressed;
