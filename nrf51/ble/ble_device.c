@@ -199,6 +199,7 @@ static void _nsec_ble_advertising_start(void)
     adv_params.type        = BLE_GAP_ADV_TYPE_ADV_IND;
     adv_params.p_peer_addr = NULL;
     adv_params.fp          = BLE_GAP_ADV_FP_ANY;
+    adv_params.p_whitelist = NULL;
     adv_params.interval    = MSEC_TO_UNITS(1216,UNIT_0_625_MS);
     adv_params.timeout     = 0;
 
