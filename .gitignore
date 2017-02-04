@@ -7,3 +7,4 @@ stm32/obj
 stm32/dep
 stm32/cube
 xcuserdata
+nrf51/*license-agreement.txt
