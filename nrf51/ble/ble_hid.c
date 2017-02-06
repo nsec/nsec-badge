@@ -28,7 +28,7 @@ struct mouse_event_s {
     uint8_t y;
 };
 
-static app_timer_id_t _mouse_timer;
+APP_TIMER_DEF(_mouse_timer);
 static uint32_t _tick_count = 0;
 
 void nsec_ble_hid_add_device(void) {

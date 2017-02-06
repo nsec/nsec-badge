@@ -12,7 +12,7 @@
 #include "status_bar.h"
 #include "boards.h"
 
-static app_timer_id_t _battery_manager_timer_id;
+APP_TIMER_DEF(_battery_manager_timer_id);
 static void _nsec_battery_check(void *p_context);
 
 void nsec_battery_manager_init(void) {

@@ -47,7 +47,7 @@ typedef struct {
 } nsec_animal_state_t;
 
 nsec_animal_state_t animal_state;
-app_timer_id_t animal_timer;
+APP_TIMER_DEF(animal_timer);
 nsec_ble_service_handle animal_ble_handle;
 
 static void animal_each_second(void * context);

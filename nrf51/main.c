@@ -93,7 +93,7 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name) {
  * Task timers
  */
 // Green hearbeat
-static app_timer_id_t m_heartbeat_timer_id;
+APP_TIMER_DEF(m_heartbeat_timer_id);
 static void heartbeat_timeout_handler(void * p_context) {
     //if (flashlight_cmd_data.state == ST_INIT) {
     //    nrf_gpio_pin_set(LED_RGB_GREEN);
@@ -220,7 +220,7 @@ int main() {
     touch_init();
     gfx_setTextBackgroundColor(WHITE, BLACK);
 
-    //application_timers_start();
+    application_timers_start();
     nsec_battery_manager_init();
 
     nsec_ble_init(g_device_id);
