@@ -102,6 +102,9 @@ $(call define_target, $(PROJECT_NAME))
 %_bitmap.c: %.png
 	python gen_image.py -i $< -o $@
 
+images/font_bitmap.c: images/font.png
+	python gen_image.py -i $< -o $@ -r
+
 bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard images/*.png))
 
 $(SDK_PATH):

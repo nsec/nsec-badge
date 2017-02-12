@@ -29,7 +29,7 @@ All text above, and the splash screen below must be included in any redistributi
 #include <nrf_delay.h>
 
 #include "boards.h"
-#include "glcdfont.h"
+#include "images/font_bitmap.c"
 
 #include "ssd1306.h"
 
@@ -953,7 +953,7 @@ void gfx_drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_
     if (i == 5)
       line = 0x0;
     else
-      line = pgm_read_byte(font+(c*5)+i);
+      line = pgm_read_byte(font_bitmap+(c*5)+i);
     for (int8_t j = 0; j<8; j++) {
       if (line & 0x1) {
         if (size == 1){ // default size
