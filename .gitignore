@@ -8,3 +8,4 @@ stm32/dep
 stm32/cube
 xcuserdata
 nrf51/*license-agreement.txt
+nrf51/flash_config.gdb
