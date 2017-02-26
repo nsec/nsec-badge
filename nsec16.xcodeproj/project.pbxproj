@@ -62,7 +62,6 @@
 		A77F8E2A1C02BB9800B8BE75 /* ble_device.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_device.c; path = nrf51/ble/ble_device.c; sourceTree = "<group>"; };
 		A7E745701BF8FDF3008533EE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = nrf51/main.c; sourceTree = "<group>"; };
 		A7E745731BF8FDF3008533EE /* boards.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = boards.h; path = nrf51/boards.h; sourceTree = "<group>"; };
-		A7E745781BF8FDF3008533EE /* glcdfont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = glcdfont.h; path = nrf51/glcdfont.h; sourceTree = "<group>"; };
 		A7E745851BF8FDF3008533EE /* ssd1306.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ssd1306.c; path = nrf51/ssd1306.c; sourceTree = "<group>"; };
 		A7E745861BF8FDF3008533EE /* ssd1306.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ssd1306.h; path = nrf51/ssd1306.h; sourceTree = "<group>"; };
 		A7F7F11A1CD854DF007B5F9A /* ble_battery.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_battery.c; path = nrf51/ble/ble_battery.c; sourceTree = "<group>"; };
@@ -120,7 +119,6 @@
 				A73AA4D41CE355C0006C4C08 /* menu.c */,
 				A73AA4D51CE355C0006C4C08 /* menu.h */,
 				A7E745731BF8FDF3008533EE /* boards.h */,
-				A7E745781BF8FDF3008533EE /* glcdfont.h */,
 				A7E745851BF8FDF3008533EE /* ssd1306.c */,
 				A7E745861BF8FDF3008533EE /* ssd1306.h */,
 				A73AA4CF1CDE969B006C4C08 /* animal_care.c */,
