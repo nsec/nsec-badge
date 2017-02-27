@@ -24,6 +24,7 @@
 		A73AA4E61CEADEA6006C4C08 /* battery.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4E41CEADEA6006C4C08 /* battery.c */; };
 		A73AA4E71CEADEA6006C4C08 /* battery.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4E51CEADEA6006C4C08 /* battery.h */; };
 		A73AA4E91CEADF2D006C4C08 /* battery_manager.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4E81CEADF2D006C4C08 /* battery_manager.c */; };
+		A74D9B491E63BEB60040F9EC /* random.c in Sources */ = {isa = PBXBuildFile; fileRef = A74D9B431E629D750040F9EC /* random.c */; };
 		A76F84EF1CD17E8200637E8B /* ble_hid.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84EE1CD17E8200637E8B /* ble_hid.c */; };
 		A76F84F11CD4414700637E8B /* ble_vendor_service.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84F01CD4414700637E8B /* ble_vendor_service.c */; };
 		A76F84F31CD4416800637E8B /* ble_device_info.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84F21CD4416800637E8B /* ble_device_info.c */; };
@@ -53,6 +54,8 @@
 		A73AA4E41CEADEA6006C4C08 /* battery.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = battery.c; path = nrf51/battery.c; sourceTree = "<group>"; };
 		A73AA4E51CEADEA6006C4C08 /* battery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = battery.h; path = nrf51/battery.h; sourceTree = "<group>"; };
 		A73AA4E81CEADF2D006C4C08 /* battery_manager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = battery_manager.c; path = nrf51/battery_manager.c; sourceTree = "<group>"; };
+		A74D9B431E629D750040F9EC /* random.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = random.c; path = nrf51/random.c; sourceTree = "<group>"; };
+		A74D9B441E62AD330040F9EC /* random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = random.h; path = nrf51/random.h; sourceTree = "<group>"; };
 		A76F84EE1CD17E8200637E8B /* ble_hid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_hid.c; path = nrf51/ble/ble_hid.c; sourceTree = "<group>"; };
 		A76F84F01CD4414700637E8B /* ble_vendor_service.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_vendor_service.c; path = nrf51/ble/ble_vendor_service.c; sourceTree = "<group>"; };
 		A76F84F21CD4416800637E8B /* ble_device_info.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_device_info.c; path = nrf51/ble/ble_device_info.c; sourceTree = "<group>"; };
@@ -119,6 +122,8 @@
 				A73AA4D41CE355C0006C4C08 /* menu.c */,
 				A73AA4D51CE355C0006C4C08 /* menu.h */,
 				A7E745731BF8FDF3008533EE /* boards.h */,
+				A74D9B431E629D750040F9EC /* random.c */,
+				A74D9B441E62AD330040F9EC /* random.h */,
 				A7E745851BF8FDF3008533EE /* ssd1306.c */,
 				A7E745861BF8FDF3008533EE /* ssd1306.h */,
 				A73AA4CF1CDE969B006C4C08 /* animal_care.c */,
@@ -233,6 +238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A74D9B491E63BEB60040F9EC /* random.c in Sources */,
 				A73AA4E21CEAD266006C4C08 /* nsec_settings.c in Sources */,
 				A71061D81CECB3DD005564B4 /* touch_button.c in Sources */,
 				A77F8E151C023A3C00B8BE75 /* main.c in Sources */,
