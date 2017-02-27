@@ -39,6 +39,7 @@
 #include "nsec_settings.h"
 #include "battery.h"
 #include "touch_button.h"
+#include "gfx_effect.h"
 
 static char g_device_id[32];
 
@@ -147,12 +148,10 @@ static void application_timers_start(void) {
 }
 
 static void nsec_intro(void) {
-    gfx_fillScreen(BLACK);
-    gfx_drawBitmap(17, 60, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, WHITE);
-    gfx_update();
-    for(int y = 60; y > 11; y--) {
+    for(uint8_t noise = 128; noise <= 128; noise -= 8) {
         gfx_fillScreen(BLACK);
-        gfx_drawBitmap(17, y, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, WHITE);
+        gfx_drawBitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, WHITE);
+        nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
 }
