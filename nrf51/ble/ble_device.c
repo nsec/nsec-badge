@@ -13,6 +13,7 @@
 #include <ble_advdata.h>
 #include <ble_dis.h>
 #include <app_timer.h>
+#include <peer_manager.h>
 
 #include "../boards.h"
 #include <nrf_gpio.h>
@@ -24,17 +25,8 @@ static uint8_t _nsec_ble_is_enabled = 0;
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt);
 static void _nsec_ble_advertising_start(void);
 
-static void _nsec_ble_get_default_sec_params(ble_gap_sec_params_t * params) {
-    params->bond         = 0;
-    params->mitm         = 0;
-    params->io_caps      = BLE_GAP_IO_CAPS_NONE;
-    params->oob          = 0;
-    params->min_key_size = 7;
-    params->max_key_size = 16;
-}
-
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
-    ble_conn_params_on_ble_evt(p_ble_evt);
+    pm_on_ble_evt(p_ble_evt);
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
         if(_nsec_ble_event_handlers[i] != NULL) {
             _nsec_ble_event_handlers[i](p_ble_evt);
@@ -62,35 +54,16 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
             _nsec_ble_advertising_start();
             break;
 
-        case BLE_GAP_EVT_SEC_PARAMS_REQUEST: {
-            const uint16_t conn = p_ble_evt->evt.gap_evt.conn_handle;
-            ble_gap_sec_params_t sec_params = p_ble_evt->evt.gap_evt.params.sec_params_request.peer_params;
-            sec_params.mitm = 0;
-            sec_params.bond = 0;
-            ble_gap_sec_keyset_t sec_keyset;
-            memset(&sec_keyset, 0, sizeof(ble_gap_sec_keyset_t));
-            //_nsec_ble_get_default_sec_params(&sec_params);
-            //APP_ERROR_CHECK(sd_ble_gap_sec_params_reply(conn, BLE_GAP_SEC_STATUS_SUCCESS, &p_ble_evt->evt.gap_evt.params.sec_params_request.peer_params));
-            APP_ERROR_CHECK(sd_ble_gap_sec_params_reply(conn, BLE_GAP_SEC_STATUS_SUCCESS, &sec_params, &sec_keyset));
-            }
-            break;
-
-        case BLE_GAP_EVT_SEC_INFO_REQUEST: {
-            const uint16_t conn = p_ble_evt->evt.gap_evt.conn_handle;
-            //ble_gap_enc_info_t enc;
-            //p_ble_evt->evt.gap_evt.params.sec_info_request.div;
-            if(_nsec_ble_is_enabled) {
-                APP_ERROR_CHECK(sd_ble_gap_sec_info_reply(conn, NULL, NULL, NULL));
-            }
-            }
-            break;
-
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             const uint16_t conn = p_ble_evt->evt.gatts_evt.conn_handle;
             APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(conn, NULL, 0, 0));
             }
             break;
     }
+}
+
+static void _nsec_pm_evt_handler(pm_evt_t const * event) {
+
 }
 
 static void _nsec_ble_softdevice_init() {
@@ -234,6 +207,27 @@ int nsec_ble_init(char * device_name) {
     APP_ERROR_CHECK(softdevice_ble_evt_handler_set(_nsec_ble_evt_dispatch));
 
     _nsec_ble_gap_params_init(device_name);
+
+    pm_init();
+    ble_gap_sec_params_t sec_params;
+    bzero(&sec_params, sizeof(sec_params));
+
+    sec_params.bond = 1;
+    sec_params.mitm = 0;
+    sec_params.lesc = 0;
+    sec_params.keypress = 0;
+    sec_params.io_caps = BLE_GAP_IO_CAPS_NONE;
+    sec_params.oob = 0;
+    sec_params.min_key_size = 7;
+    sec_params.max_key_size = 16;
+    sec_params.kdist_own.enc = 1;
+    sec_params.kdist_own.id = 1;
+    sec_params.kdist_peer.enc = 1;
+    sec_params.kdist_peer.id = 1;
+
+    pm_sec_params_set(&sec_params);
+
+    pm_register(_nsec_pm_evt_handler);
 
     //bzero(_nsec_ble_vendor_services, sizeof(_nsec_ble_vendor_services));
     //bzero(_nsec_ble_vendor_services_characteristics, sizeof(_nsec_ble_vendor_services_characteristics));

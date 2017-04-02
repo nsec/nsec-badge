@@ -15,14 +15,19 @@ SRC_FILES += $(SDK_PATH)/libraries/gpiote/app_gpiote.c
 SRC_FILES += $(SDK_PATH)/libraries/uart/app_uart_fifo.c
 SRC_FILES += $(SDK_PATH)/libraries/util/app_util_platform.c
 SRC_FILES += $(SDK_PATH)/libraries/util/app_error.c
+SRC_FILES += $(SDK_PATH)/libraries/util/sdk_mapped_flags.c
+SRC_FILES += $(SDK_PATH)/libraries/fds/fds.c
+SRC_FILES += $(SDK_PATH)/libraries/fstorage/fstorage.c
 SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
 SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
 SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
+SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_state.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/softdevice_handler/softdevice_handler.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/common/nrf_drv_common.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_slave/nrf_drv_spis.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/nrf_drv_spi.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
+SRC_FILES += $(wildcard $(SDK_PATH)/ble/peer_manager/*.c)
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_hids/ble_hids.c
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_bas/ble_bas.c
@@ -50,7 +55,11 @@ INC_FOLDERS += $(SDK_PATH)/libraries/gpiote
 INC_FOLDERS += $(SDK_PATH)/libraries/uart
 INC_FOLDERS += $(SDK_PATH)/libraries/log
 INC_FOLDERS += $(SDK_PATH)/libraries/log/src
+INC_FOLDERS += $(SDK_PATH)/libraries/fds
+INC_FOLDERS += $(SDK_PATH)/libraries/fstorage
+INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
 INC_FOLDERS += $(SDK_PATH)/ble/common
+INC_FOLDERS += $(SDK_PATH)/ble/peer_manager
 INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_bas
 INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_dis
 INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_hids
@@ -91,6 +100,7 @@ ASMFLAGS += -DNRF51822
 ASMFLAGS += -DS130
 ASMFLAGS += -DBLE_STACK_SUPPORT_REQD
 ASMFLAGS += -DNRF_SD_BLE_API_VERSION=2
+ASMFLAGS += -D__HEAP_SIZE=0
 
 TERMINAL = dup
 
