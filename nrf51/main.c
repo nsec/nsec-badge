@@ -230,6 +230,7 @@ int main() {
 
     show_main_menu();
     nsec_led_set_delay(100);
+    nsec_led_set_effect(NSEC_LED_EFFECT_SPIN);
 
     while (true) {
         app_sched_execute();
