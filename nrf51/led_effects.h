@@ -9,6 +9,9 @@
 #ifndef led_effects_h
 #define led_effects_h
 
-#include <stdio.h>
+#include <stdint.h>
+
+void nsec_led_init(void);
+void nsec_led_set_delay(uint32_t milliseconds);
 
 #endif /* led_effects_h */

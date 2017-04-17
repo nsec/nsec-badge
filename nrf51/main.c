@@ -40,6 +40,7 @@
 #include "battery.h"
 #include "touch_button.h"
 #include "gfx_effect.h"
+#include "led_effects.h"
 
 static char g_device_id[32];
 
@@ -202,18 +203,14 @@ int main() {
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
     g_device_id[9] = '\0';
 
-    nrf_gpio_cfg_output(LED_RED);
-    nrf_gpio_cfg_output(LED_GREEN);
-
-    nrf_gpio_pin_set(LED_RED);
-    nrf_gpio_pin_set(LED_GREEN);
-
     softdevice_init();
 
     APP_SCHED_INIT(APP_TIMER_SCHED_EVT_SIZE /* EVENT_SIZE */, 12 /* QUEUE SIZE */);
 
     timers_init();
     APP_GPIOTE_INIT(2);
+
+    nsec_led_init();
 
     ssd1306_init();
     touch_init();
@@ -233,6 +230,7 @@ int main() {
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     show_main_menu();
+    nsec_led_set_delay(100);
 
     while (true) {
         app_sched_execute();
