@@ -217,7 +217,6 @@ int main() {
     gfx_setTextBackgroundColor(WHITE, BLACK);
 
     application_timers_start();
-    nsec_battery_manager_init();
 
     nsec_ble_init(g_device_id);
     nsec_ble_add_device_information_service(g_device_id, "NSEC 2016 Badge", NULL, NULL, NULL, NULL);
