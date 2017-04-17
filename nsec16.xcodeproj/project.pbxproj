@@ -33,6 +33,8 @@
 		A77F8E151C023A3C00B8BE75 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = A7E745701BF8FDF3008533EE /* main.c */; };
 		A77F8E241C023A3C00B8BE75 /* ssd1306.c in Sources */ = {isa = PBXBuildFile; fileRef = A7E745851BF8FDF3008533EE /* ssd1306.c */; };
 		A77F8E2B1C02BB9800B8BE75 /* ble_device.c in Sources */ = {isa = PBXBuildFile; fileRef = A77F8E2A1C02BB9800B8BE75 /* ble_device.c */; };
+		A7ADB1EF1EA2A118004E2730 /* led_effects.c in Sources */ = {isa = PBXBuildFile; fileRef = A7ADB1ED1EA2A118004E2730 /* led_effects.c */; };
+		A7ADB1F01EA2A119004E2730 /* led_effects.h in Headers */ = {isa = PBXBuildFile; fileRef = A7ADB1EE1EA2A118004E2730 /* led_effects.h */; };
 		A7F7F11B1CD854DF007B5F9A /* ble_battery.c in Sources */ = {isa = PBXBuildFile; fileRef = A7F7F11A1CD854DF007B5F9A /* ble_battery.c */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +69,8 @@
 		A77F8E101C023A2300B8BE75 /* libdummy_target.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdummy_target.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A77F8E291C02B82000B8BE75 /* nsec_ble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nsec_ble.h; path = nrf51/ble/nsec_ble.h; sourceTree = "<group>"; };
 		A77F8E2A1C02BB9800B8BE75 /* ble_device.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_device.c; path = nrf51/ble/ble_device.c; sourceTree = "<group>"; };
+		A7ADB1ED1EA2A118004E2730 /* led_effects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = led_effects.c; path = nrf51/led_effects.c; sourceTree = "<group>"; };
+		A7ADB1EE1EA2A118004E2730 /* led_effects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = led_effects.h; path = nrf51/led_effects.h; sourceTree = "<group>"; };
 		A7E745701BF8FDF3008533EE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = nrf51/main.c; sourceTree = "<group>"; };
 		A7E745731BF8FDF3008533EE /* boards.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = boards.h; path = nrf51/boards.h; sourceTree = "<group>"; };
 		A7E745851BF8FDF3008533EE /* ssd1306.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ssd1306.c; path = nrf51/ssd1306.c; sourceTree = "<group>"; };
@@ -146,6 +150,8 @@
 				A71DC8481E3D223100954B55 /* sdk_config.h */,
 				A74D9B451E63BCA90040F9EC /* gfx_effect.c */,
 				A74D9B461E63BCA90040F9EC /* gfx_effect.h */,
+				A7ADB1ED1EA2A118004E2730 /* led_effects.c */,
+				A7ADB1EE1EA2A118004E2730 /* led_effects.h */,
 			);
 			name = nrf51;
 			sourceTree = "<group>";
@@ -166,6 +172,7 @@
 				A71061D51CEBAD1D005564B4 /* controls.h in Headers */,
 				A73AA4D71CE355C0006C4C08 /* menu.h in Headers */,
 				A74D9B481E63BCA90040F9EC /* gfx_effect.h in Headers */,
+				A7ADB1F01EA2A119004E2730 /* led_effects.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +263,7 @@
 				A73AA4E61CEADEA6006C4C08 /* battery.c in Sources */,
 				A77F8E2B1C02BB9800B8BE75 /* ble_device.c in Sources */,
 				A73AA4D11CDE969B006C4C08 /* animal_care.c in Sources */,
+				A7ADB1EF1EA2A118004E2730 /* led_effects.c in Sources */,
 				A71061D41CEBAD1D005564B4 /* controls.c in Sources */,
 				A77F8E241C023A3C00B8BE75 /* ssd1306.c in Sources */,
 				A73AA4E91CEADF2D006C4C08 /* battery_manager.c in Sources */,
