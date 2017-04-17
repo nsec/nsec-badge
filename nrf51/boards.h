@@ -29,6 +29,21 @@
 #define SPIS_MISO_PIN   13
 #define SPIS_SCK_PIN    14
 #define SPIS_CSN_PIN    15
+
+// LED placement
+//
+//     1
+//  5_/ \_2
+//   \   /
+//   /_^_\
+//  4     3
+
+#define LED_1 24
+#define LED_2 29
+#define LED_3 30
+#define LED_4 25
+#define LED_5 28
+
 #define LED_GREEN       28
 #define LED_RED         29
 #define PSU_ENABLE      30
