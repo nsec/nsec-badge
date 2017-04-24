@@ -35,7 +35,7 @@ All text above, and the splash screen below must be included in any redistributi
 
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 
-static uint8_t gfx_rotation = 2;
+static uint8_t gfx_rotation = 0;
 uint8_t ssd1306_vccstate = SSD1306_SWITCHCAPVCC;
 
 typedef enum {
