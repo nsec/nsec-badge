@@ -140,7 +140,7 @@ static void _nsec_ble_advertising_init(void)
         }
     }
 
-    advdata.name_type               = BLE_ADVDATA_NO_NAME;
+    advdata.name_type               = BLE_ADVDATA_FULL_NAME;
     advdata.include_appearance      = false;
     advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
     advdata.uuids_complete.uuid_cnt = uuid_count;
