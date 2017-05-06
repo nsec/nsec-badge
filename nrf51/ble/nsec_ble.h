@@ -29,6 +29,7 @@ enum NSEC_BLE_CHARACT_PERM {
 
 typedef struct {
     uint16_t char_uuid;
+    uint16_t max_size;
     uint8_t permissions; // see NSEC_BLE_CHARACT_PERM
     nsec_ble_characteristic_write_callback on_write;
 } nsec_ble_characteristic_t;

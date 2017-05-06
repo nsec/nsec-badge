@@ -167,7 +167,7 @@ static void _nsec_ble_add_caracteristic(nsec_ble_service_handle service_handle, 
     attr_char_value.p_attr_md    = &attr_md;
     attr_char_value.init_len     = 0;
     attr_char_value.init_offs    = 0;
-    attr_char_value.max_len      = (64 * sizeof(uint8_t)); // FIXME: hardcoded
+    attr_char_value.max_len      = charac->max_size;
     attr_char_value.p_value      = NULL;
 
     APP_ERROR_CHECK(sd_ble_gatts_characteristic_add(service_handle->sd_ble_handle, &char_md,
