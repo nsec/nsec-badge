@@ -41,6 +41,7 @@
 #include "touch_button.h"
 #include "gfx_effect.h"
 #include "led_effects.h"
+#include "identity.h"
 
 static char g_device_id[32];
 
@@ -221,7 +222,8 @@ int main() {
     nsec_ble_init(g_device_id);
     nsec_ble_add_device_information_service(g_device_id, "NSEC 2016 Badge", NULL, NULL, NULL, NULL);
 
-    animal_init();
+    //animal_init();
+    nsec_identitiy_init();
 
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
@@ -229,6 +231,8 @@ int main() {
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     show_main_menu();
+    nsec_identity_draw();
+
     nsec_led_set_delay(100);
     nsec_led_set_effect(NSEC_LED_EFFECT_SPIN);
 

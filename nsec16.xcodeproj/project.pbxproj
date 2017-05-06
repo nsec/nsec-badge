@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A70DAB481EAEEF780065F1A0 /* identity.c in Sources */ = {isa = PBXBuildFile; fileRef = A70DAB461EAEEF780065F1A0 /* identity.c */; };
+		A70DAB491EAEEF780065F1A0 /* identity.h in Headers */ = {isa = PBXBuildFile; fileRef = A70DAB471EAEEF780065F1A0 /* identity.h */; };
 		A71061D41CEBAD1D005564B4 /* controls.c in Sources */ = {isa = PBXBuildFile; fileRef = A71061D21CEBAD1D005564B4 /* controls.c */; };
 		A71061D51CEBAD1D005564B4 /* controls.h in Headers */ = {isa = PBXBuildFile; fileRef = A71061D31CEBAD1D005564B4 /* controls.h */; };
 		A71061D81CECB3DD005564B4 /* touch_button.c in Sources */ = {isa = PBXBuildFile; fileRef = A71061D61CECB3DD005564B4 /* touch_button.c */; };
@@ -39,6 +41,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A70DAB461EAEEF780065F1A0 /* identity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = identity.c; path = nrf51/identity.c; sourceTree = "<group>"; };
+		A70DAB471EAEEF780065F1A0 /* identity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = identity.h; path = nrf51/identity.h; sourceTree = "<group>"; };
 		A71061D21CEBAD1D005564B4 /* controls.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = controls.c; path = nrf51/controls.c; sourceTree = "<group>"; };
 		A71061D31CEBAD1D005564B4 /* controls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = controls.h; path = nrf51/controls.h; sourceTree = "<group>"; };
 		A71061D61CECB3DD005564B4 /* touch_button.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = touch_button.c; path = nrf51/touch_button.c; sourceTree = "<group>"; };
@@ -152,6 +156,8 @@
 				A74D9B461E63BCA90040F9EC /* gfx_effect.h */,
 				A7ADB1ED1EA2A118004E2730 /* led_effects.c */,
 				A7ADB1EE1EA2A118004E2730 /* led_effects.h */,
+				A70DAB461EAEEF780065F1A0 /* identity.c */,
+				A70DAB471EAEEF780065F1A0 /* identity.h */,
 			);
 			name = nrf51;
 			sourceTree = "<group>";
@@ -173,6 +179,7 @@
 				A73AA4D71CE355C0006C4C08 /* menu.h in Headers */,
 				A74D9B481E63BCA90040F9EC /* gfx_effect.h in Headers */,
 				A7ADB1F01EA2A119004E2730 /* led_effects.h in Headers */,
+				A70DAB491EAEEF780065F1A0 /* identity.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +272,7 @@
 				A73AA4D11CDE969B006C4C08 /* animal_care.c in Sources */,
 				A7ADB1EF1EA2A118004E2730 /* led_effects.c in Sources */,
 				A71061D41CEBAD1D005564B4 /* controls.c in Sources */,
+				A70DAB481EAEEF780065F1A0 /* identity.c in Sources */,
 				A77F8E241C023A3C00B8BE75 /* ssd1306.c in Sources */,
 				A73AA4E91CEADF2D006C4C08 /* battery_manager.c in Sources */,
 				A76F84EF1CD17E8200637E8B /* ble_hid.c in Sources */,
