@@ -55,11 +55,6 @@ void wdt_init(void)
 }
 
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
-    nrf_gpio_cfg_output(LED_RED);
-    nrf_gpio_cfg_output(LED_GREEN);
-    nrf_gpio_pin_set(LED_RED);
-    nrf_gpio_pin_set(LED_GREEN);
-    
     static int error_displayed = 0;
     
     if(!error_displayed) {
@@ -72,10 +67,10 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
         gfx_update();
         error_displayed = 1;
     }
-    uint8_t count = 10;
+    uint8_t count = 20;
     while (count > 0) {
-        nrf_gpio_pin_toggle(LED_RED);
-        nrf_delay_ms(500);
+        nsec_led_set_effect(count % 2 ? NSEC_LED_EFFECT_ALL_OFF : NSEC_LED_EFFECT_ALL_ON);
+        nrf_delay_ms(250);
         count--;
     }
 

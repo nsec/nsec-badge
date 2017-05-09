@@ -44,8 +44,6 @@
 #define LED_4 25
 #define LED_5 28
 
-#define LED_GREEN       28
-#define LED_RED         29
 #define PSU_ENABLE      30
 
 #endif

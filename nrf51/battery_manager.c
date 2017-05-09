@@ -26,11 +26,9 @@ void nsec_battery_manager_init(void) {
 
 static void _nsec_battery_check(void *p_context) {
     if (battery_is_undercharge()) {
-        nrf_gpio_pin_clear(LED_RED);
         battery_disconnect();
     }
     else {
-        nrf_gpio_pin_set(LED_RED);
         battery_connect();
     }
 

@@ -17,6 +17,8 @@
 
 #include "../boards.h"
 #include <nrf_gpio.h>
+#include <nrf_delay.h>
+#include "../led_effects.h"
 
 static ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
 static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
@@ -43,14 +45,12 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
             //    gfx_puts(hex);
             //}
             //gfx_update();
-            nrf_gpio_cfg_output(LED_GREEN);
-            nrf_gpio_pin_clear(LED_GREEN);
+            nsec_led_set_effect(NSEC_LED_EFFECT_FLASH_ALL);
             }
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            nrf_gpio_cfg_output(LED_GREEN);
-            nrf_gpio_pin_set(LED_GREEN);
+            nsec_led_set_effect(NSEC_LED_EFFECT_SPIN);
             _nsec_ble_advertising_start();
             break;
 
