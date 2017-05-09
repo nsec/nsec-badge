@@ -35,6 +35,8 @@
 		A77F8E151C023A3C00B8BE75 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = A7E745701BF8FDF3008533EE /* main.c */; };
 		A77F8E241C023A3C00B8BE75 /* ssd1306.c in Sources */ = {isa = PBXBuildFile; fileRef = A7E745851BF8FDF3008533EE /* ssd1306.c */; };
 		A77F8E2B1C02BB9800B8BE75 /* ble_device.c in Sources */ = {isa = PBXBuildFile; fileRef = A77F8E2A1C02BB9800B8BE75 /* ble_device.c */; };
+		A79A14AA1EBDBF37007AC5DD /* exploit_challenge.c in Sources */ = {isa = PBXBuildFile; fileRef = A79A14A81EBDBF37007AC5DD /* exploit_challenge.c */; };
+		A79A14AB1EBDBF37007AC5DD /* exploit_challenge.h in Headers */ = {isa = PBXBuildFile; fileRef = A79A14A91EBDBF37007AC5DD /* exploit_challenge.h */; };
 		A7ADB1EF1EA2A118004E2730 /* led_effects.c in Sources */ = {isa = PBXBuildFile; fileRef = A7ADB1ED1EA2A118004E2730 /* led_effects.c */; };
 		A7ADB1F01EA2A119004E2730 /* led_effects.h in Headers */ = {isa = PBXBuildFile; fileRef = A7ADB1EE1EA2A118004E2730 /* led_effects.h */; };
 		A7F7F11B1CD854DF007B5F9A /* ble_battery.c in Sources */ = {isa = PBXBuildFile; fileRef = A7F7F11A1CD854DF007B5F9A /* ble_battery.c */; };
@@ -73,6 +75,8 @@
 		A77F8E101C023A2300B8BE75 /* libdummy_target.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdummy_target.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A77F8E291C02B82000B8BE75 /* nsec_ble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nsec_ble.h; path = nrf51/ble/nsec_ble.h; sourceTree = "<group>"; };
 		A77F8E2A1C02BB9800B8BE75 /* ble_device.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_device.c; path = nrf51/ble/ble_device.c; sourceTree = "<group>"; };
+		A79A14A81EBDBF37007AC5DD /* exploit_challenge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = exploit_challenge.c; path = nrf51/exploit_challenge.c; sourceTree = "<group>"; };
+		A79A14A91EBDBF37007AC5DD /* exploit_challenge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = exploit_challenge.h; path = nrf51/exploit_challenge.h; sourceTree = "<group>"; };
 		A7ADB1ED1EA2A118004E2730 /* led_effects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = led_effects.c; path = nrf51/led_effects.c; sourceTree = "<group>"; };
 		A7ADB1EE1EA2A118004E2730 /* led_effects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = led_effects.h; path = nrf51/led_effects.h; sourceTree = "<group>"; };
 		A7E745701BF8FDF3008533EE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = nrf51/main.c; sourceTree = "<group>"; };
@@ -158,6 +162,8 @@
 				A7ADB1EE1EA2A118004E2730 /* led_effects.h */,
 				A70DAB461EAEEF780065F1A0 /* identity.c */,
 				A70DAB471EAEEF780065F1A0 /* identity.h */,
+				A79A14A81EBDBF37007AC5DD /* exploit_challenge.c */,
+				A79A14A91EBDBF37007AC5DD /* exploit_challenge.h */,
 			);
 			name = nrf51;
 			sourceTree = "<group>";
@@ -173,6 +179,7 @@
 				A73AA4E31CEAD266006C4C08 /* nsec_settings.h in Headers */,
 				A71061D91CECB3DD005564B4 /* touch_button.h in Headers */,
 				A73AA4DB1CE61DB9006C4C08 /* nsec_conf_schedule.h in Headers */,
+				A79A14AB1EBDBF37007AC5DD /* exploit_challenge.h in Headers */,
 				A73AA4D21CDE969B006C4C08 /* animal_care.h in Headers */,
 				A73AA4DF1CE812D3006C4C08 /* status_bar.h in Headers */,
 				A71061D51CEBAD1D005564B4 /* controls.h in Headers */,
@@ -269,6 +276,7 @@
 				A73AA4D61CE355C0006C4C08 /* menu.c in Sources */,
 				A73AA4E61CEADEA6006C4C08 /* battery.c in Sources */,
 				A77F8E2B1C02BB9800B8BE75 /* ble_device.c in Sources */,
+				A79A14AA1EBDBF37007AC5DD /* exploit_challenge.c in Sources */,
 				A73AA4D11CDE969B006C4C08 /* animal_care.c in Sources */,
 				A7ADB1EF1EA2A118004E2730 /* led_effects.c in Sources */,
 				A71061D41CEBAD1D005564B4 /* controls.c in Sources */,

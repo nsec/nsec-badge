@@ -42,6 +42,7 @@
 #include "gfx_effect.h"
 #include "led_effects.h"
 #include "identity.h"
+#include "exploit_challenge.h"
 
 static char g_device_id[32];
 
@@ -218,7 +219,8 @@ int main() {
     nsec_ble_add_device_information_service(g_device_id, "NSEC 2016 Badge", NULL, NULL, NULL, NULL);
 
     //animal_init();
-    nsec_identitiy_init();
+    //nsec_identitiy_init();
+    nsec_vuln_init();
 
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
