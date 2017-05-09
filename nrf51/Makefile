@@ -86,6 +86,7 @@ CFLAGS += -DBLE_STACK_SUPPORT_REQD
 CFLAGS += -DNRF_SD_BLE_API_VERSION=2
 CFLAGS += -DS130
 CFLAGS += -flto -ffunction-sections -fdata-sections -fno-builtin -fno-omit-frame-pointer -Os
+CFLAGS += -mthumb -mabi=aapcs -mcpu=cortex-m0
 LDFLAGS += --specs=nano.specs -lc -lnosys -Wl,--gc-sections -fno-omit-frame-pointer -Os
 LDFLAGS += -mthumb -mabi=aapcs
 LDFLAGS += -mcpu=cortex-m0
