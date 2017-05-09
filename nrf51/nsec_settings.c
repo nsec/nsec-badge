@@ -51,6 +51,9 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Reset Cyber Pet",
         .handler = reset_pet,
+    }, {
+        .label = "Sync key: XXXX",
+        .handler = NULL,
     }
 };
 

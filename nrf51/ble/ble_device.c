@@ -59,6 +59,27 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
             APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(conn, NULL, 0, 0));
             }
             break;
+
+        case BLE_GAP_EVT_ADV_REPORT: {
+            ble_gap_evt_adv_report_t * rp = &p_ble_evt->evt.gap_evt.params.adv_report;
+            int8_t i = 0;
+            while((rp->dlen - i) >= 2) {
+                const uint8_t len = rp->data[i++] - 1; // The type is included in the length
+                const uint8_t type = rp->data[i++];
+                const uint8_t * data = &rp->data[i];
+                i += len;
+
+                if(type == BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME) {
+                    if(len == 8 && data[0] == 'N' && data[1] == 'S' && data[2] == 'E' && data[3] == 'C') {
+                        uint16_t other_id = 0;
+                        if(sscanf((const char *) &data[4], "%04hx", &other_id) == 1) {
+                            // WE FOUND ONE
+                        }
+                    }
+                }
+            }
+            }
+            break;
     }
 }
 
@@ -201,6 +222,18 @@ void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {
     _nsec_ble_advertising_start();
 }
 
+void nsec_ble_scan_start(void) {
+    ble_gap_scan_params_t scan_params;
+    scan_params.active = 0;
+    scan_params.selective = 0;
+    scan_params.p_whitelist = NULL;
+    scan_params.timeout = 0;
+    scan_params.window = MSEC_TO_UNITS(40, UNIT_0_625_MS);
+    scan_params.interval = MSEC_TO_UNITS(120, UNIT_0_625_MS);
+
+    sd_ble_gap_scan_start(&scan_params);
+}
+
 int nsec_ble_init(char * device_name) {
     _nsec_ble_softdevice_init();
 
@@ -236,6 +269,7 @@ int nsec_ble_init(char * device_name) {
 
     _nsec_ble_advertising_init();
     _nsec_ble_advertising_start();
+    nsec_ble_scan_start();
     _nsec_ble_is_enabled = 1;
 
     return NRF_SUCCESS;
