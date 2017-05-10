@@ -95,12 +95,13 @@ static void _nsec_ble_vendor_evt_handler(ble_evt_t * p_ble_evt) {
             nsec_ble_characteristic_list_item_t * charac_item = NULL;
             for(int i = 0; i < NSEC_BLE_LIMIT_MAX_VENDOR_CHAR_COUNT; i++) {
                 if(_nsec_ble_vendor_services_characteristics[i].definition.char_uuid == p_ble_evt->evt.gatts_evt.params.write.uuid.uuid &&
+                   _nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle != BLE_GATT_HANDLE_INVALID &&
                    _nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle == p_ble_evt->evt.gatts_evt.params.write.handle) {
                     charac_item = &_nsec_ble_vendor_services_characteristics[i];
                     break;
                 }
             }
-            if(charac_item != NULL) {
+            if(charac_item != NULL && charac_item->definition.on_write != NULL) {
                 charac_item->definition.on_write(charac_item->service,
                                                  charac_item->definition.char_uuid,
                                                  p_ble_evt->evt.gatts_evt.params.write.data,
