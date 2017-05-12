@@ -200,13 +200,13 @@ void tsc_conversation_completed_callback() {
         // Button pressed
         if (tsc_iochannel_status[tsc_iochannel+3] == BUTTON_RELEASED) {
             tsc_iochannel_status[tsc_iochannel+3] = BUTTON_PRESSED;
-            spi_send(SPI1, BUTTON_PRESSED << 8 | (tsc_iochannel+3));
+            spi_send(SPI1, BUTTON_PRESSED << 8 | (tsc_iochannel+3+1));
         }
     }
     else if (tsc_iochannel_status[tsc_iochannel+3] == BUTTON_PRESSED) {
         // Button released
         tsc_iochannel_status[tsc_iochannel+3] = BUTTON_RELEASED;
-        spi_send(SPI1, BUTTON_RELEASED << 8 | (tsc_iochannel+3));
+        spi_send(SPI1, BUTTON_RELEASED << 8 | (tsc_iochannel+3+1));
     }
 
     tsc_clear_io_channel(1);
