@@ -90,26 +90,90 @@ static void _nsec_ble_vendor_uuid_provider(size_t * uuid_count, ble_uuid_t * uui
 }
 
 static void _nsec_ble_vendor_evt_handler(ble_evt_t * p_ble_evt) {
+    static uint8_t long_write_buffer[128];
+    static uint8_t block_is_used = 0;
     switch (p_ble_evt->header.evt_id) {
         case BLE_GATTS_EVT_WRITE: {
-            nsec_ble_characteristic_list_item_t * charac_item = NULL;
-            for(int i = 0; i < NSEC_BLE_LIMIT_MAX_VENDOR_CHAR_COUNT; i++) {
-                if(_nsec_ble_vendor_services_characteristics[i].definition.char_uuid == p_ble_evt->evt.gatts_evt.params.write.uuid.uuid &&
-                   _nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle != BLE_GATT_HANDLE_INVALID &&
-                   _nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle == p_ble_evt->evt.gatts_evt.params.write.handle) {
-                    charac_item = &_nsec_ble_vendor_services_characteristics[i];
-                    break;
+            switch(p_ble_evt->evt.gatts_evt.params.write.op) {
+                case BLE_GATTS_OP_WRITE_CMD: {
+                    nsec_ble_characteristic_list_item_t * charac_item = NULL;
+                    for(int i = 0; i < NSEC_BLE_LIMIT_MAX_VENDOR_CHAR_COUNT; i++) {
+                        if(_nsec_ble_vendor_services_characteristics[i].definition.char_uuid == p_ble_evt->evt.gatts_evt.params.write.uuid.uuid &&
+                           _nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle != BLE_GATT_HANDLE_INVALID &&
+                           _nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle == p_ble_evt->evt.gatts_evt.params.write.handle) {
+                            charac_item = &_nsec_ble_vendor_services_characteristics[i];
+                            break;
+                        }
+                    }
+                    if(charac_item != NULL && charac_item->definition.on_write != NULL) {
+                        charac_item->definition.on_write(charac_item->service,
+                                                         charac_item->definition.char_uuid,
+                                                         p_ble_evt->evt.gatts_evt.params.write.data,
+                                                         p_ble_evt->evt.gatts_evt.params.write.len);
+                    }
+                    else {
+                        // Bad send request
+                    }
                 }
+                    break;
+                case BLE_GATTS_OP_EXEC_WRITE_REQ_NOW: {
+                    nsec_ble_characteristic_list_item_t * charac_item = NULL;
+                    struct {
+                        uint16_t handle;
+                        uint16_t offset;
+                        uint16_t length;
+                        uint8_t buffer[1];
+                    } __attribute__((packed)) * packet = (void*) long_write_buffer;
+                    for(int i = 0; i < NSEC_BLE_LIMIT_MAX_VENDOR_CHAR_COUNT; i++) {
+                        if(_nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle != BLE_GATT_HANDLE_INVALID &&
+                           _nsec_ble_vendor_services_characteristics[i].sd_ble_handle.value_handle == packet->handle) {
+                            charac_item = &_nsec_ble_vendor_services_characteristics[i];
+                            break;
+                        }
+                    }
+                    if(charac_item != NULL && charac_item->definition.on_write != NULL) {
+                        uint16_t total_length = 0;
+                        while(packet->handle != BLE_GATT_HANDLE_INVALID) {
+                            void * next_packet = &packet->buffer[packet->length];
+                            if(packet->handle != charac_item->sd_ble_handle.value_handle) {
+                                // There is a problem...
+                            }
+                            if(packet->offset != total_length) {
+                                // also a problem
+                            }
+                            uint16_t packet_length = packet->length;
+                            memmove(&long_write_buffer[total_length], packet->buffer, packet->length);
+                            total_length += packet_length;
+                            packet = next_packet;
+                        }
+                        // We need to parse each packet in the long_write_buffer
+                        // We'll reuse it to avoid requiring more memory
+                        charac_item->definition.on_write(charac_item->service,
+                                                         charac_item->definition.char_uuid,
+                                                         long_write_buffer,
+                                                         total_length);
+                    }
+                }
+                    break;
             }
-            if(charac_item != NULL && charac_item->definition.on_write != NULL) {
-                charac_item->definition.on_write(charac_item->service,
-                                                 charac_item->definition.char_uuid,
-                                                 p_ble_evt->evt.gatts_evt.params.write.data,
-                                                 p_ble_evt->evt.gatts_evt.params.write.len);
+        }
+            break;
+        case BLE_EVT_USER_MEM_REQUEST: {
+            ble_user_mem_block_t block;
+            block.p_mem = long_write_buffer;
+            block.len = sizeof(long_write_buffer);
+            if (p_ble_evt->evt.common_evt.params.user_mem_request.type ==
+                    BLE_USER_MEM_TYPE_GATTS_QUEUED_WRITES && !block_is_used) {
+                sd_ble_user_mem_reply(p_ble_evt->evt.common_evt.conn_handle, &block);
+                block_is_used = 1;
             }
             else {
-                // Bad send request
+                sd_ble_user_mem_reply(p_ble_evt->evt.common_evt.conn_handle, NULL);
             }
+        }
+            break;
+        case BLE_EVT_USER_MEM_RELEASE: {
+            block_is_used = 0;
         }
             break;
     }
