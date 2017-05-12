@@ -20,8 +20,8 @@ static void clock_setup(void) {
     rcc_clock_setup_in_hsi_out_48mhz();
 
     rcc_periph_clock_enable(RCC_GPIOA);
-	rcc_periph_clock_enable(RCC_GPIOB);
-	rcc_periph_clock_enable(RCC_USART1);
+    rcc_periph_clock_enable(RCC_GPIOB);
+    rcc_periph_clock_enable(RCC_USART1);
     //rcc_periph_clock_enable(RCC_USART3);
     rcc_periph_clock_enable(RCC_TIM3);
     rcc_periph_clock_enable(RCC_TSC);
@@ -82,33 +82,33 @@ static void spi_setup(void) {
 }
 
 static void usart_setup(void) {
-	// Setup USART1 parameters. (uart on header)
-	usart_set_baudrate(USART_CONSOLE, 115200);
-	usart_set_databits(USART_CONSOLE, 8);
-	usart_set_parity(USART_CONSOLE, USART_PARITY_NONE);
-	usart_set_stopbits(USART_CONSOLE, USART_CR2_STOP_1_0BIT);
-	usart_set_mode(USART_CONSOLE, USART_MODE_TX);
-	usart_set_flow_control(USART_CONSOLE, USART_FLOWCONTROL_NONE);
+    // Setup USART1 parameters. (uart on header)
+    usart_set_baudrate(USART_CONSOLE, 115200);
+    usart_set_databits(USART_CONSOLE, 8);
+    usart_set_parity(USART_CONSOLE, USART_PARITY_NONE);
+    usart_set_stopbits(USART_CONSOLE, USART_CR2_STOP_1_0BIT);
+    usart_set_mode(USART_CONSOLE, USART_MODE_TX);
+    usart_set_flow_control(USART_CONSOLE, USART_FLOWCONTROL_NONE);
     usart_enable(USART_CONSOLE);
 
-	// Setup USART3 parameters. (uart to NRF51)
-	//usart_set_baudrate(USART3, 115200);
-	//usart_set_databits(USART3, 8);
-	//usart_set_parity(USART3, USART_PARITY_NONE);
-	//usart_set_stopbits(USART3, USART_CR2_STOP_1_0BIT);
-	//usart_set_mode(USART3, USART_MODE_TX_RX);
-	//usart_set_flow_control(USART3, USART_FLOWCONTROL_RTS_CTS);
+    // Setup USART3 parameters. (uart to NRF51)
+    //usart_set_baudrate(USART3, 115200);
+    //usart_set_databits(USART3, 8);
+    //usart_set_parity(USART3, USART_PARITY_NONE);
+    //usart_set_stopbits(USART3, USART_CR2_STOP_1_0BIT);
+    //usart_set_mode(USART3, USART_MODE_TX_RX);
+    //usart_set_flow_control(USART3, USART_FLOWCONTROL_RTS_CTS);
     //usart_enable_rx_interrupt(USART3);
     //nvic_enable_irq(NVIC_USART3_4_IRQ);
-	//usart_enable(USART3);
+    //usart_enable(USART3);
 }
 
 static void gpio_setup(void) {
     //
     // Setup GPIO for USART1
     //
-	gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO6);
-	gpio_set_af(GPIOB, GPIO_AF0, GPIO6);
+    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO6);
+    gpio_set_af(GPIOB, GPIO_AF0, GPIO6);
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO7);
     gpio_set_af(GPIOB, GPIO_AF0, GPIO7);
 
@@ -151,13 +151,13 @@ static volatile int t3ovf;
 
 // TIM3 - ping every ms
 void tim3_isr(void) {
-	TIM_SR(TIM3) &= ~TIM_SR_UIF;
-	if (t3ovf++ > 100) {
+    TIM_SR(TIM3) &= ~TIM_SR_UIF;
+    if (t3ovf++ > 100) {
         // TODO - handle scheduler here
 
         // Reset the timer overflow flag.
-		t3ovf = 0;
-	}
+        t3ovf = 0;
+    }
 }
 
 void tsc_conversation_completed_callback(void);
