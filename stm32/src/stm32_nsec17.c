@@ -61,26 +61,22 @@ static void tsc_setup(void) {
     tsc_enable();
 }
 
-void spi1_isr(void) {
-    printf("spi isr\n");
-}
-
 static void spi_setup(void) {
-    // Setup SPI1 (spi to nrf51)
-    spi_reset(SPI1);
+    spi_set_baudrate_prescaler(SPI1, SPI_CR1_BR_FPCLK_DIV_256);
     spi_set_master_mode(SPI1);
-    //spi_set_full_duplex_mode(SPI1);
-    spi_set_data_size(SPI1, SPI_CR2_DS_16BIT);
+    // Enable SSI
+    spi_set_nss_low(SPI1);
+    spi_set_full_duplex_mode(SPI1);
     spi_set_clock_polarity_0(SPI1);
     spi_set_clock_phase_0(SPI1);
-    spi_set_nss_high(SPI1);
-    spi_set_baudrate_prescaler(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_256);
+    // Disable SSM
+    spi_disable_software_slave_management(SPI1);
     spi_send_msb_first(SPI1);
     spi_disable_crc(SPI1);
-    spi_set_crcl_16bit(SPI1);
-    //spi_enable_ss_output(SPI1);
-
-    SPI1_CR2 |= SPI_CR2_NSSP;
+    spi_enable_ss_output(SPI1);
+    spi_set_data_size(SPI1, SPI_CR2_DS_16BIT);
+    // Enable NSS pulse
+    SPI_CR2(SPI1) |= SPI_CR2_NSSP;
 
     spi_enable(SPI1);
 }
@@ -108,13 +104,12 @@ static void usart_setup(void) {
 }
 
 static void gpio_setup(void) {
-	// Setup GPIO pins for USART1 transmit.
+    //
+    // Setup GPIO for USART1
+    //
 	gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO6);
-	// Setup USART1 TX pin as alternate function.
 	gpio_set_af(GPIOB, GPIO_AF0, GPIO6);
-    // Setup GPIO pins for USART1 receive.
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO7);
-    // Setup USART1 TX pin as alternate function.
     gpio_set_af(GPIOB, GPIO_AF0, GPIO7);
 
     //// Setup GPIO pins for USART3 TX.
@@ -136,7 +131,6 @@ static void gpio_setup(void) {
 #define GPIO_TSC GPIO0|GPIO1|GPIO2|GPIO3|GPIO4|GPIO5|GPIO6|GPIO7
     gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_TSC);
     gpio_set_output_options(GPIOA, GPIO_OTYPE_OD, GPIO_OSPEED_2MHZ, GPIO_TSC);
-    // Push-pull for the comparing caps
     gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO0);
     gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO7);
     gpio_set_af(GPIOA, GPIO_AF3, GPIO_TSC);
@@ -145,16 +139,17 @@ static void gpio_setup(void) {
     // Setup GPIO for SPI1
     //
     gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO15);
-    gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ, GPIO15);
+    gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, GPIO15);
     gpio_set_af(GPIOA, GPIO_AF0, GPIO15);
 #define GPIO_SPI GPIO3|GPIO4|GPIO5
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_SPI);
-    //gpio_set_output_options(GPIOB, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ, GPIO_SPI);
+    gpio_set_output_options(GPIOB, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, GPIO_SPI);
     gpio_set_af(GPIOB, GPIO_AF0, GPIO_SPI);
 }
 
 static volatile int t3ovf;
 
+// TIM3 - ping every ms
 void tim3_isr(void) {
 	TIM_SR(TIM3) &= ~TIM_SR_UIF;
 	if (t3ovf++ > 100) {
@@ -165,13 +160,10 @@ void tim3_isr(void) {
 	}
 }
 
-// Touch controller interrupt
 void tsc_conversation_completed_callback(void);
-
 void tsc_isr(void) {
     if (tsc_get_end_of_acquisition_flag()) {
         tsc_clear_end_of_acquisition_flag();
-
         tsc_conversation_completed_callback();
     }
 
@@ -180,32 +172,27 @@ void tsc_isr(void) {
     }
 }
 
+//
+// TODO: this is hackish and should be cleaned up.
+//
 #define BUTTON_RELEASED 0
 #define BUTTON_PRESSED 1
 volatile uint8_t tsc_iochannel;
 volatile uint8_t tsc_iochannel_status[6] = {0};
 
 void tsc_conversation_completed_callback() {
-    uint32_t acquisition_value = 0;
-
     // Group 1
     if (tsc_is_group_acquisition_completed(1)) {
         // Button pressed
         if (tsc_iochannel_status[tsc_iochannel] == BUTTON_RELEASED) {
             tsc_iochannel_status[tsc_iochannel] = BUTTON_PRESSED;
-            printf("button %d down\n", tsc_iochannel);
-            //uint16_t spi_data = ((tsc_iochannel+1) << 8) | BUTTON_PRESSED;
-            uint16_t spi_data = BUTTON_PRESSED << 8 | ((tsc_iochannel+1) << 8);
-            spi_send(SPI1, spi_data);
+            spi_send(SPI1, BUTTON_PRESSED << 8 | (tsc_iochannel+1));
         }
     }
     else if (tsc_iochannel_status[tsc_iochannel] == BUTTON_PRESSED) {
         // Button released
         tsc_iochannel_status[tsc_iochannel] = BUTTON_RELEASED;
-        printf("button %d up\n", tsc_iochannel);
-        //uint16_t spi_data = ((tsc_iochannel+1) << 8) | BUTTON_RELEASED;
-        uint16_t spi_data = BUTTON_RELEASED << 8 | ((tsc_iochannel+1) << 8);
-        spi_send(SPI1, spi_data);
+        spi_send(SPI1, BUTTON_RELEASED << 8 | (tsc_iochannel+1));
     }
 
     // Group 2
@@ -213,17 +200,13 @@ void tsc_conversation_completed_callback() {
         // Button pressed
         if (tsc_iochannel_status[tsc_iochannel+3] == BUTTON_RELEASED) {
             tsc_iochannel_status[tsc_iochannel+3] = BUTTON_PRESSED;
-            printf("button %d down\n", tsc_iochannel+3);
-            uint16_t spi_data = ((tsc_iochannel+3) << 8) | BUTTON_PRESSED;
-            spi_send(SPI1, spi_data);
+            spi_send(SPI1, BUTTON_PRESSED << 8 | (tsc_iochannel+3));
         }
     }
     else if (tsc_iochannel_status[tsc_iochannel+3] == BUTTON_PRESSED) {
         // Button released
         tsc_iochannel_status[tsc_iochannel+3] = BUTTON_RELEASED;
-        printf("button %d up\n", tsc_iochannel+3);
-        uint16_t spi_data = ((tsc_iochannel+3) << 8) | BUTTON_RELEASED;
-        spi_send(SPI1, spi_data);
+        spi_send(SPI1, BUTTON_RELEASED << 8 | (tsc_iochannel+3));
     }
 
     tsc_clear_io_channel(1);
@@ -302,12 +285,6 @@ int main(void) {
     say_hello();
 
     while (true) {
-        //spi_send(SPI1, 0x01);
-	uint32_t i=0;
-        while (i<100000) {
-            __asm("nop");
-            i++;
-        }
     }
 
     return 0;
