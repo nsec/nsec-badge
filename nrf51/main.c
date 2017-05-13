@@ -162,9 +162,6 @@ static menu_item_s main_menu_items[] = {
         .label = "Conference schedule",
         .handler = open_conference_schedule,
     }, {
-        .label = "My Cyber Pet",
-        .handler = open_animal_care,
-    }, {
         .label = "Settings",
         .handler = open_settings,
     }
