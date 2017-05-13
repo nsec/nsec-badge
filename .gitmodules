@@ -1,3 +1,7 @@
 [submodule "libopencm3"]
 	path = stm32/libopencm3
 	url = https://github.com/libopencm3/libopencm3
+[submodule "stm32/blackmagic"]
+	path = stm32/blackmagic
+	url = git@github.com:bvanheu/nsec-blackmagic.git
+	branch = nsec17
