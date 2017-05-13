@@ -19,7 +19,7 @@
 
 BINARY = stm32_nsec17
 
-OBJS += tsc.o
+OBJS += tsc.o touch_handler.o
 
 OPENCM3_DIR=../libopencm3
 LDSCRIPT = ../nsec17_badge.ld
