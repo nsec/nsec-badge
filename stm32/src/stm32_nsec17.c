@@ -4,8 +4,6 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
-#include <libopencm3/stm32/tsc.h>
-#include <libopencm3/stm32/spi.h>
 
 #include "tsc_n.h"
 #include "touch_handler.h"
