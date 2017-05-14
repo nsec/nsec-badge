@@ -24,4 +24,8 @@ OBJS += tsc.o touch_handler.o usart.o
 OPENCM3_DIR=../libopencm3
 LDSCRIPT = ../nsec17_badge.ld
 
+LDFLAGS += -L../blackmagic/src
+LDLIBS += -lblackmagic
+CPPFLAGS += -I../blackmagic/src/include
+
 include ../libopencm3.target.mk
