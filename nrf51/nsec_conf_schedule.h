@@ -1,6 +1,6 @@
 //
 //  nsec_conf_schedule.h
-//  nsec16
+//  nsec17
 //
 //  Created by Marc-Etienne M.Léveillé on 2016-05-13.
 //
