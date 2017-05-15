@@ -2,10 +2,10 @@ nrf51/_build
 nrf51/*.jlink
 nrf51/images/*.c
 nrf51/nordicsdk
-stm32/build
-stm32/obj
-stm32/dep
-stm32/cube
+stm32/src/*.o
+stm32/src/*.d
+stm32/src/*.elf
+stm32/src/*.map
 xcuserdata
 nrf51/*license-agreement.txt
 nrf51/flash_config.gdb
