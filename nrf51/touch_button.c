@@ -114,6 +114,8 @@ uint32_t touch_init(void) {
     spi_slave_config.def              = DEF_CHARACTER;
     spi_slave_config.orc              = ORC_CHARACTER;
     spi_slave_config.csn_pullup       = NRF_GPIO_PIN_PULLUP;
+    spi_slave_config.miso_drive       = NRF_GPIO_PIN_S0S1;
+    spi_slave_config.irq_priority     = APP_IRQ_PRIORITY_MID;
 
     err_code = nrf_drv_spis_init(&spis, &spi_slave_config, spi_slave_event_handle);
     APP_ERROR_CHECK(err_code);
