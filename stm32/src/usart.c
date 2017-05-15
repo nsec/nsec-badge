@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "usart.h"
+
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
 
 #define USART_CONSOLE USART1
+
+int _write(int file, char *ptr, int len);
 
 static void usart_clock_setup(void) {
     rcc_periph_clock_enable(RCC_USART1);
