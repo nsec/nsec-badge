@@ -27,5 +27,8 @@ LDSCRIPT = ../nsec17_badge.ld
 LDFLAGS += -L../blackmagic/src
 LDLIBS += -lblackmagic
 CPPFLAGS += -I../blackmagic/src/include
+CPPFLAGS += -I../blackmagic/src/platforms/common
+CPPFLAGS += -I../blackmagic/src/platforms/stm32
+CPPFLAGS += -I../blackmagic/src/platforms/nsec17
 
 include ../libopencm3.target.mk
