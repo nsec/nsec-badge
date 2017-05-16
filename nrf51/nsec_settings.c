@@ -14,6 +14,8 @@
 #include "status_bar.h"
 #include "app_glue.h"
 #include "controls.h"
+#include "identity.h"
+#include <stdio.h>
 
 static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
@@ -34,6 +36,8 @@ static enum setting_state _state = SETTING_STATE_CLOSED;
 
 static void setting_handle_buttons(button_t button);
 
+static char sync_key_string[] = "Sync key: XXXX";
+
 static menu_item_s settings_items[] = {
     {
         .label = "Toggle Bluetooth",
@@ -48,7 +52,7 @@ static menu_item_s settings_items[] = {
         .label = "Credit",
         .handler = show_credit,
     }, {
-        .label = "Sync key: XXXX",
+        .label = sync_key_string,
         .handler = NULL,
     }
 };
@@ -90,6 +94,9 @@ static void flashlight(uint8_t item) {
 }
 
 void nsec_setting_show(void) {
+    char key[8];
+    nsec_identity_get_unlock_key(key, sizeof(key));
+    snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
     gfx_fillRect(0, 8, 128, 65 - 8, BLACK);
     menu_init(0, 12, 128, 64 - 12, sizeof(settings_items) / sizeof(settings_items[0]), settings_items);
     nsec_controls_add_handler(setting_handle_buttons);
