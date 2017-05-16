@@ -111,10 +111,10 @@ TARGETS=$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.elf $(PROJECT_NAME)
 $(call define_target, $(PROJECT_NAME))
 
 %_bitmap.c: %.png
-	python gen_image.py -i $< -o $@
+	python2 gen_image.py -i $< -o $@
 
 images/font_bitmap.c: images/font.png
-	python gen_image.py -i $< -o $@ -r
+	python2 gen_image.py -i $< -o $@ -r
 
 bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard images/*.png))
 
