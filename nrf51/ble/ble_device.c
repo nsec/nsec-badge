@@ -27,6 +27,7 @@ static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt);
 static void _nsec_ble_advertising_start(void);
+static void nsec_ble_scan_start(void);
 
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
     pm_on_ble_evt(p_ble_evt);
@@ -177,10 +178,12 @@ static void _nsec_ble_advertising_init(void)
 uint8_t nsec_ble_toggle(void) {
     if(_nsec_ble_is_enabled) {
         sd_ble_gap_adv_stop();
+        sd_ble_gap_scan_stop();
         _nsec_ble_is_enabled = 0;
     }
     else {
         _nsec_ble_advertising_start();
+        nsec_ble_scan_start();
         _nsec_ble_is_enabled = 1;
     }
     return _nsec_ble_is_enabled;
@@ -230,7 +233,7 @@ void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {
     _nsec_ble_advertising_start();
 }
 
-void nsec_ble_scan_start(void) {
+static void nsec_ble_scan_start(void) {
     ble_gap_scan_params_t scan_params;
     scan_params.active = 0;
     scan_params.selective = 0;
