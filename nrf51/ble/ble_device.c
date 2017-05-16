@@ -23,6 +23,7 @@
 static ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
 static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
 static uint8_t _nsec_ble_is_enabled = 0;
+static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt);
 static void _nsec_ble_advertising_start(void);
@@ -61,6 +62,9 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
             break;
 
         case BLE_GAP_EVT_ADV_REPORT: {
+            if(_nsec_ble_scan_callback == NULL) {
+                break;
+            }
             ble_gap_evt_adv_report_t * rp = &p_ble_evt->evt.gap_evt.params.adv_report;
             int8_t i = 0;
             while((rp->dlen - i) >= 2) {
@@ -73,7 +77,7 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
                     if(len == 8 && data[0] == 'N' && data[1] == 'S' && data[2] == 'E' && data[3] == 'C') {
                         uint16_t other_id = 0;
                         if(sscanf((const char *) &data[4], "%04hx", &other_id) == 1) {
-                            // WE FOUND ONE
+                            _nsec_ble_scan_callback(other_id, rp->peer_addr.addr, rp->rssi);
                         }
                     }
                 }
@@ -208,6 +212,10 @@ void nsec_ble_register_evt_handler(ble_evt_handler_t handler) {
             break;
         }
     }
+}
+
+void nsec_ble_set_scan_callback(nsec_ble_found_nsec_badge_callback callback) {
+    _nsec_ble_scan_callback = callback;
 }
 
 void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {

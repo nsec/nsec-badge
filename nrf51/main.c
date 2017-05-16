@@ -42,6 +42,7 @@
 #include "gfx_effect.h"
 #include "led_effects.h"
 #include "identity.h"
+#include "nsec_nearby_badges.h"
 
 static char g_device_id[32];
 
@@ -224,6 +225,7 @@ int main() {
 
     show_main_menu();
     nsec_identity_draw();
+    nsec_nearby_badges_init();
 
     nsec_led_set_delay(100);
     nsec_led_set_effect(NSEC_LED_EFFECT_SPIN);
