@@ -14,7 +14,6 @@
 #include "status_bar.h"
 #include "app_glue.h"
 #include "controls.h"
-#include "animal_care.h"
 
 static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
@@ -48,9 +47,6 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Credit",
         .handler = show_credit,
-    }, {
-        .label = "Reset Cyber Pet",
-        .handler = reset_pet,
     }, {
         .label = "Sync key: XXXX",
         .handler = NULL,
@@ -91,14 +87,6 @@ static void flashlight(uint8_t item) {
     gfx_fillScreen(WHITE);
     gfx_update();
     _state = SETTING_STATE_FLASHLIGHT;
-}
-
-static void reset_pet(uint8_t item) {
-    animal_state_reset();
-    gfx_setCursor(17 * 6, 12 + 8 * 4);
-    gfx_setTextBackgroundColor(WHITE, BLACK);
-    gfx_puts("DONE");
-    gfx_update();
 }
 
 void nsec_setting_show(void) {

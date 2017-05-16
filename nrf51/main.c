@@ -32,7 +32,6 @@
 #include "ssd1306.h"
 
 #include "images/nsec_logo_bitmap.c"
-#include "animal_care.h"
 #include "status_bar.h"
 #include "menu.h"
 #include "nsec_conf_schedule.h"
@@ -168,11 +167,6 @@ static menu_item_s main_menu_items[] = {
     }
 };
 
-void open_animal_care(uint8_t item) {
-    menu_close();
-    animal_show();
-}
-
 void open_conference_schedule(uint8_t item) {
     menu_close();
     nsec_schedule_show_dates();
@@ -215,7 +209,6 @@ int main() {
     nsec_ble_init(g_device_id);
     nsec_ble_add_device_information_service(g_device_id, "NSEC 2016 Badge", NULL, NULL, NULL, NULL);
 
-    //animal_init();
     nsec_identitiy_init();
 
     nsec_status_bar_init();
