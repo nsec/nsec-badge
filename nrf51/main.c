@@ -158,12 +158,6 @@ static void nsec_intro(void) {
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
-    for(uint8_t noise = 128; noise <= 128; noise -= 16) {
-        gfx_fillScreen(BLACK);
-        nsec_identity_draw();
-        nsec_gfx_effect_addNoise(noise);
-        gfx_update();
-    }
 }
 
 void open_animal_care(uint8_t item);
@@ -193,8 +187,12 @@ void open_settings(uint8_t item) {
 }
 
 void show_main_menu(void) {
-    gfx_fillScreen(BLACK);
-    nsec_intro();
+    for(uint8_t noise = 128; noise <= 128; noise -= 16) {
+        gfx_fillScreen(BLACK);
+        nsec_identity_draw();
+        nsec_gfx_effect_addNoise(noise);
+        gfx_update();
+    }
     nsec_status_bar_ui_redraw();
     menu_init(0, 64-8, 128, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
     is_at_main_menu = true;
@@ -234,7 +232,9 @@ int main() {
     nsec_status_set_badge_class("");
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
+    nsec_intro();
     show_main_menu();
+
     nsec_identity_draw();
     nsec_nearby_badges_init();
 
