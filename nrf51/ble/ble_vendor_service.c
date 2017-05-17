@@ -95,7 +95,7 @@ static void _nsec_ble_vendor_evt_handler(ble_evt_t * p_ble_evt) {
     switch (p_ble_evt->header.evt_id) {
         case BLE_GATTS_EVT_WRITE: {
             switch(p_ble_evt->evt.gatts_evt.params.write.op) {
-                case BLE_GATTS_OP_WRITE_CMD: {
+                case BLE_GATTS_OP_WRITE_REQ: {
                     nsec_ble_characteristic_list_item_t * charac_item = NULL;
                     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_VENDOR_CHAR_COUNT; i++) {
                         if(_nsec_ble_vendor_services_characteristics[i].definition.char_uuid == p_ble_evt->evt.gatts_evt.params.write.uuid.uuid &&
