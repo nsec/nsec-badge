@@ -43,7 +43,7 @@
 #include "identity.h"
 #include "nsec_nearby_badges.h"
 
-static char g_device_id[32];
+static char g_device_id[10];
 
 bool is_at_main_menu = false;
 
