@@ -23,7 +23,10 @@ static menu_item_s days_schedule_items[] = {
     }, {
         .label = "Friday, May 19th 2017",
         .handler = nsec_schedule_show_talks,
-    },
+    }, {
+        .label = "Workshops",
+        .handler = nsec_schedule_show_talks,
+    }
 };
 
 static menu_item_s schedule_items_may_18[] = {
@@ -49,10 +52,10 @@ static menu_item_s schedule_items_may_18[] = {
         .label = "16:30 Murder Mystery - How Vulnerability Intelligence is Poisoning your Information Security Program",
         .handler = nsec_schedule_show_details
     }, {
-        .label = "17:30 Dinner Break - Transition to NorthSec Conference Party",
-        .handler = nsec_schedule_show_details
+        .label = "17:30 Dinner Break",
+        .handler = NULL
     }, {
-        .label = "19:30 NorthSec Conference Party",
+        .label = "19:30 NorthSec Party!",
         .handler = NULL
     },
 };
@@ -87,8 +90,30 @@ static menu_item_s schedule_items_may_19[] = {
         .handler = nsec_schedule_show_details
     }, {
         .label = "17:30 Closing Speeches",
-        .handler = nsec_schedule_show_details
+        .handler = NULL
     },
+};
+
+static menu_item_s schedule_items_workshops[] = {
+    {
+        .label = "Thursday",
+        .handler = NULL
+    }, {
+        .label = "10:00 Introduction to Assembly Language and Shellcoding",
+        .handler = nsec_schedule_show_details
+    }, {
+        .label = "14:30 Automating Detection, Investigation and Mitigation with LimaCharlie",
+        .handler = nsec_schedule_show_details
+    }, {
+        .label = "Friday",
+        .handler = NULL
+    }, {
+        .label = "10:00 Cracking Custom Encryption - An Intuitive Approach to Uncovering Malware's Protected Data",
+        .handler = nsec_schedule_show_details
+    }, {
+        .label = "14:30 Script Engine Hacking For Fun And Profit",
+        .handler = nsec_schedule_show_details
+    }
 };
 
 const char * presenters_may_18[] = {
@@ -111,6 +136,14 @@ const char * presenters_may_19[] = {
     "Jackson Thuraisamy & Jason Tran",
     "Pierre-Alexandre Braeken",
 };
+const char * presenters_workshops[] = {
+    NULL,
+    "Charles F. Hamilton & Peter Heppenstall",
+    "Maxime Lamothe-Brassard",
+    NULL,
+    "Pavel Asinovsky & Magal Baz",
+    "Jean-Marc Le Blanc & Israel Halle",
+};
 
 const char * descriptions_may_18[] = {
     "Dismissing or laughing off concerns about what it does to a person to know critical secrets does not lessen the impact on life, work, and relationships of building a different map of reality than \"normal people\" use. One has to calibrate narratives to what another believes. One has to live defensively, warily. This causes at the least cognitive dissonance which some manage by denial. But refusing to feel the pain does not make it go away. It just intensifies the consequences when they erupt.",
@@ -132,6 +165,14 @@ const char * descriptions_may_19[] = {
     "Hackers try to find the easiest ways to achieve the most impact. When it comes to credit card fraud, compromising Point of Sale (PoS) systems is the latest trend. The presenters will share their experience on how attackers can exploit both technical and policy gaps to breach organizations. This talk will cover approaches to physical security, kiosk breakouts, and the extraction of sensitive data. It's laced with real-life examples, including a detailed discussion of recently disclosed critical vulnerabilities in Oracle's hotel management platform.",
     "Imagine being attacked by legitimate software tools that cannot be detected by usual defender tools. How bad could it be to be attacked by malicious threat actors only sending bytes to be read and bytes to be written in order to achieve advanced attacks? The most dangerous threat is the one you can't see. At a time when it is not obvious to detect memory attacks using API like VirtualAlloc, what would be worse than having to detect something like \"f 0xffffe001`0c79ebe8+0x8 L4 0xe8 0xcb 0x04 0x10\"? We will be able to demonstrate that we can achieve every kind of attacks you can imagine using only PowerShell and a Microsoft Signed Debugger. We can retrieve passwords from the userland memory, execute shellcode by dynamically parsing loaded PE or attack the kernel achieving advanced persistence inside any system.",
 };
+const char * descriptions_workshops[] = {
+    NULL,
+    "The purpose of this workshop is to familiarize participants with assembly language. At the end of the workshop, participants will be able to understand shellcode and optimize it to avoid null bytes or blacklisted characters.",
+    "The workshop will begin with an overview of the various detection and automation mechanisms available in LimaCharlie.",
+    NULL,
+    "As banking fraud researchers, we take part in a never-ending chase after new configurations of banking malware. We strive to have the upper hand, by figuring out where the configurations are hidden and how they are encrypted.",
+    "More and more applications are allowing execution of untrusted code in their context to extend themselves. Whether it’s Javascript in a web browser, Lua plugins in video game or ruby to customize business rules, it is important to keep your infrastructure secure when running them.",
+};
 
 struct schedule_day_s {
     menu_item_s * menu_items;
@@ -151,7 +192,12 @@ struct schedule_day_s nsec_schedule[] = {
         .presenters = presenters_may_19,
         .descriptions = descriptions_may_19,
         .item_count = sizeof(schedule_items_may_19) / sizeof(schedule_items_may_19[0]),
-    },
+    }, {
+        .menu_items = schedule_items_workshops,
+        .presenters = presenters_workshops,
+        .descriptions = descriptions_workshops,
+        .item_count = sizeof(schedule_items_workshops) / sizeof(schedule_items_workshops[0]),
+    }
 };
 
 enum schedule_state {
@@ -215,7 +261,7 @@ void _nsec_schedule_show_details(uint8_t day, uint8_t item) {
 }
 
 void nsec_schedule_show_details(uint8_t item) {
-    if(item < nsec_schedule[date_selected].item_count - 1) {
+    if(item < nsec_schedule[date_selected].item_count) {
         _nsec_schedule_show_details(date_selected, item);
     }
 }
