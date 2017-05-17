@@ -72,10 +72,10 @@ static void show_credit(uint8_t item) {
     gfx_fillRect(0, 8, 128, 56, BLACK);
     gfx_setCursor(0, 8);
     gfx_setTextBackgroundColor(WHITE, BLACK);
-    gfx_puts("nsec 2016 badge team:");
-    gfx_puts("@bvanheu (hw, sw)\n");
-    gfx_puts("@marc_etienne_ (sw)\n");
-    gfx_puts("Cat based on work by Ate-Bit (CC BY-NC-ND 3.0) on DevianArt.");
+    gfx_puts("nsec 2017 badge team:");
+    gfx_puts("Eric Tramblay\n");
+    gfx_puts("@bvanheu\n");
+    gfx_puts("@marc_etienne_");
     gfx_update();
 }
 

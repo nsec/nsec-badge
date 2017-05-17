@@ -223,7 +223,7 @@ int main() {
     application_timers_start();
 
     nsec_ble_init(g_device_id);
-    nsec_ble_add_device_information_service(g_device_id, "NSEC 2016 Badge", NULL, NULL, NULL, NULL);
+    nsec_ble_add_device_information_service(g_device_id, "NSEC 2017 Badge", NULL, NULL, NULL, NULL);
 
     nsec_identitiy_init();
 
