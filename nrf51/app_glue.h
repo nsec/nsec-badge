@@ -10,5 +10,6 @@
 #define app_glue_h
 
 void show_main_menu(void);
+extern bool is_at_main_menu;
 
 #endif /* app_glue_h */

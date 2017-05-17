@@ -21,6 +21,7 @@ static const uint8_t led_pins[] = {
 static const size_t led_count = (sizeof(led_pins) / sizeof(led_pins[0]));
 
 static nsec_led_effect current_effect = NSEC_LED_EFFECT_ALL_OFF;
+static uint32_t current_delay = 0;
 
 static void _nsec_led_timer_callback(void * context) {
     switch (current_effect) {
@@ -43,8 +44,11 @@ static void _nsec_led_timer_callback(void * context) {
 }
 
 void nsec_led_set_delay(uint32_t milliseconds) {
-    app_timer_stop(led_timer);
-    APP_ERROR_CHECK(app_timer_start(led_timer, APP_TIMER_TICKS(milliseconds, 0), NULL));
+    if(milliseconds != current_delay) {
+        app_timer_stop(led_timer);
+        APP_ERROR_CHECK(app_timer_start(led_timer, APP_TIMER_TICKS(milliseconds, 0), NULL));
+        current_delay = milliseconds;
+    }
 }
 
 void nsec_led_init(void) {

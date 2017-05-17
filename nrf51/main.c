@@ -32,7 +32,6 @@
 #include "ssd1306.h"
 
 #include "images/nsec_logo_bitmap.c"
-#include "animal_care.h"
 #include "status_bar.h"
 #include "menu.h"
 #include "nsec_conf_schedule.h"
@@ -42,9 +41,11 @@
 #include "gfx_effect.h"
 #include "led_effects.h"
 #include "identity.h"
+#include "nsec_nearby_badges.h"
 
-static char g_device_id[32];
+static char g_device_id[10];
 
+bool is_at_main_menu = false;
 
 void wdt_init(void)
 {
@@ -151,6 +152,18 @@ static void nsec_intro(void) {
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
+    for(uint8_t noise = 0; noise <= 128; noise += 8) {
+        gfx_fillScreen(BLACK);
+        gfx_drawBitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, WHITE);
+        nsec_gfx_effect_addNoise(noise);
+        gfx_update();
+    }
+    for(uint8_t noise = 128; noise <= 128; noise -= 16) {
+        gfx_fillScreen(BLACK);
+        nsec_identity_draw();
+        nsec_gfx_effect_addNoise(noise);
+        gfx_update();
+    }
 }
 
 void open_animal_care(uint8_t item);
@@ -167,18 +180,15 @@ static menu_item_s main_menu_items[] = {
     }
 };
 
-void open_animal_care(uint8_t item) {
-    menu_close();
-    animal_show();
-}
-
 void open_conference_schedule(uint8_t item) {
     menu_close();
+    is_at_main_menu = false;
     nsec_schedule_show_dates();
 }
 
 void open_settings(uint8_t item) {
     menu_close();
+    is_at_main_menu = false;
     nsec_setting_show();
 }
 
@@ -187,6 +197,7 @@ void show_main_menu(void) {
     nsec_intro();
     nsec_status_bar_ui_redraw();
     menu_init(0, 64-8, 128, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
+    is_at_main_menu = true;
 }
 
 /**
@@ -212,9 +223,8 @@ int main() {
     application_timers_start();
 
     nsec_ble_init(g_device_id);
-    nsec_ble_add_device_information_service(g_device_id, "NSEC 2016 Badge", NULL, NULL, NULL, NULL);
+    nsec_ble_add_device_information_service(g_device_id, "NSEC 2017 Badge", NULL, NULL, NULL, NULL);
 
-    //animal_init();
     nsec_identitiy_init();
 
     nsec_status_bar_init();
@@ -224,6 +234,7 @@ int main() {
 
     show_main_menu();
     nsec_identity_draw();
+    nsec_nearby_badges_init();
 
     nsec_led_set_delay(100);
     nsec_led_set_effect(NSEC_LED_EFFECT_SPIN);

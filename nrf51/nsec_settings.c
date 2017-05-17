@@ -14,7 +14,8 @@
 #include "status_bar.h"
 #include "app_glue.h"
 #include "controls.h"
-#include "animal_care.h"
+#include "identity.h"
+#include <stdio.h>
 
 static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
@@ -35,6 +36,8 @@ static enum setting_state _state = SETTING_STATE_CLOSED;
 
 static void setting_handle_buttons(button_t button);
 
+static char sync_key_string[] = "Sync key: XXXX";
+
 static menu_item_s settings_items[] = {
     {
         .label = "Toggle Bluetooth",
@@ -49,8 +52,8 @@ static menu_item_s settings_items[] = {
         .label = "Credit",
         .handler = show_credit,
     }, {
-        .label = "Reset Cyber Pet",
-        .handler = reset_pet,
+        .label = sync_key_string,
+        .handler = NULL,
     }
 };
 
@@ -69,10 +72,10 @@ static void show_credit(uint8_t item) {
     gfx_fillRect(0, 8, 128, 56, BLACK);
     gfx_setCursor(0, 8);
     gfx_setTextBackgroundColor(WHITE, BLACK);
-    gfx_puts("nsec 2016 badge team:");
-    gfx_puts("@bvanheu (hw, sw)\n");
-    gfx_puts("@marc_etienne_ (sw)\n");
-    gfx_puts("Cat based on work by Ate-Bit (CC BY-NC-ND 3.0) on DevianArt.");
+    gfx_puts("nsec 2017 badge team:");
+    gfx_puts("Eric Tramblay\n");
+    gfx_puts("@bvanheu\n");
+    gfx_puts("@marc_etienne_");
     gfx_update();
 }
 
@@ -90,15 +93,10 @@ static void flashlight(uint8_t item) {
     _state = SETTING_STATE_FLASHLIGHT;
 }
 
-static void reset_pet(uint8_t item) {
-    animal_state_reset();
-    gfx_setCursor(17 * 6, 12 + 8 * 4);
-    gfx_setTextBackgroundColor(WHITE, BLACK);
-    gfx_puts("DONE");
-    gfx_update();
-}
-
 void nsec_setting_show(void) {
+    char key[8];
+    nsec_identity_get_unlock_key(key, sizeof(key));
+    snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
     gfx_fillRect(0, 8, 128, 65 - 8, BLACK);
     menu_init(0, 12, 128, 64 - 12, sizeof(settings_items) / sizeof(settings_items[0]), settings_items);
     nsec_controls_add_handler(setting_handle_buttons);
