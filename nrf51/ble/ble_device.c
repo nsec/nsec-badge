@@ -240,7 +240,7 @@ static void nsec_ble_scan_start(void) {
     scan_params.p_whitelist = NULL;
     scan_params.timeout = 0;
     scan_params.window = MSEC_TO_UNITS(40, UNIT_0_625_MS);
-    scan_params.interval = MSEC_TO_UNITS(120, UNIT_0_625_MS);
+    scan_params.interval = MSEC_TO_UNITS(240, UNIT_0_625_MS);
 
     sd_ble_gap_scan_start(&scan_params);
 }
