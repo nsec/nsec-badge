@@ -73,7 +73,7 @@ static void show_credit(uint8_t item) {
     gfx_setCursor(0, 8);
     gfx_setTextBackgroundColor(WHITE, BLACK);
     gfx_puts("nsec 2017 badge team:");
-    gfx_puts("Eric Tramblay\n");
+    gfx_puts("Eric Tremblay\n");
     gfx_puts("@bvanheu\n");
     gfx_puts("@marc_etienne_");
     gfx_update();
