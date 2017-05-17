@@ -90,7 +90,7 @@ static void _nsec_ble_vendor_uuid_provider(size_t * uuid_count, ble_uuid_t * uui
 }
 
 static void _nsec_ble_vendor_evt_handler(ble_evt_t * p_ble_evt) {
-    static uint8_t long_write_buffer[128];
+    static uint8_t long_write_buffer[256];
     static uint8_t block_is_used = 0;
     switch (p_ble_evt->header.evt_id) {
         case BLE_GATTS_EVT_WRITE: {
