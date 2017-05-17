@@ -53,12 +53,8 @@ void nsec_nearby_badges_callback(uint16_t badge_id, uint8_t addr[], int8_t rssi)
         if(_nearby_badges[i].timeout_in_sec == 0) {
             _nearby_badges[i].id = badge_id;
             _nearby_badges[i].timeout_in_sec = 60;
+            break;
         }
-        char buf[20];
-        snprintf(buf, 20, "New: NSEC%04X", badge_id);
-        gfx_setCursor(8, 8);
-        gfx_puts(buf);
-        gfx_update();
     }
 }
 
@@ -66,10 +62,10 @@ static void nsec_nearby_update_led_pettern(void) {
     uint32_t delay;
     uint8_t count = nsec_nearby_badges_current_count();
     if(count < 5) {
-        delay = 800 - 100 * count;
+        delay = 700 - (100 * count);
     }
     else {
-        delay = 400 - 50 * count;
+        delay = 300 - (50 * (count - 4));
     }
     nsec_led_set_delay(delay);
 }
