@@ -19,32 +19,34 @@ static void touch_clock_setup(void) {
 }
 
 static void touch_tsc_setup(void) {
-    // 16 cycles
-    tsc_set_high_charge_pulse_transfer(0xf);
-    tsc_set_low_charge_pulse_transfer(0xf);
+    tsc_set_high_charge_pulse_transfer(TSC_CTP_16);
+    tsc_set_low_charge_pulse_transfer(TSC_CTP_16);
+    tsc_set_spread_spectrum_prescaler(TSC_SSPSC_2);
     tsc_set_spread_spectrum_deviation(64);
-    // DIV1
-    tsc_set_spread_spectrum_prescaler(1);
     tsc_enable_spread_spectrum();
-    // DIV64
-    tsc_set_pulse_generator_prescaler(6);
-    // 511
-    tsc_set_max_count_value(1);
+    tsc_set_pulse_generator_prescaler(TSC_PGPSC_64);
+    tsc_set_max_count_value(TSC_MCV_255);
     tsc_set_io_mode_pushpull_low();
 
-    // Clear interrupt flag
+    // Clear interrupt flags
     tsc_enable_end_of_acquisition_interrupt();
     tsc_clear_end_of_acquisition_flag();
 
-    tsc_clear_schmitt_trigger_hyst(1);
+    // Clear Schmitt trigger
+    // Excerpt from the doc:
+    //  In order to improve the system immunity, the Schmitt trigger
+    //  hysteresis of the GPIOs controlled by the TSC must be disabled by
+    //  resetting the corresponding Gx_IOy bit in the
+    tsc_clear_schmitt_trigger_hyst(TSC_GROUP_INDEX_1);
+    tsc_clear_schmitt_trigger_hyst(TSC_GROUP_INDEX_2);
 
-    // Enable groups
-    tsc_enable_group(1);
-    tsc_enable_group(2);
-    tsc_enable_io_sampling(1, 1);
-    tsc_enable_io_sampling(2, 4);
-    tsc_enable_io_channel(1, 2);
-    tsc_enable_io_channel(2, 1);
+    // Enable/configure sampling/channel IOs
+    tsc_enable_group(TSC_GROUP_INDEX_1);
+    tsc_enable_group(TSC_GROUP_INDEX_2);
+    tsc_enable_io_sampling(TSC_GROUP_INDEX_1, 1);
+    tsc_enable_io_sampling(TSC_GROUP_INDEX_2, 4);
+    tsc_enable_io_channel(TSC_GROUP_INDEX_1, 2);
+    tsc_enable_io_channel(TSC_GROUP_INDEX_2, 1);
 
     nvic_enable_irq(NVIC_TSC_IRQ);
 
@@ -75,12 +77,24 @@ static void touch_gpio_setup(void) {
     //
     // Setup GPIO for TSC
     //
-#define GPIO_TSC GPIO0|GPIO1|GPIO2|GPIO3|GPIO4|GPIO5|GPIO6|GPIO7
-    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_TSC);
-    gpio_set_output_options(GPIOA, GPIO_OTYPE_OD, GPIO_OSPEED_2MHZ, GPIO_TSC);
-    gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO0);
-    gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO7);
-    gpio_set_af(GPIOA, GPIO_AF3, GPIO_TSC);
+
+
+    //  To allow the control of the sampling capacitor I/O by the TSC
+    //  peripheral, the corresponding GPIO must be first set to alternate
+    //  output open drain mode
+    //  ...
+    //  To allow the control of the channel I/O by the TSC peripheral,
+    //  the corresponding GPIO must be first set to alternate output
+    //  push-pull mode
+#define GPIO_TSC_CHANNEL    GPIO1|GPIO2|GPIO3|GPIO4|GPIO5|GPIO6
+#define GPIO_TSC_SAMPLING   GPIO0|GPIO7
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE,
+            GPIO_TSC_SAMPLING|GPIO_TSC_CHANNEL);
+    gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_LOW,
+            GPIO_TSC_CHANNEL);
+    gpio_set_output_options(GPIOA, GPIO_OTYPE_OD, GPIO_OSPEED_LOW,
+            GPIO_TSC_SAMPLING);
+    gpio_set_af(GPIOA, GPIO_AF3, GPIO_TSC_CHANNEL|GPIO_TSC_SAMPLING);
 
     //
     // Setup GPIO for SPI1
@@ -114,52 +128,64 @@ volatile uint8_t tsc_iochannel;
 volatile uint8_t tsc_iochannel_status[6] = {0};
 
 static void tsc_conversation_completed_callback() {
+    uint32_t acquisition_value;
+
     // Group 1
-    if (tsc_is_group_acquisition_completed(1)) {
-        // Button pressed
-        if (tsc_iochannel_status[tsc_iochannel] == BUTTON_RELEASED) {
-            tsc_iochannel_status[tsc_iochannel] = BUTTON_PRESSED;
-            spi_send(SPI1, BUTTON_PRESSED << 8 | (tsc_iochannel+1));
+    if (tsc_is_group_acquisition_completed(TSC_GROUP_INDEX_1)) {
+        acquisition_value = tsc_group_read_counter(TSC_GROUP_INDEX_1);
+        if (acquisition_value < 3) {
+            // Button pressed
+            if (tsc_iochannel_status[tsc_iochannel] == BUTTON_RELEASED) {
+                tsc_iochannel_status[tsc_iochannel] = BUTTON_PRESSED;
+                spi_send(SPI1, BUTTON_PRESSED << 8 | (tsc_iochannel+1));
+            }
         }
-    }
-    else if (tsc_iochannel_status[tsc_iochannel] == BUTTON_PRESSED) {
-        // Button released
-        tsc_iochannel_status[tsc_iochannel] = BUTTON_RELEASED;
-        spi_send(SPI1, BUTTON_RELEASED << 8 | (tsc_iochannel+1));
+        else {
+            // Button released
+            if (tsc_iochannel_status[tsc_iochannel] == BUTTON_PRESSED) {
+                tsc_iochannel_status[tsc_iochannel] = BUTTON_RELEASED;
+                spi_send(SPI1, BUTTON_RELEASED << 8 | (tsc_iochannel+1));
+            }
+        }
     }
 
     // Group 2
-    if (tsc_is_group_acquisition_completed(2)) {
-        // Button pressed
-        if (tsc_iochannel_status[tsc_iochannel+3] == BUTTON_RELEASED) {
-            tsc_iochannel_status[tsc_iochannel+3] = BUTTON_PRESSED;
-            spi_send(SPI1, BUTTON_PRESSED << 8 | (tsc_iochannel+3+1));
+    if (tsc_is_group_acquisition_completed(TSC_GROUP_INDEX_2)) {
+        acquisition_value = tsc_group_read_counter(TSC_GROUP_INDEX_2);
+        if (acquisition_value <= 1) {
+            // Button pressed
+            if (tsc_iochannel_status[tsc_iochannel+3] == BUTTON_RELEASED) {
+                tsc_iochannel_status[tsc_iochannel+3] = BUTTON_PRESSED;
+                spi_send(SPI1, BUTTON_PRESSED << 8 | (tsc_iochannel+3+1));
+            }
+        }
+        else {
+            if (tsc_iochannel_status[tsc_iochannel+3] == BUTTON_PRESSED) {
+                // Button released
+                tsc_iochannel_status[tsc_iochannel+3] = BUTTON_RELEASED;
+                spi_send(SPI1, BUTTON_RELEASED << 8 | (tsc_iochannel+3+1));
+            }
         }
     }
-    else if (tsc_iochannel_status[tsc_iochannel+3] == BUTTON_PRESSED) {
-        // Button released
-        tsc_iochannel_status[tsc_iochannel+3] = BUTTON_RELEASED;
-        spi_send(SPI1, BUTTON_RELEASED << 8 | (tsc_iochannel+3+1));
-    }
 
-    tsc_clear_io_channel(1);
-    tsc_clear_io_channel(2);
+    tsc_clear_io_channel(TSC_GROUP_INDEX_1);
+    tsc_clear_io_channel(TSC_GROUP_INDEX_2);
 
     // Switch which button should be sampled
     switch (tsc_iochannel) {
         case 0:
-            tsc_enable_io_channel(1, 2);
-            tsc_enable_io_channel(2, 1);
+            tsc_enable_io_channel(TSC_GROUP_INDEX_1, 2);
+            tsc_enable_io_channel(TSC_GROUP_INDEX_2, 1);
             tsc_iochannel = 1;
             break;
         case 1:
-            tsc_enable_io_channel(1, 3);
-            tsc_enable_io_channel(2, 2);
+            tsc_enable_io_channel(TSC_GROUP_INDEX_1, 3);
+            tsc_enable_io_channel(TSC_GROUP_INDEX_2, 2);
             tsc_iochannel = 2;
             break;
         case 2:
-            tsc_enable_io_channel(1, 4);
-            tsc_enable_io_channel(2, 3);
+            tsc_enable_io_channel(TSC_GROUP_INDEX_1, 4);
+            tsc_enable_io_channel(TSC_GROUP_INDEX_2, 3);
             tsc_iochannel = 0;
             break;
     }

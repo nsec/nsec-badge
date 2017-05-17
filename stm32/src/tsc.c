@@ -13,11 +13,6 @@
 void tsc_discharge_io(void) {
     uint32_t i=0;
     tsc_set_io_mode_pushpull_low();
-    while (i<10000) {
-        __asm("nop");
-        i++;
-    }
-    tsc_set_io_mode_floating();
 }
 
 //
@@ -26,11 +21,11 @@ void tsc_discharge_io(void) {
 
 // Control register
 void tsc_set_high_charge_pulse_transfer(uint32_t high) {
-    TSC_CR |= (high & 0xf) << TSC_CR_CTPH_SHIFT;
+    TSC_CR |= (high & TSC_CR_CTPH_MASK) << TSC_CR_CTPH_SHIFT;
 }
 
 void tsc_set_low_charge_pulse_transfer(uint32_t low) {
-    TSC_CR |= (low & 0xf) << TSC_CR_CTPL_SHIFT;
+    TSC_CR |= (low & TSC_CR_CTPL_MASK) << TSC_CR_CTPL_SHIFT;
 }
 
 void tsc_enable_spread_spectrum(void) {
@@ -38,19 +33,19 @@ void tsc_enable_spread_spectrum(void) {
 }
 
 void tsc_set_spread_spectrum_deviation(uint32_t deviation) {
-    TSC_CR |= (deviation & 0x7f) << TSC_CR_SSD_SHIFT;
+    TSC_CR |= (deviation & TSC_CR_SSD_MASK) << TSC_CR_SSD_SHIFT;
 }
 
 void tsc_set_spread_spectrum_prescaler(uint32_t prescaler) {
-    TSC_CR |= (prescaler & 0x1) << 15;
+    TSC_CR |= (prescaler & TSC_CR_SSP_MASK) << TSC_CR_SSP_SHIFT;
 }
 
 void tsc_set_pulse_generator_prescaler(uint32_t prescaler) {
-    TSC_CR |= (prescaler & 0x7) << TSC_CR_PGPSC_SHIFT;
+    TSC_CR |= (prescaler & TSC_CR_PGPSC_MASK) << TSC_CR_PGPSC_SHIFT;
 }
 
 void tsc_set_max_count_value(uint32_t value) {
-    TSC_CR |= (value & 0x7) << TSC_CR_MCV_SHIFT;
+    TSC_CR |= (value & TSC_CR_MCV_MASK) << TSC_CR_MCV_SHIFT;
 }
 
 void tsc_set_io_mode_pushpull_low(void) {

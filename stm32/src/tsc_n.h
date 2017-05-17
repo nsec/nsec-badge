@@ -4,6 +4,60 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define TSC_GROUP_INDEX_1   1
+#define TSC_GROUP_INDEX_2   2
+#define TSC_GROUP_INDEX_3   3
+#define TSC_GROUP_INDEX_4   4
+
+#define TSC_CTP_1   0
+#define TSC_CTP_2   1
+#define TSC_CTP_3   2
+#define TSC_CTP_4   3
+#define TSC_CTP_5   4
+#define TSC_CTP_6   5
+#define TSC_CTP_7   6
+#define TSC_CTP_8   7
+#define TSC_CTP_9   8
+#define TSC_CTP_10  9
+#define TSC_CTP_11  10
+#define TSC_CTP_12  11
+#define TSC_CTP_13  12
+#define TSC_CTP_14  13
+#define TSC_CTP_15  14
+#define TSC_CTP_16  15
+
+#define TSC_CR_CTPH_MASK 0xf
+#define TSC_CR_CTPL_MASK 0xf
+
+#define TSC_CR_SSD_MASK 0x7f
+
+#define TSC_CR_SSP_SHIFT    0xf
+#define TSC_CR_SSP_MASK     0x1
+
+#define TSC_SSPSC_0     0
+#define TSC_SSPSC_2     1
+
+#define TSC_CR_PGPSC_MASK     0x7
+
+#define TSC_PGPSC_0     0
+#define TSC_PGPSC_2     1
+#define TSC_PGPSC_4     2
+#define TSC_PGPSC_8     3
+#define TSC_PGPSC_16    4
+#define TSC_PGPSC_32    5
+#define TSC_PGPSC_64    6
+#define TSC_PGPSC_128   7
+
+#define TSC_CR_MCV_MASK     0x7
+
+#define TSC_MCV_255     0
+#define TSC_MCV_511     1
+#define TSC_MCV_1023    2
+#define TSC_MCV_2047    3
+#define TSC_MCV_4095    4
+#define TSC_MCV_8191    5
+#define TSC_MCV_16383   6
+
 void tsc_discharge_io(void);
 bool tsc_group_get_status(uint32_t);
 uint32_t tsc_group_get_value(uint32_t);
