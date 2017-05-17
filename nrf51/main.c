@@ -45,6 +45,7 @@
 
 static char g_device_id[32];
 
+bool is_at_main_menu = false;
 
 void wdt_init(void)
 {
@@ -181,11 +182,13 @@ static menu_item_s main_menu_items[] = {
 
 void open_conference_schedule(uint8_t item) {
     menu_close();
+    is_at_main_menu = false;
     nsec_schedule_show_dates();
 }
 
 void open_settings(uint8_t item) {
     menu_close();
+    is_at_main_menu = false;
     nsec_setting_show();
 }
 
@@ -194,6 +197,7 @@ void show_main_menu(void) {
     nsec_intro();
     nsec_status_bar_ui_redraw();
     menu_init(0, 64-8, 128, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
+    is_at_main_menu = true;
 }
 
 /**

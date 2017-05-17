@@ -14,6 +14,8 @@
 #include <app_timer.h>
 
 #include "ssd1306.h"
+#include "app_glue.h"
+#include "identity.h"
 
 static struct {
     uint16_t id;
@@ -39,6 +41,10 @@ static void nsec_nearby_each_second(void * context) {
         }
     }
     nsec_nearby_update_led_pettern();
+    if(is_at_main_menu) {
+        nsec_identity_update_nearby();
+        gfx_update();
+    }
 }
 
 void nsec_nearby_badges_callback(uint16_t badge_id, uint8_t addr[], int8_t rssi) {
