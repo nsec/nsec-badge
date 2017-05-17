@@ -151,6 +151,18 @@ static void nsec_intro(void) {
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
+    for(uint8_t noise = 0; noise <= 128; noise += 8) {
+        gfx_fillScreen(BLACK);
+        gfx_drawBitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, WHITE);
+        nsec_gfx_effect_addNoise(noise);
+        gfx_update();
+    }
+    for(uint8_t noise = 128; noise <= 128; noise -= 16) {
+        gfx_fillScreen(BLACK);
+        nsec_identity_draw();
+        nsec_gfx_effect_addNoise(noise);
+        gfx_update();
+    }
 }
 
 void open_animal_care(uint8_t item);
