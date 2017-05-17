@@ -14,6 +14,7 @@
 #include <ble_dis.h>
 #include <app_timer.h>
 #include <peer_manager.h>
+#include <app_scheduler.h>
 
 #include "../boards.h"
 #include <nrf_gpio.h>
@@ -175,15 +176,23 @@ static void _nsec_ble_advertising_init(void)
     APP_ERROR_CHECK(ble_advdata_set(&advdata, NULL));
 }
 
+static void nsec_ble_disable_task(void * context, uint16_t size) {
+    sd_ble_gap_scan_stop();
+    sd_ble_gap_adv_stop();
+}
+
+static void nsec_ble_enable_task(void * context, uint16_t size) {
+    _nsec_ble_advertising_start();
+    nsec_ble_scan_start();
+}
+
 uint8_t nsec_ble_toggle(void) {
     if(_nsec_ble_is_enabled) {
-        sd_ble_gap_adv_stop();
-        sd_ble_gap_scan_stop();
+        app_sched_event_put(NULL, 0, nsec_ble_disable_task);
         _nsec_ble_is_enabled = 0;
     }
     else {
-        _nsec_ble_advertising_start();
-        nsec_ble_scan_start();
+        app_sched_event_put(NULL, 0, nsec_ble_enable_task);
         _nsec_ble_is_enabled = 1;
     }
     return _nsec_ble_is_enabled;
