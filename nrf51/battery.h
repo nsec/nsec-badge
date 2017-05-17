@@ -25,6 +25,8 @@ void battery_refresh();
 
 bool battery_is_charging();
 
+bool battery_is_present();
+
 void nsec_battery_manager_init(void);
 
 #endif

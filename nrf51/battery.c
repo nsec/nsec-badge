@@ -21,17 +21,21 @@
 
 // Reference voltage is 1.2V
 #define ADC_REF_VOLTAGE_IN_MILLIVOLTS   1200
-// Pre-scaling compensation: 1/(2/3)
-#define ADC_PRE_SCALING_COMPENSATION    1.5
+// Pre-scaling compensation: none (voltage divider hardware)
+#define ADC_PRE_SCALING_COMPENSATION    1.0
 // Physical voltage divider
-#define BATTERY_VOLTAGE_DIVIDER         ((10e6+4.7e6)/4.7e6)
-// Do not let the battery go under 3.2 V
-#define BATTERY_CHARGE_TRESHOLD         3200
+#define BATTERY_VOLTAGE_DIVIDER         ((10e6+6.8e6)/6.8e6)
+// Do not let the battery go under 1.8V
+#define BATTERY_CHARGE_TRESHOLD         1800
 
-#define ADC_RESULT_IN_MILLI_VOLTS(ADC_VALUE)\
-    (((((ADC_VALUE) * ADC_REF_VOLTAGE_IN_MILLIVOLTS) / 255) * ADC_PRE_SCALING_COMPENSATION))*BATTERY_VOLTAGE_DIVIDER
+#define ADC_RESULT_IN_MILLIVOLTS(ADC_VALUE)\
+( \
+    ((ADC_VALUE / 255) \
+        * ADC_REF_VOLTAGE_IN_MILLIVOLTS) \
+        * ADC_PRE_SCALING_COMPENSATION BATTERY_VOLTAGE_DIVIDER \
+)
 
-static volatile uint16_t m_batt_lvl_in_milli_volts = 0;
+static volatile uint16_t m_batt_lvl_in_millivolts = 0;
 static volatile bool m_batt_is_connected = false;
 
 void ADC_IRQHandler(void) {
@@ -42,7 +46,9 @@ void ADC_IRQHandler(void) {
         adc_result = NRF_ADC->RESULT;
         NRF_ADC->TASKS_STOP = 1;
 
-        m_batt_lvl_in_milli_volts = ADC_RESULT_IN_MILLI_VOLTS(adc_result);
+        // A capacitor is missing on the PCB which makes the ADC not
+        // really usable. We can't use ADC_RESULT_IN_MILLIVOLTS() here.
+        m_batt_lvl_in_millivolts = adc_result;
     }
 }
 
@@ -69,11 +75,15 @@ void battery_disconnect(void) {
 }
 
 uint16_t battery_get_voltage() {
-    return m_batt_lvl_in_milli_volts;
+    return m_batt_lvl_in_millivolts;
+}
+
+bool battery_is_present() {
+    return (m_batt_lvl_in_millivolts != 0);
 }
 
 bool battery_is_undercharge() {
-    return (m_batt_lvl_in_milli_volts < BATTERY_CHARGE_TRESHOLD);
+    return (m_batt_lvl_in_millivolts < BATTERY_CHARGE_TRESHOLD);
 }
 
 bool battery_is_charging() {
@@ -89,8 +99,8 @@ void battery_init() {
 
     // 8 bit resolution
     NRF_ADC->CONFIG = (ADC_CONFIG_RES_8bit << ADC_CONFIG_RES_Pos)
-        // 2/3 prescaling
-        | (ADC_CONFIG_INPSEL_AnalogInputTwoThirdsPrescaling << ADC_CONFIG_INPSEL_Pos)
+        // No prescaling (done in hardware)
+        | (ADC_CONFIG_INPSEL_AnalogInputNoPrescaling << ADC_CONFIG_INPSEL_Pos)
         // Pin where the battery voltage is
         | (ADC_CONFIG_PSEL_AnalogInput3 << ADC_CONFIG_PSEL_Pos)
         // Use internal 1.2V reference voltage for conversion
@@ -99,7 +109,7 @@ void battery_init() {
         | (ADC_CONFIG_EXTREFSEL_None << ADC_CONFIG_EXTREFSEL_Pos);
 
     NRF_ADC->EVENTS_END = 0;
-    NRF_ADC->ENABLE = ADC_ENABLE_ENABLE_Enabled;
+    NRF_ADC->ENABLE = ADC_ENABLE_ENABLE_Enabled << ADC_ENABLE_ENABLE_Pos;
 
     nrf_delay_us(1000);
 
