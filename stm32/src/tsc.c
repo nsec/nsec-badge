@@ -11,7 +11,6 @@
 
 // Discharge all IOs, block.
 void tsc_discharge_io(void) {
-    uint32_t i=0;
     tsc_set_io_mode_pushpull_low();
 }
 
