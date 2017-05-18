@@ -214,6 +214,13 @@ int main() {
 
     nsec_led_init();
 
+    nrf_gpio_cfg_output(22);
+    nrf_gpio_cfg_output(23);
+    nrf_gpio_cfg_output(18);
+    nrf_gpio_pin_clear(22);
+    nrf_gpio_pin_clear(23);
+    nrf_gpio_pin_clear(18);
+
     ssd1306_init();
     touch_init();
     gfx_setTextBackgroundColor(WHITE, BLACK);

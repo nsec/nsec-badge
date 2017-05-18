@@ -10,8 +10,8 @@ attach 1
 set mem inaccessible-by-default off
 set debug arm
 
-load stm32_nsec17.elf
-file stm32_nsec17.elf
+load stm32_nsec17_ctf.elf
+file stm32_nsec17_ctf.elf
 run
 
 

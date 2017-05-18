@@ -17,18 +17,31 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-BINARY = stm32_nsec17
+BINARY = stm32_nsec17_ctf
 
-OBJS += tsc.o touch_handler.o usart.o
+OBJS += tsc.o
+OBJS += touch_handler.o
+OBJS += usart.o
+OBJS += usb_cdc_acm.o
+OBJS += usb_hid_kbd.o
+OBJS += challenge1.o
+OBJS += challenge2.o
+OBJS += challenge3.o
+OBJS += challenge4.o
+OBJS += challenge4_vm.o
+OBJS += shell.o
+OBJS += scheduler.o
+OBJS += usb_common.o
+OBJS += circbuf.o
 
 OPENCM3_DIR=../libopencm3
 LDSCRIPT = ../nsec17_badge.ld
 
-LDFLAGS += -L../blackmagic/src
-LDLIBS += -lblackmagic
-CPPFLAGS += -I../blackmagic/src/include
-CPPFLAGS += -I../blackmagic/src/platforms/common
-CPPFLAGS += -I../blackmagic/src/platforms/stm32
-CPPFLAGS += -I../blackmagic/src/platforms/nsec17
+#LDFLAGS += -L../blackmagic/src
+#LDLIBS += -lblackmagic
+#CPPFLAGS += -I../blackmagic/src/include
+#CPPFLAGS += -I../blackmagic/src/platforms/common
+#CPPFLAGS += -I../blackmagic/src/platforms/stm32
+#CPPFLAGS += -I../blackmagic/src/platforms/nsec17
 
 include ../libopencm3.target.mk
