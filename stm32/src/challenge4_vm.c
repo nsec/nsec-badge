@@ -271,6 +271,30 @@ static void vm_do_pop(struct vm *vm, uint16_t opcode) {
     }
 }
 
+static uint8_t vm_do_shift_left(struct vm *vm, uint16_t opcode) {
+    uint8_t instr = (opcode & 0xf000) >> 12;
+    uint8_t imm = (opcode & 0x0ff0) >> 4;
+    uint8_t reg = (opcode & 0x000f);
+
+    if (reg & REGISTER_A && reg & REGISTER_B) {
+        vm->a = vm->a << vm->b;
+        vm->zf = (vm->a == 0 ? 1 : 0);
+    }
+    else if (reg == REGISTER_A) {
+        vm->a = vm->a << imm;
+        vm->zf = (vm->a == 0 ? 1 : 0);
+    }
+    else if (reg == REGISTER_B) {
+        vm->b = vm->b << imm;
+        vm->zf = (vm->b == 0 ? 1 : 0);
+    }
+    else {
+        vm_do_invalid_instr(vm, opcode);
+    }
+
+    return 0;
+}
+
 void vm_exec(struct vm *vm, uint16_t opcode) {
     uint8_t instruction;
 
@@ -318,6 +342,9 @@ void vm_exec(struct vm *vm, uint16_t opcode) {
             break;
         case INSTR_POP:
             vm_do_pop(vm, opcode);
+            break;
+        case INSTR_SHL:
+            vm_do_shift_left(vm, opcode);
             break;
         default:
             vm_do_invalid_instr(vm, opcode);

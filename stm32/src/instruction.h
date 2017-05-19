@@ -20,5 +20,6 @@ enum instruction {
     // Conditionnals
     INSTR_JMP,          // Jump to address
     INSTR_JMPZ,         // Jump to address, if non-zero
+    INSTR_SHL,          // Shift left
 };
 
