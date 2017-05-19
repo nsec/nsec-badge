@@ -28,7 +28,6 @@ static void on_char_in(char c) {
         if (c == '\n' || c == '\r') {
 	    	g_launched = true;
             printf("\r\n");
-            printf("success.\n");
         }
         else {
             g_binary_hex[strlen(g_binary_hex)] = c;
@@ -54,20 +53,21 @@ void *challenge4(void *arg) {
             "OUR SECRETS ARE SAFE\n\n\n");
 
     printf("Try this:\n");
-    printf("41370150e13711503137215051373150d1304150b137515011366150d130");
-    printf("7150e1378150b13791504137a1507137b1500130c1500135012011360120");
-    printf("313701203137012071370120f13601202137012041360120a13301200132");
-    printf("0120d23001100350a18050b31260f0a2d23003400180e0b3018221930350");
-    printf("126060a3023020a402d0126002c002600340018070b601c00280d2600340");
-    printf("02d0038000b4413701202137012091370120013201208136012011360120");
-    printf("213701204136012051360120213701201132012011320120000071370120");
-    printf("f136012071370120f136012071370120f136012071370120113201200000\n\n");
+    printf("41770190e17711903177219051773190d1704190b177519011766190d170");
+    printf("7190e1778190b17791904177a1907177b1900170c1900175012011760120");
+    printf("317701203177012071770120f17601202177012041760120a17301200172");
+    printf("0120d27001100390a15050d31230f0c2d27003800150e0d3015221630390");
+    printf("123060c3027020c402b0123002a002300380015070d601a00250d2300380");
+    printf("02b0035000d4417701202177012091770120017201208176012011760120");
+    printf("217701204176012051760120217701201172012011720120000071770120");
+    printf("f176012071770120f176012071770120f176012071770120117201200000");
+    printf("\n\n");
 
     while (true) {
         memset(g_binary, 0, MAX_BIN_SIZE);
         memset(g_binary_hex, 0, MAX_BIN_SIZE*2);
 
-        printf("Input (hex): ");
+        printf("Machine input (hex): ");
 
         // Wait for user input...
         while (!g_launched);
@@ -86,10 +86,14 @@ void *challenge4(void *arg) {
         vm.sp = 0x00;
         vm.zf = 0x00;
 
+        printf("Starting execution.\n");
+        printf("------------8<------------\n");
+
         usbcdcacm_set_on_data_in_cb(NULL);
         vm_run(&vm);
         usbcdcacm_set_on_data_in_cb(on_data_in);
-        printf("done.\n");
+        printf("------------8<------------\n");
+        printf("Execution finished.\n");
     }
 
     return NULL;
