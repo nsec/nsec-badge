@@ -41,8 +41,9 @@ int main(void) {
 
     usbcdcacm_init();
 
-    shell_init();
     delay(0x8000);
+
+    shell_init();
 
     while (true) {
         scheduler_execute();
