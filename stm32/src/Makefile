@@ -21,7 +21,6 @@ BINARY = stm32_nsec17_ctf
 
 OBJS += tsc.o
 OBJS += touch_handler.o
-OBJS += usart.o
 OBJS += usb_cdc_acm.o
 OBJS += usb_hid_kbd.o
 OBJS += challenge1.o
