@@ -236,7 +236,7 @@ int main() {
 
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
-    nsec_status_set_badge_class("");
+    nsec_status_set_badge_class("CTF");
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     nsec_intro();
