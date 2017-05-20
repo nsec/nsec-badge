@@ -164,9 +164,9 @@ static const struct usb_config_descriptor config_desc = {
 };
 
 static const char *usb_strings[] = {
-	"Black Sphere Technologies",
-	"CDC-ACM Demo",
-	"DEMO",
+	"NorthSec Technologies",
+	"NorthSec 2017 CTF",
+	"Badge",
 };
 
 /* Buffer to be used for control requests. */
