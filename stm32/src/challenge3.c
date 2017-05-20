@@ -10,8 +10,6 @@
 #include "challenge3.h"
 
 static void challenge3_init(void) {
-    challenge3_init();
-
     #define GPIO_CHALLENGE3 GPIO8|GPIO9|GPIO10
     gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, GPIO_CHALLENGE3);
     gpio_clear(GPIOA, GPIO_CHALLENGE3);
