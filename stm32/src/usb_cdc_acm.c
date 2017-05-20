@@ -225,7 +225,6 @@ static void usbcdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue) {
 				usbcdcacm_control_request);
 
 	usbcdcacm_set_modem_state(usbd_dev, 0, true, true);
-	usbcdcacm_set_modem_state(usbd_dev, 2, true, true);
 }
 
 void usbcdcacm_set_on_data_in_cb(on_data_in_cb_t on_data_in_cb) {
