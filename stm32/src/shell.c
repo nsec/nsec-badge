@@ -143,7 +143,5 @@ void shell_init(void) {
 
     usbcdcacm_init();
     usbcdcacm_set_on_data_in_cb(shell_on_data_in);
-
-    shell_on_char_in('\n');
 }
 
