@@ -47,7 +47,7 @@ void nsec_ble_add_device_information_service(char * manufacturer_name,
     }
 
     _nsec_ble_add_device_information_service_raw(&device_information);
-    nsec_ble_register_adv_uuid_provider(_nsec_ble_device_info_uuid_provider);
+    //nsec_ble_register_adv_uuid_provider(_nsec_ble_device_info_uuid_provider);
 }
 
 static void _nsec_ble_add_device_information_service_raw(ble_dis_init_t * raw_dis) {

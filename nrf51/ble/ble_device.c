@@ -14,6 +14,7 @@
 #include <ble_dis.h>
 #include <app_timer.h>
 #include <peer_manager.h>
+#include <app_scheduler.h>
 
 #include "../boards.h"
 #include <nrf_gpio.h>
@@ -23,9 +24,11 @@
 static ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
 static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
 static uint8_t _nsec_ble_is_enabled = 0;
+static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt);
 static void _nsec_ble_advertising_start(void);
+static void nsec_ble_scan_start(void);
 
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
     pm_on_ble_evt(p_ble_evt);
@@ -57,6 +60,30 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             const uint16_t conn = p_ble_evt->evt.gatts_evt.conn_handle;
             APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(conn, NULL, 0, 0));
+            }
+            break;
+
+        case BLE_GAP_EVT_ADV_REPORT: {
+            if(_nsec_ble_scan_callback == NULL) {
+                break;
+            }
+            ble_gap_evt_adv_report_t * rp = &p_ble_evt->evt.gap_evt.params.adv_report;
+            int8_t i = 0;
+            while((rp->dlen - i) >= 2) {
+                const uint8_t len = rp->data[i++] - 1; // The type is included in the length
+                const uint8_t type = rp->data[i++];
+                const uint8_t * data = &rp->data[i];
+                i += len;
+
+                if(type == BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME) {
+                    if(len == 8 && data[0] == 'N' && data[1] == 'S' && data[2] == 'E' && data[3] == 'C') {
+                        uint16_t other_id = 0;
+                        if(sscanf((const char *) &data[4], "%04hx", &other_id) == 1) {
+                            _nsec_ble_scan_callback(other_id, rp->peer_addr.addr, rp->rssi);
+                        }
+                    }
+                }
+            }
             }
             break;
     }
@@ -149,13 +176,23 @@ static void _nsec_ble_advertising_init(void)
     APP_ERROR_CHECK(ble_advdata_set(&advdata, NULL));
 }
 
+static void nsec_ble_disable_task(void * context, uint16_t size) {
+    sd_ble_gap_scan_stop();
+    sd_ble_gap_adv_stop();
+}
+
+static void nsec_ble_enable_task(void * context, uint16_t size) {
+    _nsec_ble_advertising_start();
+    nsec_ble_scan_start();
+}
+
 uint8_t nsec_ble_toggle(void) {
     if(_nsec_ble_is_enabled) {
-        sd_ble_gap_adv_stop();
+        app_sched_event_put(NULL, 0, nsec_ble_disable_task);
         _nsec_ble_is_enabled = 0;
     }
     else {
-        _nsec_ble_advertising_start();
+        app_sched_event_put(NULL, 0, nsec_ble_enable_task);
         _nsec_ble_is_enabled = 1;
     }
     return _nsec_ble_is_enabled;
@@ -189,6 +226,10 @@ void nsec_ble_register_evt_handler(ble_evt_handler_t handler) {
     }
 }
 
+void nsec_ble_set_scan_callback(nsec_ble_found_nsec_badge_callback callback) {
+    _nsec_ble_scan_callback = callback;
+}
+
 void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_UUID_PROVIDER; i++) {
         if(_nsec_ble_adv_uuid_providers[i] == NULL) {
@@ -199,6 +240,18 @@ void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {
     sd_ble_gap_adv_stop();
     _nsec_ble_advertising_init();
     _nsec_ble_advertising_start();
+}
+
+static void nsec_ble_scan_start(void) {
+    ble_gap_scan_params_t scan_params;
+    scan_params.active = 0;
+    scan_params.selective = 0;
+    scan_params.p_whitelist = NULL;
+    scan_params.timeout = 0;
+    scan_params.window = MSEC_TO_UNITS(40, UNIT_0_625_MS);
+    scan_params.interval = MSEC_TO_UNITS(240, UNIT_0_625_MS);
+
+    sd_ble_gap_scan_start(&scan_params);
 }
 
 int nsec_ble_init(char * device_name) {
@@ -236,6 +289,7 @@ int nsec_ble_init(char * device_name) {
 
     _nsec_ble_advertising_init();
     _nsec_ble_advertising_start();
+    nsec_ble_scan_start();
     _nsec_ble_is_enabled = 1;
 
     return NRF_SUCCESS;

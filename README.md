@@ -16,7 +16,7 @@ The nRF51 takes care of:
  - The Bluetooth Low Energy
  - The battery management
  - The red and the green LEDs
- 
+
 The stm32 takes care of:
 
  - The touch buttons
@@ -65,7 +65,21 @@ The stm32 can also be flashed by holding the "program" button behind the badge
 while pressing the "reset" button. The stm32 will boot a specific bootloader
 that  implements the DFU interface.
 
-FIXME: More details to come.
+Reset the board with the "PROGRAM" button pushed in, then release the button.
+
+You should now see a DFU device appearing on your computer:
+    % lsusb
+    ...
+    Bus 001 Device 057: ID 0483:df11 STMicroelectronics STM Device in DFU Mode
+    ...
+
+Use a DFU compliant software to flash the STM32:
+- [dfu-util](https://www.archlinux.org/packages/community/x86_64/dfu-util/) on ArchLinux
+
+Run the following command:
+    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download nsec17_stm32.bin
+
+The STM32 should reset automagically, running the downloaded firmware.
 
 ## Compiling
 

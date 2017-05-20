@@ -20,6 +20,8 @@ typedef struct nsec_ble_service_handle_s * nsec_ble_service_handle;
 
 typedef void (*nsec_ble_characteristic_write_callback)(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length);
 
+typedef void (*nsec_ble_found_nsec_badge_callback)(uint16_t badge_id, uint8_t addr[], int8_t rssi);
+
 enum NSEC_BLE_CHARACT_PERM {
     NSEC_BLE_CHARACT_PERM_NONE  = 0,
     NSEC_BLE_CHARACT_PERM_READ  = (1 << 0),
@@ -59,5 +61,7 @@ int nsec_ble_register_vendor_service(nsec_ble_service_t * srv, nsec_ble_service_
 
 void nsec_ble_hid_add_device(void);
 void nsec_ble_battery_add(void);
+
+void nsec_ble_set_scan_callback(nsec_ble_found_nsec_badge_callback callback);
 
 #endif /* nsec_ble_h */

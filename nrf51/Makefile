@@ -86,6 +86,7 @@ CFLAGS += -DBLE_STACK_SUPPORT_REQD
 CFLAGS += -DNRF_SD_BLE_API_VERSION=2
 CFLAGS += -DS130
 CFLAGS += -flto -ffunction-sections -fdata-sections -fno-builtin -fno-omit-frame-pointer -Os
+CFLAGS += -mthumb -mabi=aapcs -mcpu=cortex-m0
 LDFLAGS += --specs=nano.specs -lc -lnosys -Wl,--gc-sections -fno-omit-frame-pointer -Os
 LDFLAGS += -mthumb -mabi=aapcs
 LDFLAGS += -mcpu=cortex-m0
@@ -110,10 +111,10 @@ TARGETS=$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.elf $(PROJECT_NAME)
 $(call define_target, $(PROJECT_NAME))
 
 %_bitmap.c: %.png
-	python gen_image.py -i $< -o $@
+	python2 gen_image.py -i $< -o $@
 
 images/font_bitmap.c: images/font.png
-	python gen_image.py -i $< -o $@ -r
+	python2 gen_image.py -i $< -o $@ -r
 
 bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard images/*.png))
 
@@ -125,13 +126,8 @@ $(SDK_PATH):
 	patch -p0 -d nordicsdk < nordic-sdk-makefile-fix-object-depends-on-src.patch
 	rm nRF5_SDK_12.1.0_0d23e2a.zip
 
-$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex: $(OUTPUT_DIRECTORY)
-	wget https://www.nordicsemi.com/eng/nordic/download_resource/53724/11/92034807 -O s130_nrf51_2.0.1.zip
-	unzip -n s130_nrf51_2.0.1.zip s130_nrf51_2.0.1_license-agreement.txt
-	unzip -n s130_nrf51_2.0.1.zip -d $(OUTPUT_DIRECTORY) s130_nrf51_2.0.1_softdevice.hex
-	rm s130_nrf51_2.0.1.zip
-	echo "Please read s130_nrf51_2.0.1_license-agreement.txt"
-
+$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_PATH)
+	cp $(SDK_PATH)/softdevice/s130/hex/s130_nrf51_2.0.1_softdevice.hex $(OUTPUT_DIRECTORY)
 
 $(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
 	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@

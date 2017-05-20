@@ -13,8 +13,6 @@
 		A71061D51CEBAD1D005564B4 /* controls.h in Headers */ = {isa = PBXBuildFile; fileRef = A71061D31CEBAD1D005564B4 /* controls.h */; };
 		A71061D81CECB3DD005564B4 /* touch_button.c in Sources */ = {isa = PBXBuildFile; fileRef = A71061D61CECB3DD005564B4 /* touch_button.c */; };
 		A71061D91CECB3DD005564B4 /* touch_button.h in Headers */ = {isa = PBXBuildFile; fileRef = A71061D71CECB3DD005564B4 /* touch_button.h */; };
-		A73AA4D11CDE969B006C4C08 /* animal_care.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4CF1CDE969B006C4C08 /* animal_care.c */; };
-		A73AA4D21CDE969B006C4C08 /* animal_care.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4D01CDE969B006C4C08 /* animal_care.h */; };
 		A73AA4D61CE355C0006C4C08 /* menu.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4D41CE355C0006C4C08 /* menu.c */; };
 		A73AA4D71CE355C0006C4C08 /* menu.h in Headers */ = {isa = PBXBuildFile; fileRef = A73AA4D51CE355C0006C4C08 /* menu.h */; };
 		A73AA4DA1CE61DB9006C4C08 /* nsec_conf_schedule.c in Sources */ = {isa = PBXBuildFile; fileRef = A73AA4D81CE61DB9006C4C08 /* nsec_conf_schedule.c */; };
@@ -32,6 +30,8 @@
 		A76F84EF1CD17E8200637E8B /* ble_hid.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84EE1CD17E8200637E8B /* ble_hid.c */; };
 		A76F84F11CD4414700637E8B /* ble_vendor_service.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84F01CD4414700637E8B /* ble_vendor_service.c */; };
 		A76F84F31CD4416800637E8B /* ble_device_info.c in Sources */ = {isa = PBXBuildFile; fileRef = A76F84F21CD4416800637E8B /* ble_device_info.c */; };
+		A77BBEBB1ECA4B8600A2F7D3 /* nsec_nearby_badges.c in Sources */ = {isa = PBXBuildFile; fileRef = A77BBEB91ECA4B8600A2F7D3 /* nsec_nearby_badges.c */; };
+		A77BBEBC1ECA4B8600A2F7D3 /* nsec_nearby_badges.h in Headers */ = {isa = PBXBuildFile; fileRef = A77BBEBA1ECA4B8600A2F7D3 /* nsec_nearby_badges.h */; };
 		A77F8E151C023A3C00B8BE75 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = A7E745701BF8FDF3008533EE /* main.c */; };
 		A77F8E241C023A3C00B8BE75 /* ssd1306.c in Sources */ = {isa = PBXBuildFile; fileRef = A7E745851BF8FDF3008533EE /* ssd1306.c */; };
 		A77F8E2B1C02BB9800B8BE75 /* ble_device.c in Sources */ = {isa = PBXBuildFile; fileRef = A77F8E2A1C02BB9800B8BE75 /* ble_device.c */; };
@@ -51,8 +51,6 @@
 		A71061D71CECB3DD005564B4 /* touch_button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = touch_button.h; path = nrf51/touch_button.h; sourceTree = "<group>"; };
 		A71061DA1CED06D0005564B4 /* app_glue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = app_glue.h; path = nrf51/app_glue.h; sourceTree = "<group>"; };
 		A71DC8481E3D223100954B55 /* sdk_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdk_config.h; path = nrf51/sdk_config.h; sourceTree = "<group>"; };
-		A73AA4CF1CDE969B006C4C08 /* animal_care.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = animal_care.c; path = nrf51/animal_care.c; sourceTree = "<group>"; };
-		A73AA4D01CDE969B006C4C08 /* animal_care.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = animal_care.h; path = nrf51/animal_care.h; sourceTree = "<group>"; };
 		A73AA4D41CE355C0006C4C08 /* menu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = menu.c; path = nrf51/menu.c; sourceTree = "<group>"; };
 		A73AA4D51CE355C0006C4C08 /* menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = menu.h; path = nrf51/menu.h; sourceTree = "<group>"; };
 		A73AA4D81CE61DB9006C4C08 /* nsec_conf_schedule.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nsec_conf_schedule.c; path = nrf51/nsec_conf_schedule.c; sourceTree = "<group>"; };
@@ -72,6 +70,8 @@
 		A76F84F01CD4414700637E8B /* ble_vendor_service.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_vendor_service.c; path = nrf51/ble/ble_vendor_service.c; sourceTree = "<group>"; };
 		A76F84F21CD4416800637E8B /* ble_device_info.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_device_info.c; path = nrf51/ble/ble_device_info.c; sourceTree = "<group>"; };
 		A76F84F41CD443F100637E8B /* nsec_ble_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nsec_ble_internal.h; path = nrf51/ble/nsec_ble_internal.h; sourceTree = "<group>"; };
+		A77BBEB91ECA4B8600A2F7D3 /* nsec_nearby_badges.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nsec_nearby_badges.c; path = nrf51/nsec_nearby_badges.c; sourceTree = "<group>"; };
+		A77BBEBA1ECA4B8600A2F7D3 /* nsec_nearby_badges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nsec_nearby_badges.h; path = nrf51/nsec_nearby_badges.h; sourceTree = "<group>"; };
 		A77F8E101C023A2300B8BE75 /* libdummy_target.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdummy_target.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A77F8E291C02B82000B8BE75 /* nsec_ble.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nsec_ble.h; path = nrf51/ble/nsec_ble.h; sourceTree = "<group>"; };
 		A77F8E2A1C02BB9800B8BE75 /* ble_device.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ble_device.c; path = nrf51/ble/ble_device.c; sourceTree = "<group>"; };
@@ -142,8 +142,6 @@
 				A74D9B441E62AD330040F9EC /* random.h */,
 				A7E745851BF8FDF3008533EE /* ssd1306.c */,
 				A7E745861BF8FDF3008533EE /* ssd1306.h */,
-				A73AA4CF1CDE969B006C4C08 /* animal_care.c */,
-				A73AA4D01CDE969B006C4C08 /* animal_care.h */,
 				A73AA4D81CE61DB9006C4C08 /* nsec_conf_schedule.c */,
 				A73AA4D91CE61DB9006C4C08 /* nsec_conf_schedule.h */,
 				A73AA4DC1CE812D3006C4C08 /* status_bar.c */,
@@ -164,6 +162,8 @@
 				A70DAB471EAEEF780065F1A0 /* identity.h */,
 				A79A14A81EBDBF37007AC5DD /* exploit_challenge.c */,
 				A79A14A91EBDBF37007AC5DD /* exploit_challenge.h */,
+				A77BBEB91ECA4B8600A2F7D3 /* nsec_nearby_badges.c */,
+				A77BBEBA1ECA4B8600A2F7D3 /* nsec_nearby_badges.h */,
 			);
 			name = nrf51;
 			sourceTree = "<group>";
@@ -180,7 +180,7 @@
 				A71061D91CECB3DD005564B4 /* touch_button.h in Headers */,
 				A73AA4DB1CE61DB9006C4C08 /* nsec_conf_schedule.h in Headers */,
 				A79A14AB1EBDBF37007AC5DD /* exploit_challenge.h in Headers */,
-				A73AA4D21CDE969B006C4C08 /* animal_care.h in Headers */,
+				A77BBEBC1ECA4B8600A2F7D3 /* nsec_nearby_badges.h in Headers */,
 				A73AA4DF1CE812D3006C4C08 /* status_bar.h in Headers */,
 				A71061D51CEBAD1D005564B4 /* controls.h in Headers */,
 				A73AA4D71CE355C0006C4C08 /* menu.h in Headers */,
@@ -266,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A77BBEBB1ECA4B8600A2F7D3 /* nsec_nearby_badges.c in Sources */,
 				A74D9B491E63BEB60040F9EC /* random.c in Sources */,
 				A73AA4E21CEAD266006C4C08 /* nsec_settings.c in Sources */,
 				A71061D81CECB3DD005564B4 /* touch_button.c in Sources */,
@@ -277,7 +278,6 @@
 				A73AA4E61CEADEA6006C4C08 /* battery.c in Sources */,
 				A77F8E2B1C02BB9800B8BE75 /* ble_device.c in Sources */,
 				A79A14AA1EBDBF37007AC5DD /* exploit_challenge.c in Sources */,
-				A73AA4D11CDE969B006C4C08 /* animal_care.c in Sources */,
 				A7ADB1EF1EA2A118004E2730 /* led_effects.c in Sources */,
 				A71061D41CEBAD1D005564B4 /* controls.c in Sources */,
 				A70DAB481EAEEF780065F1A0 /* identity.c in Sources */,
