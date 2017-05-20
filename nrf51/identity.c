@@ -121,7 +121,7 @@ void nsec_identity_update_nearby(void) {
 }
 
 void nsec_identity_get_unlock_key(char * data, size_t length) {
-    snprintf(data, length, "%04X", ((NRF_FICR->DEVICEID[1] & 0xFFFF) ^ 0xC3C3));
+    snprintf(data, length, "%04X", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
 }
 
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length) {
