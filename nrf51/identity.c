@@ -23,7 +23,7 @@
     ((NSEC_IDENTITY_AVATAR_WIDTH * NSEC_IDENTITY_AVATAR_HEIGHT + 1) / 8)
 
 typedef struct {
-    char name[16];
+    char name[32];
     uint8_t unlocked;
     uint8_t avatar[AVATAR_SIZE];
 } nsec_identity_t;
@@ -50,11 +50,13 @@ nsec_ble_set_charateristic_value(identity_ble_handle, uuid, &field, sizeof(field
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
 
+static char flag[] = "flag{ble_all_the_things}";
+
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length);
 
 void nsec_identitiy_init(void) {
     memset(identity.name, 0, sizeof(identity.name));
-    snprintf(identity.name, sizeof(identity.name), "Comrade #%05d", (NRF_FICR->DEVICEID[0] & 0xFFFF));
+    snprintf(identity.name, sizeof(identity.name), "Comrade #%05d", 31337);
     memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));
     identity.unlocked = 0;
 
@@ -121,7 +123,7 @@ void nsec_identity_update_nearby(void) {
 }
 
 void nsec_identity_get_unlock_key(char * data, size_t length) {
-    snprintf(data, length, "%04X", ((NRF_FICR->DEVICEID[1] & 0xFFFF) ^ 0xC3C3));
+    snprintf(data, length, "%04X", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
 }
 
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length) {
@@ -129,8 +131,8 @@ static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t
         case IDENTITY_CHAR_UUID_NAME: {
             if(identity.unlocked) {
                 memset(identity.name, 0, sizeof(identity.name));
-                strncpy(identity.name, (char *) content,
-                        MIN(content_length, sizeof(identity.name)));
+                strncpy(identity.name, (char *) flag,
+                        MIN(sizeof(flag), sizeof(identity.name)));
                 UPDATE_BLE_CHARACTERISTIC(IDENTITY_CHAR_UUID_NAME, identity.name);
             }
             if(is_at_main_menu) {
