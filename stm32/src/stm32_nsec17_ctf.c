@@ -39,10 +39,6 @@ int main(void) {
     touch_init();
     scheduler_init();
 
-    usbcdcacm_init();
-
-    delay(0x8000);
-
     shell_init();
 
     while (true) {
