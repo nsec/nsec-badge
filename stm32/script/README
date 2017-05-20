@@ -1,0 +1,2 @@
+to remove the read protection, boot the STM32 in DFU mode and run the following command:
+$ ./stm32-dfu.py unprotect
