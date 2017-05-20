@@ -203,7 +203,7 @@ void show_main_menu(void) {
  * Main
  */
 int main() {
-    sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
+    sprintf(g_device_id, "NSEC1337");
     g_device_id[9] = '\0';
 
     softdevice_init();
