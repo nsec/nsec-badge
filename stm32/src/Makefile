@@ -17,9 +17,6 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-#BINARY = stm32_nsec17_ctf
-#BINARY = stm32_nsec17_conf
-
 ifeq ($(BINARY),stm32_nsec17_ctf)
 OBJS += usb_cdc_acm.o
 OBJS += usb_hid_kbd.o
@@ -39,8 +36,11 @@ CPPFLAGS += -I../blackmagic/src/include
 CPPFLAGS += -I../blackmagic/src/platforms/common
 CPPFLAGS += -I../blackmagic/src/platforms/stm32
 CPPFLAGS += -I../blackmagic/src/platforms/nsec17
+else
+$(error Run `make BINARY=stm32_nsec17_ctf` or `make BINARY=stm32_nsec17_conf`)
 endif
 
+# Common objects used by both projects
 OBJS += tsc.o
 OBJS += touch_handler.o
 
