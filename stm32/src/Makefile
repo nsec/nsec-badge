@@ -17,10 +17,10 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-BINARY = stm32_nsec17_ctf
+#BINARY = stm32_nsec17_ctf
+#BINARY = stm32_nsec17_conf
 
-OBJS += tsc.o
-OBJS += touch_handler.o
+ifeq ($(BINARY),stm32_nsec17_ctf)
 OBJS += usb_cdc_acm.o
 OBJS += usb_hid_kbd.o
 OBJS += challenge1.o
@@ -32,15 +32,19 @@ OBJS += shell.o
 OBJS += scheduler.o
 OBJS += usb_common.o
 OBJS += circbuf.o
+else ifeq ($(BINARY), stm32_nsec17_conf)
+LDFLAGS += -L../blackmagic/src
+LDLIBS += -lblackmagic
+CPPFLAGS += -I../blackmagic/src/include
+CPPFLAGS += -I../blackmagic/src/platforms/common
+CPPFLAGS += -I../blackmagic/src/platforms/stm32
+CPPFLAGS += -I../blackmagic/src/platforms/nsec17
+endif
+
+OBJS += tsc.o
+OBJS += touch_handler.o
 
 OPENCM3_DIR=../libopencm3
 LDSCRIPT = ../nsec17_badge.ld
-
-#LDFLAGS += -L../blackmagic/src
-#LDLIBS += -lblackmagic
-#CPPFLAGS += -I../blackmagic/src/include
-#CPPFLAGS += -I../blackmagic/src/platforms/common
-#CPPFLAGS += -I../blackmagic/src/platforms/stm32
-#CPPFLAGS += -I../blackmagic/src/platforms/nsec17
 
 include ../libopencm3.target.mk

@@ -6,7 +6,6 @@
 #include <libopencm3/stm32/timer.h>
 #include "tsc_n.h"
 #include "touch_handler.h"
-#include "usart.h"
 
 #include <gdb_main.h>
 #include <general.h>
@@ -27,8 +26,6 @@ void say_hello(void) {
 
 int main(void) {
     clock_setup();
-
-    usart_init();
 
     say_hello();
 
