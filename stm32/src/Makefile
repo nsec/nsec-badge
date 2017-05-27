@@ -17,7 +17,7 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-ifeq ($(BINARY),stm32_nsec17_ctf)
+ifeq ($(BINARY),nsec17_stm32_ctf)
 OBJS += usb_cdc_acm.o
 OBJS += usb_hid_kbd.o
 OBJS += challenge1.o
@@ -29,7 +29,7 @@ OBJS += shell.o
 OBJS += scheduler.o
 OBJS += usb_common.o
 OBJS += circbuf.o
-else ifeq ($(BINARY), stm32_nsec17_conf)
+else ifeq ($(BINARY), nsec17_stm32_conf)
 LDFLAGS += -L../blackmagic/src
 LDLIBS += -lblackmagic
 CPPFLAGS += -I../blackmagic/src/include
@@ -37,7 +37,7 @@ CPPFLAGS += -I../blackmagic/src/platforms/common
 CPPFLAGS += -I../blackmagic/src/platforms/stm32
 CPPFLAGS += -I../blackmagic/src/platforms/nsec17
 else
-$(error Run `make BINARY=stm32_nsec17_ctf` or `make BINARY=stm32_nsec17_conf`)
+$(error Run `make BINARY=nsec17_stm32_ctf` or `make BINARY=nsec17_stm32_conf`)
 endif
 
 # Common objects used by both projects
