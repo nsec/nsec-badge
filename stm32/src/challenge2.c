@@ -16,6 +16,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 
+#include "delay.h"
 #include "usb_hid_kbd.h"
 #include "usb_common.h"
 
@@ -36,12 +37,6 @@ static uint8_t table[256] = {};
 
 static uint8_t translate(char in) {
     return table[(uint8_t)in];
-}
-
-void delay(uint32_t cycle) {
-    for (uint32_t i=0; i<cycle; i++) {
-        __asm__("nop");
-    }
 }
 
 static void print_message(const char *message) {
@@ -109,8 +104,7 @@ void *challenge2(void *arg) {
     challenge2_init();
 
     // Sleep 4-5 minutes before starting to print a message
-    //delay(0x20000000);
-    delay(0x500000);
+    delay(0x20000000);
 
     while (true) {
         print_message(g_message);

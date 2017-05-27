@@ -3,6 +3,9 @@
 #include <libopencm3/stm32/st_usbfs.h>
 #include <libopencm3/cm3/nvic.h>
 #include <../lib/usb/usb_private.h>
+
+#include "delay.h"
+
 #include "usb_common.h"
 
 usbd_device *g_usbd_dev __attribute__((aligned));
@@ -17,7 +20,5 @@ void usb_disconnect(void) {
     _usbd_reset(g_usbd_dev);
 
     // Give some time to the host to discover that the USB device is gone.
-    for (uint32_t i = 0; i < 0x200000; i++) {
-        __asm__("nop");
-    }
+    delay(0x200000);
 }

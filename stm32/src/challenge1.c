@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "delay.h"
 #include "usb_cdc_acm.h"
 
 #include "challenge1.h"
@@ -21,12 +22,6 @@ static char g_input_password[256] = {0};
 
 static volatile bool g_newline = false;
 static volatile bool g_done = false;
-
-static void delay(uint32_t cycle) {
-    for (uint32_t i=0; i<cycle; i++) {
-        __asm__("nop");
-    }
-}
 
 static bool strslowcmp(char *input_password) {
     (void) input_password;

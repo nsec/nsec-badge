@@ -17,6 +17,7 @@
 #include <libopencm3/usb/cdc.h>
 
 #include "circbuf.h"
+#include "delay.h"
 #include "usb_common.h"
 
 #include "usb_cdc_acm.h"
@@ -261,9 +262,7 @@ int usbcdcacm_init(void) {
 
     nvic_enable_irq(NVIC_USB_IRQ);
 
-    for (uint32_t i = 0; i < 0x800000; i++) {
-        __asm__("nop");
-    }
+    delay(0x800000);
 
     return 0;
 }

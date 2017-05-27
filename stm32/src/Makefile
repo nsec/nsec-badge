@@ -43,6 +43,7 @@ endif
 # Common objects used by both projects
 OBJS += tsc.o
 OBJS += touch_handler.o
+OBJS += delay.o
 
 OPENCM3_DIR=../libopencm3
 LDSCRIPT = ../nsec17_badge.ld
