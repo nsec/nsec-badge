@@ -10,12 +10,9 @@
 #include <stdlib.h>
 
 #include <libopencm3/cm3/nvic.h>
-#include <libopencm3/cm3/scb.h>
 #include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/flash.h>
-#include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/hid.h>
-#include <libopencm3/usb/dfu.h>
+#include <libopencm3/usb/usbd.h>
 
 #include "usb_common.h"
 
@@ -54,49 +51,48 @@ const struct usb_device_descriptor dev_desc = {
 };
 
 static uint8_t hid_report_descriptor[] = {
-        0x05, 0x01, // Usage Page (Generic Desktop)
-        0x09, 0x06, // Usage (Keyboard)
-        0xA1, 0x01, // Collection (Application)
-        0x05, 0x07, //  Usage Page (Keyboard)
-        0x19, 0xE0, //  Usage Minimum (224)
-        0x29, 0xE7, //  Usage Maximum (231)
-        0x15, 0x00, //  Logical Minimum (0)
-        0x25, 0x01, //  Logical Maximum (1)
-        0x75, 0x01, //  Report Size (1)
-        0x95, 0x08, //  Report Count (8)
-        0x81, 0x02, //  Input (Data, Variable, Absolute)
-        0x81, 0x01, //  Input (Constant)
-        0x19, 0x00, //  Usage Minimum (0)
-        0x29, 101,  //  Usage Maximum (101)
-        0x15, 0x00, //  Logical Minimum (0)
-        0x25, 101,  //  Logical Maximum (101)
-        0x75, 0x08, //  Report Size (8)
-        0x95, 0x06, //  Report Count (6)
-        0x81, 0x00, //  Input (Data, Array)
-        0x05, 0x08, //  Usage Page (LED)
-        0x19, 0x01, //  Usage Minimum (1)
-        0x29, 0x05, //  Usage Maximum (5)
-        0x15, 0x00, //  Logical Minimum (0)
-        0x25, 0x01, //  Logical Maximum (1)
-        0x75, 0x01, //  Report Size (1)
-        0x95, 0x05, //  Report Count (5)
-        0x91, 0x02, //  Output (Data, Variable, Absolute)
-        0x95, 0x03, //  Report Count (3)
-        0x91, 0x01, //  Output (Constant)
-        0xC0        // End Collection
+    0x05, 0x01, // Usage Page (Generic Desktop)
+    0x09, 0x06, // Usage (Keyboard)
+    0xA1, 0x01, // Collection (Application)
+    0x05, 0x07, //  Usage Page (Keyboard)
+    0x19, 0xE0, //  Usage Minimum (224)
+    0x29, 0xE7, //  Usage Maximum (231)
+    0x15, 0x00, //  Logical Minimum (0)
+    0x25, 0x01, //  Logical Maximum (1)
+    0x75, 0x01, //  Report Size (1)
+    0x95, 0x08, //  Report Count (8)
+    0x81, 0x02, //  Input (Data, Variable, Absolute)
+    0x81, 0x01, //  Input (Constant)
+    0x19, 0x00, //  Usage Minimum (0)
+    0x29, 101,  //  Usage Maximum (101)
+    0x15, 0x00, //  Logical Minimum (0)
+    0x25, 101,  //  Logical Maximum (101)
+    0x75, 0x08, //  Report Size (8)
+    0x95, 0x06, //  Report Count (6)
+    0x81, 0x00, //  Input (Data, Array)
+    0x05, 0x08, //  Usage Page (LED)
+    0x19, 0x01, //  Usage Minimum (1)
+    0x29, 0x05, //  Usage Maximum (5)
+    0x15, 0x00, //  Logical Minimum (0)
+    0x25, 0x01, //  Logical Maximum (1)
+    0x75, 0x01, //  Report Size (1)
+    0x95, 0x05, //  Report Count (5)
+    0x91, 0x02, //  Output (Data, Variable, Absolute)
+    0x95, 0x03, //  Report Count (3)
+    0x91, 0x01, //  Output (Constant)
+    0xC0        // End Collection
 };
 
 static const uint8_t USBD_HID_Desc[] = {
-/* 18 */
-  0x09, // bLength: HID Descriptor size
-  0x21, // bDescriptorType: HID
-  0x11, // bcdHID: HID Class Spec release number
-  0x01,
-  0x00, // bCountryCode: Hardware target country
-  0x01, // bNumDescriptors: Number of HID class descriptors to follow
-  0x22, //bDescriptorType
-  65,   // wItemLength: Total length of Report descriptor
-  0x00,
+    0x09, // bLength: HID Descriptor size
+    0x21, // bDescriptorType: HID
+    0x11, // bcdHID: HID Class Spec release number
+    0x01,
+    0x00, // bCountryCode: Hardware target country
+    0x01, // bNumDescriptors: Number of HID class descriptors to follow
+    0x22, //bDescriptorType
+    65,   // wItemLength: Total length of Report descriptor
+    0x00,
 };
 
 static const struct {
@@ -152,10 +148,10 @@ static int usbhidkbd_control_request(usbd_device *dev,
     (void)dev;
 
     // wValue -> [DescriptorType & 0xff00 + DescriptorIndex & 0x00ff]
-    if ((req->bmRequestType != 0x81) ||
-        (req->bRequest != USB_REQ_GET_DESCRIPTOR) ||
-        ((req->wValue != 0x2200) &&
-        (req->wValue != 0x2100))) {
+    if ((req->bmRequestType != 0x81) || 
+            (req->bRequest != USB_REQ_GET_DESCRIPTOR) ||
+            ((req->wValue != 0x2200) &&
+            (req->wValue != 0x2100))) {
         return 0;
     }
 
@@ -229,12 +225,12 @@ void usbhidkbd_init(void) {
     rcc_set_usbclk_source(RCC_HSI48);
 
     g_usbd_dev = usbd_init(&st_usbfs_v2_usb_driver,
-        &dev_desc,
-        &config_desc,
-        usb_strings,
-        3,
-        usbd_control_buffer,
-        sizeof(usbd_control_buffer));
+            &dev_desc,
+            &config_desc,
+            usb_strings,
+            3,
+            usbd_control_buffer,
+            sizeof(usbd_control_buffer));
 
     usbd_register_set_config_callback(g_usbd_dev, usbhidkbd_set_config);
 

@@ -10,14 +10,14 @@
 
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
-#include <libopencm3/stm32/flash.h>
 
-#include "tsc_n.h"
-#include "touch_handler.h"
-#include "shell.h"
 #include "scheduler.h"
+#include "shell.h"
+#include "touch_handler.h"
+#include "tsc_n.h"
 #include "usb_cdc_acm.h"
 
 static void clock_setup(void) {
@@ -42,11 +42,11 @@ void enable_read_protect(void) {
 
 int main(void) {
     clock_setup();
+
     enable_read_protect();
 
     touch_init();
     scheduler_init();
-
     shell_init();
 
     while (true) {
@@ -56,7 +56,7 @@ int main(void) {
     return 0;
 }
 
-
 void hard_fault_handler(void) {
     while(1);
-    }
+}
+

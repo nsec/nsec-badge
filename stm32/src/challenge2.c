@@ -101,7 +101,6 @@ static void challenge2_init(void) {
     table['!'] = 0x38;
 
     srand(0x1982381);
-
 }
 
 void *challenge2(void *arg) {
