@@ -143,6 +143,44 @@ The STM32 should reset automagically, running the newly downloaded firmware. The
 addres of 0x08000000 is important, this is where the stm32 flash is mapped into
 memory.
 
+## Firmware of NorthSec 2017
+
+There were 7 firmware images built for the NorthSec 2017 event.
+
+- `nsec17_conf_stm32.elf`  
+  The firmware of the stm32 used during the NorthSec conference. It has the
+  BlackMagic gdb stub exposed via the USB to reprogram and debug the nrf51 chip.
+
+- `nsec17_conf_nrf51.elf`  
+  The firmware of the nrf51 used during the NorthSec conference. It exposes a
+  BLE service to change you avatar image and name.
+
+- `nsec17_ctf_stm32.elf`  
+  The firmware of the stm32 used during the NorthSec CTF competition. It does
+  *not* have the BlackMagic gdb stub. It exposes a serial device with
+  challenges for the CTF. Read protection is enable when this firmware is
+  started.
+
+- `nsec17_ctf_nrf51.elf`  
+  The firmware of the nrf51 used during the NorthSec CTF competition. It is
+  exactly the same as the conference firmware except it displays `CTF` on the
+  status bar at the top of the display.
+
+- `nsec17_ctf_nrf51_namechange.elf`  
+  One badge was running the firmware with the actual flag on the admin table
+  during the competition. The flag is shown when the name on it is change via
+  BLE.
+
+- `nsec17_ctf_nrf51_rao.elf`  
+  Rao's badge. The ELF file was distributed during the CTF. One badge was
+  running the firmware with the actual flag on the admin table during the
+  competition.
+
+- `nsec17_stm32_crossdebug.elf`  
+  Same as the stm32 conference firmware, except the debugger uses the external
+  pins to allow programming and debugging the stm32 microcontroller of another
+  badge.
+
 ## Cookbook
 
 Here are the steps to get you started. Lets say you've downloaded the source into the
