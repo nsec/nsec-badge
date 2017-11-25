@@ -1,8 +1,5 @@
-Everything is released under the following license, except for the following
-files:
-nrf51/ssd1306.c
-nrf51/ssd1306.h
-nrf51/glcdfont.h
+Everything is released under the following license, except otherwise stated
+in respective files.
 
 ------------------------------------8<-----------------------------------------
 The MIT License (MIT)
