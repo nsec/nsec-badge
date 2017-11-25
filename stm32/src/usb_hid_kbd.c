@@ -1,10 +1,8 @@
-//
 // Copyright (c) 2017
 // Benjamin Vanheuverzwijn <bvanheu@gmail.com>
 // Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
 // License: MIT (see LICENSE for details)
-//
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -148,7 +146,7 @@ static int usbhidkbd_control_request(usbd_device *dev,
     (void)dev;
 
     // wValue -> [DescriptorType & 0xff00 + DescriptorIndex & 0x00ff]
-    if ((req->bmRequestType != 0x81) || 
+    if ((req->bmRequestType != 0x81) ||
             (req->bRequest != USB_REQ_GET_DESCRIPTOR) ||
             ((req->wValue != 0x2200) &&
             (req->wValue != 0x2100))) {

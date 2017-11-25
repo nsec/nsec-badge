@@ -1,8 +1,8 @@
-/*
- * Copyright (c) 2015, Benjamin Vanheuverzwijn <bvanheu@gmail.com>
- * Copyright (c) 2017, Marc-Etienne M.Léveillé <marc.etienne.ml@gmail.com>
- * License: MIT (see LICENSE for details)
- */
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
+//
+//  License: MIT (see LICENSE for details)
 
 #include <stdint.h>
 

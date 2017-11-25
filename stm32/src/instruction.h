@@ -1,12 +1,11 @@
-//
 // Copyright (c) 2017
 // Benjamin Vanheuverzwijn <bvanheu@gmail.com>
 // Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
 // License: MIT (see LICENSE for details)
-//
 
-#pragma once
+#ifndef INSTRUCTION_H
+#define INSTRUCTION_H
 
 enum instruction {
     INSTR_RESET = 0,
@@ -31,3 +30,4 @@ enum instruction {
     INSTR_SHL,          // Shift left
 };
 
+#endif

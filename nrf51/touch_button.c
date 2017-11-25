@@ -1,10 +1,8 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
-//  touch_button.c
-//  nsec16
-//
-//  Created by Marc-Etienne M.Léveillé on 2016-05-18.
-//
-//
+//  License: MIT (see LICENSE for details)
 
 #include "touch_button.h"
 #include <stdint.h>

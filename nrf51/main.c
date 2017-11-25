@@ -1,8 +1,8 @@
-/*
- * Copyright (c) 2015, Benjamin Vanheuverzwijn <bvanheu@gmail.com>
- * Copyright (c) 2016, Marc-Etienne M.Léveillé <marc.etienne.ml@gmail.com>
- * License: MIT (see LICENSE for details)
- */
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
+//
+//  License: MIT (see LICENSE for details)
 
 #include "boards.h"
 
@@ -57,7 +57,7 @@ void wdt_init(void)
 
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     static int error_displayed = 0;
-    
+
     if(!error_displayed) {
         char error_msg[128];
         error_info_t * err_info = (error_info_t *) info;
@@ -75,7 +75,7 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
         count--;
     }
 
-    NVIC_SystemReset(); 
+    NVIC_SystemReset();
 }
 
 

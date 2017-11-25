@@ -1,3 +1,9 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
+//
+//  License: MIT (see LICENSE for details)
+
 #include "menu.h"
 #include "ssd1306.h"
 #include "string.h"

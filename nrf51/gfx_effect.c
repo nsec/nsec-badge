@@ -1,10 +1,8 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
-//  gfx_effect.c
-//  nsec16
-//
-//  Created by Marc-Etienne M.Léveillé on 2017-02-26.
-//
-//
+//  License: MIT (see LICENSE for details)
 
 #include "gfx_effect.h"
 #include "ssd1306.h"

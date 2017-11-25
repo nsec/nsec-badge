@@ -1,10 +1,8 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
-//  identity.h
-//  nsec16
-//
-//  Created by Marc-Etienne M.Léveillé on 2017-04-24.
-//
-//
+//  License: MIT (see LICENSE for details)
 
 #ifndef identity_h
 #define identity_h

@@ -1,10 +1,8 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
-//  battery_manager.c
-//  nsec16
-//
-//  Created by Marc-Etienne M.Léveillé on 2016-05-17.
-//
-//
+//  License: MIT (see LICENSE for details)
 
 #include "battery.h"
 #include <app_timer.h>

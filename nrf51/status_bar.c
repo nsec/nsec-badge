@@ -1,10 +1,8 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
-//  status_bar.c
-//  nsec16
-//
-//  Created by Marc-Etienne M.Léveillé on 2016-05-14.
-//
-//
+//  License: MIT (see LICENSE for details)
 
 #include "status_bar.h"
 #include "ssd1306.h"

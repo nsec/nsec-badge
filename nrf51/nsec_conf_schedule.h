@@ -1,10 +1,8 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
-//  nsec_conf_schedule.h
-//  nsec17
-//
-//  Created by Marc-Etienne M.Léveillé on 2016-05-13.
-//
-//
+//  License: MIT (see LICENSE for details)
 
 #ifndef nsec_conf_schedule_h
 #define nsec_conf_schedule_h

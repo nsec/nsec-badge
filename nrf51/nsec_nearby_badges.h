@@ -1,10 +1,8 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
-//  nsec_nearby_badges.h
-//  nsec16
-//
-//  Created by Marc-Etienne M.Léveillé on 2017-05-15.
-//
-//
+//  License: MIT (see LICENSE for details)
 
 #ifndef nsec_nearby_badges_h
 #define nsec_nearby_badges_h

@@ -1,10 +1,8 @@
+//  Copyright (c) 2017
+//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
-//  led_effects.c
-//  nsec16
-//
-//  Created by Marc-Etienne M.Léveillé on 2017-04-15.
-//
-//
+//  License: MIT (see LICENSE for details)
 
 #include "led_effects.h"
 
