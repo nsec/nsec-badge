@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>The NorthSec 2017 Badge</title>
+    <link rel="stylesheet" href="layout.css" type="text/css">
+</head>
+<body>
+    <h1>핰<span class="small">.ga</h1>
+    <h2>The NorthSec 2017 Badge</h2>
+    <h3></h3>
+    <p>Hey! You found a URL on the badge!</p>
+    <p>
+        Come back later. We will update this page and explain the cool stuff you
+        can do with it.
+    </p>
+    <h3>Schematics</h3>
+    <p>
+        Yep, you can download it,
+        <a href="northsec_2017_schematics.pdf">here</a>. We'll release even more
+        details soon.
+    </p>
+    <h3>Customizing your badge</h3>
+    <p>
+        The badge exposes a Bluetooth Low Energy (BLE) service that allows you
+        to customize your badge wirelessly. The name and the avatar image can be
+        changed.
+    </p>
+    <p>The service UUID is <code>6AA99996-93B3-95BA-BC40-42684CDB36FB</code>.
+    <p>
+        Here is a description of the characteristics:
+    </p>
+    <table>
+        <tr>
+            <th>UUID</th>
+            <th>Permissions</th>
+            <th>Size</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>6AA9<b>6E6D</b>-93B3-95BA-BC40-42684CDB36FB</td>
+            <td>Read-Write</td>
+            <td>14 bytes</td>
+            <td>The owner name (defaults to Comrade #00000).</td>
+        </tr>
+        <tr>
+            <td>6AA9<b>6176</b>-93B3-95BA-BC40-42684CDB36FB</td>
+            <td>Read-Write</td>
+            <td>128 bytes</td>
+            <td>The avatar bitmap, 32x32 pixels at 1 bit per pixel.</td>
+        </tr>
+        <tr>
+            <td>6AA9<b>6176</b>-93B3-95BA-BC40-42684CDB36FB</td>
+            <td>Read-Write</td>
+            <td>4 bytes</td>
+            <td>Sync key. Set this to the sync key displayed in the setting menu
+                to "unlock" the badge and allow you to upload a new name and
+                avatar. The badge will relock if you set it to anything else.
+            </td>
+        </tr>
+        <tr>
+            <td>6AA9<b>6177</b>-93B3-95BA-BC40-42684CDB36FB</td>
+            <td>Read-only</td>
+            <td>1 byte</td>
+            <td>Set to 1 if badge is unlocked, 0 otherwise</td>
+        </tr>
+    </table>
+    <p>
+        To create a customize your badge you shall:
+    </p>
+    <ol>
+        <li>Connect to your badge via BLE. Your badge ID is on the top left of
+            the screen</li>
+        <li>Write your sync key to to "Sync key" characteristic.</li>
+        <li>Write your name as a ascii string to the "name" characteristic.</li>
+        <li>Write a 128 byte bitmap to change you avatar</li>
+        <li>Write a random value (or nothing) to the "Sync key" characteristic
+            to relock and protect your badge from so-called "hackers".</li>
+    </ol>
+    <p>
+        "But, I don't want to write code!"
+    </p>
+    <p>
+        Okay, here is a reference implementation for you. Works on macOS.
+    </p>
+    <p>
+        <a href="https://gist.github.com/marc-etienne/b30e2e88b9fba27ca9536b1acb2b23ca">nsec17_badge_client.swift</a>
+        Usage:
+    </p>
+    <pre>
+        swift nsec17_badge_client.swift --device NSEC1234 --key 5678 [--name NAME | --avatar BITMAP_FILE]
+    </pre>
+    <h3>Hacking your badge</h3>
+    <p>
+        With the conference firware, the USB port exposes a serial device that
+        act as a gdb stub. It is based on the
+        <a href="https://github.com/blacksphere/blackmagic">Black Magic
+        Probe</a>. You can use it to read, write and debug the nRF51 micro
+        controller with only a micro USB cable.
+    </p>
+    <p>
+        If you have the CTF firmware, you can flash the debugger to the STM32
+        too. First, you need to remove the protection using the following Python
+        script: <a href="https://raw.githubusercontent.com/travisgoodspeed/md380tools/master/stm32-dfu">stm32-dfu.py</a>. First, put you badge in DFU mode by holding the
+        "program" button and pressing the "reset" button. Then plug you badge in
+        and use:
+    </p>
+    <pre>
+        python stm32-dfu.py unprotect
+    </pre>
+    <p>
+        This will erase the CTF firmware, but allow you to upload a new
+        firmware. To upload a new firmware, put your badge in DFU mode again and
+        use <code><a href="http://dfu-util.sourceforge.net">dfu-util</a></code>,
+        with the following settings:
+    </p>
+    <pre>
+        dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download FIRMWARE_FILE.bin
+    </pre>
+    <p>
+        The following firmware images are available for the STM32 chip:
+    </p>
+    <ul>
+        <li><a href="firmware/nsec17_conf_stm32.bin">NorthSec Conference firmware (with GDB stub)</a></li>
+	<li><a href="firmware/nsec17_ctf_stm32.bin">NorthSec CTF firmware (w/ readprotect)</a> [<a href="firmware/nsec17_ctf_stm32.elf">elf</a>]</li>
+        <li><a href="firmware/nsec17_stm32_crossdebug.bin">Probe to debug another badge with the Program In/Out pinout</a></li>
+    </ul>
+
+    <p>
+    Connecting two badges together:
+    </p>
+    <p>
+    <img src="images/badges_wired.png" alt="Connecting two badges together" />
+    </p>
+
+    <p>
+        Source code will be available after the event.
+    </p>
+    <p>More details to come.</p>
+    <!-- Here is a temporary banana while you wait: -->
+    <!-- http://www.worldwideinterweb.com/images/joomgallery/originals/funny_picture_galleries_689/most_random_pictures_on_the_internet_948/most-random-picture-ever_20150414_1257892901.jpg -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-99369196-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+</body>
+</html>
