@@ -4,6 +4,8 @@ Northsec 2017 Badge
 Brought to you by the Team badge for NorthSec.
 ----------------------------------------------
 
+[Badge website](http://xn--rr8b.ga/)
+
 ## Hardware overview
 
 The Northsec 2017 badge has two programmable micro-controllers:
