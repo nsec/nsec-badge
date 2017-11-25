@@ -138,9 +138,11 @@ Use a DFU compliant software to flash the STM32:
 - [dfu-util](https://www.archlinux.org/packages/community/x86_64/dfu-util/) on ArchLinux
 
 To make a `bin` file from an ELF, run the following:
+
     % arm-none-eabi-objcopy -O binary input.elf output.bin
 
 Run the following command:
+
     % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download nsec17_stm32.bin
 
 The STM32 should reset automagically, running the newly downloaded firmware. The
