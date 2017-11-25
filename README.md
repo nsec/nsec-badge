@@ -1,6 +1,9 @@
 Northsec 2017 Badge
 ===================
 
+Brought to you by the Team badge for NorthSec.
+----------------------------------------------
+
 ## Hardware overview
 
 The Northsec 2017 badge has two programmable micro-controllers:
