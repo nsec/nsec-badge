@@ -69,13 +69,13 @@ The nF51 firmware depends on the Nordic SDK v12.1.0. You can download and extrac
 the SDK by typing `make nordicsdk` in the nrf51 directory.
 
 The nRF51 also uses the s130 "SoftDevice" v2.0.1 to painlessly enable Bluetooth
-Low Energy (BLE), which comes with the SDK. Use 
+Low Energy (BLE), which comes with the SDK. Use
 `make _build/s130_nrf51822_2.0.1_softdevice.elf` to create the ELF file
 from Nordic's binary distribution. Also note: the SoftDevice isn't free
 software. The licence agreement (`s110_nrf51822_7.0.0_licence_agreement.pdf`)
 will be downloaded as well.
 
-The stm32 requires the opencm3 library. The library is setup as a git submodule.
+The stm32 requires the [opencm3](http://libopencm3.org/) library. The library is setup as a git submodule.
 Typing `git submodule init` and `git submodule update` in the stm32 directory
 will fetch the latest version of the library.
 
@@ -118,11 +118,12 @@ to test instructions for it.
 
 ### Via USB
 
-The stm32 can also be flashed by holding the "PROGRAM" button behind the badge
-while pressing the "RESET" button. The stm32 will boot a specific on-chip bootloader
-that implements the DFU interface.
+The stm32 can also be flashed by holding the `PROGRAM` button behind the badge
+while pressing the `RESET` button. The stm32 will boot a specific on-chip bootloader
+that implements the [DFU](https://en.wikipedia.org/wiki/USB#Device_Firmware_Upgrade)
+interface.
 
-Reset the board with the "PROGRAM" button pressed, then release the button.
+Reset the board with the `PROGRAM` button pressed, then release the button.
 
 You should now see a DFU device appearing on your computer:
     % lsusb
@@ -134,7 +135,7 @@ Use a DFU compliant software to flash the STM32:
 - [dfu-util](https://www.archlinux.org/packages/community/x86_64/dfu-util/) on ArchLinux
 
 To make a `bin` file from an ELF, run the following:
-    % arm-none-eabi-objcopy -O binary input.elf output.bin 
+    % arm-none-eabi-objcopy -O binary input.elf output.bin
 
 Run the following command:
     % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download nsec17_stm32.bin
@@ -147,36 +148,36 @@ memory.
 
 There were 7 firmware images built for the NorthSec 2017 event.
 
-- `nsec17_conf_stm32.elf`  
+- `nsec17_conf_stm32.elf`
   The firmware of the stm32 used during the NorthSec conference. It has the
   BlackMagic gdb stub exposed via the USB to reprogram and debug the nrf51 chip.
 
-- `nsec17_conf_nrf51.elf`  
+- `nsec17_conf_nrf51.elf`
   The firmware of the nrf51 used during the NorthSec conference. It exposes a
   BLE service to change you avatar image and name.
 
-- `nsec17_ctf_stm32.elf`  
+- `nsec17_ctf_stm32.elf`
   The firmware of the stm32 used during the NorthSec CTF competition. It does
   *not* have the BlackMagic gdb stub. It exposes a serial device with
   challenges for the CTF. Read protection is enable when this firmware is
   started.
 
-- `nsec17_ctf_nrf51.elf`  
+- `nsec17_ctf_nrf51.elf`
   The firmware of the nrf51 used during the NorthSec CTF competition. It is
   exactly the same as the conference firmware except it displays `CTF` on the
   status bar at the top of the display.
 
-- `nsec17_ctf_nrf51_namechange.elf`  
+- `nsec17_ctf_nrf51_namechange.elf`
   One badge was running the firmware with the actual flag on the admin table
   during the competition. The flag is shown when the name on it is change via
   BLE.
 
-- `nsec17_ctf_nrf51_rao.elf`  
+- `nsec17_ctf_nrf51_rao.elf`
   Rao's badge. The ELF file was distributed during the CTF. One badge was
   running the firmware with the actual flag on the admin table during the
   competition.
 
-- `nsec17_stm32_crossdebug.elf`  
+- `nsec17_stm32_crossdebug.elf`
   Same as the stm32 conference firmware, except the debugger uses the external
   pins to allow programming and debugging the stm32 microcontroller of another
   badge.
@@ -190,7 +191,7 @@ Here are the steps to get you started. Lets say you've downloaded the source int
 
 #### BlackMagic
 
-The blackmagic firmware that runs on the stm32 let you debug and 
+The blackmagic firmware that runs on the stm32 let you debug and
 flash firmware on the nrf51.
 
 To compile the blackmagic firmware for the stm32:
@@ -206,18 +207,18 @@ The CTF firmware will expose 4 challenges over an USB/ACM device.
 
 To compile the CTF firmware for the stm32:
 
-    % make -C libopencm3 TAGETS=stm32/f0
+    % make -C libopencm3 TARGETS=stm32/f0
     % make -C src BINARY=nsec17_stm32_ctf
 
 #### Flashing the firmware
 
 To flash the firmware on the stm32, boot the uController into DFU mode
-by pressing and holding the "PROGRAM" button, press "RESET", then
-releasing the "PROGRAM" button. 
+by pressing and holding the `PROGRAM` button, press `RESET`, then
+releasing the `PROGRAM` button.
 
 Make sure you see a DFU device:
 
-    % lsusb 
+    % lsusb
     Bus 001 Device 057: ID 0483:df11 STMicroelectronics STM Device in DFU Mode
 
 Use [dfu-util](http://dfu-util.sourceforge.net/) to flash the firmware:
@@ -232,8 +233,10 @@ To compile the binary for the nrf51:
     % make nordicsdk
     % make
 
-To flash the binary on the nrf51, you'll need to have the blackmagic firmware
-flashed onto the stm32.
+To flash the binary on the nrf51, you'll need to either:
+
+* have the blackmagic firmware flashed onto the stm32
+* use a BlackMagic device
 
 Use the blackmagic exposed ACM device to flash the firmware using GDB.
 
