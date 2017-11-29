@@ -107,8 +107,11 @@ TERMINAL = dup
 
 TARGETS=$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.elf $(PROJECT_NAME)
 
--include $(TEMPLATE_PATH)/Makefile.common
-$(call define_target, $(PROJECT_NAME))
+.PHONY: bitmaps clean-bitmaps
+
+$(PROJECT_NAME): $(SDK_PATH) bitmaps
+
+clean: clean-bitmaps
 
 %_bitmap.c: %.png
 	python2 gen_image.py -i $< -o $@
@@ -118,13 +121,22 @@ images/font_bitmap.c: images/font.png
 
 bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard images/*.png))
 
+clean-bitmaps:
+	rm -f images/*.c
+
 $(SDK_PATH):
 	wget http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v12.x.x/nRF5_SDK_12.1.0_0d23e2a.zip
 	unzip nRF5_SDK_12.1.0_0d23e2a.zip components/*
-	mv components $(SDK_PATH)
-	patch -p0 -d nordicsdk < nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
-	patch -p0 -d nordicsdk < nordic-sdk-makefile-fix-object-depends-on-src.patch
+	mv components $@
+	patch -p0 -d $@ < nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
+	patch -p0 -d $@ < nordic-sdk-makefile-fix-object-depends-on-src.patch
 	rm nRF5_SDK_12.1.0_0d23e2a.zip
+	# Restart make so that the include of Makefile.common bellow works and
+	# update targets.
+	$(MAKE) $(MAKECMDGOALS)
+
+-include $(TEMPLATE_PATH)/Makefile.common
+$(call define_target, $(PROJECT_NAME))
 
 $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_PATH)
 	cp $(SDK_PATH)/softdevice/s130/hex/s130_nrf51_2.0.1_softdevice.hex $(OUTPUT_DIRECTORY)
