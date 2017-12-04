@@ -41,8 +41,12 @@ enum {
     IDENTITY_CHAR_UUID_IS_UNLOCKED,
 };
 
+#ifdef NSEC_IDENTITY_BLE_SERVICE_DISABLE
+#define UPDATE_BLE_CHARACTERISTIC(uuid, field)
+#else
 #define UPDATE_BLE_CHARACTERISTIC(uuid, field) \
 nsec_ble_set_charateristic_value(identity_ble_handle, uuid, &field, sizeof(field))
+#endif
 
 #ifndef MIN
 #define MIN(a,b) (((a)<(b))?(a):(b))
@@ -52,7 +56,13 @@ static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t
 
 void nsec_identitiy_init(void) {
     memset(identity.name, 0, sizeof(identity.name));
+#if defined(NSEC_HARDCODED_BADGE_IDENTITY_NAME)
+#define NSEC_STRINGIFY_(...) #__VA_ARGS__
+#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
+    snprintf(identity.name, sizeof(identity.name), NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
+#else
     snprintf(identity.name, sizeof(identity.name), "Comrade #%05d", (NRF_FICR->DEVICEID[0] & 0xFFFF));
+#endif
     memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));
     identity.unlocked = 0;
 
@@ -84,7 +94,9 @@ void nsec_identitiy_init(void) {
         .characteristics = c,
     };
     memcpy(srv.uuid, identity_ble_uuid, sizeof(srv.uuid));
+#ifndef NSEC_IDENTITY_BLE_SERVICE_DISABLE
     nsec_ble_register_vendor_service(&srv, &identity_ble_handle);
+#endif
 
     UPDATE_BLE_CHARACTERISTIC(IDENTITY_CHAR_UUID_NAME, identity.name);
     UPDATE_BLE_CHARACTERISTIC(IDENTITY_CHAR_UUID_AVATAR, identity.avatar);

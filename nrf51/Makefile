@@ -2,6 +2,13 @@ PROJECT_NAME = nsec17_badge
 OUTPUT_DIRECTORY := _build
 SDK_PATH = nordicsdk
 
+ifeq ($(FLAVOR), ctf_rao)
+	CFLAGS += -DNSEC_HARDCODED_BADGE_IDENTITY_NAME=Rao!
+	CFLAGS += -DNSEC_HARDCODED_BLE_DEVICE_ID=NSEC1337
+	CFLAGS += -DNSEC_IDENTITY_BLE_SERVICE_DISABLE
+	CFLAGS += -DNSEC_VULNERABLE_BLE_SERVICE_ENABLE
+endif
+
 SRC_FILES  = $(notdir $(wildcard *.c))
 SRC_FILES += $(wildcard ble/*.c)
 SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf51.S

@@ -41,6 +41,7 @@
 #include "gfx_effect.h"
 #include "led_effects.h"
 #include "identity.h"
+#include "exploit_challenge.h"
 #include "nsec_nearby_badges.h"
 
 static char g_device_id[10];
@@ -202,7 +203,13 @@ void show_main_menu(void) {
  * Main
  */
 int main() {
+#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
+#define NSEC_STRINGIFY_(...) #__VA_ARGS__
+#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
+    sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
+#else
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
+#endif
     g_device_id[9] = '\0';
 
     softdevice_init();
@@ -229,6 +236,10 @@ int main() {
 
     nsec_ble_init(g_device_id);
     nsec_ble_add_device_information_service(g_device_id, "NSEC 2017 Badge", NULL, NULL, NULL, NULL);
+
+#ifdef NSEC_VULNERABLE_BLE_SERVICE_ENABLE
+    nsec_vuln_init();
+#endif
 
     nsec_identitiy_init();
 
