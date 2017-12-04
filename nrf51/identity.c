@@ -43,7 +43,12 @@ enum {
     IDENTITY_CHAR_UUID_IS_UNLOCKED,
 };
 
+#ifdef NSEC_IDENTITY_BLE_SERVICE_DISABLE
 #define UPDATE_BLE_CHARACTERISTIC(uuid, field)
+#else
+#define UPDATE_BLE_CHARACTERISTIC(uuid, field) \
+nsec_ble_set_charateristic_value(identity_ble_handle, uuid, &field, sizeof(field))
+#endif
 
 #ifndef MIN
 #define MIN(a,b) (((a)<(b))?(a):(b))
@@ -91,7 +96,9 @@ void nsec_identitiy_init(void) {
         .characteristics = c,
     };
     memcpy(srv.uuid, identity_ble_uuid, sizeof(srv.uuid));
-    //nsec_ble_register_vendor_service(&srv, &identity_ble_handle);
+#ifndef NSEC_IDENTITY_BLE_SERVICE_DISABLE
+    nsec_ble_register_vendor_service(&srv, &identity_ble_handle);
+#endif
 
     UPDATE_BLE_CHARACTERISTIC(IDENTITY_CHAR_UUID_NAME, identity.name);
     UPDATE_BLE_CHARACTERISTIC(IDENTITY_CHAR_UUID_AVATAR, identity.avatar);

@@ -4,6 +4,7 @@ SDK_PATH = nordicsdk
 
 ifeq ($(FLAVOR), ctf_rao)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_IDENTITY_NAME=Rao!
+	CFLAGS += -DNSEC_IDENTITY_BLE_SERVICE_DISABLE
 endif
 
 SRC_FILES  = $(notdir $(wildcard *.c))
