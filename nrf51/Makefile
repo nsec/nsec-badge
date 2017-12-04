@@ -2,6 +2,12 @@ PROJECT_NAME = nsec16_badge
 OUTPUT_DIRECTORY := _build
 SDK_PATH = nordicsdk
 
+ifeq ($(FLAVOR), ctf_rao)
+	CFLAGS += -DNSEC_HARDCODED_BADGE_IDENTITY_NAME=Rao!
+else ifeq ($(FLAVOR), ctf_namechange)
+	CFLAGS += -DNSEC_HARDCODED_BADGE_IDENTITY_NAME="Comrade 31337"
+endif
+
 SRC_FILES  = $(notdir $(wildcard *.c))
 SRC_FILES += $(wildcard ble/*.c)
 SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf51.S

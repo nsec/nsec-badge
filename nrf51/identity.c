@@ -56,7 +56,13 @@ static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t
 
 void nsec_identitiy_init(void) {
     memset(identity.name, 0, sizeof(identity.name));
-    snprintf(identity.name, sizeof(identity.name), "Comrade #%05d", 31337);
+#if defined(NSEC_HARDCODED_BADGE_IDENTITY_NAME)
+#define NSEC_STRINGIFY_(...) #__VA_ARGS__
+#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
+    snprintf(identity.name, sizeof(identity.name), NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
+#else
+    snprintf(identity.name, sizeof(identity.name), "Comrade #%05d", (NRF_FICR->DEVICEID[0] & 0xFFFF));
+#endif
     memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));
     identity.unlocked = 0;
 
