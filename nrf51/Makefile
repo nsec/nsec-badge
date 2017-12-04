@@ -7,6 +7,7 @@ ifeq ($(FLAVOR), ctf_rao)
 else ifeq ($(FLAVOR), ctf_namechange)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_IDENTITY_NAME="Comrade 31337"
 	CFLAGS += -DNSEC_SHOW_FLAG_ON_SUCCESSFUL_NAME_CHANGE
+	CFLAGS += -DNSEC_USE_BUGGY_INDENTITY_UNLOCK_KEY
 endif
 
 SRC_FILES  = $(notdir $(wildcard *.c))

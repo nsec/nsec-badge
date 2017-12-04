@@ -138,7 +138,14 @@ void nsec_identity_update_nearby(void) {
 }
 
 void nsec_identity_get_unlock_key(char * data, size_t length) {
+#ifdef NSEC_USE_BUGGY_INDENTITY_UNLOCK_KEY
+    // This is actually a bug in main.c when the g_device_id is created. It
+    // should be & 0xFFFF (or % 0x10000). It's important that both are
+    // consistant for the challange.
     snprintf(data, length, "%04X", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
+#else
+    snprintf(data, length, "%04X", ((NRF_FICR->DEVICEID[1] & 0xFFFF) ^ 0xC3C3));
+#endif
 }
 
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length) {
