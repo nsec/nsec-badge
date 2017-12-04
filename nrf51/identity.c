@@ -23,7 +23,14 @@
     ((NSEC_IDENTITY_AVATAR_WIDTH * NSEC_IDENTITY_AVATAR_HEIGHT + 1) / 8)
 
 typedef struct {
+#ifdef NSEC_SHOW_FLAG_ON_SUCCESSFUL_NAME_CHANGE
+    // Use 32 bytes to accomodate the flag length.
     char name[32];
+#else
+    // We could probably just always use 32 bytes but the other firmware on the
+    // badge used 16.
+    char name[16];
+#endif
     uint8_t unlocked;
     uint8_t avatar[AVATAR_SIZE];
 } nsec_identity_t;
@@ -50,7 +57,9 @@ nsec_ble_set_charateristic_value(identity_ble_handle, uuid, &field, sizeof(field
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
 
+#ifdef NSEC_SHOW_FLAG_ON_SUCCESSFUL_NAME_CHANGE
 static char flag[] = "flag{ble_all_the_things}";
+#endif
 
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length);
 
@@ -137,8 +146,13 @@ static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t
         case IDENTITY_CHAR_UUID_NAME: {
             if(identity.unlocked) {
                 memset(identity.name, 0, sizeof(identity.name));
+#ifdef NSEC_SHOW_FLAG_ON_SUCCESSFUL_NAME_CHANGE
                 strncpy(identity.name, (char *) flag,
                         MIN(sizeof(flag), sizeof(identity.name)));
+#else
+                strncpy(identity.name, (char *) content,
+                        MIN(content_length, sizeof(identity.name)));
+#endif
                 UPDATE_BLE_CHARACTERISTIC(IDENTITY_CHAR_UUID_NAME, identity.name);
             }
             if(is_at_main_menu) {
