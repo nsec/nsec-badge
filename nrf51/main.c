@@ -203,7 +203,13 @@ void show_main_menu(void) {
  * Main
  */
 int main() {
-    sprintf(g_device_id, "NSEC1337");
+#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
+#define NSEC_STRINGIFY_(...) #__VA_ARGS__
+#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
+    sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
+#else
+    sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
+#endif
     g_device_id[9] = '\0';
 
     softdevice_init();
