@@ -94,7 +94,11 @@ static void flashlight(uint8_t item) {
 void nsec_setting_show(void) {
     char key[8];
     nsec_identity_get_unlock_key(key, sizeof(key));
+#ifdef NSEC_HIDE_SYNC_KEY_IN_SETTINGS
+    snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", "XXXX");
+#else
     snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
+#endif
     gfx_fillRect(0, 8, 128, 65 - 8, BLACK);
     menu_init(0, 12, 128, 64 - 12, sizeof(settings_items) / sizeof(settings_items[0]), settings_items);
     nsec_controls_add_handler(setting_handle_buttons);
