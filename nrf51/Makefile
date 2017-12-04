@@ -139,7 +139,7 @@ $(SDK_PATH):
 $(call define_target, $(PROJECT_NAME))
 
 $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_PATH)
-	cp $(SDK_PATH)/softdevice/s130/hex/s130_nrf51_2.0.1_softdevice.hex $(OUTPUT_DIRECTORY)
+	cp $(SDK_PATH)/softdevice/s130/hex/s130_nrf51_2.0.1_softdevice.hex $@
 
 $(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
 	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@
