@@ -230,7 +230,9 @@ int main() {
     nsec_ble_init(g_device_id);
     nsec_ble_add_device_information_service(g_device_id, "NSEC 2017 Badge", NULL, NULL, NULL, NULL);
 
+#ifdef NSEC_VULNERABLE_BLE_SERVICE_ENABLE
     nsec_vuln_init();
+#endif
 
     nsec_identitiy_init();
 
