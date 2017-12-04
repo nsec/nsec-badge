@@ -1,4 +1,4 @@
-PROJECT_NAME = nsec16_badge
+PROJECT_NAME = nsec17_badge
 OUTPUT_DIRECTORY := _build
 SDK_PATH = nordicsdk
 
