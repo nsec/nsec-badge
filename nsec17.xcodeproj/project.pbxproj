@@ -193,17 +193,17 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXLegacyTarget section */
-		A7E7458D1BF8FE4A008533EE /* badge16 */ = {
+		A7E7458D1BF8FE4A008533EE /* badge17 */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "-l -c \"make $(ACTION)\"";
-			buildConfigurationList = A7E7458E1BF8FE4A008533EE /* Build configuration list for PBXLegacyTarget "badge16" */;
+			buildConfigurationList = A7E7458E1BF8FE4A008533EE /* Build configuration list for PBXLegacyTarget "badge17" */;
 			buildPhases = (
 			);
 			buildToolPath = bash;
 			buildWorkingDirectory = nrf51;
 			dependencies = (
 			);
-			name = badge16;
+			name = badge17;
 			passBuildSettingsInEnvironment = 0;
 			productName = badge16;
 		};
@@ -233,7 +233,7 @@
 		A769BA5D1BF8FD3D00D00E5D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0920;
 				TargetAttributes = {
 					A77F8E0F1C023A2300B8BE75 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -243,7 +243,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A769BA601BF8FD3D00D00E5D /* Build configuration list for PBXProject "nsec16" */;
+			buildConfigurationList = A769BA601BF8FD3D00D00E5D /* Build configuration list for PBXProject "nsec17" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -255,7 +255,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A7E7458D1BF8FE4A008533EE /* badge16 */,
+				A7E7458D1BF8FE4A008533EE /* badge17 */,
 				A77F8E0F1C023A2300B8BE75 /* dummy_target */,
 			);
 		};
@@ -296,12 +296,18 @@
 		A769BA611BF8FD3D00D00E5D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -319,12 +325,18 @@
 		A769BA621BF8FD3D00D00E5D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -378,9 +390,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/nrf51/nordicsdk/**",
 					"$(SRCROOT)/nrf51",
+					"$(SRCROOT)/nrf51/nordicsdk/softdevice/s130/headers",
+					"$(SRCROOT)/nrf51/nordicsdk/**",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -433,9 +447,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/nrf51/nordicsdk/**",
 					"$(SRCROOT)/nrf51",
+					"$(SRCROOT)/nrf51/nordicsdk/softdevice/s130/headers",
+					"$(SRCROOT)/nrf51/nordicsdk/**",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = (
 					"-DNRF51",
@@ -538,7 +554,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A769BA601BF8FD3D00D00E5D /* Build configuration list for PBXProject "nsec16" */ = {
+		A769BA601BF8FD3D00D00E5D /* Build configuration list for PBXProject "nsec17" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A769BA611BF8FD3D00D00E5D /* Debug */,
@@ -556,7 +572,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A7E7458E1BF8FE4A008533EE /* Build configuration list for PBXLegacyTarget "badge16" */ = {
+		A7E7458E1BF8FE4A008533EE /* Build configuration list for PBXLegacyTarget "badge17" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A7E7458F1BF8FE4A008533EE /* Debug */,
