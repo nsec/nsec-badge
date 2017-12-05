@@ -44,6 +44,9 @@
 #include "exploit_challenge.h"
 #include "nsec_nearby_badges.h"
 
+#define NSEC_STRINGIFY_(...) #__VA_ARGS__
+#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
+
 static char g_device_id[10];
 
 bool is_at_main_menu = false;
@@ -204,8 +207,6 @@ void show_main_menu(void) {
  */
 int main() {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
-#define NSEC_STRINGIFY_(...) #__VA_ARGS__
-#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
 #else
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
@@ -247,7 +248,7 @@ int main() {
 
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
-    nsec_status_set_badge_class("CTF");
+    nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     nsec_intro();
