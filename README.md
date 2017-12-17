@@ -215,7 +215,7 @@ The CTF firmware will expose 4 challenges over an USB/ACM device.
 To compile the CTF firmware for the stm32:
 
     % make -C libopencm3 TARGETS=stm32/f0
-    % make -C src BINARY=nsec17_stm32_ctf
+    % make -C src FLAVOR=nsec17_stm32_ctf
 
 #### Flashing the firmware
 
