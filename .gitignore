@@ -1,8 +1,7 @@
-nrf51/builds
+builds
 nrf51/*.jlink
 nrf51/images/*.c
 nrf51/nordicsdk
-stm32/builds
 stm32/src/*.o
 stm32/src/*.d
 stm32/src/*.elf
