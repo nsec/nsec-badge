@@ -8,7 +8,7 @@ Brought to you by the Team badge for NorthSec.
 
 ## Hardware overview
 
-The Northsec 2017 badge has two programmable micro-controllers:
+The NorthSec 2017 badge has two programmable micro-controllers:
 
  - The [Nordic Semiconductor](https://www.nordicsemi.com) [`nRF51822`](https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy2/nRF51822) (nRF51) and
  - The [STMicroelectronics](http://www.st.com/) [`stm32f072cb`](http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f0-series/stm32f0x2/stm32f072cb.html) (stm32).
@@ -71,18 +71,21 @@ https://launchpad.net/gcc-arm-embedded.
 ### Dependencies
 
 The nF51 firmware depends on the Nordic SDK v12.1.0. You can download and extract
-the SDK by typing `make nordicsdk` in the nrf51 directory.
+the SDK by typing `make nordicsdk` in the `nrf51` directory. I will also be done
+automatically when building the first time.
 
 The nRF51 also uses the s130 "SoftDevice" v2.0.1 to painlessly enable Bluetooth
 Low Energy (BLE), which comes with the SDK. Use
-`make _build/s130_nrf51822_2.0.1_softdevice.elf` to create the ELF file
-from Nordic's binary distribution. Also note: the SoftDevice isn't free
-software. The licence agreement (`s110_nrf51822_7.0.0_licence_agreement.pdf`)
-will be downloaded as well.
+`make builds/s130_nrf51822_2.0.1_softdevice.elf` to create the ELF file
+from Nordic's binary distribution.
 
-The stm32 requires the [opencm3](http://libopencm3.org/) library. The library is setup as a git submodule.
-Typing `git submodule init` and `git submodule update` in the stm32 directory
-will fetch the latest version of the library.
+NOTE: The Nordic SDK and the SoftDevice isn't free software. The licence
+agreements (`nordicsdk_licence_agreement.txt` and
+`s130_nrf51_2.0.1_licence_agreement.txt`) will be downloaded as well.
+
+The stm32 requires the [opencm3](http://libopencm3.org/) library. The library
+is setup as a git submodule. Typing `git submodule init` and `git submodule
+update` in the stm32 directory will fetch the latest version of the library.
 
 ## Programming
 
@@ -110,13 +113,13 @@ monitor swdp_scan
 attach 1
 set mem inaccessible-by-default off
 set debug arm
-load _build/s110_nrf51822_7.0.0_softdevice.elf
-load _build/nsec16_badge_s110.elf
+load buildsfs130_nrf51822_2.0.1_softdevice.eld
+load builds/nsec17_nrf51_conf.elf
 quit
 ```
 
 The stm32 can be flashed in a similar fashion, although you will want to
-`load stm32f072cb.elf` instead.
+`load nsec17_stm32_conf.elf` instead.
 
 You can also use the (more expensive) STLink, but we do not have the hardware
 to test instructions for it.
@@ -148,58 +151,58 @@ Run the following command:
     % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download nsec17_stm32.bin
 
 The STM32 should reset automagically, running the newly downloaded firmware. The
-addres of 0x08000000 is important, this is where the stm32 flash is mapped into
+address of 0x08000000 is important, this is where the stm32 flash is mapped into
 memory.
 
 ## Firmware of NorthSec 2017
 
-There were 7 firmware images built for the NorthSec 2017 event.
+There were 9 firmware images built for the NorthSec 2017 event.
 
-- `nsec17_conf_stm32.elf`
-  The firmware of the stm32 used during the NorthSec conference. It has the
-  BlackMagic gdb stub exposed via the USB to reprogram and debug the nrf51 chip.
+### `nsec17_stm32_conf.elf`
 
-- `nsec17_conf_nrf51.elf`
-  The firmware of the nrf51 used during the NorthSec conference. It exposes a
-  BLE service to change you avatar image and name.
+The firmware of the stm32 used during the NorthSec conference. It has the
+BlackMagic gdb stub exposed via the USB to reprogram and debug the nrf51 chip.
 
-- `nsec17_ctf_stm32.elf`
-  The firmware of the stm32 used during the NorthSec CTF competition. It does
-  *not* have the BlackMagic gdb stub. It exposes a serial device with
-  challenges for the CTF. Read protection is enable when this firmware is
-  started.
+### `nsec17_stm32_ctf.elf`
 
-- `nsec17_ctf_nrf51.elf`
-  The firmware of the nrf51 used during the NorthSec CTF competition. It is
-  exactly the same as the conference firmware except it displays `CTF` on the
-  status bar at the top of the display.
+The firmware of the stm32 used during the NorthSec CTF competition. It does
+*not* have the BlackMagic gdb stub. It exposes a serial device with challenges
+for the CTF. Read protection is enable when this firmware is started.
 
-- `nsec17_ctf_nrf51_namechange.elf`
-  One badge was running the firmware with the actual flag on the admin table
-  during the competition. The flag is shown when the name on it is change via
-  BLE.
+### `nsec17_stm32_crossdebug.elf`
 
-- `nsec17_ctf_nrf51_rao.elf`
-  Rao's badge. The ELF file was distributed during the CTF. One badge was
-  running the firmware with the actual flag on the admin table during the
-  competition.
+Same as the stm32 conference firmware, except the debugger uses the external
+pins to allow programming and debugging the stm32 micro-controller of another
+badge.
 
-- `nsec17_stm32_crossdebug.elf`
-  Same as the stm32 conference firmware, except the debugger uses the external
-  pins to allow programming and debugging the stm32 microcontroller of another
-  badge.
+### `nsec17_nrf51_{conf,admin,speaker,ctf}.elf`
+
+The firmware of the nRF51 used during the NorthSec conference and CTF. It
+exposes a BLE service to change you avatar image and name. `admin`, `speaker`
+and `ctf` has a special label in the status bar at the top of the display, all
+the rest is the same.
+
+### `nsec17_nrf51_ctf_namechange.elf`
+
+One badge was running the firmware with the actual flag on the admin table
+during the competition. The flag is shown when the name on it is change via BLE.
+
+### `nsec17_nrf51_ctf_rao.elf`
+
+Rao's badge. The ELF file was distributed during the CTF. One badge was running
+the firmware with the actual flag on the admin table during the competition.
 
 ## Cookbook
 
 Here are the steps to get you started. Lets say you've downloaded the source into the
-`nsec_badge` folder.
+`nsec-badge` folder.
 
 ### stm32
 
 #### BlackMagic
 
-The blackmagic firmware that runs on the stm32 let you debug and
-flash firmware on the nrf51.
+The blackmagic firmware that runs on the stm32 let you debug and flash firmware
+on the nrf51.
 
 To compile the blackmagic firmware for the stm32:
 
@@ -215,13 +218,13 @@ The CTF firmware will expose 4 challenges over an USB/ACM device.
 To compile the CTF firmware for the stm32:
 
     % make -C libopencm3 TARGETS=stm32/f0
-    % make -C src FLAVOR=nsec17_stm32_ctf
+    % make -C src FLAVOR=ctf
 
 #### Flashing the firmware
 
-To flash the firmware on the stm32, boot the uController into DFU mode
-by pressing and holding the `PROGRAM` button, press `RESET`, then
-releasing the `PROGRAM` button.
+To flash the firmware on the stm32, boot the uController into DFU mode by
+pressing and holding the `PROGRAM` button, press `RESET`, then releasing the
+`PROGRAM` button.
 
 Make sure you see a DFU device:
 
@@ -237,13 +240,11 @@ Use [dfu-util](http://dfu-util.sourceforge.net/) to flash the firmware:
 To compile the binary for the nrf51:
 
     % cd nrf51
-    % make nordicsdk
     % make
 
 To flash the binary on the nrf51, you'll need to either:
 
-* have the blackmagic firmware flashed onto the stm32
+* have the blackmagic firmware (`conf`) flashed onto the stm32
 * use a BlackMagic device
 
 Use the blackmagic exposed ACM device to flash the firmware using GDB.
-
