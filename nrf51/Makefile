@@ -1,6 +1,6 @@
 FLAVOR ?= conf
 PROJECT_NAME = nsec17_nrf51_$(FLAVOR)
-OUTPUT_DIRECTORY := _build
+OUTPUT_DIRECTORY := builds
 SDK_PATH = nordicsdk
 
 ifeq ($(FLAVOR), ctf_rao)

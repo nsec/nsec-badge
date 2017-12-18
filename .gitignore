@@ -1,4 +1,4 @@
-nrf51/_build
+nrf51/builds
 nrf51/*.jlink
 nrf51/images/*.c
 nrf51/nordicsdk
