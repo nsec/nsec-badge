@@ -1,4 +1,5 @@
-PROJECT_NAME = nsec17_badge
+FLAVOR ?= conf
+PROJECT_NAME = nsec17_nrf51_$(FLAVOR)
 OUTPUT_DIRECTORY := _build
 SDK_PATH = nordicsdk
 
@@ -17,6 +18,9 @@ else ifeq ($(FLAVOR), speaker)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPEAKER
 else ifeq ($(FLAVOR), admin)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=ADMIN
+else ifneq ($(FLAVOR), conf)
+all:
+$(error "Unknown flavor `$(FLAVOR)`")
 endif
 
 SRC_FILES  = $(notdir $(wildcard *.c))
