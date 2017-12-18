@@ -151,6 +151,8 @@ $(SDK_PATH):
 	mv components $@
 	patch -p0 -d $@ < nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
 	patch -p0 -d $@ < nordic-sdk-makefile-fix-object-depends-on-src.patch
+	unzip -n -p nRF5_SDK_12.1.0_0d23e2a.zip documentation/license.txt > nordicsdk_licence_agreement.txt
+	cp $@/softdevice/s130/doc/s130_nrf51_2.0.1_licence_agreement.txt .
 	rm nRF5_SDK_12.1.0_0d23e2a.zip
 	# Restart make so that the include of Makefile.common bellow works and
 	# update targets.
