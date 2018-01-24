@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <nrf51.h>
+#include <nrf52.h>
 #include <nrf_gpio.h>
 #include <nrf_drv_spis.h>
 #include <app_error.h>

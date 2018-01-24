@@ -1,4 +1,4 @@
-#include <device/nrf51822_peripherals.h>
+#include <device/nrf52832_peripherals.h>
 
 #define SPI_ENABLED 1
 #define SPI0_ENABLED 1
@@ -22,7 +22,7 @@
 #define FDS_CHUNK_QUEUE_SIZE 8
 #define FDS_MAX_USERS 8
 #define FDS_VIRTUAL_PAGES 3
-#define FDS_VIRTUAL_PAGE_SIZE 256
+#define FDS_VIRTUAL_PAGE_SIZE 1024
 #define FSTORAGE_ENABLED 1
 #define FS_QUEUE_SIZE 4
 #define FS_OP_MAX_RETRIES 3

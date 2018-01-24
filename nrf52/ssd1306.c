@@ -23,7 +23,7 @@ All text above, and the splash screen below must be included in any redistributi
 #include <app_error.h>
 #include <app_util_platform.h>
 #include <nrf_drv_spi.h>
-#include <nrf51.h>
+#include <nrf52.h>
 #include <nrf_error.h>
 #include <nrf_gpio.h>
 #include <nrf_delay.h>

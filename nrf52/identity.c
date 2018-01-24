@@ -7,7 +7,7 @@
 #include "identity.h"
 #include <stdint.h>
 #include <stdio.h>
-#include <nrf51.h>
+#include <nrf52.h>
 #include "ble/nsec_ble.h"
 #include "ssd1306.h"
 #include "nsec_nearby_badges.h"

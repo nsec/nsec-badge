@@ -1,5 +1,5 @@
-FLAVOR ?= conf
-PROJECT_NAME = nsec17_nrf51_$(FLAVOR)
+FLAVOR ?= devboard
+PROJECT_NAME = nsec18_nrf52_$(FLAVOR)
 OUTPUT_DIRECTORY := builds
 SDK_PATH = nordicsdk
 
@@ -18,15 +18,23 @@ else ifeq ($(FLAVOR), speaker)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPEAKER
 else ifeq ($(FLAVOR), admin)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=ADMIN
+else ifeq ($(FLAVOR), devboard)
+	#special flags for the devboard
+	ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
+	ASMFLAGS += -DBOARD_PCA10040
+	ASMFLAGS += -DBSP_DEFINES_ONLY
+	CFLAGS += -DCONFIG_GPIO_AS_PINRESET
+	CFLAGS += -DBOARD_PCA10040
+	CFLAGS += -DBSP_DEFINES_ONLY
 else ifneq ($(FLAVOR), conf)
 all:
 $(error "Unknown flavor `$(FLAVOR)`")
 endif
 
 SRC_FILES  = $(notdir $(wildcard *.c))
-SRC_FILES += $(wildcard ble/*.c)
-SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf51.S
-SRC_FILES += $(SDK_PATH)/toolchain/system_nrf51.c
+#SRC_FILES += $(wildcard ble/*.c)
+SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
+SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
 SRC_FILES += $(SDK_PATH)/libraries/timer/app_timer.c
 SRC_FILES += $(SDK_PATH)/libraries/scheduler/app_scheduler.c
 SRC_FILES += $(SDK_PATH)/libraries/timer/app_timer_appsh.c
@@ -39,19 +47,19 @@ SRC_FILES += $(SDK_PATH)/libraries/util/app_error.c
 SRC_FILES += $(SDK_PATH)/libraries/util/sdk_mapped_flags.c
 SRC_FILES += $(SDK_PATH)/libraries/fds/fds.c
 SRC_FILES += $(SDK_PATH)/libraries/fstorage/fstorage.c
-SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
-SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
-SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
-SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_state.c
-SRC_FILES += $(SDK_PATH)/softdevice/common/softdevice_handler/softdevice_handler.c
+#SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
+#SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
+#SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
+#SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_state.c
+#SRC_FILES += $(SDK_PATH)/softdevice/common/softdevice_handler/softdevice_handler.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/common/nrf_drv_common.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_slave/nrf_drv_spis.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/nrf_drv_spi.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
-SRC_FILES += $(wildcard $(SDK_PATH)/ble/peer_manager/*.c)
-SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
-SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_hids/ble_hids.c
-SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_bas/ble_bas.c
+#SRC_FILES += $(wildcard $(SDK_PATH)/ble/peer_manager/*.c)
+#SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
+#SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_hids/ble_hids.c
+#SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_bas/ble_bas.c
 
 INC_FOLDERS  = .
 INC_FOLDERS += $(SDK_PATH)
@@ -79,17 +87,17 @@ INC_FOLDERS += $(SDK_PATH)/libraries/log/src
 INC_FOLDERS += $(SDK_PATH)/libraries/fds
 INC_FOLDERS += $(SDK_PATH)/libraries/fstorage
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
-INC_FOLDERS += $(SDK_PATH)/ble/common
-INC_FOLDERS += $(SDK_PATH)/ble/peer_manager
-INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_bas
-INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_dis
-INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_hids
+#INC_FOLDERS += $(SDK_PATH)/ble/common
+#INC_FOLDERS += $(SDK_PATH)/ble/peer_manager
+#INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_bas
+#INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_dis
+#INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_hids
 INC_FOLDERS += $(SDK_PATH)/serialization/common/transport/ser_phy/config
 
-DEVICE = NRF51
+DEVICE = NRF52
 
-USE_SOFTDEVICE = s130
-SOFTDEVICE = $(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex
+#USE_SOFTDEVICE = s132
+#SOFTDEVICE = $(OUTPUT_DIRECTORY)/s132_nrf52_3.0.0_softdevice.hex
 
 TEMPLATE_PATH = $(SDK_PATH)/toolchain/gcc/
 
@@ -97,36 +105,39 @@ CFLAGS += -DDEBUG -g3 -Os
 LDFLAGS += -g3
 ASMFLAGS += -DDEBUG -g3 -Os
 
-CFLAGS += -DNRF51
-CFLAGS += -DNRF51822_QFAA_CA
-CFLAGS += -DNRF51822
-CFLAGS += -DSPI_MASTER_0_ENABLE
-CFLAGS += -DPROD
-CFLAGS += -DSOFTDEVICE_PRESENT
-CFLAGS += -DBLE_STACK_SUPPORT_REQD
-CFLAGS += -DNRF_SD_BLE_API_VERSION=2
-CFLAGS += -DS130
+#CFLAGS += -DNRF51822_QFAA_CA
+#CFLAGS += -DNRF51822
+#CFLAGS += -DSPI_MASTER_0_ENABLE
+#CFLAGS += -DPROD
+#CFLAGS += -DSOFTDEVICE_PRESENT
+#CFLAGS += -DBLE_STACK_SUPPORT_REQD
+#CFLAGS += -DNRF_SD_BLE_API_VERSION=2
+#CFLAGS += -DS132
 CFLAGS += -flto -ffunction-sections -fdata-sections -fno-builtin -fno-omit-frame-pointer -Os
-CFLAGS += -mthumb -mabi=aapcs -mcpu=cortex-m0
+CFLAGS += -mthumb -mabi=aapcs -mcpu=cortex-m4
 LDFLAGS += --specs=nano.specs -lc -lnosys -Wl,--gc-sections -fno-omit-frame-pointer -Os
 LDFLAGS += -mthumb -mabi=aapcs
-LDFLAGS += -mcpu=cortex-m0
+LDFLAGS += -mcpu=cortex-m4
 LDFLAGS += -L $(TEMPLATE_PATH)
 LDFLAGS += -T nsec_badge.ld
 
+CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CFLAGS += -DNRF52
+LDFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+
 ASMFLAGS += -x assembler-with-cpp
-ASMFLAGS += -DSWI_DISABLE0
-ASMFLAGS += -DSOFTDEVICE_PRESENT
-ASMFLAGS += -DNRF51
-ASMFLAGS += -DNRF51822
-ASMFLAGS += -DS130
-ASMFLAGS += -DBLE_STACK_SUPPORT_REQD
-ASMFLAGS += -DNRF_SD_BLE_API_VERSION=2
+#ASMFLAGS += -DSWI_DISABLE0
+#ASMFLAGS += -DSOFTDEVICE_PRESENT
+#ASMFLAGS += -DNRF51822
+#ASMFLAGS += -DS132
+#ASMFLAGS += -DBLE_STACK_SUPPORT_REQD
+#ASMFLAGS += -DNRF_SD_BLE_API_VERSION=2
 ASMFLAGS += -D__HEAP_SIZE=0
+ASMFLAGS += -DNRF52
 
 TERMINAL = dup
 
-TARGETS=$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.elf $(PROJECT_NAME)
+TARGETS=$(OUTPUT_DIRECTORY)/s132_nrf52_3.0.0_softdevice.elf $(PROJECT_NAME)
 
 .PHONY: bitmaps clean-bitmaps
 
@@ -152,7 +163,7 @@ $(SDK_PATH):
 	patch -p0 -d $@ < nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
 	patch -p0 -d $@ < nordic-sdk-makefile-fix-object-depends-on-src.patch
 	unzip -n -p nRF5_SDK_12.1.0_0d23e2a.zip documentation/license.txt > nordicsdk_licence_agreement.txt
-	cp $@/softdevice/s130/doc/s130_nrf51_2.0.1_licence_agreement.txt .
+	cp $@/softdevice/s130/doc/s132_nrf52_3.0.0_licence_agreement.txt .
 	rm nRF5_SDK_12.1.0_0d23e2a.zip
 	# Restart make so that the include of Makefile.common bellow works and
 	# update targets.
@@ -161,8 +172,8 @@ $(SDK_PATH):
 -include $(TEMPLATE_PATH)/Makefile.common
 $(call define_target, $(PROJECT_NAME))
 
-$(OUTPUT_DIRECTORY)/s130_nrf51_2.0.1_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_PATH)
-	cp $(SDK_PATH)/softdevice/s130/hex/s130_nrf51_2.0.1_softdevice.hex $@
+$(OUTPUT_DIRECTORY)/s132_nrf52_3.0.0_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_PATH)
+	cp $(SDK_PATH)/softdevice/s130/hex/s132_nrf52_3.0.0_softdevice.hex $@
 
 $(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
 	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@

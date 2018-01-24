@@ -5,9 +5,9 @@ GROUP(-lgcc -lc -lnosys)
 
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x1b000, LENGTH = 0x25000
+  FLASH (rx) : ORIGIN = 0x0, LENGTH = 0x80000
   /* 0x1FF8 as returned by sd_ble_enable */
-  RAM (rwx) :  ORIGIN = 0x20000000 + 0x1FF8, LENGTH = 0x4000 - 0x1FF8
+  RAM (rw) :  ORIGIN = 0x20000000, LENGTH = 0x10000
 }
 
 SECTIONS

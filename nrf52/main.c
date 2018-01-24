@@ -22,8 +22,8 @@
 #include <nrf_error.h>
 #include <nrf_gpio.h>
 #include <nrf_delay.h>
-#include <nrf51.h>
-#include <nrf51_bitfields.h>
+#include <nrf52.h>
+#include <nrf52_bitfields.h>
 #include <nordic_common.h>
 
 #include <stdbool.h>
@@ -50,7 +50,7 @@
 static char g_device_id[10];
 
 bool is_at_main_menu = false;
-
+/*
 void wdt_init(void)
 {
     NRF_WDT->CONFIG = (WDT_CONFIG_HALT_Pause << WDT_CONFIG_HALT_Pos) | ( WDT_CONFIG_SLEEP_Run << WDT_CONFIG_SLEEP_Pos);   //Configure Watchdog. a) Pause watchdog while the CPU is halted by the debugger.  b) Keep the watchdog running while the CPU is sleeping.
@@ -58,8 +58,8 @@ void wdt_init(void)
     NRF_WDT->RREN |= WDT_RREN_RR0_Msk;  //Enable reload register 0
     NRF_WDT->TASKS_START = 1;           //Start the Watchdog timer
 }
-
-void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
+*/
+void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {}/*
     static int error_displayed = 0;
 
     if(!error_displayed) {
@@ -86,7 +86,7 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
 /**
  * Callback function for asserts in the SoftDevice.
  * This function will be called in case of an assert in the SoftDevice.
- */
+ *
 void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name) {
     app_error_handler(0xdeadbeef, line_num, p_file_name);
 }
@@ -94,7 +94,7 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name) {
 
 /**
  * Task timers
- */
+ *
 // Green hearbeat
 APP_TIMER_DEF(m_heartbeat_timer_id);
 static void heartbeat_timeout_handler(void * p_context) {
@@ -107,13 +107,13 @@ static void heartbeat_timeout_handler(void * p_context) {
 
 /**
  * Init functions
- */
+ *
 static void timers_init(void) {
     uint32_t err_code;
 
-    // Initialize timer module.
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, 16 /* APP_TIMER_OP_QUEUE_SIZE */, app_timer_evt_schedule);
-
+    // Initialize timer module.*/
+    //APP_TIMER_INIT(APP_TIMER_PRESCALER, 16 /* APP_TIMER_OP_QUEUE_SIZE */, app_timer_evt_schedule);
+/*
     // Create timers.
     err_code = app_timer_create(&m_heartbeat_timer_id,
             APP_TIMER_MODE_REPEATED,
@@ -144,9 +144,9 @@ static void softdevice_init(void) {
 static void application_timers_start(void) {
     uint32_t err_code;
 
-    // Start application timers.
-    err_code = app_timer_start(m_heartbeat_timer_id, APP_TIMER_TICKS(500 /* ms */, APP_TIMER_PRESCALER), NULL);
-    APP_ERROR_CHECK(err_code);
+    // Start application timers.*/
+    //err_code = app_timer_start(m_heartbeat_timer_id, APP_TIMER_TICKS(500 /* ms */, APP_TIMER_PRESCALER), NULL);
+    /*APP_ERROR_CHECK(err_code);
 }
 
 static void nsec_intro(void) {
@@ -205,7 +205,7 @@ void show_main_menu(void) {
 /**
  * Main
  */
-int main() {
+int main() {/*
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
 #else
@@ -214,17 +214,26 @@ int main() {
     g_device_id[9] = '\0';
 
     softdevice_init();
-
-    APP_SCHED_INIT(APP_TIMER_SCHED_EVT_SIZE /* EVENT_SIZE */, 12 /* QUEUE SIZE */);
-
+*/
+    //APP_SCHED_INIT(APP_TIMER_SCHED_EVT_SIZE /* EVENT_SIZE */, 12 /* QUEUE SIZE */);
+/*
     timers_init();
     APP_GPIOTE_INIT(2);
 
     nsec_led_init();
-
-    nrf_gpio_cfg_output(22);
-    nrf_gpio_cfg_output(23);
-    nrf_gpio_cfg_output(18);
+*/
+	int leds[] = {17, 18, 19, 20};
+	for(int i = 0; i < 4; i++)
+		nrf_gpio_cfg_output(leds[i]);
+    while(1){
+    	for(int i = 0; i < 4; i++)
+    		nrf_gpio_pin_clear(leds[i]);
+    	nrf_delay_ms(500);
+    	for(int i = 0; i < 4; i++)
+			nrf_gpio_pin_set(leds[i]);
+		nrf_delay_ms(500);
+    }
+    /*
     nrf_gpio_pin_clear(22);
     nrf_gpio_pin_clear(23);
     nrf_gpio_pin_clear(18);
@@ -265,6 +274,6 @@ int main() {
 
         APP_ERROR_CHECK(sd_app_evt_wait());
     }
-
+*/
     return 0;
 }
