@@ -137,7 +137,7 @@ ASMFLAGS += -DNRF52
 
 TERMINAL = dup
 
-TARGETS=$(OUTPUT_DIRECTORY)/s132_nrf52_3.0.0_softdevice.elf $(PROJECT_NAME)
+TARGETS=$(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.elf $(PROJECT_NAME)
 
 .PHONY: bitmaps clean-bitmaps
 
@@ -157,15 +157,17 @@ clean-bitmaps:
 	rm -f images/*.c
 
 $(SDK_PATH):
-	wget http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v12.x.x/nRF5_SDK_12.1.0_0d23e2a.zip
-	unzip nRF5_SDK_12.1.0_0d23e2a.zip components/*
+	wget http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.2.0_17b948a.zip
+	unzip nRF5_SDK_14.2.0_17b948a.zip nRF5_SDK_14.2.0_17b948a/components/*
+	mv nRF5_SDK_14.2.0_17b948a/components .
 	mv components $@
-	patch -p0 -d $@ < nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
-	patch -p0 -d $@ < nordic-sdk-makefile-fix-object-depends-on-src.patch
-	unzip -n -p nRF5_SDK_12.1.0_0d23e2a.zip documentation/license.txt > nordicsdk_licence_agreement.txt
-	cp $@/softdevice/s130/doc/s132_nrf52_3.0.0_licence_agreement.txt .
-	rm nRF5_SDK_12.1.0_0d23e2a.zip
-	# Restart make so that the include of Makefile.common bellow works and
+	./nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
+	unzip -n -p nRF5_SDK_14.2.0_17b948a.zip nRF5_SDK_14.2.0_17b948a/documentation/nRF5_Nordic_license.txt > nordicsdk_licence_agreement.txt
+	unzip -n -p nRF5_SDK_14.2.0_17b948a.zip nRF5_SDK_14.2.0_17b948a/documentation/nRF5_Dynastream_license.txt > dynastream_licence_agreement.txt
+	cp $@/softdevice/s132/doc/s132_nrf52_5.0.0_licence-agreement.txt .
+	rm nRF5_SDK_14.2.0_17b948a.zip
+	rm -d nRF5_SDK_14.2.0_17b948a
+	# Restart make so that the include of Makefile.common below works and
 	# update targets.
 	$(MAKE) $(MAKECMDGOALS)
 
