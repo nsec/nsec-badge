@@ -106,7 +106,7 @@ void nsec_setting_show(void) {
 }
 
 static void setting_handle_buttons(button_t button) {
-    if (button == BUTTON_BACK) {
+    if (button == BUTTON_LEFT) {
         switch (_state) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;

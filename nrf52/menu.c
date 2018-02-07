@@ -139,10 +139,6 @@ void menu_change_selected_item(MENU_DIRECTION direction) {
             }
         }
             break;
-        case MENU_DIRECTION_LEFT:
-        case MENU_DIRECTION_RIGHT:
-            // TODO
-            break;
     }
 }
 
@@ -157,15 +153,12 @@ void menu_button_handler(button_t button) {
     if(menu.is_handling_buttons) {
         switch (button) {
             case BUTTON_UP:
-            case BUTTON_LEFT:
                 menu_change_selected_item(MENU_DIRECTION_UP);
                 break;
-
             case BUTTON_DOWN:
-            case BUTTON_RIGHT:
                 menu_change_selected_item(MENU_DIRECTION_DOWN);
                 break;
-            case BUTTON_ENTER:
+            case BUTTON_RIGHT:
                 menu_trigger_action();
                 break;
             default:
