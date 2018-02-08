@@ -37,7 +37,6 @@ SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
 SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
 SRC_FILES += $(SDK_PATH)/libraries/timer/app_timer.c
 SRC_FILES += $(SDK_PATH)/libraries/scheduler/app_scheduler.c
-SRC_FILES += $(SDK_PATH)/libraries/timer/app_timer_appsh.c
 SRC_FILES += $(SDK_PATH)/libraries/button/app_button.c
 SRC_FILES += $(SDK_PATH)/libraries/fifo/app_fifo.c
 SRC_FILES += $(SDK_PATH)/libraries/gpiote/app_gpiote.c
@@ -46,12 +45,12 @@ SRC_FILES += $(SDK_PATH)/libraries/util/app_util_platform.c
 SRC_FILES += $(SDK_PATH)/libraries/util/app_error.c
 SRC_FILES += $(SDK_PATH)/libraries/util/sdk_mapped_flags.c
 SRC_FILES += $(SDK_PATH)/libraries/fds/fds.c
-SRC_FILES += $(SDK_PATH)/libraries/fstorage/fstorage.c
+SRC_FILES += $(SDK_PATH)/libraries/fstorage/nrf_fstorage.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_state.c
-#SRC_FILES += $(SDK_PATH)/softdevice/common/softdevice_handler/softdevice_handler.c
+SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/common/nrf_drv_common.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_slave/nrf_drv_spis.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/nrf_drv_spi.c
@@ -67,8 +66,8 @@ INC_FOLDERS += $(SDK_PATH)/toolchain
 INC_FOLDERS += $(SDK_PATH)/toolchain/gcc
 INC_FOLDERS += $(SDK_PATH)/toolchain/cmsis/include
 INC_FOLDERS += $(SDK_PATH)/device
-INC_FOLDERS += $(SDK_PATH)/softdevice/common/softdevice_handler
-INC_FOLDERS += $(SDK_PATH)/softdevice/s130/headers
+INC_FOLDERS += $(SDK_PATH)/softdevice/common
+INC_FOLDERS += $(SDK_PATH)/softdevice/s132/headers
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/common
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/gpiote
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/hal
@@ -82,8 +81,8 @@ INC_FOLDERS += $(SDK_PATH)/libraries/scheduler
 INC_FOLDERS += $(SDK_PATH)/libraries/fifo
 INC_FOLDERS += $(SDK_PATH)/libraries/gpiote
 INC_FOLDERS += $(SDK_PATH)/libraries/uart
-INC_FOLDERS += $(SDK_PATH)/libraries/log
-INC_FOLDERS += $(SDK_PATH)/libraries/log/src
+INC_FOLDERS += $(SDK_PATH)/libraries/experimental_log
+INC_FOLDERS += $(SDK_PATH)/libraries/experimental_log/src
 INC_FOLDERS += $(SDK_PATH)/libraries/fds
 INC_FOLDERS += $(SDK_PATH)/libraries/fstorage
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
@@ -96,8 +95,8 @@ INC_FOLDERS += $(SDK_PATH)/serialization/common/transport/ser_phy/config
 
 DEVICE = NRF52
 
-#USE_SOFTDEVICE = s132
-#SOFTDEVICE = $(OUTPUT_DIRECTORY)/s132_nrf52_3.0.0_softdevice.hex
+USE_SOFTDEVICE = s132
+SOFTDEVICE = $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex
 
 TEMPLATE_PATH = $(SDK_PATH)/toolchain/gcc/
 
@@ -109,10 +108,10 @@ ASMFLAGS += -DDEBUG -g3 -Os
 #CFLAGS += -DNRF51822
 #CFLAGS += -DSPI_MASTER_0_ENABLE
 #CFLAGS += -DPROD
-#CFLAGS += -DSOFTDEVICE_PRESENT
+CFLAGS += -DSOFTDEVICE_PRESENT
 #CFLAGS += -DBLE_STACK_SUPPORT_REQD
 #CFLAGS += -DNRF_SD_BLE_API_VERSION=2
-#CFLAGS += -DS132
+CFLAGS += -DS132
 CFLAGS += -flto -ffunction-sections -fdata-sections -fno-builtin -fno-omit-frame-pointer -Os
 CFLAGS += -mthumb -mabi=aapcs -mcpu=cortex-m4
 LDFLAGS += --specs=nano.specs -lc -lnosys -Wl,--gc-sections -fno-omit-frame-pointer -Os
@@ -127,9 +126,9 @@ LDFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
 ASMFLAGS += -x assembler-with-cpp
 #ASMFLAGS += -DSWI_DISABLE0
-#ASMFLAGS += -DSOFTDEVICE_PRESENT
+ASMFLAGS += -DSOFTDEVICE_PRESENT
 #ASMFLAGS += -DNRF51822
-#ASMFLAGS += -DS132
+ASMFLAGS += -DS132
 #ASMFLAGS += -DBLE_STACK_SUPPORT_REQD
 #ASMFLAGS += -DNRF_SD_BLE_API_VERSION=2
 ASMFLAGS += -D__HEAP_SIZE=0
@@ -174,8 +173,8 @@ $(SDK_PATH):
 -include $(TEMPLATE_PATH)/Makefile.common
 $(call define_target, $(PROJECT_NAME))
 
-$(OUTPUT_DIRECTORY)/s132_nrf52_3.0.0_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_PATH)
-	cp $(SDK_PATH)/softdevice/s130/hex/s132_nrf52_3.0.0_softdevice.hex $@
+$(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_PATH)
+	cp $(SDK_PATH)/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex $@
 
 $(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
 	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@

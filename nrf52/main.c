@@ -10,13 +10,10 @@
 #include <app_scheduler.h>
 #include <app_error.h>
 #include <app_button.h>
-#include <app_timer_appsh.h>
 #include <app_gpiote.h>
 #include <app_uart.h>
 
 #include "ble/nsec_ble.h"
-
-#include <softdevice_handler.h>
 
 #include <nrf.h>
 #include <nrf_error.h>
