@@ -44,7 +44,7 @@ static void _nsec_led_timer_callback(void * context) {
 void nsec_led_set_delay(uint32_t milliseconds) {
     if(milliseconds != current_delay) {
         app_timer_stop(led_timer);
-        APP_ERROR_CHECK(app_timer_start(led_timer, APP_TIMER_TICKS(milliseconds, 0), NULL));
+        APP_ERROR_CHECK(app_timer_start(led_timer, APP_TIMER_TICKS(milliseconds), NULL));
         current_delay = milliseconds;
     }
 }

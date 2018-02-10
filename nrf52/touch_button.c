@@ -35,7 +35,7 @@ static uint32_t last_event_received_time;
 void touch_on_event(enum touch_event event, enum touch_button button) {
     uint32_t event_received_time, event_received_diff;
     event_received_time = app_timer_cnt_get();
-    app_timer_cnt_diff_compute(event_received_time, last_event_received_time, &event_received_diff);
+    event_received_diff = app_timer_cnt_diff_compute(event_received_time, last_event_received_time);
     last_event_received_time = event_received_time;
     if(event_received_diff < 3000) {
        return;

@@ -108,16 +108,16 @@ static void heartbeat_timeout_handler(void * p_context) {
 static void timers_init(void) {
     uint32_t err_code;
 
-    // Initialize timer module.*/
-    //APP_TIMER_INIT(APP_TIMER_PRESCALER, 16 /* APP_TIMER_OP_QUEUE_SIZE */, app_timer_evt_schedule);
-/*
+    // Initialize timer module.
+    APP_ERROR_CHECK(app_timer_init());
+
     // Create timers.
     err_code = app_timer_create(&m_heartbeat_timer_id,
             APP_TIMER_MODE_REPEATED,
             heartbeat_timeout_handler);
     APP_ERROR_CHECK(err_code);
 }
-
+/*
 void sys_evt_dispatch(uint32_t evt_id) {
 
 }

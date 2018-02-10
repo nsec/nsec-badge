@@ -27,3 +27,6 @@
 #define FS_QUEUE_SIZE 4
 #define FS_OP_MAX_RETRIES 3
 #define FS_MAX_WRITE_SIZE_WORDS 256
+#define APP_TIMER_CONFIG_RTC_FREQUENCY 0
+#define APP_TIMER_CONFIG_OP_QUEUE_SIZE 16
+#define APP_TIMER_CONFIG_IRQ_PRIORITY 2  // highest priority not reserved for SoftDevice.
