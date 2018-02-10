@@ -44,7 +44,7 @@ SRC_FILES += $(SDK_PATH)/libraries/uart/app_uart_fifo.c
 SRC_FILES += $(SDK_PATH)/libraries/util/app_util_platform.c
 SRC_FILES += $(SDK_PATH)/libraries/util/app_error.c
 SRC_FILES += $(SDK_PATH)/libraries/util/sdk_mapped_flags.c
-SRC_FILES += $(SDK_PATH)/libraries/fds/fds.c
+#SRC_FILES += $(SDK_PATH)/libraries/fds/fds.c
 SRC_FILES += $(SDK_PATH)/libraries/fstorage/nrf_fstorage.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
@@ -59,6 +59,7 @@ SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
 #SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
 #SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_hids/ble_hids.c
 #SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_bas/ble_bas.c
+#SRC_FILES += $(SDK_PATH)/libraries/strerror/
 
 INC_FOLDERS  = .
 INC_FOLDERS += $(SDK_PATH)
@@ -83,15 +84,18 @@ INC_FOLDERS += $(SDK_PATH)/libraries/gpiote
 INC_FOLDERS += $(SDK_PATH)/libraries/uart
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_log
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_log/src
-INC_FOLDERS += $(SDK_PATH)/libraries/fds
+#INC_FOLDERS += $(SDK_PATH)/libraries/fds
 INC_FOLDERS += $(SDK_PATH)/libraries/fstorage
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
+INC_FOLDERS += $(SDK_PATH)/libraries/atomic
+INC_FOLDERS += $(SDK_PATH)/libraries/atomic_fifo
 #INC_FOLDERS += $(SDK_PATH)/ble/common
 #INC_FOLDERS += $(SDK_PATH)/ble/peer_manager
 #INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_bas
 #INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_dis
 #INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_hids
 INC_FOLDERS += $(SDK_PATH)/serialization/common/transport/ser_phy/config
+INC_FOLDERS += $(SDK_PATH)/libraries/strerror
 
 DEVICE = NRF52
 

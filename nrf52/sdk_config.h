@@ -9,6 +9,7 @@
 #define SPIS0_ENABLED 0
 #define SPIS1_ENABLED 1
 #define SPIS2_ENABLED 0
+#define NRF_SPI_DRV_MISO_PULLUP_CFG 0 //0 -> no pull, may need to be changed.
 #define APP_SCHEDULER_ENABLED 1
 #define APP_TIMER_ENABLED 1
 #define APP_GPIOTE_ENABLED 1
@@ -30,3 +31,4 @@
 #define APP_TIMER_CONFIG_RTC_FREQUENCY 0
 #define APP_TIMER_CONFIG_OP_QUEUE_SIZE 16
 #define APP_TIMER_CONFIG_IRQ_PRIORITY 2  // highest priority not reserved for SoftDevice.
+#define NRF_LOG_ENABLED 1
