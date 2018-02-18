@@ -32,3 +32,21 @@
 #define APP_TIMER_CONFIG_OP_QUEUE_SIZE 16
 #define APP_TIMER_CONFIG_IRQ_PRIORITY 2  // highest priority not reserved for SoftDevice.
 #define NRF_LOG_ENABLED 1
+
+// Defines added while trying to make the softdevice stuff compile. Maybe some are useless/misconfigured. Clean up later.
+#define NRF_SDH_ENABLED 1
+#define NRF_SDH_BLE_ENABLED 1
+#define NRF_SDH_CLOCK_LF_SRC 0 // NRF_CLOCK_LF_SRC_RC
+#define NRF_SDH_CLOCK_LF_RC_CTIV 16
+#define NRF_SDH_CLOCK_LF_RC_TEMP_CTIV 2
+#define NRF_SDH_CLOCK_LF_XTAL_ACCURACY 1 //not used for NRF_CLOCK_LF_SRC_RC
+#define NRF_SDH_SOC_ENABLED 1
+#define NRF_SDH_SOC_OBSERVER_PRIO_LEVELS 4
+#define NRF_SDH_SOC_STACK_OBSERVER_PRIO 0
+#define NRF_SDH_STACK_OBSERVER_PRIO_LEVELS 2
+#define NRF_SDH_BLE_STACK_OBSERVER_PRIO 0
+#define NRF_SDH_BLE_VS_UUID_COUNT 1
+#define NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE 1408
+#define NRF_SDH_BLE_SERVICE_CHANGED 0
+#define NRF_SDH_BLE_GATT_MAX_MTU_SIZE 23
+#define NRF_SECTION_ITER_ENABLED 1

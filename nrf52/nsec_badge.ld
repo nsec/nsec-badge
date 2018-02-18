@@ -5,9 +5,10 @@ GROUP(-lgcc -lc -lnosys)
 
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x0, LENGTH = 0x80000
-  /* 0x1FF8 as returned by sd_ble_enable */
-  RAM (rw) :  ORIGIN = 0x20000000, LENGTH = 0x10000
+  FLASH (rx) : ORIGIN = 0x23000, LENGTH = 0x5d000
+  /* 0x1FF8 as returned by sd_ble_enable */ /*outdated comment, but still relevant as the new address should be determined precisely
+  (now it's only a copy-paste from the examples to make the code work.*/
+  RAM (rwx) :  ORIGIN = 0x20002180, LENGTH = 0xde80
 }
 
 SECTIONS
@@ -19,5 +20,43 @@ SECTIONS
     PROVIDE(__stop_fs_data = .);
   } > RAM
 } INSERT AFTER .data;
+
+/* I have no idea what it does, but without that the softdevice doesn't compile, I'll check that later.*/
+SECTIONS
+{
+  .mem_section_dummy_rom :
+  {
+  }
+  .sdh_soc_observers :
+  {
+    PROVIDE(__start_sdh_soc_observers = .);
+    KEEP(*(SORT(.sdh_soc_observers*)))
+    PROVIDE(__stop_sdh_soc_observers = .);
+  } > FLASH
+  .sdh_ble_observers :
+  {
+    PROVIDE(__start_sdh_ble_observers = .);
+    KEEP(*(SORT(.sdh_ble_observers*)))
+    PROVIDE(__stop_sdh_ble_observers = .);
+  } > FLASH
+  .sdh_req_observers :
+  {
+    PROVIDE(__start_sdh_req_observers = .);
+    KEEP(*(SORT(.sdh_req_observers*)))
+    PROVIDE(__stop_sdh_req_observers = .);
+  } > FLASH
+  .sdh_state_observers :
+  {
+    PROVIDE(__start_sdh_state_observers = .);
+    KEEP(*(SORT(.sdh_state_observers*)))
+    PROVIDE(__stop_sdh_state_observers = .);
+  } > FLASH
+  .sdh_stack_observers :
+  {
+    PROVIDE(__start_sdh_stack_observers = .);
+    KEEP(*(SORT(.sdh_stack_observers*)))
+    PROVIDE(__stop_sdh_stack_observers = .);
+  } > FLASH
+} INSERT AFTER .text
 
 INCLUDE "nrf5x_common.ld"

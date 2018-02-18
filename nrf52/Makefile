@@ -51,6 +51,8 @@ SRC_FILES += $(SDK_PATH)/libraries/fstorage/nrf_fstorage.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_state.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh.c
+SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_soc.c
+SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_ble.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/common/nrf_drv_common.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_slave/nrf_drv_spis.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/nrf_drv_spi.c
@@ -60,6 +62,7 @@ SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
 #SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_hids/ble_hids.c
 #SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_bas/ble_bas.c
 #SRC_FILES += $(SDK_PATH)/libraries/strerror/
+SRC_FILES += $(SDK_PATH)/libraries/experimental_section_vars/nrf_section_iter.c
 
 INC_FOLDERS  = .
 INC_FOLDERS += $(SDK_PATH)
@@ -96,6 +99,7 @@ INC_FOLDERS += $(SDK_PATH)/libraries/atomic_fifo
 #INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_hids
 INC_FOLDERS += $(SDK_PATH)/serialization/common/transport/ser_phy/config
 INC_FOLDERS += $(SDK_PATH)/libraries/strerror
+INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars/
 
 DEVICE = NRF52
 
@@ -182,3 +186,10 @@ $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_P
 
 $(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
 	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@
+	
+flash: $(PROJECT_NAME)
+	@echo Flashing: $<
+	nrfjprog/nrfjprog -f nrf52 --eraseall
+	mergehex/mergehex -m $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex $(OUTPUT_DIRECTORY)/$<.hex -o $(OUTPUT_DIRECTORY)/program.hex
+	nrfjprog/nrfjprog -f nrf52 --program $(OUTPUT_DIRECTORY)/program.hex --sectorerase --verify
+	nrfjprog/nrfjprog -f nrf52 --reset

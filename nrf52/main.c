@@ -22,6 +22,7 @@
 #include <nrf52.h>
 #include <nrf52_bitfields.h>
 #include <nordic_common.h>
+#include <nrf_sdh.h>
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -40,6 +41,8 @@
 #include "identity.h"
 #include "exploit_challenge.h"
 #include "nsec_nearby_badges.h"
+#include "nrf_sdh_soc.h"
+#include "nrf_sdh_ble.h"
 
 #define NSEC_STRINGIFY_(...) #__VA_ARGS__
 #define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
@@ -117,27 +120,37 @@ static void timers_init(void) {
             heartbeat_timeout_handler);
     APP_ERROR_CHECK(err_code);
 }
-/*
-void sys_evt_dispatch(uint32_t evt_id) {
+*/
+void sys_evt_dispatch(uint32_t evt_id, void * p_context) {
 
+}
+
+void print_error_code(uint32_t err_code){
+	if(err_code != NRF_SUCCESS){
+		nrf_gpio_pin_clear(17);
+		while(1);
+	}
 }
 
 static void softdevice_init(void) {
     uint32_t err_code;
 
-    nrf_clock_lf_cfg_t clock_cfg = {
-        .source = NRF_CLOCK_LF_SRC_RC,
-        .rc_ctiv = 16,
-        .rc_temp_ctiv = 2,
-    };
-    // Initialize the SoftDevice handler module.
-    SOFTDEVICE_HANDLER_INIT(&clock_cfg, false);
+    err_code = nrf_sdh_enable_request();
+    print_error_code(err_code);
+    // Configure the BLE stack using the default settings.
+	// Fetch the start address of the application RAM.
 
+	uint32_t ram_start = 0;
+	err_code = nrf_sdh_ble_default_cfg_set(1, &ram_start);
+	print_error_code(err_code);
+
+	// Enable BLE stack.
+	err_code = nrf_sdh_ble_enable(&ram_start);
+	print_error_code(err_code);/*
     // Register with the SoftDevice handler module for events.
-    err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
-    APP_ERROR_CHECK(err_code);
+	NRF_SDH_SOC_OBSERVER(sys_evt_observer, 3, sys_evt_dispatch, NULL);*/
 }
-
+/*
 static void application_timers_start(void) {
     uint32_t err_code;
 
@@ -202,7 +215,7 @@ void show_main_menu(void) {
 /**
  * Main
  */
-int main() {/*
+int main() {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
 #else
@@ -210,8 +223,12 @@ int main() {/*
 #endif
     g_device_id[9] = '\0';
 
+    int leds[] = {17, 18, 19, 20};
+	for(int i = 0; i < 4; i++)
+		nrf_gpio_cfg_output(leds[i]);
+
     softdevice_init();
-*/
+
     //APP_SCHED_INIT(APP_TIMER_SCHED_EVT_SIZE /* EVENT_SIZE */, 12 /* QUEUE SIZE */);
 /*
     timers_init();
@@ -219,9 +236,7 @@ int main() {/*
 
     nsec_led_init();
 */
-	int leds[] = {17, 18, 19, 20};
-	for(int i = 0; i < 4; i++)
-		nrf_gpio_cfg_output(leds[i]);
+
     while(1){
     	for(int i = 0; i < 4; i++)
     		nrf_gpio_pin_clear(leds[i]);
