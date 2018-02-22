@@ -71,7 +71,7 @@ static void nsec_nearby_update_led_pettern(void) {
     else {
         delay = 300 - (50 * (count - 4));
     }
-    nsec_led_set_delay(delay);
+    //nsec_led_set_delay(delay);
 }
 
 uint8_t nsec_nearby_badges_current_count(void) {

@@ -1,23 +1,30 @@
-//  Copyright (c) 2017
-//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
-//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
+//  Copyright (c) 2018
+//  Eric Tremblay <habscup@gmail.com>
 //
 //  License: MIT (see LICENSE for details)
 
-#ifndef led_effects_h
-#define led_effects_h
+#ifndef neoPixel_h
+#define neoPixel_h
 
-#include <stdint.h>
+#define NEO_GRB  	82 //((1 << 6) | (1 << 4) | (0 << 2) | (2))
+#define MAGIC_T0H  	6UL | (0x8000) // 0.375us
+#define MAGIC_T1H  	13UL | (0x8000) // 0.8125us
+#define CTOPVAL 	20UL // 1.25us
 
-typedef enum {
-    NSEC_LED_EFFECT_ALL_OFF,
-    NSEC_LED_EFFECT_ALL_ON,
-    NSEC_LED_EFFECT_SPIN,
-    NSEC_LED_EFFECT_FLASH_ALL,
-} nsec_led_effect;
+#define NEOPIXEL_COUNT	8
+#define LED_PIN			26
 
-void nsec_led_init(void);
-void nsec_led_set_delay(uint32_t milliseconds);
-void nsec_led_set_effect(nsec_led_effect effect);
+struct nsec18_pixels {
+	uint16_t numBytes;
+	uint8_t rOffset;
+	uint8_t gOffset;
+	uint8_t bOffset;
+	uint8_t *pixels;
+};
 
-#endif /* led_effects_h */
+void nsec_neopixel_init(void);
+void nsec_neoPixel_clean(void);
+void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b);
+void nsec_neopixel_show(void);
+
+#endif /* neoPixel_h */
