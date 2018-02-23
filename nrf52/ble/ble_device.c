@@ -21,7 +21,7 @@
 #include <nrf_delay.h>
 #include "../led_effects.h"
 
-static ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
+static nrf_sdh_ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
 static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
 static uint8_t _nsec_ble_is_enabled = 0;
 static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
@@ -94,20 +94,18 @@ static void _nsec_pm_evt_handler(pm_evt_t const * event) {
 }
 
 static void _nsec_ble_softdevice_init() {
-    ble_enable_params_t ble_enable_params;
     extern uint32_t __data_start__;
     volatile uint32_t ram_start = (uint32_t) &__data_start__;
     uint32_t ram_start_copy = ram_start;
+    ble_cfg_t cfg;
+    sd_ble_cfg_set(BLE_COMMON_CFG_VS_UUID, );
 
-    softdevice_enable_get_default_config(0, 1, &ble_enable_params);
-
-    ble_enable_params.common_enable_params.vs_uuid_count = 2;
 #if DEBUG_PRINT_RAM_USAGE
     ram_start_copy = 0;
     sd_ble_enable(&ble_enable_params, &ram_start_copy);
     APP_ERROR_CHECK(ram_start_copy - ram_start);
 #else
-    APP_ERROR_CHECK(sd_ble_enable(&ble_enable_params, &ram_start_copy));
+    APP_ERROR_CHECK(sd_ble_enable(&ram_start_copy));
 #endif
 }
 
@@ -217,7 +215,7 @@ static void _nsec_ble_advertising_start(void)
     APP_ERROR_CHECK(err_code);
 }
 
-void nsec_ble_register_evt_handler(ble_evt_handler_t handler) {
+void nsec_ble_register_evt_handler(nrf_sdh_ble_evt_handler_t handler) {
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
         if(_nsec_ble_event_handlers[i] == NULL) {
             _nsec_ble_event_handlers[i] = handler;

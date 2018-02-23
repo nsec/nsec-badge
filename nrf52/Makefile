@@ -46,9 +46,9 @@ SRC_FILES += $(SDK_PATH)/libraries/util/app_error.c
 SRC_FILES += $(SDK_PATH)/libraries/util/sdk_mapped_flags.c
 #SRC_FILES += $(SDK_PATH)/libraries/fds/fds.c
 SRC_FILES += $(SDK_PATH)/libraries/fstorage/nrf_fstorage.c
-#SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
-#SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
-#SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
+SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
+SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
+SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
 #SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_state.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_soc.c
@@ -63,6 +63,21 @@ SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
 #SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_bas/ble_bas.c
 #SRC_FILES += $(SDK_PATH)/libraries/strerror/
 SRC_FILES += $(SDK_PATH)/libraries/experimental_section_vars/nrf_section_iter.c
+SRC_FILES += $(SDK_PATH)/ble/nrf_ble_gatt/nrf_ble_gatt.c
+SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_lbs/ble_lbs.c
+SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_backend_rtt.c
+SRC_FILES += $(SDK_PATH)/external/segger_rtt/SEGGER_RTT.c
+SRC_FILES += $(SDK_PATH)/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c
+SRC_FILES += $(SDK_PATH)/external/segger_rtt/SEGGER_RTT_printf.c
+SRC_FILES += $(SDK_PATH)/external/fprintf/nrf_fprintf.c
+SRC_FILES += $(SDK_PATH)/external/fprintf/nrf_fprintf_format.c
+SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_frontend.c
+SRC_FILES += $(SDK_PATH)/libraries/experimental_memobj/nrf_memobj.c
+SRC_FILES += $(SDK_PATH)/libraries/balloc/nrf_balloc.c
+SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_default_backends.c
+SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_backend_serial.c
+SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_str_formatter.c
+SRC_FILES += $(SDK_PATH)/libraries/strerror/nrf_strerror.c
 
 INC_FOLDERS  = .
 INC_FOLDERS += $(SDK_PATH)
@@ -92,14 +107,22 @@ INC_FOLDERS += $(SDK_PATH)/libraries/fstorage
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
 INC_FOLDERS += $(SDK_PATH)/libraries/atomic
 INC_FOLDERS += $(SDK_PATH)/libraries/atomic_fifo
-#INC_FOLDERS += $(SDK_PATH)/ble/common
+INC_FOLDERS += $(SDK_PATH)/ble/common
 #INC_FOLDERS += $(SDK_PATH)/ble/peer_manager
 #INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_bas
 #INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_dis
 #INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_hids
 INC_FOLDERS += $(SDK_PATH)/serialization/common/transport/ser_phy/config
 INC_FOLDERS += $(SDK_PATH)/libraries/strerror
-INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars/
+INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
+INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_lbs
+INC_FOLDERS += $(SDK_PATH)/ble/nrf_ble_gatt/
+INC_FOLDERS += $(SDK_PATH)/libraries/timer/
+INC_FOLDERS += $(SDK_PATH)/libraries/experimental_memobj
+INC_FOLDERS += $(SDK_PATH)/libraries/balloc/
+INC_FOLDERS += $(SDK_PATH)/external/fprintf
+INC_FOLDERS += $(SDK_PATH)/external/segger_rtt
+INC_FOLDERS += $(SDK_PATH)/libraries/strerror
 
 DEVICE = NRF52
 
@@ -187,7 +210,7 @@ $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_P
 $(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
 	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@
 	
-flash: $(PROJECT_NAME)
+flash: $(PROJECT_NAME) $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex
 	@echo Flashing: $<
 	nrfjprog/nrfjprog -f nrf52 --eraseall
 	mergehex/mergehex -m $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex $(OUTPUT_DIRECTORY)/$<.hex -o $(OUTPUT_DIRECTORY)/program.hex

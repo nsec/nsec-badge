@@ -6,9 +6,8 @@ GROUP(-lgcc -lc -lnosys)
 MEMORY
 {
   FLASH (rx) : ORIGIN = 0x23000, LENGTH = 0x5d000
-  /* 0x1FF8 as returned by sd_ble_enable */ /*outdated comment, but still relevant as the new address should be determined precisely
-  (now it's only a copy-paste from the examples to make the code work.*/
-  RAM (rwx) :  ORIGIN = 0x20002180, LENGTH = 0xde80
+  /* 0x200027B0 as returned by nrf_sdh_ble_default_cfg_set */
+  RAM (rwx) :  ORIGIN = 0x200027B0, LENGTH = 0xD850
 }
 
 SECTIONS
@@ -18,6 +17,12 @@ SECTIONS
     PROVIDE(__start_fs_data = .);
     KEEP(*(.fs_data))
     PROVIDE(__stop_fs_data = .);
+  } > RAM
+  .log_dynamic_data :
+  {
+    PROVIDE(__start_log_dynamic_data = .);
+    KEEP(*(SORT(.log_dynamic_data*)))
+    PROVIDE(__stop_log_dynamic_data = .);
   } > RAM
 } INSERT AFTER .data;
 
@@ -56,6 +61,12 @@ SECTIONS
     PROVIDE(__start_sdh_stack_observers = .);
     KEEP(*(SORT(.sdh_stack_observers*)))
     PROVIDE(__stop_sdh_stack_observers = .);
+  } > FLASH
+  .log_const_data :
+  {
+    PROVIDE(__start_log_const_data = .);
+    KEEP(*(SORT(.log_const_data*)))
+    PROVIDE(__stop_log_const_data = .);
   } > FLASH
 } INSERT AFTER .text
 
