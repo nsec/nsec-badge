@@ -22,7 +22,7 @@ struct nsec18_pixels {
 	uint8_t *pixels;
 };
 
-void nsec_neopixel_init(void);
+int nsec_neopixel_init(void);
 void nsec_neoPixel_clean(void);
 void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b);
 void nsec_neopixel_show(void);
