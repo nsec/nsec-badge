@@ -50,9 +50,7 @@
 #include "ble_conn_params.h"
 #include "ble_gap.h"
 #include "app_timer.h"
-#include "nrf_log.h"
-#include "nrf_log_ctrl.h"
-#include "nrf_log_default_backends.h"
+#include "logs.h"
 
 
 #define NSEC_STRINGIFY_(...) #__VA_ARGS__
@@ -85,19 +83,11 @@ void wdt_init(void)
     NRF_WDT->TASKS_START = 1;           //Start the Watchdog timer
 }
 */
-void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
-	while(1){
-		nrf_gpio_pin_clear(20);
-		nrf_delay_ms(500);
-		nrf_gpio_pin_set(20);
-		nrf_delay_ms(500);
-	}
-}
+void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){}
 
 void print_error_code(char const * function_name, uint32_t err_code){
 	if(err_code != NRF_SUCCESS){
-		NRF_LOG_INFO("%s: %s", function_name, nrf_strerror_get(err_code));
-		NRF_LOG_FLUSH();
+		log_error_code(function_name, err_code);
 	}
 }
 
@@ -181,14 +171,10 @@ static void ble_stack_init(void){
     uint32_t ram_start = 0;
     err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
     print_error_code("nrf_sdh_ble_default_cfg_set", err_code);
-    NRF_LOG_INFO("Ram start is 0x%x", ram_start);
-    NRF_LOG_FLUSH();
 
     // Enable BLE stack.
     err_code = nrf_sdh_ble_enable(&ram_start);
     print_error_code("nrf_sdh_ble_enable", err_code);
-    NRF_LOG_INFO("Ram start is 0x%x", ram_start);
-    NRF_LOG_FLUSH();
     //APP_ERROR_CHECK(err_code);
 
     // Register a handler for BLE events.
@@ -412,13 +398,6 @@ void test_neopixels(){
 		nsec_neopixel_show();
 }
 
-static void log_init(void)
-{
-    ret_code_t err_code = NRF_LOG_INIT(NULL);
-    APP_ERROR_CHECK(err_code);
-
-    NRF_LOG_DEFAULT_BACKENDS_INIT();
-}
 
 int main() {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
@@ -457,6 +436,10 @@ int main() {
     	for(int i = 0; i < 4; i++)
 			nrf_gpio_pin_set(leds[i]);
 		nrf_delay_ms(500);
+		log_info("Flashing leds!!!");
+		log_debug("Flashing leds!!!");
+		log_warning("Flashing leds!!!");
+		log_error("Flashing leds!!!");
     }
     /*
     nrf_gpio_pin_clear(22);
