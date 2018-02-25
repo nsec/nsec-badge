@@ -8,10 +8,11 @@
 
 #include "nsec_ble_internal.h"
 #include <ble_conn_params.h>
+/*
 #include <ble_bas.h>
-#include <ble_hci.h>
+#include <ble_hci.h>*/
 #include <ble_advdata.h>
-#include <ble_dis.h>
+//#include <ble_dis.h>
 #include <app_timer.h>
 #include <peer_manager.h>
 #include <app_scheduler.h>
@@ -20,6 +21,10 @@
 #include <nrf_gpio.h>
 #include <nrf_delay.h>
 #include "../led_effects.h"
+#include "../logs.h"
+
+#define APP_BLE_OBSERVER_PRIO 3
+
 
 static nrf_sdh_ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
 static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
@@ -29,7 +34,7 @@ static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt);
 static void _nsec_ble_advertising_start(void);
 static void nsec_ble_scan_start(void);
-
+/*
 static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
     pm_on_ble_evt(p_ble_evt);
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
@@ -88,25 +93,26 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
             break;
     }
 }
-
+*/
 static void _nsec_pm_evt_handler(pm_evt_t const * event) {
 
 }
 
+static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context){}
+
 static void _nsec_ble_softdevice_init() {
-    extern uint32_t __data_start__;
-    volatile uint32_t ram_start = (uint32_t) &__data_start__;
-    uint32_t ram_start_copy = ram_start;
-    ble_cfg_t cfg;
-    sd_ble_cfg_set(BLE_COMMON_CFG_VS_UUID, );
+    uint32_t ram_start = 0;
+    nrf_sdh_ble_default_cfg_set(BLE_COMMON_CFG_VS_UUID, &ram_start);
 
 #if DEBUG_PRINT_RAM_USAGE
-    ram_start_copy = 0;
-    sd_ble_enable(&ble_enable_params, &ram_start_copy);
-    APP_ERROR_CHECK(ram_start_copy - ram_start);
+    uint32_t ram_start_copy = 0;
+    nrf_sdh_ble_enable(&ram_start_copy);
+    //TO DO
 #else
-    APP_ERROR_CHECK(sd_ble_enable(&ram_start_copy));
+    APP_ERROR_CHECK(nrf_sdh_ble_enable(&ram_start));
 #endif
+    // Register a handler for BLE events.
+	NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
 }
 
 /**@brief Function for the GAP initialization.
@@ -122,18 +128,11 @@ static void _nsec_ble_gap_params_init(char * device_name)
 
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);
 
-    ble_srv_utf8_str_t device_id_utf8_str;
-    ble_srv_ascii_to_utf8(&device_id_utf8_str, device_name);
-
-    err_code = sd_ble_gap_device_name_set(&sec_mode,
-                                          device_id_utf8_str.p_str,
-                                          device_id_utf8_str.length);
-    APP_ERROR_CHECK(err_code);
+    err_code = sd_ble_gap_device_name_set(&sec_mode, (const uint8_t *)device_name, strlen(device_name));
+    log_error_code("sd_ble_gap_device_name_set", err_code);
 
     err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_UNKNOWN);
-    APP_ERROR_CHECK(err_code);
-
-    memset(&gap_conn_params, 0, sizeof(gap_conn_params));
+    log_error_code("sd_ble_gap_appearance_set", err_code);
 
     gap_conn_params.min_conn_interval = MSEC_TO_UNITS(400, UNIT_1_25_MS);
     gap_conn_params.max_conn_interval = MSEC_TO_UNITS(650, UNIT_1_25_MS);
@@ -141,7 +140,7 @@ static void _nsec_ble_gap_params_init(char * device_name)
     gap_conn_params.conn_sup_timeout  = MSEC_TO_UNITS(4000, UNIT_10_MS);
 
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
-    APP_ERROR_CHECK(err_code);
+    log_error_code("sd_ble_gap_ppcp_set", err_code);
 }
 
 static void _nsec_ble_advertising_init(void)
@@ -171,7 +170,7 @@ static void _nsec_ble_advertising_init(void)
     advdata.uuids_complete.uuid_cnt = uuid_count;
     advdata.uuids_complete.p_uuids  = adv_uuids;
 
-    APP_ERROR_CHECK(ble_advdata_set(&advdata, NULL));
+    log_error_code("ble_advdata_set", ble_advdata_set(&advdata, NULL));
 }
 
 static void nsec_ble_disable_task(void * context, uint16_t size) {
@@ -207,11 +206,11 @@ static void _nsec_ble_advertising_start(void)
     adv_params.type        = BLE_GAP_ADV_TYPE_ADV_IND;
     adv_params.p_peer_addr = NULL;
     adv_params.fp          = BLE_GAP_ADV_FP_ANY;
-    adv_params.p_whitelist = NULL;
     adv_params.interval    = MSEC_TO_UNITS(1216,UNIT_0_625_MS);
     adv_params.timeout     = 0;
 
-    err_code = sd_ble_gap_adv_start(&adv_params);
+    err_code = sd_ble_gap_adv_start(&adv_params, BLE_COMMON_CFG_VS_UUID);
+    log_error_code("sd_ble_gap_adv_start", err_code);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -243,19 +242,19 @@ void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {
 static void nsec_ble_scan_start(void) {
     ble_gap_scan_params_t scan_params;
     scan_params.active = 0;
-    scan_params.selective = 0;
-    scan_params.p_whitelist = NULL;
+    scan_params.adv_dir_report = 0;
+    scan_params.use_whitelist = 0;
     scan_params.timeout = 0;
     scan_params.window = MSEC_TO_UNITS(40, UNIT_0_625_MS);
     scan_params.interval = MSEC_TO_UNITS(240, UNIT_0_625_MS);
 
-    sd_ble_gap_scan_start(&scan_params);
+    log_error_code("sd_ble_gap_scan_start", sd_ble_gap_scan_start(&scan_params));
 }
 
 int nsec_ble_init(char * device_name) {
     _nsec_ble_softdevice_init();
 
-    APP_ERROR_CHECK(softdevice_ble_evt_handler_set(_nsec_ble_evt_dispatch));
+    //APP_ERROR_CHECK(softdevice_ble_evt_handler_set(_nsec_ble_evt_dispatch));
 
     _nsec_ble_gap_params_init(device_name);
 
@@ -280,8 +279,6 @@ int nsec_ble_init(char * device_name) {
 
     pm_register(_nsec_pm_evt_handler);
 
-    //bzero(_nsec_ble_vendor_services, sizeof(_nsec_ble_vendor_services));
-    //bzero(_nsec_ble_vendor_services_characteristics, sizeof(_nsec_ble_vendor_services_characteristics));
     bzero(_nsec_ble_event_handlers, sizeof(_nsec_ble_event_handlers));
     bzero(_nsec_ble_adv_uuid_providers, sizeof(_nsec_ble_adv_uuid_providers));
 
