@@ -15,6 +15,8 @@ void log_warning(const char* message);
 
 void log_error_code(const char*, uint32_t);
 
+void log_status_code(const char* message, uint32_t code);
+
 void log_init();
 
 

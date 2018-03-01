@@ -22,8 +22,10 @@
 #include <nrf_delay.h>
 #include "../led_effects.h"
 #include "../logs.h"
+#include "nrf_log.h"
 
 #define APP_BLE_OBSERVER_PRIO 3
+#define PEER_ADDRESS_SIZE 6
 
 
 static nrf_sdh_ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
@@ -31,35 +33,29 @@ static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MA
 static uint8_t _nsec_ble_is_enabled = 0;
 static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 
-static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt);
 static void _nsec_ble_advertising_start(void);
 static void nsec_ble_scan_start(void);
-/*
-static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
-    pm_on_ble_evt(p_ble_evt);
+
+
+static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
+    //pm_on_ble_evt(p_ble_evt);
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
         if(_nsec_ble_event_handlers[i] != NULL) {
-            _nsec_ble_event_handlers[i](p_ble_evt);
+            _nsec_ble_event_handlers[i](p_ble_evt, p_context);
         }
     }
-    switch (p_ble_evt->header.evt_id)
-    {
+    switch (p_ble_evt->header.evt_id){
         case BLE_GAP_EVT_CONNECTED: {
-            //uint8_t * addr = p_ble_evt->evt.gap_evt.params.connected.peer_addr.addr;
-            //size_t addr_size = sizeof(p_ble_evt->evt.gap_evt.params.connected.peer_addr.addr);
-            //for(int i = 0; i < addr_size; i++) {
-            //    char hex[4];
-            //    snprintf(hex, sizeof(hex), "%02x", addr[i]);
-            //    gfx_puts(hex);
-            //}
-            //gfx_update();
-            nsec_led_set_effect(NSEC_LED_EFFECT_FLASH_ALL);
+            uint8_t * addr = p_ble_evt->evt.gap_evt.params.connected.peer_addr.addr;
+            char address[PEER_ADDRESS_SIZE + 1];
+            memcpy(address, addr, PEER_ADDRESS_SIZE);
+            address[PEER_ADDRESS_SIZE] = 0;
+            NRF_LOG_INFO("Connected to %x", address);
             }
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            nsec_led_set_effect(NSEC_LED_EFFECT_SPIN);
-            _nsec_ble_advertising_start();
+            log_status_code("Disconnected. Reason: %d", p_ble_evt->evt.gap_evt.params.disconnected.reason);
             break;
 
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
@@ -93,12 +89,10 @@ static void _nsec_ble_evt_dispatch(ble_evt_t * p_ble_evt) {
             break;
     }
 }
-*/
+
 static void _nsec_pm_evt_handler(pm_evt_t const * event) {
 
 }
-
-static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context){}
 
 static void _nsec_ble_softdevice_init() {
     uint32_t ram_start = 0;
@@ -112,7 +106,7 @@ static void _nsec_ble_softdevice_init() {
     APP_ERROR_CHECK(nrf_sdh_ble_enable(&ram_start));
 #endif
     // Register a handler for BLE events.
-	NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
+	NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_event_handler, NULL);
 }
 
 /**@brief Function for the GAP initialization.

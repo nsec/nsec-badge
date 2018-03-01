@@ -24,6 +24,10 @@ void log_error(const char* message){
 	nrf_log_frontend_std_0(1, message);
 }
 
+void log_status_code(const char* message, uint32_t code){
+	nrf_log_frontend_std_1(1, message, code);
+}
+
 void log_init(){
     ret_code_t err_code = NRF_LOG_INIT(NULL);
     APP_ERROR_CHECK(err_code);
