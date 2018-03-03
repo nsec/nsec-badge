@@ -51,6 +51,7 @@
 #include "ble_gap.h"
 #include "app_timer.h"
 #include "logs.h"
+#include "ble/ble_device.h"
 
 
 #define NSEC_STRINGIFY_(...) #__VA_ARGS__
@@ -238,7 +239,8 @@ int main() {
 		nrf_gpio_cfg_output(leds[i]);
 	log_init();
     softdevice_init();
-    nsec_ble_init(DEVICE_NAME);
+    create_ble_device("My BLE device");
+    start_advertising();
 
     //APP_SCHED_INIT(APP_TIMER_SCHED_EVT_SIZE /* EVENT_SIZE */, 12 /* QUEUE SIZE */);
 /*
@@ -248,7 +250,6 @@ int main() {
     nsec_led_init();
 */
     //test_neopixels();
-	log_error("Flashing leds!!!");
     while(1){
     	for(int i = 0; i < 4; i++)
     		nrf_gpio_pin_clear(leds[i]);
