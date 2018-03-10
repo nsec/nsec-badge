@@ -18,33 +18,30 @@
 //////////////////////////////////////////////
 // PINOUT
 
-#define BATT_CHARGE     1
-#define OLED_DATA       3
-#define OLED_CLK        4
-#define OLED_DC_MODE    5
-#define OLED_RESET      6
-#define OLED_CS         7
-#define TX_PIN_NUMBER   10
-#define RX_PIN_NUMBER   11
-#define SPIS_MOSI_PIN   12
-#define SPIS_MISO_PIN   13
-#define SPIS_SCK_PIN    14
-#define SPIS_CSN_PIN    15
+// Battery
+#define BATT_VOLTAGE    2
+#define BATT_CHARGE		27
+#define BATT_PGOOD		28
 
-// LED placement
-//
-//     1
-//  5_/ \_2
-//   \   /
-//   /_^_\
-//  4     3
+// Display
+#define OLED_DATA       4
+#define OLED_CLK        3
+#define OLED_DC_MODE    9
+#define OLED_RESET      7
+#define OLED_CS         11
 
-#define LED_1 24
-#define LED_2 29
-#define LED_3 30
-#define LED_4 25
-#define LED_5 28
+// Button
+#define BUTTON_UP		30
+#define BUTTON_DOWN		31
+#define BUTTON_BACK		6
+#define BUTTON_ENTER	5
 
-#define PSU_ENABLE      30
+// UART TO STM32
+#define nRF_RXD			13
+#define nRF_TXD			12
+#define nRF_CTS			14
+#define nRF_RTS			15
+
+#define NEOPIXEL 		26
 
 #endif
