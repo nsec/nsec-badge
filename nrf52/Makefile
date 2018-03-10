@@ -226,3 +226,8 @@ flash: $(PROJECT_NAME) $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex
 	mergehex/mergehex -m $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex $(OUTPUT_DIRECTORY)/$<.hex -o $(OUTPUT_DIRECTORY)/program.hex
 	nrfjprog/nrfjprog -f nrf52 --program $(OUTPUT_DIRECTORY)/program.hex --sectorerase --verify
 	nrfjprog/nrfjprog -f nrf52 --reset
+
+merge: $(PROJECT_NAME) $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex
+	echo Merging: $<
+	cp $(SDK_PATH)/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex $@
+	mergehex/mergehex -m $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex $(OUTPUT_DIRECTORY)/$<.hex -o $(OUTPUT_DIRECTORY)/program.hex
