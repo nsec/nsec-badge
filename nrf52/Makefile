@@ -189,8 +189,11 @@ clean-bitmaps:
 $(SDK_PATH):
 	wget http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.2.0_17b948a.zip
 	unzip nRF5_SDK_14.2.0_17b948a.zip nRF5_SDK_14.2.0_17b948a/components/*
+	unzip nRF5_SDK_14.2.0_17b948a.zip nRF5_SDK_14.2.0_17b948a/external/* 
 	mv nRF5_SDK_14.2.0_17b948a/components .
+	mv nRF5_SDK_14.2.0_17b948a/external .
 	mv components $@
+	mv external $@
 	./nordic-sdk-use-arm-none-eabi-gcc-in-path.patch
 	unzip -n -p nRF5_SDK_14.2.0_17b948a.zip nRF5_SDK_14.2.0_17b948a/documentation/nRF5_Nordic_license.txt > nordicsdk_licence_agreement.txt
 	unzip -n -p nRF5_SDK_14.2.0_17b948a.zip nRF5_SDK_14.2.0_17b948a/documentation/nRF5_Dynastream_license.txt > dynastream_licence_agreement.txt
