@@ -11,21 +11,27 @@
 #include <peer_manager.h>
 #include <ble_advdata.h>
 #include <ble_conn_params.h>
+#include <app_timer.h>
 
 
-static void set_default_advertising_data();
+static void set_default_advertising_data(ble_uuid_t*);
 static void set_default_security_parameters();
 static void set_default_scan_parameters();
 static void set_default_advertising_parameters(ble_gap_adv_params_t* advertising_parameters);
 static void set_default_connection_parameters(const char * device_name);
+static void conn_params_init();
 
 
 void set_default_gap_parameters(const char * device_name, ble_gap_adv_params_t* advertising_parameters){
 	set_default_advertising_parameters(advertising_parameters);
-	set_default_security_parameters();
+	//set_default_security_parameters();
 	set_default_scan_parameters();
 	set_default_connection_parameters(device_name);
-	set_default_advertising_data();
+	conn_params_init();
+}
+
+void set_default_advertised_service(ble_uuid_t* service_uuid){
+	set_default_advertising_data(service_uuid);
 }
 
 static void set_default_security_parameters(){
@@ -93,30 +99,35 @@ static void set_default_connection_parameters(const char * device_name){
     log_error_code("sd_ble_gap_ppcp_set", error_code);
 }
 
-static void set_default_advertising_data(){
+static void conn_params_init(){
+    ret_code_t             err_code;
+    ble_conn_params_init_t cp_init;
+
+    memset(&cp_init, 0, sizeof(cp_init));
+
+    cp_init.p_conn_params                  = NULL;
+    cp_init.first_conn_params_update_delay = APP_TIMER_TICKS(20000);
+    cp_init.next_conn_params_update_delay  = APP_TIMER_TICKS(5000);
+    cp_init.max_conn_params_update_count   = 3;
+    cp_init.start_on_notify_cccd_handle    = BLE_GATT_HANDLE_INVALID;
+    cp_init.disconnect_on_fail             = false;
+    cp_init.evt_handler                    = NULL;
+    cp_init.error_handler                  = NULL;
+
+    err_code = ble_conn_params_init(&cp_init);
+    log_error_code("ble_conn_params_init", err_code);
+}
+
+static void set_default_advertising_data(ble_uuid_t* uuid){
     ble_advdata_t advdata;
 
     memset(&advdata, 0, sizeof(advdata));
 
-    ble_uuid_t adv_uuids[16];
-    int uuid_count = 0;
-/*
-    for(int i = 0; i < NSEC_BLE_LIMIT_MAX_UUID_PROVIDER && uuid_count < 16; i++) {
-        if(_nsec_ble_adv_uuid_providers[i] != NULL) {
-            size_t count = 4;
-            ble_uuid_t uuids[count];
-            _nsec_ble_adv_uuid_providers[i](&count, uuids);
-            for(int j = 0; j < count && uuid_count < 16; j++) {
-                adv_uuids[uuid_count++] = uuids[j];
-            }
-        }
-    }
-*/
     advdata.name_type               = BLE_ADVDATA_FULL_NAME;
     advdata.include_appearance      = false;
     advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
-    advdata.uuids_complete.uuid_cnt = uuid_count;
-    advdata.uuids_complete.p_uuids  = adv_uuids;
+    advdata.uuids_complete.uuid_cnt = 1;
+    advdata.uuids_complete.p_uuids  = uuid;
 
     log_error_code("ble_advdata_set", ble_advdata_set(&advdata, NULL));
 }

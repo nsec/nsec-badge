@@ -16,6 +16,7 @@
 #include <app_timer.h>
 #include <peer_manager.h>
 #include <app_scheduler.h>
+#include <nrf_ble_gatt.h>
 
 #include "../boards.h"
 #include <nrf_gpio.h>
@@ -24,12 +25,17 @@
 #include "../logs.h"
 #include "nrf_log.h"
 #include "gap_configuration.h"
+#include "nsec_ble.h"
+
 
 #define APP_BLE_OBSERVER_PRIO 3
 #define PEER_ADDRESS_SIZE 6
+NRF_BLE_GATT_DEF(m_gatt);
+
 
 typedef struct{
 	const char* device_name;
+	ble_gap_adv_params_t advertising_parameters;
 } BleDevice;
 
 static BleDevice* ble_device = NULL;
@@ -42,6 +48,7 @@ static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 
 static void nsec_ble_scan_start();
 static void _nsec_ble_softdevice_init();
+static void gatt_init();
 
 ret_code_t create_ble_device(char* device_name){
 	if(ble_device == NULL){
@@ -56,7 +63,10 @@ ret_code_t create_ble_device(char* device_name){
 }
 
 void configure_advertising(){
-
+	if(ble_device == NULL)
+		return;
+	gatt_init();
+	set_default_gap_parameters(ble_device->device_name, &(ble_device->advertising_parameters));
 }
 
 
@@ -65,10 +75,7 @@ void start_advertising(){
 	if(ble_device == NULL)
 	    		return;
     uint32_t error_code;
-    ble_gap_adv_params_t advertising_parameters;
-	set_default_gap_parameters(ble_device->device_name, &advertising_parameters);
-
-	error_code = sd_ble_gap_adv_start(&advertising_parameters, BLE_COMMON_CFG_VS_UUID);
+	error_code = sd_ble_gap_adv_start(&(ble_device->advertising_parameters), BLE_COMMON_CFG_VS_UUID);
     log_error_code("sd_ble_gap_adv_start", error_code);
 }
 
@@ -122,7 +129,41 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             }
             }
             break;
+        case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
+        	log_info("Central is attempting pairing.");
+        	//log_error_code("sd_ble_gap_sec_params_reply", sd_ble_gap_sec_params_reply());
+			break;
     }
+}
+
+void service_write_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length){
+	log_info("Writing value in dummy service");
+}
+
+void config_dummy_service(){
+	nsec_ble_service_handle service_handle;
+	nsec_ble_characteristic_t service_characteristic;
+	service_characteristic.char_uuid = 0x1234;
+	service_characteristic.max_size = 4;
+	service_characteristic.permissions = NSEC_BLE_CHARACT_PERM_RW;
+	service_characteristic.on_write = service_write_callback;
+	nsec_ble_service_t dummy_service;
+	dummy_service.characteristics = &service_characteristic;
+	dummy_service.characteristics_count = 1;
+	uint8_t uuid[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+	memcpy(&dummy_service.uuid, &uuid, 16);
+	int result = nsec_ble_register_vendor_service(&dummy_service, &service_handle);
+	if(result != 0)
+		log_error("Error when registering vendor service");
+	ble_uuid_t dummy_service_uuid;
+	dummy_service_uuid.type = BLE_UUID_TYPE_VENDOR_BEGIN;
+	dummy_service_uuid.uuid = *((uint16_t*)&uuid[12]);
+	set_default_advertised_service(&dummy_service_uuid);
+}
+
+static void gatt_init(){
+    ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, NULL);
+    log_error_code("nrf_ble_gatt_init",err_code);
 }
 
 static void _nsec_pm_evt_handler(pm_evt_t const * event) {
@@ -165,7 +206,7 @@ uint8_t nsec_ble_toggle(void) {
     }
     return _nsec_ble_is_enabled;
 }
-
+*/
 void nsec_ble_register_evt_handler(nrf_sdh_ble_evt_handler_t handler) {
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
         if(_nsec_ble_event_handlers[i] == NULL) {
@@ -174,11 +215,11 @@ void nsec_ble_register_evt_handler(nrf_sdh_ble_evt_handler_t handler) {
         }
     }
 }
-
+/*
 void nsec_ble_set_scan_callback(nsec_ble_found_nsec_badge_callback callback) {
     _nsec_ble_scan_callback = callback;
 }
-
+*/
 void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_UUID_PROVIDER; i++) {
         if(_nsec_ble_adv_uuid_providers[i] == NULL) {
@@ -187,10 +228,8 @@ void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {
         }
     }
     sd_ble_gap_adv_stop();
-    _nsec_ble_advertising_init();
-    _nsec_ble_advertising_start();
 }
-*/
+/*
 static void nsec_ble_scan_start(void) {
     ble_gap_scan_params_t scan_params;
     scan_params.active = 0;
@@ -202,12 +241,12 @@ static void nsec_ble_scan_start(void) {
 
     log_error_code("sd_ble_gap_scan_start", sd_ble_gap_scan_start(&scan_params));
 }
-
+*/
 int nsec_ble_init() {
     bzero(_nsec_ble_event_handlers, sizeof(_nsec_ble_event_handlers));
     bzero(_nsec_ble_adv_uuid_providers, sizeof(_nsec_ble_adv_uuid_providers));
 
-    nsec_ble_scan_start();
+    //nsec_ble_scan_start();
     _nsec_ble_is_enabled = 1;
 
     return NRF_SUCCESS;

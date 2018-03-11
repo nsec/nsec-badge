@@ -71,7 +71,9 @@ void wdt_init(void)
     NRF_WDT->TASKS_START = 1;           //Start the Watchdog timer
 }
 */
-void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){}
+void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
+	log_error("An error happened");
+}
 
 void print_error_code(char const * function_name, uint32_t err_code){
 	if(err_code != NRF_SUCCESS){
@@ -240,6 +242,8 @@ int main() {
 	log_init();
     softdevice_init();
     create_ble_device("My BLE device");
+    configure_advertising();
+    config_dummy_service();
     start_advertising();
 
     //APP_SCHED_INIT(APP_TIMER_SCHED_EVT_SIZE /* EVENT_SIZE */, 12 /* QUEUE SIZE */);

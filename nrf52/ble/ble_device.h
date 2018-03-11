@@ -11,3 +11,5 @@ void destroy_ble_device();
 void configure_advertising();
 
 void start_advertising();
+
+void config_dummy_service();
