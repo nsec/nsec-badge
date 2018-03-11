@@ -43,7 +43,7 @@ typedef struct {
 } nsec_ble_service_t;
 
 
-int nsec_ble_init(char * device_name);
+int nsec_ble_init();
 
 int nsec_ble_set_charateristic_value(nsec_ble_service_handle service, uint16_t characteristic_uuid, void * value, uint16_t value_size);
 

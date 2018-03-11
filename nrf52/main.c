@@ -50,28 +50,14 @@
 #include "ble_conn_params.h"
 #include "ble_gap.h"
 #include "app_timer.h"
-#include "nrf_log.h"
-#include "nrf_log_ctrl.h"
-#include "nrf_log_default_backends.h"
+#include "logs.h"
+#include "ble/ble_device.h"
 
 
 #define NSEC_STRINGIFY_(...) #__VA_ARGS__
 #define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
+#define DEVICE_NAME "123" /**< Name of device. Will be included in the advertising data. */
 
-BLE_LBS_DEF(m_lbs); /**< LED Button Service instance. */
-NRF_BLE_GATT_DEF(m_gatt); /**< GATT module instance. */
-#define DEVICE_NAME "DevBoard" /**< Name of device. Will be included in the advertising data. */
-#define APP_BLE_OBSERVER_PRIO 3 /**< Application's BLE observer priority. You shouldn't need to modify this value. */
-#define APP_BLE_CONN_CFG_TAG 1
-#define MIN_CONN_INTERVAL MSEC_TO_UNITS(100, UNIT_1_25_MS) /**< Minimum acceptable connection interval (0.5 seconds). */
-#define MAX_CONN_INTERVAL MSEC_TO_UNITS(200, UNIT_1_25_MS) /**< Maximum acceptable connection interval (1 second). */
-#define SLAVE_LATENCY 0 /**< Slave latency. */
-#define CONN_SUP_TIMEOUT MSEC_TO_UNITS(4000, UNIT_10_MS) /**< Connection supervisory time-out (4 seconds). */
-#define FIRST_CONN_PARAMS_UPDATE_DELAY APP_TIMER_TICKS(20000) /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (15 seconds). */
-#define NEXT_CONN_PARAMS_UPDATE_DELAY APP_TIMER_TICKS(5000) /**< Time between each call to sd_ble_gap_conn_param_update after the first call (5 seconds). */
-#define MAX_CONN_PARAMS_UPDATE_COUNT 3
-#define APP_ADV_INTERVAL                64                                      /**< The advertising interval (in units of 0.625 ms; this value corresponds to 40 ms). */
-#define APP_ADV_TIMEOUT_IN_SECONDS      BLE_GAP_ADV_TIMEOUT_GENERAL_UNLIMITED   /**< The advertising time-out (in units of seconds). When set to 0, we will never time out. */
 
 static char g_device_id[10];
 
@@ -85,19 +71,11 @@ void wdt_init(void)
     NRF_WDT->TASKS_START = 1;           //Start the Watchdog timer
 }
 */
-void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
-	while(1){
-		nrf_gpio_pin_clear(20);
-		nrf_delay_ms(500);
-		nrf_gpio_pin_set(20);
-		nrf_delay_ms(500);
-	}
-}
+void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){}
 
 void print_error_code(char const * function_name, uint32_t err_code){
 	if(err_code != NRF_SUCCESS){
-		NRF_LOG_INFO("%s: %s", function_name, nrf_strerror_get(err_code));
-		NRF_LOG_FLUSH();
+		log_error_code(function_name, err_code);
 	}
 }
 
@@ -164,157 +142,6 @@ static void timers_init(void) {
 }
 */
 
-static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context){}
-
-/**@brief Function for initializing the BLE stack.
- *
- * @details Initializes the SoftDevice and the BLE event interrupt.
- */
-static void ble_stack_init(void){
-    ret_code_t err_code;
-    //print("nrf_sdh_enable_request");
-    err_code = nrf_sdh_enable_request();
-    //print(nrf_strerror_get(err_code));
-
-    // Configure the BLE stack using the default settings.
-    // Fetch the start address of the application RAM.
-    uint32_t ram_start = 0;
-    err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
-    print_error_code("nrf_sdh_ble_default_cfg_set", err_code);
-    NRF_LOG_INFO("Ram start is 0x%x", ram_start);
-    NRF_LOG_FLUSH();
-
-    // Enable BLE stack.
-    err_code = nrf_sdh_ble_enable(&ram_start);
-    print_error_code("nrf_sdh_ble_enable", err_code);
-    NRF_LOG_INFO("Ram start is 0x%x", ram_start);
-    NRF_LOG_FLUSH();
-    //APP_ERROR_CHECK(err_code);
-
-    // Register a handler for BLE events.
-    NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
-}
-
-/**@brief Function for the GAP initialization.
- *
- * @details This function sets up all the necessary GAP (Generic Access Profile) parameters of the
- *          device including the device name, appearance, and the preferred connection parameters.
- */
-static void gap_params_init(void){
-    ret_code_t              err_code;
-    ble_gap_conn_params_t   gap_conn_params;
-    ble_gap_conn_sec_mode_t sec_mode;
-
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);
-
-    err_code = sd_ble_gap_device_name_set(&sec_mode,
-                                          (const uint8_t *)DEVICE_NAME,
-                                          strlen(DEVICE_NAME));
-    print_error_code("sd_ble_gap_device_name_set", err_code);
-
-    memset(&gap_conn_params, 0, sizeof(gap_conn_params));
-
-    gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
-    gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
-    gap_conn_params.slave_latency     = SLAVE_LATENCY;
-    gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
-
-    err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
-    print_error_code("sd_ble_gap_ppcp_set", err_code);
-}
-
-/**@brief Function for initializing the GATT module.
- */
-static void gatt_init(void){
-    ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, NULL);
-    print_error_code("nrf_ble_gatt_init", err_code);
-}
-
-/**@brief Function for initializing the Advertising functionality.
- *
- * @details Encodes the required advertising data and passes it to the stack.
- *          Also builds a structure to be passed to the stack when starting advertising.
- */
-static void advertising_init(void){
-    ret_code_t    err_code;
-    ble_advdata_t advdata;
-    ble_advdata_t srdata;
-
-    ble_uuid_t adv_uuids[] = {{LBS_UUID_SERVICE, m_lbs.uuid_type}};
-
-    // Build and set advertising data
-    memset(&advdata, 0, sizeof(advdata));
-
-    advdata.name_type          = BLE_ADVDATA_FULL_NAME;
-    advdata.include_appearance = true;
-    advdata.flags              = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
-
-
-    memset(&srdata, 0, sizeof(srdata));
-    srdata.uuids_complete.uuid_cnt = sizeof(adv_uuids) / sizeof(adv_uuids[0]);
-    srdata.uuids_complete.p_uuids  = adv_uuids;
-
-    err_code = ble_advdata_set(&advdata, &srdata);
-    print_error_code("ble_advdata_set", err_code);
-}
-
-/**@brief Function for initializing services that will be used by the application.
- */
-static void services_init(void){
-    ret_code_t     err_code;
-    ble_lbs_init_t init;
-
-    //init.led_write_handler = led_write_handler;
-
-    err_code = ble_lbs_init(&m_lbs, &init);
-    print_error_code("ble_lbs_init", err_code);
-}
-
-static void on_conn_params_evt(ble_conn_params_evt_t * p_evt){}
-
-static void conn_params_error_handler(uint32_t nrf_error){}
-
-/**@brief Function for initializing the Connection Parameters module.
- */
-static void conn_params_init(void)
-{
-    ret_code_t             err_code;
-    ble_conn_params_init_t cp_init;
-
-    memset(&cp_init, 0, sizeof(cp_init));
-
-    cp_init.p_conn_params                  = NULL;
-    cp_init.first_conn_params_update_delay = FIRST_CONN_PARAMS_UPDATE_DELAY;
-    cp_init.next_conn_params_update_delay  = NEXT_CONN_PARAMS_UPDATE_DELAY;
-    cp_init.max_conn_params_update_count   = MAX_CONN_PARAMS_UPDATE_COUNT;
-    cp_init.start_on_notify_cccd_handle    = BLE_GATT_HANDLE_INVALID;
-    cp_init.disconnect_on_fail             = false;
-    cp_init.evt_handler                    = on_conn_params_evt;
-    cp_init.error_handler                  = conn_params_error_handler;
-
-    err_code = ble_conn_params_init(&cp_init);
-    sd_ble_gap_adv_start("ble_conn_params_init", err_code);
-}
-
-/**@brief Function for starting advertising.
- */
-static void advertising_start(void)
-{
-    ret_code_t           err_code;
-    ble_gap_adv_params_t adv_params;
-
-    // Start advertising
-    memset(&adv_params, 0, sizeof(adv_params));
-
-    adv_params.type        = BLE_GAP_ADV_TYPE_ADV_IND;
-    adv_params.p_peer_addr = NULL;
-    adv_params.fp          = BLE_GAP_ADV_FP_ANY;
-    adv_params.interval    = APP_ADV_INTERVAL;
-    adv_params.timeout     = APP_ADV_TIMEOUT_IN_SECONDS;
-
-    err_code = sd_ble_gap_adv_start(&adv_params, APP_BLE_CONN_CFG_TAG);
-    print_error_code("sd_ble_gap_adv_start", err_code);
-}
 
 void sys_evt_dispatch(uint32_t evt_id, void * p_context) {
 
@@ -322,21 +149,8 @@ void sys_evt_dispatch(uint32_t evt_id, void * p_context) {
 
 static void softdevice_init(void) {
     uint32_t err_code;
-/*
-    err_code = nrf_sdh_enable_request();
-    print_error_code(err_code);
-    // Configure the BLE stack using the default settings.
-	// Fetch the start address of the application RAM.
-
-	uint32_t ram_start = 0;
-	err_code = nrf_sdh_ble_default_cfg_set(1, &ram_start);
-	print_error_code(err_code);
-
-	// Enable BLE stack.
-	err_code = nrf_sdh_ble_enable(&ram_start);
-	print_error_code(err_code);/*
-    // Register with the SoftDevice handler module for events.
-	NRF_SDH_SOC_OBSERVER(sys_evt_observer, 3, sys_evt_dispatch, NULL);*/
+	err_code = nrf_sdh_enable_request();
+	print_error_code("nrf_sdh_enable_request", err_code);
 }
 /*
 static void application_timers_start(void) {
@@ -362,7 +176,6 @@ static void nsec_intro(void) {
     }
 }
 
-void open_animal_care(uint8_t item);
 void open_conference_schedule(uint8_t item);
 void open_settings(uint8_t item);
 
@@ -412,13 +225,6 @@ void test_neopixels(){
 		nsec_neopixel_show();
 }
 
-static void log_init(void)
-{
-    ret_code_t err_code = NRF_LOG_INIT(NULL);
-    APP_ERROR_CHECK(err_code);
-
-    NRF_LOG_DEFAULT_BACKENDS_INIT();
-}
 
 int main() {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
@@ -432,15 +238,9 @@ int main() {
 	for(int i = 0; i < 4; i++)
 		nrf_gpio_cfg_output(leds[i]);
 	log_init();
-    //softdevice_init();
-	ble_stack_init();
-
-	gap_params_init();
-	gatt_init();
-	services_init();
-	advertising_init();
-	conn_params_init();
-	advertising_start();
+    softdevice_init();
+    create_ble_device("My BLE device");
+    start_advertising();
 
     //APP_SCHED_INIT(APP_TIMER_SCHED_EVT_SIZE /* EVENT_SIZE */, 12 /* QUEUE SIZE */);
 /*

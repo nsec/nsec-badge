@@ -13,6 +13,7 @@
 #include <string.h>
 #include <ble.h>
 #include <nrf_sdh.h>
+#include <nrf_sdh_ble.h>
 
 #define NSEC_BLE_LIMIT_MAX_EVENT_HANDLER (4)
 #define NSEC_BLE_LIMIT_MAX_UUID_PROVIDER (4)
