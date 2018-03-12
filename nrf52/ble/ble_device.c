@@ -12,7 +12,7 @@
 #include <ble_bas.h>
 #include <ble_hci.h>*/
 #include <ble_advdata.h>
-//#include <ble_dis.h>
+#include <ble_dis.h>
 #include <app_timer.h>
 #include <peer_manager.h>
 #include <app_scheduler.h>
@@ -49,6 +49,10 @@ static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 static void nsec_ble_scan_start();
 static void _nsec_ble_softdevice_init();
 static void gatt_init();
+static void init_connection_parameters();
+static void add_device_information_service(char * manufacturer_name, char * model, char * serial_number,
+		char * hw_revision, char * fw_revision, char * sw_revision);
+
 
 ret_code_t create_ble_device(char* device_name){
 	if(ble_device == NULL){
@@ -71,6 +75,7 @@ void configure_advertising(){
 
 
 void start_advertising(){
+	//init_connection_parameters();
 	log_info("Starting advertising");
 	if(ble_device == NULL)
 	    		return;
@@ -141,6 +146,7 @@ void service_write_callback(nsec_ble_service_handle service, uint16_t char_uuid,
 }
 
 void config_dummy_service(){
+	/*
 	nsec_ble_service_handle service_handle;
 	nsec_ble_characteristic_t service_characteristic;
 	service_characteristic.char_uuid = 0x1234;
@@ -158,7 +164,13 @@ void config_dummy_service(){
 	ble_uuid_t dummy_service_uuid;
 	dummy_service_uuid.type = BLE_UUID_TYPE_VENDOR_BEGIN;
 	dummy_service_uuid.uuid = *((uint16_t*)&uuid[12]);
-	set_default_advertised_service(&dummy_service_uuid);
+	*/
+	add_device_information_service("Nordic Semi", "NFR52", "qwerty12345", "1", "2", "3");
+	ble_uuid_t device_info_uuid = {
+	        .uuid = BLE_UUID_DEVICE_INFORMATION_SERVICE,
+	        .type = BLE_UUID_TYPE_BLE
+	    };
+	set_default_advertised_service(&device_info_uuid);
 }
 
 static void gatt_init(){
@@ -168,6 +180,68 @@ static void gatt_init(){
 
 static void _nsec_pm_evt_handler(pm_evt_t const * event) {
 
+}
+
+static void on_connection_params_event(ble_conn_params_evt_t * p_evt){
+    if (p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED){
+    	log_error("BLE connection params event failed.");
+    }
+}
+
+static void connection_params_error_handler(uint32_t nrf_error){
+    log_error_code("connection params error handler", nrf_error);
+}
+
+static void init_connection_parameters(){
+    ret_code_t             err_code;
+    ble_conn_params_init_t cp_init;
+
+    memset(&cp_init, 0, sizeof(cp_init));
+
+    cp_init.p_conn_params                  = NULL;
+    cp_init.first_conn_params_update_delay = APP_TIMER_TICKS(20000);
+    cp_init.next_conn_params_update_delay  = APP_TIMER_TICKS(5000);
+    cp_init.max_conn_params_update_count   = 3;
+    cp_init.start_on_notify_cccd_handle    = BLE_GATT_HANDLE_INVALID;
+    cp_init.disconnect_on_fail             = false;
+    cp_init.evt_handler                    = on_connection_params_event;
+    cp_init.error_handler                  = connection_params_error_handler;
+
+    err_code = ble_conn_params_init(&cp_init);
+    log_error_code("ble_conn_params_init", err_code);
+}
+
+static void add_device_information_service(char * manufacturer_name, char * model, char * serial_number,
+		char * hw_revision, char * fw_revision, char * sw_revision){
+	ble_dis_init_t device_information;
+	bzero(&device_information, sizeof(device_information));
+
+	if(manufacturer_name) {
+		ble_srv_ascii_to_utf8(&device_information.manufact_name_str,
+							  manufacturer_name);
+	}
+	if(model) {
+		ble_srv_ascii_to_utf8(&device_information.model_num_str,
+							  model);
+	}
+	if(serial_number) {
+		ble_srv_ascii_to_utf8(&device_information.serial_num_str,
+							  serial_number);
+	}
+	if(hw_revision) {
+		ble_srv_ascii_to_utf8(&device_information.hw_rev_str,
+							  hw_revision);
+	}
+	if(fw_revision) {
+		ble_srv_ascii_to_utf8(&device_information.fw_rev_str,
+							  fw_revision);
+	}
+	if(sw_revision) {
+		ble_srv_ascii_to_utf8(&device_information.sw_rev_str,
+							  sw_revision);
+	}
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&device_information.dis_attr_md.read_perm);
+	log_error_code("ble_dis_init", ble_dis_init(&device_information));
 }
 
 static void _nsec_ble_softdevice_init() {
