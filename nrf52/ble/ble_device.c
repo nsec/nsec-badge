@@ -76,6 +76,7 @@ void configure_advertising(){
 
 void start_advertising(){
 	//init_connection_parameters();
+	log_error_code("sd_ble_gap_tx_power_set", sd_ble_gap_tx_power_set(4));
 	log_info("Starting advertising");
 	if(ble_device == NULL)
 	    		return;
