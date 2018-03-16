@@ -77,7 +77,7 @@ void configure_advertising(){
 void start_advertising(){
 	//init_connection_parameters();
 	log_error_code("sd_ble_gap_tx_power_set", sd_ble_gap_tx_power_set(4));
-	log_info("Starting advertising");
+	NRF_LOG_INFO("Starting advertising");
 	if(ble_device == NULL)
 	    		return;
     uint32_t error_code;
@@ -103,7 +103,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
-            log_status_code("Disconnected. Reason: %d", p_ble_evt->evt.gap_evt.params.disconnected.reason);
+            NRF_LOG_INFO("Disconnected. Reason: %d", p_ble_evt->evt.gap_evt.params.disconnected.reason);
             break;
 
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
@@ -136,14 +136,14 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             }
             break;
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
-        	log_info("Central is attempting pairing.");
+        	NRF_LOG_INFO("Central is attempting pairing.");
         	//log_error_code("sd_ble_gap_sec_params_reply", sd_ble_gap_sec_params_reply());
 			break;
     }
 }
 
 void service_write_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length){
-	log_info("Writing value in dummy service");
+	NRF_LOG_INFO("Writing value in dummy service");
 }
 
 void config_dummy_service(){
@@ -185,7 +185,7 @@ static void _nsec_pm_evt_handler(pm_evt_t const * event) {
 
 static void on_connection_params_event(ble_conn_params_evt_t * p_evt){
     if (p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED){
-    	log_error("BLE connection params event failed.");
+    	NRF_LOG_ERROR("BLE connection params event failed.");
     }
 }
 

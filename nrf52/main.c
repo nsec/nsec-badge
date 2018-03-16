@@ -23,19 +23,13 @@
 
 
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
-	log_error("An error happened");
-}
-
-void print_error_code(char const * function_name, uint32_t err_code){
-	if(err_code != NRF_SUCCESS){
-		log_error_code(function_name, err_code);
-	}
+	NRF_LOG_ERROR("An error happened");
 }
 
 static void softdevice_init(void) {
     uint32_t err_code;
 	err_code = nrf_sdh_enable_request();
-	print_error_code("nrf_sdh_enable_request", err_code);
+	log_error_code("nrf_sdh_enable_request", err_code);
 }
 
 void test_neopixels(){
