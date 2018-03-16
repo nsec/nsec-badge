@@ -63,7 +63,6 @@ SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/nrf_drv_spi.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
 SRC_FILES += $(wildcard $(SDK_PATH)/ble/peer_manager/*.c)
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
-#SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_hids/ble_hids.c
 #SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_bas/ble_bas.c
 SRC_FILES += $(SDK_PATH)/libraries/experimental_section_vars/nrf_section_iter.c
 SRC_FILES += $(SDK_PATH)/ble/nrf_ble_gatt/nrf_ble_gatt.c
@@ -116,11 +115,9 @@ INC_FOLDERS += $(SDK_PATH)/ble/peer_manager
 INC_FOLDERS += $(SDK_PATH)/ble/nrf_ble_gatt
 INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_bas
 INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_dis
-INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_hids
 INC_FOLDERS += $(SDK_PATH)/serialization/common/transport/ser_phy/config
 INC_FOLDERS += $(SDK_PATH)/libraries/strerror
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
-INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_lbs
 INC_FOLDERS += $(SDK_PATH)/ble/nrf_ble_gatt/
 INC_FOLDERS += $(SDK_PATH)/libraries/timer/
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_memobj
@@ -141,6 +138,9 @@ TEMPLATE_PATH = $(SDK_PATH)/toolchain/gcc/
 CFLAGS += -DDEBUG -g3 -Os
 LDFLAGS += -g3
 ASMFLAGS += -DDEBUG -g3 -Os
+
+
+# Commented flags seems to have no nrf52 equivalent. double check that before removing them.
 
 #CFLAGS += -DNRF51822_QFAA_CA
 #CFLAGS += -DNRF51822
@@ -219,7 +219,8 @@ $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex: $(OUTPUT_DIRECTORY) $(SDK_P
 
 $(OUTPUT_DIRECTORY)/%.elf: $(OUTPUT_DIRECTORY)/%.hex
 	arm-none-eabi-objcopy -I ihex -O elf32-littlearm -B armv5 $< $@
-	
+
+# TODO add target to install nrfjprog and mergehex, rename to make devboard
 flash: $(PROJECT_NAME) $(OUTPUT_DIRECTORY)/s132_nrf52_5.0.0_softdevice.hex
 	@echo Flashing: $<
 	nrfjprog/nrfjprog -f nrf52 --eraseall
