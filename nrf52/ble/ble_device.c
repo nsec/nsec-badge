@@ -95,10 +95,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     switch (p_ble_evt->header.evt_id){
         case BLE_GAP_EVT_CONNECTED: {
             uint8_t * addr = p_ble_evt->evt.gap_evt.params.connected.peer_addr.addr;
-            char address[PEER_ADDRESS_SIZE + 1];
-            memcpy(address, addr, PEER_ADDRESS_SIZE);
-            address[PEER_ADDRESS_SIZE] = 0;
-            NRF_LOG_INFO("Connected to %x", address);
+            NRF_LOG_INFO("Connected to a device"); //TODO print address of peer.
             }
             break;
 
@@ -137,7 +134,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             break;
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
         	NRF_LOG_INFO("Central is attempting pairing.");
-        	//log_error_code("sd_ble_gap_sec_params_reply", sd_ble_gap_sec_params_reply());
 			break;
     }
 }
@@ -194,6 +190,8 @@ static void connection_params_error_handler(uint32_t nrf_error){
 }
 
 static void init_connection_parameters(){
+	// The BLE stack seems to work without this function, but I leave it here just in case it might be needed in the future.
+
     ret_code_t             err_code;
     ble_conn_params_init_t cp_init;
 
