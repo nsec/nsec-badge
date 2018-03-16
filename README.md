@@ -1,4 +1,4 @@
-Northsec 2017 Badge
+Northsec 2018 Badge
 ===================
 
 Brought to you by the Team badge for NorthSec.
@@ -8,30 +8,28 @@ Brought to you by the Team badge for NorthSec.
 
 ## Hardware overview
 
-The NorthSec 2017 badge has two programmable micro-controllers:
+The NorthSec 2018 badge has two programmable micro-controllers:
 
- - The [Nordic Semiconductor](https://www.nordicsemi.com) [`nRF51822`](https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy2/nRF51822) (nRF51) and
- - The [STMicroelectronics](http://www.st.com/) [`stm32f072cb`](http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32f0-series/stm32f0x2/stm32f072cb.html) (stm32).
+ - The [Nordic Semiconductor](https://www.nordicsemi.com) [`nRF52832`](https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy2/nRF52832) (nRF52) and
+ - The [STMicroelectronics](http://www.st.com/) [`STM32F070F6P6`](http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32-mainstream-mcus/stm32f0-series/stm32f0x0-value-line/stm32f070f6.html) (stm32).
 
-Both are based on the ARM Cortex-M0 core and runs the `armv6-m` instruction set.
-
-The nRF51 takes care of:
+The nRF52 is based on the ARM Cortex-M4F core and runs the `armv7-m` instruction set, it takes care of:
 
  - The OLED display
  - The Bluetooth Low Energy
  - The battery management
  - The red and green LEDs
-
-The stm32 takes care of:
-
  - The touch buttons
+
+The stm32 is based on the ARM Cortex-M0 core and runs the `armv6-m` instruction set, it takes care of:
+
  - The USB port
 
-The badge can be supplied by 2 AAA batteries and/or the USB port. It is
-perfectly safe to have both at the same time. The badge should work with
-any DC voltage between 1.8V and 5.5V.
+The badge can be supplied by 1 ICR14500 3.7v Li-ion rechargeable battery and/or the USB port. The
+battery can be charged from the USB port but the power switch must be turned ON for the duration
+of the charge.
 
-The [schematic](http://xn--rr8b.ga/northsec_2017_schematics.pdf) are available.
+The [schematic](http://xn--rr8b.ga/northsec_2018_schematics.pdf) are available.
 
 If you wish to build your own badge:
 
@@ -70,18 +68,18 @@ https://launchpad.net/gcc-arm-embedded.
 
 ### Dependencies
 
-The nF51 firmware depends on the Nordic SDK v12.1.0. You can download and extract
-the SDK by typing `make nordicsdk` in the `nrf51` directory. I will also be done
+The nF52 firmware depends on the Nordic SDK v14.2.0. You can download and extract
+the SDK by typing `make nordicsdk` in the `nrf52` directory. I will also be done
 automatically when building the first time.
 
-The nRF51 also uses the s130 "SoftDevice" v2.0.1 to painlessly enable Bluetooth
+The nRF52 also uses the s132 "SoftDevice" v5.0.0 to painlessly enable Bluetooth
 Low Energy (BLE), which comes with the SDK. Use
-`make builds/s130_nrf51822_2.0.1_softdevice.elf` to create the ELF file
+`make builds/s132_nrf52_5.0.0_softdevice.elf` to create the ELF file
 from Nordic's binary distribution.
 
 NOTE: The Nordic SDK and the SoftDevice isn't free software. The licence
 agreements (`nordicsdk_licence_agreement.txt` and
-`s130_nrf51_2.0.1_licence_agreement.txt`) will be downloaded as well.
+`s132_nrf52_5.0.0_licence_agreement.txt`) will be downloaded as well.
 
 The stm32 requires the [opencm3](http://libopencm3.org/) library. The library
 is setup as a git submodule. Typing `git submodule init` and `git submodule
