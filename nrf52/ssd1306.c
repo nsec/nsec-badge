@@ -23,7 +23,7 @@ All text above, and the splash screen below must be included in any redistributi
 #include <app_error.h>
 #include <app_util_platform.h>
 #include <nrf_drv_spi.h>
-#include <nrf51.h>
+#include <nrf52.h>
 #include <nrf_error.h>
 #include <nrf_gpio.h>
 #include <nrf_delay.h>
@@ -62,7 +62,7 @@ static void spi_init() {
     spi_config.irq_priority = APP_IRQ_PRIORITY_LOW;
     spi_config.orc = 0xFF;
 
-    APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, NULL));
+    APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, NULL, NULL));
 }
 
 static void spi_master_tx(const uint8_t * p_tx_data, uint16_t len) {

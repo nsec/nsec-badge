@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 
-#include <nrf51.h>
+#include <nrf52.h>
 #include <nrf_soc.h>
 
 #include "random.h"

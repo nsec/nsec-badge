@@ -20,7 +20,7 @@ void nsec_battery_manager_init(void) {
                      APP_TIMER_MODE_REPEATED,
                      _nsec_battery_check);
     app_timer_start(_battery_manager_timer_id,
-            APP_TIMER_TICKS(1000/*ms*/, APP_TIMER_PRESCALER), NULL);
+            APP_TIMER_TICKS(1000/*ms*/), NULL);
 
     _nsec_battery_check(NULL);
 }

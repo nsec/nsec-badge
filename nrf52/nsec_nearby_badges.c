@@ -28,7 +28,7 @@ static void nsec_nearby_update_led_pettern(void);
 void nsec_nearby_badges_init(void) {
     memset(_nearby_badges, 0, sizeof(_nearby_badges));
     app_timer_create(&nearby_timer, APP_TIMER_MODE_REPEATED, nsec_nearby_each_second);
-    app_timer_start(nearby_timer, APP_TIMER_TICKS(1000, 0), NULL);
+    app_timer_start(nearby_timer, APP_TIMER_TICKS(1000), NULL);
     nsec_ble_set_scan_callback(nsec_nearby_badges_callback);
 }
 
@@ -71,7 +71,7 @@ static void nsec_nearby_update_led_pettern(void) {
     else {
         delay = 300 - (50 * (count - 4));
     }
-    nsec_led_set_delay(delay);
+    //nsec_led_set_delay(delay);
 }
 
 uint8_t nsec_nearby_badges_current_count(void) {

@@ -3,7 +3,7 @@
 //  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
 //  License: MIT (see LICENSE for details)
-
+/*
 #include "boards.h"
 
 #include <stdint.h>
@@ -125,4 +125,4 @@ void battery_init() {
 
     err_code = sd_nvic_EnableIRQ(ADC_IRQn);
     APP_ERROR_CHECK(err_code);
-}
+}*/
