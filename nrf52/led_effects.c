@@ -31,8 +31,7 @@ uint32_t mapConnect[] = {LED_PIN, NRF_PWM_PIN_NOT_CONNECTED,
 uint32_t mapDisconnect[] = {NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
                     NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
 
-int nsec_neopixel_init()
-{
+int nsec_neopixel_init() {
     nsec18_pixels = malloc(sizeof(struct Nsec18_pixels));
     if (nsec18_pixels == NULL) {
         return -1;
@@ -59,14 +58,12 @@ int nsec_neopixel_init()
     return 0;
 }
 
-void nsec_neoPixel_clean(void)
-{
+void nsec_neoPixel_clean(void) {
 
 }
 
 //Set the n pixel color
-void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b)
-{
+void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
     //TODO add brightness
     if (n < NEOPIXEL_COUNT) {
         uint8_t *p;
@@ -78,8 +75,7 @@ void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b)
 
 }
 
-void nsec_neopixel_show(void)
-{
+void nsec_neopixel_show(void) {
     if (nsec18_pixels == NULL) {
         return;
     }
@@ -92,8 +88,7 @@ void nsec_neopixel_show(void)
     nrf_delay_us(50);
 }
 
-void show_with_PWM(void)
-{
+void show_with_PWM(void) {
     //todo Implement the canshow
     uint32_t pattern_size = nsec18_pixels->numBytes*8*sizeof(uint16_t)+2*sizeof(uint16_t);
     uint16_t *pixels_pattern = NULL;
@@ -149,37 +144,36 @@ void show_with_PWM(void)
 
 }
 
-void show_with_DWT(void)
-{
+void show_with_DWT(void) {
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 
     while (1) {
         uint8_t *p = nsec18_pixels->pixels;
         uint32_t cycStart = DWT->CYCCNT;
-        uint32_t cyc = 0;
+        uint32_t cycle = 0;
 
         for (uint16_t n=0; n < nsec18_pixels->numBytes; n++) {
             uint8_t pix = *p++;
 
             for (uint8_t mask = 0x80; mask; mask >>=1) {
-                while (DWT->CYCCNT - cyc < CYCLES_800);
+                while (DWT->CYCCNT - cycle < CYCLES_800);
 
-                cyc = DWT->CYCCNT;
+                cycle = DWT->CYCCNT;
 
                 nrf_gpio_pin_set(LED_PIN);
 
                 if (pix & mask) {
-                    while(DWT->CYCCNT - cyc < CYCLES_800_T1H);
+                    while(DWT->CYCCNT - cycle < CYCLES_800_T1H);
                 } else {
-                    while(DWT->CYCCNT - cyc < CYCLES_800_T0H);
+                    while(DWT->CYCCNT - cycle < CYCLES_800_T0H);
                 }
 
                 nrf_gpio_pin_clear(LED_PIN);
             }
         }
 
-        while(DWT->CYCCNT - cyc < CYCLES_800);
+        while(DWT->CYCCNT - cycle < CYCLES_800);
 
         // If total time is longer than 25%, resend the whole data.
         // Since we are likely to be interrupted by SoftDevice
