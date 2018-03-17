@@ -158,7 +158,7 @@ void menu_button_handler(button_t button) {
             case BUTTON_DOWN:
                 menu_change_selected_item(MENU_DIRECTION_DOWN);
                 break;
-            case BUTTON_RIGHT:
+            case BUTTON_ENTER:
                 menu_trigger_action();
                 break;
             default:

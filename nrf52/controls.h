@@ -14,8 +14,8 @@
 typedef enum {
     BUTTON_UP,
     BUTTON_DOWN,
-    BUTTON_LEFT,
-    BUTTON_RIGHT,
+    BUTTON_BACK,
+    BUTTON_ENTER,
 } button_t;
 
 typedef void (*button_handler)(button_t button);

@@ -211,11 +211,11 @@ static uint8_t date_selected = 0;
 void nsec_schedule_show_talks(uint8_t date);
 
 static void nsec_schedule_button_handler(button_t button) {
-    if(schedule_state == SCHEDULE_STATE_TALK_DETAILS && button != BUTTON_RIGHT) {
+    if(schedule_state == SCHEDULE_STATE_TALK_DETAILS && button != BUTTON_ENTER) {
         schedule_state = SCHEDULE_STATE_TALKS;
         menu_ui_redraw_all();
     }
-    else if(button == BUTTON_LEFT) {
+    else if(button == BUTTON_BACK) {
         switch (schedule_state) {
             case SCHEDULE_STATE_TALKS:
                 nsec_schedule_show_dates();
