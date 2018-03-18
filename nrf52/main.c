@@ -50,13 +50,19 @@ void init_devboard(){
 	log_init();
 }
 
-void init_DCDC() {
+/*
+ * Initialize power module driver.
+ *
+ * Power driver has to be enabled before SoftDevice.
+ */
+void init_DCDC(void) {
     ret_code_t err_code;
 
-    nrf_drv_power_config_t p_config;
-    p_config.dcdcen = true;
-
-    err_code = nrf_drv_power_init(&p_config);
+    /*
+     * Passing NULL as config will use the value of
+     * POWER_CONFIG_DEFAULT_DCDCEN from sdk_config.h
+     */
+    err_code = nrf_drv_power_init(NULL);
     APP_ERROR_CHECK(err_code);
 }
 
