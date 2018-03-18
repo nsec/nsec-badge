@@ -31,10 +31,10 @@
 #define OLED_CS         11
 
 // Button
-#define BUTTON_UP		30
-#define BUTTON_DOWN		31
-#define BUTTON_BACK		6
-#define BUTTON_ENTER	5
+#define INPUT_UP		30
+#define INPUT_DOWN		31
+#define INPUT_BACK		6
+#define INPUT_ENTER		5
 
 // UART TO STM32
 #define nRF_RXD			13

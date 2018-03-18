@@ -1,4 +1,4 @@
-//  Copyright (c) 2017
+//  Copyright (c) 2018
 //  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
 //  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
