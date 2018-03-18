@@ -21,6 +21,7 @@
 #include "logs.h"
 #include "ble/ble_device.h"
 
+#include "nrf_drv_power.h"
 
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
 	NRF_LOG_ERROR("An error happened");
@@ -36,7 +37,7 @@ void test_neopixels(){
 	if(nsec_neopixel_init() == -1)
 		return;
 	for(int i = 0; i < NEOPIXEL_COUNT; i++){
-		nsec_set_pixel_color(i, 255, 255, 255);
+		nsec_set_pixel_color(i, 0, 0, 50);
 	}
 	while(1)
 		nsec_neopixel_show();
@@ -49,9 +50,20 @@ void init_devboard(){
 	log_init();
 }
 
+void init_DCDC() {
+    ret_code_t err_code;
+
+    nrf_drv_power_config_t p_config;
+    p_config.dcdcen = true;
+
+    err_code = nrf_drv_power_init(&p_config);
+    APP_ERROR_CHECK(err_code);
+}
+
 
 int main() {
 	init_devboard();
+    init_DCDC();
     softdevice_init();
     create_ble_device("My BLE device");
     configure_advertising();
