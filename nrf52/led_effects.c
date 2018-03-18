@@ -10,12 +10,29 @@
 #include "nrf.h"
 #include "nrf_gpio.h"
 #include "nrf_pwm.h"
+#include <nrf_delay.h>
 
-struct nsec18_pixels* nsec18_pixels;
+void show_with_PWM(void);
+void show_with_DWT(void);
 
-int nsec_neopixel_init()
-{
-    nsec18_pixels = malloc(sizeof(struct nsec18_pixels));
+struct Nsec18_pixels {
+    uint16_t numBytes;
+    uint8_t rOffset;
+    uint8_t gOffset;
+    uint8_t bOffset;
+    uint8_t *pixels;
+};
+
+struct Nsec18_pixels *nsec18_pixels;
+
+uint32_t mapConnect[] = {LED_PIN, NRF_PWM_PIN_NOT_CONNECTED,
+                    NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
+
+uint32_t mapDisconnect[] = {NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
+                    NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
+
+int nsec_neopixel_init() {
+    nsec18_pixels = malloc(sizeof(struct Nsec18_pixels));
     if (nsec18_pixels == NULL) {
         return -1;
     }
@@ -27,7 +44,7 @@ int nsec_neopixel_init()
 
     //Allocate three bytes for each pixels (3 led by pixel)
     nsec18_pixels->numBytes = NEOPIXEL_COUNT * 3;
-    nsec18_pixels->pixels = malloc(sizeof(nsec18_pixels->numBytes));
+    nsec18_pixels->pixels = (uint8_t *)malloc(nsec18_pixels->numBytes);
     if (nsec18_pixels->pixels == NULL) {
         free(nsec18_pixels);
         return -1;
@@ -38,25 +55,15 @@ int nsec_neopixel_init()
     nrf_gpio_cfg_output(LED_PIN);
     nrf_gpio_pin_clear(LED_PIN);
 
-    //Configure PWM
-    uint32_t map[] = {LED_PIN, NRF_PWM_PIN_NOT_CONNECTED,
-                    NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
-    nrf_pwm_pins_set(NRF_PWM0, map);
-    nrf_pwm_configure(NRF_PWM0, PWM_PRESCALER_PRESCALER_DIV_1, NRF_PWM_MODE_UP, CTOPVAL);
-    nrf_pwm_loop_set(NRF_PWM0, 0);
-    nrf_pwm_decoder_set(NRF_PWM0, NRF_PWM_LOAD_COMMON, NRF_PWM_STEP_AUTO);
-
     return 0;
 }
 
-void nsec_neoPixel_clean(void)
-{
+void nsec_neoPixel_clean(void) {
 
 }
 
 //Set the n pixel color
-void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b)
-{
+void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
     //TODO add brightness
     if (n < NEOPIXEL_COUNT) {
         uint8_t *p;
@@ -68,25 +75,33 @@ void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b)
 
 }
 
-void nsec_neopixel_show(void)
-{
+void nsec_neopixel_show(void) {
     if (nsec18_pixels == NULL) {
         return;
     }
 
+    //TODO: This is suppose to be better with PWM
+    // for now, DWT will be enough.
+    //show_with_PWM();
+    show_with_DWT();
+
+    nrf_delay_us(50);
+}
+
+void show_with_PWM(void) {
     //todo Implement the canshow
     uint32_t pattern_size = nsec18_pixels->numBytes*8*sizeof(uint16_t)+2*sizeof(uint16_t);
-    uint16_t* pixels_pattern = NULL;
+    uint16_t *pixels_pattern = NULL;
 
     uint16_t pos = 0;
-    pixels_pattern = (uint16_t *) malloc(pattern_size);
+    pixels_pattern = (uint16_t *)malloc(pattern_size);
     if (pixels_pattern != NULL && nsec18_pixels->pixels != NULL) {
 
         for (uint16_t n=0; n < NEOPIXEL_COUNT; n++) {
             uint8_t pix = nsec18_pixels->pixels[n];
 
             for (uint8_t mask=0x80, i=0; mask > 0; mask >>= 1, i++) {
-                pixels_pattern[pos] = (pix * mask) ? MAGIC_T1H : MAGIC_T0H;
+                pixels_pattern[pos] = (pix & mask) ? MAGIC_T1H : MAGIC_T0H;
             }
             pos++;
         }
@@ -94,15 +109,20 @@ void nsec_neopixel_show(void)
         return;
     }
 
-     // Zero padding to indicate the end of que sequence
+    // Zero padding to indicate the end of que sequence
     pixels_pattern[++pos] = 0 | (0x8000);
     pixels_pattern[++pos] = 0 | (0x8000);
+
+    nrf_pwm_configure(NRF_PWM0, NRF_PWM_CLK_16MHz, NRF_PWM_MODE_UP, CTOPVAL);
+    nrf_pwm_loop_set(NRF_PWM0, 0);
+    nrf_pwm_decoder_set(NRF_PWM0, NRF_PWM_LOAD_COMMON, NRF_PWM_STEP_AUTO);
 
     //Configure the sequence
     nrf_pwm_seq_ptr_set(NRF_PWM0, 0, pixels_pattern);
     nrf_pwm_seq_cnt_set(NRF_PWM0, 0, pattern_size/sizeof(uint16_t));
     nrf_pwm_seq_refresh_set(NRF_PWM0, 0, 0);
     nrf_pwm_seq_end_delay_set(NRF_PWM0, 0, 0);
+    nrf_pwm_pins_set(NRF_PWM0, mapConnect);
 
     // Enable the PWM
     nrf_pwm_enable(NRF_PWM0);
@@ -118,7 +138,49 @@ void nsec_neopixel_show(void)
     //Disable the PWM
     nrf_pwm_disable(NRF_PWM0);
 
+    nrf_pwm_pins_set(NRF_PWM0, mapDisconnect);
+
     free(pixels_pattern);
 
-    //TODO add latch
+}
+
+void show_with_DWT(void) {
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+
+    while (1) {
+        uint8_t *p = nsec18_pixels->pixels;
+        uint32_t cycStart = DWT->CYCCNT;
+        uint32_t cycle = 0;
+
+        for (uint16_t n=0; n < nsec18_pixels->numBytes; n++) {
+            uint8_t pix = *p++;
+
+            for (uint8_t mask = 0x80; mask; mask >>=1) {
+                while (DWT->CYCCNT - cycle < CYCLES_800);
+
+                cycle = DWT->CYCCNT;
+
+                nrf_gpio_pin_set(LED_PIN);
+
+                if (pix & mask) {
+                    while(DWT->CYCCNT - cycle < CYCLES_800_T1H);
+                } else {
+                    while(DWT->CYCCNT - cycle < CYCLES_800_T0H);
+                }
+
+                nrf_gpio_pin_clear(LED_PIN);
+            }
+        }
+
+        while(DWT->CYCCNT - cycle < CYCLES_800);
+
+        // If total time is longer than 25%, resend the whole data.
+        // Since we are likely to be interrupted by SoftDevice
+        if ((DWT->CYCCNT - cycStart) < (8*nsec18_pixels->numBytes*((CYCLES_800*5)/4))) {
+            break;
+        }
+
+        nrf_delay_us(300);
+    }
 }
