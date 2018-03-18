@@ -9,6 +9,17 @@
 #define SPIS0_ENABLED 0
 #define SPIS1_ENABLED 1
 #define SPIS2_ENABLED 0
+
+// Enable the power driver
+#define POWER_ENABLED 1
+
+// DCDC regulator is installed and can be enabled
+#define POWER_CONFIG_DEFAULT_DCDCEN 1
+
+// 0-7, 0,1,4,5 are reserved for SoftDevice
+#define POWER_CONFIG_IRQ_PRIORITY 7
+#define POWER_CONFIG_SOC_OBSERVER_PRIO 0
+#define POWER_CONFIG_STATE_OBSERVER_PRIO 0
 #define NRF_SPI_DRV_MISO_PULLUP_CFG 0 //0 -> no pull, may need to be changed.
 #define APP_SCHEDULER_ENABLED 1
 #define APP_TIMER_ENABLED 1
@@ -40,6 +51,8 @@
 #define NRF_SDH_CLOCK_LF_RC_CTIV 16
 #define NRF_SDH_CLOCK_LF_RC_TEMP_CTIV 2
 #define NRF_SDH_CLOCK_LF_XTAL_ACCURACY 1 //not used for NRF_CLOCK_LF_SRC_RC
+#define CLOCK_CONFIG_SOC_OBSERVER_PRIO 0
+#define CLOCK_CONFIG_STATE_OBSERVER_PRIO 0
 #define NRF_SDH_SOC_ENABLED 1
 #define NRF_SDH_SOC_OBSERVER_PRIO_LEVELS 4
 #define NRF_SDH_SOC_STACK_OBSERVER_PRIO 0
