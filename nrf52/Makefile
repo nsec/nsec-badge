@@ -29,7 +29,9 @@ else ifeq ($(FLAVOR), devboard)
 	CFLAGS += -DBOARD_PCA10040
 	CFLAGS += -DBSP_DEFINES_ONLY
 else ifeq ($(FLAVOR), proto)
-	# Nothing special yet
+	# One of the oled screen pin is shared with the
+	# NFC antenna, make sure it's configured as GPIO
+	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
 else ifneq ($(FLAVOR), conf)
 all:
 $(error "Unknown flavor `$(FLAVOR)`")
