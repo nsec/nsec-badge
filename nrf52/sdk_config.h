@@ -98,6 +98,10 @@
 #define NRF_LOG_WARNING_COLOR 4
 
 
+#define SAADC_ENABLED 1
+#define SAADC_CONFIG_LOG_ENABLED 0
+
+
 #define BLE_ADVERTISING_ENABLED 0 //could be useful in the future.
 
 // <e> NRF_BLE_CONN_PARAMS_ENABLED - ble_conn_params - Initiating and executing a connection parameters negotiation procedure
@@ -177,11 +181,6 @@
 #define CLOCK_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> SAADC_ENABLED - nrf_drv_saadc - SAADC peripheral driver
-//==========================================================
-#ifndef SAADC_ENABLED
-#define SAADC_ENABLED 0
-#endif
 // <o> SAADC_CONFIG_RESOLUTION  - Resolution
 
 // <0=> 8 bit
@@ -190,7 +189,7 @@
 // <3=> 14 bit
 
 #ifndef SAADC_CONFIG_RESOLUTION
-#define SAADC_CONFIG_RESOLUTION 1
+#define SAADC_CONFIG_RESOLUTION 0
 #endif
 
 // <o> SAADC_CONFIG_OVERSAMPLE  - Sample period
@@ -510,7 +509,7 @@
 // <e> SAADC_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef SAADC_CONFIG_LOG_ENABLED
-#define SAADC_CONFIG_LOG_ENABLED 0
+#define SAADC_CONFIG_LOG_ENABLED 1
 #endif
 // <o> SAADC_CONFIG_LOG_LEVEL  - Default Severity level
 

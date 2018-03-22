@@ -83,6 +83,8 @@ SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_backend_serial.c
 SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_str_formatter.c
 SRC_FILES += $(SDK_PATH)/libraries/strerror/nrf_strerror.c
 SRC_FILES += $(SDK_PATH)/libraries/atomic_fifo/nrf_atfifo.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/saadc/nrf_drv_saadc.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/hal/nrf_saadc.c
 
 INC_FOLDERS  = .
 INC_FOLDERS += $(SDK_PATH)
@@ -130,6 +132,7 @@ INC_FOLDERS += $(SDK_PATH)/external/fprintf
 INC_FOLDERS += $(SDK_PATH)/external/segger_rtt
 INC_FOLDERS += $(SDK_PATH)/libraries/strerror
 INC_FOLDERS += $(SDK_PATH)/libraries/atomic_fifo
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/saadc
 
 
 DEVICE = NRF52
