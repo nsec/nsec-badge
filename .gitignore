@@ -7,5 +7,4 @@ stm32/src/*.d
 stm32/src/*.elf
 stm32/src/*.map
 xcuserdata
-nrf52/*license_agreement.txt
 nrf52/flash_config.gdb

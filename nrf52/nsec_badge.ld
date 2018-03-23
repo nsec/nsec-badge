@@ -5,8 +5,10 @@ GROUP(-lgcc -lc -lnosys)
 
 MEMORY
 {
+  /* The S132 softdevice requires the first 140kB of flash */
   FLASH (rx) : ORIGIN = 0x23000, LENGTH = 0x5d000
-  /* 0x200027B0 as returned by nrf_sdh_ble_default_cfg_set */
+  /* The base ram address is 0x20000000, add the softdevice ram usage
+     0x200027B0 as returned by nrf_sdh_ble_default_cfg_set */
   RAM (rwx) :  ORIGIN = 0x200027B0, LENGTH = 0xD850
 }
 
