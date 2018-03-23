@@ -13,10 +13,10 @@ builds/nsec18_nrf52_%.elf: builds
 	$(MAKE) -C nrf52 FLAVOR=$*
 	cp nrf52/$(@:%.elf=%.out) $@
 
-FIREWARE += builds/nsec18_nrf52_devboard.elf
-FIREWARE += builds/nsec18_nrf52_proto.elf
+FIRMWARE += builds/nsec18_nrf52_devboard.elf
+FIRMWARE += builds/nsec18_nrf52_proto.elf
 
-all: $(FIREWARE)
+all: $(FIRMWARE)
 
 clean:
 	$(MAKE) -C stm32 clean

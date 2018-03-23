@@ -3,7 +3,7 @@ PROJECT_NAME = nsec18_nrf52_$(FLAVOR)
 TARGETS=$(PROJECT_NAME)
 OUTPUT_DIRECTORY := builds
 SDK_PATH = nordicsdk
-SDK_VER = nRF5_SDK_14.2.0_17b948a
+SDK_VERSION = nRF5_SDK_14.2.0_17b948a
 
 ifeq ($(FLAVOR), ctf_rao)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_IDENTITY_NAME=Rao!
@@ -216,15 +216,15 @@ clean-bitmaps:
 	rm -f images/*.c
 
 $(SDK_PATH):
-	./install-sdk.sh $@ $(SDK_VER)
+	./install-sdk.sh $@ $(SDK_VERSION)
 	# Restart make so that the include of Makefile.common below works and
 	# update targets.
 	$(MAKE) $(MAKECMDGOALS)
 
 clean-$(SDK_PATH):
 	rm -rf ./$(SDK_PATH)
-	rm -rf ./$(SDK_VER)
-	rm -f ./$(SDK_VER).zip
+	rm -rf ./$(SDK_VERSION)
+	rm -f ./$(SDK_VERSION).zip
 
 -include $(TEMPLATE_PATH)/Makefile.common
 $(foreach target, $(TARGETS), $(call define_target, $(target)))
