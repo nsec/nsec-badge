@@ -10,10 +10,10 @@ if $FORCE_ERASE_ALL
   monitor erase_mass
 end
 if $LOAD_SOFTDEVICE
-  load _build/s130_nrf51_2.0.1_softdevice.elf
+  load nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex
 end
-load _build/nsec16_badge.out
-file _build/nsec16_badge.out
+load builds/nsec18_nrf52_proto.out
+file builds/nsec18_nrf52_proto.out
 
 define hook-quit
   set confirm off

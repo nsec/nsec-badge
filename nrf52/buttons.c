@@ -31,11 +31,13 @@ void buttons_IRQHandler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action) 
 }
 
 void buttons_init(void) {
-	ret_code_t err_code;
+    ret_code_t err_code;
 
-	// Init the GPIOE module
-    err_code = nrf_drv_gpiote_init();
-    APP_ERROR_CHECK(err_code);
+    // Init the GPIOTE module
+    if (!nrf_drv_gpiote_is_init()) {
+        err_code = nrf_drv_gpiote_init();
+        APP_ERROR_CHECK(err_code);
+    }
 
     // Create an input configuration
     // Pull UP
