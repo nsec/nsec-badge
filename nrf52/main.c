@@ -34,8 +34,8 @@ static void softdevice_init(void) {
 }
 
 void test_neopixels(){
-	if(nsec_neopixel_init() == -1)
-		return;
+    nsec_neopixel_init();
+	
 	for(int i = 0; i < NEOPIXEL_COUNT; i++){
 		nsec_set_pixel_color(i, 0, 0, 50);
 	}
