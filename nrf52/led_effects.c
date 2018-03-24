@@ -89,7 +89,7 @@ void nsec_neopixel_set_brightness(uint8_t b)
         if (oldBrighness == 0) {
             scale = 0;
         } else if (b == 255) {
-            scale == 65535;
+            scale = 65535;
         } else {
             scale = (((uint16_t)newBrightness << 8) - 1) / oldBrighness;
         }
