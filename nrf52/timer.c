@@ -44,3 +44,8 @@ void application_timers_start(void) {
                          APP_TIMER_TICKS(APP_TIMER_TIMEOUT /* ms */), NULL);
     APP_ERROR_CHECK(err_code);
 }
+
+uint64_t get_current_time_millis(void) {
+    uint32_t ms_timer = app_timer_cnt_get() / APP_TIMER_TICKS(1);
+    return ms_timer + (APP_TIMER_TIMEOUT * timeout_count);
+}
