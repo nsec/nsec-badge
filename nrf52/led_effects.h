@@ -21,6 +21,7 @@
 void nsec_neopixel_init(void);
 void nsec_neoPixel_clean(void);
 void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b);
+void nsec_set_pixel_color_packed(uint16_t n, uint32_t c);
 void nsec_neopixel_show(void);
 uint8_t nsec_neopixel_get_brightness(void);
 void nsec_neopixel_set_brightness(uint8_t b);
