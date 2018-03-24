@@ -32,7 +32,7 @@ uint32_t mapConnect[] = {LED_PIN, NRF_PWM_PIN_NOT_CONNECTED,
 uint32_t mapDisconnect[] = {NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
                     NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
 
-void nsec_neopixel_init() {
+void nsec_neoPixel_init() {
     nsec_pixels = malloc(sizeof(struct Nsec_pixels));
 
     nsec_pixels->brightness = 0;
@@ -55,12 +55,12 @@ void nsec_neopixel_init() {
     return;
 }
 
-void nsec_neoPixel_clean(void) {
+void nsec_neoPixel_clear(void) {
     memset(nsec_pixels->pixels, 0, nsec_pixels->numBytes);
 }
 
 //Set the n pixel color
-void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
+void nsec_neoPixel_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
     if (n < NEOPIXEL_COUNT) {
         if (nsec_pixels->brightness) {
             r = (r * nsec_pixels->brightness) >> 8;
@@ -77,17 +77,17 @@ void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
 
 }
 
-void nsec_set_pixel_color_packed(uint16_t n, uint32_t c) {
+void nsec_neoPixel_set_pixel_color_packed(uint16_t n, uint32_t c) {
     if (n < NEOPIXEL_COUNT) {
         uint8_t r = (uint8_t)(c >> 16);
         uint8_t g = (uint8_t)(c >> 8);
         uint8_t b = (uint8_t)c;
 
-        nsec_set_pixel_color(n, r, g, b);
+        nsec_neoPixel_set_pixel_color(n, r, g, b);
     }
 }
 
-void nsec_neopixel_set_brightness(uint8_t b)
+void nsec_neoPixel_set_brightness(uint8_t b)
 {
     uint8_t newBrightness = b + 1;
     if (newBrightness != nsec_pixels->brightness) {
@@ -112,12 +112,12 @@ void nsec_neopixel_set_brightness(uint8_t b)
     }
 }
 
-uint8_t nsec_neopixel_get_brightness(void)
+uint8_t nsec_neoPixel_get_brightness(void)
 {
     return nsec_pixels->brightness - 1;
 }
 
-void nsec_neopixel_show(void) {
+void nsec_neoPixel_show(void) {
     if (nsec_pixels == NULL) {
         return;
     }
