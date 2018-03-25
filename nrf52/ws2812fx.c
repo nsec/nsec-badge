@@ -160,11 +160,11 @@ uint16_t (*mode[])(void) = {
     mode_twinkle_random,
     mode_twinkle_fade,
     mode_twinkle_fade_random,
-    //mode_sparkle,
-    //mode_flash_sparkle,
-    //mode_hyper_sparkle,
-    //mode_strobe,
-    //mode_strobe_rainbow,
+    mode_sparkle,
+    mode_flash_sparkle,
+    mode_hyper_sparkle,
+    mode_strobe,
+    mode_strobe_rainbow,
     //mode_multi_strobe,
     //mode_blink_rainbow,
     //mode_chase_white,
@@ -590,7 +590,7 @@ uint16_t mode_blink(void) {
 uint16_t mode_blink_rainbow(void) {
   return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
 }
-
+#endif
 /*
  * Classic Strobe effect.
  */
@@ -601,10 +601,9 @@ uint16_t mode_strobe(void) {
 /*
  * Classic Strobe effect. Cycling through the rainbow.
  */
-uint16_t WS2812FX::mode_strobe_rainbow(void) {
+uint16_t mode_strobe_rainbow(void) {
   return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], true);
 }
-#endif
 
 /*
  * Color wipe function
@@ -998,15 +997,15 @@ uint16_t mode_twinkle_fade_random(void) {
   return twinkle_fade(color_wheel(nsec_random_get_byte(255)));
 }
 
-#if 0
+
 /*
  * Blinks one LED at a time.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t WS2812FX::mode_sparkle(void) {
-  this->setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param, BLACK);
-  SEGMENT_RUNTIME.aux_param = random(SEGMENT_LENGTH); // aux_param stores the random led index
-  this->setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param, SEGMENT.colors[0]);
+uint16_t mode_sparkle(void) {
+  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + SEGMENT_RUNTIME.aux_param, BLACK);
+  SEGMENT_RUNTIME.aux_param = nsec_random_get_byte(SEGMENT_LENGTH - 1); // aux_param stores the random led index
+  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + SEGMENT_RUNTIME.aux_param, SEGMENT.colors[0]);
   return (SEGMENT.speed / SEGMENT_LENGTH);
 }
 
@@ -1015,18 +1014,19 @@ uint16_t WS2812FX::mode_sparkle(void) {
  * Lights all LEDs in the color. Flashes single white pixels randomly.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t WS2812FX::mode_flash_sparkle(void) {
+uint16_t mode_flash_sparkle(void) {
   if(SEGMENT_RUNTIME.counter_mode_call == 0) {
     for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-      this->setPixelColor(i, SEGMENT.colors[0]);
+      nsec_neoPixel_set_pixel_color_packed(i, SEGMENT.colors[0]);
     }
   }
 
-  this->setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param, SEGMENT.colors[0]);
+  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + SEGMENT_RUNTIME.aux_param,
+                                       SEGMENT.colors[0]);
 
-  if(random(5) == 0) {
-    SEGMENT_RUNTIME.aux_param = random(SEGMENT_LENGTH); // aux_param stores the random led index
-    this->setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param, WHITE);
+  if(nsec_random_get_byte(4) == 0) {
+    SEGMENT_RUNTIME.aux_param = nsec_random_get_byte(SEGMENT_LENGTH - 1); // aux_param stores the random led index
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + SEGMENT_RUNTIME.aux_param, WHITE);
     return 20;
   } 
   return SEGMENT.speed;
@@ -1037,21 +1037,22 @@ uint16_t WS2812FX::mode_flash_sparkle(void) {
  * Like flash sparkle. With more flash.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t WS2812FX::mode_hyper_sparkle(void) {
+uint16_t mode_hyper_sparkle(void) {
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, SEGMENT.colors[0]);
+    nsec_neoPixel_set_pixel_color_packed(i, SEGMENT.colors[0]);
   }
 
-  if(random(5) < 2) {
+  if(nsec_random_get_byte(4) < 2) {
     for(uint16_t i=0; i < max(1, SEGMENT_LENGTH/3); i++) {
-      this->setPixelColor(SEGMENT.start + random(SEGMENT_LENGTH), WHITE);
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.start +
+                     nsec_random_get_byte(SEGMENT_LENGTH - 1), WHITE);
     }
     return 20;
   }
   return SEGMENT.speed;
 }
 
-
+#if 0
 /*
  * Strobe effect with different strobe count and pause, controlled by speed.
  */
