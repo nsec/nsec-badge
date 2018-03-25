@@ -36,7 +36,7 @@
 #define DEFAULT_BRIGHTNESS 50
 #define DEFAULT_MODE 0
 #define DEFAULT_SPEED 1000
-#define DEFAULT_COLOR 0xFF0000
+#define DEFAULT_COLOR 0x000000
 
 #define SPEED_MIN 10
 
@@ -138,7 +138,7 @@ void decreaseBrightness_WS2812FX(uint8_t s);
 void trigger_WS2812FX(void);
 void setNumSegments_WS2812FX(uint8_t n);
 void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,   uint16_t speed, bool reverse);
-void setSegment_color_packed_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse);
+void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse);
 void resetSegments_WS2812FX();
 
 bool isRunning_WS2812FX(void);

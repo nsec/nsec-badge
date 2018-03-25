@@ -137,8 +137,8 @@ uint16_t mode_custom(void);
 
 uint16_t (*mode[])(void) = {
     mode_static,
+    mode_blink,
 #if 0
-    &mode_blink,
     &mode_color_wipe,
     &mode_color_wipe_inv,
     &mode_color_wipe_rev,
@@ -260,10 +260,10 @@ const char *name[] = {
 uint32_t SPEED_MAX = 65535;
 
 // Macro to increase readability
-#define SEGMENT fx->segments[fx->segment_index]
-#define SEGMENT_RUNTIMES fx->segment_runtimes[fx->segment_index]
-#define SEGMENT_LENGHT SEGMENT.stop - SEGMENT.start + 1
-#define RESET_RUNTIME memset(fx->segment_runtimes, 0 , sizeof(fx->segment_runtimes))
+#define SEGMENT         fx->segments[fx->segment_index]
+#define SEGMENT_RUNTIME fx->segment_runtimes[fx->segment_index]
+#define SEGMENT_LENGHT  (SEGMENT.stop - SEGMENT.start + 1)
+#define RESET_RUNTIME   memset(fx->segment_runtimes, 0 , sizeof(fx->segment_runtimes))
 
 // segment parameters
 typedef struct Segment { // 20 bytes
@@ -306,7 +306,6 @@ void init_WS2812FX() {
     fx->running = false;
     fx->triggered = false;
     fx->num_segments = 1;
-    fx->segment_index = 1;
     
     for (int i = 0; i < MAX_NUM_SEGMENTS; i++) {
         fx->segments[i].mode = DEFAULT_MODE;
@@ -318,23 +317,23 @@ void init_WS2812FX() {
         }
     }
 
-  nsec_neoPixel_init();
-  setBrightness_WS2812FX(fx->brightness);
-  nsec_neoPixel_show();
+    RESET_RUNTIME;
+    nsec_neoPixel_init();
+    setBrightness_WS2812FX(fx->brightness);
+    nsec_neoPixel_show();
 }
 
 void service_WS2812FX() {
   if(fx->running || fx->triggered) {
-    unsigned long now = get_current_time_millis();
+    uint64_t now = get_current_time_millis();
     bool doShow = false;
     for(uint8_t i=0; i < fx->num_segments; i++) {
       fx->segment_index = i;
-      if(now > SEGMENT_RUNTIMES.next_time || fx->triggered) {
+      if(now > SEGMENT_RUNTIME.next_time || fx->triggered) {
         doShow = true;
-
         uint16_t delay = mode[SEGMENT.mode]();
-        SEGMENT_RUNTIMES.next_time = now + max((int)delay, SPEED_MIN);
-        SEGMENT_RUNTIMES.counter_mode_call++;
+        SEGMENT_RUNTIME.next_time = now + max((int)delay, SPEED_MIN);
+        SEGMENT_RUNTIME.counter_mode_call++;
       }
     }
     if(doShow) {
@@ -467,7 +466,7 @@ void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode,
   }
 }
 
-void setSegment_color_packed_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse) {
+void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse) {
   if(n < (sizeof(fx->segments) / sizeof(fx->segments[0]))) {
     if(n + 1 > fx->num_segments) fx->num_segments = n + 1;
     fx->segments[n].start = start;
@@ -562,13 +561,13 @@ uint16_t mode_static(void) {
  * Alternate between color1 and color2
  * if(strobe == true) then create a strobe effect
  */
-#if 0
-uint16_t WS2812FX::blink(uint32_t color1, uint32_t color2, bool strobe) {
+
+uint16_t blink(uint32_t color1, uint32_t color2, bool strobe) {
   uint32_t color = ((SEGMENT_RUNTIME.counter_mode_call & 1) == 0) ? color1 : color2;
   if(SEGMENT.reverse) color = (color == color1) ? color2 : color1;
 
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, color);
+    nsec_neoPixel_set_pixel_color_packed(i, color);
   }
 
   if((SEGMENT_RUNTIME.counter_mode_call & 1) == 0) {
@@ -578,15 +577,14 @@ uint16_t WS2812FX::blink(uint32_t color1, uint32_t color2, bool strobe) {
   }
 }
 
-
 /*
  * Normal blinking. 50% on/off time.
  */
-uint16_t WS2812FX::mode_blink(void) {
+uint16_t mode_blink(void) {
   return blink(SEGMENT.colors[0], SEGMENT.colors[1], false);
 }
 
-
+#if 0
 /*
  * Classic Blink effect. Cycling through the rainbow.
  */
