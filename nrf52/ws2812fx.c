@@ -138,63 +138,61 @@ uint16_t mode_custom(void);
 uint16_t (*mode[])(void) = {
     mode_static,
     mode_blink,
-#if 0
-    &mode_color_wipe,
-    &mode_color_wipe_inv,
-    &mode_color_wipe_rev,
-    &mode_color_wipe_rev_inv,
-    &mode_color_wipe_random,
-    &mode_random_color,
-    &mode_single_dynamic,
-    &mode_multi_dynamic,
-    &mode_rainbow,
-    &mode_rainbow_cycle,
-    &mode_scan,
-    &mode_dual_scan,
-    &mode_fade,
-    &mode_theater_chase,
-    &mode_theater_chase_rainbow,
-    &mode_twinkle,
-    &mode_twinkle_random,
-    &mode_twinkle_fade,
-    &mode_twinkle_fade_random,
-    &mode_sparkle,
-    &mode_flash_sparkle,
-    &mode_hyper_sparkle,
-    &mode_strobe,
-    &mode_strobe_rainbow,
-    &mode_multi_strobe,
-    &mode_blink_rainbow,
-    &mode_chase_white,
-    &mode_chase_color,
-    &mode_chase_random,
-    &mode_chase_rainbow,
-    &mode_chase_flash,
-    &mode_chase_flash_random,
-    &mode_chase_rainbow_white,
-    &mode_chase_blackout,
-    &mode_chase_blackout_rainbow,
-    &mode_color_sweep_random,
-    &mode_running_color,
-    &mode_running_red_blue,
-    &mode_running_random,
-    &mode_larson_scanner,
-    &mode_comet,
-    &mode_fireworks,
-    &mode_fireworks_random,
-    &mode_merry_christmas,
-    &mode_halloween,
-    &mode_fire_flicker,
-    &mode_fire_flicker_soft,
-    &mode_fire_flicker_intense,
-    &mode_circus_combustus,
-    &mode_bicolor_chase,
-    &mode_tricolor_chase,
-    &mode_breath,
-    &mode_running_lights,
-    &mode_icu,
-    &mode_custom,
-#endif
+    mode_breath,
+    mode_color_wipe,
+    mode_color_wipe_inv,
+    mode_color_wipe_rev,
+    mode_color_wipe_rev_inv,
+    mode_color_wipe_random,
+    //mode_random_color,
+    //mode_single_dynamic,
+    //mode_multi_dynamic,
+    //mode_rainbow,
+    //mode_rainbow_cycle,
+    //mode_scan,
+    //mode_dual_scan,
+    //mode_fade,
+    //mode_theater_chase,
+    //mode_theater_chase_rainbow,
+    //mode_twinkle,
+    //mode_twinkle_random,
+    //mode_twinkle_fade,
+    //mode_twinkle_fade_random,
+    //mode_sparkle,
+    //mode_flash_sparkle,
+    //mode_hyper_sparkle,
+    //mode_strobe,
+    //mode_strobe_rainbow,
+    //mode_multi_strobe,
+    //mode_blink_rainbow,
+    //mode_chase_white,
+    //mode_chase_color,
+    //mode_chase_random,
+    //mode_chase_rainbow,
+    //mode_chase_flash,
+    //mode_chase_flash_random,
+    //mode_chase_rainbow_white,
+    //mode_chase_blackout,
+    //mode_chase_blackout_rainbow,
+    //mode_color_sweep_random,
+    //mode_running_color,
+    //mode_running_red_blue,
+    //mode_running_random,
+    //mode_larson_scanner,
+    //mode_comet,
+    //mode_fireworks,
+    //mode_fireworks_random,
+    //mode_merry_christmas,
+    //mode_halloween,
+    //mode_fire_flicker,
+    //mode_fire_flicker_soft,
+    //mode_fire_flicker_intense,
+    //mode_circus_combustus,
+    //mode_bicolor_chase,
+    //mode_tricolor_chase,
+    //mode_running_lights,
+    //mode_icu,
+    //mode_custom,
 };
 
 const char *name[] = {
@@ -262,8 +260,8 @@ uint32_t SPEED_MAX = 65535;
 // Macro to increase readability
 #define SEGMENT         fx->segments[fx->segment_index]
 #define SEGMENT_RUNTIME fx->segment_runtimes[fx->segment_index]
-#define SEGMENT_LENGHT  (SEGMENT.stop - SEGMENT.start + 1)
-#define RESET_RUNTIME   memset(fx->segment_runtimes, 0 , sizeof(fx->segment_runtimes))
+#define SEGMENT_LENGTH  (SEGMENT.stop - SEGMENT.start + 1)
+#define RESET_RUNTIME   memset(fx->segment_runtimes, 0, sizeof(fx->segment_runtimes))
 
 // segment parameters
 typedef struct Segment { // 20 bytes
@@ -509,7 +507,7 @@ void strip_off_WS2812FX() {
  * The colours are a transition r -> g -> b -> back to r
  * Inspired by the Adafruit examples.
  */
-uint32_t color_wheel_WS2812FX(uint8_t pos) {
+uint32_t color_wheel(uint8_t pos) {
   pos = 255 - pos;
   if(pos < 85) {
     return ((uint32_t)(255 - pos * 3) << 16) | ((uint32_t)(0) << 8) | (pos * 3);
@@ -526,7 +524,7 @@ uint32_t color_wheel_WS2812FX(uint8_t pos) {
 /*
  * Returns a new, random wheel index with a minimum distance of 42 from pos.
  */
-uint8_t get_random_wheel_index_WS2812FX(uint8_t pos) {
+uint8_t get_random_wheel_index(uint8_t pos) {
   uint8_t r = 0;
   uint8_t x = 0;
   uint8_t y = 0;
@@ -584,22 +582,22 @@ uint16_t mode_blink(void) {
   return blink(SEGMENT.colors[0], SEGMENT.colors[1], false);
 }
 
+
+
 #if 0
 /*
  * Classic Blink effect. Cycling through the rainbow.
  */
-uint16_t WS2812FX::mode_blink_rainbow(void) {
+uint16_t mode_blink_rainbow(void) {
   return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
 }
-
 
 /*
  * Classic Strobe effect.
  */
-uint16_t WS2812FX::mode_strobe(void) {
+uint16_t mode_strobe(void) {
   return blink(SEGMENT.colors[0], SEGMENT.colors[1], true);
 }
-
 
 /*
  * Classic Strobe effect. Cycling through the rainbow.
@@ -607,27 +605,27 @@ uint16_t WS2812FX::mode_strobe(void) {
 uint16_t WS2812FX::mode_strobe_rainbow(void) {
   return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], true);
 }
-
+#endif
 
 /*
  * Color wipe function
  * LEDs are turned on (color1) in sequence, then turned off (color2) in sequence.
  * if (bool rev == true) then LEDs are turned off in reverse order
  */
-uint16_t WS2812FX::color_wipe(uint32_t color1, uint32_t color2, bool rev) {
+uint16_t color_wipe(uint32_t color1, uint32_t color2, bool rev) {
   if(SEGMENT_RUNTIME.counter_mode_step < SEGMENT_LENGTH) {
     uint32_t led_offset = SEGMENT_RUNTIME.counter_mode_step;
     if(SEGMENT.reverse) {
-      this->setPixelColor(SEGMENT.stop - led_offset, color1);
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - led_offset, color1);
     } else {
-      this->setPixelColor(SEGMENT.start + led_offset, color1);
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + led_offset, color1);
     }
   } else {
     uint32_t led_offset = SEGMENT_RUNTIME.counter_mode_step - SEGMENT_LENGTH;
     if((SEGMENT.reverse && !rev) || (!SEGMENT.reverse && rev)) {
-      this->setPixelColor(SEGMENT.stop - led_offset, color2);
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - led_offset, color2);
     } else {
-      this->setPixelColor(SEGMENT.start + led_offset, color2);
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + led_offset, color2);
     }
   }
 
@@ -638,35 +636,35 @@ uint16_t WS2812FX::color_wipe(uint32_t color1, uint32_t color2, bool rev) {
 /*
  * Lights all LEDs one after another.
  */
-uint16_t WS2812FX::mode_color_wipe(void) {
+uint16_t mode_color_wipe(void) {
   return color_wipe(SEGMENT.colors[0], SEGMENT.colors[1], false);
 }
 
-uint16_t WS2812FX::mode_color_wipe_inv(void) {
+
+uint16_t mode_color_wipe_inv(void) {
   return color_wipe(SEGMENT.colors[1], SEGMENT.colors[0], false);
 }
 
-uint16_t WS2812FX::mode_color_wipe_rev(void) {
+uint16_t mode_color_wipe_rev(void) {
   return color_wipe(SEGMENT.colors[0], SEGMENT.colors[1], true);
 }
 
-uint16_t WS2812FX::mode_color_wipe_rev_inv(void) {
+uint16_t mode_color_wipe_rev_inv(void) {
   return color_wipe(SEGMENT.colors[1], SEGMENT.colors[0], true);
 }
-
 
 /*
  * Turns all LEDs after each other to a random color.
  * Then starts over with another color.
  */
-uint16_t WS2812FX::mode_color_wipe_random(void) {
+uint16_t mode_color_wipe_random(void) {
   if(SEGMENT_RUNTIME.counter_mode_step % SEGMENT_LENGTH == 0) { // aux_param will store our random color wheel index
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
   uint32_t color = color_wheel(SEGMENT_RUNTIME.aux_param);
   return color_wipe(color, color, false) * 2;
 }
-
+#if 0
 
 /*
  * Random color introduced alternating from start and end of strip.
@@ -723,11 +721,12 @@ uint16_t WS2812FX::mode_multi_dynamic(void) {
 }
 
 
+#endif
 /*
  * Does the "standby-breathing" of well known i-Devices. Fixed Speed.
  * Use mode "fade" if you like to have something similar with a different speed.
  */
-uint16_t WS2812FX::mode_breath(void) {
+uint16_t mode_breath(void) {
   //                                      0    1    2   3   4   5   6    7   8   9  10  11   12   13   14   15   16    // step
   uint16_t breath_delay_steps[] =     {   7,   9,  13, 15, 16, 17, 18, 930, 19, 18, 15, 13,   9,   7,   4,   5,  10 }; // magic numbers for breathing LED
   uint8_t breath_brightness_steps[] = { 150, 125, 100, 75, 50, 25, 16,  15, 16, 25, 50, 75, 100, 125, 150, 220, 255 }; // even more magic numbers!
@@ -749,19 +748,19 @@ uint16_t WS2812FX::mode_breath(void) {
     SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) % (sizeof(breath_brightness_steps)/sizeof(uint8_t));
   }
 
-  int lum = map(breath_brightness, 0, 255, 0, _brightness);  // keep luminosity below brightness set by user
-  uint8_t w = (SEGMENT.colors[0] >> 24 & 0xFF) * lum / _brightness; // modify RGBW colors with brightness info
-  uint8_t r = (SEGMENT.colors[0] >> 16 & 0xFF) * lum / _brightness;
-  uint8_t g = (SEGMENT.colors[0] >>  8 & 0xFF) * lum / _brightness;
-  uint8_t b = (SEGMENT.colors[0]       & 0xFF) * lum / _brightness;
+  int lum = map(breath_brightness, 0, 255, 0, fx->brightness);  // keep luminosity below brightness set by user
+  //uint8_t w = (SEGMENT.colors[0] >> 24 & 0xFF) * lum / _brightness; // modify RGBW colors with brightness info
+  uint8_t r = (SEGMENT.colors[0] >> 16 & 0xFF) * lum / fx->brightness;
+  uint8_t g = (SEGMENT.colors[0] >>  8 & 0xFF) * lum / fx->brightness;
+  uint8_t b = (SEGMENT.colors[0]       & 0xFF) * lum / fx->brightness;
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, r, g, b, w);
+    nsec_neoPixel_set_pixel_color(i, r, g, b);
   }
 
   SEGMENT_RUNTIME.aux_param = breath_brightness;
   return breath_delay_steps[SEGMENT_RUNTIME.counter_mode_step];
 }
-
+#if 0
 
 /*
  * Fades the LEDs on and (almost) off again.

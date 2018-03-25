@@ -11,3 +11,4 @@
 uint8_t constrain_u8(uint8_t x, uint8_t a, uint8_t b);
 uint16_t constrain_u16(uint16_t x, uint16_t a, uint16_t b);
 uint32_t constrain_u32(uint32_t x, uint32_t a, uint32_t b);
+int map(int x, int in_min, int in_max, int out_min, int out_max);

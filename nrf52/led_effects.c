@@ -222,7 +222,6 @@ void show_with_DWT(void) {
         if ((DWT->CYCCNT - cycStart) < (8*nsec_pixels->numBytes*((CYCLES_800*5)/4))) {
             break;
         }
-
         nrf_delay_us(300);
     }
 }
