@@ -56,6 +56,7 @@
 #include <nrf_delay.h>
 #include <string.h>
 #include <stdlib.h>
+#include <arm_math.h>
 #include "ws2812fx.h"
 #include "led_effects.h"
 #include "utils.h"
@@ -154,10 +155,11 @@ uint16_t (*mode[])(void) = {
     mode_fade,
     mode_theater_chase,
     mode_theater_chase_rainbow,
-    //mode_twinkle,
-    //mode_twinkle_random,
-    //mode_twinkle_fade,
-    //mode_twinkle_fade_random,
+    mode_running_lights,
+    mode_twinkle,
+    mode_twinkle_random,
+    mode_twinkle_fade,
+    mode_twinkle_fade_random,
     //mode_sparkle,
     //mode_flash_sparkle,
     //mode_hyper_sparkle,
@@ -190,7 +192,6 @@ uint16_t (*mode[])(void) = {
     //mode_circus_combustus,
     //mode_bicolor_chase,
     //mode_tricolor_chase,
-    //mode_running_lights,
     //mode_icu,
     //mode_custom,
 };
@@ -358,23 +359,23 @@ void trigger_WS2812FX() {
 
 void setMode_WS2812FX(uint8_t m) {
   RESET_RUNTIME;
-  fx->segments[0].mode = constrain_u8(m, 0, MODE_COUNT - 1);
+  fx->segments[0].mode = constrain(m, 0, MODE_COUNT - 1);
   setBrightness_WS2812FX(fx->brightness);
 }
 
 void setSpeed_WS2812FX(uint16_t s) {
   RESET_RUNTIME;
-  fx->segments[0].speed = constrain_u8(s, SPEED_MIN, SPEED_MAX);
+  fx->segments[0].speed = constrain(s, SPEED_MIN, SPEED_MAX);
 }
 
 void increaseSpeed_WS2812FX(uint8_t s) {
-  uint16_t newSpeed = constrain_u8(SEGMENT.speed + s,
+  uint16_t newSpeed = constrain(SEGMENT.speed + s,
                                 SPEED_MIN, SPEED_MAX);
   setSpeed_WS2812FX(newSpeed);
 }
 
 void decreaseSpeed_WS2812FX(uint8_t s) {
-  uint16_t newSpeed = constrain_u8(SEGMENT.speed - s,
+  uint16_t newSpeed = constrain(SEGMENT.speed - s,
                                  SPEED_MIN, SPEED_MAX);
   setSpeed_WS2812FX(newSpeed);
 }
@@ -391,19 +392,19 @@ void setColor_packed_WS2812FX(uint32_t c) {
 
 void setBrightness_WS2812FX(uint8_t b)
 {
-  fx->brightness = constrain_u8(b, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
+  fx->brightness = constrain(b, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
   nsec_neoPixel_set_brightness(fx->brightness);
   nsec_neoPixel_show();
   nrf_delay_ms(1);
 }
 
 void increaseBrightness_WS2812FX(uint8_t s) {
-  s = constrain_u8(fx->brightness + s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
+  s = constrain(fx->brightness + s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
   setBrightness_WS2812FX(s);
 }
 
 void decreaseBrightness_WS2812FX(uint8_t s) {
-  s = constrain_u8(fx->brightness - s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
+  s = constrain(fx->brightness - s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
   setBrightness_WS2812FX(s);
 }
 
@@ -701,7 +702,7 @@ uint16_t mode_single_dynamic(void) {
       nsec_neoPixel_set_pixel_color_packed(i, color_wheel(nsec_random_get_byte(255)));
     }
   }
-  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + nsec_random_get_byte(SEGMENT_LENGTH),
+  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + nsec_random_get_byte(SEGMENT_LENGTH - 1),
                                 color_wheel(nsec_random_get_byte(255)));
   return (SEGMENT.speed);
 }
@@ -893,24 +894,27 @@ uint16_t mode_theater_chase_rainbow(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
   return theater_chase(color_wheel(SEGMENT_RUNTIME.counter_mode_step), BLACK);
 }
-#if 0
+
 
 /*
  * Running lights effect with smooth sine transition.
  */
-uint16_t WS2812FX::mode_running_lights(void) {
-  uint8_t w = ((SEGMENT.colors[0] >> 24) & 0xFF);
+uint16_t mode_running_lights(void) {
+  //uint8_t w = ((SEGMENT.colors[0] >> 24) & 0xFF);
   uint8_t r = ((SEGMENT.colors[0] >> 16) & 0xFF);
   uint8_t g = ((SEGMENT.colors[0] >>  8) & 0xFF);
   uint8_t b = (SEGMENT.colors[0]         & 0xFF);
 
   float radPerLed = (2.0 * 3.14159) / SEGMENT_LENGTH;
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-    int lum = map((int)(sin((i + SEGMENT_RUNTIME.counter_mode_step) * radPerLed) * 128), -128, 128, 0, 255);
+    int lum = map((int)(arm_sin_f32((i + SEGMENT_RUNTIME.counter_mode_step) * radPerLed) * 128),
+                         -128, 128, 0, 255);
     if(SEGMENT.reverse) {
-      this->setPixelColor(SEGMENT.start + i, (r * lum) / 256, (g * lum) / 256, (b * lum) / 256, (w * lum) / 256);
+      nsec_neoPixel_set_pixel_color(SEGMENT.start + i, (r * lum) / 256,
+                                    (g * lum) / 256, (b * lum) / 256);
     } else {
-      this->setPixelColor(SEGMENT.stop - i, (r * lum) / 256, (g * lum) / 256, (b * lum) / 256, (w * lum) / 256);
+      nsec_neoPixel_set_pixel_color(SEGMENT.stop - i, (r * lum) / 256,
+                                    (g * lum) / 256, (b * lum) / 256); 
     }
   }
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) % SEGMENT_LENGTH;
@@ -921,17 +925,18 @@ uint16_t WS2812FX::mode_running_lights(void) {
 /*
  * twinkle function
  */
-uint16_t WS2812FX::twinkle(uint32_t color) {
+uint16_t twinkle(uint32_t color) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-      this->setPixelColor(i, BLACK);
+      nsec_neoPixel_set_pixel_color_packed(i, BLACK);
     }
     uint16_t min_leds = max(1, SEGMENT_LENGTH / 5); // make sure, at least one LED is on
     uint16_t max_leds = max(1, SEGMENT_LENGTH / 2); // make sure, at least one LED is on
-    SEGMENT_RUNTIME.counter_mode_step = random(min_leds, max_leds);
+    SEGMENT_RUNTIME.counter_mode_step = nsec_random_get_byte_range(min_leds, max_leds - 1);
   }
 
-  this->setPixelColor(SEGMENT.start + random(SEGMENT_LENGTH), color);
+  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start +
+                           nsec_random_get_byte(SEGMENT_LENGTH - 1), color);
 
   SEGMENT_RUNTIME.counter_mode_step--;
   return (SEGMENT.speed / SEGMENT_LENGTH);
@@ -941,7 +946,7 @@ uint16_t WS2812FX::twinkle(uint32_t color) {
  * Blink several LEDs on, reset, repeat.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t WS2812FX::mode_twinkle(void) {
+uint16_t mode_twinkle(void) {
   return twinkle(SEGMENT.colors[0]);
 }
 
@@ -949,31 +954,30 @@ uint16_t WS2812FX::mode_twinkle(void) {
  * Blink several LEDs in random colors on, reset, repeat.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t WS2812FX::mode_twinkle_random(void) {
-  return twinkle(color_wheel(random(256)));
+uint16_t mode_twinkle_random(void) {
+  return twinkle(color_wheel(nsec_random_get_byte(255)));
 }
-
 
 /*
  * fade out function
  * fades out the current segment by dividing each pixel's intensity by 2
  */
-void WS2812FX::fade_out() {
+void fade_out() {
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    uint32_t color = Adafruit_NeoPixel::getPixelColor(i);
+    uint32_t color = nsec_neoPixel_get_pixel_color(i);
     color = (color >> 1) & 0x7F7F7F7F;
-    this->setPixelColor(i, color);
+    nsec_neoPixel_set_pixel_color_packed(i, color);
   }
 }
 
 /*
  * twinkle_fade function
  */
-uint16_t WS2812FX::twinkle_fade(uint32_t color) {
+uint16_t twinkle_fade(uint32_t color) {
   fade_out();
 
-  if(random(3) == 0) {
-    this->setPixelColor(SEGMENT.start + random(SEGMENT_LENGTH), color);
+  if(nsec_random_get_byte(2) == 0) {
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + nsec_random_get_byte(SEGMENT_LENGTH - 1), color);
   }
   return (SEGMENT.speed / 8);
 }
@@ -982,7 +986,7 @@ uint16_t WS2812FX::twinkle_fade(uint32_t color) {
 /*
  * Blink several LEDs on, fading out.
  */
-uint16_t WS2812FX::mode_twinkle_fade(void) {
+uint16_t mode_twinkle_fade(void) {
   return twinkle_fade(SEGMENT.colors[0]);
 }
 
@@ -990,11 +994,11 @@ uint16_t WS2812FX::mode_twinkle_fade(void) {
 /*
  * Blink several LEDs in random colors on, fading out.
  */
-uint16_t WS2812FX::mode_twinkle_fade_random(void) {
-  return twinkle_fade(color_wheel(random(256)));
+uint16_t mode_twinkle_fade_random(void) {
+  return twinkle_fade(color_wheel(nsec_random_get_byte(255)));
 }
 
-
+#if 0
 /*
  * Blinks one LED at a time.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/

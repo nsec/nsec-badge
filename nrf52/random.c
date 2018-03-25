@@ -106,14 +106,32 @@ uint8_t nsec_random_get_byte(uint8_t max) {
         _init_done = 1;
     }
 
-    uint8_t byte = 255;
-    while (byte >= max) {
+    uint8_t byte;
+    do {
         if(_rand_buff.bytes_left == 0) {
                 _rand_buff.data.uint32 = lfsr113_bits();
                 _rand_buff.bytes_left = 4;
         }
         byte = _rand_buff.data.bytes[--_rand_buff.bytes_left];
+    } while (byte > max);
+
+    return byte;
+}
+
+uint8_t nsec_random_get_byte_range(uint8_t min, uint8_t max) {
+    if(!_init_done) {
+        random_init();
+        _init_done = 1;
     }
-    
+
+    uint8_t byte;
+    do  {
+        if(_rand_buff.bytes_left == 0) {
+                _rand_buff.data.uint32 = lfsr113_bits();
+                _rand_buff.bytes_left = 4;
+        }
+        byte = _rand_buff.data.bytes[--_rand_buff.bytes_left];
+    } while (byte < min || byte > max);
+
     return byte;
 }

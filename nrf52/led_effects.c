@@ -87,6 +87,22 @@ void nsec_neoPixel_set_pixel_color_packed(uint16_t n, uint32_t c) {
     }
 }
 
+uint32_t nsec_neoPixel_get_pixel_color(uint16_t n) {
+    if (n >= NEOPIXEL_COUNT) return 0;
+
+    uint8_t *pixel;
+    pixel = &nsec_pixels->pixels[n * 3];
+    if (nsec_pixels->brightness) {
+        return (((uint32_t)(pixel[nsec_pixels->rOffset] << 8) / nsec_pixels->brightness) << 16) |
+                (((uint32_t)(pixel[nsec_pixels->gOffset] << 8) / nsec_pixels->brightness) <<  8) |
+                ((uint32_t)(pixel[nsec_pixels->bOffset] << 8) / nsec_pixels->brightness);
+    } else {
+        return ((uint32_t)pixel[nsec_pixels->rOffset] << 16) |
+                ((uint32_t)pixel[nsec_pixels->gOffset] <<  8) |
+                (uint32_t)pixel[nsec_pixels->bOffset];
+    }
+}
+
 void nsec_neoPixel_set_brightness(uint8_t b)
 {
     uint8_t newBrightness = b + 1;

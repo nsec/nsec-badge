@@ -137,6 +137,7 @@ INC_FOLDERS += $(SDK_PATH)/external/segger_rtt
 
 # Libraries common to all targets
 LIB_FILES += \
+	$(SDK_PATH)/toolchain/cmsis/dsp/GCC/libarm_cortexM4lf_math.a \
 
 DEVICE = NRF52
 CFLAGS   += -DNRF52 -DNRF52832_XXAA
@@ -172,6 +173,8 @@ CFLAGS += -fno-builtin -fshort-enums
 CFLAGS += -fno-omit-frame-pointer
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -D__HEAP_SIZE=0
+# Needed to use arm_math
+CFLAGS += -DARM_MATH_CM4
 
 
 # Assembler flags common to all targets
