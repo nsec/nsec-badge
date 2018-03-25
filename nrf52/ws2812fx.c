@@ -149,11 +149,11 @@ uint16_t (*mode[])(void) = {
     mode_multi_dynamic,
     mode_rainbow,
     mode_rainbow_cycle,
-    //mode_scan,
-    //mode_dual_scan,
-    //mode_fade,
-    //mode_theater_chase,
-    //mode_theater_chase_rainbow,
+    mode_scan,
+    mode_dual_scan,
+    mode_fade,
+    mode_theater_chase,
+    mode_theater_chase_rainbow,
     //mode_twinkle,
     //mode_twinkle_random,
     //mode_twinkle_fade,
@@ -756,48 +756,46 @@ uint16_t mode_breath(void) {
   SEGMENT_RUNTIME.aux_param = breath_brightness;
   return breath_delay_steps[SEGMENT_RUNTIME.counter_mode_step];
 }
-#if 0
 
 /*
  * Fades the LEDs on and (almost) off again.
  */
-uint16_t WS2812FX::mode_fade(void) {
+uint16_t mode_fade(void) {
   int lum = SEGMENT_RUNTIME.counter_mode_step - 31;
   lum = 63 - (abs(lum) * 2);
-  lum = map(lum, 0, 64, min(25, (int)_brightness), _brightness);
+  lum = map(lum, 0, 64, min(25, (int)fx->brightness), fx->brightness);
 
-  uint8_t w = (SEGMENT.colors[0] >> 24 & 0xFF) * lum / _brightness; // modify RGBW colors with brightness info
-  uint8_t r = (SEGMENT.colors[0] >> 16 & 0xFF) * lum / _brightness;
-  uint8_t g = (SEGMENT.colors[0] >>  8 & 0xFF) * lum / _brightness;
-  uint8_t b = (SEGMENT.colors[0]       & 0xFF) * lum / _brightness;
+  //uint8_t w = (SEGMENT.colors[0] >> 24 & 0xFF) * lum / _brightness; // modify RGBW colors with brightness info
+  uint8_t r = (SEGMENT.colors[0] >> 16 & 0xFF) * lum / fx->brightness;
+  uint8_t g = (SEGMENT.colors[0] >>  8 & 0xFF) * lum / fx->brightness;
+  uint8_t b = (SEGMENT.colors[0]       & 0xFF) * lum / fx->brightness;
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, r, g, b, w);
+    nsec_neoPixel_set_pixel_color(i, r, g, b);
   }
 
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) % 64;
   return (SEGMENT.speed / 64);
 }
 
-
 /*
  * Runs a single pixel back and forth.
  */
-uint16_t WS2812FX::mode_scan(void) {
+uint16_t mode_scan(void) {
   if(SEGMENT_RUNTIME.counter_mode_step > (SEGMENT_LENGTH * 2) - 3) {
     SEGMENT_RUNTIME.counter_mode_step = 0;
   }
 
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, BLACK);
+    nsec_neoPixel_set_pixel_color_packed(i, BLACK);
   }
 
   int led_offset = SEGMENT_RUNTIME.counter_mode_step - (SEGMENT_LENGTH - 1);
   led_offset = abs(led_offset); 
 
   if(SEGMENT.reverse) {
-    this->setPixelColor(SEGMENT.stop - led_offset, SEGMENT.colors[0]);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - led_offset, SEGMENT.colors[0]);
   } else {
-    this->setPixelColor(SEGMENT.start + led_offset, SEGMENT.colors[0]);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + led_offset, SEGMENT.colors[0]);
   }
 
   SEGMENT_RUNTIME.counter_mode_step++;
@@ -808,26 +806,25 @@ uint16_t WS2812FX::mode_scan(void) {
 /*
  * Runs two pixel back and forth in opposite directions.
  */
-uint16_t WS2812FX::mode_dual_scan(void) {
+uint16_t mode_dual_scan(void) {
   if(SEGMENT_RUNTIME.counter_mode_step > (SEGMENT_LENGTH * 2) - 3) {
     SEGMENT_RUNTIME.counter_mode_step = 0;
   }
 
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, BLACK);
+    nsec_neoPixel_set_pixel_color_packed(i, BLACK);
   }
 
   int led_offset = SEGMENT_RUNTIME.counter_mode_step - (SEGMENT_LENGTH - 1);
   led_offset = abs(led_offset);
 
-  this->setPixelColor(SEGMENT.start + led_offset, SEGMENT.colors[0]);
-  this->setPixelColor(SEGMENT.start + SEGMENT_LENGTH - led_offset - 1, SEGMENT.colors[0]);
+  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + led_offset, SEGMENT.colors[0]);
+  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + SEGMENT_LENGTH - led_offset - 1, SEGMENT.colors[0]);
 
   SEGMENT_RUNTIME.counter_mode_step++;
   return (SEGMENT.speed / (SEGMENT_LENGTH * 2));
 }
 
-#endif
 /*
  * Cycles all LEDs at once through a rainbow.
  */
@@ -855,24 +852,23 @@ uint16_t mode_rainbow_cycle(void) {
   return (SEGMENT.speed / 256);
 }
 
-#if 0
 /*
  * theater chase function
  */
-uint16_t WS2812FX::theater_chase(uint32_t color1, uint32_t color2) {
+uint16_t theater_chase(uint32_t color1, uint32_t color2) {
   SEGMENT_RUNTIME.counter_mode_call = SEGMENT_RUNTIME.counter_mode_call % 3;
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
     if((i % 3) == SEGMENT_RUNTIME.counter_mode_call) {
       if(SEGMENT.reverse) {
-        this->setPixelColor(SEGMENT.stop - i, color1);
+        nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - i, color1);
       } else {
-        this->setPixelColor(SEGMENT.start + i, color1);
+        nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + i, color1);
       }
     } else {
       if(SEGMENT.reverse) {
-        this->setPixelColor(SEGMENT.stop - i, color2);
+        nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - i, color2);
       } else {
-        this->setPixelColor(SEGMENT.start + i, color2);
+        nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + i, color2);
       }
     }
   }
@@ -885,20 +881,19 @@ uint16_t WS2812FX::theater_chase(uint32_t color1, uint32_t color2) {
  * Theatre-style crawling lights.
  * Inspired by the Adafruit examples.
  */
-uint16_t WS2812FX::mode_theater_chase(void) {
+uint16_t mode_theater_chase(void) {
   return theater_chase(SEGMENT.colors[0], BLACK);
 }
-
 
 /*
  * Theatre-style crawling lights with rainbow effect.
  * Inspired by the Adafruit examples.
  */
-uint16_t WS2812FX::mode_theater_chase_rainbow(void) {
+uint16_t mode_theater_chase_rainbow(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
   return theater_chase(color_wheel(SEGMENT_RUNTIME.counter_mode_step), BLACK);
 }
-
+#if 0
 
 /*
  * Running lights effect with smooth sine transition.
