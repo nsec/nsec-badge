@@ -170,11 +170,11 @@ uint16_t (*mode[])(void) = {
     mode_chase_white,
     mode_chase_color,
     mode_chase_random,
-    //mode_chase_rainbow,
-    //mode_chase_flash,
-    //mode_chase_flash_random,
-    //mode_chase_rainbow_white,
-    //mode_chase_blackout,
+    mode_chase_rainbow,
+    mode_chase_flash,
+    mode_chase_flash_random,
+    mode_chase_rainbow_white,
+    mode_chase_blackout,
     //mode_chase_blackout_rainbow,
     //mode_color_sweep_random,
     //mode_running_color,
@@ -1116,15 +1116,15 @@ uint16_t mode_chase_color(void) {
   return chase(SEGMENT.colors[0], WHITE, WHITE);
 }
 
-#if 0
+
 /*
  * Black running on _color.
  */
-uint16_t WS2812FX::mode_chase_blackout(void) {
+uint16_t mode_chase_blackout(void) {
   return chase(SEGMENT.colors[0], BLACK, BLACK);
 }
 
-#endif
+
 /*
  * _color running on white.
  */
@@ -1143,11 +1143,11 @@ uint16_t mode_chase_random(void) {
   return chase(color_wheel(SEGMENT_RUNTIME.aux_param), WHITE, WHITE);
 }
 
-#if 0
+
 /*
  * Rainbow running on white.
  */
-uint16_t WS2812FX::mode_chase_rainbow_white(void) {
+uint16_t mode_chase_rainbow_white(void) {
   uint16_t n = SEGMENT_RUNTIME.counter_mode_step;
   uint16_t m = (SEGMENT_RUNTIME.counter_mode_step + 1) % SEGMENT_LENGTH;
   uint32_t color2 = color_wheel(((n * 256 / SEGMENT_LENGTH) + (SEGMENT_RUNTIME.counter_mode_call & 0xFF)) & 0xFF);
@@ -1160,7 +1160,7 @@ uint16_t WS2812FX::mode_chase_rainbow_white(void) {
 /*
  * White running on rainbow.
  */
-uint16_t WS2812FX::mode_chase_rainbow(void) {
+uint16_t mode_chase_rainbow(void) {
   uint8_t color_sep = 256 / SEGMENT_LENGTH;
   uint8_t color_index = SEGMENT_RUNTIME.counter_mode_call & 0xFF;
   uint32_t color = color_wheel(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF);
@@ -1168,7 +1168,7 @@ uint16_t WS2812FX::mode_chase_rainbow(void) {
   return chase(color, WHITE, WHITE);
 }
 
-
+#if 0
 /*
  * Black running on rainbow.
  */
@@ -1179,17 +1179,17 @@ uint16_t WS2812FX::mode_chase_blackout_rainbow(void) {
 
   return chase(color, BLACK, BLACK);
 }
-
+#endif
 
 /*
  * White flashes running on _color.
  */
-uint16_t WS2812FX::mode_chase_flash(void) {
+uint16_t mode_chase_flash(void) {
   const static uint8_t flash_count = 4;
   uint8_t flash_step = SEGMENT_RUNTIME.counter_mode_call % ((flash_count * 2) + 1);
 
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, SEGMENT.colors[0]);
+    nsec_neoPixel_set_pixel_color_packed(i, SEGMENT.colors[0]);
   }
 
   uint16_t delay = (SEGMENT.speed / SEGMENT_LENGTH);
@@ -1198,11 +1198,11 @@ uint16_t WS2812FX::mode_chase_flash(void) {
       uint16_t n = SEGMENT_RUNTIME.counter_mode_step;
       uint16_t m = (SEGMENT_RUNTIME.counter_mode_step + 1) % SEGMENT_LENGTH;
       if(SEGMENT.reverse) {
-        this->setPixelColor(SEGMENT.stop - n, WHITE);
-        this->setPixelColor(SEGMENT.stop - m, WHITE);
+        nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - n, WHITE);
+        nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - m, WHITE);
       } else {
-        this->setPixelColor(SEGMENT.start + n, WHITE);
-        this->setPixelColor(SEGMENT.start + m, WHITE);
+        nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + n, WHITE);
+        nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + m, WHITE);
       }
       delay = 20;
     } else {
@@ -1218,12 +1218,12 @@ uint16_t WS2812FX::mode_chase_flash(void) {
 /*
  * White flashes running, followed by random color.
  */
-uint16_t WS2812FX::mode_chase_flash_random(void) {
+uint16_t mode_chase_flash_random(void) {
   const static uint8_t flash_count = 4;
   uint8_t flash_step = SEGMENT_RUNTIME.counter_mode_call % ((flash_count * 2) + 1);
 
   for(uint16_t i=0; i < SEGMENT_RUNTIME.counter_mode_step; i++) {
-    this->setPixelColor(SEGMENT.start + i, color_wheel(SEGMENT_RUNTIME.aux_param));
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + i, color_wheel(SEGMENT_RUNTIME.aux_param));
   }
 
   uint16_t delay = (SEGMENT.speed / SEGMENT_LENGTH);
@@ -1231,12 +1231,12 @@ uint16_t WS2812FX::mode_chase_flash_random(void) {
     uint16_t n = SEGMENT_RUNTIME.counter_mode_step;
     uint16_t m = (SEGMENT_RUNTIME.counter_mode_step + 1) % SEGMENT_LENGTH;
     if(flash_step % 2 == 0) {
-      this->setPixelColor(SEGMENT.start + n, WHITE);
-      this->setPixelColor(SEGMENT.start + m, WHITE);
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + n, WHITE);
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + m, WHITE);
       delay = 20;
     } else {
-      this->setPixelColor(SEGMENT.start + n, color_wheel(SEGMENT_RUNTIME.aux_param));
-      this->setPixelColor(SEGMENT.start + m, BLACK);
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + n, color_wheel(SEGMENT_RUNTIME.aux_param));
+      nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + m, BLACK);
       delay = 30;
     }
   } else {
@@ -1249,7 +1249,7 @@ uint16_t WS2812FX::mode_chase_flash_random(void) {
   return delay;
 }
 
-
+#if 0
 /*
  * Alternating pixels running function.
  */
