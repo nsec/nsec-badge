@@ -165,11 +165,11 @@ uint16_t (*mode[])(void) = {
     mode_hyper_sparkle,
     mode_strobe,
     mode_strobe_rainbow,
-    //mode_multi_strobe,
-    //mode_blink_rainbow,
-    //mode_chase_white,
-    //mode_chase_color,
-    //mode_chase_random,
+    mode_multi_strobe,
+    mode_blink_rainbow,
+    mode_chase_white,
+    mode_chase_color,
+    mode_chase_random,
     //mode_chase_rainbow,
     //mode_chase_flash,
     //mode_chase_flash_random,
@@ -583,14 +583,14 @@ uint16_t mode_blink(void) {
 
 
 
-#if 0
+
 /*
  * Classic Blink effect. Cycling through the rainbow.
  */
 uint16_t mode_blink_rainbow(void) {
   return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
 }
-#endif
+
 /*
  * Classic Strobe effect.
  */
@@ -1052,20 +1052,20 @@ uint16_t mode_hyper_sparkle(void) {
   return SEGMENT.speed;
 }
 
-#if 0
+
 /*
  * Strobe effect with different strobe count and pause, controlled by speed.
  */
-uint16_t WS2812FX::mode_multi_strobe(void) {
+uint16_t mode_multi_strobe(void) {
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, BLACK);
+    nsec_neoPixel_set_pixel_color_packed(i, BLACK);
   }
 
   uint16_t delay = SEGMENT.speed / (2 * ((SEGMENT.speed / 10) + 1));
   if(SEGMENT_RUNTIME.counter_mode_step < (2 * ((SEGMENT.speed / 10) + 1))) {
     if((SEGMENT_RUNTIME.counter_mode_step & 1) == 0) {
       for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-        this->setPixelColor(i, SEGMENT.colors[0]);
+        nsec_neoPixel_set_pixel_color_packed(i, SEGMENT.colors[0]);
       }
       delay = 20;
     } else {
@@ -1076,48 +1076,47 @@ uint16_t WS2812FX::mode_multi_strobe(void) {
   return delay;
 }
 
-
 /*
  * color chase function.
  * color1 = background color
  * color2 and color3 = colors of two adjacent leds
  */
 
-uint16_t WS2812FX::chase(uint32_t color1, uint32_t color2, uint32_t color3) {
+uint16_t chase(uint32_t color1, uint32_t color2, uint32_t color3) {
   uint16_t a = SEGMENT_RUNTIME.counter_mode_step;
   uint16_t b = (a + 1) % SEGMENT_LENGTH;
   uint16_t c = (b + 1) % SEGMENT_LENGTH;
   if(SEGMENT.reverse) {
-    this->setPixelColor(SEGMENT.stop - a, color1);
-    this->setPixelColor(SEGMENT.stop - b, color2);
-    this->setPixelColor(SEGMENT.stop - c, color3);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - a, color1);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - b, color2);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.stop - c, color3);
   } else {
-    this->setPixelColor(SEGMENT.start + a, color1);
-    this->setPixelColor(SEGMENT.start + b, color2);
-    this->setPixelColor(SEGMENT.start + c, color3);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + a, color1);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + b, color2);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + c, color3);
   }
 
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) % SEGMENT_LENGTH;
   return (SEGMENT.speed / SEGMENT_LENGTH);
 }
 
-
+#if 0
 /*
  * Bicolor chase mode
  */
 uint16_t WS2812FX::mode_bicolor_chase(void) {
   return chase(SEGMENT.colors[0], SEGMENT.colors[1], SEGMENT.colors[2]);
 }
-
+#endif
 
 /*
  * White running on _color.
  */
-uint16_t WS2812FX::mode_chase_color(void) {
+uint16_t mode_chase_color(void) {
   return chase(SEGMENT.colors[0], WHITE, WHITE);
 }
 
-
+#if 0
 /*
  * Black running on _color.
  */
@@ -1125,11 +1124,11 @@ uint16_t WS2812FX::mode_chase_blackout(void) {
   return chase(SEGMENT.colors[0], BLACK, BLACK);
 }
 
-
+#endif
 /*
  * _color running on white.
  */
-uint16_t WS2812FX::mode_chase_white(void) {
+uint16_t mode_chase_white(void) {
   return chase(WHITE, SEGMENT.colors[0], SEGMENT.colors[0]);
 }
 
@@ -1137,14 +1136,14 @@ uint16_t WS2812FX::mode_chase_white(void) {
 /*
  * White running followed by random color.
  */
-uint16_t WS2812FX::mode_chase_random(void) {
+uint16_t mode_chase_random(void) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
   return chase(color_wheel(SEGMENT_RUNTIME.aux_param), WHITE, WHITE);
 }
 
-
+#if 0
 /*
  * Rainbow running on white.
  */
