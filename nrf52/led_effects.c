@@ -107,7 +107,7 @@ void nsec_neoPixel_set_brightness(uint8_t b)
 {
     uint8_t newBrightness = b + 1;
     if (newBrightness != nsec_pixels->brightness) {
-        uint8_t c;
+        uint8_t pixel;
         uint8_t *ptr = nsec_pixels->pixels;
         uint8_t oldBrighness = nsec_pixels->brightness - 1;
         uint16_t scale;
@@ -121,8 +121,8 @@ void nsec_neoPixel_set_brightness(uint8_t b)
         }
 
         for (uint16_t i=0; i < nsec_pixels->numBytes; i++) {
-            c = *ptr;
-            *ptr++ = (c * scale) >> 8;
+            pixel = *ptr;
+            *ptr++ = (pixel * scale) >> 8;
         }
         nsec_pixels->brightness = newBrightness;
     }
