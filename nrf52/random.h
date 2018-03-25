@@ -11,5 +11,6 @@
 #include <stdint.h>
 
 void nsec_random_get(uint8_t * buffer, size_t buffer_size);
+uint8_t nsec_random_get_byte(uint8_t max);
 
 #endif
