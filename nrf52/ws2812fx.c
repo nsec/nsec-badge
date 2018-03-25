@@ -144,11 +144,11 @@ uint16_t (*mode[])(void) = {
     mode_color_wipe_rev,
     mode_color_wipe_rev_inv,
     mode_color_wipe_random,
-    //mode_random_color,
-    //mode_single_dynamic,
-    //mode_multi_dynamic,
-    //mode_rainbow,
-    //mode_rainbow_cycle,
+    mode_random_color,
+    mode_single_dynamic,
+    mode_multi_dynamic,
+    mode_rainbow,
+    mode_rainbow_cycle,
     //mode_scan,
     //mode_dual_scan,
     //mode_fade,
@@ -529,11 +529,9 @@ uint8_t get_random_wheel_index(uint8_t pos) {
   uint8_t x = 0;
   uint8_t y = 0;
   uint8_t d = 0;
-  uint8_t buffer[1];
 
   while(d < 42) {
-    nsec_random_get(buffer, 1);
-    r = buffer[0];
+    r = nsec_random_get_byte(255);
     x = abs(pos - r);
     y = 255 - x;
     d = min(x, y);
@@ -677,34 +675,34 @@ uint16_t WS2812FX::mode_color_sweep_random(void) {
   return color_wipe(color, color, true) * 2;
 }
 
+#endif
 
 /*
  * Lights all LEDs in one random color up. Then switches them
  * to the next random color.
  */
-uint16_t WS2812FX::mode_random_color(void) {
+uint16_t mode_random_color(void) {
   SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param); // aux_param will store our random color wheel index
   uint32_t color = color_wheel(SEGMENT_RUNTIME.aux_param);
 
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, color);
+    nsec_neoPixel_set_pixel_color_packed(i, color);
   }
   return (SEGMENT.speed);
 }
-
 
 /*
  * Lights every LED in a random color. Changes one random LED after the other
  * to another random color.
  */
-uint16_t WS2812FX::mode_single_dynamic(void) {
+uint16_t mode_single_dynamic(void) {
   if(SEGMENT_RUNTIME.counter_mode_call == 0) {
     for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-      this->setPixelColor(i, color_wheel(random(256)));
+      nsec_neoPixel_set_pixel_color_packed(i, color_wheel(nsec_random_get_byte(255)));
     }
   }
-
-  this->setPixelColor(SEGMENT.start + random(SEGMENT_LENGTH), color_wheel(random(256)));
+  nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + nsec_random_get_byte(SEGMENT_LENGTH),
+                                color_wheel(nsec_random_get_byte(255)));
   return (SEGMENT.speed);
 }
 
@@ -713,15 +711,13 @@ uint16_t WS2812FX::mode_single_dynamic(void) {
  * Lights every LED in a random color. Changes all LED at the same time
  * to new random colors.
  */
-uint16_t WS2812FX::mode_multi_dynamic(void) {
+uint16_t mode_multi_dynamic(void) {
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, color_wheel(random(256)));
+    nsec_neoPixel_set_pixel_color_packed(i, color_wheel(nsec_random_get_byte(255)));
   }
   return (SEGMENT.speed);
 }
 
-
-#endif
 /*
  * Does the "standby-breathing" of well known i-Devices. Fixed Speed.
  * Use mode "fade" if you like to have something similar with a different speed.
@@ -831,14 +827,14 @@ uint16_t WS2812FX::mode_dual_scan(void) {
   return (SEGMENT.speed / (SEGMENT_LENGTH * 2));
 }
 
-
+#endif
 /*
  * Cycles all LEDs at once through a rainbow.
  */
-uint16_t WS2812FX::mode_rainbow(void) {
+uint16_t mode_rainbow(void) {
   uint32_t color = color_wheel(SEGMENT_RUNTIME.counter_mode_step);
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
-    this->setPixelColor(i, color);
+    nsec_neoPixel_set_pixel_color_packed(i, color);
   }
 
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
@@ -849,17 +845,17 @@ uint16_t WS2812FX::mode_rainbow(void) {
 /*
  * Cycles a rainbow over the entire string of LEDs.
  */
-uint16_t WS2812FX::mode_rainbow_cycle(void) {
+uint16_t mode_rainbow_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
 	  uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
-    this->setPixelColor(SEGMENT.start + i, color);
+    nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + i, color);
   }
 
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
   return (SEGMENT.speed / 256);
 }
 
-
+#if 0
 /*
  * theater chase function
  */
