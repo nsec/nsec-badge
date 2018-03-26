@@ -5,7 +5,7 @@ default: all
 builds:
 	mkdir builds
 
-builds/nsec17_stm32_%: builds
+builds/nsec18_stm32_%: builds
 	$(MAKE) -C stm32 $@
 	cp stm32/$@ $@
 
@@ -15,6 +15,7 @@ builds/nsec18_nrf52_%.elf: builds
 
 FIRMWARE += builds/nsec18_nrf52_devboard.elf
 FIRMWARE += builds/nsec18_nrf52_proto.elf
+FIRMWARE += builds/nsec18_stm32_debugger.elf
 
 all: $(FIRMWARE)
 
