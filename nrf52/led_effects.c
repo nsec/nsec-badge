@@ -17,6 +17,7 @@ void show_with_DWT(void);
 
 struct Nsec18_pixels {
     uint16_t numBytes;
+    uint8_t brightness;
     uint8_t rOffset;
     uint8_t gOffset;
     uint8_t bOffset;
@@ -31,11 +32,10 @@ uint32_t mapConnect[] = {LED_PIN, NRF_PWM_PIN_NOT_CONNECTED,
 uint32_t mapDisconnect[] = {NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
                     NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
 
-int nsec_neopixel_init() {
+void nsec_neopixel_init() {
     nsec18_pixels = malloc(sizeof(struct Nsec18_pixels));
-    if (nsec18_pixels == NULL) {
-        return -1;
-    }
+
+    nsec18_pixels->brightness = 0;
 
     //Magic number comming from Adafruit library
     nsec18_pixels->rOffset = (NEO_GRB >> 4) & 0b11;
@@ -45,26 +45,28 @@ int nsec_neopixel_init() {
     //Allocate three bytes for each pixels (3 led by pixel)
     nsec18_pixels->numBytes = NEOPIXEL_COUNT * 3;
     nsec18_pixels->pixels = (uint8_t *)malloc(nsec18_pixels->numBytes);
-    if (nsec18_pixels->pixels == NULL) {
-        free(nsec18_pixels);
-        return -1;
-    }
+
     memset(nsec18_pixels->pixels, 0, nsec18_pixels->numBytes);
 
     //Configure pin
     nrf_gpio_cfg_output(LED_PIN);
     nrf_gpio_pin_clear(LED_PIN);
 
-    return 0;
+    return;
 }
 
 void nsec_neoPixel_clean(void) {
-
+    memset(nsec18_pixels->pixels, 0, nsec18_pixels->numBytes);
 }
 
 //Set the n pixel color
 void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
-    //TODO add brightness
+    if (nsec18_pixels->brightness) {
+        r = (r * nsec18_pixels->brightness) >> 8;
+        g = (g * nsec18_pixels->brightness) >> 8;
+        b = (b * nsec18_pixels->brightness) >> 8;
+    }
+
     if (n < NEOPIXEL_COUNT) {
         uint8_t *p;
         p = &nsec18_pixels->pixels[n * 3];
@@ -73,6 +75,36 @@ void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
         p[nsec18_pixels->bOffset] = b;
     }
 
+}
+
+void nsec_neopixel_set_brightness(uint8_t b)
+{
+    uint8_t newBrightness = b + 1;
+    if (newBrightness != nsec18_pixels->brightness) {
+        uint8_t pixel;
+        uint8_t *ptr = nsec18_pixels->pixels;
+        uint8_t oldBrighness = nsec18_pixels->brightness - 1;
+        uint16_t scale;
+
+        if (oldBrighness == 0) {
+            scale = 0;
+        } else if (b == 255) {
+            scale = 65535;
+        } else {
+            scale = (((uint16_t)newBrightness << 8) - 1) / oldBrighness;
+        }
+
+        for (uint16_t i=0; i < nsec18_pixels->numBytes; i++) {
+            pixel = *ptr;
+            *ptr++ = (pixel * scale) >> 8;
+        }
+        nsec18_pixels->brightness = newBrightness;
+    }
+}
+
+uint8_t nsec_neopixel_get_brightness(void)
+{
+    return nsec18_pixels->brightness - 1;
 }
 
 void nsec_neopixel_show(void) {
