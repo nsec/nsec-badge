@@ -13,5 +13,6 @@
 void nsec_random_get(uint8_t * buffer, size_t buffer_size);
 uint8_t nsec_random_get_byte(uint8_t max);
 uint8_t nsec_random_get_byte_range(uint8_t min, uint8_t max);
+uint16_t nsec_random_get_u16(uint16_t max);
 
 #endif

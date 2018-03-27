@@ -135,3 +135,13 @@ uint8_t nsec_random_get_byte_range(uint8_t min, uint8_t max) {
 
     return byte;
 }
+
+uint16_t nsec_random_get_u16(uint16_t max) {
+    uint16_t value = 0;
+    uint8_t buffer[2];
+
+    do {
+        nsec_random_get(buffer, 2);
+        value = (buffer[0] << 8) | buffer[1];
+    } while (value > max);
+}
