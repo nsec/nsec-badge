@@ -99,3 +99,49 @@ void nsec_random_get(uint8_t * buffer, size_t buffer_size) {
         buffer[--buffer_size] = _rand_buff.data.bytes[--_rand_buff.bytes_left];
     }
 }
+
+uint8_t nsec_random_get_byte(uint8_t max) {
+    if(!_init_done) {
+        random_init();
+        _init_done = 1;
+    }
+
+    uint8_t byte;
+    do {
+        if(_rand_buff.bytes_left == 0) {
+                _rand_buff.data.uint32 = lfsr113_bits();
+                _rand_buff.bytes_left = 4;
+        }
+        byte = _rand_buff.data.bytes[--_rand_buff.bytes_left];
+    } while (byte > max);
+
+    return byte;
+}
+
+uint8_t nsec_random_get_byte_range(uint8_t min, uint8_t max) {
+    if(!_init_done) {
+        random_init();
+        _init_done = 1;
+    }
+
+    uint8_t byte;
+    do  {
+        if(_rand_buff.bytes_left == 0) {
+                _rand_buff.data.uint32 = lfsr113_bits();
+                _rand_buff.bytes_left = 4;
+        }
+        byte = _rand_buff.data.bytes[--_rand_buff.bytes_left];
+    } while (byte < min || byte > max);
+
+    return byte;
+}
+
+uint16_t nsec_random_get_u16(uint16_t max) {
+    uint16_t value = 0;
+    uint8_t buffer[2];
+
+    do {
+        nsec_random_get(buffer, 2);
+        value = (buffer[0] << 8) | buffer[1];
+    } while (value > max);
+}
