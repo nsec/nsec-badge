@@ -28,6 +28,7 @@ static void _nsec_ble_add_caracteristic(nsec_ble_service_handle service_handle, 
 static void _nsec_ble_vendor_uuid_provider(size_t * uuid_count, ble_uuid_t * uuids);
 static void _nsec_ble_vendor_evt_handler(ble_evt_t * p_ble_evt);
 
+
 int nsec_ble_register_vendor_service(nsec_ble_service_t * srv, nsec_ble_service_handle * handle) {
     ble_uuid128_t     base_uuid;
 

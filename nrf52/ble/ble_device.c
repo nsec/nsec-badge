@@ -26,6 +26,7 @@
 #include "nrf_log.h"
 #include "gap_configuration.h"
 #include "nsec_ble.h"
+#include "vendor_service.h"
 
 
 #define APP_BLE_OBSERVER_PRIO 3
@@ -143,31 +144,15 @@ void service_write_callback(nsec_ble_service_handle service, uint16_t char_uuid,
 }
 
 void config_dummy_service(){
-	/*
-	nsec_ble_service_handle service_handle;
-	nsec_ble_characteristic_t service_characteristic;
-	service_characteristic.char_uuid = 0x1234;
-	service_characteristic.max_size = 4;
-	service_characteristic.permissions = NSEC_BLE_CHARACT_PERM_RW;
-	service_characteristic.on_write = service_write_callback;
-	nsec_ble_service_t dummy_service;
-	dummy_service.characteristics = &service_characteristic;
-	dummy_service.characteristics_count = 1;
-	uint8_t uuid[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-	memcpy(&dummy_service.uuid, &uuid, 16);
-	int result = nsec_ble_register_vendor_service(&dummy_service, &service_handle);
-	if(result != 0)
-		log_error("Error when registering vendor service");
-	ble_uuid_t dummy_service_uuid;
-	dummy_service_uuid.type = BLE_UUID_TYPE_VENDOR_BEGIN;
-	dummy_service_uuid.uuid = *((uint16_t*)&uuid[12]);
-	*/
-	add_device_information_service("Nordic Semi", "NFR52", "qwerty12345", "1", "2", "3");
-	ble_uuid_t device_info_uuid = {
-	        .uuid = BLE_UUID_DEVICE_INFORMATION_SERVICE,
-	        .type = BLE_UUID_TYPE_BLE
-	    };
-	set_default_advertised_service(&device_info_uuid);
+	VendorService dummy_service;
+	ble_gatts_char_handles_t characteristic_handles;
+	create_vendor_service(&dummy_service);
+	add_characteristic_to_vendor_service(&dummy_service, 1, &characteristic_handles);
+	uint8_t value = 0xAB;
+	ble_gatts_value_t dummy_value;
+	dummy_value.len = 1;
+	dummy_value.p_value = &value;
+	sd_ble_gatts_value_set(NULL, characteristic_handles.value_handle, &dummy_value);
 }
 
 static void gatt_init(){

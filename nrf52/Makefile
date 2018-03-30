@@ -42,6 +42,7 @@ SRC_FILES  = $(notdir $(wildcard *.c))
 SRC_FILES += ble/ble_device.c
 SRC_FILES += ble/gap_configuration.c
 SRC_FILES += ble/ble_vendor_service.c
+SRC_FILES += ble/vendor_service.c
 #SRC_FILES += $(wildcard ble/*.c)
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_lbs/ble_lbs.c
@@ -235,7 +236,7 @@ $(foreach target, $(TARGETS), $(call define_target, $(target)))
 $(OUTPUT_DIRECTORY)/program.hex: $(PROJECT_NAME)
 	mergehex/mergehex -m $(SOFTDEVICE) $(OUTPUT_DIRECTORY)/$<.hex -o $@
 
-# TODO add target to install nrfjprog and mergehex, rename to make devboard
+# TODO add target to install nrfjprog and mergehex
 flash-devboard: $(OUTPUT_DIRECTORY)/program.hex
 	@echo Flashing: $<
 	nrfjprog/nrfjprog -f nrf52 --eraseall
