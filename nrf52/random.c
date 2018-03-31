@@ -144,4 +144,6 @@ uint16_t nsec_random_get_u16(uint16_t max) {
         nsec_random_get(buffer, 2);
         value = (buffer[0] << 8) | buffer[1];
     } while (value > max);
+
+    return value;
 }
