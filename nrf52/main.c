@@ -21,9 +21,8 @@
 #include "logs.h"
 #include "ble/ble_device.h"
 
-#include "nrf_drv_power.h"
-
 #include "timer.h"
+#include "power.h"
 
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
 	NRF_LOG_ERROR("An error happened");
@@ -42,26 +41,9 @@ void init_devboard(){
 	log_init();
 }
 
-/*
- * Initialize power module driver.
- *
- * Power driver has to be enabled before SoftDevice.
- */
-void init_DCDC(void) {
-    ret_code_t err_code;
-
-    /*
-     * Passing NULL as config will use the value of
-     * POWER_CONFIG_DEFAULT_DCDCEN from sdk_config.h
-     */
-    err_code = nrf_drv_power_init(NULL);
-    APP_ERROR_CHECK(err_code);
-}
-
-
 int main() {
 	init_devboard();
-    init_DCDC();
+    power_init();
     softdevice_init();
     timers_init();
     application_timers_start();
