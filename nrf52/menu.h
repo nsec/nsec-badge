@@ -4,6 +4,9 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#ifndef menu_h
+#define menu_h
+
 #include <stdint.h>
 
 #define MENU_LIMIT_MAX_ITEM_COUNT (10)
@@ -25,3 +28,5 @@ void menu_ui_redraw_all(void);
 void menu_change_selected_item(MENU_DIRECTION direction);
 void menu_trigger_action(void);
 void menu_close(void);
+
+#endif
