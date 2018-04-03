@@ -244,15 +244,15 @@ void nsec_schedule_show_talks(uint8_t item) {
 }
 
 void _nsec_schedule_show_details(uint8_t day, uint8_t item) {
-    gfx_fillRect(0, 8, 128, 56, BLACK);
+    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
     gfx_setCursor(0, 8);
-    gfx_setTextBackgroundColor(WHITE, BLACK);
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(nsec_schedule[day].menu_items[item].label);
     gfx_puts("\n");
-    gfx_setTextBackgroundColor(BLACK, WHITE);
+    gfx_setTextBackgroundColor(SSD1306_BLACK, SSD1306_WHITE);
     gfx_puts((char *) nsec_schedule[day].presenters[item]);
     gfx_puts("\n");
-    gfx_setTextBackgroundColor(WHITE, BLACK);
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts((char *) nsec_schedule[day].descriptions[item]);
     gfx_update();
     schedule_state = SCHEDULE_STATE_TALK_DETAILS;

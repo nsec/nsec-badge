@@ -14,7 +14,7 @@ void nsec_gfx_effect_addNoise(uint8_t noise_amount) {
             uint8_t r;
             nsec_random_get(&r, 1);
             if(r < noise_amount) {
-                ssd1306_drawPixel(x, y, INVERSE);
+                ssd1306_drawPixel(x, y, SSD1306_INVERSE);
             }
         }
     }

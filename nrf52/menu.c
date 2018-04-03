@@ -37,7 +37,7 @@ void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height, 
     menu.selected_item = 0;
     menu.item_on_top = 0;
     menu_set_position(pos_x, pos_y, width, height);
-    gfx_fillRect(pos_x, pos_y, width, height, BLACK);
+    gfx_fillRect(pos_x, pos_y, width, height, SSD1306_BLACK);
     for(uint8_t i = 0; i < item_count; i++) {
         menu_add_item(items + i);
     }
@@ -83,14 +83,14 @@ static void menu_ui_redraw_items(uint8_t start, uint8_t end) {
                  menu.pos_y + FONT_SIZE_HEIGHT * (start - menu.item_on_top),
                  menu.col_width * FONT_SIZE_WIDTH,
                  (end - start + 1) * FONT_SIZE_HEIGHT,
-                 BLACK);
+                 SSD1306_BLACK);
     for(int item_index = start; item_index < menu.item_count && item_index <= end; item_index++) {
         gfx_setCursor(menu.pos_x, menu.pos_y + (item_index - menu.item_on_top) * FONT_SIZE_HEIGHT);
         if(item_index == menu.selected_item) {
-            gfx_setTextBackgroundColor(BLACK,WHITE);
+            gfx_setTextBackgroundColor(SSD1306_BLACK,SSD1306_WHITE);
         }
         else {
-            gfx_setTextBackgroundColor(WHITE,BLACK);
+            gfx_setTextBackgroundColor(SSD1306_WHITE,SSD1306_BLACK);
         }
         char * string = menu.items[item_index].label;
         if(strlen(string) <= menu.col_width) {

@@ -105,9 +105,9 @@ void ssd1306_drawPixel(int16_t x, int16_t y, uint16_t color) {
     // x is which column
     switch (color)
     {
-        case WHITE:   buffer[x+ (y/8)*SSD1306_LCDWIDTH] |=  (1 << (y&7)); break;
-        case BLACK:   buffer[x+ (y/8)*SSD1306_LCDWIDTH] &= ~(1 << (y&7)); break;
-        case INVERSE: buffer[x+ (y/8)*SSD1306_LCDWIDTH] ^=  (1 << (y&7)); break;
+        case SSD1306_WHITE:   buffer[x+ (y/8)*SSD1306_LCDWIDTH] |=  (1 << (y&7)); break;
+        case SSD1306_BLACK:   buffer[x+ (y/8)*SSD1306_LCDWIDTH] &= ~(1 << (y&7)); break;
+        case SSD1306_INVERSE: buffer[x+ (y/8)*SSD1306_LCDWIDTH] ^=  (1 << (y&7)); break;
     }
 }
 
@@ -429,9 +429,9 @@ void ssd1306_drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t col
 
   switch (color)
   {
-  case WHITE:         while(w--) { *pBuf++ |= mask; }; break;
-    case BLACK: mask = ~mask;   while(w--) { *pBuf++ &= mask; }; break;
-  case INVERSE:         while(w--) { *pBuf++ ^= mask; }; break;
+  case SSD1306_WHITE:         while(w--) { *pBuf++ |= mask; }; break;
+    case SSD1306_BLACK: mask = ~mask;   while(w--) { *pBuf++ &= mask; }; break;
+  case SSD1306_INVERSE:         while(w--) { *pBuf++ ^= mask; }; break;
   }
 }
 
@@ -522,9 +522,9 @@ void ssd1306_drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t
 
   switch (color)
     {
-    case WHITE:   *pBuf |=  mask;  break;
-    case BLACK:   *pBuf &= ~mask;  break;
-    case INVERSE: *pBuf ^=  mask;  break;
+    case SSD1306_WHITE:   *pBuf |=  mask;  break;
+    case SSD1306_BLACK:   *pBuf &= ~mask;  break;
+    case SSD1306_INVERSE: *pBuf ^=  mask;  break;
     }
 
     // fast exit if we're done here!
@@ -538,7 +538,7 @@ void ssd1306_drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t
 
   // write solid bytes while we can - effectively doing 8 rows at a time
   if(h >= 8) {
-    if (color == INVERSE)  {          // separate copy of the code so we don't impact performance of the black/white write version with an extra comparison per loop
+    if (color == SSD1306_INVERSE)  {          // separate copy of the code so we don't impact performance of the black/white write version with an extra comparison per loop
       do  {
       *pBuf=~(*pBuf);
 
@@ -551,7 +551,7 @@ void ssd1306_drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t
       }
     else {
       // store a local value to work with
-      register uint8_t val = (color == WHITE) ? 255 : 0;
+      register uint8_t val = (color == SSD1306_WHITE) ? 255 : 0;
 
       do  {
         // write our value in
@@ -576,9 +576,9 @@ void ssd1306_drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t
     register uint8_t mask = postmask[mod];
     switch (color)
     {
-      case WHITE:   *pBuf |=  mask;  break;
-      case BLACK:   *pBuf &= ~mask;  break;
-      case INVERSE: *pBuf ^=  mask;  break;
+      case SSD1306_WHITE:   *pBuf |=  mask;  break;
+      case SSD1306_BLACK:   *pBuf &= ~mask;  break;
+      case SSD1306_INVERSE: *pBuf ^=  mask;  break;
     }
   }
 }
@@ -763,10 +763,10 @@ void gfx_fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
 }
 
 void gfx_fillScreen(uint16_t color) {
-    if (color == BLACK) {
+    if (color == SSD1306_BLACK) {
         memset(buffer, 0, sizeof(buffer));
     }
-    else if(color == WHITE) {
+    else if(color == SSD1306_WHITE) {
         memset(buffer, 0xFF, sizeof(buffer));
     }
     else {
