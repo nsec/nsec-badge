@@ -28,15 +28,7 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
 	NRF_LOG_ERROR("An error happened");
 }
 
-void init_devboard(){
-	int leds[] = {17, 18, 19, 20};
-	for(int i = 0; i < 4; i++)
-		nrf_gpio_cfg_output(leds[i]);
-	log_init();
-}
-
 int main() {
-	init_devboard();
     power_init();
     softdevice_init();
     timer_init();
