@@ -14,7 +14,6 @@
 #include <nrf52.h>
 #include <nrf52_bitfields.h>
 #include <nordic_common.h>
-#include <nrf_sdh.h>
 #include <stdint.h>
 
 #include "led_effects.h"
@@ -23,15 +22,10 @@
 
 #include "timer.h"
 #include "power.h"
+#include "softdevice.h"
 
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
 	NRF_LOG_ERROR("An error happened");
-}
-
-static void softdevice_init(void) {
-    uint32_t err_code;
-	err_code = nrf_sdh_enable_request();
-	log_error_code("nrf_sdh_enable_request", err_code);
 }
 
 void init_devboard(){
