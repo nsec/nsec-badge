@@ -65,14 +65,14 @@ static char flag[] = "flag{ble_all_the_things}";
 
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length);
 
-void nsec_identitiy_init(void) {
+void nsec_identity_init(void) {
     memset(identity.name, 0, sizeof(identity.name));
 #if defined(NSEC_HARDCODED_BADGE_IDENTITY_NAME)
 #define NSEC_STRINGIFY_(...) #__VA_ARGS__
 #define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
     snprintf(identity.name, sizeof(identity.name), NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
 #else
-    snprintf(identity.name, sizeof(identity.name), "Comrade #%05d", (NRF_FICR->DEVICEID[0] & 0xFFFF));
+    snprintf(identity.name, sizeof(identity.name), "Comrade #%05ld", (NRF_FICR->DEVICEID[0] & 0xFFFF));
 #endif
     memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));
     identity.unlocked = 0;
@@ -142,7 +142,7 @@ void nsec_identity_update_nearby(void) {
 }
 
 void nsec_identity_get_unlock_key(char * data, size_t length) {
-    snprintf(data, length, "%04X", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
+    snprintf(data, length, "%04lX", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
 }
 
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length) {
