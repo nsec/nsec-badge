@@ -16,8 +16,6 @@ typedef struct {
 typedef enum {
 	MENU_DIRECTION_UP,
 	MENU_DIRECTION_DOWN,
-	MENU_DIRECTION_LEFT,
-	MENU_DIRECTION_RIGHT,
 } MENU_DIRECTION;
 
 void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height, uint8_t item_count, menu_item_s * items);
