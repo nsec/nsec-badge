@@ -39,8 +39,7 @@ int main() {
 	init_devboard();
     power_init();
     softdevice_init();
-    timers_init();
-    application_timers_start();
+    timer_init();
     create_ble_device("My BLE device");
     configure_advertising();
     config_dummy_service();
