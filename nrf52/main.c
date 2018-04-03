@@ -16,7 +16,6 @@
 #include <nordic_common.h>
 #include <stdint.h>
 
-#include "logs.h"
 #include "ble/ble_device.h"
 
 #include "buttons.h"
@@ -27,8 +26,44 @@
 #include "softdevice.h"
 #include "ssd1306.h"
 
-void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info){
-	NRF_LOG_ERROR("An error happened");
+/*
+ * Callback function when APP_ERROR_CHECK() fails
+ *
+ *  - Display the filename, line number and error code.
+ *  - Flash all neopixels red for 5 seconds.
+ *  - Reset the system.
+ */
+void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
+    static int error_displayed = 0;
+    uint8_t count = 50;
+
+    if(!error_displayed) {
+        char error_msg[128];
+        error_info_t *err_info = (error_info_t *) info;
+        snprintf(error_msg, sizeof(error_msg), "%s:%u -> error 0x%08x\r\n",
+                 err_info->p_file_name, (unsigned int)err_info->line_num,
+                 (unsigned int)err_info->err_code);
+        puts(error_msg);
+        gfx_setCursor(0, 0);
+        gfx_puts(error_msg);
+        gfx_update();
+        error_displayed = 1;
+    }
+
+    init_WS2812FX();
+    setBrightness_WS2812FX(64);
+    setSpeed_WS2812FX(200);
+    setColor_WS2812FX(255, 0, 0);
+    setMode_WS2812FX(FX_MODE_BLINK);
+    start_WS2812FX();
+
+    while (count > 0) {
+        service_WS2812FX();
+        nrf_delay_ms(100);
+        count--;
+    }
+
+    NVIC_SystemReset();
 }
 
 int main(void) {
