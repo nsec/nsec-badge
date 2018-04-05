@@ -58,7 +58,7 @@ bool battery_is_undercharge() {
 }
 
 bool battery_is_charging() {
-    return nrf_gpio_pin_read(BATT_CHARGE) != 0;
+    return nrf_gpio_pin_read(BATT_CHARGE) == 0;
 }
 
 bool battery_is_power_good() {
