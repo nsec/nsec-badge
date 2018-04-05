@@ -77,15 +77,25 @@ static uint16_t adc_in_millivolts(uint32_t adc_value){
     return voltage_in_millivolts;
 }
 
-static void register_buffer_for_next_conversion(){
+static void calibrate_saadc(){
+	if(nrf_drv_saadc_calibrate_offset() == NRF_SUCCESS)
+		while(!calibration_done);
+	else
+		NRF_LOG_ERROR("SAADC is busy, cannot calibrate.");
+}
+
+static uint32_t register_buffer_for_next_conversion(){
 	uint32_t error_code = nrf_drv_saadc_buffer_convert(&conversion_buffer, SAMPLES_IN_BUFFER);
-	log_error_code("nrf_drv_saadc_buffer_convert", error_code);
+	return error_code;
 }
 
 void saadc_callback(nrf_drv_saadc_evt_t const * p_event){
 	if(p_event->type == NRF_DRV_SAADC_EVT_DONE){
 		adc_value = p_event->data.done.p_buffer[0];
 		register_buffer_for_next_conversion();
+	}
+	else if(p_event->type == NRF_DRV_SAADC_EVT_CALIBRATEDONE){
+		calibration_done = true;
 	}
 }
 
@@ -102,16 +112,7 @@ void saadc_init(){
 
     err_code = nrf_drv_saadc_channel_init(0, &channel_config);
     log_error_code("nrf_drv_saadc_channel_init", err_code);
+
+    calibrate_saadc();
     register_buffer_for_next_conversion();
-
-/*
-    NRF_LOG_INFO("waiting for saadc to be ready");
-
-    while(nrf_drv_saadc_is_busy());
-
-    NRF_LOG_INFO("saadc is now ready");
-
-    log_error_code("nrf_drv_saadc_calibrate_offset", nrf_drv_saadc_calibrate_offset());
-	//while(!calibration_done);
-	//NRF_LOG_INFO("Calibration done");*/
 }
