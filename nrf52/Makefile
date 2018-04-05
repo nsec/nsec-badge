@@ -155,7 +155,7 @@ TEMPLATE_PATH = $(SDK_PATH)/toolchain/gcc/
 OPTIMIZATIONS = -DDEBUG -g3 -Os
 
 # Enable link time optimization
-OPTIMIZATIONS += -flto
+#OPTIMIZATIONS += -flto (mjeanson: Breaks the app timer for me)
 
 
 # Architecture and ABI flags
