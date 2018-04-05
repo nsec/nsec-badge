@@ -98,8 +98,6 @@
 #define NRF_LOG_WARNING_COLOR 4
 
 #define SAADC_ENABLED 1
-#define SAADC_CONFIG_LOG_ENABLED 0
-
 
 #define BLE_ADVERTISING_ENABLED 0 //could be useful in the future.
 
@@ -508,7 +506,7 @@
 // <e> SAADC_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef SAADC_CONFIG_LOG_ENABLED
-#define SAADC_CONFIG_LOG_ENABLED 1
+#define SAADC_CONFIG_LOG_ENABLED 0
 #endif
 // <o> SAADC_CONFIG_LOG_LEVEL  - Default Severity level
 

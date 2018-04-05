@@ -68,28 +68,16 @@ void init_DCDC(void) {
 }
 
 
-void print_battery(){
-	battery_refresh();
-	int16_t voltage = battery_get_voltage();
-	NRF_LOG_INFO("battery_voltage is %d", voltage);
-}
-
-
 int main() {
-	/*
-	init_devboard();
     init_DCDC();
     softdevice_init();
     create_ble_device("My BLE device");
     configure_advertising();
     config_dummy_service();
     start_advertising();
-    */
-	log_init();
 	battery_init();
     while(1){
-    	nrf_delay_ms(2000);
-    	print_battery();
+    	nrf_delay_ms(500);
     }
     return 0;
 }
