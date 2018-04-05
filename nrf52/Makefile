@@ -42,7 +42,8 @@ SRC_FILES += ble/ble_device.c
 SRC_FILES += ble/gap_configuration.c
 SRC_FILES += ble/ble_vendor_service.c
 #SRC_FILES += $(wildcard ble/*.c)
-
+SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
+SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_lbs/ble_lbs.c
 SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
@@ -90,8 +91,7 @@ SRC_FILES += $(SDK_PATH)/libraries/util/sdk_mapped_flags.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_ble.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_soc.c
-SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
-SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
+
 
 INC_FOLDERS  = .
 INC_FOLDERS += $(SDK_PATH)
