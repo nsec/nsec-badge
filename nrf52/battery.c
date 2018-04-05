@@ -25,7 +25,9 @@
 #define ADC_GAIN 1.0/6.0
 #define BATTERY_VOLTAGE_DIVIDER (4.7 / (4.7 + 10))
 // Do not let the battery go under 1.8V
-#define BATTERY_CHARGE_TRESHOLD         1800
+#define BATTERY_CHARGE_TRESHOLD 1800
+// Even with the pulldown, the voltage is not 0 when the battery is not present.
+#define NO_BATTERY_THRESHOLD 200
 #define SAMPLES_IN_BUFFER 1
 
 static volatile bool calibration_done = false;
@@ -48,7 +50,7 @@ uint16_t battery_get_voltage(){
 }
 
 bool battery_is_present() {
-    return adc_value != 0;
+    return battery_get_voltage() > NO_BATTERY_THRESHOLD;
 }
 
 bool battery_is_undercharge() {
@@ -102,6 +104,7 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event){
 void saadc_init(){
     ret_code_t err_code;
     nrf_saadc_channel_config_t channel_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN0);
+    channel_config.resistor_p = NRF_SAADC_RESISTOR_PULLDOWN;
 
     nrf_drv_saadc_config_t saadc_config;
     saadc_config.resolution = NRF_SAADC_RESOLUTION_8BIT;
