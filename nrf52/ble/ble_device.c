@@ -280,6 +280,8 @@ uint8_t nsec_ble_toggle(void) {
     return _nsec_ble_is_enabled;
 }
 */
+uint8_t nsec_ble_toggle(void) {} // FIXME
+
 void nsec_ble_register_evt_handler(nrf_sdh_ble_evt_handler_t handler) {
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
         if(_nsec_ble_event_handlers[i] == NULL) {
