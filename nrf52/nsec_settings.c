@@ -4,22 +4,22 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#include <nrf.h>
+#include <stdio.h>
 #include "nsec_settings.h"
+#include "nsec_led_settings.h"
 #include "menu.h"
 #include "ssd1306.h"
-#include <nrf.h>
 #include "ble/nsec_ble.h"
 #include "status_bar.h"
 #include "app_glue.h"
 #include "controls.h"
 #include "identity.h"
-#include <stdio.h>
 
 static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
-static void flashlight(uint8_t item);
-static void reset_pet(uint8_t item);
+static void show_led_settings(uint8_t item);
 static void setting_handle_buttons(button_t button);
 
 enum setting_state {
@@ -27,7 +27,6 @@ enum setting_state {
     SETTING_STATE_MENU,
     SETTING_STATE_CREDIT,
     SETTING_STATE_SCREEN_OFF,
-    SETTING_STATE_FLASHLIGHT,
 };
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
@@ -38,14 +37,14 @@ static char sync_key_string[] = "Sync key: XXXX";
 
 static menu_item_s settings_items[] = {
     {
+        .label = "Led settings",
+        .handler = show_led_settings,
+    }, {
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
     }, {
         .label = "Turn screen off",
         .handler = turn_off_screen,
-    }, {
-        .label = "Flashlight",
-        .handler = flashlight,
     }, {
         .label = "Credit",
         .handler = show_credit,
@@ -54,6 +53,12 @@ static menu_item_s settings_items[] = {
         .handler = NULL,
     }
 };
+
+static void show_led_settings(uint8_t item) {
+    menu_close();
+    _state = SETTING_STATE_CLOSED;
+    nsec_show_led_settings();
+}
 
 static void toggle_bluetooth(uint8_t item) {
     if(nsec_ble_toggle()) {
@@ -84,13 +89,6 @@ static void turn_off_screen(uint8_t item) {
     _state = SETTING_STATE_SCREEN_OFF;
 }
 
-static void flashlight(uint8_t item) {
-    menu_close();
-    gfx_fillScreen(SSD1306_WHITE);
-    gfx_update();
-    _state = SETTING_STATE_FLASHLIGHT;
-}
-
 void nsec_setting_show(void) {
     char key[8];
     nsec_identity_get_unlock_key(key, sizeof(key));
@@ -114,8 +112,6 @@ static void setting_handle_buttons(button_t button) {
                 show_main_menu();
                 break;
 
-            case SETTING_STATE_FLASHLIGHT:
-                gfx_fillScreen(SSD1306_BLACK);
             case SETTING_STATE_SCREEN_OFF:
                 nsec_status_bar_ui_redraw();
             case SETTING_STATE_CREDIT:
