@@ -44,6 +44,9 @@
 #define APP_TIMER_CONFIG_OP_QUEUE_SIZE 16
 #define APP_TIMER_CONFIG_IRQ_PRIORITY 2  // highest priority not reserved for SoftDevice.
 
+// BUTTON_ENABLED  - app_button - buttons handling module
+#define BUTTON_ENABLED 1
+
 // Defines added while trying to make the softdevice stuff compile. Maybe some are useless/misconfigured. Clean up later.
 #define NRF_SDH_ENABLED 1
 #define NRF_SDH_BLE_ENABLED 1
