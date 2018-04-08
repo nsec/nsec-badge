@@ -152,9 +152,8 @@ uint8_t getNumSegments_WS2812FX(void);
 
 uint16_t getSpeed_WS2812FX(void);
 uint16_t getLength_WS2812FX(void);
-
-uint32_t color_wheel_WS2812FX(uint8_t);
 uint32_t getColor_WS2812FX(void);
+uint32_t getArrayColor_WS2812FX(uint8_t index);
 
 const char* getModeName_WS2812FX(uint8_t m);
 

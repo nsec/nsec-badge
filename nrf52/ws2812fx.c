@@ -462,6 +462,14 @@ uint32_t getColor_WS2812FX(void) {
   return fx->segments[0].colors[0];
 }
 
+uint32_t getArrayColor_WS2812FX(uint8_t index) {
+  if (index < NUM_COLORS) {
+    return fx->segments[0].colors[index];
+  } else {
+    return getColor_WS2812FX();
+  }
+}
+
 //Todo c'est pas bon sa
 const char* getModeName_WS2812FX(uint8_t m) {
   if(m < MODE_COUNT) {
