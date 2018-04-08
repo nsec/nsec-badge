@@ -49,6 +49,17 @@
 #define FAST_SPEED_INDEX            3
 #define SUPER_FAST_SPEED_INDEX      4
 
+#define RED_INDEX                   0
+#define GREEN_INDEX                 1
+#define BLUE_INDEX                  2
+#define WHITE_INDEX                 3
+#define BLACK_INDEX                 4
+#define YELLOW_INDEX                5
+#define CYAN_INDEX                  6
+#define MAGENTA_INDEX               7
+#define PURPLE_INDEX                8
+#define ORANGE_INDEX                9
+
 #define SUPER_LOW_BRIGHTNESS        20
 #define LOW_BRIGHTNESS              40
 #define MEDIUM_BRIGHTNESS           60
@@ -74,8 +85,10 @@ static enum setting_state _state = SETTING_STATE_CLOSED;
 
 static void show_brightness_menu(uint8_t item);
 static void show_speed_menu(uint8_t item);
+static void show_color_menu(uint8_t item);
 static void save_brightness(uint8_t item);
 static void save_speed(uint8_t item);
+static void save_color(uint8_t item);
 
 static void setting_handle_buttons(button_t button);
 
@@ -134,6 +147,40 @@ static menu_item_s speed_items[] = {
         .label = "Super fast",
         .handler = save_speed,
     }
+};
+
+static menu_item_s color_items[] = {
+    {
+        .label = "Red",
+        .handler = save_color,
+    }, {
+        .label = "Green",
+        .handler = save_color,
+    }, {
+        .label = "Blue",
+        .handler = save_color,
+    }, {
+        .label = "White",
+        .handler = save_color,
+    }, {
+        .label = "Black",
+        .handler = save_color,
+    }, {
+        .label = "Yellow",
+        .handler = save_color,
+    }, {
+        .label = "Cyan",
+        .handler = save_color,
+    }, {
+        .label = "Magenta",
+        .handler = save_color,
+    }, {
+        .label = "Purple",
+        .handler = save_color,
+    }, {
+        .label = "Orange",
+        .handler = save_color,
+    } 
 };
 
 void nsec_show_led_settings(void) {
@@ -251,6 +298,83 @@ static void save_speed(uint8_t item) {
     show_speed_menu(0);
 }
 
+void show_actual_color(void) {
+    uint32_t color = getColor_WS2812FX();
+    char actual[50] = {0};
+    if (color == RED) {
+        snprintf(actual, 50, "Now: %s", "Red");
+    } else  if (color == GREEN) {
+        snprintf(actual, 50, "Now: %s", "Green");
+    } else if (color == BLUE) {
+        snprintf(actual, 50, "Now: %s", "Blue");
+    } else if (color == WHITE) {
+        snprintf(actual, 50, "Now: %s", "White");
+    } else if (color == BLACK) {
+        snprintf(actual, 50, "Now: %s", "Black");
+    } else if (color == YELLOW) {
+        snprintf(actual, 50, "Now: %s", "Yellow");
+    } else if (color == CYAN) {
+        snprintf(actual, 50, "Now: %s", "Cyan");
+    } else if (color == PURPLE) {
+        snprintf(actual, 50, "Now: %s", "Purple");
+    } else {
+        snprintf(actual, 50, "Now: %s", "Orange");
+    }
+
+    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_setCursor(0, 12);
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_puts(actual);
+}
+
+static void show_color_menu(uint8_t item) {
+    menu_close();
+    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    show_actual_color();
+    menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(color_items), color_items);
+    _state = SETTING_STATE_FAVORITE_COLOR;
+}
+
+static void save_color(uint8_t item) {
+    switch(item) {
+        case RED_INDEX:
+            setColor_packed_WS2812FX(RED);
+            break;
+        case GREEN_INDEX:
+            setColor_packed_WS2812FX(GREEN);
+            break;
+        case BLUE_INDEX:
+            setColor_packed_WS2812FX(BLUE);
+            break;
+        case WHITE_INDEX:
+            setColor_packed_WS2812FX(WHITE);
+            break;
+        case BLACK_INDEX:
+            setColor_packed_WS2812FX(BLACK);
+            break;
+        case YELLOW_INDEX:
+            setColor_packed_WS2812FX(YELLOW);
+            break;
+        case CYAN_INDEX:
+            setColor_packed_WS2812FX(CYAN);
+            break;
+        case MAGENTA_INDEX:
+            setColor_packed_WS2812FX(MAGENTA);
+            break;
+        case PURPLE_INDEX:
+            setColor_packed_WS2812FX(PURPLE);
+            break;
+        case ORANGE_INDEX:
+            setColor_packed_WS2812FX(ORANGE);
+            break;
+        default:
+            break;
+    }
+
+    //TODO save into default_led_config whatever
+    show_color_menu(0);
+}
+
 static void setting_handle_buttons(button_t button) {
     if (button == BUTTON_BACK) {
         switch (_state) {
@@ -262,6 +386,7 @@ static void setting_handle_buttons(button_t button) {
 
             case SETTING_STATE_BRIGHTNESS:
             case SETTING_STATE_SPEED:
+            case SETTING_STATE_FAVORITE_COLOR:
                 _state = SETTING_STATE_MENU;
                 menu_close();
                 nsec_show_led_settings();
