@@ -144,7 +144,7 @@ int main(void) {
     init_WS2812FX();
     ssd1306_init();
     gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
-    buttons_init();
+    nsec_buttons_init();
 
     /*
      * Initialize bluetooth stack
