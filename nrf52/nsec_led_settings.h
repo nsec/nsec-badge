@@ -20,4 +20,9 @@
  * SOFTWARE.
  */
 
+#ifndef nsec_led_settings_h
+#define nsec_led_settings_h
+
 void nsec_show_led_settings(void);
+
+#endif
