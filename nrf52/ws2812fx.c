@@ -384,8 +384,22 @@ void decreaseSpeed_WS2812FX(uint8_t s) {
   setSpeed_WS2812FX(newSpeed);
 }
 
+void setArrayColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b, uint8_t index) {
+  if (index < NUM_COLORS) {
+    setArrayColor_packed_WS2812FX(((uint32_t)r << 16) | ((uint32_t)g << 8) | b, index);
+  }
+}
+
 void setColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b) {
   setColor_packed_WS2812FX(((uint32_t)r << 16) | ((uint32_t)g << 8) | b);
+}
+
+void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index) {
+  if (index < NUM_COLORS) {
+    RESET_RUNTIME;
+    fx->segments[0].colors[index] = c;
+    setBrightness_WS2812FX(fx->brightness);
+  }
 }
 
 void setColor_packed_WS2812FX(uint32_t c) {
