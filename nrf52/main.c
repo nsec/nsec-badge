@@ -18,6 +18,7 @@
 #include <nrf_soc.h>
 
 #include "ble/ble_device.h"
+#include "battery.h"
 
 #include "buttons.h"
 #include "logs.h"
@@ -140,6 +141,7 @@ int main(void) {
     log_init();
     power_init();
     softdevice_init();
+    battery_init();
     timer_init();
     init_WS2812FX();
     ssd1306_init();
