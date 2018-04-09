@@ -1,5 +1,7 @@
 /*
- * Copyright 2018 Eric Tremblay <habscup@gmail.com>
+ * Copyright 2015-2017, Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+ *           2016-2017, Marc-Etienne M.Léveillé <marc.etienne.ml@gmail.com>
+ *           2018, Michael Jeanson <mjeanson@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +22,12 @@
  * SOFTWARE.
  */
 
-#ifndef buttons_h
-#define buttons_h
+#ifndef softdevice_h
+#define softdevice_h
 
-#include <app_button.h>
-#include <app_error.h>
-#include <app_timer.h>
+#include <nrf_sdh.h>
 
-void nsec_buttons_init(void);
+void state_evt_handler(nrf_sdh_state_evt_t state, void * p_context);
+void softdevice_init(void);
 
 #endif

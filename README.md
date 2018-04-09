@@ -111,13 +111,13 @@ monitor swdp_scan
 attach 1
 set mem inaccessible-by-default off
 set debug arm
-load buildsfs130_nrf51822_2.0.1_softdevice.eld
-load builds/nsec17_nrf51_conf.elf
+load builds/s132_nrf52_5.0.0_softdevice.hex
+load builds/nsec18_nrf52_conf.elf
 quit
 ```
 
 The stm32 can be flashed in a similar fashion, although you will want to
-`load nsec17_stm32_conf.elf` instead.
+`load builds/nsec18_stm32_debugger.elf` instead.
 
 You can also use the (more expensive) STLink, but we do not have the hardware
 to test instructions for it.
@@ -142,53 +142,37 @@ Use a DFU compliant software to flash the STM32:
 
 To make a `bin` file from an ELF, run the following:
 
-    % arm-none-eabi-objcopy -O binary input.elf output.bin
+    % arm-none-eabi-objcopy -O binary builds/nsec18_stm32_debugger.elf builds/nsec18_stm32_debugger.bin
 
 Run the following command:
 
-    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download nsec17_stm32.bin
+    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec18_stm32_debugger.bin
 
 The STM32 should reset automagically, running the newly downloaded firmware. The
 address of 0x08000000 is important, this is where the stm32 flash is mapped into
 memory.
 
-## Firmware of NorthSec 2017
+## Firmware of NorthSec 2018
 
-There were 9 firmware images built for the NorthSec 2017 event.
+There were 6 firmware images built for the NorthSec 2018 event.
 
-### `nsec17_stm32_conf.elf`
+### `nsec18_stm32_debugger.elf`
 
 The firmware of the stm32 used during the NorthSec conference. It has the
-BlackMagic gdb stub exposed via the USB to reprogram and debug the nrf51 chip.
+BlackMagic gdb stub exposed via the USB to reprogram and debug the nRF52 chip.
 
-### `nsec17_stm32_ctf.elf`
-
-The firmware of the stm32 used during the NorthSec CTF competition. It does
-*not* have the BlackMagic gdb stub. It exposes a serial device with challenges
-for the CTF. Read protection is enable when this firmware is started.
-
-### `nsec17_stm32_crossdebug.elf`
+### `nsec18_stm32_crossdebug.elf`
 
 Same as the stm32 conference firmware, except the debugger uses the external
 pins to allow programming and debugging the stm32 micro-controller of another
 badge.
 
-### `nsec17_nrf51_{conf,admin,speaker,ctf}.elf`
+### `nsec18_nrf52_{conf,admin,speaker,ctf}.elf`
 
-The firmware of the nRF51 used during the NorthSec conference and CTF. It
+The firmware of the nRF52 used during the NorthSec conference and CTF. It
 exposes a BLE service to change you avatar image and name. `admin`, `speaker`
 and `ctf` has a special label in the status bar at the top of the display, all
 the rest is the same.
-
-### `nsec17_nrf51_ctf_namechange.elf`
-
-One badge was running the firmware with the actual flag on the admin table
-during the competition. The flag is shown when the name on it is change via BLE.
-
-### `nsec17_nrf51_ctf_rao.elf`
-
-Rao's badge. The ELF file was distributed during the CTF. One badge was running
-the firmware with the actual flag on the admin table during the competition.
 
 ## Cookbook
 
@@ -200,23 +184,13 @@ Here are the steps to get you started. Lets say you've downloaded the source int
 #### BlackMagic
 
 The blackmagic firmware that runs on the stm32 let you debug and flash firmware
-on the nrf51.
+on the nRF52.
 
 To compile the blackmagic firmware for the stm32:
 
-    % cd stm32
     % git submodule init
     % git submodule update
-    % make -C blackmagic PROBE_HOST=nsec17
-
-#### CTF
-
-The CTF firmware will expose 4 challenges over an USB/ACM device.
-
-To compile the CTF firmware for the stm32:
-
-    % make -C libopencm3 TARGETS=stm32/f0
-    % make -C src FLAVOR=ctf
+    % make builds/nsec18_stm32_debugger.bin
 
 #### Flashing the firmware
 
@@ -231,18 +205,18 @@ Make sure you see a DFU device:
 
 Use [dfu-util](http://dfu-util.sourceforge.net/) to flash the firmware:
 
-    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download nsec17_stm32.bin
+    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec18_stm32_debugger.bin
 
 ### nrf51
 
 To compile the binary for the nrf51:
 
-    % cd nrf51
+    % cd nrf52
     % make
 
 To flash the binary on the nrf51, you'll need to either:
 
-* have the blackmagic firmware (`conf`) flashed onto the stm32
+* have the blackmagic debugger firmware flashed onto the stm32
 * use a BlackMagic device
 
 Use the blackmagic exposed ACM device to flash the firmware using GDB.

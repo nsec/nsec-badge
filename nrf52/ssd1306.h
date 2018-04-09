@@ -22,9 +22,9 @@ All text above, and the splash screen must be included in any redistribution
 #include <stdint.h>
 #include <stdbool.h>
 
-#define BLACK 0
-#define WHITE 1
-#define INVERSE 2
+#define SSD1306_BLACK 0
+#define SSD1306_WHITE 1
+#define SSD1306_INVERSE 2
 
 #define SSD1306_I2C_ADDRESS   0x3C	// 011110+SA0+RW - 0x3C or 0x3D
 // Address for 128x32 is 0x3C

@@ -5,7 +5,7 @@ default: all
 builds:
 	mkdir builds
 
-builds/nsec17_stm32_%: builds
+builds/nsec18_stm32_%: builds
 	$(MAKE) -C stm32 $@
 	cp stm32/$@ $@
 
@@ -13,8 +13,15 @@ builds/nsec18_nrf52_%.elf: builds
 	$(MAKE) -C nrf52 FLAVOR=$*
 	cp nrf52/$(@:%.elf=%.out) $@
 
+builds/s132_nrf52_5.0.0_softdevice.hex:
+	$(MAKE) -C nrf52 nordicsdk
+	cp nrf52/nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex $@
+
 FIRMWARE += builds/nsec18_nrf52_devboard.elf
 FIRMWARE += builds/nsec18_nrf52_proto.elf
+FIRMWARE += builds/nsec18_stm32_debugger.elf
+FIRMWARE += builds/nsec18_stm32_debugger.bin
+FIRMWARE += builds/s132_nrf52_5.0.0_softdevice.hex
 
 all: $(FIRMWARE)
 

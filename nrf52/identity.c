@@ -65,14 +65,14 @@ static char flag[] = "flag{ble_all_the_things}";
 
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length);
 
-void nsec_identitiy_init(void) {
+void nsec_identity_init(void) {
     memset(identity.name, 0, sizeof(identity.name));
 #if defined(NSEC_HARDCODED_BADGE_IDENTITY_NAME)
 #define NSEC_STRINGIFY_(...) #__VA_ARGS__
 #define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
     snprintf(identity.name, sizeof(identity.name), NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
 #else
-    snprintf(identity.name, sizeof(identity.name), "Comrade #%05d", (NRF_FICR->DEVICEID[0] & 0xFFFF));
+    snprintf(identity.name, sizeof(identity.name), "Comrade #%05ld", (NRF_FICR->DEVICEID[0] & 0xFFFF));
 #endif
     memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));
     identity.unlocked = 0;
@@ -115,34 +115,34 @@ void nsec_identitiy_init(void) {
 }
 
 static void nsec_draw_empty_progress_bar(uint16_t x, uint16_t y, uint16_t w) {
-    gfx_drawRect(x, y, w, 3, BLACK);
-    gfx_drawFastHLine(x + 1, y    , w - 2, WHITE);
-    gfx_drawFastHLine(x + 1, y + 2, w - 2, WHITE);
-    gfx_drawFastVLine(x,         y + 1, 1, WHITE);
-    gfx_drawFastVLine(x + w - 1, y + 1, 1, WHITE);
+    gfx_drawRect(x, y, w, 3, SSD1306_BLACK);
+    gfx_drawFastHLine(x + 1, y    , w - 2, SSD1306_WHITE);
+    gfx_drawFastHLine(x + 1, y + 2, w - 2, SSD1306_WHITE);
+    gfx_drawFastVLine(x,         y + 1, 1, SSD1306_WHITE);
+    gfx_drawFastVLine(x + w - 1, y + 1, 1, SSD1306_WHITE);
 }
 
 void nsec_identity_draw(void) {
-    gfx_fillRect(8, 8, 128-16, 64-16, BLACK);
-    gfx_drawBitmapBg(8, 16, identity.avatar, NSEC_IDENTITY_AVATAR_WIDTH, NSEC_IDENTITY_AVATAR_HEIGHT, WHITE, BLACK);
+    gfx_fillRect(8, 8, 128-16, 64-16, SSD1306_BLACK);
+    gfx_drawBitmapBg(8, 16, identity.avatar, NSEC_IDENTITY_AVATAR_WIDTH, NSEC_IDENTITY_AVATAR_HEIGHT, SSD1306_WHITE, SSD1306_BLACK);
     gfx_setCursor(16+16+8, 20);
     char name_with_spaces[sizeof(identity.name)];
     snprintf(name_with_spaces, sizeof(name_with_spaces), "%-14s", identity.name);
     gfx_puts(name_with_spaces);
-    gfx_drawBitmap(59, 32, star_bitmap, star_bitmap_width, star_bitmap_height, WHITE);
+    gfx_drawBitmap(59, 32, star_bitmap, star_bitmap_width, star_bitmap_height, SSD1306_WHITE);
     nsec_draw_empty_progress_bar(70, 38, 30);
-    gfx_drawBitmapBg(111, 47, nsec_logo_tiny_bitmap, nsec_logo_tiny_bitmap_width, nsec_logo_tiny_bitmap_height, WHITE, BLACK);
+    gfx_drawBitmapBg(111, 47, nsec_logo_tiny_bitmap, nsec_logo_tiny_bitmap_width, nsec_logo_tiny_bitmap_height, SSD1306_WHITE, SSD1306_BLACK);
     nsec_identity_update_nearby();
 }
 
 void nsec_identity_update_nearby(void) {
     int16_t bar_width = (28 * nsec_nearby_badges_current_count()) / (NSEC_MAX_NEARBY_BADGES_COUNT);
-    gfx_drawFastHLine(71, 39, 28, BLACK);
-    gfx_drawFastHLine(71, 39, bar_width, WHITE);
+    gfx_drawFastHLine(71, 39, 28, SSD1306_BLACK);
+    gfx_drawFastHLine(71, 39, bar_width, SSD1306_WHITE);
 }
 
 void nsec_identity_get_unlock_key(char * data, size_t length) {
-    snprintf(data, length, "%04X", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
+    snprintf(data, length, "%04lX", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
 }
 
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length) {
