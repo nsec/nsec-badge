@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include <nrf.h>
 #include <nordic_common.h>
@@ -21,8 +22,6 @@
 #include "battery.h"
 
 
-#define ADC_REF_VOLTAGE_IN_MILLIVOLTS 600
-#define ADC_GAIN 1.0/6.0
 #define BATTERY_VOLTAGE_DIVIDER (4.7 / (4.7 + 10))
 // Do not let the battery go under 1.8V
 #define BATTERY_CHARGE_TRESHOLD 1800
@@ -32,7 +31,6 @@
 
 static volatile bool calibration_done = false;
 static volatile uint32_t adc_value = 0;
-volatile uint8_t state = 1;
 static nrf_saadc_value_t conversion_buffer;
 
 static uint16_t adc_in_millivolts(uint32_t adc_value);
@@ -72,10 +70,11 @@ void battery_init() {
 }
 
 static uint16_t adc_in_millivolts(uint32_t adc_value){
-    float adc_gain = 1.0F/6.0F;
-    int adc_resolution_bits = 8;
-    float reference_voltage = 600.0F;
-    uint16_t voltage_in_millivolts = (uint16_t)(adc_value / ((adc_gain / reference_voltage) * 256));
+    const float adc_gain = 1.0F/6.0F;
+    const int adc_resolution_in_bits = 8;
+    const float reference_voltage = 600.0F;
+    uint16_t voltage_in_millivolts = (uint16_t)(adc_value / ((adc_gain / reference_voltage)
+    		* pow(2, adc_resolution_in_bits)));
     return voltage_in_millivolts;
 }
 
