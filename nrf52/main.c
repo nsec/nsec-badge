@@ -36,7 +36,6 @@
 #include "ws2812fx.h"
 
 #include "images/nsec_logo_bitmap.c"
-#include "battery.h"
 
 static char g_device_id[10];
 bool is_at_main_menu = false;
