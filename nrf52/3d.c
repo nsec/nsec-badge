@@ -63,7 +63,7 @@ const nsec_mesh_t nsec_cube = {
     nsec_matrix_t * name = (nsec_matrix_t *) &name##_m; \
     const size_t name##_size __attribute__((unused)) = sizeof(name##_m);
 
-// #define nsec_matrix_value(m, x, y) (m)->values[(x) * (m)->cols + (y)]
+#define NSEC_MATRIX_VALUE(m, row, col) (m)->values[(row) * (m)->cols + (col)]
 
 int nsec_multiply_matrix(nsec_matrix_t * result, nsec_matrix_t * m1, nsec_matrix_t * m2) {
     if(m1 == result || m2 == result) {
@@ -84,9 +84,9 @@ int nsec_multiply_matrix(nsec_matrix_t * result, nsec_matrix_t * m1, nsec_matrix
         for(int j = 0; j < result->cols; j++) {
           float sum = 0.0f;
           for(int x = 0; x < m1->rows; x++) {
-            sum += m1->values[i * m1->cols + x] * m2->values[x * m2->cols + j];
+            sum += NSEC_MATRIX_VALUE(m1, i, x) * NSEC_MATRIX_VALUE(m2, x, j);
           }
-          result->values[i * result->cols + j] = sum;
+          NSEC_MATRIX_VALUE(result, i, j) = sum;
         }
     }
     return 0;
