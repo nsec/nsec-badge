@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "3d.h"
 #include "ssd1306.h"
 
 typedef struct {
@@ -22,7 +23,7 @@ typedef struct {
     unsigned int vertex_index[2];
 } nsec_edge_t;
 
-typedef struct {
+typedef struct nsec_mesh_s {
     int vertex_count;
     int edge_count;
     nsec_vertex_t * vertices;
