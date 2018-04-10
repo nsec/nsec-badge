@@ -61,7 +61,7 @@ const nsec_mesh_t nsec_cube = {
         float values[(rows)*(cols)]; \
     } name##_m = { { (rows), (cols) } }; \
     nsec_matrix_t * name = (nsec_matrix_t *) &name##_m; \
-    const size_t name##_size = sizeof(name##_m);
+    const size_t name##_size __attribute__((unused)) = sizeof(name##_m);
 
 // #define nsec_matrix_value(m, x, y) (m)->values[(x) * (m)->cols + (y)]
 
