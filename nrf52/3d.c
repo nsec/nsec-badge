@@ -29,6 +29,15 @@ typedef struct {
     nsec_edge_t * edges;
 } nsec_mesh_t;
 
+#define NSEC_DECLARE_MESH(name, vertices, edges) \
+    const nsec_mesh_t name##_m = { \
+        sizeof(vertices) / sizeof(nsec_vertex_t), \
+        sizeof(edges) / sizeof(nsec_edge_t), \
+        (vertices), \
+        (edges) \
+    }; \
+    const nsec_mesh_t * name = &name##_m;
+
 static const nsec_vertex_t nsec_cube_vertices[] = {
   {-1, -1, -1},
   {-1, -1,  1},
@@ -46,12 +55,7 @@ static const nsec_edge_t nsec_cube_edges[] = {
     {0, 4}, {1, 5}, {2, 6}, {3, 7}
 };
 
-const nsec_mesh_t nsec_cube = {
-    sizeof(nsec_cube_vertices) / sizeof(nsec_vertex_t),
-    sizeof(nsec_cube_edges) / sizeof(nsec_edge_t),
-    nsec_cube_vertices,
-    nsec_cube_edges
-};
+NSEC_DECLARE_MESH(nsec_cube, nsec_cube_vertices, nsec_cube_edges);
 
 #define NSEC_MAX_VERTEX_ON_MESH (sizeof(nsec_cube_vertices) / sizeof(nsec_vertex_t))
 
