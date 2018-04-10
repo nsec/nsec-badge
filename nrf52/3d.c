@@ -96,7 +96,6 @@ void nsec_vertex_rotate(nsec_vertex_t * result, nsec_vertex_t * src, float angle
     NSEC_DECLARE_MATRIX(point, 3, 1);
     memcpy(point->values, src->position, sizeof(src->position));
     NSEC_DECLARE_MATRIX(result_matrix, 3, 1);
-    NSEC_DECLARE_MATRIX(state, 3, 3);
     NSEC_DECLARE_MATRIX(rotation, 3, 3);
     memcpy(rotation->values, (float[9]) {
         1, 0,               0,
