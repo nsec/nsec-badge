@@ -57,6 +57,21 @@ static const nsec_edge_t nsec_cube_edges[] = {
 
 NSEC_DECLARE_MESH(nsec_cube, nsec_cube_vertices, nsec_cube_edges);
 
+static const nsec_vertex_t nsec_tetra_vertices[] = {
+    { 0,  1,  0},
+    {-1, -1, -1},
+    { 1, -1, -1},
+    { 1, -1,  1},
+    {-1, -1,  1},
+};
+
+static const nsec_edge_t nsec_tetra_edges[] = {
+    {0,1}, {0,2}, {0,3}, {0,4},
+    {1,2}, {2,3}, {3,4}, {4,1}
+};
+
+NSEC_DECLARE_MESH(nsec_tetra, nsec_tetra_vertices, nsec_tetra_edges);
+
 #define NSEC_MAX_VERTEX_ON_MESH (sizeof(nsec_cube_vertices) / sizeof(nsec_vertex_t))
 
 #define NSEC_DECLARE_MATRIX(name, rows, cols) \
