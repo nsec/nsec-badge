@@ -1,0 +1,13 @@
+--- nordicsdk/libraries/fstorage/nrf_fstorage_sd.c	2018-03-31 17:46:11.928829666 -0400
++++ nordicsdk/libraries/fstorage/nrf_fstorage_sd.c	2018-03-31 17:46:16.896829471 -0400
+@@ -372,9 +372,9 @@
+ {
+     UNUSED_PARAMETER(p_param);
+ 
++    p_fs->p_flash_info = &m_flash_info;
+     if (!nrf_atomic_flag_set_fetch(&m_flags.initialized))
+     {
+-        p_fs->p_flash_info = &m_flash_info;
+ 
+ #if NRF_SDH_ENABLED
+         m_flags.sd_enabled = nrf_sdh_is_enabled();

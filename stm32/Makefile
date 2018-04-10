@@ -24,4 +24,4 @@ all: builds/nsec18_stm32_debugger.elf \
 clean:
 	$(MAKE) -C libopencm3 clean
 	$(MAKE) -C blackmagic clean PROBE_HOST=nsec18
-	rm -R builds
+	rm -rf builds

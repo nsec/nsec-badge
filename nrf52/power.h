@@ -20,13 +20,11 @@
  * SOFTWARE.
  */
 
-#ifndef buttons_h
-#define buttons_h
+#ifndef power_h
+#define power_h
 
-#include <app_button.h>
-#include <app_error.h>
-#include <app_timer.h>
+#include <nrf_drv_power.h>
 
-void nsec_buttons_init(void);
+void power_init(void);
 
 #endif

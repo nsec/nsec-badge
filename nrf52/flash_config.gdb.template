@@ -11,3 +11,6 @@ set $LOAD_SOFTDEVICE = 0
 
 # Quit gdb after flashing is done.
 set $QUIT_AFTER_FLASH = 0
+
+# Use an external blackmagic debugger
+set $USE_EXTERNAL_DEBUGGER = 0
