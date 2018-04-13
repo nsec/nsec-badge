@@ -1,7 +1,11 @@
 source flash_config.gdb
 
 set gnutarget elf32-littlearm
-monitor tpwr enable
+if $USE_EXTERNAL_DEBUGGER
+  monitor tpwr enable
+else
+  set tdesc filename gdb-tdesc-cortex-m4f.xml
+end
 monitor swdp_scan
 attach 1
 set mem inaccessible-by-default off

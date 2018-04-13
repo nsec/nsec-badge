@@ -18,9 +18,14 @@
 #define NEOPIXEL_COUNT	8
 #define LED_PIN			26
 
-int nsec_neopixel_init(void);
-void nsec_neoPixel_clean(void);
-void nsec_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b);
-void nsec_neopixel_show(void);
+void nsec_neoPixel_init(void);
+void nsec_neoPixel_clear(void);
+void nsec_neoPixel_set_pixel_color(uint16_t n, uint8_t r, uint8_t g, uint8_t b);
+void nsec_neoPixel_set_pixel_color_packed(uint16_t n, uint32_t c);
+uint32_t nsec_neoPixel_get_pixel_color(uint16_t n);
+void nsec_neoPixel_show(void);
+uint8_t nsec_neoPixel_get_brightness(void);
+void nsec_neoPixel_set_brightness(uint8_t b);
+
 
 #endif /* neoPixel_h */

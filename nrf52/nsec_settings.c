@@ -67,9 +67,9 @@ static void toggle_bluetooth(uint8_t item) {
 static void show_credit(uint8_t item) {
     _state = SETTING_STATE_CREDIT;
     menu_close();
-    gfx_fillRect(0, 8, 128, 56, BLACK);
+    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
     gfx_setCursor(0, 8);
-    gfx_setTextBackgroundColor(WHITE, BLACK);
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts("nsec 2017 badge team:");
     gfx_puts("Eric Tremblay\n");
     gfx_puts("@bvanheu\n");
@@ -79,14 +79,14 @@ static void show_credit(uint8_t item) {
 
 static void turn_off_screen(uint8_t item) {
     menu_close();
-    gfx_fillScreen(BLACK);
+    gfx_fillScreen(SSD1306_BLACK);
     gfx_update();
     _state = SETTING_STATE_SCREEN_OFF;
 }
 
 static void flashlight(uint8_t item) {
     menu_close();
-    gfx_fillScreen(WHITE);
+    gfx_fillScreen(SSD1306_WHITE);
     gfx_update();
     _state = SETTING_STATE_FLASHLIGHT;
 }
@@ -99,7 +99,7 @@ void nsec_setting_show(void) {
 #else
     snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
 #endif
-    gfx_fillRect(0, 8, 128, 65 - 8, BLACK);
+    gfx_fillRect(0, 8, 128, 65 - 8, SSD1306_BLACK);
     menu_init(0, 12, 128, 64 - 12, sizeof(settings_items) / sizeof(settings_items[0]), settings_items);
     nsec_controls_add_handler(setting_handle_buttons);
     _state = SETTING_STATE_MENU;
@@ -115,7 +115,7 @@ static void setting_handle_buttons(button_t button) {
                 break;
 
             case SETTING_STATE_FLASHLIGHT:
-                gfx_fillScreen(BLACK);
+                gfx_fillScreen(SSD1306_BLACK);
             case SETTING_STATE_SCREEN_OFF:
                 nsec_status_bar_ui_redraw();
             case SETTING_STATE_CREDIT:

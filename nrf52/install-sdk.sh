@@ -39,6 +39,9 @@ echo "GNU_PREFIX ?= ${GNU_PREFIX}
 GNU_INSTALL_ROOT ?= \$(shell dirname \$(shell which \$(GNU_PREFIX)-gcc))/
 GNU_VERSION ?= \$(shell \"\$(GNU_INSTALL_ROOT)\$(GNU_PREFIX)-gcc\" -dumpversion)" > "${SDK_DIR}/toolchain/gcc/Makefile.posix"
 
+# Patch
+patch -p0 --binary < fix_fstorage_init.patch
+
 # Cleanup
 rmdir "${SDK_VER}/documentation"
 rmdir "${SDK_VER}"

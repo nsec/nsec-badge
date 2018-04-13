@@ -44,6 +44,8 @@ SRC_FILES += ble/gap_configuration.c
 SRC_FILES += ble/ble_vendor_service.c
 SRC_FILES += ble/vendor_service.c
 #SRC_FILES += $(wildcard ble/*.c)
+SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
+SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_lbs/ble_lbs.c
 SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
@@ -55,7 +57,9 @@ SRC_FILES += $(wildcard $(SDK_PATH)/ble/peer_manager/*.c)
 SRC_FILES += $(SDK_PATH)/drivers_nrf/clock/nrf_drv_clock.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/common/nrf_drv_common.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/hal/nrf_saadc.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/power/nrf_drv_power.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/saadc/nrf_drv_saadc.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/nrf_drv_spi.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_slave/nrf_drv_spis.c
 SRC_FILES += $(SDK_PATH)/external/fprintf/nrf_fprintf.c
@@ -108,6 +112,7 @@ INC_FOLDERS += $(SDK_PATH)/drivers_nrf/delay
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/gpiote
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/hal
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/power
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/saadc
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/spi_master
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/spi_slave
 INC_FOLDERS += $(SDK_PATH)/libraries/atomic
@@ -140,6 +145,7 @@ INC_FOLDERS += $(SDK_PATH)/external/segger_rtt
 
 # Libraries common to all targets
 LIB_FILES += \
+	$(SDK_PATH)/toolchain/cmsis/dsp/GCC/libarm_cortexM4lf_math.a \
 
 DEVICE = NRF52
 CFLAGS   += -DNRF52 -DNRF52832_XXAA
@@ -157,7 +163,7 @@ TEMPLATE_PATH = $(SDK_PATH)/toolchain/gcc/
 OPTIMIZATIONS = -DDEBUG -g3 -Os
 
 # Enable link time optimization
-OPTIMIZATIONS += -flto
+#OPTIMIZATIONS += -flto (mjeanson: Breaks the app timer for me)
 
 
 # Architecture and ABI flags
@@ -175,6 +181,8 @@ CFLAGS += -fno-builtin -fshort-enums
 CFLAGS += -fno-omit-frame-pointer
 CFLAGS += -DFLOAT_ABI_HARD
 CFLAGS += -D__HEAP_SIZE=0
+# Needed to use arm_math
+CFLAGS += -DARM_MATH_CM4
 
 
 # Assembler flags common to all targets
@@ -197,7 +205,7 @@ LDFLAGS += --specs=nano.specs
 
 # Add standard libraries at the very end of the linker input, after all objects
 # that may need symbols provided by these libraries.
-LIB_FILES += -lc -lnosys
+LIB_FILES += -lc -lnosys -lm
 
 TERMINAL = dup
 

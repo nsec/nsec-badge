@@ -20,13 +20,22 @@
  * SOFTWARE.
  */
 
-#ifndef buttons_h
-#define buttons_h
-
-#include <app_button.h>
 #include <app_error.h>
-#include <app_timer.h>
 
-void nsec_buttons_init(void);
+#include "power.h"
 
-#endif
+/*
+ * Initialize power module driver.
+ *
+ * The power driver has to be enabled before the SoftDevice.
+ */
+void power_init(void) {
+    ret_code_t err_code;
+
+    /*
+     * Passing NULL as config will use the value of
+     * POWER_CONFIG_DEFAULT_DCDCEN from sdk_config.h
+     */
+    err_code = nrf_drv_power_init(NULL);
+    APP_ERROR_CHECK(err_code);
+}

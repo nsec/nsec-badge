@@ -44,6 +44,9 @@
 #define APP_TIMER_CONFIG_OP_QUEUE_SIZE 16
 #define APP_TIMER_CONFIG_IRQ_PRIORITY 2  // highest priority not reserved for SoftDevice.
 
+// BUTTON_ENABLED  - app_button - buttons handling module
+#define BUTTON_ENABLED 1
+
 // Defines added while trying to make the softdevice stuff compile. Maybe some are useless/misconfigured. Clean up later.
 #define NRF_SDH_ENABLED 1
 #define NRF_SDH_BLE_ENABLED 1
@@ -97,6 +100,7 @@
 #define NRF_LOG_ERROR_COLOR 2
 #define NRF_LOG_WARNING_COLOR 4
 
+#define SAADC_ENABLED 1
 
 #define BLE_ADVERTISING_ENABLED 0 //could be useful in the future.
 
@@ -177,11 +181,6 @@
 #define CLOCK_CONFIG_IRQ_PRIORITY 7
 #endif
 
-// <e> SAADC_ENABLED - nrf_drv_saadc - SAADC peripheral driver
-//==========================================================
-#ifndef SAADC_ENABLED
-#define SAADC_ENABLED 0
-#endif
 // <o> SAADC_CONFIG_RESOLUTION  - Resolution
 
 // <0=> 8 bit
@@ -190,7 +189,7 @@
 // <3=> 14 bit
 
 #ifndef SAADC_CONFIG_RESOLUTION
-#define SAADC_CONFIG_RESOLUTION 1
+#define SAADC_CONFIG_RESOLUTION 0
 #endif
 
 // <o> SAADC_CONFIG_OVERSAMPLE  - Sample period

@@ -3,11 +3,12 @@
 //  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
 //  License: MIT (see LICENSE for details)
-/*
+
 #include "boards.h"
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 
 #include <nrf.h>
 #include <nordic_common.h>
@@ -15,114 +16,105 @@
 #include <nrf_delay.h>
 #include <nrf_nvic.h>
 #include <app_util_platform.h>
-#include <softdevice_handler.h>
+#include <nrf_drv_saadc.h>
+#include "logs.h"
 
 #include "battery.h"
 
-// Reference voltage is 1.2V
-#define ADC_REF_VOLTAGE_IN_MILLIVOLTS   1200
-// Pre-scaling compensation: none (voltage divider hardware)
-#define ADC_PRE_SCALING_COMPENSATION    1.0
-// Physical voltage divider
-#define BATTERY_VOLTAGE_DIVIDER         ((10e6+6.8e6)/6.8e6)
+
+#define BATTERY_VOLTAGE_DIVIDER (4.7 / (4.7 + 10))
 // Do not let the battery go under 1.8V
-#define BATTERY_CHARGE_TRESHOLD         1800
+#define BATTERY_CHARGE_TRESHOLD 1800
+// Even with the pulldown, the voltage is not 0 when the battery is not present.
+#define NO_BATTERY_THRESHOLD 200
+#define SAMPLES_IN_BUFFER 1
 
-#define ADC_RESULT_IN_MILLIVOLTS(ADC_VALUE)\
-( \
-    ((ADC_VALUE / 255) \
-        * ADC_REF_VOLTAGE_IN_MILLIVOLTS) \
-        * ADC_PRE_SCALING_COMPENSATION BATTERY_VOLTAGE_DIVIDER \
-)
+static volatile bool calibration_done = false;
+static volatile uint32_t adc_value = 0;
+static nrf_saadc_value_t conversion_buffer;
 
-static volatile uint16_t m_batt_lvl_in_millivolts = 0;
-static volatile bool m_batt_is_connected = false;
+static uint16_t adc_in_millivolts(uint32_t adc_value);
+static void saadc_callback(nrf_drv_saadc_evt_t const * p_event);
+static void saadc_init();
 
-void ADC_IRQHandler(void) {
-    if (NRF_ADC->EVENTS_END) {
-        uint8_t adc_result;
-
-        NRF_ADC->EVENTS_END = 0;
-        adc_result = NRF_ADC->RESULT;
-        NRF_ADC->TASKS_STOP = 1;
-
-        // A capacitor is missing on the PCB which makes the ADC not
-        // really usable. We can't use ADC_RESULT_IN_MILLIVOLTS() here.
-        m_batt_lvl_in_millivolts = adc_result;
-    }
-}
 
 void battery_refresh(void) {
-    NRF_ADC->TASKS_START = 1;
+	log_error_code("nrf_drv_saadc_sample", nrf_drv_saadc_sample());
 }
 
-void battery_connect(void) {
-    if (!m_batt_is_connected) {
-        // Start the PSU by forcing a HIGH to the enable pin
-        nrf_gpio_cfg_input(PSU_ENABLE, NRF_GPIO_PIN_PULLUP);
-        m_batt_is_connected = true;
-    }
-}
-
-void battery_disconnect(void) {
-    if (m_batt_is_connected) {
-        // Set the pin to HIGHZ, the physical pull down will disable the PSU. Once
-        // reconnecting the USB cable, the USB voltage will take care of starting
-        // the PSU
-        nrf_gpio_cfg_input(PSU_ENABLE, NRF_GPIO_PIN_NOPULL);
-        m_batt_is_connected = false;
-    }
-}
-
-uint16_t battery_get_voltage() {
-    return m_batt_lvl_in_millivolts;
+uint16_t battery_get_voltage(){
+	uint16_t voltage_at_adc = adc_in_millivolts(adc_value);
+	return voltage_at_adc / BATTERY_VOLTAGE_DIVIDER;
 }
 
 bool battery_is_present() {
-    return (m_batt_lvl_in_millivolts != 0);
+    return battery_get_voltage() > NO_BATTERY_THRESHOLD;
 }
 
 bool battery_is_undercharge() {
-    return (m_batt_lvl_in_millivolts < BATTERY_CHARGE_TRESHOLD);
+    return battery_get_voltage() < BATTERY_CHARGE_TRESHOLD;
 }
 
 bool battery_is_charging() {
-    nrf_gpio_cfg_input(BATT_CHARGE, NRF_GPIO_PIN_NOPULL);
-    return nrf_gpio_pin_read(BATT_CHARGE) != 0;
+    return nrf_gpio_pin_read(BATT_CHARGE) == 0;
+}
+
+bool battery_is_power_good() {
+	return nrf_gpio_pin_read(BATT_PGOOD) == 0;
 }
 
 void battery_init() {
-    uint32_t err_code;
+	nrf_gpio_cfg_input(BATT_CHARGE, NRF_GPIO_PIN_PULLUP);
+	nrf_gpio_cfg_input(BATT_PGOOD, NRF_GPIO_PIN_PULLUP);
+    saadc_init();
+}
 
-    // Interrupt on END event
-    NRF_ADC->INTENSET = ADC_INTENSET_END_Msk;
+static uint16_t adc_in_millivolts(uint32_t adc_value){
+    const float adc_gain = 1.0F/6.0F;
+    const int adc_resolution_in_bits = 8;
+    const float reference_voltage = 600.0F;
+    uint16_t voltage_in_millivolts = (uint16_t)(adc_value / ((adc_gain / reference_voltage)
+    		* pow(2, adc_resolution_in_bits)));
+    return voltage_in_millivolts;
+}
 
-    // 8 bit resolution
-    NRF_ADC->CONFIG = (ADC_CONFIG_RES_8bit << ADC_CONFIG_RES_Pos)
-        // No prescaling (done in hardware)
-        | (ADC_CONFIG_INPSEL_AnalogInputNoPrescaling << ADC_CONFIG_INPSEL_Pos)
-        // Pin where the battery voltage is
-        | (ADC_CONFIG_PSEL_AnalogInput3 << ADC_CONFIG_PSEL_Pos)
-        // Use internal 1.2V reference voltage for conversion
-        | (ADC_CONFIG_REFSEL_VBG << ADC_CONFIG_REFSEL_Pos)
-        // No external reference
-        | (ADC_CONFIG_EXTREFSEL_None << ADC_CONFIG_EXTREFSEL_Pos);
+static void calibrate_saadc(){
+	if(nrf_drv_saadc_calibrate_offset() == NRF_SUCCESS)
+		while(!calibration_done);
+	else
+		NRF_LOG_ERROR("SAADC is busy, cannot calibrate.");
+}
 
-    NRF_ADC->EVENTS_END = 0;
-    NRF_ADC->ENABLE = ADC_ENABLE_ENABLE_Enabled << ADC_ENABLE_ENABLE_Pos;
+static uint32_t register_buffer_for_next_conversion(){
+	uint32_t error_code = nrf_drv_saadc_buffer_convert(&conversion_buffer, SAMPLES_IN_BUFFER);
+	return error_code;
+}
 
-    nrf_delay_us(1000);
+void saadc_callback(nrf_drv_saadc_evt_t const * p_event){
+	if(p_event->type == NRF_DRV_SAADC_EVT_DONE){
+		adc_value = p_event->data.done.p_buffer[0];
+		register_buffer_for_next_conversion();
+	}
+	else if(p_event->type == NRF_DRV_SAADC_EVT_CALIBRATEDONE){
+		calibration_done = true;
+	}
+}
 
-    NRF_ADC->EVENTS_END = 0;
-    NRF_ADC->TASKS_START = 1;
+void saadc_init(){
+    ret_code_t err_code;
+    nrf_saadc_channel_config_t channel_config = NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN0);
+    channel_config.resistor_p = NRF_SAADC_RESISTOR_PULLDOWN;
 
-    // Enable the ADC interrupt
-    err_code = sd_nvic_ClearPendingIRQ(ADC_IRQn);
-    APP_ERROR_CHECK(err_code);
+    nrf_drv_saadc_config_t saadc_config;
+    saadc_config.resolution = NRF_SAADC_RESOLUTION_8BIT;
+    saadc_config.low_power_mode = false;
+    saadc_config.oversample = NRF_SAADC_OVERSAMPLE_DISABLED;
+    err_code = nrf_drv_saadc_init(&saadc_config, saadc_callback);
+    log_error_code("nrf_drv_saadc_init", err_code);
 
-    err_code = sd_nvic_SetPriority(ADC_IRQn, APP_IRQ_PRIORITY_LOW);
-    APP_ERROR_CHECK(err_code);
+    err_code = nrf_drv_saadc_channel_init(0, &channel_config);
+    log_error_code("nrf_drv_saadc_channel_init", err_code);
 
-    err_code = sd_nvic_EnableIRQ(ADC_IRQn);
-    APP_ERROR_CHECK(err_code);
-}*/
+    calibrate_saadc();
+    register_buffer_for_next_conversion();
+}

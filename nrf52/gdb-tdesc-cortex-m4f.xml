@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE target SYSTEM "gdb-target.dtd">
+<target>
+  <architecture>arm</architecture>
+  <feature name="org.gnu.gdb.arm.m-profile">
+    <reg name="r0" bitsize="32"/>
+    <reg name="r1" bitsize="32"/>
+    <reg name="r2" bitsize="32"/>
+    <reg name="r3" bitsize="32"/>
+    <reg name="r4" bitsize="32"/>
+    <reg name="r5" bitsize="32"/>
+    <reg name="r6" bitsize="32"/>
+    <reg name="r7" bitsize="32"/>
+    <reg name="r8" bitsize="32"/>
+    <reg name="r9" bitsize="32"/>
+    <reg name="r10" bitsize="32"/>
+    <reg name="r11" bitsize="32"/>
+    <reg name="r12" bitsize="32"/>
+    <reg name="sp" bitsize="32" type="data_ptr"/>
+    <reg name="lr" bitsize="32" type="code_ptr"/>
+    <reg name="pc" bitsize="32" type="code_ptr"/>
+    <reg name="xpsr" bitsize="32"/>
+    <reg name="msp" bitsize="32" save-restore="no" type="data_ptr"/>
+    <reg name="psp" bitsize="32" save-restore="no" type="data_ptr"/>
+    <reg name="special" bitsize="32" save-restore="no"/>
+  </feature>
+  <feature name="org.gnu.gdb.arm.vfp">
+    <reg name="fpscr" bitsize="32"/>
+    <reg name="d0" bitsize="64" type="float"/>
+    <reg name="d1" bitsize="64" type="float"/>
+    <reg name="d2" bitsize="64" type="float"/>
+    <reg name="d3" bitsize="64" type="float"/>
+    <reg name="d4" bitsize="64" type="float"/>
+    <reg name="d5" bitsize="64" type="float"/>
+    <reg name="d6" bitsize="64" type="float"/>
+    <reg name="d7" bitsize="64" type="float"/>
+    <reg name="d8" bitsize="64" type="float"/>
+    <reg name="d9" bitsize="64" type="float"/>
+    <reg name="d10" bitsize="64" type="float"/>
+    <reg name="d11" bitsize="64" type="float"/>
+    <reg name="d12" bitsize="64" type="float"/>
+    <reg name="d13" bitsize="64" type="float"/>
+    <reg name="d14" bitsize="64" type="float"/>
+    <reg name="d15" bitsize="64" type="float"/>
+  </feature>
+</target>
