@@ -32,4 +32,6 @@ void update_stored_mode(uint8_t mode);
 void update_stored_speed(uint16_t speed);
 void update_stored_color(uint32_t color, uint8_t index);
 
+bool nsec_unlock_led_pattern(uint32_t password);
+
 #endif

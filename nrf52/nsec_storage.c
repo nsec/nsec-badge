@@ -34,12 +34,14 @@
 #include "nrf_fstorage_sd.h"
 
 #include "nsec_storage.h"
+#include "led_code_storage.h"
 #include "ws2812fx.h"
 #include "nsec_led_settings.h"
 #include "power.h"
 
 #define PAGE_START_MAGIC    0xDEADC0DE
 
+/* Led settings */
 typedef struct led_settings_t {
 	uint8_t mode;
 	uint16_t speed;
@@ -52,22 +54,32 @@ Led_settings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS
 Led_settings actual_settings;
 bool need_led_settings_update = false;
 
-bool isInit = false;
-
 NRF_FSTORAGE_DEF(nrf_fstorage_t fs_led_settings) =
 {
-    /* Set a handler for fstorage events. */
     .evt_handler = NULL,
-
-    /* These below are the boundaries of the flash space assigned to this instance of fstorage.
-     * You must set these manually, even at runtime, before nrf_fstorage_init() is called.
-     * The function nrf5_flash_end_addr_get() can be used to retrieve the last address on the
-     * last page of flash available to write data. */
     .start_addr = 0x68000,
     .end_addr   = 0x68FFF,
 };
 
-void wait_for_flash_ready(nrf_fstorage_t const * p_fstorage)
+/* password */
+uint32_t stored_password;
+
+uint32_t pw[] = {SPONSOR_0_PW, SPONSOR_1_PW, SPONSOR_2_PW, SPONSOR_3_PW, SPONSOR_4_PW,
+                SPONSOR_5_PW, SPONSOR_6_PW, SPONSOR_7_PW, SPONSOR_8_PW, SPONSOR_9_PW,
+                SPONSOR_10_PW, SPONSOR_11_PW, SPONSOR_12_PW, SPONSOR_13_PW, SPONSOR_14_PW,
+                SPONSOR_15_PW};
+
+NRF_FSTORAGE_DEF(nrf_fstorage_t fs_password) =
+{
+    .evt_handler = NULL,
+    .start_addr = 0x69000,
+    .end_addr   = 0x69FFF,
+};
+bool need_password_update = false;
+
+bool isInit = false;
+
+static void wait_for_flash_ready(nrf_fstorage_t const * p_fstorage)
 {
     /* While fstorage is busy*/
     while (nrf_fstorage_is_busy(p_fstorage)) {
@@ -89,8 +101,20 @@ void nsec_storage_update() {
         wait_for_flash_ready(&fs_led_settings);
         need_led_settings_update = false;
     }
+
+    if (need_password_update) {
+        rc = nrf_fstorage_erase(&fs_password, fs_password.start_addr, 1, NULL);
+        APP_ERROR_CHECK(rc);
+        wait_for_flash_ready(&fs_password);
+
+        rc = nrf_fstorage_write(&fs_password, fs_password.start_addr, &stored_password, 4, NULL);
+        APP_ERROR_CHECK(rc);
+        wait_for_flash_ready(&fs_password);
+        need_password_update = false;
+    }
 }
 
+/* Led Settings interface */
 void update_stored_brightness(uint8_t brightness) {
 	actual_settings.brightness = brightness;
     need_led_settings_update = true;
@@ -125,12 +149,62 @@ void load_stored_led_settings(void) {
 	setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
 }
 
-void nsec_storage_init() {
-    ret_code_t rc;
+/* code interface */
 
-    if (isInit) {
-    	return;
+static void unlock_all_pattern() {
+    if (stored_password != 0xFFFFFFFF) {
+        stored_password = 0xFFFFFFFF;
+        need_password_update = true;
     }
+}
+
+static void unlock_pattern(uint32_t sponsor_index) {
+    if (sponsor_index < 31) {
+        SET_BIT(stored_password, sponsor_index);
+        need_password_update = true;
+    }
+}
+
+uint32_t nsec_get_pattern_pw(uint32_t sponsor_index) {
+    if (sponsor_index < SPONSOR_PW_SIZE) {
+        return pw[sponsor_index];
+    }
+    return 0;
+}
+
+bool pattern_is_unlock(uint32_t sponsor_index) {
+    return IS_SET(stored_password, sponsor_index);
+}
+
+// true valid, false invalid
+bool nsec_unlock_led_pattern(uint32_t password) {
+    if (password == MASTER_PW) {
+        unlock_all_pattern();
+        return true;
+    }
+    for (int i = 0; i < SPONSOR_PW_SIZE; i++) {
+        if (password == pw[i]) {
+            if (!pattern_is_unlock(i)) {
+                unlock_pattern(i);
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool is_new_memory_page(nrf_fstorage_t const * p_fstorage) {
+    ret_code_t rc;
+    uint32_t new_dev_memory;
+    rc = nrf_fstorage_read(&fs_led_settings, fs_led_settings.start_addr, &new_dev_memory, 4);
+    APP_ERROR_CHECK(rc);
+    wait_for_flash_ready(&fs_led_settings);
+
+    return (new_dev_memory == PAGE_START_MAGIC) ? true : false;
+} 
+
+static void led_settings_storage_init(void) {
+    ret_code_t rc;
 
     nrf_fstorage_api_t *p_fs_api;
     p_fs_api = &nrf_fstorage_sd;
@@ -138,25 +212,51 @@ void nsec_storage_init() {
     rc = nrf_fstorage_init(&fs_led_settings, p_fs_api, NULL);
     APP_ERROR_CHECK(rc);
     
-    /* New device check */
-    uint32_t new_dev_memory;
-    rc = nrf_fstorage_read(&fs_led_settings, fs_led_settings.start_addr, &new_dev_memory, 4);
-    APP_ERROR_CHECK(rc);
-    wait_for_flash_ready(&fs_led_settings);
-
-    if (new_dev_memory == PAGE_START_MAGIC) {
+    if (is_new_memory_page(&fs_led_settings)) {
         //Store the default settings
         rc = nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr, &default_settings, 
-        						sizeof(actual_settings), NULL);
+                                sizeof(actual_settings), NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_led_settings);
     }
 
     //Load actual settings
     rc = nrf_fstorage_read(&fs_led_settings, fs_led_settings.start_addr, &actual_settings,
-    						sizeof(actual_settings));
+                            sizeof(actual_settings));
     APP_ERROR_CHECK(rc);
     wait_for_flash_ready(&fs_led_settings);
+}
+
+static void password_storage_init(void) {
+    ret_code_t rc;
+
+    nrf_fstorage_api_t *p_fs_api;
+    p_fs_api = &nrf_fstorage_sd;
+
+    rc = nrf_fstorage_init(&fs_password, p_fs_api, NULL);
+    APP_ERROR_CHECK(rc);
+    
+    if (is_new_memory_page(&fs_password)) {
+        //Store the default settings
+        rc = nrf_fstorage_write(&fs_password, fs_password.start_addr, &stored_password, 4, NULL);
+        APP_ERROR_CHECK(rc);
+        wait_for_flash_ready(&fs_led_settings);
+    }
+
+    //Load actual settings
+    rc = nrf_fstorage_read(&fs_password, fs_password.start_addr, &stored_password, 4);
+    APP_ERROR_CHECK(rc);
+    wait_for_flash_ready(&fs_led_settings);
+}
+
+void nsec_storage_init(void) {
+   
+    if (isInit) {
+    	return;
+    }
+
+    led_settings_storage_init();
+    password_storage_init();
 
     isInit = true;
 }
