@@ -149,6 +149,12 @@ void load_stored_led_settings(void) {
 	setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
 }
 
+void load_stored_led_default_settings(void) {
+     memcpy(&actual_settings, &default_settings, sizeof(Led_settings));
+     need_led_settings_update = true;
+     load_stored_led_settings();
+}
+
 /* code interface */
 
 static void unlock_all_pattern() {

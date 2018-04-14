@@ -175,8 +175,8 @@ int main(void) {
      */
     while(true) {
         service_WS2812FX();
-        nrf_delay_ms(5);
         nsec_storage_update();
+        power_manage();
     }
 
     return 0;

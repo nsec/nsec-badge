@@ -81,6 +81,7 @@ static void save_brightness(uint8_t item);
 static void save_speed(uint8_t item);
 static void save_color(uint8_t item);
 static void save_pattern(uint8_t item);
+static void set_led_default(uint8_t item);
 
 static void setting_handle_buttons(button_t button);
 
@@ -105,7 +106,7 @@ static menu_item_s settings_items[] = {
         .handler = show_led_pattern_menu,
     }, {
         .label = "Factory default",
-        .handler = NULL,
+        .handler = set_led_default,
     }
 };
 
@@ -429,6 +430,10 @@ static void show_led_pattern_menu(uint8_t item) {
     show_actual_pattern();
     menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(pattern_items), pattern_items);
     _state = SETTING_STATE_PATTERN;
+}
+
+static void set_led_default(uint8_t item) {
+    load_stored_led_default_settings();
 }
 
 static void setting_handle_buttons(button_t button) {
