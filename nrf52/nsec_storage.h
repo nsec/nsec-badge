@@ -20,21 +20,16 @@
  * SOFTWARE.
  */
 
-#ifndef nsec_led_settings_h
-#define nsec_led_settings_h
+#ifndef _NSEC_STORAGE_H
+#define _NSEC_STORAGE_H
 
-#define SUPER_LOW_BRIGHTNESS        20
-#define LOW_BRIGHTNESS              40
-#define MEDIUM_BRIGHTNESS           60
-#define HIGH_BRIGHTNESS             80
-#define MAX_BRIGHTNESS              100
+void nsec_storage_init(void);
+void nsec_storage_update(void);
 
-#define SUPER_SLOW_SPEED            5000
-#define SLOW_SPEED                  1000
-#define MEDIUM_SPEED                500
-#define FAST_SPEED                  100
-#define SUPER_FAST_SPEED            10
-
-void nsec_show_led_settings(void);
+void load_stored_led_settings(void);
+void update_stored_brightness(uint8_t brightness);
+void update_stored_mode(uint8_t mode);
+void update_stored_speed(uint16_t speed);
+void update_stored_color(uint32_t color, uint8_t index);
 
 #endif
