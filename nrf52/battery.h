@@ -10,29 +10,21 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// Let the device use the battery to power itself
-void battery_connect();
 
-// Disconnect the battery
-void battery_disconnect();
+void battery_init();
 
 // Get the current battery voltage (mV)
 // Require a battery_refresh();
 uint16_t battery_get_voltage();
 
-// Initialize the battery module
-void battery_init();
-
-// Check if the battery is undercharge
-bool battery_is_undercharge();
-
-// Refresh the battery voltage
 void battery_refresh();
+
+bool battery_is_undercharge();
 
 bool battery_is_charging();
 
 bool battery_is_present();
 
-void nsec_battery_manager_init(void);
+bool battery_is_power_good();
 
 #endif
