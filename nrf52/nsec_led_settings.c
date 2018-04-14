@@ -337,10 +337,6 @@ void show_actual_color(void) {
 }
 
 static void show_color_menu(uint8_t item) {
-    menu_close();
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
-    show_actual_color();
-    menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(color_items), color_items);
     if (item == 2) {
         _state = SETTING_STATE_FIRST_COLOR;
     } else if (item == 3) {
@@ -348,6 +344,10 @@ static void show_color_menu(uint8_t item) {
     } else {
         _state = SETTING_STATE_THIRD_COLOR;
     }
+    menu_close();
+    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    show_actual_color();
+    menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(color_items), color_items);
 }
 
 void setColor(uint32_t color) {
