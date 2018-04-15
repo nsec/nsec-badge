@@ -27,6 +27,7 @@
 #include "gap_configuration.h"
 #include "nsec_ble.h"
 #include "vendor_service.h"
+#include "service_characteristic.h"
 
 
 #define APP_BLE_OBSERVER_PRIO 3
@@ -136,23 +137,26 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
         	NRF_LOG_INFO("Central is attempting pairing.");
 			break;
+        case BLE_GATTS_EVT_WRITE:
+        {
+        	ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+        	NRF_LOG_INFO("write event for UUID %s", p_evt_write->uuid.uuid);
+        	NRF_LOG_INFO("Writing data %d", p_evt_write->data[0]);
+        	break;
+        }
+        case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
+        	NRF_LOG_INFO("MTU exchange requested");
+        	break;
+        default:
+        	NRF_LOG_INFO("Received BLE event %d", p_ble_evt->header.evt_id);
     }
 }
 
-void service_write_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length){
-	NRF_LOG_INFO("Writing value in dummy service");
-}
-
-void config_dummy_service(){
-	VendorService dummy_service;
-	ble_gatts_char_handles_t characteristic_handles;
-	create_vendor_service(&dummy_service);
-	add_characteristic_to_vendor_service(&dummy_service, 1, &characteristic_handles);
-	uint8_t value = 0xAB;
-	ble_gatts_value_t dummy_value;
-	dummy_value.len = 1;
-	dummy_value.p_value = &value;
-	sd_ble_gatts_value_set(NULL, characteristic_handles.value_handle, &dummy_value);
+void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* characteristic){
+	create_vendor_service(dummy_service);
+	create_characteristic(characteristic, 1, 1, 1);
+	configure_characteristic(characteristic);
+	log_error_code("Adding characteristic", add_characteristic_to_vendor_service(dummy_service, characteristic));
 }
 
 static void gatt_init(){

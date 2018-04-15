@@ -43,6 +43,7 @@ SRC_FILES += ble/ble_device.c
 SRC_FILES += ble/gap_configuration.c
 SRC_FILES += ble/ble_vendor_service.c
 SRC_FILES += ble/vendor_service.c
+SRC_FILES += ble/service_characteristic.c
 #SRC_FILES += $(wildcard ble/*.c)
 SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
 SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c

@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <ble_gatts.h>
+#include "service_characteristic.h"
 
 
 typedef struct {
@@ -18,8 +19,7 @@ typedef struct {
 
 void create_vendor_service(VendorService* service);
 
-void add_characteristic_to_vendor_service(VendorService* service, uint8_t value_size, ble_gatts_char_handles_t*
-		characteristic_handles);
+uint32_t add_characteristic_to_vendor_service(VendorService* service, ServiceCharacteristic* characteristic);
 
 
 #endif //vendor_service_h
