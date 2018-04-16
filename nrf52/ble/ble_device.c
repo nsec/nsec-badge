@@ -38,6 +38,7 @@ NRF_BLE_GATT_DEF(m_gatt);
 typedef struct{
 	const char* device_name;
 	ble_gap_adv_params_t advertising_parameters;
+	uint16_t vendor_service_count;
 } BleDevice;
 
 static BleDevice* ble_device = NULL;
@@ -63,6 +64,7 @@ ret_code_t create_ble_device(char* device_name){
 		nsec_ble_init();
 		ble_device = malloc(sizeof(BleDevice));
 		ble_device->device_name = device_name;
+		ble_device->vendor_service_count = 0;
 		return NRF_SUCCESS;
 	}
 	return -1;
@@ -152,11 +154,16 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     }
 }
 
+void add_vendor_service(VendorService* service){
+	create_uuid_for_vendor_service(&service->uuid, ble_device->vendor_service_count);
+	uint32_t error_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &service->uuid, &service->handle);
+	APP_ERROR_CHECK(error_code);
+	ble_device->vendor_service_count++;
+}
+
 void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* characteristic){
-	create_vendor_service(dummy_service);
-	create_characteristic(characteristic, 1, 1, 1);
-	configure_characteristic(characteristic);
-	log_error_code("Adding characteristic", add_characteristic_to_vendor_service(dummy_service, characteristic));
+	add_vendor_service(dummy_service);
+	log_error_code("Adding characteristic", add_characteristic_to_vendor_service(dummy_service, characteristic, 1, 1, 1));
 	set_default_advertised_service(&dummy_service->uuid);
 }
 

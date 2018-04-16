@@ -34,7 +34,9 @@ uint16_t set_characteristic_value(ServiceCharacteristic* characteristic, uint8_t
 	ble_gatts_value_t characteristic_value;
 	characteristic_value.len = characteristic->value_length;
 	characteristic_value.p_value = value_buffer;
-	APP_ERROR_CHECK(sd_ble_gatts_value_set(USER_ATTRIBUTE, characteristic->handle, &characteristic_value));
+	// No app error check, as this function returns non-zero on success (likely a bug in nordic sdk).
+	// It returns the bytes that were successfully written, it could be used to assert that it was successful.
+	sd_ble_gatts_value_set(USER_ATTRIBUTE, characteristic->handle, &characteristic_value);
 	return characteristic_value.len;
 }
 

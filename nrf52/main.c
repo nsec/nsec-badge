@@ -156,9 +156,17 @@ int main(void) {
      */
     create_ble_device("My BLE device");
     configure_advertising();
-    VendorService service;
-    ServiceCharacteristic characteristic;
-    config_dummy_service(&service, &characteristic);
+    VendorService service0;
+    ServiceCharacteristic* characteristic0;
+    create_vendor_service(&service0);
+    config_dummy_service(&service0, characteristic0);
+
+    VendorService service1;
+	ServiceCharacteristic* characteristic1;
+	create_vendor_service(&service1);
+	add_vendor_service(&service1);
+	add_characteristic_to_vendor_service(&service1, characteristic1, 1, 1, 1);
+
     start_advertising();
 
     //nsec_identity_init();
