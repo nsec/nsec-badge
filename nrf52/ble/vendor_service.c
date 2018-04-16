@@ -28,7 +28,6 @@ uint32_t add_characteristic_to_vendor_service(VendorService* service, ServiceCha
 	uint32_t error_code = sd_ble_gatts_characteristic_add(service->handle, &characteristic->metadata,
 			&characteristic->attribute, &characteristic_handles);
 	characteristic->handle = characteristic_handles.value_handle;
-	NRF_LOG_INFO("Value handle is %d", characteristic->handle);
 	return error_code;
 }
 

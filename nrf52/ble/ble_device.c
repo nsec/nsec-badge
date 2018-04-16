@@ -157,6 +157,7 @@ void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* c
 	create_characteristic(characteristic, 1, 1, 1);
 	configure_characteristic(characteristic);
 	log_error_code("Adding characteristic", add_characteristic_to_vendor_service(dummy_service, characteristic));
+	set_default_advertised_service(&dummy_service->uuid);
 }
 
 static void gatt_init(){

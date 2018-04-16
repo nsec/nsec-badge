@@ -36,6 +36,8 @@
 #include "ws2812fx.h"
 
 #include "images/nsec_logo_bitmap.c"
+#include "ble/service_characteristic.h"
+#include "ble/vendor_service.h"
 
 static char g_device_id[10];
 bool is_at_main_menu = false;
@@ -142,6 +144,7 @@ int main(void) {
     power_init();
     softdevice_init();
     battery_init();
+
     timer_init();
     init_WS2812FX();
     ssd1306_init();
@@ -153,10 +156,12 @@ int main(void) {
      */
     create_ble_device("My BLE device");
     configure_advertising();
-    config_dummy_service();
+    VendorService service;
+    ServiceCharacteristic characteristic;
+    config_dummy_service(&service, &characteristic);
     start_advertising();
 
-    nsec_identity_init();
+    //nsec_identity_init();
 
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
