@@ -428,7 +428,7 @@ static void show_led_pattern_menu(uint8_t item) {
         pattern_items[i].handler = save_pattern;
     }
     show_actual_pattern();
-    menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(pattern_items), pattern_items);
+    menu_init(0, 32, 128, 64 - 32, ARRAY_SIZE(pattern_items), pattern_items);
     _state = SETTING_STATE_PATTERN;
 }
 
