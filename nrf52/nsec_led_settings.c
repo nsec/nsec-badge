@@ -350,7 +350,7 @@ static void show_color_menu(uint8_t item) {
     menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(color_items), color_items);
 }
 
-void setColor(uint32_t color) {
+void set_color(uint32_t color) {
     if (_state == SETTING_STATE_FIRST_COLOR) {
         setArrayColor_packed_WS2812FX(color, 0);
         update_stored_color(color, 0);
@@ -366,34 +366,34 @@ void setColor(uint32_t color) {
 static void save_color(uint8_t item) {
     switch(item) {
         case RED_INDEX:
-            setColor(RED);
+            set_color(RED);
             break;
         case GREEN_INDEX:
-            setColor(GREEN);
+            set_color(GREEN);
             break;
         case BLUE_INDEX:
-            setColor(BLUE);
+            set_color(BLUE);
             break;
         case WHITE_INDEX:
-            setColor(WHITE);
+            set_color(WHITE);
             break;
         case BLACK_INDEX:
-            setColor(BLACK);
+            set_color(BLACK);
             break;
         case YELLOW_INDEX:
-            setColor(YELLOW);
+            set_color(YELLOW);
             break;
         case CYAN_INDEX:
-            setColor(CYAN);
+            set_color(CYAN);
             break;
         case MAGENTA_INDEX:
-            setColor(MAGENTA);
+            set_color(MAGENTA);
             break;
         case PURPLE_INDEX:
-            setColor(PURPLE);
+            set_color(PURPLE);
             break;
         case ORANGE_INDEX:
-            setColor(ORANGE);
+            set_color(ORANGE);
             break;
         default:
             break;

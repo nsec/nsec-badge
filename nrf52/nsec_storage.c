@@ -47,7 +47,7 @@ typedef struct led_settings_t {
 	uint16_t speed;
 	uint8_t brightness;
 	uint32_t colors[NUM_COLORS];
-} Led_settings;
+} LedSettings;
 
 Led_settings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS, 
 								{RED, GREEN, BLUE}};
