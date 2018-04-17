@@ -150,7 +150,7 @@ void load_stored_led_settings(void) {
 }
 
 void load_stored_led_default_settings(void) {
-     memcpy(&actual_settings, &default_settings, sizeof(Led_settings));
+     memcpy(&actual_settings, &default_settings, sizeof(LedSettings));
      need_led_settings_update = true;
      load_stored_led_settings();
 }
