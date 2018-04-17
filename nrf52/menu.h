@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-#define MENU_LIMIT_MAX_ITEM_COUNT (10)
+#define MENU_LIMIT_MAX_ITEM_COUNT (60)
 
 typedef struct {
 	char * label;

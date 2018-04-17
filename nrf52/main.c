@@ -34,6 +34,7 @@
 #include "ssd1306.h"
 #include "utils.h"
 #include "ws2812fx.h"
+#include "nsec_storage.h"
 
 #include "images/nsec_logo_bitmap.c"
 
@@ -163,9 +164,7 @@ int main(void) {
     nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
-    setBrightness_WS2812FX(64);
-    setSpeed_WS2812FX(200);
-    setMode_WS2812FX(FX_MODE_RAINBOW_CYCLE);
+    load_stored_led_settings();
     start_WS2812FX();
 
     nsec_intro();
@@ -178,7 +177,8 @@ int main(void) {
      */
     while(true) {
         service_WS2812FX();
-        nrf_delay_ms(50);
+        nsec_storage_update();
+        power_manage();
     }
 
     return 0;

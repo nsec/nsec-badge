@@ -43,9 +43,4 @@
 
 #define SPONSOR_PW_SIZE	16
 
-uint32_t nsec_get_led_code_pw(uint32_t sponsor_index);
-bool nsec_led_code_is_unlock(uint32_t sponsor_index);
-bool nsec_unlock_led_code(uint32_t password);
-void nsec_led_code_storage_init();
-
 #endif
