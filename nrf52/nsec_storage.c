@@ -42,16 +42,16 @@
 #define PAGE_START_MAGIC    0xDEADC0DE
 
 /* Led settings */
-typedef struct led_settings_t {
+typedef struct LedSettings_t {
 	uint8_t mode;
 	uint16_t speed;
 	uint8_t brightness;
 	uint32_t colors[NUM_COLORS];
 } LedSettings;
 
-Led_settings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS, 
+LedSettings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS, 
 								{RED, GREEN, BLUE}};
-Led_settings actual_settings;
+LedSettings actual_settings;
 bool need_led_settings_update = false;
 
 NRF_FSTORAGE_DEF(nrf_fstorage_t fs_led_settings) =
@@ -77,7 +77,7 @@ NRF_FSTORAGE_DEF(nrf_fstorage_t fs_password) =
 };
 bool need_password_update = false;
 
-bool isInit = false;
+bool is_init = false;
 
 static void wait_for_flash_ready(nrf_fstorage_t const * p_fstorage)
 {
@@ -138,7 +138,7 @@ void update_stored_color(uint32_t color, uint8_t index) {
 }
 
 void load_stored_led_settings(void) {
-	if (!isInit) {
+	if (!is_init) {
 		nsec_storage_init();
 	}
 	setBrightness_WS2812FX(actual_settings.brightness);
@@ -257,12 +257,12 @@ static void password_storage_init(void) {
 
 void nsec_storage_init(void) {
    
-    if (isInit) {
+    if (is_init) {
     	return;
     }
 
     led_settings_storage_init();
     password_storage_init();
 
-    isInit = true;
+    is_init = true;
 }
