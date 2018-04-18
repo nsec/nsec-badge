@@ -15,11 +15,14 @@
 #include "app_glue.h"
 #include "controls.h"
 #include "identity.h"
+#include "ws2812fx.h"
+#include "nsec_storage.h"
 
 static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
 static void show_led_settings(uint8_t item);
+static void toggle_flashlight(uint8_t item);
 static void setting_handle_buttons(button_t button);
 
 enum setting_state {
@@ -27,6 +30,7 @@ enum setting_state {
     SETTING_STATE_MENU,
     SETTING_STATE_CREDIT,
     SETTING_STATE_SCREEN_OFF,
+    SETTING_STATE_FLASHLIGHT,
 };
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
@@ -45,6 +49,9 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Turn screen off",
         .handler = turn_off_screen,
+    }, {
+        .label = "Flashlight",
+        .handler = toggle_flashlight,
     }, {
         .label = "Credit",
         .handler = show_credit,
@@ -82,6 +89,16 @@ static void show_credit(uint8_t item) {
     gfx_update();
 }
 
+static void toggle_flashlight(uint8_t item) {
+    _state = SETTING_STATE_FLASHLIGHT;
+    menu_close();
+    gfx_fillScreen(SSD1306_WHITE);
+    gfx_update();
+    setMode_WS2812FX(FX_MODE_STATIC);
+    setBrightness_WS2812FX(255);
+    setColor_packed_WS2812FX(WHITE);
+}
+
 static void turn_off_screen(uint8_t item) {
     menu_close();
     gfx_fillScreen(SSD1306_BLACK);
@@ -112,8 +129,12 @@ static void setting_handle_buttons(button_t button) {
                 show_main_menu();
                 break;
 
+            case SETTING_STATE_FLASHLIGHT:
+                load_stored_led_settings();
+                // no break
             case SETTING_STATE_SCREEN_OFF:
                 nsec_status_bar_ui_redraw();
+                // no break
             case SETTING_STATE_CREDIT:
                 nsec_setting_show();
                 break;
