@@ -131,9 +131,10 @@ static void setting_handle_buttons(button_t button) {
 
             case SETTING_STATE_FLASHLIGHT:
                 load_stored_led_settings();
-
+                // no break
             case SETTING_STATE_SCREEN_OFF:
                 nsec_status_bar_ui_redraw();
+                // no break
             case SETTING_STATE_CREDIT:
                 nsec_setting_show();
                 break;
