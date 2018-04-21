@@ -500,14 +500,14 @@ struct schedule_day_s nsec_schedule[] = {
 enum schedule_state {
     SCHEDULE_STATE_CLOSED,
     SCHEDULE_STATE_DATES,
+    SCHEDULE_STATE_TRACK,
     SCHEDULE_STATE_TALKS,
     SCHEDULE_STATE_TALK_DETAILS,
 };
 
 static enum schedule_state schedule_state = SCHEDULE_STATE_CLOSED;
 static uint8_t date_selected = 0;
-
-void nsec_schedule_show_talks(uint8_t date);
+static uint8_t track_selected = 0;
 
 static void nsec_schedule_button_handler(button_t button) {
     if(schedule_state == SCHEDULE_STATE_TALK_DETAILS && button != BUTTON_ENTER) {
@@ -517,6 +517,9 @@ static void nsec_schedule_button_handler(button_t button) {
     else if(button == BUTTON_BACK) {
         switch (schedule_state) {
             case SCHEDULE_STATE_TALKS:
+                nsec_schedule_show_tracks(date_selected);
+                break;
+            case SCHEDULE_STATE_TRACK:
                 nsec_schedule_show_dates();
                 break;
             case SCHEDULE_STATE_DATES:
@@ -537,8 +540,9 @@ void nsec_schedule_show_dates(void) {
 }
 
 void nsec_schedule_show_talks(uint8_t item) {
-    date_selected = item;
-    menu_init(0, 8, 128, 56, nsec_schedule[item].item_count, nsec_schedule[item].menu_items);
+    track_selected = item;
+    uint8_t sched_index = (date_selected * 3) + track_selected;
+    menu_init(0, 8, 128, 56, nsec_schedule[sched_index].item_count, nsec_schedule[sched_index].menu_items);
     schedule_state = SCHEDULE_STATE_TALKS;
 }
 
@@ -564,7 +568,9 @@ void nsec_schedule_show_details(uint8_t item) {
 }
 
 void nsec_schedule_show_tracks (uint8_t item) {
-
+    menu_init(0, 8, 128, 56, ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items);
+    date_selected = item;
+    schedule_state = SCHEDULE_STATE_TRACK;
 }
 
 void nsec_schedule_show_party(uint8_t item) {
