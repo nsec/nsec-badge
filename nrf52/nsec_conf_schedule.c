@@ -17,12 +17,15 @@
 #define COLUMN_COUNT                21
 #define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
 
+#define PRESENTER_COUNT             40
+
 static void nsec_schedule_button_handler(button_t button);
 void nsec_schedule_show_talks(uint8_t item);
 void nsec_schedule_show_details(uint8_t item);
 void nsec_schedule_show_tracks(uint8_t item);
 void nsec_schedule_show_party(uint8_t item);
 void nsec_schedule_show_presenters(uint8_t item);
+void nsec_schedule_show_presenters_details(uint8_t item);
 
 static menu_item_s days_schedule_items[] = {
     {
@@ -281,6 +284,8 @@ static menu_item_s schedule_items_friday_workshops[] = {
     }
 };
 
+static menu_item_s presenters_items[PRESENTER_COUNT];
+
 const char * presenters_thursday_track_1[] = {
     "Eleanor Saitta",
     NULL,
@@ -367,6 +372,92 @@ const char * presenters_friday_workshops[] = {
     "Nicole Becher & Tanya Janca",
     NULL,
     "Aaron Guzman",
+};
+
+const char * presenters_all[] = {
+    "Aaron Guzman",
+    "Allan Wirth",
+    "Charles F. Hamilton",
+    "Daniel Bohannon",
+    "Danny Cooper",
+    "Dave Lewis",
+    "Dimitry Snezhkov",
+    "Eleanor Saitta",
+    "Filip Kafka",
+    "Israel Halle",
+    "Jean-Marc Leblanc",
+    "Jon Maurelian",
+    "Karla Burnett",
+    "Kristina Balaam",
+    "Laurent Desaulniers",
+    "Mahsa Alimardani",
+    "Marc-Andre Labonte",
+    "Mark El-Khoury",
+    "Mark Mossberg",
+    "Martijn Grooten",
+    "Masarah Paquet-Clouston",
+    "Melanie Segado",
+    "Nicole Becher",
+    "Olivier Arteau",
+    "Olivier Bilodeau",
+    "Paul Rascagneres",
+    "Raphael Vinot",
+    "Ron Bowes",
+    "Robert Sell",
+    "Saad Khadi",
+    "Sarah Friend",
+    "Silvia Valli",
+    "Sebastien Larinier",
+    "Stephane Graber",
+    "Tanya Janca",
+    "Thais Moreira Hamasaki",
+    "Thomas Pornin",
+    "Vikram Salunke",
+    "Wan Mengyuan",
+    "Yomna Nasser",
+};
+
+const char * presenters_detail[] = {
+    "Aaron Guzman is a Security Consultant from the Los Angeles area with expertise in web app security, mobile app security, and embedded security. Mr. Guzman has spoken at several word-wide conferences which include: DEF CON, AppSec EU, AppSec USA, HackFest, Security Fest, HackMiami, 44Con, AusCERT as well as several regional BSides events. Furthermore, Aaron is a Chapter leader for the Open Web Application Security Project (OWASP) Los Angeles, Cloud Security Alliance SoCal (CSA SoCal), a Technical Editor, and author of \"IoT Penetration Testing Cookbook\" with Packt Publishing. He has contributed to many IoT security guidance publications from CSA, OWASP, Prpl, and several others. Aaron leads the OWASP Embedded Application Security project; providing practical guidance to address the most common firmware security bugs to the embedded and IoT community. Follow Aaron’s latest research on Twitter at @scriptingxss",
+    "Allan Wirth and Danny Cooper are security researchers in the Adversarial Resilience group at Akamai, as well as administrators of BKPCTF.",
+    "With more than 8 years of experience delivering Information Technology and Information Security services to various government and commercial clients such as a banks, nuclear industry and lay firms. Having the opportunity to perform RedTeam against complex and secured environment allowed him to develop a certain expertise that can be used to navigate through the target network without being detected. Since 2014 I'm also the proud owner of the RingZer0 Team website that have more than 28 000 members worldwide. The RingZer0 Team website is a hacking learning platform.",
+    "Daniel Bohannon is a Senior Applied Security Researcher with FireEye’s Advanced Practices Team with over seven years of operations, security and Incident Response experience. He is the author of Invoke-Obfuscation, Invoke-CradleCrafter, Invoke-DOSfuscation and co- author of the Revoke-Obfuscation detection framework. He has presented at numerous conferences including Black Hat USA, DEF CON, DerbyCon and BlueHat. Mr. Bohannon received a Master of Science in Information Security from the Georgia Institute of Technology and a Bachelor of Science in Computer Science from The University of Georgia.",
+    "Allan Wirth and Danny Cooper are security researchers in the Adversarial Resilience group at Akamai, as well as administrators of BKPCTF.",
+    "Dave has over two decades of industry experience. He has extensive experience in IT security operations and management. Currently, Dave is a Global Security Advocate for Akamai Technologies . He is the founder of the security site Liquidmatrix Security Digest and co-host of the Liquidmatrix podcast. Dave writes a column for Forbes and Huffington Post.",
+    "Dimitry Snezhkov does not like to refer to himself in the third person :) but when he does he is a Sr. Security Consultant for X-Force Red at IBM, performing penetration testing, occasional Red Teaming and application security assessments.",
+    "Eleanor Saitta is an independent security architecture and strategy consultant with media, finance, healthcare, infrastructure, and software clients across the US and Europe. She was previously the security architect for Etsy.com, and has worked for a number of commercial consultancies (Bishop Fox, IOACtive, and others) over the past fifteen years. Her work has encompassed everything from core security engineering and architecture work for Fortune 50 software firms to cross-domain security for news organizations and NGOs targeted by nation states. Her focus is on the ways task and experience design, system architecture, development process change, and operational changes can shift the balance of power between adversaries to bring better outcomes to users. Saitta is a co-founder and developer for Trike, an open source threat modeling methodology and tool which partially automates the art of security analysis and has contributed to the Briar and Mailpile secure messaging projects. She's on the advisory boards of the Freedom of the Press Foundation, the International Modern Media Institute, and the Calyx Institute, all organizations that look at freedom in the media and security online. Saitta is a regular speaker at industry conferences; past venues include O'Reilly Velocity, KiwiCon, ToorCon, CCC, Hack in The Box, and HOPE, among others. You can find her on twitter as @dymaxion, and at https://dymaxion.org",
+    "Filip Kafka is a malware analyst at ESET's Malware Analysis Laboratory. His main responsibilities include detailed malware analyses and training new reverse engineers in the ESET Virus Lab, but his professional interests, as well as his latest research, focus on APTs. His experience as a speaker includes speaking at the Virus Bulletin conference, the AVAR conference, and at several events aimed at raising awareness about malware and computer security, presented for local universities. He also teaches a reverse engineering course at the Slovak University of Technology and the Comenius University and runs workshops of reverse engineering and malware research held in London, Brno, Bratislava.",
+    "Israel Halle has a B.Eng. from the Ecole de Technologie Superieure (E.T.S.). He worked as a developer on the Merchant Protection and Checkout teams at Shopify. He also did malware analysis and reverse engineering contracting work for Google on their Safe browsing team. He is now working full-time developing the technology that powers Flare Systems. Israël has organized exploitation workshops at E.T.S. and at the NorthSec conference in addition to participating in multiples security CTFs, mostly working on binary reverse engineering and exploitation challenges.",
+    "Currently working as a reverse engineer at EWA-Cadana, Jean-Marc has worked for multiple respected security enterprises for past 5 years including national security agencies and contract work at google. On top of his professional security research, he has done a lot of personal vulnerability research on large popular applications. He has successfully claim bug bounties from google chrome and shopify. He has presented multiple talk at various conferences including last years script engine hacking for fun and profit at northsec and “why U A.F.ter calc?” at Ihack Ottawa.",
+    "Jon Maurelian is a security engineer at ConsenSys Diligence, where he works to ensure that Ethereum smart contracts are transparent, trustworthy, and reliable. He helped build a decentralized name registrar for the Ethereum Name Service; authoring the spec, and auditing the final implementation. He is a regular writer and speaker on smart contract security. Prior to joining ConsenSys, Maurelian worked at Coinbase.",
+    "Karla has a varied offensive security background: she's reverse engineered train ticketing systems, written articles on TLS and SSH, and competed in the Defcon CTF finals for the last several years running. She officially works on authentication and application security at Stripe, but builds internal phishing campaigns when she has business hours to spare. She's cumulatively phished nearly half the company, has triggered many bouts of internal paranoia, and has built a reputation as being entirely untrustworthy when it comes to email.",
+    "Kristina is an Application Security Engineer with Shopify. She builds web and mobile security tools and helps discover vulnerabilities in the existing platform. Prior to Shopify, Kristina led a team of developers, building web and mobile applications for enterprise and start-up clients. Kristina graduated with a Bachelor of Computer Science from McGill University in 2012. She volunteers with DEFCON Toronto, founded the Women in Tech Toronto book club, and is a novice boxer, book hoarder, and purveyor of fine cat gifs.",
+    "Laurent is a team lead for a large security consulting firm, based in Montreal. He has conducted over 200 pentesting and red team engagements over the span of 10 years and is still enthusiatic about it. Laurent is also a challenge designer for Northsec and has given talks to CQSI, NCFTA, HackFest, RSI, Montrehack, Owasp Montreal and Northsec. Besides security, Laurent is interested in Lockpicking, magic and pickpocketting.",
+    "Mahsa Alimardani has been doing research and work on the politics of Iran’s Internet for the past six years. She leads on some of Article 19's Iran digital rights projects while she does her DPhil at the Oxford Internet Institute at the University of Oxford, researching communications technology's and how they affect political participation in Iran's information control space. She has also been Iran editor for the citizen media platform Global Voices for the past five years.",
+    "System administrator for more than 10 years, now doing penetration testing since 2016. I do have a strong interest in privacy and computer security. While not in front of a computer, I am either rock climbing or walking highlines.",
+    "Mark El-Khoury is a Security Consultant with NCC Group, where he has been for over two years. Mark has been involved in a wide variety of security assessments, ranging from large web applications in various environments and frameworks, to native desktop applications and IoT devices. Mark also specializes in internal and external network infrastructure penetration testing, including IEEE 802.11 wireless assessments. Mark graduated from Syracuse University with a Master's degree in Computer Science, and has participated in many programming contests, including ACM ICPC, IEEE Xtreme, and Topcoder matches.",
+    "Mark Mossberg is an engineer at Trail of Bits, and the lead developer for the Manticore project.",
+    "Martijn Grooten is a lapsed mathematician who by chance ended up working in security - and loved it. He's spend more than a decade testing security software but his interest in security is broad and he has a weak spot for cryptography. He currently is Editor of Virus Bulletin.",
+    "Masarah is a security researcher at GoSecure and one of Canada’s decorated 150 scientific innovators. With her background in economics and criminology, she specializes in the study of market dynamics behind illicit online activities. Her primary goal is to conduct scientific research on online crime without falling into the alarmist side. She published in several peer-review journals, such as Global Crime, Social Networks and the International Journal for the Study of Drug Policy and presented at various international conferences including Black Hat Europe, Botconf and the American Society of Criminology.",
+    "Melanie really likes brains and computers. This is why she co-founded NeuroTechX, a non-profit whose mission is to grow the global neurotechnology community. She is currently pursuing a PhD in cognitive neuroscience. Melanie spends her free time hacking on brain technology and thinking about its societal implications.",
+    "Nicole Becher specializes in application security, red teaming, penetration testing, malware analysis and computer forenscics. OWASP Brooklyn Chapter Leader, OWASP DevSlop Project Leader, Adjunct Instructor at NYU, political junkie, marathoner, martial artist and animal lover. OWASP WASPY 2017 winner!",
+    "Olivier Arteau is a security researcher that works for a large financial institution. In his early day, he was a web developer and transitioned into the security field during his university. He gave in the last few years a good amount of workshop for the usergroup MontreHack and is also part of the organization of a few CTF (Mini-CTF OWASP and NorthSec).",
+    "Olivier Bilodeau is leading the Cybersecurity Research team at GoSecure. With more than 10 years of infosec experience, Olivier managed large networks and server farms, wrote open source network access control software and recently worked as a Malware Researcher. Passionate communicator, Olivier has spoken at several conferences like Defcon, Botconf, SecTor, Derbycon and many more. Invested in his community, he co-organizes MontreHack — a monthly workshop focused on applied information security through capture-the-flag challenges —, he is in charge of NorthSec’s training sessions and is hosting NorthSec’s Hacker Jeopardy. His primary research interests include reverse-engineering tools, Linux and/or embedded malware and honeypots. To relax, he likes to participate in information security capture-the-flag competitions, work on various open-source projects and brew his own beer.",
+    "Paul is a security researcher within Talos, Cisco’s threat intelligence and research organization. As a researcher, he performs investigations to identify new threats and presents his findings as publications and at international security conferences throughout the world. He has been involved in security research for 7 years, mainly focusing on malware analysis, malware hunting and more specially on Advanced Persistence Threat campaigns and rootkit capabilities. He previously worked for several incident response team within the private and public sectors.",
+    "Raphael Vinot is a longstanding member of Computer Incident Response Center Luxembourg (CIRCL) and of Malware Information Sharing Platform (MISP).",
+    "Ron has worked in information security for more years than he can count, and has performed roles across the board. He currently works at Counter Hack, where he develops SANS Netwars, Holiday Hack Challenge, and other security games.",
+    "Robert is a Senior IT Manager in the aerospace industry where he spends most of his time managing InfoSec teams. While his teams focus on the traditional blue/red team exercises, lately he has spent an increasing amount of time building defenses against social engineering. Robert has spoken about the rising SE risk at numerous events and on different security podcasts. In 2017 he competed at the Social Engineering Village Capture the Flag contest at Defcon 25. He placed third in this contest and since then has been teaching organizations how to defend against SE attacks and reduce the OSINT footprint. Robert is also a nine year veteran with Search & Rescue in British Columbia, Canada. In his SAR capacity, Robert is a Team Leader, Trainer, Marine Rescue Technician, Swift Water Technician and Tracker. While one may think that SAR has little do to with InfoSec, tracking lost subjects in the back country has many of the same qualities as tracking individuals or organizations online with OSINT.",
+    "Saad Kadhi, head of CERT Banque de France and TheHive Project leader, has over 18 years of experience in cybersecurity. He discovered incident response and digital forensics in early 2008 and has been working exclusively in this fascinating field since then. He built a CSIRT at a French multinational food-products corporation and worked as an analyst at CERT Societe Generale before joining the French national central bank where he leads a team of 20 analysts. He frequently writes information security articles in a leading French magazine. He also co-organizes the Botconf security conference.",
+    "Sarah Friend is a software engineer working at a large blockchain development studio on tools for financial transparency/accounting. When not doing that, she creates games and other interactive experiences. She has recently exhibited with Furtherfield at the Neon Festival in Dundee, Scotland, and presented at the Montreal International Games Showcase. In 2018, she will be part of the MoneyLab program by the Institute for Networked Culture in London, UK and at Transmediale in Berlin.",
+    "Security researcher from Estonia, working as a web-application pentester in Clarified Security.",
+    "Sebastien Larinier is a freelance Senior Researcher and Incident Handler who created the CERT Sekoia located in Paris. Member of the honeyproject chapter France and co-organizer of botconf. Sebastien focuses his work on botnet hunting, malware analysis, network forensics, early compromise detection, forensic and incident response. As a Python addict, he supports different opensource projects like FastIR, veri-sig, Oletools, pymisp, and malcom…",
+    "Stephane Graber works as the technical lead for LXD at Canonical Ltd. He is the upstream project leader for LXC and LXD and a frequent speaker and track leader at various containers and other Linux related events. Stephane is also a long time contributor to the Ubuntu Linux distribution as an Ubuntu Core Developer and he currently sits on the Ubuntu Technical Board. On his spare time, Stephane helps organize a yearly security conference and contest in Montreal, Northsec, where his knowledge of Linux and network infrastructure is used to simulate the most complex of environments for the contestants."
+    "Tanya Janca is a senior cloud advocate for Microsoft, specializing in application security; evangelizing software security and advocating for developers through public speaking, her open source project OWASP DevSlop, and various forms of teaching via workshops, blogs and community events. As an ethical hacker, OWASP Project and Chapter Leader, software developer, effective altruist and professional computer geek of 20+ years, she is a person who is truly fascinated by the ‘science’ of computer science.",
+    "Thais Moreira Hamasaki is a malware researcher, who focus on static analysis, reverse engineering and logical programming. Thaís started her career within the anti-virus industry working on data and malware analysis, where she developed her knowledge on threat protection systems. She won the “best rookie speaker” award from BSides London for her first talk about “Using SMT solvers to deobfuscate malware binaries”. Recent research topics include malware binary code deobfuscation, generic unpacking and malware analysis automation. She is an active member of the Düsseldorf Hackerspace, where she also leads the groups for Reverse Engineering and x86 Assembly. In her free time, you can find Thaís building tools, cooking or climbing somewhere offline.",
+    "Thomas Pornin is a cryptographer and researcher, doing cryptography consulting at NCC Group. He is the author of BearSSL, a secure and compact SSL/TLS library.",
+    "Vikram is the founder of Vmaskers, and a professional pentester. He has led 100+ pentests over the past years, compromising highly sensitive and secured enterprise networks. His primary responsibilities in his recent job roles were to look after enterprise network security, manage security automation and build internal tools to fight security attacks. He has also discovered serious security flaws in many unique product giants all over the world. He has worked in various domains including Pentesting, Reverse Engineering, Fuzzing, Exploitation ,Source Code Auditing and Mobile application security research. He helps the community by uploading regular InfoSec videos on youtube (https://www.youtube.com/VikramSalunke). He has also previously spoken and trained at numerous security conferences all around the world including CHCon, OWASP AppSec Africa, CrikeyCon, CanSecWest, OWASP New Zealand Day, NolaCon, LayerOne, ShakaCon, OWASP AppSec California and will be training in Hack in The Box (HITB), InfoSec in the City, BlackHat USA 2018 etc.",
+    "Wan is a security engineer in DeNA Co., Ltd. He gives pen testing and security consulting for in-house developers. His main focus is on pen testing, game security and reverse engineering. He loves writing tools for game hacking / analyzing and publishing them on Github.",
+    "Yomna likes mathematical cryptography, geometry, and clear, succinct explanations.",
 };
 
 const char * descriptions_thursday_track_1[] = {
@@ -503,6 +594,8 @@ enum schedule_state {
     SCHEDULE_STATE_TRACK,
     SCHEDULE_STATE_TALKS,
     SCHEDULE_STATE_TALK_DETAILS,
+    SCHEDULE_STATE_PRESENTERS,
+    SCHEDULE_STATE_PRESENTERS_DETAILS,
 };
 
 static enum schedule_state schedule_state = SCHEDULE_STATE_CLOSED;
@@ -510,6 +603,7 @@ static uint16_t description_index = 0;
 static uint8_t date_selected = 0;
 static uint8_t track_selected = 0;
 static uint8_t talk_selected = 0;
+static uint8_t presenter_selected = 0;
 static uint8_t schedule_index = 0; // Keep track of our index in the scheduler array
 
 void nsec_schedule_show_dates(void) {
@@ -608,6 +702,43 @@ void nsec_schedule_scroll_down_details(void) {
     gfx_update();
 }
 
+void nsec_schedule_scroll_up_presenters_details() {
+    if (description_index < MAX_CHAR_UNDER_STATUS_BAR) {
+        description_index = 0;
+    } else {
+        description_index -= MAX_CHAR_UNDER_STATUS_BAR;
+    }
+
+    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_setCursor(0, 8);
+
+    char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
+    strncpy(buffer, presenters_detail[presenter_selected] + description_index,
+            MAX_CHAR_UNDER_STATUS_BAR);
+
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_puts(buffer);
+    gfx_update();
+}
+
+void nsec_schedule_scroll_down_presenters_details() {
+    if (description_index > strlen(presenters_detail[presenter_selected])) {
+        return;
+    }
+
+    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_setCursor(0, 8);
+
+    char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
+    strncpy(buffer, presenters_detail[presenter_selected] + description_index,
+            MAX_CHAR_UNDER_STATUS_BAR);
+    description_index += MAX_CHAR_UNDER_STATUS_BAR;
+
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_puts(buffer);
+    gfx_update();
+}
+
 void nsec_schedule_show_details(uint8_t item) {
     talk_selected = item;
     menu_close();
@@ -623,11 +754,27 @@ void nsec_schedule_show_tracks (uint8_t item) {
 }
 
 void nsec_schedule_show_party(uint8_t item) {
-
 }
 
+void nsec_schedule_show_presenters_details(uint8_t item) {
+    schedule_state = SCHEDULE_STATE_PRESENTERS_DETAILS;
+    presenter_selected = item;
+    menu_close();
+    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_setCursor(0, 8);
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_puts((char *) presenters_detail[presenter_selected]);
+    description_index = MAX_CHAR_UNDER_STATUS_BAR;
+    gfx_update();
+}
 void nsec_schedule_show_presenters(uint8_t item) {
-
+    for (int i=0; i<PRESENTER_COUNT; i++) {
+        presenters_items[i].label = presenters_all[i];
+        presenters_items[i].handler = nsec_schedule_show_presenters_details;
+    }
+    menu_init(0, 8, 128, 56, ARRAY_SIZE(presenters_items), presenters_items);
+    description_index = 0;
+    schedule_state = SCHEDULE_STATE_PRESENTERS;
 }
 
 static void nsec_schedule_button_handler(button_t button) {
@@ -637,8 +784,17 @@ static void nsec_schedule_button_handler(button_t button) {
         nsec_schedule_scroll_up_details();
     }
 
+    if (schedule_state == SCHEDULE_STATE_PRESENTERS_DETAILS && button == BUTTON_DOWN) {
+        nsec_schedule_scroll_down_presenters_details();
+    } else if (schedule_state == SCHEDULE_STATE_PRESENTERS_DETAILS && button == BUTTON_UP) {
+        nsec_schedule_scroll_up_presenters_details();
+    }
+
     if(button == BUTTON_BACK) {
         switch (schedule_state) {
+            case SCHEDULE_STATE_PRESENTERS_DETAILS:
+                nsec_schedule_show_presenters(2);
+                break;
             case SCHEDULE_STATE_TALK_DETAILS:
                 nsec_schedule_show_talks(track_selected);
                 break;
@@ -646,6 +802,7 @@ static void nsec_schedule_button_handler(button_t button) {
                 nsec_schedule_show_tracks(date_selected);
                 break;
             case SCHEDULE_STATE_TRACK:
+            case SCHEDULE_STATE_PRESENTERS:
                 nsec_schedule_show_dates();
                 break;
             case SCHEDULE_STATE_DATES:
