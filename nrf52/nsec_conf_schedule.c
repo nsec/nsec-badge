@@ -104,12 +104,6 @@ static menu_item_s schedule_items_thursday_track_1[] = {
 
 static menu_item_s schedule_items_thursday_track_2[] = {
     {
-        .label = "09:00 KEYNOTE - ????",
-        .handler = nsec_schedule_show_details
-    }, {
-        .label = "10:00 Break",
-        .handler = NULL
-    }, {
         .label = "10:15 Getting ahead of the elliptic curve",
         .handler = nsec_schedule_show_details
     }, {
