@@ -22,6 +22,7 @@ void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value
 	characteristic->read = read;
 	characteristic->write = write;
 	characteristic->value_length = value_length;
+	characteristic->on_write = NULL;
 }
 
 void configure_characteristic(ServiceCharacteristic* characteristic){
@@ -47,6 +48,10 @@ uint16_t get_characteristic_value(ServiceCharacteristic* characteristic, uint8_t
 	characteristic_value.offset = 0;
 	APP_ERROR_CHECK(sd_ble_gatts_value_get(USER_ATTRIBUTE, characteristic->handle, &characteristic_value));
 	return characteristic_value.len;
+}
+
+void add_write_event_handler(ServiceCharacteristic* characteristic, on_characteristic_write event_handler){
+	characteristic->on_write = event_handler;
 }
 
 static void set_metadata_for_characteristic(ServiceCharacteristic* characteristic){

@@ -17,12 +17,12 @@ void create_vendor_service(VendorService* service){
 	service->characteristic_count = 0;
 }
 
-uint32_t add_characteristic_to_vendor_service(VendorService* service, ServiceCharacteristic* characteristic, uint16_t value_length,
+ServiceCharacteristic* add_characteristic_to_vendor_service(VendorService* service, uint16_t value_length,
 		bool read, bool write){
 	if(service->characteristic_count >= MAX_CHARACTERISTICS_PER_SERVICE)
-		return -1;
+		return NULL;
 	ble_gatts_char_handles_t characteristic_handles;
-	characteristic = &service->characteristics[service->characteristic_count];
+	ServiceCharacteristic* characteristic = &service->characteristics[service->characteristic_count];
 	create_characteristic(characteristic, value_length, read, write);
 	configure_characteristic(characteristic);
 	service->characteristic_count++;
@@ -32,13 +32,20 @@ uint32_t add_characteristic_to_vendor_service(VendorService* service, ServiceCha
 	APP_ERROR_CHECK(sd_ble_gatts_characteristic_add(service->handle, &characteristic->metadata, &characteristic->attribute,
 			&characteristic_handles));
 	characteristic->handle = characteristic_handles.value_handle;
-	return 0;
+	return characteristic;
 }
 
 void create_uuid_for_vendor_service(ble_uuid_t* service_uuid, uint16_t service_number){
 	ble_uuid128_t base_uuid = {0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xBA, 0xBB, 0xBC, 0xBD, 0xBE, 0xBF, 0x00, 0x00, 0xCA, 0xCB};
 	APP_ERROR_CHECK(sd_ble_uuid_vs_add(&base_uuid, &service_uuid->type));
 	service_uuid->uuid = service_number << 8;
+}
+
+ServiceCharacteristic* get_characteristic(VendorService* service, uint16_t chararacteristic_uuid){
+	uint16_t characteristic_number = chararacteristic_uuid & UUID_CHARACTERISTIC_PART_MASK;
+	if(service->characteristic_count >= characteristic_number)
+		return &(service->characteristics[characteristic_number - 1]);
+	return NULL;
 }
 
 static void create_uuid_for_service_characteristic(VendorService* service, ble_uuid_t* char_uuid){

@@ -14,6 +14,6 @@ void configure_advertising();
 
 void start_advertising();
 
-void add_vendor_service(VendorService*);
+uint32_t add_vendor_service(VendorService*);
 
-void config_dummy_service(VendorService*, ServiceCharacteristic* characteristic);
+ServiceCharacteristic* config_dummy_service(VendorService*);

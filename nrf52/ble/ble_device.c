@@ -32,6 +32,7 @@
 
 #define APP_BLE_OBSERVER_PRIO 3
 #define PEER_ADDRESS_SIZE 6
+#define MAX_VENDOR_SERVICE_COUNT 8
 NRF_BLE_GATT_DEF(m_gatt);
 
 
@@ -39,6 +40,7 @@ typedef struct{
 	const char* device_name;
 	ble_gap_adv_params_t advertising_parameters;
 	uint16_t vendor_service_count;
+	VendorService* vendor_services[MAX_VENDOR_SERVICE_COUNT];
 } BleDevice;
 
 static BleDevice* ble_device = NULL;
@@ -55,6 +57,7 @@ static void gatt_init();
 static void init_connection_parameters();
 static void add_device_information_service(char * manufacturer_name, char * model, char * serial_number,
 		char * hw_revision, char * fw_revision, char * sw_revision);
+static void on_characteristic_write_event(ble_gatts_evt_write_t* write_event);
 
 
 ret_code_t create_ble_device(char* device_name){
@@ -65,6 +68,9 @@ ret_code_t create_ble_device(char* device_name){
 		ble_device = malloc(sizeof(BleDevice));
 		ble_device->device_name = device_name;
 		ble_device->vendor_service_count = 0;
+		for(int i = 0; i < MAX_VENDOR_SERVICE_COUNT; i++){
+			ble_device->vendor_services[i] = NULL;
+		}
 		return NRF_SUCCESS;
 	}
 	return -1;
@@ -91,11 +97,6 @@ void start_advertising(){
 
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     //pm_on_ble_evt(p_ble_evt);
-    for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
-        if(_nsec_ble_event_handlers[i] != NULL) {
-            _nsec_ble_event_handlers[i](p_ble_evt, p_context);
-        }
-    }
     switch (p_ble_evt->header.evt_id){
         case BLE_GAP_EVT_CONNECTED: {
             uint8_t * addr = p_ble_evt->evt.gap_evt.params.connected.peer_addr.addr;
@@ -105,7 +106,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
 
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("Disconnected. Reason: %d", p_ble_evt->evt.gap_evt.params.disconnected.reason);
-            break;
+            break; // TODO re-enter advertising mode?
 
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             const uint16_t conn = p_ble_evt->evt.gatts_evt.conn_handle;
@@ -142,8 +143,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
         case BLE_GATTS_EVT_WRITE:
         {
         	ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
-        	NRF_LOG_INFO("write event for UUID %s", p_evt_write->uuid.uuid);
-        	NRF_LOG_INFO("Writing data %d", p_evt_write->data[0]);
+        	on_characteristic_write_event(p_evt_write);
         	break;
         }
         case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
@@ -154,17 +154,22 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     }
 }
 
-void add_vendor_service(VendorService* service){
+uint32_t add_vendor_service(VendorService* service){
+	if(ble_device->vendor_service_count >= MAX_VENDOR_SERVICE_COUNT)
+		return 1;
 	create_uuid_for_vendor_service(&service->uuid, ble_device->vendor_service_count);
 	uint32_t error_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &service->uuid, &service->handle);
 	APP_ERROR_CHECK(error_code);
+	ble_device->vendor_services[ble_device->vendor_service_count] = service;
 	ble_device->vendor_service_count++;
+	return 0;
 }
 
-void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* characteristic){
+ServiceCharacteristic* config_dummy_service(VendorService* dummy_service){
 	add_vendor_service(dummy_service);
-	log_error_code("Adding characteristic", add_characteristic_to_vendor_service(dummy_service, characteristic, 1, 1, 1));
+	ServiceCharacteristic* characteristic = add_characteristic_to_vendor_service(dummy_service, 1, 1, 1);
 	set_default_advertised_service(&dummy_service->uuid);
+	return characteristic;
 }
 
 static void gatt_init(){
@@ -184,6 +189,25 @@ static void on_connection_params_event(ble_conn_params_evt_t * p_evt){
 
 static void connection_params_error_handler(uint32_t nrf_error){
     log_error_code("connection params error handler", nrf_error);
+}
+
+static void on_characteristic_write_event(ble_gatts_evt_write_t* write_event){
+	for(int i = 0; i < ble_device->vendor_service_count; i++){
+		VendorService* service = ble_device->vendor_services[i];
+		if(service->uuid.uuid == (write_event->uuid.uuid & UUID_SERVICE_PART_MASK)){
+			ServiceCharacteristic* characteristic = get_characteristic(service, write_event->uuid.uuid);
+			if(characteristic != NULL && characteristic->on_write != NULL){
+				CharacteristicWriteEvent event = {
+						.characteristic_uuid = write_event->uuid,
+						.write_offset = write_event->offset,
+						.data_length = write_event->len,
+						.characteristic_handle = write_event->handle,
+						.data_buffer = write_event->data
+				};
+				characteristic->on_write(&event);
+			}
+		}
+	}
 }
 
 static void init_connection_parameters(){
