@@ -3,6 +3,7 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#include <sdk_errors.h>
 #include "vendor_service.h"
 #include "service_characteristic.h"
 

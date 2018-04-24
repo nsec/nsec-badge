@@ -10,7 +10,7 @@
 #include "../logs.h"
 
 
-#define USER_ATTRIBUTE 0
+#define NO_CONNECTION_HANDLE_REQUIRED BLE_CONN_HANDLE_INVALID
 
 
 static void set_metadata_for_characteristic(ServiceCharacteristic*);
@@ -35,9 +35,8 @@ uint16_t set_characteristic_value(ServiceCharacteristic* characteristic, uint8_t
 	ble_gatts_value_t characteristic_value;
 	characteristic_value.len = characteristic->value_length;
 	characteristic_value.p_value = value_buffer;
-	// No app error check, as this function returns non-zero on success (likely a bug in nordic sdk).
-	// It returns the bytes that were successfully written, it could be used to assert that it was successful.
-	sd_ble_gatts_value_set(USER_ATTRIBUTE, characteristic->handle, &characteristic_value);
+	characteristic_value.offset = 0;
+	APP_ERROR_CHECK(sd_ble_gatts_value_set(NO_CONNECTION_HANDLE_REQUIRED, characteristic->handle, &characteristic_value));
 	return characteristic_value.len;
 }
 
@@ -46,7 +45,7 @@ uint16_t get_characteristic_value(ServiceCharacteristic* characteristic, uint8_t
 	characteristic_value.len = characteristic->value_length;
 	characteristic_value.p_value = value_buffer;
 	characteristic_value.offset = 0;
-	APP_ERROR_CHECK(sd_ble_gatts_value_get(USER_ATTRIBUTE, characteristic->handle, &characteristic_value));
+	APP_ERROR_CHECK(sd_ble_gatts_value_get(NO_CONNECTION_HANDLE_REQUIRED, characteristic->handle, &characteristic_value));
 	return characteristic_value.len;
 }
 

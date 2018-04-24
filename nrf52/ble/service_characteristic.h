@@ -16,7 +16,7 @@ typedef struct {
 	ble_uuid_t characteristic_uuid;
 	uint16_t write_offset;
 	uint16_t data_length;
-	uint16_t characteristic_handle; //TODO check which handle is that. It may be useless.
+	uint16_t characteristic_handle;
 	uint8_t* data_buffer;
 } CharacteristicWriteEvent;
 
