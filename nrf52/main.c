@@ -26,7 +26,7 @@
 #include "identity.h"
 #include "menu.h"
 #include "nsec_conf_schedule.h"
-#include "nsec_settings.h"
+// #include "nsec_settings.h"
 #include "timer.h"
 #include "power.h"
 #include "softdevice.h"
@@ -35,6 +35,7 @@
 #include "utils.h"
 #include "ws2812fx.h"
 #include "nsec_storage.h"
+#include "nsec_led_pattern.h"
 
 #include "images/nsec_logo_bitmap.c"
 
@@ -103,6 +104,12 @@ void open_conference_schedule(uint8_t item) {
     nsec_schedule_show_dates();
 }
 
+void open_led_pattern(uint8_t item) {
+    menu_close();
+    is_at_main_menu = false;
+    nsec_led_pattern_show();
+}
+
 void open_settings(uint8_t item) {
     menu_close();
     is_at_main_menu = false;
@@ -115,6 +122,9 @@ menu_item_s main_menu_items[] = {
         .label = "Conference schedule",
         .handler = open_conference_schedule,
     }, {
+        .label = "LED pattern",
+        .handler = open_led_pattern,
+    },{
         .label = "Settings",
         .handler = open_settings,
     }

@@ -68,7 +68,6 @@ enum setting_state {
     SETTING_STATE_FIRST_COLOR,
     SETTING_STATE_SECOND_COLOR,
     SETTING_STATE_THIRD_COLOR,
-    SETTING_STATE_PATTERN,
 };
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
@@ -76,11 +75,9 @@ static enum setting_state _state = SETTING_STATE_CLOSED;
 static void show_brightness_menu(uint8_t item);
 static void show_speed_menu(uint8_t item);
 static void show_color_menu(uint8_t item);
-static void show_led_pattern_menu(uint8_t item);
 static void save_brightness(uint8_t item);
 static void save_speed(uint8_t item);
 static void save_color(uint8_t item);
-static void save_pattern(uint8_t item);
 static void set_led_default(uint8_t item);
 
 static void setting_handle_buttons(button_t button);
@@ -101,10 +98,7 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Led third color",
         .handler = show_color_menu,
-    }, {
-        .label = "Led pattern",
-        .handler = show_led_pattern_menu,
-    }, {
+    },{
         .label = "Factory default",
         .handler = set_led_default,
     }
@@ -181,8 +175,6 @@ static menu_item_s color_items[] = {
         .handler = save_color,
     } 
 };
-
-static menu_item_s pattern_items[MODE_COUNT];
 
 void nsec_show_led_settings(void) {
     gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
@@ -402,36 +394,6 @@ static void save_color(uint8_t item) {
     show_color_menu(0);
 }
 
-void show_actual_pattern(void) {
-    uint8_t mode = getMode_WS2812FX();
-    char actual[50] = {0};
-
-    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
-
-    snprintf(actual, 50, "Now: %s", getModeName_WS2812FX(mode));
-    gfx_puts(actual);
-}
-
-static void save_pattern(uint8_t item) {
-    setMode_WS2812FX(item);
-    update_stored_mode(item);
-    show_led_pattern_menu(0);
-}
-
-static void show_led_pattern_menu(uint8_t item) {
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
-
-    for (int i=0; i<MODE_COUNT; i++) {
-        pattern_items[i].label = getModeName_WS2812FX(i);
-        pattern_items[i].handler = save_pattern;
-    }
-    show_actual_pattern();
-    menu_init(0, 32, 128, 64 - 32, ARRAY_SIZE(pattern_items), pattern_items);
-    _state = SETTING_STATE_PATTERN;
-}
-
 static void set_led_default(uint8_t item) {
     load_stored_led_default_settings();
 }
@@ -450,7 +412,7 @@ static void setting_handle_buttons(button_t button) {
             case SETTING_STATE_FIRST_COLOR:
             case SETTING_STATE_SECOND_COLOR:
             case SETTING_STATE_THIRD_COLOR:
-            case SETTING_STATE_PATTERN:
+            // case SETTING_STATE_PATTERN:
                 _state = SETTING_STATE_MENU;
                 menu_close();
                 nsec_show_led_settings();
