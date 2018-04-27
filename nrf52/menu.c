@@ -127,6 +127,11 @@ void menu_change_selected_item(MENU_DIRECTION direction) {
         }
             break;
         case MENU_DIRECTION_UP: {
+            if(menu.selected_item == 0) {
+                menu.item_on_top = menu.item_count - 1;
+                menu.selected_item = menu.item_count;
+                menu_ui_redraw_all();
+            }
             if(menu.selected_item > 0) {
                 menu.selected_item--;
                 if(menu.item_on_top > menu.selected_item) {
