@@ -417,7 +417,6 @@ void show_actual_pattern(void) {
 static void save_pattern(uint8_t item) {
     setMode_WS2812FX(item);
     update_stored_mode(item);
-    show_led_pattern_menu(0);
 }
 
 static void show_led_pattern_menu(uint8_t item) {

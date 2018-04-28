@@ -612,6 +612,13 @@ void nsec_schedule_show_dates(void) {
     nsec_controls_add_handler(nsec_schedule_button_handler);
 }
 
+void nsec_schedule_return_to_talks(void) {
+    description_index = 0;
+    schedule_state = SCHEDULE_STATE_TALKS;
+    menu_open();
+    menu_ui_redraw_all();
+}
+
 void nsec_schedule_show_talks(uint8_t item) {
     track_selected = item;
     schedule_index = (date_selected * 3) + track_selected;
@@ -781,6 +788,14 @@ void nsec_schedule_show_presenters_details(uint8_t item) {
     description_index = MAX_CHAR_UNDER_STATUS_BAR;
     gfx_update();
 }
+
+void nsec_schedule_return_to_presenters(void) {
+    description_index = 0;
+    schedule_state = SCHEDULE_STATE_PRESENTERS;
+    menu_open();
+    menu_ui_redraw_all();
+}
+
 void nsec_schedule_show_presenters(uint8_t item) {
     for (int i=0; i<PRESENTER_COUNT; i++) {
         presenters_items[i].label = presenters_all[i];
@@ -829,11 +844,11 @@ static void nsec_schedule_button_handler(button_t button) {
         switch (schedule_state) {
             case SCHEDULE_STATE_PRESENTERS_DETAILS:
                 last_pressed_button = BUTTON_ENTER;
-                nsec_schedule_show_presenters(2);
+                nsec_schedule_return_to_presenters();
                 break;
             case SCHEDULE_STATE_TALK_DETAILS:
                 last_pressed_button = BUTTON_ENTER;
-                nsec_schedule_show_talks(track_selected);
+                nsec_schedule_return_to_talks();
                 break;
             case SCHEDULE_STATE_TALKS:
                 nsec_schedule_show_tracks(date_selected);
