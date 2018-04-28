@@ -52,8 +52,11 @@ void show_warning(void) {
     gfx_update();
 }
 
-void scroll_up_warning(void) {
+void scroll_up_warning(bool change_direction) {
 	text_index -= MAX_CHAR_UNDER_STATUS_BAR;
+	if (change_direction) {
+		text_index -= MAX_CHAR_UNDER_STATUS_BAR;
+	}
 
     if (text_index <= MAX_CHAR_UNDER_STATUS_BAR) {
         show_warning();
@@ -71,13 +74,17 @@ void scroll_up_warning(void) {
     gfx_update();
 }
 
-void scroll_down_warning(void) {
+void scroll_down_warning(bool change_direction) {
     if (text_index > strlen(warning_notice)) {
         return;
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
     gfx_setCursor(0, 8);
+
+    if (change_direction) {
+    	text_index += MAX_CHAR_UNDER_STATUS_BAR;
+    }
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, warning_notice + text_index, MAX_CHAR_UNDER_STATUS_BAR);
@@ -95,14 +102,25 @@ void nsec_warning_show(void) {
 }
 
 static void warning_handle_buttons(button_t button) {
+	static button_t last_pressed_button = BUTTON_ENTER;
 	if (in_warning_page) {
 	    if (button == BUTTON_BACK) {
 	    	in_warning_page = false;
 	        show_main_menu();
 	    } else if (button == BUTTON_UP) {
-	    	scroll_up_warning();
+	   		if (last_pressed_button == BUTTON_DOWN) {
+	   			scroll_up_warning(true);
+	   		} else {
+	   			scroll_up_warning(false);
+	   		}
+	    	last_pressed_button = BUTTON_UP;
 	    } else if (button == BUTTON_DOWN) {
-	    	scroll_down_warning();
+	    	if (last_pressed_button == BUTTON_UP) {
+	    		scroll_down_warning(true);
+	    	} else {
+	    		scroll_down_warning(false);
+	    	}
+	    	last_pressed_button = BUTTON_DOWN;
 	    }
 	}
 }
