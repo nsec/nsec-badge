@@ -13,22 +13,26 @@
 #define NO_CONNECTION_HANDLE_REQUIRED BLE_CONN_HANDLE_INVALID
 
 
+
 static void set_metadata_for_characteristic(ServiceCharacteristic*, ble_gatts_char_md_t*);
-static void set_default_metadata_for_attribute(ble_gatts_attr_md_t* attribute_metadata);
-static void set_attribute(ServiceCharacteristic*, ble_gatts_attr_t*, ble_gatts_attr_md_t*);
+static void set_default_metadata_for_attribute(ble_gatts_attr_md_t* attribute_metadata, bool auto_read, bool auto_write);
+static void set_attribute(ServiceCharacteristic*, ble_gatts_attr_t*, ble_gatts_attr_md_t*, bool auto_read, bool auto_write);
 
 
-void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, bool read, bool write){
+void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, bool read, bool write,
+		bool auto_read, bool auto_write){
 	characteristic->read = read;
 	characteristic->write = write;
 	characteristic->value_length = value_length;
 	characteristic->on_write = NULL;
+	characteristic->on_write_request = NULL;
+	characteristic->on_read_request = NULL;
 }
 
 void configure_characteristic(ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
-		ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute){
+		ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute, bool auto_read, bool auto_write){
 	set_metadata_for_characteristic(characteristic, metadata);
-	set_attribute(characteristic, attribute, attribute_metadata);
+	set_attribute(characteristic, attribute, attribute_metadata, auto_read, auto_write);
 }
 
 uint16_t set_characteristic_value(ServiceCharacteristic* characteristic, uint8_t* value_buffer){
@@ -64,20 +68,29 @@ static void set_metadata_for_characteristic(ServiceCharacteristic* characteristi
 	metadata->p_sccd_md = NULL;
 }
 
-static void set_attribute(ServiceCharacteristic* characteristic, ble_gatts_attr_t* attribute, ble_gatts_attr_md_t* attribute_metadata){
+void add_write_request_handler(ServiceCharacteristic* characteristic, on_characteristic_write_request event_handler){
+	characteristic->on_write_request = event_handler;
+}
+
+void add_read_request_handler(ServiceCharacteristic* characteristic, on_characteristic_read_request event_handler){
+	characteristic->on_read_request = event_handler;
+}
+
+static void set_attribute(ServiceCharacteristic* characteristic, ble_gatts_attr_t* attribute,
+		ble_gatts_attr_md_t* attribute_metadata, bool auto_read, bool auto_write){
 	attribute->init_len = characteristic->value_length;
 	attribute->max_len = characteristic->value_length;
 	attribute->init_offs = 0;
-	set_default_metadata_for_attribute(attribute_metadata);
+	set_default_metadata_for_attribute(attribute_metadata, auto_read, auto_write);
 	attribute->p_attr_md = attribute_metadata;
 }
 
-static void set_default_metadata_for_attribute(ble_gatts_attr_md_t* attribute_metadata){
+static void set_default_metadata_for_attribute(ble_gatts_attr_md_t* attribute_metadata, bool auto_read, bool auto_write){
 	bzero(attribute_metadata, sizeof(*attribute_metadata));
 	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->read_perm);
 	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->write_perm);
 	attribute_metadata->vloc = BLE_GATTS_VLOC_STACK;
-	attribute_metadata->rd_auth = 0;
-	attribute_metadata->wr_auth = 0;
+	attribute_metadata->rd_auth = !auto_read;
+	attribute_metadata->wr_auth = !auto_write;
 	attribute_metadata->vlen = 0;
 }

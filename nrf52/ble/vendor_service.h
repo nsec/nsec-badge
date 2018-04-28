@@ -28,7 +28,8 @@ typedef struct {
 
 void create_vendor_service(VendorService* service);
 
-void add_characteristic_to_vendor_service(VendorService* service, ServiceCharacteristic* characteristic, uint16_t value_length, bool read, bool write);
+void add_characteristic_to_vendor_service(VendorService* service, ServiceCharacteristic* characteristic, uint16_t value_length, bool read,
+		bool write, bool auto_read, bool auto_write);
 
 void create_uuid_for_vendor_service(ble_uuid_t* service_uuid, uint16_t service_number);
 

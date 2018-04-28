@@ -17,17 +17,17 @@ void create_vendor_service(VendorService* service){
 	service->characteristic_count = 0;
 }
 
-void add_characteristic_to_vendor_service(VendorService* service, ServiceCharacteristic* characteristic, uint16_t value_length,
-		bool read, bool write){
+void add_characteristic_to_vendor_service(VendorService* service, ServiceCharacteristic* characteristic, uint16_t value_length, bool read,
+		bool write, bool auto_read, bool auto_write){
 	if(service->characteristic_count >= MAX_CHARACTERISTICS_PER_SERVICE)
 		return;
 	ble_gatts_char_handles_t characteristic_handles;
 	service->characteristics[service->characteristic_count] = characteristic;
-	create_characteristic(characteristic, value_length, read, write);
+	create_characteristic(characteristic, value_length, read, write, auto_read, auto_write);
 	ble_gatts_char_md_t metadata;
 	ble_gatts_attr_md_t attribute_metadata;
 	ble_gatts_attr_t attribute;
-	configure_characteristic(characteristic, &metadata, &attribute_metadata, &attribute);
+	configure_characteristic(characteristic, &metadata, &attribute_metadata, &attribute, auto_read, auto_write);
 	service->characteristic_count++;
 	ble_uuid_t characteristic_uuid;
 	create_uuid_for_service_characteristic(service, &characteristic_uuid);

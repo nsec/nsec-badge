@@ -132,6 +132,20 @@ void show_main_menu(void) {
     is_at_main_menu = true;
 }
 
+uint16_t service0_write_event_handler(CharacteristicWriteEvent* event){
+	NRF_LOG_INFO("Write request, I will not allow it.");
+	return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
+}
+
+uint16_t service0_read_request_handler(CharacteristicReadEvent* event){
+	NRF_LOG_INFO("Read request, I will allow it.");
+	return BLE_GATT_STATUS_SUCCESS;
+}
+
+void service1_write_event_handler(CharacteristicWriteEvent* event){
+	NRF_LOG_INFO("Write command for service 1");
+}
+
 int main(void) {
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
     g_device_id[9] = '\0';
@@ -142,27 +156,32 @@ int main(void) {
     log_init();
     power_init();
     softdevice_init();
-    battery_init();
-
-    timer_init();
-    init_WS2812FX();
-    ssd1306_init();
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
-    nsec_buttons_init();
+	battery_init();
 
     /*
      * Initialize bluetooth stack
      */
     create_ble_device("My BLE device");
     configure_advertising();
-    VendorService service;
-    ServiceCharacteristic characteristic;
-    create_vendor_service(&service);
-    config_dummy_service(&service, &characteristic);
+    VendorService service0;
+    ServiceCharacteristic characteristic0;
+    create_vendor_service(&service0);
+    config_dummy_service(&service0, &characteristic0);
+    uint8_t value = 0xab;
+    set_characteristic_value(&characteristic0, &value);
+    add_write_request_handler(&characteristic0, service0_write_event_handler);
+    add_read_request_handler(&characteristic0, service0_read_request_handler);
+
+    VendorService service1;
+	create_vendor_service(&service1);
+	add_vendor_service(&service1);
+	ServiceCharacteristic characteristic1;
+	add_characteristic_to_vendor_service(&service1, &characteristic1, 1, true, true, true, true);
+	add_write_event_handler(&characteristic1, service1_write_event_handler);
+	value = 0xba;
+	set_characteristic_value(&characteristic1, &value);
     start_advertising();
-
-    //nsec_identity_init();
-
+    nsec_identity_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
     nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
