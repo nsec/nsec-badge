@@ -52,7 +52,6 @@ bool is_at_main_menu = false;
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     static int error_displayed = 0;
     uint8_t count = 50;
-
     if(!error_displayed) {
         char error_msg[128];
         error_info_t *err_info = (error_info_t *) info;
@@ -156,17 +155,10 @@ int main(void) {
      */
     create_ble_device("My BLE device");
     configure_advertising();
-    VendorService service0;
-    ServiceCharacteristic* characteristic0;
-    create_vendor_service(&service0);
-    config_dummy_service(&service0, characteristic0);
-
-    VendorService service1;
-	ServiceCharacteristic* characteristic1;
-	create_vendor_service(&service1);
-	add_vendor_service(&service1);
-	add_characteristic_to_vendor_service(&service1, characteristic1, 1, 1, 1);
-
+    VendorService service;
+    ServiceCharacteristic characteristic;
+    create_vendor_service(&service);
+    config_dummy_service(&service, &characteristic);
     start_advertising();
 
     //nsec_identity_init();

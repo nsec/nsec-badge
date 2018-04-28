@@ -27,9 +27,6 @@ typedef void (*on_characteristic_write)(CharacteristicWriteEvent*);
 typedef struct {
 	uint16_t handle;
 	uint16_t value_length;
-	ble_gatts_char_md_t metadata;
-	ble_gatts_attr_md_t attribute_metadata;
-	ble_gatts_attr_t attribute;
 	bool read;
 	bool write;
 	on_characteristic_write on_write;
@@ -38,7 +35,8 @@ typedef struct {
 
 void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, bool read, bool write);
 
-void configure_characteristic(ServiceCharacteristic*);
+void configure_characteristic(ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
+		ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute);
 
 uint16_t set_characteristic_value(ServiceCharacteristic*, uint8_t* value_buffer);
 

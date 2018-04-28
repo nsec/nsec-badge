@@ -165,11 +165,10 @@ uint32_t add_vendor_service(VendorService* service){
 	return 0;
 }
 
-ServiceCharacteristic* config_dummy_service(VendorService* dummy_service){
+void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* characteristic){
 	add_vendor_service(dummy_service);
-	ServiceCharacteristic* characteristic = add_characteristic_to_vendor_service(dummy_service, 1, 1, 1);
+	add_characteristic_to_vendor_service(dummy_service, characteristic, 1, 1, 1);
 	set_default_advertised_service(&dummy_service->uuid);
-	return characteristic;
 }
 
 static void gatt_init(){
