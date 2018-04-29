@@ -165,7 +165,6 @@ int main(void) {
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     load_stored_led_settings();
-    start_WS2812FX();
 
     nsec_intro();
     show_main_menu();
