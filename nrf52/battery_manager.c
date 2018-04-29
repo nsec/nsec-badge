@@ -1,53 +1,120 @@
-//  Copyright (c) 2017
-//  Benjamin Vanheuverzwijn <bvanheu@gmail.com>
-//  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
-//
-//  License: MIT (see LICENSE for details)
+/*
+ * Copyright 2016-2017 Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+ *           2016-2017 Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
+ *           2018 Michael Jeanson <mjeanson@gmail.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
-#include "battery.h"
 #include <app_timer.h>
 #include <nrf_gpio.h>
+
+#include "battery.h"
 #include "status_bar.h"
 #include "boards.h"
 
+#define BATTERY_MANAGER_TIMER_TIMEOUT_MS 1000
+
+#define BATTERY_HISTERESIS_MV 20
+
+#define BATTERY_100PER_THRES_MV 3800
+#define BATTERY_75PER_THRES_MV 3700
+#define BATTERY_50PER_THRES_MV 3300
+#define BATTERY_25PER_THRES_MV 3000
+
+#define BATTERY_100PER_UP_THRES_MV (BATTERY_100PER_THRES_MV + BATTERY_HISTERESIS_MV)
+#define BATTERY_75PER_UP_THRES_MV (BATTERY_75PER_THRES_MV + BATTERY_HISTERESIS_MV)
+#define BATTERY_50PER_UP_THRES_MV (BATTERY_50PER_THRES_MV + BATTERY_HISTERESIS_MV)
+#define BATTERY_25PER_UP_THRES_MV (BATTERY_25PER_THRES_MV + BATTERY_HISTERESIS_MV)
+
+#define BATTERY_100PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
+#define BATTERY_75PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
+#define BATTERY_50PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
+#define BATTERY_25PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
+
 APP_TIMER_DEF(_battery_manager_timer_id);
-static void _nsec_battery_check(void *p_context);
 
-void nsec_battery_manager_init(void) {
-    battery_init();
-
-    app_timer_create(&_battery_manager_timer_id,
-                     APP_TIMER_MODE_REPEATED,
-                     _nsec_battery_check);
-    app_timer_start(_battery_manager_timer_id,
-            APP_TIMER_TICKS(1000/*ms*/), NULL);
-
-    _nsec_battery_check(NULL);
-}
-
-static void _nsec_battery_check(void *p_context) {
-    if (!battery_is_present()) {
-        nsec_status_set_battery_status(STATUS_BATTERY_0_PERCENT);
-        return;
-    }
-
+/*
+ * This handler updates the battery icon in the status bar.
+ */
+static
+void _battery_manager_handler(void *p_context) {
+    static uint16_t prev_voltage = 0;
     uint16_t voltage = battery_get_voltage();
 
-    if(voltage > 131) {
-        nsec_status_set_battery_status(STATUS_BATTERY_100_PERCENT);
-    }
-    else if(voltage > 130) {
-        nsec_status_set_battery_status(STATUS_BATTERY_75_PERCENT);
-    }
-    else if(voltage > 129) {
-        nsec_status_set_battery_status(STATUS_BATTERY_50_PERCENT);
-    }
-    else if(voltage > 128) {
-        nsec_status_set_battery_status(STATUS_BATTERY_25_PERCENT);
-    }
-    else {
-        nsec_status_set_battery_status(STATUS_BATTERY_0_PERCENT);
+    if (battery_is_usb_plugged()) {
+        nsec_status_set_battery_status(STATUS_BATTERY_CHARGING);
+        goto end_refresh;
     }
 
+    if (voltage > prev_voltage) {
+        if (voltage > BATTERY_100PER_UP_THRES_MV) {
+            nsec_status_set_battery_status(STATUS_BATTERY_100_PERCENT);
+        }
+        else if (voltage > BATTERY_75PER_UP_THRES_MV) {
+            nsec_status_set_battery_status(STATUS_BATTERY_75_PERCENT);
+        }
+        else if (voltage > BATTERY_50PER_UP_THRES_MV) {
+            nsec_status_set_battery_status(STATUS_BATTERY_50_PERCENT);
+        }
+        else if (voltage > BATTERY_25PER_UP_THRES_MV) {
+            nsec_status_set_battery_status(STATUS_BATTERY_25_PERCENT);
+        }
+        else {
+            nsec_status_set_battery_status(STATUS_BATTERY_0_PERCENT);
+        }
+    } else {
+        if (voltage > BATTERY_100PER_DOWN_THRES_MV) {
+            nsec_status_set_battery_status(STATUS_BATTERY_100_PERCENT);
+        }
+        else if (voltage > BATTERY_75PER_DOWN_THRES_MV) {
+            nsec_status_set_battery_status(STATUS_BATTERY_75_PERCENT);
+        }
+        else if (voltage > BATTERY_50PER_DOWN_THRES_MV) {
+            nsec_status_set_battery_status(STATUS_BATTERY_50_PERCENT);
+        }
+        else if (voltage > BATTERY_25PER_DOWN_THRES_MV) {
+            nsec_status_set_battery_status(STATUS_BATTERY_25_PERCENT);
+        }
+        else {
+            nsec_status_set_battery_status(STATUS_BATTERY_0_PERCENT);
+        }
+    }
+
+end_refresh:
     battery_refresh();
+}
+
+void nsec_battery_manager_init(void) {
+    ret_code_t err_code;
+
+    battery_init();
+
+    err_code = app_timer_create(&_battery_manager_timer_id,
+                APP_TIMER_MODE_REPEATED,
+                _battery_manager_handler);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(_battery_manager_timer_id,
+                APP_TIMER_TICKS(BATTERY_MANAGER_TIMER_TIMEOUT_MS), NULL);
+    APP_ERROR_CHECK(err_code);
+
+    /* Call the handler immediately to get the initial battery status */
+    _battery_manager_handler(NULL);
 }

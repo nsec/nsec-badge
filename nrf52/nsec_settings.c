@@ -18,8 +18,10 @@
 #include "identity.h"
 #include "ws2812fx.h"
 #include "nsec_storage.h"
+#include "timer.h"
 
 static void toggle_bluetooth(uint8_t item);
+static void battery_status_screen(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
 static void show_led_settings(uint8_t item);
@@ -34,6 +36,7 @@ enum setting_state {
     SETTING_STATE_CREDIT_DETAILS,
     SETTING_STATE_SCREEN_OFF,
     SETTING_STATE_FLASHLIGHT,
+    SETTING_STATE_BATTERY,
 };
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
@@ -49,6 +52,9 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
+    }, {
+        .label = "Battery status",
+        .handler = battery_status_screen,
     }, {
         .label = "Turn screen off",
         .handler = turn_off_screen,
@@ -157,6 +163,12 @@ static void show_credit(uint8_t item) {
     gfx_update();
 }
 
+static void battery_status_screen(uint8_t item) {
+    _state = SETTING_STATE_BATTERY;
+    menu_close();
+    start_battery_status_timer();
+}
+
 static void toggle_flashlight(uint8_t item) {
     _state = SETTING_STATE_FLASHLIGHT;
     menu_close();
@@ -200,6 +212,13 @@ static void setting_handle_buttons(button_t button) {
             case SETTING_STATE_CREDIT_DETAILS:
                 show_credit(4);
                 break;
+
+	    case SETTING_STATE_BATTERY:
+		// stop the refreshing
+                stop_battery_status_timer();
+                nsec_status_bar_ui_redraw();
+                nsec_setting_show();
+		break;
 
             case SETTING_STATE_FLASHLIGHT:
                 load_stored_led_settings();
