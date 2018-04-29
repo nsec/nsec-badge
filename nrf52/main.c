@@ -35,6 +35,7 @@
 #include "utils.h"
 #include "ws2812fx.h"
 #include "nsec_storage.h"
+#include "nsec_warning.h"
 
 #include "images/nsec_logo_bitmap.c"
 
@@ -109,6 +110,12 @@ void open_settings(uint8_t item) {
     nsec_setting_show();
 }
 
+void open_warning(uint8_t item) {
+    menu_close();
+    is_at_main_menu = false;
+    nsec_warning_show();
+}
+
 static
 menu_item_s main_menu_items[] = {
     {
@@ -117,6 +124,9 @@ menu_item_s main_menu_items[] = {
     }, {
         .label = "Settings",
         .handler = open_settings,
+    }, {
+        .label = "Battery Warning",
+        .handler = open_warning,
     }
 };
 

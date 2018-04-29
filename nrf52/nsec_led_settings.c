@@ -406,18 +406,19 @@ void show_actual_pattern(void) {
     uint8_t mode = getMode_WS2812FX();
     char actual[50] = {0};
 
-    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_fillRect(0, 12, 128, 20, SSD1306_BLACK);
     gfx_setCursor(0, 12);
     gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
 
     snprintf(actual, 50, "Now: %s", getModeName_WS2812FX(mode));
     gfx_puts(actual);
+    gfx_update();
 }
 
 static void save_pattern(uint8_t item) {
     setMode_WS2812FX(item);
     update_stored_mode(item);
-    show_led_pattern_menu(0);
+    show_actual_pattern();
 }
 
 static void show_led_pattern_menu(uint8_t item) {

@@ -612,6 +612,13 @@ void nsec_schedule_show_dates(void) {
     nsec_controls_add_handler(nsec_schedule_button_handler);
 }
 
+void nsec_schedule_return_to_talks(void) {
+    description_index = 0;
+    schedule_state = SCHEDULE_STATE_TALKS;
+    menu_open();
+    menu_ui_redraw_all();
+}
+
 void nsec_schedule_show_talks(uint8_t item) {
     track_selected = item;
     schedule_index = (date_selected * 3) + track_selected;
@@ -657,7 +664,7 @@ void _nsec_schedule_show_details(void) {
     schedule_state = SCHEDULE_STATE_TALK_DETAILS;
 }
 
-void nsec_schedule_scroll_up_details(void) {
+void nsec_schedule_scroll_up_details(bool change_direction) {
     //Is there enough place for the header ?
     uint16_t header_length = nsec_schedule_get_header_length();
 
@@ -665,6 +672,9 @@ void nsec_schedule_scroll_up_details(void) {
         description_index = 0;
     } else {
         description_index -= MAX_CHAR_UNDER_STATUS_BAR;
+        if (change_direction) {
+            description_index -= MAX_CHAR_UNDER_STATUS_BAR;
+        }
     }
 
     if (header_length + description_index < MAX_CHAR_UNDER_STATUS_BAR) {
@@ -684,13 +694,17 @@ void nsec_schedule_scroll_up_details(void) {
     gfx_update();
 }
 
-void nsec_schedule_scroll_down_details(void) {
+void nsec_schedule_scroll_down_details(bool change_direction) {
     if (description_index > strlen(nsec_schedule[schedule_index].descriptions[talk_selected])) {
         return;
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
     gfx_setCursor(0, 8);
+
+    if (change_direction) {
+        description_index += MAX_CHAR_UNDER_STATUS_BAR;
+    }
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected] + description_index,
@@ -702,11 +716,14 @@ void nsec_schedule_scroll_down_details(void) {
     gfx_update();
 }
 
-void nsec_schedule_scroll_up_presenters_details() {
+void nsec_schedule_scroll_up_presenters_details(bool change_direction) {
     if (description_index < MAX_CHAR_UNDER_STATUS_BAR) {
         description_index = 0;
     } else {
         description_index -= MAX_CHAR_UNDER_STATUS_BAR;
+        if (change_direction) {
+            description_index -= MAX_CHAR_UNDER_STATUS_BAR;
+        }
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
@@ -721,13 +738,17 @@ void nsec_schedule_scroll_up_presenters_details() {
     gfx_update();
 }
 
-void nsec_schedule_scroll_down_presenters_details() {
+void nsec_schedule_scroll_down_presenters_details(bool change_direction) {
     if (description_index > strlen(presenters_detail[presenter_selected])) {
         return;
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
     gfx_setCursor(0, 8);
+
+    if (change_direction) {
+        description_index += MAX_CHAR_UNDER_STATUS_BAR;
+    }
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, presenters_detail[presenter_selected] + description_index,
@@ -767,6 +788,14 @@ void nsec_schedule_show_presenters_details(uint8_t item) {
     description_index = MAX_CHAR_UNDER_STATUS_BAR;
     gfx_update();
 }
+
+void nsec_schedule_return_to_presenters(void) {
+    description_index = 0;
+    schedule_state = SCHEDULE_STATE_PRESENTERS;
+    menu_open();
+    menu_ui_redraw_all();
+}
+
 void nsec_schedule_show_presenters(uint8_t item) {
     for (int i=0; i<PRESENTER_COUNT; i++) {
         presenters_items[i].label = presenters_all[i];
@@ -778,25 +807,48 @@ void nsec_schedule_show_presenters(uint8_t item) {
 }
 
 static void nsec_schedule_button_handler(button_t button) {
+    static button_t last_pressed_button = BUTTON_ENTER;
     if (schedule_state == SCHEDULE_STATE_TALK_DETAILS && button == BUTTON_DOWN) {
-        nsec_schedule_scroll_down_details();
+        if (last_pressed_button == BUTTON_UP) {
+            nsec_schedule_scroll_down_details(true);
+        } else {
+            nsec_schedule_scroll_down_details(false);
+        }
+        last_pressed_button = BUTTON_DOWN;
     } else if (schedule_state == SCHEDULE_STATE_TALK_DETAILS && button == BUTTON_UP) {
-        nsec_schedule_scroll_up_details();
+        if (last_pressed_button == BUTTON_DOWN) {
+            nsec_schedule_scroll_up_details(true);
+        } else {
+            nsec_schedule_scroll_up_details(false);
+        }
+        last_pressed_button = BUTTON_UP;
     }
 
     if (schedule_state == SCHEDULE_STATE_PRESENTERS_DETAILS && button == BUTTON_DOWN) {
-        nsec_schedule_scroll_down_presenters_details();
+        if (last_pressed_button == BUTTON_UP) {
+            nsec_schedule_scroll_down_presenters_details(true);
+        } else {
+            nsec_schedule_scroll_down_presenters_details(false);
+        }
+        last_pressed_button = BUTTON_DOWN;
     } else if (schedule_state == SCHEDULE_STATE_PRESENTERS_DETAILS && button == BUTTON_UP) {
-        nsec_schedule_scroll_up_presenters_details();
+        if (last_pressed_button == BUTTON_DOWN) {
+            nsec_schedule_scroll_up_presenters_details(true);
+        } else {
+            nsec_schedule_scroll_up_presenters_details(false);
+        }
+        last_pressed_button = BUTTON_UP;
     }
 
     if(button == BUTTON_BACK) {
         switch (schedule_state) {
             case SCHEDULE_STATE_PRESENTERS_DETAILS:
-                nsec_schedule_show_presenters(2);
+                last_pressed_button = BUTTON_ENTER;
+                nsec_schedule_return_to_presenters();
                 break;
             case SCHEDULE_STATE_TALK_DETAILS:
-                nsec_schedule_show_talks(track_selected);
+                last_pressed_button = BUTTON_ENTER;
+                nsec_schedule_return_to_talks();
                 break;
             case SCHEDULE_STATE_TALKS:
                 nsec_schedule_show_tracks(date_selected);

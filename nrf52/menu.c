@@ -49,6 +49,10 @@ void menu_close(void) {
     menu.is_handling_buttons = 0;
 }
 
+void menu_open(void) {
+    menu.is_handling_buttons = 1;
+}
+
 void menu_set_position(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height) {
     menu.pos_x = pos_x;
     menu.pos_y = pos_y;
