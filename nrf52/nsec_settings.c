@@ -113,7 +113,11 @@ static void show_member_details(uint8_t item) {
         break;
 
         case 3: //Michael Jeanson
-        show_credit(4);
+        gfx_puts("Badge drone nsec 2018\n");
+        gfx_puts("Michael Jeanson\n");
+        gfx_puts("mjeanson@gmail.com\n");
+        gfx_puts("@mjeanson\n");
+        gfx_puts("Software\n");
         break;
 
         case 4: // Nicolas Aubry
