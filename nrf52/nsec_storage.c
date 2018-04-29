@@ -47,10 +47,12 @@ typedef struct LedSettings_t {
 	uint16_t speed;
 	uint8_t brightness;
 	uint32_t colors[NUM_COLORS];
+    bool reverse;
+    bool control;
 } LedSettings;
 
 LedSettings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS, 
-								{RED, GREEN, BLUE}};
+								{RED, GREEN, BLUE}, false, true};
 LedSettings actual_settings;
 bool need_led_settings_update = false;
 
@@ -137,16 +139,32 @@ void update_stored_color(uint32_t color, uint8_t index) {
 	}
 }
 
+void update_stored_reverse(bool reverse) {
+    actual_settings.reverse = reverse;
+    need_led_settings_update = true;
+}
+
+void update_stored_control(bool control) {
+    actual_settings.control = control;
+    need_led_settings_update = true;
+}
+
 void load_stored_led_settings(void) {
 	if (!is_init) {
 		nsec_storage_init();
 	}
+    if (actual_settings.control) {
+        start_WS2812FX();
+    } else {
+        stop_WS2812FX();
+    }
 	setBrightness_WS2812FX(actual_settings.brightness);
 	setMode_WS2812FX(actual_settings.mode);
 	setSpeed_WS2812FX(actual_settings.speed);
 	setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
 	setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);
 	setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
+    setReverse_WS2812FX(actual_settings.reverse);
 }
 
 void load_stored_led_default_settings(void) {
