@@ -4,22 +4,25 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#include <nrf.h>
+#include <stdio.h>
 #include "nsec_settings.h"
+#include "nsec_led_settings.h"
 #include "menu.h"
 #include "ssd1306.h"
-#include <nrf.h>
 #include "ble/nsec_ble.h"
 #include "status_bar.h"
 #include "app_glue.h"
 #include "controls.h"
 #include "identity.h"
-#include <stdio.h>
+#include "ws2812fx.h"
+#include "nsec_storage.h"
 
 static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
-static void flashlight(uint8_t item);
-static void reset_pet(uint8_t item);
+static void show_led_settings(uint8_t item);
+static void toggle_flashlight(uint8_t item);
 static void setting_handle_buttons(button_t button);
 
 enum setting_state {
@@ -38,6 +41,9 @@ static char sync_key_string[] = "Sync key: XXXX";
 
 static menu_item_s settings_items[] = {
     {
+        .label = "Led settings",
+        .handler = show_led_settings,
+    }, {
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
     }, {
@@ -45,7 +51,7 @@ static menu_item_s settings_items[] = {
         .handler = turn_off_screen,
     }, {
         .label = "Flashlight",
-        .handler = flashlight,
+        .handler = toggle_flashlight,
     }, {
         .label = "Credit",
         .handler = show_credit,
@@ -54,6 +60,12 @@ static menu_item_s settings_items[] = {
         .handler = NULL,
     }
 };
+
+static void show_led_settings(uint8_t item) {
+    menu_close();
+    _state = SETTING_STATE_CLOSED;
+    nsec_show_led_settings();
+}
 
 static void toggle_bluetooth(uint8_t item) {
     if(nsec_ble_toggle()) {
@@ -77,18 +89,21 @@ static void show_credit(uint8_t item) {
     gfx_update();
 }
 
+static void toggle_flashlight(uint8_t item) {
+    _state = SETTING_STATE_FLASHLIGHT;
+    menu_close();
+    gfx_fillScreen(SSD1306_WHITE);
+    gfx_update();
+    setMode_WS2812FX(FX_MODE_STATIC);
+    setBrightness_WS2812FX(255);
+    setColor_packed_WS2812FX(WHITE);
+}
+
 static void turn_off_screen(uint8_t item) {
     menu_close();
     gfx_fillScreen(SSD1306_BLACK);
     gfx_update();
     _state = SETTING_STATE_SCREEN_OFF;
-}
-
-static void flashlight(uint8_t item) {
-    menu_close();
-    gfx_fillScreen(SSD1306_WHITE);
-    gfx_update();
-    _state = SETTING_STATE_FLASHLIGHT;
 }
 
 void nsec_setting_show(void) {
@@ -115,9 +130,11 @@ static void setting_handle_buttons(button_t button) {
                 break;
 
             case SETTING_STATE_FLASHLIGHT:
-                gfx_fillScreen(SSD1306_BLACK);
+                load_stored_led_settings();
+                // no break
             case SETTING_STATE_SCREEN_OFF:
                 nsec_status_bar_ui_redraw();
+                // no break
             case SETTING_STATE_CREDIT:
                 nsec_setting_show();
                 break;
