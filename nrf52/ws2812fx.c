@@ -372,6 +372,11 @@ void setSpeed_WS2812FX(uint16_t s) {
   fx->segments[0].speed = constrain(s, SPEED_MIN, SPEED_MAX);
 }
 
+void setReverse_WS2812FX(bool reverse) {
+  RESET_RUNTIME;
+  fx->segments[0].reverse = reverse;
+}
+
 void increaseSpeed_WS2812FX(uint8_t s) {
   uint16_t newSpeed = constrain(SEGMENT.speed + s,
                                 SPEED_MIN, SPEED_MAX);
@@ -436,6 +441,10 @@ uint8_t getMode_WS2812FX(void) {
 
 uint16_t getSpeed_WS2812FX(void) {
   return fx->segments[0].speed;
+}
+
+bool getReverse_WS2812FX(void) {
+  return fx->segments[0].reverse;
 }
 
 uint8_t getBrightness_WS2812FX(void) {
