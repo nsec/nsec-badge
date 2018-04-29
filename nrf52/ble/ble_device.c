@@ -57,7 +57,7 @@ static void gatt_init();
 static void init_connection_parameters();
 static void add_device_information_service(char * manufacturer_name, char * model, char * serial_number,
 		char * hw_revision, char * fw_revision, char * sw_revision);
-static void on_characteristic_write_event(ble_gatts_evt_write_t* write_event);
+static void on_characteristic_write_command_event(ble_gatts_evt_write_t* write_event);
 static void on_characteristic_write_request_event(ble_gatts_evt_write_t* write_event, uint16_t connection_handle);
 static void on_characteristic_read_request_event(ble_gatts_evt_read_t* read_event, uint16_t connection_handle);
 static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid);
@@ -149,7 +149,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
         {
         	NRF_LOG_INFO("write command");
         	ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
-        	on_characteristic_write_event(p_evt_write);
+        	on_characteristic_write_command_event(p_evt_write);
         	break;
         }
         case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
@@ -185,9 +185,13 @@ uint32_t add_vendor_service(VendorService* service){
 	return 0;
 }
 
+/*
+ * At least one BLE service must be advertised for the advertising to work. This dummy service is a place holder
+ * to make it work until a real service is added to assume this role.
+ */
 void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* characteristic){
 	add_vendor_service(dummy_service);
-	add_characteristic_to_vendor_service(dummy_service, characteristic, 1, true, true, false, false);
+	add_characteristic_to_vendor_service(dummy_service, characteristic, 1, REQUEST_READ, REQUEST_WRITE);
 	set_default_advertised_service(&dummy_service->uuid);
 }
 
@@ -210,9 +214,9 @@ static void connection_params_error_handler(uint32_t nrf_error){
     log_error_code("connection params error handler", nrf_error);
 }
 
-static void on_characteristic_write_event(ble_gatts_evt_write_t* write_event){
+static void on_characteristic_write_command_event(ble_gatts_evt_write_t* write_event){
 	ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
-	if(characteristic != NULL && characteristic->on_write != NULL){
+	if(characteristic != NULL && characteristic->on_write_command != NULL){
 		CharacteristicWriteEvent event = {
 			.characteristic_uuid = write_event->uuid,
 			.write_offset = write_event->offset,
@@ -220,7 +224,7 @@ static void on_characteristic_write_event(ble_gatts_evt_write_t* write_event){
 			.characteristic_handle = write_event->handle,
 			.data_buffer = write_event->data
 		};
-		characteristic->on_write(&event);
+		characteristic->on_write_command(&event);
 	}
 }
 
