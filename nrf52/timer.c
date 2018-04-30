@@ -10,11 +10,18 @@
 #include "timer.h"
 #include "battery.h"
 #include "ssd1306.h"
+#include "battery_manager.h"
 
 uint64_t heartbeat_timeout_count = 0;
 
 APP_TIMER_DEF(m_heartbeat_timer_id);
 APP_TIMER_DEF(m_battery_status_timer_id);
+APP_TIMER_DEF(m_battery_manager_timer_id);
+
+static
+void _battery_manager_handler(void *p_context) {
+    battery_manager_handler();
+}
 
 /*
  * Callback function when the heartbeat timeout expires
@@ -98,5 +105,16 @@ void stop_battery_status_timer(void) {
     ret_code_t err_code;
 
     err_code = app_timer_stop(m_battery_status_timer_id);
+    APP_ERROR_CHECK(err_code);
+}
+
+void start_battery_manage_timer(void) {
+    ret_code_t err_code = app_timer_create(&m_battery_manager_timer_id,
+                APP_TIMER_MODE_REPEATED,
+                _battery_manager_handler);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(m_battery_manager_timer_id,
+                APP_TIMER_TICKS(BATTERY_MANAGER_TIMER_TIMEOUT_MS), NULL);
     APP_ERROR_CHECK(err_code);
 }

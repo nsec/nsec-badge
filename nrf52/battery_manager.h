@@ -25,5 +25,6 @@
 #define BATTERY_MANAGER_H
 
 void nsec_battery_manager_init(void);
+void battery_manager_handler(void);
 
 #endif

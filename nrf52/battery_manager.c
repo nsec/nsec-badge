@@ -28,8 +28,7 @@
 #include "battery.h"
 #include "status_bar.h"
 #include "boards.h"
-
-#define BATTERY_MANAGER_TIMER_TIMEOUT_MS 1000
+#include "timer.h"
 
 #define BATTERY_HISTERESIS_MV 20
 
@@ -48,13 +47,10 @@
 #define BATTERY_50PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
 #define BATTERY_25PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
 
-APP_TIMER_DEF(_battery_manager_timer_id);
-
 /*
  * This handler updates the battery icon in the status bar.
  */
-static
-void _battery_manager_handler(void *p_context) {
+void battery_manager_handler(void) {
     static uint16_t prev_voltage = 0;
     uint16_t voltage = battery_get_voltage();
 
@@ -106,15 +102,9 @@ void nsec_battery_manager_init(void) {
 
     battery_init();
 
-    err_code = app_timer_create(&_battery_manager_timer_id,
-                APP_TIMER_MODE_REPEATED,
-                _battery_manager_handler);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = app_timer_start(_battery_manager_timer_id,
-                APP_TIMER_TICKS(BATTERY_MANAGER_TIMER_TIMEOUT_MS), NULL);
-    APP_ERROR_CHECK(err_code);
+    start_battery_manage_timer();
 
     /* Call the handler immediately to get the initial battery status */
-    _battery_manager_handler(NULL);
+    //_battery_manager_handler(NULL);
+    battery_manager_handler();
 }
