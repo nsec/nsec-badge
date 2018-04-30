@@ -68,6 +68,8 @@ enum setting_state {
     SETTING_STATE_FIRST_COLOR,
     SETTING_STATE_SECOND_COLOR,
     SETTING_STATE_THIRD_COLOR,
+    SETTING_STATE_REVERSE,
+    SETTING_STATE_CONTROL,
     SETTING_STATE_PATTERN,
 };
 
@@ -80,7 +82,11 @@ static void show_led_pattern_menu(uint8_t item);
 static void save_brightness(uint8_t item);
 static void save_speed(uint8_t item);
 static void save_color(uint8_t item);
+static void save_reverse(uint8_t item);
 static void save_pattern(uint8_t item);
+static void save_control(uint8_t item); 
+static void show_reverse_menu(uint8_t item);
+static void show_control_menu(uint8_t item);
 static void set_led_default(uint8_t item);
 
 static void setting_handle_buttons(button_t button);
@@ -104,6 +110,12 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Led pattern",
         .handler = show_led_pattern_menu,
+    }, {
+        .label = "Reverse pattern",
+        .handler = show_reverse_menu,
+    }, {
+        .label = "Turn led on/off",
+        .handler = show_control_menu,
     }, {
         .label = "Factory default",
         .handler = set_led_default,
@@ -180,6 +192,26 @@ static menu_item_s color_items[] = {
         .label = "Orange",
         .handler = save_color,
     } 
+};
+
+static menu_item_s reverse_items[] = {
+    {
+        .label = "False",
+        .handler = save_reverse,
+    }, {
+        .label = "True",
+        .handler = save_reverse,
+    }
+};
+
+static menu_item_s control_items[] = {
+    {
+        .label = "OFF",
+        .handler = save_control,
+    }, {
+        .label = "ON",
+        .handler = save_control,
+    }
 };
 
 static menu_item_s pattern_items[MODE_COUNT];
@@ -406,18 +438,19 @@ void show_actual_pattern(void) {
     uint8_t mode = getMode_WS2812FX();
     char actual[50] = {0};
 
-    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_fillRect(0, 12, 128, 20, SSD1306_BLACK);
     gfx_setCursor(0, 12);
     gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
 
     snprintf(actual, 50, "Now: %s", getModeName_WS2812FX(mode));
     gfx_puts(actual);
+    gfx_update();
 }
 
 static void save_pattern(uint8_t item) {
     setMode_WS2812FX(item);
     update_stored_mode(item);
-    show_led_pattern_menu(0);
+    show_actual_pattern();
 }
 
 static void show_led_pattern_menu(uint8_t item) {
@@ -430,6 +463,68 @@ static void show_led_pattern_menu(uint8_t item) {
     show_actual_pattern();
     menu_init(0, 32, 128, 64 - 32, ARRAY_SIZE(pattern_items), pattern_items);
     _state = SETTING_STATE_PATTERN;
+}
+
+void show_actual_reverse(void) {
+    bool reverse = getReverse_WS2812FX();
+    char actual[10] = {0};
+    if (reverse) {
+        snprintf(actual, 50, "Now: %s", "True");
+    } else {
+        snprintf(actual, 50, "Now: %s", "False");
+    }
+
+    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_setCursor(0, 12);
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_puts(actual);
+}
+
+static void show_reverse_menu(uint8_t item) {
+    menu_close();
+    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    show_actual_reverse();
+    menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(reverse_items), reverse_items);
+    _state = SETTING_STATE_REVERSE;
+}
+
+static void save_reverse(uint8_t item) {
+    setReverse_WS2812FX((bool)item);
+    update_stored_reverse((bool)item);
+    show_reverse_menu(0);
+}
+
+void show_actual_control(void) {
+    bool control = isRunning_WS2812FX();
+    char actual[10] = {0};
+    if (control) {
+        snprintf(actual, 50, "Now: %s", "ON");
+    } else {
+        snprintf(actual, 50, "Now: %s", "OFF");
+    }
+
+    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_setCursor(0, 12);
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_puts(actual);
+}
+
+static void show_control_menu(uint8_t item) {
+    menu_close();
+    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    show_actual_control();
+    menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(control_items), control_items);
+    _state = SETTING_STATE_CONTROL;
+}
+
+static void save_control(uint8_t item) {
+    if (item) {
+        start_WS2812FX();
+    } else {
+        stop_WS2812FX();
+    }
+    update_stored_control((bool)item);
+    show_control_menu(0);
 }
 
 static void set_led_default(uint8_t item) {
@@ -451,6 +546,8 @@ static void setting_handle_buttons(button_t button) {
             case SETTING_STATE_SECOND_COLOR:
             case SETTING_STATE_THIRD_COLOR:
             case SETTING_STATE_PATTERN:
+            case SETTING_STATE_REVERSE:
+            case SETTING_STATE_CONTROL:
                 _state = SETTING_STATE_MENU;
                 menu_close();
                 nsec_show_led_settings();

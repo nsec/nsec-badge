@@ -1,7 +1,5 @@
 /*
- * Copyright 2016-2017 Benjamin Vanheuverzwijn <bvanheu@gmail.com>
- *           2016-2017 Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
- *           2018 Michael Jeanson <mjeanson@gmail.com>
+ * Copyright 2018 Eric Tremblay <habscup@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +20,9 @@
  * SOFTWARE.
  */
 
-#ifndef BATTERY_H
-#define BATTERY_H
+#ifndef nsec_warning_h
+#define nsec_warning_h
 
-#include <stdint.h>
-#include <stdbool.h>
+void nsec_warning_show(void);
 
-
-void battery_init(void);
-
-// Get the current battery voltage (mV)
-// Require a battery_refresh();
-uint16_t battery_get_voltage();
-
-void battery_refresh(void);
-
-bool battery_is_charging(void);
-
-bool battery_is_present(void);
-
-bool battery_is_usb_plugged(void);
-
-#endif
+#endif /* nsec_warning_h */

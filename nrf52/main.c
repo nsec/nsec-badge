@@ -19,6 +19,7 @@
 
 #include "ble/ble_device.h"
 #include "battery.h"
+#include "battery_manager.h"
 
 #include "buttons.h"
 #include "logs.h"
@@ -35,6 +36,7 @@
 #include "utils.h"
 #include "ws2812fx.h"
 #include "nsec_storage.h"
+#include "nsec_warning.h"
 
 #include "images/nsec_logo_bitmap.c"
 #include "ble/service_characteristic.h"
@@ -110,6 +112,12 @@ void open_settings(uint8_t item) {
     nsec_setting_show();
 }
 
+void open_warning(uint8_t item) {
+    menu_close();
+    is_at_main_menu = false;
+    nsec_warning_show();
+}
+
 static
 menu_item_s main_menu_items[] = {
     {
@@ -118,6 +126,9 @@ menu_item_s main_menu_items[] = {
     }, {
         .label = "Settings",
         .handler = open_settings,
+    }, {
+        .label = "Battery Warning",
+        .handler = open_warning,
     }
 };
 
@@ -143,7 +154,6 @@ int main(void) {
     log_init();
     power_init();
     softdevice_init();
-    battery_init();
     timer_init();
     init_WS2812FX();
     ssd1306_init();
@@ -161,16 +171,15 @@ int main(void) {
     config_dummy_service(&service0, &characteristic0);
     uint8_t value = 0xab;
     set_characteristic_value(&characteristic0, &value);
-
     start_advertising();
     //nsec_identity_init();
+    nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
     nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     load_stored_led_settings();
-    start_WS2812FX();
 
     nsec_intro();
     show_main_menu();

@@ -5,6 +5,7 @@
 //  License: MIT (see LICENSE for details)
 
 #include <nrf.h>
+#include <nordic_common.h>
 #include <stdio.h>
 #include "nsec_settings.h"
 #include "nsec_led_settings.h"
@@ -17,20 +18,25 @@
 #include "identity.h"
 #include "ws2812fx.h"
 #include "nsec_storage.h"
+#include "timer.h"
 
 static void toggle_bluetooth(uint8_t item);
+static void battery_status_screen(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
 static void show_led_settings(uint8_t item);
 static void toggle_flashlight(uint8_t item);
+static void show_member_details(uint8_t item);
 static void setting_handle_buttons(button_t button);
 
 enum setting_state {
     SETTING_STATE_CLOSED,
     SETTING_STATE_MENU,
     SETTING_STATE_CREDIT,
+    SETTING_STATE_CREDIT_DETAILS,
     SETTING_STATE_SCREEN_OFF,
     SETTING_STATE_FLASHLIGHT,
+    SETTING_STATE_BATTERY,
 };
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
@@ -47,6 +53,9 @@ static menu_item_s settings_items[] = {
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
     }, {
+        .label = "Battery status",
+        .handler = battery_status_screen,
+    }, {
         .label = "Turn screen off",
         .handler = turn_off_screen,
     }, {
@@ -60,6 +69,73 @@ static menu_item_s settings_items[] = {
         .handler = NULL,
     }
 };
+
+static menu_item_s members_items[] = {
+    {
+        .label = "Eric Tremblay",
+        .handler = show_member_details,
+    }, {
+        .label = "Francois Charbonneau",
+        .handler = show_member_details,
+    }, {
+        .label = "Marc-Etienne Leveille",
+        .handler = show_member_details,
+    }, {
+        .label = "Michael Jeanson",
+        .handler = show_member_details,
+    }, {
+        .label = "Nicolas Aubry",
+        .handler = show_member_details,
+    }, {
+        .label = "Thomas Dupuy",
+        .handler = show_member_details,
+    },
+};
+
+static void show_member_details(uint8_t item) {
+    menu_close();
+    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_setCursor(0, 8);
+    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    _state = SETTING_STATE_CREDIT_DETAILS;
+
+    switch (item) {
+        //Line   |                     | 21 character
+        // There is 7 lines under the status bar
+        case 0: //Eric Tremblay
+        gfx_puts("VP Badge nsec 2018\n");
+        gfx_puts("etremblay.16@\n");
+        gfx_puts("            gmail.com");
+        gfx_puts("Hardware\n");
+        gfx_puts("Software\n");
+        break;
+
+        case 1: //Francois Charbonneau
+        show_credit(4);
+        break;
+
+        case 2: // Marc-Etienne Leveille
+        show_credit(4);
+        break;
+
+        case 3: //Michael Jeanson
+        gfx_puts("Badge drone nsec 2018\n");
+        gfx_puts("Michael Jeanson\n");
+        gfx_puts("mjeanson@gmail.com\n");
+        gfx_puts("@mjeanson\n");
+        gfx_puts("Software\n");
+        break;
+
+        case 4: // Nicolas Aubry
+        show_credit(4);
+        break;
+
+        case 5: //Thomas Dupuy
+        show_credit(4);
+        break;
+    }
+    gfx_update();
+}
 
 static void show_led_settings(uint8_t item) {
     menu_close();
@@ -82,11 +158,15 @@ static void show_credit(uint8_t item) {
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
     gfx_setCursor(0, 8);
     gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
-    gfx_puts("nsec 2017 badge team:");
-    gfx_puts("Eric Tremblay\n");
-    gfx_puts("@bvanheu\n");
-    gfx_puts("@marc_etienne_");
+    gfx_puts("nsec 2018 badge team:");
+    menu_init(0, 16, 128, 64 - 12, ARRAY_SIZE(members_items), members_items);
     gfx_update();
+}
+
+static void battery_status_screen(uint8_t item) {
+    _state = SETTING_STATE_BATTERY;
+    menu_close();
+    start_battery_status_timer();
 }
 
 static void toggle_flashlight(uint8_t item) {
@@ -115,7 +195,7 @@ void nsec_setting_show(void) {
     snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
 #endif
     gfx_fillRect(0, 8, 128, 65 - 8, SSD1306_BLACK);
-    menu_init(0, 12, 128, 64 - 12, sizeof(settings_items) / sizeof(settings_items[0]), settings_items);
+    menu_init(0, 12, 128, 64 - 12, ARRAY_SIZE(settings_items), settings_items);
     nsec_controls_add_handler(setting_handle_buttons);
     _state = SETTING_STATE_MENU;
 }
@@ -128,6 +208,17 @@ static void setting_handle_buttons(button_t button) {
                 menu_close();
                 show_main_menu();
                 break;
+
+            case SETTING_STATE_CREDIT_DETAILS:
+                show_credit(4);
+                break;
+
+	    case SETTING_STATE_BATTERY:
+		// stop the refreshing
+                stop_battery_status_timer();
+                nsec_status_bar_ui_redraw();
+                nsec_setting_show();
+		break;
 
             case SETTING_STATE_FLASHLIGHT:
                 load_stored_led_settings();
