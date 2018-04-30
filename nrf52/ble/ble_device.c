@@ -147,7 +147,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
 			break;
         case BLE_GATTS_EVT_WRITE:
         {
-        	NRF_LOG_INFO("write command");
         	ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
         	on_characteristic_write_command_event(p_evt_write);
         	break;
@@ -163,7 +162,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
 				on_characteristic_read_request_event(&event, p_ble_evt->evt.gatts_evt.conn_handle);
 			}
 			else if(type == BLE_GATTS_AUTHORIZE_TYPE_WRITE){
-				NRF_LOG_INFO("write request");
 				ble_gatts_evt_write_t event = p_ble_evt->evt.gatts_evt.params.authorize_request.request.write;
 			    on_characteristic_write_request_event(&event, p_ble_evt->evt.gatts_evt.conn_handle);
 			}
@@ -191,7 +189,7 @@ uint32_t add_vendor_service(VendorService* service){
  */
 void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* characteristic){
 	add_vendor_service(dummy_service);
-	add_characteristic_to_vendor_service(dummy_service, characteristic, 1, REQUEST_READ, REQUEST_WRITE);
+	add_characteristic_to_vendor_service(dummy_service, characteristic, 1, AUTO_READ, AUTO_WRITE);
 	set_default_advertised_service(&dummy_service->uuid);
 }
 
