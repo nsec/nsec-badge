@@ -39,6 +39,8 @@
 #include "nsec_warning.h"
 
 #include "images/nsec_logo_bitmap.c"
+#include "ble/service_characteristic.h"
+#include "ble/vendor_service.h"
 
 static char g_device_id[10];
 bool is_at_main_menu = false;
@@ -53,7 +55,6 @@ bool is_at_main_menu = false;
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     static int error_displayed = 0;
     uint8_t count = 50;
-
     if(!error_displayed) {
         char error_msg[128];
         error_info_t *err_info = (error_info_t *) info;
@@ -164,12 +165,15 @@ int main(void) {
      */
     create_ble_device("My BLE device");
     configure_advertising();
-    config_dummy_service();
+    VendorService service0;
+    ServiceCharacteristic characteristic0;
+    create_vendor_service(&service0);
+    config_dummy_service(&service0, &characteristic0);
+    uint8_t value = 0xab;
+    set_characteristic_value(&characteristic0, &value);
     start_advertising();
-
-    nsec_identity_init();
+    //nsec_identity_init();
     nsec_battery_manager_init();
-
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
     nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));

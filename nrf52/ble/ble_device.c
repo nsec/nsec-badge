@@ -26,16 +26,21 @@
 #include "nrf_log.h"
 #include "gap_configuration.h"
 #include "nsec_ble.h"
+#include "vendor_service.h"
+#include "service_characteristic.h"
 
 
 #define APP_BLE_OBSERVER_PRIO 3
 #define PEER_ADDRESS_SIZE 6
+#define MAX_VENDOR_SERVICE_COUNT 8
 NRF_BLE_GATT_DEF(m_gatt);
 
 
 typedef struct{
 	const char* device_name;
 	ble_gap_adv_params_t advertising_parameters;
+	uint16_t vendor_service_count;
+	VendorService* vendor_services[MAX_VENDOR_SERVICE_COUNT];
 } BleDevice;
 
 static BleDevice* ble_device = NULL;
@@ -52,6 +57,12 @@ static void gatt_init();
 static void init_connection_parameters();
 static void add_device_information_service(char * manufacturer_name, char * model, char * serial_number,
 		char * hw_revision, char * fw_revision, char * sw_revision);
+static void on_characteristic_write_command_event(ble_gatts_evt_write_t* write_event);
+static void on_characteristic_write_request_event(ble_gatts_evt_write_t* write_event, uint16_t connection_handle);
+static void on_characteristic_read_request_event(ble_gatts_evt_read_t* read_event, uint16_t connection_handle);
+static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid);
+static void reply_to_client_request(uint8_t operation, uint16_t status_code, uint16_t connection_handle,
+		uint8_t* data_buffer, uint16_t data_length);
 
 
 ret_code_t create_ble_device(char* device_name){
@@ -61,6 +72,10 @@ ret_code_t create_ble_device(char* device_name){
 		nsec_ble_init();
 		ble_device = malloc(sizeof(BleDevice));
 		ble_device->device_name = device_name;
+		ble_device->vendor_service_count = 0;
+		for(int i = 0; i < MAX_VENDOR_SERVICE_COUNT; i++){
+			ble_device->vendor_services[i] = NULL;
+		}
 		return NRF_SUCCESS;
 	}
 	return -1;
@@ -87,11 +102,6 @@ void start_advertising(){
 
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     //pm_on_ble_evt(p_ble_evt);
-    for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
-        if(_nsec_ble_event_handlers[i] != NULL) {
-            _nsec_ble_event_handlers[i](p_ble_evt, p_context);
-        }
-    }
     switch (p_ble_evt->header.evt_id){
         case BLE_GAP_EVT_CONNECTED: {
             uint8_t * addr = p_ble_evt->evt.gap_evt.params.connected.peer_addr.addr;
@@ -101,7 +111,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
 
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("Disconnected. Reason: %d", p_ble_evt->evt.gap_evt.params.disconnected.reason);
-            break;
+            break; // TODO re-enter advertising mode?
 
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             const uint16_t conn = p_ble_evt->evt.gatts_evt.conn_handle;
@@ -135,39 +145,52 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
         	NRF_LOG_INFO("Central is attempting pairing.");
 			break;
+        case BLE_GATTS_EVT_WRITE:
+        {
+        	ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+        	on_characteristic_write_command_event(p_evt_write);
+        	break;
+        }
+        case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
+        	NRF_LOG_INFO("MTU exchange requested");
+        	break;
+        case BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST:
+        {
+        	uint8_t type = p_ble_evt->evt.gatts_evt.params.authorize_request.type;
+			if(type == BLE_GATTS_AUTHORIZE_TYPE_READ){
+				ble_gatts_evt_read_t event = p_ble_evt->evt.gatts_evt.params.authorize_request.request.read;
+				on_characteristic_read_request_event(&event, p_ble_evt->evt.gatts_evt.conn_handle);
+			}
+			else if(type == BLE_GATTS_AUTHORIZE_TYPE_WRITE){
+				ble_gatts_evt_write_t event = p_ble_evt->evt.gatts_evt.params.authorize_request.request.write;
+			    on_characteristic_write_request_event(&event, p_ble_evt->evt.gatts_evt.conn_handle);
+			}
+			break;
+        }
+        default:
+        	NRF_LOG_INFO("Received BLE event %d", p_ble_evt->header.evt_id);
     }
 }
 
-void service_write_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length){
-	NRF_LOG_INFO("Writing value in dummy service");
+uint32_t add_vendor_service(VendorService* service){
+	if(ble_device->vendor_service_count >= MAX_VENDOR_SERVICE_COUNT)
+		return 1;
+	create_uuid_for_vendor_service(&service->uuid, ble_device->vendor_service_count);
+	uint32_t error_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &service->uuid, &service->handle);
+	APP_ERROR_CHECK(error_code);
+	ble_device->vendor_services[ble_device->vendor_service_count] = service;
+	ble_device->vendor_service_count++;
+	return 0;
 }
 
-void config_dummy_service(){
-	/*
-	nsec_ble_service_handle service_handle;
-	nsec_ble_characteristic_t service_characteristic;
-	service_characteristic.char_uuid = 0x1234;
-	service_characteristic.max_size = 4;
-	service_characteristic.permissions = NSEC_BLE_CHARACT_PERM_RW;
-	service_characteristic.on_write = service_write_callback;
-	nsec_ble_service_t dummy_service;
-	dummy_service.characteristics = &service_characteristic;
-	dummy_service.characteristics_count = 1;
-	uint8_t uuid[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-	memcpy(&dummy_service.uuid, &uuid, 16);
-	int result = nsec_ble_register_vendor_service(&dummy_service, &service_handle);
-	if(result != 0)
-		log_error("Error when registering vendor service");
-	ble_uuid_t dummy_service_uuid;
-	dummy_service_uuid.type = BLE_UUID_TYPE_VENDOR_BEGIN;
-	dummy_service_uuid.uuid = *((uint16_t*)&uuid[12]);
-	*/
-	add_device_information_service("Nordic Semi", "NFR52", "qwerty12345", "1", "2", "3");
-	ble_uuid_t device_info_uuid = {
-	        .uuid = BLE_UUID_DEVICE_INFORMATION_SERVICE,
-	        .type = BLE_UUID_TYPE_BLE
-	    };
-	set_default_advertised_service(&device_info_uuid);
+/*
+ * At least one BLE service must be advertised for the advertising to work. This dummy service is a place holder
+ * to make it work until a real service is added to assume this role.
+ */
+void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* characteristic){
+	add_vendor_service(dummy_service);
+	add_characteristic_to_vendor_service(dummy_service, characteristic, 1, AUTO_READ, AUTO_WRITE);
+	set_default_advertised_service(dummy_service);
 }
 
 static void gatt_init(){
@@ -187,6 +210,78 @@ static void on_connection_params_event(ble_conn_params_evt_t * p_evt){
 
 static void connection_params_error_handler(uint32_t nrf_error){
     log_error_code("connection params error handler", nrf_error);
+}
+
+static void on_characteristic_write_command_event(ble_gatts_evt_write_t* write_event){
+	ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
+	if(characteristic != NULL && characteristic->on_write_command != NULL){
+		CharacteristicWriteEvent event = {
+			.characteristic_uuid = write_event->uuid,
+			.write_offset = write_event->offset,
+			.data_length = write_event->len,
+			.characteristic_handle = write_event->handle,
+			.data_buffer = write_event->data
+		};
+		characteristic->on_write_command(&event);
+	}
+}
+
+static void on_characteristic_write_request_event(ble_gatts_evt_write_t* write_event, uint16_t connection_handle){
+	ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
+	if(characteristic != NULL && characteristic->on_write_request != NULL){
+		CharacteristicWriteEvent event = {
+			.characteristic_uuid = write_event->uuid,
+			.write_offset = write_event->offset,
+			.data_length = write_event->len,
+			.characteristic_handle = write_event->handle,
+			.data_buffer = write_event->data
+		};
+		uint16_t status_code = characteristic->on_write_request(&event);
+		uint8_t* data_buffer = status_code == BLE_GATT_STATUS_SUCCESS ? event.data_buffer: NULL;
+		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, status_code, connection_handle, data_buffer,
+				characteristic->value_length);
+	}
+	else{
+		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED,
+						connection_handle, NULL, 0);
+	}
+}
+
+static void on_characteristic_read_request_event(ble_gatts_evt_read_t* read_event, uint16_t connection_handle){
+	ServiceCharacteristic* characteristic = get_characteristic_from_uuid(read_event->uuid.uuid);
+	if(characteristic != NULL && characteristic->on_read_request != NULL){
+		CharacteristicReadEvent event = {
+			.characteristic_uuid = read_event->uuid,
+			.read_offset = read_event->offset,
+			.characteristic_handle = read_event->handle
+		};
+		uint16_t status_code = characteristic->on_read_request(&event);
+		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_READ, status_code, connection_handle, NULL, characteristic->value_length);
+	}
+	else{
+		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_READ, BLE_GATT_STATUS_ATTERR_READ_NOT_PERMITTED, connection_handle, NULL, 0);
+	}
+}
+
+static void reply_to_client_request(uint8_t operation, uint16_t status_code, uint16_t connection_handle,
+		uint8_t* data_buffer, uint16_t data_length){
+	ble_gatts_rw_authorize_reply_params_t reply;
+	reply.type = operation;
+	reply.params.read.gatt_status = status_code;
+	reply.params.read.len = data_length;
+	reply.params.read.offset = 0;
+	reply.params.read.update = data_buffer == NULL ? false: true;
+	reply.params.read.p_data = data_buffer;
+	APP_ERROR_CHECK(sd_ble_gatts_rw_authorize_reply(connection_handle, &reply));
+}
+
+static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid){
+	for(int i = 0; i < ble_device->vendor_service_count; i++){
+		VendorService* service = ble_device->vendor_services[i];
+		if(service->uuid.uuid == (uuid & UUID_SERVICE_PART_MASK))
+			return get_characteristic(service, uuid);
+	}
+	return NULL;
 }
 
 static void init_connection_parameters(){
