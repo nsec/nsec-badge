@@ -27,8 +27,8 @@ void set_default_gap_parameters(const char * device_name, ble_gap_adv_params_t* 
 	set_default_connection_parameters(device_name);
 }
 
-void set_default_advertised_service(ble_uuid_t* service_uuid){
-	set_default_advertising_data(service_uuid);
+void set_default_advertised_service(VendorService* service){
+	set_default_advertising_data(&service->uuid);
 }
 
 static void set_default_security_parameters(){
