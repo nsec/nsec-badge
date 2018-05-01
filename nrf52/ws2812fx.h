@@ -61,7 +61,11 @@
 #define ORANGE     0xFF3000
 #define ULTRAWHITE 0xFFFFFFFF
 
-#define MODE_COUNT 57
+#define MODE_BASIC_COUNT 42
+#define MODE_EXTRA_COUNT 14
+
+#define IS_EXTRA_PATTERN 0
+#define IS_BASIC_PATTERN 1
 
 #define FX_MODE_STATIC                   0
 #define FX_MODE_BLINK                    1
@@ -125,7 +129,7 @@ void init_WS2812FX(void);
 void service_WS2812FX(void);
 void start_WS2812FX(void);
 void stop_WS2812FX(void);
-void setMode_WS2812FX(uint8_t m);
+void setMode_WS2812FX(uint8_t m, bool basic_pattern);
 void setCustomMode_WS2812FX(uint16_t (*p)());
 void setSpeed_WS2812FX(uint16_t s);
 void increaseSpeed_WS2812FX(uint8_t s);
@@ -155,6 +159,6 @@ uint16_t getLength_WS2812FX(void);
 uint32_t getColor_WS2812FX(void);
 uint32_t getArrayColor_WS2812FX(uint8_t index);
 
-const char* getModeName_WS2812FX(uint8_t m);
+char* getModeName_WS2812FX(uint8_t m, bool basic_pattern);
 
 #endif

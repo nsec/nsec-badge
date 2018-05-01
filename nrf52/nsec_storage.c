@@ -142,7 +142,7 @@ void load_stored_led_settings(void) {
 		nsec_storage_init();
 	}
 	setBrightness_WS2812FX(actual_settings.brightness);
-	setMode_WS2812FX(actual_settings.mode);
+	setMode_WS2812FX(actual_settings.mode, IS_BASIC_PATTERN);
 	setSpeed_WS2812FX(actual_settings.speed);
 	setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
 	setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);

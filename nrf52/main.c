@@ -70,7 +70,7 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     setBrightness_WS2812FX(64);
     setSpeed_WS2812FX(200);
     setColor_WS2812FX(255, 0, 0);
-    setMode_WS2812FX(FX_MODE_BLINK);
+    setMode_WS2812FX(FX_MODE_BLINK, IS_BASIC_PATTERN);
     start_WS2812FX();
 
     while (count > 0) {
