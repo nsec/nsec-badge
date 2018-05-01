@@ -18,8 +18,8 @@ The nRF52 is based on the ARM Cortex-M4F core and runs the `armv7-m` instruction
  - The OLED display
  - The Bluetooth Low Energy
  - The battery management
- - The red and green LEDs
- - The touch buttons
+ - The [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel) RGB LEDs
+ - The buttons
 
 The stm32 is based on the ARM Cortex-M0 core and runs the `armv6-m` instruction set, it takes care of:
 
@@ -97,7 +97,7 @@ to the chip via SWD. We used the
 probe. There is a [version 2](http://1bitsquared.com/collections/frontpage/products/black-magic-probe)
 out there now.
 
-The following `gdb` commands will load the firmware into the nRF51:
+The following `gdb` commands will load the firmware into the nRF52:
 
 ```
 set gnutarget elf32-littlearm
@@ -207,14 +207,14 @@ Use [dfu-util](http://dfu-util.sourceforge.net/) to flash the firmware:
 
     % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec18_stm32_debugger.bin
 
-### nrf51
+### nRF52
 
-To compile the binary for the nrf51:
+To compile the binary for the nRF52:
 
     % cd nrf52
     % make
 
-To flash the binary on the nrf51, you'll need to either:
+To flash the binary on the nRF52, you'll need to either:
 
 * have the blackmagic debugger firmware flashed onto the stm32
 * use a BlackMagic device
