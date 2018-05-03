@@ -37,6 +37,7 @@
 #include "ws2812fx.h"
 #include "nsec_storage.h"
 #include "nsec_warning.h"
+#include "nsec_led_ble.h"
 
 #include "images/nsec_logo_bitmap.c"
 #include "ble/service_characteristic.h"
@@ -165,14 +166,10 @@ int main(void) {
      */
     create_ble_device("Test device");
     configure_advertising();
-    VendorService service0;
-    ServiceCharacteristic characteristic0;
-    create_vendor_service(&service0);
-    config_dummy_service(&service0, &characteristic0);
-    uint8_t value = 0xab;
-    set_characteristic_value(&characteristic0, &value);
-    start_advertising();
+    nsec_led_ble_init();
     //nsec_identity_init();
+    start_advertising();
+
     nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
