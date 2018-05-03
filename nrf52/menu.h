@@ -12,7 +12,7 @@
 #define MENU_LIMIT_MAX_ITEM_COUNT (60)
 
 typedef struct {
-    char * label;
+    const char * label;
     void (*handler)(uint8_t item_index);
 } menu_item_s;
 

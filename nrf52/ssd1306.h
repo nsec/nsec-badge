@@ -159,7 +159,7 @@ void gfx_setTextColor(uint16_t c);
 void gfx_setTextBackgroundColor(uint16_t c, uint16_t b);
 void gfx_setTextWrap(bool w);
 void gfx_putc(char c);
-void gfx_puts(char *s);
+void gfx_puts(const char *s);
 void gfx_update();
 
 #endif

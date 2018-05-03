@@ -63,7 +63,7 @@ nsec_ble_set_charateristic_value(identity_ble_handle, uuid, &field, sizeof(field
 static char flag[] = "flag{ble_all_the_things}";
 #endif
 
-static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length);
+static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, const uint8_t * content, size_t content_length);
 
 void nsec_identity_init(void) {
     memset(identity.name, 0, sizeof(identity.name));
@@ -145,7 +145,7 @@ void nsec_identity_get_unlock_key(char * data, size_t length) {
     snprintf(data, length, "%04lX", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
 }
 
-static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length) {
+static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, const uint8_t * content, size_t content_length) {
     switch (char_uuid) {
         case IDENTITY_CHAR_UUID_NAME: {
             if(identity.unlocked) {

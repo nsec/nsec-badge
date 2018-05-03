@@ -1002,7 +1002,7 @@ void gfx_putc(char c) {
     gfx_write((uint8_t)c);
 }
 
-void gfx_puts(char *s) {
+void gfx_puts(const char *s) {
     while (*s) {
         gfx_write((uint8_t)*s++);
     }

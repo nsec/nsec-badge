@@ -8,6 +8,7 @@
 #define service_characteristic_h
 
 #include <stdint.h>
+#include <strings.h>
 #include <ble_gatts.h>
 #include <stdbool.h>
 
@@ -17,7 +18,7 @@ typedef struct {
     uint16_t write_offset;
     uint16_t data_length;
     uint16_t characteristic_handle;
-    uint8_t* data_buffer;
+    const uint8_t* data_buffer;
 } CharacteristicWriteEvent;
 
 typedef struct {

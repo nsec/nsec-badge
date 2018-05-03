@@ -98,7 +98,7 @@ end_refresh:
 }
 
 void nsec_battery_manager_init(void) {
-    ret_code_t err_code;
+    //ret_code_t err_code;
 
     battery_init();
 

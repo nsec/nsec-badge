@@ -96,7 +96,7 @@ static void menu_ui_redraw_items(uint8_t start, uint8_t end) {
         else {
             gfx_setTextBackgroundColor(SSD1306_WHITE,SSD1306_BLACK);
         }
-        char * string = menu.items[item_index].label;
+        const char * string = menu.items[item_index].label;
         if(strlen(string) <= menu.col_width) {
             gfx_puts(string);
         }
