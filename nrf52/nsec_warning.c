@@ -53,10 +53,10 @@ void show_warning(void) {
 }
 
 void scroll_up_warning(bool change_direction) {
-	text_index -= MAX_CHAR_UNDER_STATUS_BAR;
-	if (change_direction) {
-		text_index -= MAX_CHAR_UNDER_STATUS_BAR;
-	}
+    text_index -= MAX_CHAR_UNDER_STATUS_BAR;
+    if (change_direction) {
+        text_index -= MAX_CHAR_UNDER_STATUS_BAR;
+    }
 
     if (text_index <= MAX_CHAR_UNDER_STATUS_BAR) {
         show_warning();
@@ -83,7 +83,7 @@ void scroll_down_warning(bool change_direction) {
     gfx_setCursor(0, 8);
 
     if (change_direction) {
-    	text_index += MAX_CHAR_UNDER_STATUS_BAR;
+        text_index += MAX_CHAR_UNDER_STATUS_BAR;
     }
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
@@ -102,25 +102,25 @@ void nsec_warning_show(void) {
 }
 
 static void warning_handle_buttons(button_t button) {
-	static button_t last_pressed_button = BUTTON_ENTER;
-	if (in_warning_page) {
-	    if (button == BUTTON_BACK) {
-	    	in_warning_page = false;
-	        show_main_menu();
-	    } else if (button == BUTTON_UP) {
-	   		if (last_pressed_button == BUTTON_DOWN) {
-	   			scroll_up_warning(true);
-	   		} else {
-	   			scroll_up_warning(false);
-	   		}
-	    	last_pressed_button = BUTTON_UP;
-	    } else if (button == BUTTON_DOWN) {
-	    	if (last_pressed_button == BUTTON_UP) {
-	    		scroll_down_warning(true);
-	    	} else {
-	    		scroll_down_warning(false);
-	    	}
-	    	last_pressed_button = BUTTON_DOWN;
-	    }
-	}
+    static button_t last_pressed_button = BUTTON_ENTER;
+    if (in_warning_page) {
+        if (button == BUTTON_BACK) {
+            in_warning_page = false;
+            show_main_menu();
+        } else if (button == BUTTON_UP) {
+               if (last_pressed_button == BUTTON_DOWN) {
+                   scroll_up_warning(true);
+               } else {
+                   scroll_up_warning(false);
+               }
+            last_pressed_button = BUTTON_UP;
+        } else if (button == BUTTON_DOWN) {
+            if (last_pressed_button == BUTTON_UP) {
+                scroll_down_warning(true);
+            } else {
+                scroll_down_warning(false);
+            }
+            last_pressed_button = BUTTON_DOWN;
+        }
+    }
 }

@@ -12,13 +12,13 @@
 #define MENU_LIMIT_MAX_ITEM_COUNT (60)
 
 typedef struct {
-	char * label;
-	void (*handler)(uint8_t item_index);
+    char * label;
+    void (*handler)(uint8_t item_index);
 } menu_item_s;
 
 typedef enum {
-	MENU_DIRECTION_UP,
-	MENU_DIRECTION_DOWN,
+    MENU_DIRECTION_UP,
+    MENU_DIRECTION_DOWN,
 } MENU_DIRECTION;
 
 void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height, uint8_t item_count, menu_item_s * items);

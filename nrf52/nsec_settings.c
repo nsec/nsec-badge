@@ -213,12 +213,12 @@ static void setting_handle_buttons(button_t button) {
                 show_credit(4);
                 break;
 
-	    case SETTING_STATE_BATTERY:
-		// stop the refreshing
+            case SETTING_STATE_BATTERY:
+            // stop the refreshing
                 stop_battery_status_timer();
                 nsec_status_bar_ui_redraw();
                 nsec_setting_show();
-		break;
+                break;
 
             case SETTING_STATE_FLASHLIGHT:
                 load_stored_led_settings();

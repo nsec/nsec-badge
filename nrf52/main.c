@@ -163,7 +163,7 @@ int main(void) {
     /*
      * Initialize bluetooth stack
      */
-    create_ble_device("My BLE device");
+    create_ble_device("Test device");
     configure_advertising();
     VendorService service0;
     ServiceCharacteristic characteristic0;

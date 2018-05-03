@@ -215,7 +215,7 @@ void ssd1306_init(void) {
         ssd1306_command(SSD1306_SEGREMAP | 0x1);
         ssd1306_command(SSD1306_COMSCANDEC);
         ssd1306_command(SSD1306_SETCOMPINS);                    // 0xDA
-        ssd1306_command(0x2);	//ada x12
+        ssd1306_command(0x2);    //ada x12
         ssd1306_command(SSD1306_SETCONTRAST);                   // 0x81
         if (ssd1306_vccstate == SSD1306_EXTERNALVCC)
         { ssd1306_command(0x10); }

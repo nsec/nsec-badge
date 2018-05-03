@@ -13,15 +13,15 @@
 // RTC prescaler
 #define APP_TIMER_PRESCALER 0
 
-#define UART_BAUDRATE 		UART_BAUDRATE_BAUDRATE_Baud115200
+#define UART_BAUDRATE         UART_BAUDRATE_BAUDRATE_Baud115200
 
 //////////////////////////////////////////////
 // PINOUT
 
 // Battery
 #define BATT_VOLTAGE    2
-#define BATT_CHARGE		27
-#define BATT_PGOOD		28
+#define BATT_CHARGE        27
+#define BATT_PGOOD        28
 
 // Display
 #define OLED_DATA       4
@@ -31,17 +31,17 @@
 #define OLED_CS         11
 
 // Button
-#define INPUT_UP		30
-#define INPUT_DOWN		31
-#define INPUT_BACK		6
-#define INPUT_ENTER		5
+#define INPUT_UP        30
+#define INPUT_DOWN        31
+#define INPUT_BACK        6
+#define INPUT_ENTER        5
 
 // UART TO STM32
-#define nRF_RXD			13
-#define nRF_TXD			12
-#define nRF_CTS			14
-#define nRF_RTS			15
+#define nRF_RXD            13
+#define nRF_TXD            12
+#define nRF_CTS            14
+#define nRF_RTS            15
 
-#define NEOPIXEL 		26
+#define NEOPIXEL         26
 
 #endif

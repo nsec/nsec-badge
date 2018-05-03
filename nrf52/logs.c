@@ -4,9 +4,9 @@
 
 
 void log_error_code(const char* function_name, uint32_t error_code){
-	if(error_code != NRF_SUCCESS){
-		NRF_LOG_ERROR("%s: %s", function_name, nrf_strerror_get(error_code));
-	}
+    if(error_code != NRF_SUCCESS){
+        NRF_LOG_ERROR("%s: %s", function_name, nrf_strerror_get(error_code));
+    }
 }
 
 void log_init(){

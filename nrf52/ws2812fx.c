@@ -876,7 +876,7 @@ uint16_t mode_rainbow(void) {
  */
 uint16_t mode_rainbow_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-	  uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+      uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
     nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + i, color);
   }
 

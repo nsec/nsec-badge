@@ -134,25 +134,25 @@ void saadc_callback(nrf_drv_saadc_evt_t const *p_event) {
         uint16_t average = 0;
         ret_code_t err_code;
 
-	/*
-	 * Convert the raw adc value to millivolts and compute the average
-	 * value of the samples.
-	 */
+    /*
+     * Convert the raw adc value to millivolts and compute the average
+     * value of the samples.
+     */
         for (int i = 0; i < SAMPLES_IN_BUFFER; i++) {
             average += ADC_RESULT_IN_MILLIVOLTS(p_event->data.done.p_buffer[i]) / SAMPLES_IN_BUFFER;
-	}
+    }
         m_batt_lvl_in_millivolts = average;
 
-	/*
-	 * Switch buffer for next sampling.
-	 */
+    /*
+     * Switch buffer for next sampling.
+     */
         err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer, SAMPLES_IN_BUFFER);
         APP_ERROR_CHECK(err_code);
-	break;
+    break;
     }
 
     case NRF_DRV_SAADC_EVT_LIMIT:
-	break;
+    break;
     }
 }
 
