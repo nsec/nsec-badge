@@ -86,8 +86,72 @@ No handler is called.
 
 ### 3.3 Characteristic event handlers
 
-TODO
+* ``on_read_request``: A function that takes a ``CharacteristicReadEvent*`` as parameter and return either 
+``BLE_GATT_STATUS_SUCCESS`` to authorize the read request and allow the client to access the value of the 
+characteristic or ``BLE_GATT_STATUS_ATTERR_READ_NOT_PERMITTED`` to deny the read access to the client.
 
+```C
+
+uint16_t my_read_request_handler(CharacteristicReadEvent* event){
+	bool some_flag = true;
+	// Prevent client to know the value if some_flag is not set.
+	if(some_flag)
+		return BLE_GATT_STATUS_SUCCESS;
+	else
+		BLE_GATT_STATUS_ATTERR_READ_NOT_PERMITTED;
+}
+
+// setting the read permission to REQUEST_READ, else no read callback is called.
+add_characteristic_to_vendor_service(&my_service, &characteristic0, length_of_characteristic_value, REQUEST_READ,
+                                     AUTO_WRITE);
+add_read_request_handler(&characteristic0, my_read_request_handler);
+```
+
+* ``on_write_command``: A function that takes a ``CharacteristicWriteEvent*`` as parameter. The value of the 
+BLE characteristic is already updated when this callback is invoked. Use it to inspect the new value and do other 
+actions based on the written value. The value can also be changed afterward.
+
+```C
+
+void my_write_command_handler(CharacteristicWriteEvent* event){
+	uint8_t value;
+	get_characteristic_value(&characteristic0, &value);
+	if(value > 10)
+		let_the_rest_of_the_app_know_that_value_is_greater_than_ten(value);
+}
+
+// setting the write permission to AUTO_WRITE for this callback to be called.
+add_characteristic_to_vendor_service(&my_service, &characteristic0, length_of_characteristic_value, AUTO_READ,
+                                     AUTO_WRITE);
+add_write_command_handler(&characteristic0, my_write_command_handler);
+```
+
+* ``on_write_request``: A function that takes a ``CharacteristicWriteEvent*`` as parameter  and return either 
+``BLE_GATT_STATUS_SUCCESS`` to authorize the write request or ``BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED`` to deny 
+the write access. The value of the BLE characteristic is not updated yet when this callback is invoked, allowing the 
+app to change it if necessary.
+
+```C
+
+uint16_t my_write_request_handler(CharacteristicWriteEvent* event){
+	uint8_t value;
+	get_characteristic_value(&characteristic0, &value);
+	if(value > 100)
+		return BLE_GATT_STATUS_SUCCESS; // 100 or more is great, accept the write.
+	else if(value > 50){
+		// below 100, it's not so great, we'll change it but accept the write request.
+		*(event->data_buffer) = 200;
+		return BLE_GATT_STATUS_SUCCESS;
+	}
+	else
+		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED; // below 50 the value is too low, we simply reject it.
+}
+
+// setting the write permission to REQEST_WRITE for this callback to be called.
+add_characteristic_to_vendor_service(&my_service, &characteristic0, length_of_characteristic_value, AUTO_READ,
+                                     REQUEST_WRITE);
+add_write_request_handler(&characteristic0, my_write_request_handler);
+```
 
 ## 4. Starting the advertising of the BLE device.
 
