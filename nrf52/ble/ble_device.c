@@ -158,12 +158,12 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
         {
         	uint8_t type = p_ble_evt->evt.gatts_evt.params.authorize_request.type;
 			if(type == BLE_GATTS_AUTHORIZE_TYPE_READ){
-				ble_gatts_evt_read_t event = p_ble_evt->evt.gatts_evt.params.authorize_request.request.read;
-				on_characteristic_read_request_event(&event, p_ble_evt->evt.gatts_evt.conn_handle);
+				ble_gatts_evt_read_t* event = &p_ble_evt->evt.gatts_evt.params.authorize_request.request.read;
+				on_characteristic_read_request_event(event, p_ble_evt->evt.gatts_evt.conn_handle);
 			}
 			else if(type == BLE_GATTS_AUTHORIZE_TYPE_WRITE){
-				ble_gatts_evt_write_t event = p_ble_evt->evt.gatts_evt.params.authorize_request.request.write;
-			    on_characteristic_write_request_event(&event, p_ble_evt->evt.gatts_evt.conn_handle);
+				ble_gatts_evt_write_t* event = &p_ble_evt->evt.gatts_evt.params.authorize_request.request.write;
+			    on_characteristic_write_request_event(event, p_ble_evt->evt.gatts_evt.conn_handle);
 			}
 			break;
         }
