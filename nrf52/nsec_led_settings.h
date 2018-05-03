@@ -23,8 +23,8 @@
 #ifndef nsec_led_settings_h
 #define nsec_led_settings_h
 
-#define SUPER_LOW_BRIGHTNESS        20
-#define LOW_BRIGHTNESS              40
+#define SUPER_LOW_BRIGHTNESS        10
+#define LOW_BRIGHTNESS              30
 #define MEDIUM_BRIGHTNESS           60
 #define HIGH_BRIGHTNESS             80
 #define MAX_BRIGHTNESS              100
