@@ -2,6 +2,9 @@ builds
 nrf52/*.jlink
 nrf52/images/*.c
 nrf52/nordicsdk
+nrf52/mergehex
+nrf52/nrfjprog
+nrf52/tools
 stm32/src/*.o
 stm32/src/*.d
 stm32/src/*.elf
