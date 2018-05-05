@@ -50,7 +50,7 @@ typedef struct LedSettings_t {
 } LedSettings;
 
 LedSettings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS, 
-								{RED, GREEN, BLUE}};
+								{BLUE, RED, GREEN}};
 LedSettings actual_settings;
 bool need_led_settings_update = false;
 
@@ -62,7 +62,7 @@ NRF_FSTORAGE_DEF(nrf_fstorage_t fs_led_settings) =
 };
 
 /* password */
-uint32_t stored_password;
+uint32_t stored_password = 0;
 
 uint32_t pw[] = {SPONSOR_0_PW, SPONSOR_1_PW, SPONSOR_2_PW, SPONSOR_3_PW, SPONSOR_4_PW,
                 SPONSOR_5_PW, SPONSOR_6_PW, SPONSOR_7_PW, SPONSOR_8_PW, SPONSOR_9_PW,
@@ -202,11 +202,11 @@ bool nsec_unlock_led_pattern(uint32_t password) {
 static bool is_new_memory_page(nrf_fstorage_t const * p_fstorage) {
     ret_code_t rc;
     uint32_t new_dev_memory;
-    rc = nrf_fstorage_read(&fs_led_settings, fs_led_settings.start_addr, &new_dev_memory, 4);
+    rc = nrf_fstorage_read(p_fstorage, p_fstorage->start_addr, &new_dev_memory, 4);
     APP_ERROR_CHECK(rc);
-    wait_for_flash_ready(&fs_led_settings);
+    wait_for_flash_ready(p_fstorage);
 
-    return (new_dev_memory == PAGE_START_MAGIC) ? true : false;
+    return (new_dev_memory == 0xFFFFFFFF) ? true : false;
 } 
 
 static void led_settings_storage_init(void) {
@@ -246,13 +246,13 @@ static void password_storage_init(void) {
         //Store the default settings
         rc = nrf_fstorage_write(&fs_password, fs_password.start_addr, &stored_password, 4, NULL);
         APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_led_settings);
+        wait_for_flash_ready(&fs_password);
     }
 
     //Load actual settings
     rc = nrf_fstorage_read(&fs_password, fs_password.start_addr, &stored_password, 4);
     APP_ERROR_CHECK(rc);
-    wait_for_flash_ready(&fs_led_settings);
+    wait_for_flash_ready(&fs_password);
 }
 
 void nsec_storage_init(void) {
