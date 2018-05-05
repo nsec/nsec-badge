@@ -10,7 +10,7 @@
 #include <ble_gatts.h>
 #include "service_characteristic.h"
 
-#define MAX_CHARACTERISTICS_PER_SERVICE 10
+#define MAX_CHARACTERISTICS_PER_SERVICE 12
 
 // Only the leftmost byte of the 16bit UUID is used to identify vendor services. The other byte is used for characteristics of the service
 #define UUID_SERVICE_PART_OFFSET 8
