@@ -196,7 +196,7 @@ uint16_t (*mode[])(void) = {
     mode_custom,
 };
 
-char *basic_patterns[] = {
+const char *name[] = {
     "Static",
     "Blink",
     "Breath",
@@ -204,14 +204,22 @@ char *basic_patterns[] = {
     "Color Wipe Inverse",
     "Color Wipe Reverse",
     "Color Wipe Reverse Inverse",
+    "Color Wipe Random",
+    "Random Color",
     "Single Dynamic",
+    "Multi Dynamic",
+    "Rainbow",
+    "Rainbow Cycle",
     "Scan",
     "Dual Scan",
     "Fade",
     "Theater Chase",
+    "Theater Chase Rainbow",
     "Running Lights",
     "Twinkle",
+    "Twinkle Random",
     "Twinkle Fade",
+    "Twinkle Fade Random",
     "Sparkle",
     "Flash Sparkle",
     "Hyper Sparkle",
@@ -222,12 +230,16 @@ char *basic_patterns[] = {
     "Chase White",
     "Chase Color",
     "Chase Random",
+    "Chase Rainbow",
     "Chase Flash",
     "Chase Flash Random",
+    "Chase Rainbow White",
     "Chase Blackout",
     "Chase Blackout Rainbow",
+    "Color Sweep Random",
     "Running Color",
     "Running Red Blue",
+    "Running Random",
     "Larson Scanner",
     "Comet",
     "Fireworks",
@@ -236,27 +248,12 @@ char *basic_patterns[] = {
     "Halloween",
     "Fire Flicker",
     "Fire Flicker (soft)",
+    "Fire Flicker (intense)",
     "Circus Combustus",
     "Bicolor Chase",
+    "Tricolor Chase",
     "ICU",
     "Custom",
-};
-
-char *extra_patterns[] = {
-    "Color Wipe Random",
-    "Random Color",
-    "Fire Flicker (Intense)",
-    "Multi Dynamic",
-    "Rainbow",
-    "Rainbow Cycle",
-    "Theater Chase Rainbow",
-    "Twinkle Random",
-    "Twinkle Fade Random",
-    "Running Random",
-    "Tricolor Chase",
-    "Chase Rainbow",
-    "Chase Rainbow White",
-    "Color Sweep Random",
 };
 
 uint32_t SPEED_MAX = 65535;
@@ -364,12 +361,9 @@ void trigger_WS2812FX() {
   fx->triggered = true;
 }
 
-void setMode_WS2812FX(uint8_t m, bool basic_pattern) {
+void setMode_WS2812FX(uint8_t m) {
   RESET_RUNTIME;
-  if (basic_pattern == true)
-    fx->segments[0].mode = constrain(m, 0, MODE_BASIC_COUNT - 1);
-  else
-    fx->segments[0].mode = constrain(m, 0, MODE_EXTRA_COUNT - 1);
+  fx->segments[0].mode = constrain(m, 0, MODE_COUNT - 1);
   setBrightness_WS2812FX(fx->brightness);
 }
 
@@ -452,12 +446,8 @@ uint16_t getLength_WS2812FX(void) {
   return fx->segments[0].stop - fx->segments[0].start + 1;
 }
 
-uint8_t getModeCount_basic_WS2812FX(void) {
-  return MODE_BASIC_COUNT;
-}
-
-uint8_t getModeCount_extra_WS2812FX(void) {
-  return MODE_EXTRA_COUNT;
+uint8_t getModeCount_WS2812FX(void) {
+  return MODE_COUNT;
 }
 
 uint8_t getNumSegments_WS2812FX(void) {
@@ -481,20 +471,12 @@ uint32_t getArrayColor_WS2812FX(uint8_t index) {
 }
 
 //Todo c'est pas bon sa
-char* getModeName_WS2812FX(uint8_t m, bool basic_pattern) {
-    if(basic_pattern == IS_BASIC_PATTERN) {
-        if(m < MODE_BASIC_COUNT) {
-            return basic_patterns[m];
-        }
-    }
-    else if (basic_pattern == IS_EXTRA_PATTERN) {
-        if(m < MODE_EXTRA_COUNT) {
-            return extra_patterns[m];
-        }
-    }
-    else {
-        return "";
-    }
+const char* getModeName_WS2812FX(uint8_t m) {
+  if(m < MODE_COUNT) {
+    return name[m];
+  } else {
+    return "";
+  }
 }
 
 void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, bool reverse) {

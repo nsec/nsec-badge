@@ -94,7 +94,7 @@ static void toggle_flashlight(uint8_t item) {
     menu_close();
     gfx_fillScreen(SSD1306_WHITE);
     gfx_update();
-    setMode_WS2812FX(FX_MODE_STATIC, IS_BASIC_PATTERN);
+    setMode_WS2812FX(FX_MODE_STATIC);
     setBrightness_WS2812FX(255);
     setColor_packed_WS2812FX(WHITE);
 }
