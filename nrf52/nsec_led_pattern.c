@@ -4,6 +4,7 @@
 //  License: MIT (see LICENSE for details)
 
 #include <nordic_common.h>
+#include <nrf_delay.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -255,9 +256,16 @@ static void save_letter3(uint8_t item) {
 static uint8_t index_to_unlock;
 static void try_unlock(uint8_t item) {
     strcat(pass, letters[item]);
+    gfx_fillRect(0, 12, 128, 64-12, SSD1306_BLACK);
+    gfx_setCursor(12, 26);
     if (nsec_unlock_led_pattern(pass, index_to_unlock)) {
         save_pattern(index_to_unlock);
+        gfx_puts("Unlocked !");
+    } else {
+        gfx_puts("Try again !");
     }
+    gfx_update();
+    nrf_delay_ms(1000);
     menu_close();
     nsec_led_pattern_show();
 }
