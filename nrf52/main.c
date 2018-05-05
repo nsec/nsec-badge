@@ -74,7 +74,7 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     setColor_WS2812FX(255, 0, 0);
     setMode_WS2812FX(FX_MODE_BLINK);
     start_WS2812FX();
-
+    while(1);
     while (count > 0) {
         service_WS2812FX();
         nrf_delay_ms(100);
@@ -144,6 +144,10 @@ void show_main_menu(void) {
     is_at_main_menu = true;
 }
 
+uint16_t handle_write(CharacteristicWriteEvent* event){
+	return BLE_GATT_STATUS_SUCCESS;
+}
+
 int main(void) {
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
     g_device_id[9] = '\0';
@@ -171,8 +175,9 @@ int main(void) {
     config_dummy_service(&service0, &characteristic0);
     uint8_t value = 0xab;
     set_characteristic_value(&characteristic0, &value);
+    add_write_request_handler(&characteristic0, handle_write);
     start_advertising();
-    //nsec_identity_init();
+    //init_identity_service();
     nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
