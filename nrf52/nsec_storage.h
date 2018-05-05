@@ -35,6 +35,7 @@ void update_stored_color(uint32_t color, uint8_t index);
 void update_stored_reverse(bool reverse);
 void update_stored_control(bool control);
 
-bool nsec_unlock_led_pattern(uint32_t password);
+bool nsec_unlock_led_pattern(char *password, uint8_t index);
+bool pattern_is_unlock(uint32_t sponsor_index);
 
 #endif

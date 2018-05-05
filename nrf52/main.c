@@ -36,6 +36,7 @@
 #include "utils.h"
 #include "ws2812fx.h"
 #include "nsec_storage.h"
+#include "nsec_led_pattern.h"
 #include "nsec_warning.h"
 
 #include "images/nsec_logo_bitmap.c"
@@ -55,6 +56,7 @@ bool is_at_main_menu = false;
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     static int error_displayed = 0;
     uint8_t count = 50;
+
     if(!error_displayed) {
         char error_msg[128];
         error_info_t *err_info = (error_info_t *) info;
@@ -74,7 +76,7 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     setColor_WS2812FX(255, 0, 0);
     setMode_WS2812FX(FX_MODE_BLINK);
     start_WS2812FX();
-    while(1);
+
     while (count > 0) {
         service_WS2812FX();
         nrf_delay_ms(100);
@@ -106,6 +108,12 @@ void open_conference_schedule(uint8_t item) {
     nsec_schedule_show_dates();
 }
 
+void open_led_pattern(uint8_t item) {
+    menu_close();
+    is_at_main_menu = false;
+    nsec_led_pattern_show();
+}
+
 void open_settings(uint8_t item) {
     menu_close();
     is_at_main_menu = false;
@@ -124,6 +132,9 @@ menu_item_s main_menu_items[] = {
         .label = "Conference schedule",
         .handler = open_conference_schedule,
     }, {
+        .label = "LED pattern",
+        .handler = open_led_pattern,
+    },{
         .label = "Settings",
         .handler = open_settings,
     }, {
@@ -167,7 +178,7 @@ int main(void) {
     /*
      * Initialize bluetooth stack
      */
-    create_ble_device("Test device");
+    create_ble_device("My BLE device");
     configure_advertising();
     VendorService service0;
     ServiceCharacteristic characteristic0;
