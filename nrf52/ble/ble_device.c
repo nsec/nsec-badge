@@ -75,7 +75,6 @@ static void reply_to_client_request(uint8_t operation, uint16_t status_code, uin
         const uint8_t* data_buffer, uint16_t data_length);
 static void on_prepare_write_request(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle);
 static void on_execute_queued_write_requests(uint16_t connection_handle);
-static uint16_t get_queued_write_count();
 static uint16_t get_characteristic_handle_for_queued_writes();
 static ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle);
 static QueuedWrite* parse_next_queued_write_event();
@@ -297,7 +296,7 @@ static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * 
             .data_buffer = write_event->data
         };
         uint16_t status_code = BLE_GATT_STATUS_SUCCESS;
-        uint8_t* data_buffer = status_code == BLE_GATT_STATUS_SUCCESS ? event.data_buffer: NULL;
+        const uint8_t* data_buffer = status_code == BLE_GATT_STATUS_SUCCESS ? event.data_buffer: NULL;
         reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, status_code, connection_handle, data_buffer,
                 write_event->len);
         status_code = characteristic->on_write_request(&event);
@@ -404,22 +403,6 @@ static ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle){
         }
     }
     return NULL;
-}
-
-static uint16_t get_queued_write_count(){
-	if(buffer == NULL){
-		return 0;
-	}
-	uint16_t count = 0;
-	uint16_t handle = *((uint16_t*)buffer);
-	uint16_t index = 0;
-	while(handle != BLE_GATT_HANDLE_INVALID){
-		count++;
-		uint16_t current_write_length = *((uint16_t*)(buffer + index + 4));
-		index += 6 + current_write_length;
-		handle = *((uint16_t*)(buffer + index));
-	}
-	return count;
 }
 
 static uint16_t get_characteristic_handle_for_queued_writes(){
