@@ -33,7 +33,7 @@ void update_stored_mode(uint8_t mode);
 void update_stored_speed(uint16_t speed);
 void update_stored_color(uint32_t color, uint8_t index);
 
-bool nsec_unlock_led_pattern(uint32_t password);
+bool nsec_unlock_led_pattern(uint8_t *password, uint8_t index);
 bool pattern_is_unlock(uint32_t sponsor_index);
 
 #endif

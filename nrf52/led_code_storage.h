@@ -23,23 +23,26 @@
 #define SPONSOR_14		14
 #define SPONSOR_15		15
 
-#define SPONSOR_0_PW	0x84C6
-#define SPONSOR_1_PW	0x74D2
-#define SPONSOR_2_PW	0x5798
-#define SPONSOR_3_PW	0x0F18
-#define SPONSOR_4_PW	0x00FF
-#define SPONSOR_5_PW	0xCF8E
-#define SPONSOR_6_PW	0x0D17
-#define SPONSOR_7_PW	0xBC2F
-#define SPONSOR_8_PW	0xF6B1
-#define SPONSOR_9_PW	0x1B6F
-#define SPONSOR_10_PW	0xAF10
-#define SPONSOR_11_PW	0x4B57
-#define SPONSOR_12_PW	0x6851
-#define SPONSOR_13_PW	0xDB22
-#define SPONSOR_14_PW	0x51F8
-#define SPONSOR_15_PW	0x5ED4
-#define MASTER_PW		0x92DC
+const char *sponsor_password[] = {
+	"84C6",
+	"74D2",
+	"5798",
+	"0F18",
+	"00FF",
+	"CF8E",
+	"0D17",
+	"BC2F",
+	"F6B1",
+	"1B6F",
+	"AF10",
+	"4B57",
+	"6851",
+	"DB22",
+	"51F8",
+	"5ED4",
+};
+
+#define MASTER_PW	"92DC"
 
 #define SPONSOR_PW_SIZE	16
 
