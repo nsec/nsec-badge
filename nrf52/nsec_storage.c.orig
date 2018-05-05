@@ -52,7 +52,11 @@ typedef struct LedSettings_t {
 } LedSettings;
 
 LedSettings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS, 
-                                {BLUE, GREEN, RED}, false, true};
+<<<<<<< HEAD
+								{BLUE, RED, GREEN}};
+=======
+                                {RED, GREEN, BLUE}, false, true};
+>>>>>>> master
 LedSettings actual_settings;
 bool need_led_settings_update = false;
 
@@ -196,7 +200,7 @@ bool pattern_is_unlock(uint32_t sponsor_index) {
 }
 
 // true valid, false invalid
-bool nsec_unlock_led_pattern(char *password, uint8_t index) {
+bool nsec_unlock_led_pattern(uint8_t *password, uint8_t index) {
     if (strcmp(password, MASTER_PW) == 0) {
         unlock_all_pattern();
         return true;
