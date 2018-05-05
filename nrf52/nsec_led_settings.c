@@ -81,7 +81,6 @@ static void save_brightness(uint8_t item);
 static void save_speed(uint8_t item);
 static void save_color(uint8_t item);
 static void save_reverse(uint8_t item);
-static void save_pattern(uint8_t item);
 static void save_control(uint8_t item); 
 static void show_reverse_menu(uint8_t item);
 static void show_control_menu(uint8_t item);

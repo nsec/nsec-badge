@@ -19,10 +19,9 @@
 enum setting_state {
     SETTING_STATE_CLOSED,
     SETTING_STATE_MENU,
-    SETTING_STATE_CHOOSE,
-    SETTING_STATE_PATTERN,
-    SETTING_STATE_BACK,
-    SETTING_STATE_STATUS,
+    SETTING_STATE_BASIC_PATTERN,
+    SETTING_STATE_EXTRA_PATTERN,
+    SETTING_STATE_UNLOCK_PATTERN,
 };
 
 #define MODE_BASIC_COUNT 42
@@ -176,7 +175,7 @@ uint8_t extra_patterns_match_index[] = {
 };
 
 
-char pass[4];
+char pass[5];
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
 
@@ -189,7 +188,7 @@ static void save_letter0(void);
 static void save_letter1(uint8_t item);
 static void save_letter2(uint8_t item);
 static void save_letter3(uint8_t item);
-static void save_letter4(uint8_t item);
+static void try_unlock(uint8_t item);
 
 static void led_pattern_handle_buttons(button_t button);
 
@@ -247,20 +246,20 @@ static void save_letter3(uint8_t item) {
     strcat(pass, letters[item]);
     for (int i=0; i<16; i++) {
         letters_items[i].label = letters[i];
-        letters_items[i].handler = save_letter4;
+        letters_items[i].handler = try_unlock;
     }
     menu_close();
     menu_init(90, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items);
 }
 
-uint8_t index_to_unlock;
-static void save_letter4(uint8_t item) {
+static uint8_t index_to_unlock;
+static void try_unlock(uint8_t item) {
     strcat(pass, letters[item]);
     if (nsec_unlock_led_pattern(pass, index_to_unlock)) {
         save_pattern(index_to_unlock);
     }
     menu_close();
-    show_extra_pattern_menu(0);
+    nsec_led_pattern_show();
 }
 
 static void unlock_led_pattern(uint8_t item) {
@@ -271,9 +270,9 @@ static void unlock_led_pattern(uint8_t item) {
     snprintf(brackets, 20, "[ ] [ ] [ ] [ ]");
     gfx_puts(brackets);
     index_to_unlock = item;
-
+    _state  = SETTING_STATE_UNLOCK_PATTERN;
+    menu_close();
     save_letter0();
-    _state = SETTING_STATE_PATTERN;
 }
 
 void show_actual_pattern(void) {
@@ -286,6 +285,7 @@ void show_actual_pattern(void) {
 
     snprintf(actual, 50, "Now: %s", getModeName_WS2812FX(mode));
     gfx_puts(actual);
+    gfx_update();
 }
 
 static bool basic_selected = false;
@@ -298,10 +298,9 @@ static void show_basic_pattern_menu(uint8_t item) {
     }
     show_actual_pattern();
     menu_init(0, 32, 128, 64 - 32, ARRAY_SIZE(basic_pattern_items), basic_pattern_items);
-    _state = SETTING_STATE_PATTERN;
+    _state = SETTING_STATE_BASIC_PATTERN;
 }
 
-// TODO <L> or <U> before the pattern led
 static void show_extra_pattern_menu(uint8_t item) {
     basic_selected = false;
     gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
@@ -315,10 +314,10 @@ static void show_extra_pattern_menu(uint8_t item) {
             extra_pattern_items[i].handler = unlock_led_pattern;
         }
     }
-    show_actual_pattern();
     menu_close();
+    show_actual_pattern();
     menu_init(0, 32, 128, 64 - 32, ARRAY_SIZE(extra_pattern_items), extra_pattern_items);
-    _state = SETTING_STATE_PATTERN;
+    _state = SETTING_STATE_EXTRA_PATTERN;
 }
 
 static void save_pattern(uint8_t item) {
@@ -327,8 +326,8 @@ static void save_pattern(uint8_t item) {
         index = basic_patterns_match_index[item];
     } else {
         index = extra_patterns_match_index[item];
-        show_extra_pattern_menu(0);
     }
+
     setMode_WS2812FX(index);
     update_stored_mode(index);
 }
@@ -341,10 +340,14 @@ static void led_pattern_handle_buttons(button_t button) {
                 menu_close();
                 show_main_menu();
                 break;
-            case SETTING_STATE_PATTERN:
-                _state = SETTING_STATE_MENU;
+            case SETTING_STATE_EXTRA_PATTERN:
+            case SETTING_STATE_BASIC_PATTERN:
                 menu_close();
                 nsec_led_pattern_show();
+                break;
+            case SETTING_STATE_UNLOCK_PATTERN:
+                menu_close();
+                show_extra_pattern_menu(0);
                 break;
             default:
                 break;
