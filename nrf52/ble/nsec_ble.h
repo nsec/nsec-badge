@@ -18,9 +18,9 @@
 struct nsec_ble_service_handle_s;
 typedef struct nsec_ble_service_handle_s * nsec_ble_service_handle;
 
-typedef void (*nsec_ble_characteristic_write_callback)(nsec_ble_service_handle service, uint16_t char_uuid, uint8_t * content, size_t content_length);
+typedef void (*nsec_ble_characteristic_write_callback)(nsec_ble_service_handle service, uint16_t char_uuid, const uint8_t * content, size_t content_length);
 
-typedef void (*nsec_ble_found_nsec_badge_callback)(uint16_t badge_id, uint8_t addr[], int8_t rssi);
+typedef void (*nsec_ble_found_nsec_badge_callback)(uint16_t badge_id, const uint8_t addr[], int8_t rssi);
 
 enum NSEC_BLE_CHARACT_PERM {
     NSEC_BLE_CHARACT_PERM_NONE  = 0,

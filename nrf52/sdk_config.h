@@ -189,7 +189,7 @@
 // <3=> 14 bit
 
 #ifndef SAADC_CONFIG_RESOLUTION
-#define SAADC_CONFIG_RESOLUTION 0
+#define SAADC_CONFIG_RESOLUTION 1
 #endif
 
 // <o> SAADC_CONFIG_OVERSAMPLE  - Sample period

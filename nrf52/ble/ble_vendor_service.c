@@ -26,7 +26,8 @@ static nsec_ble_characteristic_list_item_t _nsec_ble_vendor_services_characteris
 
 static void _nsec_ble_add_caracteristic(nsec_ble_service_handle service_handle, nsec_ble_characteristic_t * charac, ble_gatts_char_handles_t * charac_handle);
 static void _nsec_ble_vendor_uuid_provider(size_t * uuid_count, ble_uuid_t * uuids);
-static void _nsec_ble_vendor_evt_handler(ble_evt_t * p_ble_evt);
+static void _nsec_ble_vendor_evt_handler(const ble_evt_t * p_ble_evt, void *unused);
+
 
 int nsec_ble_register_vendor_service(nsec_ble_service_t * srv, nsec_ble_service_handle * handle) {
     ble_uuid128_t     base_uuid;
@@ -89,7 +90,7 @@ static void _nsec_ble_vendor_uuid_provider(size_t * uuid_count, ble_uuid_t * uui
     *uuid_count = count;
 }
 
-static void _nsec_ble_vendor_evt_handler(ble_evt_t * p_ble_evt) {
+static void _nsec_ble_vendor_evt_handler(const ble_evt_t * p_ble_evt, void *unused) {
     static uint8_t long_write_buffer[256];
     static uint8_t block_is_used = 0;
     switch (p_ble_evt->header.evt_id) {

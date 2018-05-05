@@ -43,14 +43,16 @@
 
 /* Led settings */
 typedef struct LedSettings_t {
-	uint8_t mode;
-	uint16_t speed;
-	uint8_t brightness;
-	uint32_t colors[NUM_COLORS];
+    uint8_t mode;
+    uint16_t speed;
+    uint8_t brightness;
+    uint32_t colors[NUM_COLORS];
+    bool reverse;
+    bool control;
 } LedSettings;
 
 LedSettings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS, 
-								{BLUE, RED, GREEN}};
+                                {BLUE, GREEN, RED}, false, true};
 LedSettings actual_settings;
 bool need_led_settings_update = false;
 
@@ -91,7 +93,7 @@ void nsec_storage_update() {
         wait_for_flash_ready(&fs_led_settings);
 
         rc = nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr, &actual_settings,
-        						sizeof(actual_settings), NULL);
+                                sizeof(actual_settings), NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_led_settings);
         need_led_settings_update = false;
@@ -111,37 +113,53 @@ void nsec_storage_update() {
 
 /* Led Settings interface */
 void update_stored_brightness(uint8_t brightness) {
-	actual_settings.brightness = brightness;
+    actual_settings.brightness = brightness;
     need_led_settings_update = true;
 }
 
 void update_stored_mode(uint8_t mode) {
-	actual_settings.mode = mode;
-	need_led_settings_update = true;
+    actual_settings.mode = mode;
+    need_led_settings_update = true;
 }
 
 void update_stored_speed(uint16_t speed) {
-	actual_settings.speed = speed;
-	need_led_settings_update = true;
+    actual_settings.speed = speed;
+    need_led_settings_update = true;
 }
 
 void update_stored_color(uint32_t color, uint8_t index) {
-	if (index < NUM_COLORS) {
-		actual_settings.colors[index] = color;
-		need_led_settings_update = true;
-	}
+    if (index < NUM_COLORS) {
+        actual_settings.colors[index] = color;
+        need_led_settings_update = true;
+    }
+}
+
+void update_stored_reverse(bool reverse) {
+    actual_settings.reverse = reverse;
+    need_led_settings_update = true;
+}
+
+void update_stored_control(bool control) {
+    actual_settings.control = control;
+    need_led_settings_update = true;
 }
 
 void load_stored_led_settings(void) {
-	if (!is_init) {
-		nsec_storage_init();
-	}
-	setBrightness_WS2812FX(actual_settings.brightness);
-	setMode_WS2812FX(actual_settings.mode);
-	setSpeed_WS2812FX(actual_settings.speed);
-	setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
-	setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);
-	setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
+    if (!is_init) {
+        nsec_storage_init();
+    }
+    if (actual_settings.control) {
+        start_WS2812FX();
+    } else {
+        stop_WS2812FX();
+    }
+    setBrightness_WS2812FX(actual_settings.brightness);
+    setMode_WS2812FX(actual_settings.mode);
+    setSpeed_WS2812FX(actual_settings.speed);
+    setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
+    setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);
+    setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
+    setReverse_WS2812FX(actual_settings.reverse);
 }
 
 void load_stored_led_default_settings(void) {
@@ -251,7 +269,7 @@ static void password_storage_init(void) {
 void nsec_storage_init(void) {
    
     if (is_init) {
-    	return;
+        return;
     }
 
     led_settings_storage_init();

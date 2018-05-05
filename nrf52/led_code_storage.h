@@ -6,22 +6,22 @@
 #ifndef _LED_CODE_STORAGE_H
 #define _LED_CODE_STORAGE_H
 
-#define SPONSOR_0		0
-#define SPONSOR_1		1
-#define SPONSOR_2		2
-#define SPONSOR_3		3
-#define SPONSOR_4		4
-#define SPONSOR_5		5
-#define SPONSOR_6		6
-#define SPONSOR_7		7
-#define SPONSOR_8		8
-#define SPONSOR_9		9
-#define SPONSOR_10		10
-#define SPONSOR_11		11
-#define SPONSOR_12		12
-#define SPONSOR_13		13
-#define SPONSOR_14		14
-#define SPONSOR_15		15
+#define SPONSOR_0       0
+#define SPONSOR_1       1
+#define SPONSOR_2       2
+#define SPONSOR_3       3
+#define SPONSOR_4       4
+#define SPONSOR_5       5
+#define SPONSOR_6       6
+#define SPONSOR_7       7
+#define SPONSOR_8       8
+#define SPONSOR_9       9
+#define SPONSOR_10      10
+#define SPONSOR_11      11
+#define SPONSOR_12      12
+#define SPONSOR_13      13
+#define SPONSOR_14      14
+#define SPONSOR_15      15
 
 const char *sponsor_password[] = {
 	"84C6",

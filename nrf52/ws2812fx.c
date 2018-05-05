@@ -372,6 +372,11 @@ void setSpeed_WS2812FX(uint16_t s) {
   fx->segments[0].speed = constrain(s, SPEED_MIN, SPEED_MAX);
 }
 
+void setReverse_WS2812FX(bool reverse) {
+  RESET_RUNTIME;
+  fx->segments[0].reverse = reverse;
+}
+
 void increaseSpeed_WS2812FX(uint8_t s) {
   uint16_t newSpeed = constrain(SEGMENT.speed + s,
                                 SPEED_MIN, SPEED_MAX);
@@ -436,6 +441,10 @@ uint8_t getMode_WS2812FX(void) {
 
 uint16_t getSpeed_WS2812FX(void) {
   return fx->segments[0].speed;
+}
+
+bool getReverse_WS2812FX(void) {
+  return fx->segments[0].reverse;
 }
 
 uint8_t getBrightness_WS2812FX(void) {
@@ -867,7 +876,7 @@ uint16_t mode_rainbow(void) {
  */
 uint16_t mode_rainbow_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-	  uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+      uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
     nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + i, color);
   }
 

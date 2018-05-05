@@ -42,6 +42,6 @@ void power_init(void) {
 }
 
 void power_manage(void) {
-	uint32_t err_code = sd_app_evt_wait();
-	APP_ERROR_CHECK(err_code);
+    uint32_t err_code = sd_app_evt_wait();
+    APP_ERROR_CHECK(err_code);
 }

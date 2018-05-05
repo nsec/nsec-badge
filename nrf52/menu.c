@@ -49,6 +49,10 @@ void menu_close(void) {
     menu.is_handling_buttons = 0;
 }
 
+void menu_open(void) {
+    menu.is_handling_buttons = 1;
+}
+
 void menu_set_position(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height) {
     menu.pos_x = pos_x;
     menu.pos_y = pos_y;
@@ -92,7 +96,7 @@ static void menu_ui_redraw_items(uint8_t start, uint8_t end) {
         else {
             gfx_setTextBackgroundColor(SSD1306_WHITE,SSD1306_BLACK);
         }
-        char * string = menu.items[item_index].label;
+        const char * string = menu.items[item_index].label;
         if(strlen(string) <= menu.col_width) {
             gfx_puts(string);
         }
