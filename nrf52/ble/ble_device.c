@@ -33,6 +33,7 @@
 #define APP_BLE_OBSERVER_PRIO 3
 #define PEER_ADDRESS_SIZE 6
 #define MAX_VENDOR_SERVICE_COUNT 8
+#define LONG_WRITE_MAX_LENGTH 200
 NRF_BLE_GATT_DEF(m_gatt);
 
 
@@ -43,8 +44,16 @@ typedef struct{
     VendorService* vendor_services[MAX_VENDOR_SERVICE_COUNT];
 } BleDevice;
 
+typedef struct{
+	uint16_t characteristic_handle;
+	uint16_t write_offset;
+	uint16_t write_length;
+	uint8_t write_buffer[1];
+} QueuedWrite;
+
 static BleDevice* ble_device = NULL;
 
+static uint8_t* buffer = NULL;
 
 static nrf_sdh_ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
 static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
@@ -58,11 +67,17 @@ static void gatt_init();
 //static void add_device_information_service(char * manufacturer_name, char * model, char * serial_number,
 //        char * hw_revision, char * fw_revision, char * sw_revision);
 static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * write_event);
+static void on_execute_queued_write_commands();
 static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle);
 static void on_characteristic_read_request_event(const ble_gatts_evt_read_t * read_event, uint16_t connection_handle);
 static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid);
 static void reply_to_client_request(uint8_t operation, uint16_t status_code, uint16_t connection_handle,
         const uint8_t* data_buffer, uint16_t data_length);
+static void on_prepare_write_request(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle);
+static void on_execute_queued_write_requests(uint16_t connection_handle);
+static uint16_t get_characteristic_handle_for_queued_writes();
+static ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle);
+static QueuedWrite* parse_next_queued_write_event();
 
 
 ret_code_t create_ble_device(char* device_name){
@@ -147,8 +162,13 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             break;
         case BLE_GATTS_EVT_WRITE:
         {
-            const ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
-            on_characteristic_write_command_event(p_evt_write);
+            const ble_gatts_evt_write_t * event = &p_ble_evt->evt.gatts_evt.params.write;
+            if(event->op == BLE_GATTS_OP_EXEC_WRITE_REQ_NOW){
+            	on_execute_queued_write_commands();
+            }
+            else{
+            	on_characteristic_write_command_event(event);
+            }
             break;
         }
         case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
@@ -163,12 +183,38 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             }
             else if(type == BLE_GATTS_AUTHORIZE_TYPE_WRITE){
                 const ble_gatts_evt_write_t * event = &p_ble_evt->evt.gatts_evt.params.authorize_request.request.write;
-                on_characteristic_write_request_event(event, p_ble_evt->evt.gatts_evt.conn_handle);
+                uint16_t connection_handle = p_ble_evt->evt.gatts_evt.conn_handle;
+                switch(event->op){
+                	case BLE_GATTS_OP_WRITE_REQ:
+                		on_characteristic_write_request_event(event, connection_handle);
+                		break;
+                	case BLE_GATTS_OP_PREP_WRITE_REQ:
+                		on_prepare_write_request(event, connection_handle);
+                		break;
+                	case BLE_GATTS_OP_EXEC_WRITE_REQ_NOW:
+                		on_execute_queued_write_requests(connection_handle);
+                		break;
+                	default:
+                		APP_ERROR_CHECK(event->op);
+                }
             }
             break;
         }
+        case BLE_EVT_USER_MEM_REQUEST:
+        {
+            buffer = malloc(LONG_WRITE_MAX_LENGTH);
+            ble_user_mem_block_t memory_block;
+            memory_block.p_mem = buffer;
+            memory_block.len = LONG_WRITE_MAX_LENGTH;
+            APP_ERROR_CHECK(sd_ble_user_mem_reply(p_ble_evt->evt.common_evt.conn_handle, &memory_block));
+        }
+            break;
+        case BLE_EVT_USER_MEM_RELEASE:
+            free(p_ble_evt->evt.common_evt.params.user_mem_release.mem_block.p_mem);
+            buffer = NULL;
+            break;
         default:
-            NRF_LOG_INFO("Received BLE event %d", p_ble_evt->header.evt_id);
+            APP_ERROR_CHECK(p_ble_evt->header.evt_id);
     }
 }
 
@@ -189,7 +235,7 @@ uint32_t add_vendor_service(VendorService* service){
  */
 void config_dummy_service(VendorService* dummy_service, ServiceCharacteristic* characteristic){
     add_vendor_service(dummy_service);
-    add_characteristic_to_vendor_service(dummy_service, characteristic, 1, AUTO_READ, AUTO_WRITE);
+    add_characteristic_to_vendor_service(dummy_service, characteristic, 30, AUTO_READ, REQUEST_WRITE);
     set_default_advertised_service(dummy_service);
 }
 
@@ -216,30 +262,44 @@ static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * 
     ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
     if(characteristic != NULL && characteristic->on_write_command != NULL){
         CharacteristicWriteEvent event = {
-            .characteristic_uuid = write_event->uuid,
             .write_offset = write_event->offset,
             .data_length = write_event->len,
-            .characteristic_handle = write_event->handle,
             .data_buffer = write_event->data
         };
         characteristic->on_write_command(&event);
     }
 }
 
+static void on_execute_queued_write_commands(){
+	APP_ERROR_CHECK(buffer == NULL);
+	QueuedWrite* write_event = parse_next_queued_write_event();
+	while(write_event != NULL){
+		ServiceCharacteristic* characteristic = get_characteristic_from_handle(write_event->characteristic_handle);
+		if(characteristic != NULL && characteristic->on_write_command != NULL){
+			CharacteristicWriteEvent event = {
+				.write_offset = write_event->write_offset,
+				.data_length = write_event->write_length,
+				.data_buffer =  write_event->write_buffer
+			};
+			characteristic->on_write_command(&event);
+		}
+		write_event = parse_next_queued_write_event();
+	}
+}
+
 static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle){
     ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
     if(characteristic != NULL && characteristic->on_write_request != NULL){
         CharacteristicWriteEvent event = {
-            .characteristic_uuid = write_event->uuid,
             .write_offset = write_event->offset,
             .data_length = write_event->len,
-            .characteristic_handle = write_event->handle,
             .data_buffer = write_event->data
         };
-        uint16_t status_code = characteristic->on_write_request(&event);
+        uint16_t status_code = BLE_GATT_STATUS_SUCCESS;
         const uint8_t* data_buffer = status_code == BLE_GATT_STATUS_SUCCESS ? event.data_buffer: NULL;
         reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, status_code, connection_handle, data_buffer,
-                characteristic->value_length);
+                write_event->len);
+        status_code = characteristic->on_write_request(&event);
     }
     else{
         reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED,
@@ -251,9 +311,7 @@ static void on_characteristic_read_request_event(const ble_gatts_evt_read_t * re
     ServiceCharacteristic* characteristic = get_characteristic_from_uuid(read_event->uuid.uuid);
     if(characteristic != NULL && characteristic->on_read_request != NULL){
         CharacteristicReadEvent event = {
-            .characteristic_uuid = read_event->uuid,
             .read_offset = read_event->offset,
-            .characteristic_handle = read_event->handle
         };
         uint16_t status_code = characteristic->on_read_request(&event);
         reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_READ, status_code, connection_handle, NULL, characteristic->value_length);
@@ -261,6 +319,56 @@ static void on_characteristic_read_request_event(const ble_gatts_evt_read_t * re
     else{
         reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_READ, BLE_GATT_STATUS_ATTERR_READ_NOT_PERMITTED, connection_handle, NULL, 0);
     }
+}
+
+static void on_prepare_write_request(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle){
+	if(get_characteristic_handle_for_queued_writes() == write_event->handle){
+		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_SUCCESS, connection_handle, NULL, 0);
+	}
+	else{
+		/* Queuing multiple writes to different characteristics should be allowed, but it would be difficult to handle properly and simply. */
+		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED, connection_handle, write_event->data, write_event->len);
+	}
+}
+
+static void on_execute_queued_write_requests(uint16_t connection_handle){
+	APP_ERROR_CHECK(buffer == NULL);
+	uint16_t status_code = BLE_GATT_STATUS_SUCCESS;
+	QueuedWrite* queued_write = parse_next_queued_write_event();
+	while(queued_write != NULL){
+		ServiceCharacteristic* characteristic = get_characteristic_from_handle(queued_write->characteristic_handle);
+		if(characteristic != NULL && characteristic->on_write_request != NULL){
+			CharacteristicWriteEvent event = {
+				.write_offset = queued_write->write_offset,
+				.data_length = queued_write->write_length,
+				.data_buffer =  queued_write->write_buffer
+			};
+			status_code = characteristic->on_write_request(&event);
+			if(status_code != BLE_GATT_STATUS_SUCCESS){
+				break;
+			}
+		}
+		queued_write = parse_next_queued_write_event();
+	}
+	if(status_code == BLE_GATT_STATUS_SUCCESS){
+		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, status_code, connection_handle, NULL, 0);
+	}
+	else{
+		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED,
+				connection_handle, NULL, 0);
+	}
+}
+
+static QueuedWrite* parse_next_queued_write_event(){
+	QueuedWrite* write = (QueuedWrite*)buffer;
+	if(write->characteristic_handle == BLE_GATT_HANDLE_INVALID){
+		return NULL;
+	}
+	else{
+		buffer += sizeof(write->characteristic_handle) + sizeof(write->write_length) + sizeof(write->write_offset);
+		buffer += write->write_length;
+		return write;
+	}
 }
 
 static void reply_to_client_request(uint8_t operation, uint16_t status_code, uint16_t connection_handle,
@@ -284,59 +392,26 @@ static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid){
     return NULL;
 }
 
-/*static void init_connection_parameters(){
-    // The BLE stack seems to work without this function, but I leave it here just in case it might be needed in the future.
-
-    ret_code_t             err_code;
-    ble_conn_params_init_t cp_init;
-
-    memset(&cp_init, 0, sizeof(cp_init));
-
-    cp_init.p_conn_params                  = NULL;
-    cp_init.first_conn_params_update_delay = APP_TIMER_TICKS(20000);
-    cp_init.next_conn_params_update_delay  = APP_TIMER_TICKS(5000);
-    cp_init.max_conn_params_update_count   = 3;
-    cp_init.start_on_notify_cccd_handle    = BLE_GATT_HANDLE_INVALID;
-    cp_init.disconnect_on_fail             = false;
-    cp_init.evt_handler                    = on_connection_params_event;
-    cp_init.error_handler                  = connection_params_error_handler;
-
-    err_code = ble_conn_params_init(&cp_init);
-    log_error_code("ble_conn_params_init", err_code);
-}*/
-
-/*static void add_device_information_service(char * manufacturer_name, char * model, char * serial_number,
-        char * hw_revision, char * fw_revision, char * sw_revision){
-    ble_dis_init_t device_information;
-    bzero(&device_information, sizeof(device_information));
-
-    if(manufacturer_name) {
-        ble_srv_ascii_to_utf8(&device_information.manufact_name_str,
-                              manufacturer_name);
+static ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle){
+    for(int i = 0; i < ble_device->vendor_service_count; i++){
+        VendorService* service = ble_device->vendor_services[i];
+        for(int j = 0; j < service->characteristic_count; j++){
+        	ServiceCharacteristic* characteristic = service->characteristics[j];
+        	if(characteristic->handle == handle){
+        		return characteristic;
+        	}
+        }
     }
-    if(model) {
-        ble_srv_ascii_to_utf8(&device_information.model_num_str,
-                              model);
-    }
-    if(serial_number) {
-        ble_srv_ascii_to_utf8(&device_information.serial_num_str,
-                              serial_number);
-    }
-    if(hw_revision) {
-        ble_srv_ascii_to_utf8(&device_information.hw_rev_str,
-                              hw_revision);
-    }
-    if(fw_revision) {
-        ble_srv_ascii_to_utf8(&device_information.fw_rev_str,
-                              fw_revision);
-    }
-    if(sw_revision) {
-        ble_srv_ascii_to_utf8(&device_information.sw_rev_str,
-                              sw_revision);
-    }
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&device_information.dis_attr_md.read_perm);
-    log_error_code("ble_dis_init", ble_dis_init(&device_information));
-}*/
+    return NULL;
+}
+
+static uint16_t get_characteristic_handle_for_queued_writes(){
+	if(buffer == NULL){
+		return BLE_GATT_HANDLE_INVALID;
+	}
+	uint16_t handle = *((uint16_t*)buffer);
+	return handle;
+}
 
 static void _nsec_ble_softdevice_init() {
     uint32_t ram_start = 0;

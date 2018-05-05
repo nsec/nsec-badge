@@ -14,17 +14,13 @@
 
 
 typedef struct {
-    ble_uuid_t characteristic_uuid;
     uint16_t write_offset;
     uint16_t data_length;
-    uint16_t characteristic_handle;
     const uint8_t* data_buffer;
 } CharacteristicWriteEvent;
 
 typedef struct {
-    ble_uuid_t characteristic_uuid;
     uint16_t read_offset;
-    uint16_t characteristic_handle;
 } CharacteristicReadEvent;
 
 typedef void (*on_characteristic_write_command)(CharacteristicWriteEvent*);
