@@ -295,11 +295,10 @@ static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * 
             .data_length = write_event->len,
             .data_buffer = write_event->data
         };
-        uint16_t status_code = BLE_GATT_STATUS_SUCCESS;
+        uint16_t status_code = characteristic->on_write_request(&event);
         const uint8_t* data_buffer = status_code == BLE_GATT_STATUS_SUCCESS ? event.data_buffer: NULL;
         reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, status_code, connection_handle, data_buffer,
                 write_event->len);
-        status_code = characteristic->on_write_request(&event);
     }
     else{
         reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED,
