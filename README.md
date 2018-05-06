@@ -4,7 +4,7 @@ Northsec 2018 Badge
 Brought to you by the Team badge for NorthSec.
 ----------------------------------------------
 
-[Badge website](http://xn--rr8b.ga/)
+[Badge website](http://sputnak.ga/)
 
 ## Hardware overview
 
