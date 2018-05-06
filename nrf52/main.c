@@ -146,7 +146,7 @@ menu_item_s main_menu_items[] = {
 void show_main_menu(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 16) {
         gfx_fillScreen(SSD1306_BLACK);
-        nsec_identity_draw();
+        // nsec_identity_draw();
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
@@ -209,7 +209,8 @@ printf("%s", flag1); // Don't optimize out flag1
     nsec_intro();
     show_main_menu();
 
-    nsec_identity_draw();
+    // bug with white rectangle
+    // nsec_identity_draw();
 
     /*
      * Main loop
