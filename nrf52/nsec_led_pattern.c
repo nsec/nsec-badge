@@ -338,6 +338,7 @@ static void save_pattern(uint8_t item) {
 
     setMode_WS2812FX(index);
     update_stored_mode(index);
+    show_actual_pattern();
 }
 
 static void led_pattern_handle_buttons(button_t button) {
