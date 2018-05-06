@@ -20,12 +20,22 @@
  * SOFTWARE.
  */
 
-#ifndef power_h
-#define power_h
+#ifndef _NSEC_STORAGE_H
+#define _NSEC_STORAGE_H
 
-#include <nrf_drv_power.h>
+void nsec_storage_init(void);
+void nsec_storage_update(void);
 
-void power_init(void);
-void power_manage(void);
+void load_stored_led_settings(void);
+void load_stored_led_default_settings(void);
+void update_stored_brightness(uint8_t brightness);
+void update_stored_mode(uint8_t mode);
+void update_stored_speed(uint16_t speed);
+void update_stored_color(uint32_t color, uint8_t index);
+void update_stored_reverse(bool reverse);
+void update_stored_control(bool control);
+
+bool nsec_unlock_led_pattern(char *password, uint8_t index);
+bool pattern_is_unlock(uint32_t sponsor_index);
 
 #endif

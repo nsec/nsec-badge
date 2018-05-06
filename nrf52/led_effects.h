@@ -6,17 +6,17 @@
 #ifndef neoPixel_h
 #define neoPixel_h
 
-#define NEO_GRB  	((1 << 6) | (1 << 4) | (0 << 2) | (2))
-#define MAGIC_T0H  	6UL | (0x8000) // 0.375us
-#define MAGIC_T1H  	13UL | (0x8000) // 0.8125us
-#define CTOPVAL 	20UL // 1.25us
+#define NEO_GRB     ((1 << 6) | (1 << 4) | (0 << 2) | (2))
+#define MAGIC_T0H   6UL | (0x8000) // 0.375us
+#define MAGIC_T1H   13UL | (0x8000) // 0.8125us
+#define CTOPVAL     20UL // 1.25us
 
-#define CYCLES_800_T0H	18 // ~0.36 us
-#define CYCLES_800_T1H	41 // ~0.76 us
-#define CYCLES_800 		71 // ~1.25 us
+#define CYCLES_800_T0H  18 // ~0.36 us
+#define CYCLES_800_T1H  41 // ~0.76 us
+#define CYCLES_800      71 // ~1.25 us
 
-#define NEOPIXEL_COUNT	8
-#define LED_PIN			26
+#define NEOPIXEL_COUNT  8
+#define LED_PIN         26
 
 void nsec_neoPixel_init(void);
 void nsec_neoPixel_clear(void);

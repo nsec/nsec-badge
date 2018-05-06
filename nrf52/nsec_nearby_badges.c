@@ -23,7 +23,7 @@ static struct {
 APP_TIMER_DEF(nearby_timer);
 
 static void nsec_nearby_each_second(void * context);
-static void nsec_nearby_update_led_pettern(void);
+static void nsec_nearby_update_led_pattern(void);
 
 void nsec_nearby_badges_init(void) {
     memset(_nearby_badges, 0, sizeof(_nearby_badges));
@@ -38,14 +38,14 @@ static void nsec_nearby_each_second(void * context) {
             _nearby_badges[i].timeout_in_sec--;
         }
     }
-    nsec_nearby_update_led_pettern();
+    nsec_nearby_update_led_pattern();
     if(is_at_main_menu) {
         nsec_identity_update_nearby();
         gfx_update();
     }
 }
 
-void nsec_nearby_badges_callback(uint16_t badge_id, uint8_t addr[], int8_t rssi) {
+void nsec_nearby_badges_callback(uint16_t badge_id, const uint8_t addr[], int8_t rssi) {
     for(uint8_t i = 0; i < NSEC_MAX_NEARBY_BADGES_COUNT; i++) {
         if(_nearby_badges[i].id == badge_id) {
             _nearby_badges[i].timeout_in_sec = 60;
@@ -62,15 +62,15 @@ void nsec_nearby_badges_callback(uint16_t badge_id, uint8_t addr[], int8_t rssi)
     }
 }
 
-static void nsec_nearby_update_led_pettern(void) {
-    uint32_t delay;
+static void nsec_nearby_update_led_pattern(void) {
+    /*uint32_t delay;
     uint8_t count = nsec_nearby_badges_current_count();
     if(count < 5) {
         delay = 700 - (100 * count);
     }
     else {
         delay = 300 - (50 * (count - 4));
-    }
+    }*/
     //nsec_led_set_delay(delay);
 }
 

@@ -20,12 +20,21 @@
  * SOFTWARE.
  */
 
-#ifndef power_h
-#define power_h
+#ifndef nsec_led_settings_h
+#define nsec_led_settings_h
 
-#include <nrf_drv_power.h>
+#define SUPER_LOW_BRIGHTNESS        20
+#define LOW_BRIGHTNESS              40
+#define MEDIUM_BRIGHTNESS           60
+#define HIGH_BRIGHTNESS             80
+#define MAX_BRIGHTNESS              100
 
-void power_init(void);
-void power_manage(void);
+#define SUPER_SLOW_SPEED            5000
+#define SLOW_SPEED                  1000
+#define MEDIUM_SPEED                500
+#define FAST_SPEED                  100
+#define SUPER_FAST_SPEED            10
+
+void nsec_show_led_settings(void);
 
 #endif

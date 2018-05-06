@@ -11,6 +11,7 @@
 
 #include "nsec_ble.h"
 #include <string.h>
+#include <strings.h>
 #include <ble.h>
 #include <nrf_sdh.h>
 #include <nrf_sdh_ble.h>

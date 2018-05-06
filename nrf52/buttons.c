@@ -80,7 +80,7 @@ void nsec_buttons_init(void) {
      * Configure the button library
      */
     err_code = app_button_init(buttons,
-		    sizeof(buttons) / sizeof(buttons[0]),
+            sizeof(buttons) / sizeof(buttons[0]),
                     BUTTON_DETECTION_DELAY);
     APP_ERROR_CHECK(err_code);
 

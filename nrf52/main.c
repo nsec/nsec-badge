@@ -19,6 +19,7 @@
 
 #include "ble/ble_device.h"
 #include "battery.h"
+#include "battery_manager.h"
 
 #include "buttons.h"
 #include "logs.h"
@@ -34,8 +35,13 @@
 #include "ssd1306.h"
 #include "utils.h"
 #include "ws2812fx.h"
+#include "nsec_storage.h"
+#include "nsec_led_pattern.h"
+#include "nsec_warning.h"
 
 #include "images/nsec_logo_bitmap.c"
+#include "ble/service_characteristic.h"
+#include "ble/vendor_service.h"
 
 static char g_device_id[10];
 bool is_at_main_menu = false;
@@ -102,10 +108,22 @@ void open_conference_schedule(uint8_t item) {
     nsec_schedule_show_dates();
 }
 
+void open_led_pattern(uint8_t item) {
+    menu_close();
+    is_at_main_menu = false;
+    nsec_led_pattern_show();
+}
+
 void open_settings(uint8_t item) {
     menu_close();
     is_at_main_menu = false;
     nsec_setting_show();
+}
+
+void open_warning(uint8_t item) {
+    menu_close();
+    is_at_main_menu = false;
+    nsec_warning_show();
 }
 
 static
@@ -114,8 +132,14 @@ menu_item_s main_menu_items[] = {
         .label = "Conference schedule",
         .handler = open_conference_schedule,
     }, {
+        .label = "LED pattern",
+        .handler = open_led_pattern,
+    },{
         .label = "Settings",
         .handler = open_settings,
+    }, {
+        .label = "Battery Warning",
+        .handler = open_warning,
     }
 };
 
@@ -131,6 +155,10 @@ void show_main_menu(void) {
     is_at_main_menu = true;
 }
 
+uint16_t handle_write(CharacteristicWriteEvent* event){
+	return BLE_GATT_STATUS_SUCCESS;
+}
+
 int main(void) {
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
     g_device_id[9] = '\0';
@@ -141,7 +169,6 @@ int main(void) {
     log_init();
     power_init();
     softdevice_init();
-    battery_init();
     timer_init();
     init_WS2812FX();
     ssd1306_init();
@@ -153,20 +180,22 @@ int main(void) {
      */
     create_ble_device("My BLE device");
     configure_advertising();
-    config_dummy_service();
+    VendorService service0;
+    ServiceCharacteristic characteristic0;
+    create_vendor_service(&service0);
+    config_dummy_service(&service0, &characteristic0);
+    uint8_t value = 0xab;
+    set_characteristic_value(&characteristic0, &value);
+    add_write_request_handler(&characteristic0, handle_write);
     start_advertising();
-
-    nsec_identity_init();
-
+    //init_identity_service();
+    nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
     nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
-    setBrightness_WS2812FX(64);
-    setSpeed_WS2812FX(200);
-    setMode_WS2812FX(FX_MODE_RAINBOW_CYCLE);
-    start_WS2812FX();
+    load_stored_led_settings();
 
     nsec_intro();
     show_main_menu();
@@ -178,7 +207,8 @@ int main(void) {
      */
     while(true) {
         service_WS2812FX();
-        nrf_delay_ms(50);
+        nsec_storage_update();
+        power_manage();
     }
 
     return 0;

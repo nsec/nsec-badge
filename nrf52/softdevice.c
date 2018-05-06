@@ -63,6 +63,6 @@ void softdevice_init(void) {
         err_code = nrf_sdh_is_enabled();
         if (err_code)
             break;
-	nrf_delay_ms(10);
+        nrf_delay_ms(10);
     }
 }
