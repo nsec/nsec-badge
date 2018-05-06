@@ -169,7 +169,7 @@ int main(void) {
 
 #ifndef NSEC_CONF_NO_FLAGS
 static volatile char flag1[] = "FLAG-624bbf3fb2e54f9194057f9adbd66836";
-printf("%s", flag_blah); // Don't optimize out flag1
+printf("%s", flag1); // Don't optimize out flag1
 #endif
 
     /*
