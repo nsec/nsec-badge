@@ -9,16 +9,16 @@
 
 #include <stdint.h>
 
-#define MENU_LIMIT_MAX_ITEM_COUNT (10)
+#define MENU_LIMIT_MAX_ITEM_COUNT (60)
 
 typedef struct {
-	char * label;
-	void (*handler)(uint8_t item_index);
+    const char * label;
+    void (*handler)(uint8_t item_index);
 } menu_item_s;
 
 typedef enum {
-	MENU_DIRECTION_UP,
-	MENU_DIRECTION_DOWN,
+    MENU_DIRECTION_UP,
+    MENU_DIRECTION_DOWN,
 } MENU_DIRECTION;
 
 void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height, uint8_t item_count, menu_item_s * items);
@@ -28,5 +28,6 @@ void menu_ui_redraw_all(void);
 void menu_change_selected_item(MENU_DIRECTION direction);
 void menu_trigger_action(void);
 void menu_close(void);
+void menu_open(void);
 
 #endif

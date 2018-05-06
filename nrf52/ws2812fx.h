@@ -128,10 +128,13 @@ void stop_WS2812FX(void);
 void setMode_WS2812FX(uint8_t m);
 void setCustomMode_WS2812FX(uint16_t (*p)());
 void setSpeed_WS2812FX(uint16_t s);
+void setReverse_WS2812FX(bool reverse);
 void increaseSpeed_WS2812FX(uint8_t s);
 void decreaseSpeed_WS2812FX(uint8_t s);
 void setColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b);
+void setArrayColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b, uint8_t index);
 void setColor_packed_WS2812FX(uint32_t c);
+void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index);
 void setBrightness_WS2812FX(uint8_t b);
 void increaseBrightness_WS2812FX(uint8_t s);
 void decreaseBrightness_WS2812FX(uint8_t s);
@@ -149,10 +152,10 @@ uint8_t getModeCount_WS2812FX(void);
 uint8_t getNumSegments_WS2812FX(void);
 
 uint16_t getSpeed_WS2812FX(void);
+bool getReverse_WS2812FX(void);
 uint16_t getLength_WS2812FX(void);
-
-uint32_t color_wheel_WS2812FX(uint8_t);
 uint32_t getColor_WS2812FX(void);
+uint32_t getArrayColor_WS2812FX(uint8_t index);
 
 const char* getModeName_WS2812FX(uint8_t m);
 

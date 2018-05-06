@@ -3,6 +3,9 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#include <sdk_errors.h>
+#include "vendor_service.h"
+#include "service_characteristic.h"
 
 ret_code_t create_ble_device(char* device_name);
 
@@ -12,4 +15,6 @@ void configure_advertising();
 
 void start_advertising();
 
-void config_dummy_service();
+uint32_t add_vendor_service(VendorService*);
+
+void config_dummy_service(VendorService*, ServiceCharacteristic*);

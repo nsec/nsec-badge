@@ -1,4 +1,5 @@
-FLAVOR ?= proto
+FLAVOR ?= ctf
+BOARD ?= proto
 PROJECT_NAME = nsec18_nrf52_$(FLAVOR)
 TARGETS=$(PROJECT_NAME)
 OUTPUT_DIRECTORY := builds
@@ -20,7 +21,21 @@ else ifeq ($(FLAVOR), speaker)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPEAKER
 else ifeq ($(FLAVOR), admin)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=ADMIN
-else ifeq ($(FLAVOR), devboard)
+else ifneq ($(FLAVOR), conf)
+all:
+$(error "Unknown flavor `$(FLAVOR)`")
+endif
+
+
+ifeq ($(BOARD), proto)
+	# One of the oled screen pin is shared with the
+	# NFC antenna, make sure it's configured as GPIO
+	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+else ifeq ($(BOARD), sputnik)
+	# One of the oled screen pin is shared with the
+	# NFC antenna, make sure it's configured as GPIO
+	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+else ifeq ($(BOARD), devboard)
 	#special flags for the devboard
 	ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
 	ASMFLAGS += -DBOARD_PCA10040
@@ -28,19 +43,18 @@ else ifeq ($(FLAVOR), devboard)
 	CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 	CFLAGS += -DBOARD_PCA10040
 	CFLAGS += -DBSP_DEFINES_ONLY
-else ifeq ($(FLAVOR), proto)
-	# One of the oled screen pin is shared with the
-	# NFC antenna, make sure it's configured as GPIO
-	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-else ifneq ($(FLAVOR), conf)
+else
 all:
-$(error "Unknown flavor `$(FLAVOR)`")
+$(error "Unknown board `$(BOARD)`")
 endif
+
 
 SRC_FILES  = $(notdir $(wildcard *.c))
 SRC_FILES += ble/ble_device.c
 SRC_FILES += ble/gap_configuration.c
 SRC_FILES += ble/ble_vendor_service.c
+SRC_FILES += ble/vendor_service.c
+SRC_FILES += ble/service_characteristic.c
 #SRC_FILES += $(wildcard ble/*.c)
 SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
 SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
@@ -88,6 +102,9 @@ SRC_FILES += $(SDK_PATH)/libraries/util/app_error.c
 SRC_FILES += $(SDK_PATH)/libraries/util/app_error_weak.c
 SRC_FILES += $(SDK_PATH)/libraries/util/app_util_platform.c
 SRC_FILES += $(SDK_PATH)/libraries/util/sdk_mapped_flags.c
+# include theses files before the softdevice source code, or strange bugs will occur.
+SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
+SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_ble.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_soc.c
@@ -200,7 +217,7 @@ LDFLAGS += --specs=nano.specs
 
 # Add standard libraries at the very end of the linker input, after all objects
 # that may need symbols provided by these libraries.
-LIB_FILES += -lc -lnosys -lm
+LIB_FILES += -lc -lnosys
 
 TERMINAL = dup
 
@@ -239,7 +256,7 @@ $(foreach target, $(TARGETS), $(call define_target, $(target)))
 $(OUTPUT_DIRECTORY)/program.hex: $(PROJECT_NAME)
 	mergehex/mergehex -m $(SOFTDEVICE) $(OUTPUT_DIRECTORY)/$<.hex -o $@
 
-# TODO add target to install nrfjprog and mergehex, rename to make devboard
+# TODO add target to install nrfjprog and mergehex
 flash-devboard: $(OUTPUT_DIRECTORY)/program.hex
 	@echo Flashing: $<
 	nrfjprog/nrfjprog -f nrf52 --eraseall

@@ -49,6 +49,10 @@ void menu_close(void) {
     menu.is_handling_buttons = 0;
 }
 
+void menu_open(void) {
+    menu.is_handling_buttons = 1;
+}
+
 void menu_set_position(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height) {
     menu.pos_x = pos_x;
     menu.pos_y = pos_y;
@@ -92,7 +96,7 @@ static void menu_ui_redraw_items(uint8_t start, uint8_t end) {
         else {
             gfx_setTextBackgroundColor(SSD1306_WHITE,SSD1306_BLACK);
         }
-        char * string = menu.items[item_index].label;
+        const char * string = menu.items[item_index].label;
         if(strlen(string) <= menu.col_width) {
             gfx_puts(string);
         }
@@ -114,7 +118,7 @@ void menu_ui_redraw_all(void) {
 void menu_change_selected_item(MENU_DIRECTION direction) {
     switch(direction) {
         case MENU_DIRECTION_DOWN: {
-            if(menu.selected_item < menu.item_count - 1) {
+            if(menu.selected_item < menu.item_count) {
                 menu.selected_item++;
                 if(menu.selected_item >= menu.item_on_top + (menu.line_height - 1)) {
                     menu.item_on_top++;
@@ -124,9 +128,19 @@ void menu_change_selected_item(MENU_DIRECTION direction) {
                     menu_ui_redraw_items(menu.selected_item - 1, menu.selected_item);
                 }
             }
+            if (menu.selected_item == menu.item_count) {
+                menu.selected_item = 0;
+                menu.item_on_top = 0;
+                menu_ui_redraw_all();
+            }
         }
             break;
         case MENU_DIRECTION_UP: {
+            if(menu.selected_item == 0) {
+                menu.item_on_top = menu.item_count - 1;
+                menu.selected_item = menu.item_count;
+                menu_ui_redraw_all();
+            }
             if(menu.selected_item > 0) {
                 menu.selected_item--;
                 if(menu.item_on_top > menu.selected_item) {

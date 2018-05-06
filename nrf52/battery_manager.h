@@ -1,5 +1,6 @@
 /*
- * Copyright 2018 Eric Tremblay <habscup@gmail.com>
+ * Copyright 2016-2017 Benjamin Vanheuverzwijn <bvanheu@gmail.com>
+ *           2016-2017 Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +21,10 @@
  * SOFTWARE.
  */
 
-#ifndef power_h
-#define power_h
+#ifndef BATTERY_MANAGER_H
+#define BATTERY_MANAGER_H
 
-#include <nrf_drv_power.h>
-
-void power_init(void);
-void power_manage(void);
+void nsec_battery_manager_init(void);
+void battery_manager_handler(void);
 
 #endif

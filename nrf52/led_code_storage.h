@@ -6,46 +6,44 @@
 #ifndef _LED_CODE_STORAGE_H
 #define _LED_CODE_STORAGE_H
 
-#define SPONSOR_0		0
-#define SPONSOR_1		1
-#define SPONSOR_2		2
-#define SPONSOR_3		3
-#define SPONSOR_4		4
-#define SPONSOR_5		5
-#define SPONSOR_6		6
-#define SPONSOR_7		7
-#define SPONSOR_8		8
-#define SPONSOR_9		9
-#define SPONSOR_10		10
-#define SPONSOR_11		11
-#define SPONSOR_12		12
-#define SPONSOR_13		13
-#define SPONSOR_14		14
-#define SPONSOR_15		15
+#define SPONSOR_0       0
+#define SPONSOR_1       1
+#define SPONSOR_2       2
+#define SPONSOR_3       3
+#define SPONSOR_4       4
+#define SPONSOR_5       5
+#define SPONSOR_6       6
+#define SPONSOR_7       7
+#define SPONSOR_8       8
+#define SPONSOR_9       9
+#define SPONSOR_10      10
+#define SPONSOR_11      11
+#define SPONSOR_12      12
+#define SPONSOR_13      13
+#define SPONSOR_14      14
+#define SPONSOR_15      15
 
-#define SPONSOR_0_PW	0x84C6
-#define SPONSOR_1_PW	0x74D2
-#define SPONSOR_2_PW	0x5798
-#define SPONSOR_3_PW	0x0F18
-#define SPONSOR_4_PW	0x00FF
-#define SPONSOR_5_PW	0xCF8E
-#define SPONSOR_6_PW	0x0D17
-#define SPONSOR_7_PW	0xBC2F
-#define SPONSOR_8_PW	0xF6B1
-#define SPONSOR_9_PW	0x1B6F
-#define SPONSOR_10_PW	0xAF10
-#define SPONSOR_11_PW	0x4B57
-#define SPONSOR_12_PW	0x6851
-#define SPONSOR_13_PW	0xDB22
-#define SPONSOR_14_PW	0x51F8
-#define SPONSOR_15_PW	0x5ED4
-#define MASTER_PW		0x92DC
+const char *sponsor_password[] = {
+	"84C6", // Color wipe Random
+	"74D2", // Random color
+	"5798", // Fire Flicker (Intense)
+	"0F18", // Multi Dynamic
+	"00FF", // Rainbow
+	"CF8E", // Rainbow Cycle
+	"0D17", // Theater Chase Rainbow
+	"BC2F", // Twinkle Random
+	"F6B1", // Twinkle Fade Random
+	"1B6F", // Running Random
+	"AF10", // Tricolor Chase
+	"4B57", // Chase Rainbow
+	"6851", // Chase Rainbow White
+	"DB22", // Color Sweep Random
+	"51F8",
+	"5ED4",
+};
+
+#define MASTER_PW	"92DC"
 
 #define SPONSOR_PW_SIZE	16
-
-uint32_t nsec_get_led_code_pw(uint32_t sponsor_index);
-bool nsec_led_code_is_unlock(uint32_t sponsor_index);
-bool nsec_unlock_led_code(uint32_t password);
-void nsec_led_code_storage_init();
 
 #endif

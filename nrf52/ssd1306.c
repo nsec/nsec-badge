@@ -215,7 +215,7 @@ void ssd1306_init(void) {
         ssd1306_command(SSD1306_SEGREMAP | 0x1);
         ssd1306_command(SSD1306_COMSCANDEC);
         ssd1306_command(SSD1306_SETCOMPINS);                    // 0xDA
-        ssd1306_command(0x2);	//ada x12
+        ssd1306_command(0x2);    //ada x12
         ssd1306_command(SSD1306_SETCONTRAST);                   // 0x81
         if (ssd1306_vccstate == SSD1306_EXTERNALVCC)
         { ssd1306_command(0x10); }
@@ -1002,7 +1002,7 @@ void gfx_putc(char c) {
     gfx_write((uint8_t)c);
 }
 
-void gfx_puts(char *s) {
+void gfx_puts(const char *s) {
     while (*s) {
         gfx_write((uint8_t)*s++);
     }

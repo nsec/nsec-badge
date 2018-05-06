@@ -138,10 +138,8 @@ void nsec_neoPixel_show(void) {
         return;
     }
 
-    //TODO: This is suppose to be better with PWM
-    // for now, DWT will be enough.
-    //show_with_PWM();
-    show_with_DWT();
+    show_with_PWM();
+    //show_with_DWT();
 
     nrf_delay_us(50);
 }
@@ -151,25 +149,24 @@ void show_with_PWM(void) {
     uint32_t pattern_size = nsec_pixels->numBytes*8*sizeof(uint16_t)+2*sizeof(uint16_t);
     uint16_t *pixels_pattern = NULL;
 
-    uint16_t pos = 0;
     pixels_pattern = (uint16_t *)malloc(pattern_size);
     if (pixels_pattern != NULL && nsec_pixels->pixels != NULL) {
+        uint16_t pos = 0;
 
-        for (uint16_t n=0; n < NEOPIXEL_COUNT; n++) {
+        for (uint16_t n=0; n < nsec_pixels->numBytes; n++) {
             uint8_t pix = nsec_pixels->pixels[n];
 
             for (uint8_t mask=0x80, i=0; mask > 0; mask >>= 1, i++) {
                 pixels_pattern[pos] = (pix & mask) ? MAGIC_T1H : MAGIC_T0H;
+                pos++;
             }
-            pos++;
         }
+        // Zero padding to indicate the end of que sequence
+        pixels_pattern[++pos] = 0 | (0x8000);
+        pixels_pattern[++pos] = 0 | (0x8000);
     } else {
         return;
     }
-
-    // Zero padding to indicate the end of que sequence
-    pixels_pattern[++pos] = 0 | (0x8000);
-    pixels_pattern[++pos] = 0 | (0x8000);
 
     nrf_pwm_configure(NRF_PWM0, NRF_PWM_CLK_16MHz, NRF_PWM_MODE_UP, CTOPVAL);
     nrf_pwm_loop_set(NRF_PWM0, 0);

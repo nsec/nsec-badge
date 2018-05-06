@@ -372,6 +372,11 @@ void setSpeed_WS2812FX(uint16_t s) {
   fx->segments[0].speed = constrain(s, SPEED_MIN, SPEED_MAX);
 }
 
+void setReverse_WS2812FX(bool reverse) {
+  RESET_RUNTIME;
+  fx->segments[0].reverse = reverse;
+}
+
 void increaseSpeed_WS2812FX(uint8_t s) {
   uint16_t newSpeed = constrain(SEGMENT.speed + s,
                                 SPEED_MIN, SPEED_MAX);
@@ -384,8 +389,22 @@ void decreaseSpeed_WS2812FX(uint8_t s) {
   setSpeed_WS2812FX(newSpeed);
 }
 
+void setArrayColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b, uint8_t index) {
+  if (index < NUM_COLORS) {
+    setArrayColor_packed_WS2812FX(((uint32_t)r << 16) | ((uint32_t)g << 8) | b, index);
+  }
+}
+
 void setColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b) {
   setColor_packed_WS2812FX(((uint32_t)r << 16) | ((uint32_t)g << 8) | b);
+}
+
+void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index) {
+  if (index < NUM_COLORS) {
+    RESET_RUNTIME;
+    fx->segments[0].colors[index] = c;
+    setBrightness_WS2812FX(fx->brightness);
+  }
 }
 
 void setColor_packed_WS2812FX(uint32_t c) {
@@ -424,6 +443,10 @@ uint16_t getSpeed_WS2812FX(void) {
   return fx->segments[0].speed;
 }
 
+bool getReverse_WS2812FX(void) {
+  return fx->segments[0].reverse;
+}
+
 uint8_t getBrightness_WS2812FX(void) {
   return fx->brightness;
 }
@@ -446,6 +469,14 @@ void setNumSegments_WS2812FX(uint8_t n) {
 
 uint32_t getColor_WS2812FX(void) {
   return fx->segments[0].colors[0];
+}
+
+uint32_t getArrayColor_WS2812FX(uint8_t index) {
+  if (index < NUM_COLORS) {
+    return fx->segments[0].colors[index];
+  } else {
+    return getColor_WS2812FX();
+  }
 }
 
 //Todo c'est pas bon sa
@@ -845,7 +876,7 @@ uint16_t mode_rainbow(void) {
  */
 uint16_t mode_rainbow_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-	  uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+      uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
     nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + i, color);
   }
 

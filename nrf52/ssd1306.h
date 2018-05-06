@@ -26,7 +26,7 @@ All text above, and the splash screen must be included in any redistribution
 #define SSD1306_WHITE 1
 #define SSD1306_INVERSE 2
 
-#define SSD1306_I2C_ADDRESS   0x3C	// 011110+SA0+RW - 0x3C or 0x3D
+#define SSD1306_I2C_ADDRESS   0x3C    // 011110+SA0+RW - 0x3C or 0x3D
 // Address for 128x32 is 0x3C
 // Address for 128x64 is 0x3D (default) or 0x3C (if SA0 is grounded)
 
@@ -159,7 +159,7 @@ void gfx_setTextColor(uint16_t c);
 void gfx_setTextBackgroundColor(uint16_t c, uint16_t b);
 void gfx_setTextWrap(bool w);
 void gfx_putc(char c);
-void gfx_puts(char *s);
+void gfx_puts(const char *s);
 void gfx_update();
 
 #endif

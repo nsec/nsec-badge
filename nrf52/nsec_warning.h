@@ -20,12 +20,9 @@
  * SOFTWARE.
  */
 
-#ifndef power_h
-#define power_h
+#ifndef nsec_warning_h
+#define nsec_warning_h
 
-#include <nrf_drv_power.h>
+void nsec_warning_show(void);
 
-void power_init(void);
-void power_manage(void);
-
-#endif
+#endif /* nsec_warning_h */

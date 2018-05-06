@@ -21,6 +21,7 @@
  */
 
 #include <app_error.h>
+#include <nrf_soc.h>
 
 #include "power.h"
 
@@ -37,5 +38,10 @@ void power_init(void) {
      * POWER_CONFIG_DEFAULT_DCDCEN from sdk_config.h
      */
     err_code = nrf_drv_power_init(NULL);
+    APP_ERROR_CHECK(err_code);
+}
+
+void power_manage(void) {
+    uint32_t err_code = sd_app_evt_wait();
     APP_ERROR_CHECK(err_code);
 }
