@@ -160,7 +160,11 @@ uint16_t handle_write(CharacteristicWriteEvent* event){
 }
 
 int main(void) {
+#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
+    sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
+#else
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
+#endif
     g_device_id[9] = '\0';
 
     /*
@@ -178,7 +182,7 @@ int main(void) {
     /*
      * Initialize bluetooth stack
      */
-    create_ble_device("My BLE device");
+    create_ble_device(g_device_id);
     configure_advertising();
     VendorService service0;
     ServiceCharacteristic characteristic0;

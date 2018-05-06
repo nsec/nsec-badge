@@ -1,4 +1,5 @@
-FLAVOR ?= proto
+FLAVOR ?= ctf
+BOARD ?= proto
 PROJECT_NAME = nsec18_nrf52_$(FLAVOR)
 TARGETS=$(PROJECT_NAME)
 OUTPUT_DIRECTORY := builds
@@ -20,7 +21,21 @@ else ifeq ($(FLAVOR), speaker)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPEAKER
 else ifeq ($(FLAVOR), admin)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=ADMIN
-else ifeq ($(FLAVOR), devboard)
+else ifneq ($(FLAVOR), conf)
+all:
+$(error "Unknown flavor `$(FLAVOR)`")
+endif
+
+
+ifeq ($(BOARD), proto)
+	# One of the oled screen pin is shared with the
+	# NFC antenna, make sure it's configured as GPIO
+	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+else ifeq ($(BOARD), sputnik)
+	# One of the oled screen pin is shared with the
+	# NFC antenna, make sure it's configured as GPIO
+	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+else ifeq ($(BOARD), devboard)
 	#special flags for the devboard
 	ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
 	ASMFLAGS += -DBOARD_PCA10040
@@ -28,13 +43,9 @@ else ifeq ($(FLAVOR), devboard)
 	CFLAGS += -DCONFIG_GPIO_AS_PINRESET
 	CFLAGS += -DBOARD_PCA10040
 	CFLAGS += -DBSP_DEFINES_ONLY
-else ifeq ($(FLAVOR), proto)
-	# One of the oled screen pin is shared with the
-	# NFC antenna, make sure it's configured as GPIO
-	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-else ifneq ($(FLAVOR), conf)
+else
 all:
-$(error "Unknown flavor `$(FLAVOR)`")
+$(error "Unknown board `$(BOARD)`")
 endif
 
 
