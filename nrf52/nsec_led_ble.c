@@ -169,13 +169,11 @@ void update_all_characteristics_value(void) {
 }
 
 uint16_t set_segment_index_char_callback(CharacteristicWriteEvent *event) {
-	uint8_t value;
-
 	if (!unlock_state) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
 	}
 
-	get_characteristic_value(&segment_index_char, &value);
+	uint8_t value = *(event->data_buffer);
 
 	if (value >= MAX_NUM_SEGMENTS) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
@@ -192,8 +190,7 @@ uint16_t set_start_segment_char_callback(CharacteristicWriteEvent *event) {
 	}
 
 	uint8_t value[2];
-	get_characteristic_value(&start_segment_char, value);
-
+	memcpy(value, event->data_buffer, 2);
 	uint16_t start_segment = value[0] | value[1] << 8;
 
 	if (start_segment >= MAX_NUM_SEGMENTS) {
@@ -211,8 +208,7 @@ uint16_t set_stop_segment_char_callback(CharacteristicWriteEvent *event) {
 	}
 
 	uint8_t value[2];
-	get_characteristic_value(&stop_segment_char, value);
-
+	memcpy(value, event->data_buffer, 2);
 	uint16_t stop_segment = value[0] | value[1] << 8;
 
 	if (stop_segment >= MAX_NUM_SEGMENTS) {
@@ -225,13 +221,11 @@ uint16_t set_stop_segment_char_callback(CharacteristicWriteEvent *event) {
 }
 
 uint16_t set_pattern_char_callback(CharacteristicWriteEvent *event) {
-	uint8_t value;
-	
 	if (!unlock_state) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
 	}
 
-	get_characteristic_value(&pattern_char, &value);
+	uint8_t value = *(event->data_buffer);
 
 	if (value >= MODE_COUNT) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
@@ -253,8 +247,7 @@ uint16_t set_colors_char_callback(CharacteristicWriteEvent *event) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
 	}
 
-	get_characteristic_value(&colors_char, value);
-
+	memcpy(value, event->data_buffer, 12);
 	memcpy(&first, value, 4);
 	memcpy(&second, value + 4, 4);
 	memcpy(&third, value + 8, 4);
@@ -270,8 +263,7 @@ uint16_t set_speed_char_callback(CharacteristicWriteEvent *event) {
 	}
 
 	uint8_t value[2];
-	get_characteristic_value(&speed_char, value);
-
+	memcpy(value, event->data_buffer, 2);
 	uint16_t speed = value[0] | value[1] << 8;
 
 	if (speed < SPEED_MIN) {
@@ -288,9 +280,7 @@ uint16_t set_reverse_char_callback(CharacteristicWriteEvent *event) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
 	}
 
-	uint8_t value;
-	get_characteristic_value(&reverse_char, &value);
-
+	uint8_t value = *(event->data_buffer);
 	set_segment_reverse(value);
 
 	return BLE_GATT_STATUS_SUCCESS;
@@ -301,9 +291,7 @@ uint16_t set_active_char_callback(CharacteristicWriteEvent *event) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
 	}
 
-	uint8_t value;
-	get_characteristic_value(&active_char, &value);
-
+	uint8_t value = *(event->data_buffer);
 	set_segment_active(value);
 
 	return BLE_GATT_STATUS_SUCCESS;
@@ -314,8 +302,7 @@ uint16_t set_brightness_char_callback(CharacteristicWriteEvent *event) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
 	}
 
-	uint8_t value;
-	get_characteristic_value(&brightness_char, &value);
+	uint8_t value = *(event->data_buffer);
 
 	if (value > 100) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
