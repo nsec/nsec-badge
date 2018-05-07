@@ -129,13 +129,15 @@ add_write_command_handler(&characteristic0, my_write_command_handler);
 * ``on_write_request``: A function that takes a ``CharacteristicWriteEvent*`` as parameter  and return either 
 ``BLE_GATT_STATUS_SUCCESS`` to authorize the write request or ``BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED`` to deny 
 the write access. The value of the BLE characteristic is not updated yet when this callback is invoked, allowing the 
-app to change it if necessary.
+app to change it if necessary. It means that ``get_characteristic_value``returns the current value (i.e the value 
+before the write event), and that ``get_characteristic_value`` can't be used as the value will be overwritten by the 
+write (if the handler authorizes it). Use ``event->data_buffer`` to get the value of the write event and change it if 
+desired.
 
 ```C
 
 uint16_t my_write_request_handler(CharacteristicWriteEvent* event){
-	uint8_t value;
-	get_characteristic_value(&characteristic0, &value);
+	uint8_t value = *event->data_buffer; // Only valid if the characteristic is one byte long.
 	if(value > 100)
 		return BLE_GATT_STATUS_SUCCESS; // 100 or more is great, accept the write.
 	else if(value > 50){
