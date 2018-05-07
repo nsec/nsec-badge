@@ -66,6 +66,12 @@ On Ubuntu, check the the [GNU ARM Embedded Toolchain PPA](https://launchpad.net/
 Pre-built packages are also available for Windows, Linux and OS X here:
 https://launchpad.net/gcc-arm-embedded.
 
+You will also need some python libraries, on Ubuntu / Debian:
+
+```
+sudo apt install python-pil python-pycparser
+```
+
 ### Dependencies
 
 The nF52 firmware depends on the Nordic SDK v14.2.0. You can download and extract
