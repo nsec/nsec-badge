@@ -30,7 +30,6 @@
 #include "ble/gap_configuration.h"
 #include "ble/ble_device.h"
 #include "app_glue.h"
-#include "ws2812fx.h"
 #include "nsec_storage.h"
 #include "identity.h"
 
@@ -44,7 +43,6 @@ uint16_t set_reverse_char_callback(CharacteristicWriteEvent *event);
 uint16_t set_active_char_callback(CharacteristicWriteEvent *event);
 uint16_t set_brightness_char_callback(CharacteristicWriteEvent *event);
 uint16_t unlock_service_callback(CharacteristicWriteEvent *event);
-void update_all_characteristics_value(void);
 void ble_take_over(void);
 void set_selected_segment(uint8_t select);
 void update_segment_active_char(void);
@@ -63,17 +61,6 @@ ServiceCharacteristic segment_index_char, start_segment_char, stop_segment_char,
 						unlock_char, sync_char;
 
 bool is_ble_controled = false;
-
-typedef struct segment_ble {
-	bool	 active;
-	uint8_t  index;
-    uint16_t start;
-    uint16_t stop;
-    uint16_t speed;
-    uint8_t  mode;
-    bool     reverse;
-    uint32_t colors[NUM_COLORS];
-} SegmentBle;
 
 // Possible to set up to 8 segment
 uint8_t selected_segment = 0;
@@ -330,11 +317,26 @@ uint16_t unlock_service_callback(CharacteristicWriteEvent *event) {
     return BLE_GATT_STATUS_SUCCESS;
 }
 
-//Control via the menu and via ble ?
 void ble_take_over(void) {
 	if (!is_ble_controled) {
 		is_ble_controled = true;
 		resetSegments_WS2812FX();
+		update_is_ble_controlled(true);
+		load_stored_led_settings();
+	}
+}
+
+void set_ble_controlled(bool controlled) {
+	is_ble_controled = controlled;
+}
+
+
+void menu_take_over(void) {
+	if (is_ble_controled) {
+		is_ble_controled = false;
+		resetSegments_WS2812FX();
+		update_is_ble_controlled(false);
+		load_stored_led_settings();
 	}
 }
 
@@ -369,6 +371,7 @@ void update_segment_active_char(void) {
 void set_segment_active(bool active) {
 	segment_array[selected_segment].active = active;
 	update_segment_active_char();
+	update_stored_segment(&segment_array[selected_segment], selected_segment);
 }
 
 void set_segment_start(uint16_t start) {

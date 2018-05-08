@@ -42,6 +42,7 @@
 #define PAGE_START_MAGIC    0xDEADC0DE
 
 /* Led settings */
+
 typedef struct LedSettings_t {
     uint8_t mode;
     uint16_t speed;
@@ -49,11 +50,13 @@ typedef struct LedSettings_t {
     uint32_t colors[NUM_COLORS];
     bool reverse;
     bool control;
+    bool is_ble_controlled;
+    bool ble_control_permitted;
+    SegmentBle segment_array[8];
 } LedSettings;
 
-LedSettings default_settings = {FX_MODE_STATIC, MEDIUM_SPEED, MEDIUM_BRIGHTNESS, 
-                                {RED, GREEN, BLUE}, false, true};
 LedSettings actual_settings;
+LedSettings default_settings;
 bool need_led_settings_update = false;
 
 NRF_FSTORAGE_DEF(nrf_fstorage_t fs_led_settings) =
@@ -149,22 +152,74 @@ void update_stored_control(bool control) {
     need_led_settings_update = true;
 }
 
+void update_stored_segment(SegmentBle *segment, int index) {
+    if (actual_settings.ble_control_permitted) {
+        if (actual_settings.is_ble_controlled) {
+            actual_settings.segment_array[index].active = segment->active;
+            actual_settings.segment_array[index].index = segment->index;
+            actual_settings.segment_array[index].start = segment->start;
+            actual_settings.segment_array[index].stop = segment->stop;
+            actual_settings.segment_array[index].speed = segment->speed;
+            actual_settings.segment_array[index].mode = segment->mode;
+            actual_settings.segment_array[index].reverse = segment->reverse;
+            actual_settings.segment_array[index].colors[0] = segment->colors[0];
+            actual_settings.segment_array[index].colors[1] = segment->colors[1];
+            actual_settings.segment_array[index].colors[2] = segment->colors[2];
+
+            need_led_settings_update = true;
+        }
+    }
+}
+
+void update_is_ble_controlled(bool ble_controlled) {
+    if (actual_settings.ble_control_permitted) {
+        actual_settings.is_ble_controlled = ble_controlled;
+        need_led_settings_update = true;
+    }
+}
+
+void update_ble_control_permitted(bool permitted) {
+    actual_settings.ble_control_permitted = permitted;
+    need_led_settings_update = true;
+}
+
 void load_stored_led_settings(void) {
     if (!is_init) {
         nsec_storage_init();
     }
+
     if (actual_settings.control) {
         start_WS2812FX();
     } else {
         stop_WS2812FX();
     }
-    setBrightness_WS2812FX(actual_settings.brightness);
-    setMode_WS2812FX(actual_settings.mode);
-    setSpeed_WS2812FX(actual_settings.speed);
-    setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
-    setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);
-    setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
-    setReverse_WS2812FX(actual_settings.reverse);
+
+    resetSegments_WS2812FX();
+
+    if (!actual_settings.is_ble_controlled) {
+        set_ble_controlled(false);
+        setBrightness_WS2812FX(actual_settings.brightness);
+        setMode_WS2812FX(actual_settings.mode);
+        setSpeed_WS2812FX(actual_settings.speed);
+        setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
+        setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);
+        setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
+        setReverse_WS2812FX(actual_settings.reverse);
+    } else {
+        set_ble_controlled(true);
+        for (int i = 0; i < ARRAY_SIZE(actual_settings.segment_array); i++) {
+            if (actual_settings.segment_array[i].active) {
+                setSegment_color_array_WS2812FX(actual_settings.segment_array[i].index,
+                actual_settings.segment_array[i].start,
+                actual_settings.segment_array[i].stop,
+                actual_settings.segment_array[i].mode, 
+                actual_settings.segment_array[i].colors,
+                actual_settings.segment_array[i].speed,
+                actual_settings.segment_array[i].reverse);
+            }
+        }
+        update_all_characteristics_value();
+    }
 }
 
 void load_stored_led_default_settings(void) {
@@ -235,6 +290,30 @@ static void led_settings_storage_init(void) {
 
     rc = nrf_fstorage_init(&fs_led_settings, p_fs_api, NULL);
     APP_ERROR_CHECK(rc);
+
+    default_settings.mode = FX_MODE_STATIC;
+    default_settings.speed = MEDIUM_SPEED;
+    default_settings.brightness = MEDIUM_BRIGHTNESS;
+    default_settings.colors[0] = BLUE;
+    default_settings.colors[1] = RED;
+    default_settings.colors[2] = GREEN;
+    default_settings.reverse = false;
+    default_settings.control = true;
+    default_settings.is_ble_controlled = false;
+    default_settings.ble_control_permitted = true;
+
+    for (int i = 0; i < ARRAY_SIZE(default_settings.segment_array); i++) {
+        default_settings.segment_array[i].active = false;
+        default_settings.segment_array[i].index = 0;
+        default_settings.segment_array[i].start = 0;
+        default_settings.segment_array[i].stop = 0;
+        default_settings.segment_array[i].speed = 1000;
+        default_settings.segment_array[i].mode = 0;
+        default_settings.segment_array[i].reverse = false;
+        default_settings.segment_array[i].colors[0] = BLUE;
+        default_settings.segment_array[i].colors[1] = RED;
+        default_settings.segment_array[i].colors[2] = GREEN;
+    }
     
     if (is_new_memory_page(&fs_led_settings)) {
         //Store the default settings

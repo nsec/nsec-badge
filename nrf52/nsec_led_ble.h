@@ -19,4 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "ws2812fx.h"
+
+#ifndef NSEC_LED_BLE_H
+#define NSEC_LED_BLE_H
+
 void nsec_led_ble_init(void);
+void set_ble_controlled(bool controlled);
+void menu_take_over(void);
+void update_all_characteristics_value(void);
+
+typedef struct segment_ble {
+	bool	 active;
+	uint8_t  index;
+    uint16_t start;
+    uint16_t stop;
+    uint16_t speed;
+    uint8_t  mode;
+    bool     reverse;
+    uint32_t colors[NUM_COLORS];
+} SegmentBle;
+
+#endif 
