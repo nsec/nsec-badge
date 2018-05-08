@@ -4,7 +4,7 @@ Northsec 2018 Badge
 Brought to you by the Team badge for NorthSec.
 ----------------------------------------------
 
-[Badge website](http://xn--rr8b.ga/)
+[Badge website](http://sputnak.ga/)
 
 ## Hardware overview
 
@@ -65,6 +65,12 @@ On Ubuntu, check the the [GNU ARM Embedded Toolchain PPA](https://launchpad.net/
 
 Pre-built packages are also available for Windows, Linux and OS X here:
 https://launchpad.net/gcc-arm-embedded.
+
+You will also need some python libraries, on Ubuntu / Debian:
+
+```
+sudo apt install python-pil python-pycparser
+```
 
 ### Dependencies
 

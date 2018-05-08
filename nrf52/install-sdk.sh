@@ -18,7 +18,7 @@ if test -d "${SDK_VER}" || test -d "${SDK_DIR}"; then
     rm -rf "${SDK_VER}" "${SDK_DIR}"
 fi
 
-SDK_MAJOR="$(echo "${SDK_VER}" | sed -r 's/^nRF5_SDK_([0-9]+).*/\1/')"
+SDK_MAJOR="$(echo "${SDK_VER}" | sed -E 's/^nRF5_SDK_([0-9]+).*/\1/')"
 
 wget -c "http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v${SDK_MAJOR}.x.x/${SDK_VER}.zip"
 

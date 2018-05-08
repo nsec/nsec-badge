@@ -118,7 +118,7 @@ void menu_ui_redraw_all(void) {
 void menu_change_selected_item(MENU_DIRECTION direction) {
     switch(direction) {
         case MENU_DIRECTION_DOWN: {
-            if(menu.selected_item < menu.item_count - 1) {
+            if(menu.selected_item < menu.item_count) {
                 menu.selected_item++;
                 if(menu.selected_item >= menu.item_on_top + (menu.line_height - 1)) {
                     menu.item_on_top++;
@@ -128,9 +128,19 @@ void menu_change_selected_item(MENU_DIRECTION direction) {
                     menu_ui_redraw_items(menu.selected_item - 1, menu.selected_item);
                 }
             }
+            if (menu.selected_item == menu.item_count) {
+                menu.selected_item = 0;
+                menu.item_on_top = 0;
+                menu_ui_redraw_all();
+            }
         }
             break;
         case MENU_DIRECTION_UP: {
+            if(menu.selected_item == 0) {
+                menu.item_on_top = menu.item_count - 1;
+                menu.selected_item = menu.item_count;
+                menu_ui_redraw_all();
+            }
             if(menu.selected_item > 0) {
                 menu.selected_item--;
                 if(menu.item_on_top > menu.selected_item) {

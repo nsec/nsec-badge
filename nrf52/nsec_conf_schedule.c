@@ -29,7 +29,7 @@ void nsec_schedule_show_presenters_details(uint8_t item);
 
 static menu_item_s days_schedule_items[] = {
     {
-        .label = "Thursday May 17th 2018",
+        .label = "Thursday, May 17th 2018",
         .handler = nsec_schedule_show_tracks
     }, {
         .label = "Friday, May 18th 2018",
@@ -607,7 +607,7 @@ static uint8_t presenter_selected = 0;
 static uint8_t schedule_index = 0; // Keep track of our index in the scheduler array
 
 void nsec_schedule_show_dates(void) {
-    menu_init(0, 8, 128, 56, ARRAY_SIZE(days_schedule_items), days_schedule_items);
+    menu_init(0, 12, 128, 56, ARRAY_SIZE(days_schedule_items), days_schedule_items);
     schedule_state = SCHEDULE_STATE_DATES;
     nsec_controls_add_handler(nsec_schedule_button_handler);
 }
@@ -622,7 +622,7 @@ void nsec_schedule_return_to_talks(void) {
 void nsec_schedule_show_talks(uint8_t item) {
     track_selected = item;
     schedule_index = (date_selected * 3) + track_selected;
-    menu_init(0, 8, 128, 56, nsec_schedule[schedule_index].item_count, nsec_schedule[schedule_index].menu_items);
+    menu_init(0, 12, 128, 56, nsec_schedule[schedule_index].item_count, nsec_schedule[schedule_index].menu_items);
     schedule_state = SCHEDULE_STATE_TALKS;
 }
 
@@ -646,7 +646,7 @@ uint16_t nsec_schedule_get_header_length(void) {
 
 void _nsec_schedule_show_details(void) {
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 8);
+    gfx_setCursor(0, 12);
 
     nsec_schedule_show_header();
     uint16_t header_length = nsec_schedule_get_header_length();
@@ -683,7 +683,7 @@ void nsec_schedule_scroll_up_details(bool change_direction) {
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 8);
+    gfx_setCursor(0, 12);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected] + description_index,
@@ -700,7 +700,7 @@ void nsec_schedule_scroll_down_details(bool change_direction) {
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 8);
+    gfx_setCursor(0, 12);
 
     if (change_direction) {
         description_index += MAX_CHAR_UNDER_STATUS_BAR;
@@ -727,7 +727,7 @@ void nsec_schedule_scroll_up_presenters_details(bool change_direction) {
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 8);
+    gfx_setCursor(0, 12);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, presenters_detail[presenter_selected] + description_index,
@@ -744,7 +744,7 @@ void nsec_schedule_scroll_down_presenters_details(bool change_direction) {
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 8);
+    gfx_setCursor(0, 12);
 
     if (change_direction) {
         description_index += MAX_CHAR_UNDER_STATUS_BAR;
@@ -769,7 +769,7 @@ void nsec_schedule_show_details(uint8_t item) {
 }
 
 void nsec_schedule_show_tracks (uint8_t item) {
-    menu_init(0, 8, 128, 56, ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items);
+    menu_init(0, 12, 128, 56, ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items);
     date_selected = item;
     schedule_state = SCHEDULE_STATE_TRACK;
 }
@@ -782,7 +782,7 @@ void nsec_schedule_show_presenters_details(uint8_t item) {
     presenter_selected = item;
     menu_close();
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 8);
+    gfx_setCursor(0, 12);
     gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts((char *) presenters_detail[presenter_selected]);
     description_index = MAX_CHAR_UNDER_STATUS_BAR;
@@ -801,7 +801,7 @@ void nsec_schedule_show_presenters(uint8_t item) {
         presenters_items[i].label = presenters_all[i];
         presenters_items[i].handler = nsec_schedule_show_presenters_details;
     }
-    menu_init(0, 8, 128, 56, ARRAY_SIZE(presenters_items), presenters_items);
+    menu_init(0, 12, 128, 56, ARRAY_SIZE(presenters_items), presenters_items);
     description_index = 0;
     schedule_state = SCHEDULE_STATE_PRESENTERS;
 }

@@ -36,6 +36,7 @@
 #include "utils.h"
 #include "ws2812fx.h"
 #include "nsec_storage.h"
+#include "nsec_led_pattern.h"
 #include "nsec_warning.h"
 #include "nsec_led_ble.h"
 
@@ -56,6 +57,7 @@ bool is_at_main_menu = false;
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     static int error_displayed = 0;
     uint8_t count = 50;
+
     if(!error_displayed) {
         char error_msg[128];
         error_info_t *err_info = (error_info_t *) info;
@@ -107,6 +109,12 @@ void open_conference_schedule(uint8_t item) {
     nsec_schedule_show_dates();
 }
 
+void open_led_pattern(uint8_t item) {
+    menu_close();
+    is_at_main_menu = false;
+    nsec_led_pattern_show();
+}
+
 void open_settings(uint8_t item) {
     menu_close();
     is_at_main_menu = false;
@@ -125,6 +133,9 @@ menu_item_s main_menu_items[] = {
         .label = "Conference schedule",
         .handler = open_conference_schedule,
     }, {
+        .label = "LED pattern",
+        .handler = open_led_pattern,
+    },{
         .label = "Settings",
         .handler = open_settings,
     }, {
@@ -136,7 +147,7 @@ menu_item_s main_menu_items[] = {
 void show_main_menu(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 16) {
         gfx_fillScreen(SSD1306_BLACK);
-        nsec_identity_draw();
+        // nsec_identity_draw();
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
@@ -145,9 +156,22 @@ void show_main_menu(void) {
     is_at_main_menu = true;
 }
 
+uint16_t handle_write(CharacteristicWriteEvent* event){
+	return BLE_GATT_STATUS_SUCCESS;
+}
+
 int main(void) {
+#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
+    sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
+#else
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
+#endif
     g_device_id[9] = '\0';
+
+#ifndef NSEC_CONF_NO_FLAGS
+static volatile char flag1[] = "FLAG-624bbf3fb2e54f9194057f9adbd66836";
+printf("%s", flag1); // Don't optimize out flag1
+#endif
 
     /*
      * Initialize base hardware
@@ -164,12 +188,12 @@ int main(void) {
     /*
      * Initialize bluetooth stack
      */
-    create_ble_device("Test device");
+    create_ble_device(g_device_id);
     configure_advertising();
     nsec_led_ble_init();
     //nsec_identity_init();
     start_advertising();
-
+    //init_identity_service();
     nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
@@ -181,7 +205,8 @@ int main(void) {
     nsec_intro();
     show_main_menu();
 
-    nsec_identity_draw();
+    // bug with white rectangle
+    // nsec_identity_draw();
 
     /*
      * Main loop

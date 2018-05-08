@@ -40,6 +40,7 @@ void update_stored_segment(SegmentBle *segment, int index);
 void update_is_ble_controlled(bool ble_controlled);
 void update_ble_control_permitted(bool permitted);
 
-bool nsec_unlock_led_pattern(uint32_t password);
+bool nsec_unlock_led_pattern(char *password, uint8_t index);
+bool pattern_is_unlock(uint32_t sponsor_index);
 
 #endif
