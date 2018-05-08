@@ -16,6 +16,7 @@
 #include "nsec_storage.h"
 #include "ssd1306.h"
 #include "ws2812fx.h"
+#include "nsec_led_ble.h"
 
 enum setting_state {
     SETTING_STATE_CLOSED,
@@ -336,6 +337,7 @@ static void save_pattern(uint8_t item) {
         index = extra_patterns_match_index[item];
     }
 
+    menu_take_over();
     setMode_WS2812FX(index);
     update_stored_mode(index);
     show_actual_pattern();

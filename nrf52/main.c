@@ -38,6 +38,7 @@
 #include "nsec_storage.h"
 #include "nsec_led_pattern.h"
 #include "nsec_warning.h"
+#include "nsec_led_ble.h"
 
 #include "images/nsec_logo_bitmap.c"
 #include "ble/service_characteristic.h"
@@ -189,13 +190,8 @@ printf("%s", flag1); // Don't optimize out flag1
      */
     create_ble_device(g_device_id);
     configure_advertising();
-    VendorService service0;
-    ServiceCharacteristic characteristic0;
-    create_vendor_service(&service0);
-    config_dummy_service(&service0, &characteristic0);
-    uint8_t value = 0xab;
-    set_characteristic_value(&characteristic0, &value);
-    add_write_request_handler(&characteristic0, handle_write);
+    nsec_led_ble_init();
+    //nsec_identity_init();
     start_advertising();
     //init_identity_service();
     nsec_battery_manager_init();

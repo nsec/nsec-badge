@@ -19,22 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include "ws2812fx.h"
 
-#ifndef nsec_led_settings_h
-#define nsec_led_settings_h
+#ifndef NSEC_LED_BLE_H
+#define NSEC_LED_BLE_H
 
-#define SUPER_LOW_BRIGHTNESS        10
-#define LOW_BRIGHTNESS              30
-#define MEDIUM_BRIGHTNESS           60
-#define HIGH_BRIGHTNESS             80
-#define MAX_BRIGHTNESS              100
+void nsec_led_ble_init(void);
+void set_ble_controlled(bool controlled);
+void menu_take_over(void);
+void update_all_characteristics_value(void);
 
-#define SUPER_SLOW_SPEED            5000
-#define SLOW_SPEED                  1000
-#define MEDIUM_SPEED                500
-#define FAST_SPEED                  100
-#define SUPER_FAST_SPEED            10
+typedef struct segment_ble {
+	bool	 active;
+	uint8_t  index;
+    uint16_t start;
+    uint16_t stop;
+    uint16_t speed;
+    uint8_t  mode;
+    bool     reverse;
+    uint32_t colors[NUM_COLORS];
+} SegmentBle;
 
-void nsec_show_led_settings(void);
-
-#endif
+#endif 
