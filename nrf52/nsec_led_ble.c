@@ -79,7 +79,7 @@ typedef struct segment_ble {
 uint8_t selected_segment = 0;
 SegmentBle segment_array[8];
 uint8_t brightness = 60;
-bool unlock_state = true;
+bool unlock_state = false;
 
 void nsec_led_ble_init(void) {
 
@@ -129,7 +129,7 @@ void nsec_led_ble_init(void) {
 	add_characteristic_to_vendor_service(&led_service, &unlock_char, 1, AUTO_READ, DENY_WRITE);
 	set_characteristic_value(&unlock_char, (uint8_t *)&unlock_state);
 
-	add_characteristic_to_vendor_service(&led_service, &sync_char, 8, AUTO_READ, REQUEST_WRITE);
+	add_characteristic_to_vendor_service(&led_service, &sync_char, 8, DENY_READ, REQUEST_WRITE);
 	add_write_request_handler(&sync_char, unlock_service_callback);
 
 	update_all_characteristics_value();
@@ -315,11 +315,11 @@ uint16_t set_brightness_char_callback(CharacteristicWriteEvent *event) {
 
 uint16_t unlock_service_callback(CharacteristicWriteEvent *event) {
 	uint8_t key_enterred[8];
-	get_characteristic_value(&unlock_char, key_enterred);
+	strcpy((char*)key_enterred, (char*)event->data_buffer);
 
 	char key[8];
     nsec_identity_get_unlock_key(key, sizeof(key));
-    if(event->data_length == strlen(key) && memcmp(key, key_enterred, event->data_length) == 0) {
+    if((event->data_length == strlen(key)) && (memcmp(key, key_enterred, event->data_length) == 0)) {
     	unlock_state = true;
     } else {
     	unlock_state = false;
