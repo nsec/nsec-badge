@@ -215,6 +215,15 @@ void nsec_led_pattern_show(void) {
     _state = SETTING_STATE_MENU;
 }
 
+int8_t get_extra_array_index(uint8_t mode) {
+    for (int i = 0; i < ARRAY_SIZE(extra_patterns_match_index); i++) {
+        if (extra_patterns_match_index[i] == mode) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 static void save_letter0(void) {
     for (int i=0; i<16; i++) {
         letters_items[i].label = letters[i];

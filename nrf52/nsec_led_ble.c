@@ -32,6 +32,7 @@
 #include "app_glue.h"
 #include "nsec_storage.h"
 #include "identity.h"
+#include "nsec_led_pattern.h"
 
 uint16_t set_segment_index_char_callback(CharacteristicWriteEvent *event);
 uint16_t set_start_segment_char_callback(CharacteristicWriteEvent *event);
@@ -218,8 +219,12 @@ uint16_t set_pattern_char_callback(CharacteristicWriteEvent *event) {
 		return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
 	}
 
-	//TODO check for unlock
-	// if code unlock then denied
+	int8_t extra_index = get_extra_array_index(value);
+	if (extra_index != -1) {
+		if (!pattern_is_unlock(extra_index)) {
+			return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
+		}
+	}
 
 	set_segment_mode(value);
 
