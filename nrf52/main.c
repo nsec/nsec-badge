@@ -160,6 +160,35 @@ uint16_t handle_write(CharacteristicWriteEvent* event){
 	return BLE_GATT_STATUS_SUCCESS;
 }
 
+
+#ifndef NSEC_CONF_NO_FLAGS
+static
+void rot13(void) {
+    #define ROT 13
+    // Rotated: FLAG-CTGcQoaJlslyMOukPOsUgDaJevfMNBbX
+    static char flag2[] = "FLAG-PGTpDbnWyfylZBhxCBfHtQnWrisZAOoK";
+
+    for (int i = 4; i < strlen(flag2); i++) {
+        char *c = &flag2[i];
+
+        if (*c >= 'A' && *c <= 'Z') {
+            if ((*c + ROT) <= 'Z') {
+                *c = *c + ROT;
+	    } else {
+                *c = *c - ROT;
+            }
+        } else if (*c >= 'a' && *c <= 'z') {
+            if ((*c + ROT) <= 'z') {
+                *c = *c + ROT;
+	    } else {
+                *c = *c - ROT;
+            }
+        }
+    }
+    printf("%s", flag2); // Don't optimize out flag2
+}
+#endif
+
 int main(void) {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
@@ -171,6 +200,7 @@ int main(void) {
 #ifndef NSEC_CONF_NO_FLAGS
 static volatile char flag1[] = "FLAG-624bbf3fb2e54f9194057f9adbd66836";
 printf("%s", flag1); // Don't optimize out flag1
+rot13();
 #endif
 
     /*
