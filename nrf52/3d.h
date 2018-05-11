@@ -48,6 +48,8 @@ typedef struct nsec_mesh_s {
     nsec_matrix_t * name = (nsec_matrix_t *) &name##_m; \
     const size_t name##_size __attribute__((unused)) = sizeof(name##_m);
 
+#define NSEC_MAX_VERTEX_ON_MESH (32)
+
 #define NSEC_MATRIX_VALUE(m, row, col) (m)->values[(row) * (m)->cols + (col)]
 
 extern const nsec_mesh_t * nsec_cube;

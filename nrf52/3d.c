@@ -35,8 +35,6 @@ NSEC_DECLARE_MESH(nsec_tetra, (
     {1,2}, {2,3}, {3,4}, {4,1}
 ));
 
-#define NSEC_MAX_VERTEX_ON_MESH (sizeof(nsec_cube_vertices) / sizeof(nsec_vertex_t))
-
 int nsec_multiply_matrix(nsec_matrix_t * result, nsec_matrix_t * m1, nsec_matrix_t * m2) {
     if(m1 == result || m2 == result) {
         return -1;
