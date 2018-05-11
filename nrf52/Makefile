@@ -26,6 +26,8 @@ all:
 $(error "Unknown flavor `$(FLAVOR)`")
 endif
 
+# Temporarly disable BLE identity service because it breaks right now.
+CFLAGS += -DNSEC_IDENTITY_BLE_SERVICE_DISABLE
 
 ifeq ($(BOARD), proto)
 	# One of the oled screen pin is shared with the
