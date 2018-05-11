@@ -192,7 +192,7 @@ int main(void) {
     set_characteristic_value(&characteristic0, &value);
     add_write_request_handler(&characteristic0, handle_write);
     start_advertising();
-    //init_identity_service();
+    nsec_identity_init();
     nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
