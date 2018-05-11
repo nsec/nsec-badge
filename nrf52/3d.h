@@ -24,12 +24,19 @@ typedef struct nsec_mesh_s {
     nsec_edge_t * edges;
 } nsec_mesh_t;
 
+#define NSEC_UNWRAP(...) __VA_ARGS__
+
 #define NSEC_DECLARE_MESH(name, vertices, edges) \
+    _Pragma("GCC diagnostic push"); \
+    _Pragma("GCC diagnostic ignored \"-Wmissing-braces\""); \
+    static nsec_vertex_t name##_vertices[] = { NSEC_UNWRAP vertices }; \
+    static nsec_edge_t name##_edges[] = { NSEC_UNWRAP edges }; \
+    _Pragma("GCC diagnostic pop"); \
     const nsec_mesh_t name##_m = { \
-        sizeof(vertices) / sizeof(nsec_vertex_t), \
-        sizeof(edges) / sizeof(nsec_edge_t), \
-        (vertices), \
-        (edges) \
+        sizeof(name##_vertices) / sizeof(nsec_vertex_t), \
+        sizeof(name##_edges) / sizeof(nsec_edge_t), \
+        (name##_vertices), \
+        (name##_edges) \
     }; \
     const nsec_mesh_t * name = &name##_m;
 

@@ -9,7 +9,7 @@
 #include "3d.h"
 #include "ssd1306.h"
 
-static const nsec_vertex_t nsec_cube_vertices[] = {
+NSEC_DECLARE_MESH(nsec_cube, (
   {-1, -1, -1},
   {-1, -1,  1},
   {-1,  1, -1},
@@ -18,30 +18,22 @@ static const nsec_vertex_t nsec_cube_vertices[] = {
   {1,  -1,  1},
   {1,   1, -1},
   {1,   1,  1}
-};
-
-static const nsec_edge_t nsec_cube_edges[] = {
+), (
     {0, 1}, {1, 3}, {3, 2}, {2, 0},
     {4, 5}, {5, 7}, {7, 6}, {6, 4},
     {0, 4}, {1, 5}, {2, 6}, {3, 7}
-};
+));
 
-NSEC_DECLARE_MESH(nsec_cube, nsec_cube_vertices, nsec_cube_edges);
-
-static const nsec_vertex_t nsec_tetra_vertices[] = {
+NSEC_DECLARE_MESH(nsec_tetra, (
     { 0,  1,  0},
     {-1, -1, -1},
     { 1, -1, -1},
     { 1, -1,  1},
     {-1, -1,  1},
-};
-
-static const nsec_edge_t nsec_tetra_edges[] = {
+), (
     {0,1}, {0,2}, {0,3}, {0,4},
     {1,2}, {2,3}, {3,4}, {4,1}
-};
-
-NSEC_DECLARE_MESH(nsec_tetra, nsec_tetra_vertices, nsec_tetra_edges);
+));
 
 #define NSEC_MAX_VERTEX_ON_MESH (sizeof(nsec_cube_vertices) / sizeof(nsec_vertex_t))
 
