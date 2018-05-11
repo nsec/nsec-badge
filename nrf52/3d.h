@@ -32,13 +32,13 @@ typedef struct nsec_mesh_s {
     static nsec_vertex_t name##_vertices[] = { NSEC_UNWRAP vertices }; \
     static nsec_edge_t name##_edges[] = { NSEC_UNWRAP edges }; \
     _Pragma("GCC diagnostic pop"); \
-    const nsec_mesh_t name##_m = { \
+    nsec_mesh_t name##_m = { \
         sizeof(name##_vertices) / sizeof(nsec_vertex_t), \
         sizeof(name##_edges) / sizeof(nsec_edge_t), \
         (name##_vertices), \
         (name##_edges) \
     }; \
-    const nsec_mesh_t * name = &name##_m;
+    nsec_mesh_t * name = &name##_m;
 
 #define NSEC_DECLARE_MATRIX(name, rows, cols) \
     struct { \
@@ -52,7 +52,7 @@ typedef struct nsec_mesh_s {
 
 #define NSEC_MATRIX_VALUE(m, row, col) (m)->values[(row) * (m)->cols + (col)]
 
-extern const nsec_mesh_t * nsec_cube;
-extern const nsec_mesh_t * nsec_tetra;
+extern nsec_mesh_t * nsec_cube;
+extern nsec_mesh_t * nsec_tetra;
 
 void nsec_draw_rotated_mesh(nsec_mesh_t * mesh, int center[2], int size, float angles[3]);
