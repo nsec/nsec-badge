@@ -115,7 +115,11 @@ static void show_member_details(uint8_t item) {
         break;
 
         case 2: // Marc-Etienne Leveille
-        show_credit(4);
+        gfx_puts("Badge veteran nsec18\n");
+        gfx_puts("Marc-Etienne Leveille\n");
+        gfx_puts("marc-etienne@nsec.io\n");
+        gfx_puts("@marc_etienne_\n");
+        gfx_puts("shape//soft//new dad\n");
         break;
 
         case 3: //Michael Jeanson
