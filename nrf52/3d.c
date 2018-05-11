@@ -9,36 +9,6 @@
 #include "3d.h"
 #include "ssd1306.h"
 
-typedef struct {
-    int rows;
-    int cols;
-    float values[];
-} nsec_matrix_t;
-
-typedef struct {
-    float position[3];
-} nsec_vertex_t;
-
-typedef struct {
-    unsigned int vertex_index[2];
-} nsec_edge_t;
-
-typedef struct nsec_mesh_s {
-    int vertex_count;
-    int edge_count;
-    nsec_vertex_t * vertices;
-    nsec_edge_t * edges;
-} nsec_mesh_t;
-
-#define NSEC_DECLARE_MESH(name, vertices, edges) \
-    const nsec_mesh_t name##_m = { \
-        sizeof(vertices) / sizeof(nsec_vertex_t), \
-        sizeof(edges) / sizeof(nsec_edge_t), \
-        (vertices), \
-        (edges) \
-    }; \
-    const nsec_mesh_t * name = &name##_m;
-
 static const nsec_vertex_t nsec_cube_vertices[] = {
   {-1, -1, -1},
   {-1, -1,  1},
@@ -74,16 +44,6 @@ static const nsec_edge_t nsec_tetra_edges[] = {
 NSEC_DECLARE_MESH(nsec_tetra, nsec_tetra_vertices, nsec_tetra_edges);
 
 #define NSEC_MAX_VERTEX_ON_MESH (sizeof(nsec_cube_vertices) / sizeof(nsec_vertex_t))
-
-#define NSEC_DECLARE_MATRIX(name, rows, cols) \
-    struct { \
-        nsec_matrix_t m; \
-        float values[(rows)*(cols)]; \
-    } name##_m = { { (rows), (cols) } }; \
-    nsec_matrix_t * name = (nsec_matrix_t *) &name##_m; \
-    const size_t name##_size __attribute__((unused)) = sizeof(name##_m);
-
-#define NSEC_MATRIX_VALUE(m, row, col) (m)->values[(row) * (m)->cols + (col)]
 
 int nsec_multiply_matrix(nsec_matrix_t * result, nsec_matrix_t * m1, nsec_matrix_t * m2) {
     if(m1 == result || m2 == result) {

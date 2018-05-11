@@ -3,8 +3,46 @@
 //
 //  License: MIT (see LICENSE for details)
 
-struct nsec_mesh_s;
-typedef struct nsec_mesh_s nsec_mesh_t;
+typedef struct {
+    int rows;
+    int cols;
+    float values[];
+} nsec_matrix_t;
+
+typedef struct {
+    float position[3];
+} nsec_vertex_t;
+
+typedef struct {
+    unsigned int vertex_index[2];
+} nsec_edge_t;
+
+typedef struct nsec_mesh_s {
+    int vertex_count;
+    int edge_count;
+    nsec_vertex_t * vertices;
+    nsec_edge_t * edges;
+} nsec_mesh_t;
+
+#define NSEC_DECLARE_MESH(name, vertices, edges) \
+    const nsec_mesh_t name##_m = { \
+        sizeof(vertices) / sizeof(nsec_vertex_t), \
+        sizeof(edges) / sizeof(nsec_edge_t), \
+        (vertices), \
+        (edges) \
+    }; \
+    const nsec_mesh_t * name = &name##_m;
+
+#define NSEC_DECLARE_MATRIX(name, rows, cols) \
+    struct { \
+        nsec_matrix_t m; \
+        float values[(rows)*(cols)]; \
+    } name##_m = { { (rows), (cols) } }; \
+    nsec_matrix_t * name = (nsec_matrix_t *) &name##_m; \
+    const size_t name##_size __attribute__((unused)) = sizeof(name##_m);
+
+#define NSEC_MATRIX_VALUE(m, row, col) (m)->values[(row) * (m)->cols + (col)]
+
 extern const nsec_mesh_t * nsec_cube;
 extern const nsec_mesh_t * nsec_tetra;
 
