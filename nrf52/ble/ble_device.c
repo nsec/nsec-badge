@@ -105,23 +105,17 @@ void configure_advertising(){
 
 
 void start_advertising(){
-    //init_connection_parameters();
-    log_error_code("sd_ble_gap_tx_power_set", sd_ble_gap_tx_power_set(4));
-    NRF_LOG_INFO("Starting advertising");
     if(ble_device == NULL)
-                return;
-    uint32_t error_code;
-    error_code = sd_ble_gap_adv_start(&(ble_device->advertising_parameters), BLE_COMMON_CFG_VS_UUID);
-    log_error_code("sd_ble_gap_adv_start", error_code);
+        return;
+    APP_ERROR_CHECK(sd_ble_gap_adv_start(&(ble_device->advertising_parameters), BLE_COMMON_CFG_VS_UUID));
 }
 
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     //pm_on_ble_evt(p_ble_evt);
     switch (p_ble_evt->header.evt_id){
         case BLE_GAP_EVT_DISCONNECTED:
-            NRF_LOG_INFO("Disconnected. Reason: %d", p_ble_evt->evt.gap_evt.params.disconnected.reason);
-            break; // TODO re-enter advertising mode?
-
+            start_advertising();
+            break;
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             const uint16_t conn = p_ble_evt->evt.gatts_evt.conn_handle;
             APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(conn, NULL, 0, 0));
