@@ -225,8 +225,8 @@ void load_stored_led_default_settings(void) {
 /* code interface */
 
 static void unlock_all_pattern() {
-    if (stored_password != 0xFFFFFFFF) {
-        stored_password = 0xFFFFFFFF;
+    if (stored_password != 0x00FFFFFF) {
+        stored_password = 0x00FFFFFF;
         need_password_update = true;
     }
 }
