@@ -118,9 +118,6 @@ void start_advertising(){
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     //pm_on_ble_evt(p_ble_evt);
     switch (p_ble_evt->header.evt_id){
-        case BLE_GAP_EVT_CONNECTED:
-            break;
-
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("Disconnected. Reason: %d", p_ble_evt->evt.gap_evt.params.disconnected.reason);
             break; // TODO re-enter advertising mode?
@@ -154,8 +151,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             }
             }
             break;
-        case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
-            break;
         case BLE_GATTS_EVT_WRITE:
         {
             const ble_gatts_evt_write_t * event = &p_ble_evt->evt.gatts_evt.params.write;
@@ -167,8 +162,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             }
             break;
         }
-        case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
-            break;
         case BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST:
         {
             uint8_t type = p_ble_evt->evt.gatts_evt.params.authorize_request.type;
@@ -378,8 +371,6 @@ static void reply_to_client_request(uint8_t operation, uint16_t status_code, uin
     reply.params.read.offset = 0;
     reply.params.read.update = data_buffer == NULL ? false: true;
     reply.params.read.p_data = data_buffer;
-    static int count = 0;
-    count += 1;
     APP_ERROR_CHECK(sd_ble_gatts_rw_authorize_reply(connection_handle, &reply));
 }
 
