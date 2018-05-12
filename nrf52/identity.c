@@ -22,6 +22,7 @@
 #include "images/nsec_logo_tiny_bitmap.c"
 #include "images/star_bitmap.c"
 #include "ble/gap_configuration.h"
+#include "nsec_storage.h"
 
 
 #define AVATAR_SIZE \
@@ -36,9 +37,10 @@ static uint16_t on_unlock_password_write(CharacteristicWriteEvent* event);
 
 static void configure_service();
 
+#define NAME_MAX_LEN 16
 
 typedef struct {
-    char name[16];
+    char name[NAME_MAX_LEN + 1];
     uint8_t unlocked;
     uint8_t avatar[AVATAR_SIZE];
 } BadgeIdentity;
@@ -81,14 +83,8 @@ void init_identity_service() {
     app_timer_create(&nsec_render_timer, APP_TIMER_MODE_REPEATED, nsec_render_3d_mesh);
     app_timer_start(nsec_render_timer, APP_TIMER_TICKS(40), NULL);
 
-#if defined(NSEC_HARDCODED_BADGE_IDENTITY_NAME)
-#define NSEC_STRINGIFY_(...) #__VA_ARGS__
-#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
-    snprintf(identity.name, sizeof(identity.name), NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
-#else
-    snprintf(identity.name, sizeof(identity.name), "Comrade #%05ld", (NRF_FICR->DEVICEID[0] & 0xFFFF));
-#endif
-    memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));
+    load_stored_identity(identity.name);
+    //memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));
     identity.unlocked = 0;
     configure_service();
     set_default_advertised_service(&identity_ble_service);
@@ -106,8 +102,8 @@ void nsec_identity_draw(void) {
     gfx_fillRect(48, 12, 128-48, 20, SSD1306_BLACK);
     //gfx_drawBitmapBg(8, 16, identity.avatar, NSEC_IDENTITY_AVATAR_WIDTH, NSEC_IDENTITY_AVATAR_HEIGHT, SSD1306_WHITE, SSD1306_BLACK);
     gfx_setCursor(48, 30);
-    char name_with_spaces[sizeof(identity.name)];
-    snprintf(name_with_spaces, sizeof(name_with_spaces), "%-14s", identity.name);
+    char name_with_spaces[NAME_MAX_LEN + 1];
+    snprintf(name_with_spaces, NAME_MAX_LEN + 1, "%-14s", identity.name);
     gfx_puts(name_with_spaces);
     gfx_update();
     //gfx_drawBitmap(59, 32, star_bitmap, star_bitmap_width, star_bitmap_height, SSD1306_WHITE);
@@ -128,14 +124,9 @@ void nsec_identity_get_unlock_key(char * data, size_t length) {
 
 static uint16_t on_name_write(CharacteristicWriteEvent* event){
 	if(identity.unlocked) {
-		memset(identity.name, 0, sizeof(identity.name));
-		strncpy(identity.name, (char *) event->data_buffer, MIN(event->data_length, sizeof(identity.name)));
-		if(is_at_main_menu) {
-			nsec_identity_draw();
-			gfx_update();
-		}
-		event->data_length = sizeof(identity.name);
-		event->data_buffer = (uint8_t*)identity.name;
+		memset(identity.name, 0, NAME_MAX_LEN);
+		strncpy(identity.name, (char *) event->data_buffer, MIN(event->data_length, NAME_MAX_LEN));
+		update_identity(identity.name); 
 		return BLE_GATT_STATUS_SUCCESS;
 	}
 	else{
@@ -173,7 +164,7 @@ static void configure_service(){
 	create_vendor_service(&identity_ble_service);
 	add_vendor_service(&identity_ble_service);
 
-	add_characteristic_to_vendor_service(&identity_ble_service, &name_characteristic, sizeof(identity.name), AUTO_READ, REQUEST_WRITE);
+	add_characteristic_to_vendor_service(&identity_ble_service, &name_characteristic, NAME_MAX_LEN, AUTO_READ, REQUEST_WRITE);
 	add_write_request_handler(&name_characteristic, on_name_write);
 	set_characteristic_value(&name_characteristic, (uint8_t*)identity.name);
 

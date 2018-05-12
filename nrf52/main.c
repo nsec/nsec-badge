@@ -239,9 +239,6 @@ rot13();
     nsec_intro();
     show_main_menu();
 
-    // bug with white rectangle
-    // nsec_identity_draw();
-
     /*
      * Main loop
      */

@@ -43,4 +43,7 @@ void update_ble_control_permitted(bool permitted);
 bool nsec_unlock_led_pattern(char *password, uint8_t index);
 bool pattern_is_unlock(uint32_t sponsor_index);
 
+void update_identity(char *new_identity);
+void load_stored_identity(char *identity);
+
 #endif
