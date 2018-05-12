@@ -156,10 +156,10 @@ menu_item_s main_menu_items[] = {
 void show_main_menu(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 16) {
         gfx_fillScreen(SSD1306_BLACK);
-        // nsec_identity_draw();
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
+    nsec_identity_draw();
     nsec_status_bar_ui_redraw();
     menu_init(0, 64-8, 128, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
     is_at_main_menu = true;

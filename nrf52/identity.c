@@ -28,7 +28,7 @@
     ((NSEC_IDENTITY_AVATAR_WIDTH * NSEC_IDENTITY_AVATAR_HEIGHT + 1) / 8)
 
 #define M_PI            3.14159265358979323846
-#define UNLOCK_PASSWORD_SIZE 4
+#define UNLOCK_PASSWORD_SIZE 5
 
 static uint16_t on_name_write(CharacteristicWriteEvent* event);
 static uint16_t on_avatar_write(CharacteristicWriteEvent* event);
@@ -103,16 +103,17 @@ static void nsec_draw_empty_progress_bar(uint16_t x, uint16_t y, uint16_t w) {
 }
 
 void nsec_identity_draw(void) {
-    gfx_fillRect(8, 8, 128-16, 64-16, SSD1306_BLACK);
-    gfx_drawBitmapBg(8, 16, identity.avatar, NSEC_IDENTITY_AVATAR_WIDTH, NSEC_IDENTITY_AVATAR_HEIGHT, SSD1306_WHITE, SSD1306_BLACK);
-    gfx_setCursor(16+16+8, 20);
+    gfx_fillRect(48, 12, 128-48, 20, SSD1306_BLACK);
+    //gfx_drawBitmapBg(8, 16, identity.avatar, NSEC_IDENTITY_AVATAR_WIDTH, NSEC_IDENTITY_AVATAR_HEIGHT, SSD1306_WHITE, SSD1306_BLACK);
+    gfx_setCursor(48, 30);
     char name_with_spaces[sizeof(identity.name)];
     snprintf(name_with_spaces, sizeof(name_with_spaces), "%-14s", identity.name);
     gfx_puts(name_with_spaces);
-    gfx_drawBitmap(59, 32, star_bitmap, star_bitmap_width, star_bitmap_height, SSD1306_WHITE);
-    nsec_draw_empty_progress_bar(70, 38, 30);
-    gfx_drawBitmapBg(111, 47, nsec_logo_tiny_bitmap, nsec_logo_tiny_bitmap_width, nsec_logo_tiny_bitmap_height, SSD1306_WHITE, SSD1306_BLACK);
-    nsec_identity_update_nearby();
+    gfx_update();
+    //gfx_drawBitmap(59, 32, star_bitmap, star_bitmap_width, star_bitmap_height, SSD1306_WHITE);
+    //nsec_draw_empty_progress_bar(70, 38, 30);
+    //gfx_drawBitmapBg(111, 47, nsec_logo_tiny_bitmap, nsec_logo_tiny_bitmap_width, nsec_logo_tiny_bitmap_height, SSD1306_WHITE, SSD1306_BLACK);
+    //nsec_identity_update_nearby();
 }
 
 void nsec_identity_update_nearby(void) {
@@ -160,7 +161,7 @@ static uint16_t on_unlock_password_write(CharacteristicWriteEvent* event){
 	if(identity.unlocked){
 		return BLE_GATT_STATUS_SUCCESS;
 	}
-	else if(event->data_length == UNLOCK_PASSWORD_SIZE && memcmp(unlock_password, (const char*)event->data_buffer, UNLOCK_PASSWORD_SIZE) == 0){
+	else if(event->data_length == (UNLOCK_PASSWORD_SIZE - 1) && memcmp(unlock_password, (const char*)event->data_buffer, UNLOCK_PASSWORD_SIZE) == 0){
 		identity.unlocked = 1;
 		set_characteristic_value(&unlocked_characteristic, &identity.unlocked);
 		return BLE_GATT_STATUS_SUCCESS;
@@ -176,9 +177,11 @@ static void configure_service(){
 	add_write_request_handler(&name_characteristic, on_name_write);
 	set_characteristic_value(&name_characteristic, (uint8_t*)identity.name);
 
+	/*
 	add_characteristic_to_vendor_service(&identity_ble_service, &avatar_characteristic, sizeof(identity.avatar), AUTO_READ, REQUEST_WRITE);
 	add_write_request_handler(&avatar_characteristic, on_avatar_write);
 	set_characteristic_value(&avatar_characteristic, identity.avatar);
+	*/
 
 	add_characteristic_to_vendor_service(&identity_ble_service, &unlock_password_characteristic, UNLOCK_PASSWORD_SIZE, DENY_READ, REQUEST_WRITE);
 	add_write_request_handler(&unlock_password_characteristic, on_unlock_password_write);
