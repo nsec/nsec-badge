@@ -70,13 +70,12 @@ const char *basic_patterns[] = {
     "Fireworks",
     "Fireworks Random",
     "Merry Christmas",
-    "Halloween",
     "Fire Flicker",
     "Fire Flicker (soft)",
     "Circus Combustus",
+    "Halloween",
     "Bicolor Chase",
     "ICU",
-    "Custom",
 };
 
 uint8_t basic_patterns_match_index[] = {
@@ -111,7 +110,6 @@ uint8_t basic_patterns_match_index[] = {
     38,
     40,
     41,
-    42,
     43,
     44,
     45,
@@ -120,9 +118,9 @@ uint8_t basic_patterns_match_index[] = {
     48,
     49,
     51,
+    52,
     53,
     55,
-    56,
 };
 
 const char *extra_patterns_lock[] = {
