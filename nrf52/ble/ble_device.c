@@ -214,7 +214,8 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             buffer = NULL;
             break;
         default:
-            APP_ERROR_CHECK(p_ble_evt->header.evt_id);
+            //APP_ERROR_CHECK(p_ble_evt->header.evt_id);
+        	break;
     }
 }
 
