@@ -12,7 +12,7 @@
 #define NSEC_IDENTITY_AVATAR_WIDTH 32
 #define NSEC_IDENTITY_AVATAR_HEIGHT 32
 
-void nsec_identity_init(void);
+void init_identity_service(void);
 void nsec_identity_draw(void);
 void nsec_identity_get_unlock_key(char * data, size_t length);
 void nsec_identity_update_nearby(void);

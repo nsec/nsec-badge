@@ -165,10 +165,6 @@ void show_main_menu(void) {
     is_at_main_menu = true;
 }
 
-uint16_t handle_write(CharacteristicWriteEvent* event){
-	return BLE_GATT_STATUS_SUCCESS;
-}
-
 
 #ifndef NSEC_CONF_NO_FLAGS
 static
@@ -230,9 +226,8 @@ rot13();
     create_ble_device(g_device_id);
     configure_advertising();
     nsec_led_ble_init();
-    //nsec_identity_init();
+    init_identity_service();
     start_advertising();
-    nsec_identity_init();
     nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
