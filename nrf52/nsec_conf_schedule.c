@@ -652,6 +652,9 @@ void _nsec_schedule_show_details(void) {
     // We calculate the number of character we can use for the description
     // we keep that value for scrolling
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
+    if(header_length >= MAX_CHAR_UNDER_STATUS_BAR) {
+        header_length = MAX_CHAR_UNDER_STATUS_BAR - 1;
+    }
     description_index = MAX_CHAR_UNDER_STATUS_BAR - header_length;
     strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected], description_index);
 
