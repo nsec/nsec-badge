@@ -215,10 +215,13 @@ static void setting_handle_buttons(button_t button) {
                 break;
 
             case SETTING_STATE_BATTERY:
-            // stop the refreshing
                 stop_battery_status_timer();
-                nsec_status_bar_ui_redraw();
-                nsec_setting_show();
+                // Battery status was moved to the main menu
+                // this is a hack to make it work with minimal
+                // code change
+                _state = SETTING_STATE_CLOSED;
+                menu_close();
+                show_main_menu();
                 break;
 
             case SETTING_STATE_FLASHLIGHT:
