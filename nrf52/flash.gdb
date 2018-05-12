@@ -23,3 +23,8 @@ define hook-quit
   set confirm off
 end
 
+if $QUIT_AFTER_FLASH
+  quit
+else
+  run
+end

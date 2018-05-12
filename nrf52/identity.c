@@ -21,7 +21,6 @@
 #include "images/default_avatar_bitmap.c"
 #include "images/nsec_logo_tiny_bitmap.c"
 #include "images/star_bitmap.c"
-#include "logs.h"
 #include "ble/gap_configuration.h"
 
 
@@ -56,9 +55,6 @@ static ServiceCharacteristic avatar_characteristic;
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #endif
 
-#ifdef NSEC_SHOW_FLAG_ON_SUCCESSFUL_NAME_CHANGE
-static char flag[] = "flag{ble_all_the_things}";
-#endif
 
 APP_TIMER_DEF(nsec_render_timer);
 
@@ -147,7 +143,6 @@ static uint16_t on_name_write(CharacteristicWriteEvent* event){
 }
 
 static uint16_t on_avatar_write(CharacteristicWriteEvent* event){
-	NRF_LOG_INFO("received %d bytes", event->data_length);
 	if(identity.unlocked && event->data_length == AVATAR_SIZE) {
 		memcpy(identity.avatar, event->data_buffer, AVATAR_SIZE);
 		if(is_at_main_menu) {

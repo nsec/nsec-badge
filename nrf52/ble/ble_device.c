@@ -118,10 +118,7 @@ void start_advertising(){
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     //pm_on_ble_evt(p_ble_evt);
     switch (p_ble_evt->header.evt_id){
-        case BLE_GAP_EVT_CONNECTED: {
-            //const uint8_t * addr = p_ble_evt->evt.gap_evt.params.connected.peer_addr.addr;
-            NRF_LOG_INFO("Connected to a device"); //TODO print address of peer.
-            }
+        case BLE_GAP_EVT_CONNECTED:
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
@@ -158,7 +155,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             }
             break;
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
-            NRF_LOG_INFO("Central is attempting pairing.");
             break;
         case BLE_GATTS_EVT_WRITE:
         {
@@ -172,7 +168,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             break;
         }
         case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
-            NRF_LOG_INFO("MTU exchange requested");
             break;
         case BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST:
         {
@@ -195,7 +190,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
                 		on_execute_queued_write_requests(connection_handle);
                 		break;
                 	default:
-                		APP_ERROR_CHECK(event->op);
+                		break;
                 }
             }
             break;
@@ -215,8 +210,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             buffer = NULL;
             break;
         default:
-            //APP_ERROR_CHECK(p_ble_evt->header.evt_id);
-        	break;
+            break;
     }
 }
 
@@ -232,8 +226,7 @@ uint32_t add_vendor_service(VendorService* service){
 }
 
 static void gatt_init(){
-    ret_code_t err_code = nrf_ble_gatt_init(&m_gatt, NULL);
-    log_error_code("nrf_ble_gatt_init",err_code);
+    APP_ERROR_CHECK(nrf_ble_gatt_init(&m_gatt, NULL));
 }
 
 /*static void _nsec_pm_evt_handler(pm_evt_t const * event) {
@@ -373,7 +366,6 @@ static uint16_t parse_queued_write_events(CharacteristicWriteEvent* event){
 	}
 	event->data_buffer = buffer;
 	event->write_offset = 0;
-	NRF_LOG_INFO("Queued writes parsed for %d, total write size is %d", characteristic_handle, event->data_length);
 	return characteristic_handle;
 }
 
@@ -388,12 +380,7 @@ static void reply_to_client_request(uint8_t operation, uint16_t status_code, uin
     reply.params.read.p_data = data_buffer;
     static int count = 0;
     count += 1;
-    uint32_t error_code = sd_ble_gatts_rw_authorize_reply(connection_handle, &reply);
-    if(error_code){
-    	volatile int i = 0;
-    	i++;
-    }
-    //APP_ERROR_CHECK();
+    APP_ERROR_CHECK(sd_ble_gatts_rw_authorize_reply(connection_handle, &reply));
 }
 
 static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid){
