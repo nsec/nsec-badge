@@ -8,5 +8,6 @@
 #define nsec_settings_h
 
 void nsec_setting_show(void);
+void show_battery_status(void);
 
 #endif /* nsec_settings_h */

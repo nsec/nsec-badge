@@ -21,7 +21,6 @@
 #include "timer.h"
 
 static void toggle_bluetooth(uint8_t item);
-static void battery_status_screen(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
 static void show_led_settings(uint8_t item);
@@ -52,9 +51,6 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
-    }, {
-        .label = "Battery status",
-        .handler = battery_status_screen,
     }, {
         .label = "Turn screen off",
         .handler = turn_off_screen,
@@ -167,10 +163,11 @@ static void show_credit(uint8_t item) {
     gfx_update();
 }
 
-static void battery_status_screen(uint8_t item) {
+void show_battery_status(void) {
     _state = SETTING_STATE_BATTERY;
     menu_close();
     start_battery_status_timer();
+    nsec_controls_add_handler(setting_handle_buttons);
 }
 
 static void toggle_flashlight(uint8_t item) {

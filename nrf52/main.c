@@ -127,6 +127,12 @@ void open_warning(uint8_t item) {
     nsec_warning_show();
 }
 
+void open_battery_status(uint8_t item) {
+    menu_close();
+    is_at_main_menu = false;
+    show_battery_status();
+}
+
 static
 menu_item_s main_menu_items[] = {
     {
@@ -135,9 +141,12 @@ menu_item_s main_menu_items[] = {
     }, {
         .label = "LED pattern",
         .handler = open_led_pattern,
-    },{
+    }, {
         .label = "Settings",
         .handler = open_settings,
+    }, {
+        .label = "Battery status",
+        .handler = open_battery_status,
     }, {
         .label = "Battery Warning",
         .handler = open_warning,
