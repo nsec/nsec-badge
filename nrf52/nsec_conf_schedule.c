@@ -13,7 +13,7 @@
 #include "controls.h"
 #include "app_glue.h"
 
-#define ROW_COUNT                   7 // 8 - status bar
+#define ROW_COUNT                   6 // 8 - status bar
 #define COLUMN_COUNT                21
 #define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
 
@@ -646,7 +646,7 @@ uint16_t nsec_schedule_get_header_length(void) {
 
 void _nsec_schedule_show_details(void) {
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
+    gfx_setCursor(0, 16);
 
     nsec_schedule_show_header();
     uint16_t header_length = nsec_schedule_get_header_length();
@@ -700,7 +700,7 @@ void nsec_schedule_scroll_down_details(bool change_direction) {
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
+    gfx_setCursor(0, 16);
 
     if (change_direction) {
         description_index += MAX_CHAR_UNDER_STATUS_BAR;
@@ -727,7 +727,7 @@ void nsec_schedule_scroll_up_presenters_details(bool change_direction) {
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
+    gfx_setCursor(0, 16);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, presenters_detail[presenter_selected] + description_index,
@@ -744,7 +744,7 @@ void nsec_schedule_scroll_down_presenters_details(bool change_direction) {
     }
 
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
+    gfx_setCursor(0, 16);
 
     if (change_direction) {
         description_index += MAX_CHAR_UNDER_STATUS_BAR;
@@ -782,7 +782,7 @@ void nsec_schedule_show_presenters_details(uint8_t item) {
     presenter_selected = item;
     menu_close();
     gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
+    gfx_setCursor(0, 16);
     gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts((char *) presenters_detail[presenter_selected]);
     description_index = MAX_CHAR_UNDER_STATUS_BAR;
