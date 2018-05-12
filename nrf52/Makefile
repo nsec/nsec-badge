@@ -27,6 +27,8 @@ all:
 $(error "Unknown flavor `$(FLAVOR)`")
 endif
 
+# Temporarly disable BLE identity service because it breaks right now.
+CFLAGS += -DNSEC_IDENTITY_BLE_SERVICE_DISABLE
 
 ifeq ($(BOARD), proto)
 	# One of the oled screen pin is shared with the
@@ -218,7 +220,7 @@ LDFLAGS += --specs=nano.specs
 
 # Add standard libraries at the very end of the linker input, after all objects
 # that may need symbols provided by these libraries.
-LIB_FILES += -lc -lnosys
+LIB_FILES += -lc -lnosys -lm
 
 TERMINAL = dup
 

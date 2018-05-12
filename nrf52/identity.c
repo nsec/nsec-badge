@@ -8,10 +8,12 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <nrf52.h>
+#include <app_timer.h>
 #include "ble/nsec_ble.h"
 #include "ssd1306.h"
 #include "nsec_nearby_badges.h"
 #include "app_glue.h"
+#include "3d.h"
 
 #include "images/default_avatar_bitmap.c"
 #include "images/nsec_logo_tiny_bitmap.c"
@@ -19,6 +21,8 @@
 
 #define AVATAR_SIZE \
     ((NSEC_IDENTITY_AVATAR_WIDTH * NSEC_IDENTITY_AVATAR_HEIGHT + 1) / 8)
+
+#define M_PI            3.14159265358979323846
 
 typedef struct {
 #ifdef NSEC_SHOW_FLAG_ON_SUCCESSFUL_NAME_CHANGE
@@ -63,10 +67,32 @@ nsec_ble_set_charateristic_value(identity_ble_handle, uuid, &field, sizeof(field
 static char flag[] = "flag{ble_all_the_things}";
 #endif
 
+APP_TIMER_DEF(nsec_render_timer);
+
 static void nsec_identity_ble_callback(nsec_ble_service_handle service, uint16_t char_uuid, const uint8_t * content, size_t content_length);
+
+static void nsec_render_3d_mesh(void * context) {
+    if(is_at_main_menu) {
+        static float current_angle = 0.0f;
+        gfx_fillRect(0, 10, 40, 42, SSD1306_BLACK);
+        nsec_draw_rotated_mesh(nsec_cube, (int[2]) {20, 32}, 11,
+                               (float[3]) {current_angle,
+                                           current_angle + 1.0f,
+                                           current_angle + 2.0f});
+        current_angle += 0.03f;
+        if(current_angle >= 2 * M_PI) {
+            current_angle -= 2 * M_PI;
+        }
+        gfx_update();
+    }
+}
 
 void nsec_identity_init(void) {
     memset(identity.name, 0, sizeof(identity.name));
+
+    app_timer_create(&nsec_render_timer, APP_TIMER_MODE_REPEATED, nsec_render_3d_mesh);
+    app_timer_start(nsec_render_timer, APP_TIMER_TICKS(40), NULL);
+
 #if defined(NSEC_HARDCODED_BADGE_IDENTITY_NAME)
 #define NSEC_STRINGIFY_(...) #__VA_ARGS__
 #define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)

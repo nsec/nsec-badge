@@ -223,7 +223,7 @@ rot13();
     nsec_led_ble_init();
     //nsec_identity_init();
     start_advertising();
-    //init_identity_service();
+    nsec_identity_init();
     nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);
