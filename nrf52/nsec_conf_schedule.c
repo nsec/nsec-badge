@@ -42,10 +42,10 @@ static menu_item_s days_schedule_items[] = {
 
 static menu_item_s tracks_schedule_items[] = {
     {
-        .label = "Track 1",
+        .label = "Track Ville-Marie",
         .handler = nsec_schedule_show_talks
     }, {
-        .label = "Track 2",
+        .label = "Track De la Commune",
         .handler = nsec_schedule_show_talks
     }, {
         .label = "Workshop",
@@ -494,7 +494,7 @@ const char * descriptions_thursday_track_2[] = {
     NULL,
     "In typical enterprise networks today, ingress filtering is taken care of by firewall or similar devices. Unfortunately, the ability of devices and applications to reach the outside world is often overlooked or intentionnaly left open as Web services might need to be reacheable. We will present a fork of an OpenSSH daemon, that is able to exploit the often loose egress filtering and maneuver around network restrictions. Designed for more comfortable post-exploitation, it also extends regular forwarding and tunneling abilities in order to circumvent network rules that may otherwise hinder lateral movement. In addition, it can also act as a regular SSH server listening for an incoming connection, and provides reliable interactive shell access (must be able to run top, sudo, screen, vi, etc) as opposed to crafted reverse shells or even meterpreter which allow basic commands but fail at interactive ones.",
     NULL,
-    "????"
+    "????",
 };
 
 const char * descriptions_thursday_workshops[] = {
