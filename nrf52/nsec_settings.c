@@ -48,10 +48,10 @@ static menu_item_s settings_items[] = {
     {
         .label = "Led settings",
         .handler = show_led_settings,
-    }, {
+    }, /*{
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
-    }, {
+    }, */{
         .label = "Turn screen off",
         .handler = turn_off_screen,
     }, {
@@ -70,10 +70,10 @@ static menu_item_s members_items[] = {
     {
         .label = "Eric Tremblay",
         .handler = show_member_details,
-    }, {
+    }, /*{
         .label = "Francois Charbonneau",
         .handler = show_member_details,
-    }, {
+    }, */{
         .label = "Marc-Etienne Leveille",
         .handler = show_member_details,
     }, {
@@ -106,11 +106,7 @@ static void show_member_details(uint8_t item) {
         gfx_puts("Software\n");
         break;
 
-        case 1: //Francois Charbonneau
-        show_credit(4);
-        break;
-
-        case 2: // Marc-Etienne Leveille
+        case 1: // Marc-Etienne Leveille
         gfx_puts("Badge veteran nsec18\n");
         gfx_puts("Marc-Etienne Leveille\n");
         gfx_puts("marc-etienne@nsec.io\n");
@@ -118,7 +114,7 @@ static void show_member_details(uint8_t item) {
         gfx_puts("shape//soft//new dad\n");
         break;
 
-        case 3: //Michael Jeanson
+        case 2: //Michael Jeanson
         gfx_puts("Badge drone nsec 2018\n");
         gfx_puts("Michael Jeanson\n");
         gfx_puts("mjeanson@gmail.com\n");
@@ -126,11 +122,11 @@ static void show_member_details(uint8_t item) {
         gfx_puts("Software\n");
         break;
 
-        case 4: // Nicolas Aubry
+        case 3: // Nicolas Aubry
         show_credit(4);
         break;
 
-        case 5: //Thomas Dupuy
+        case 4: //Thomas Dupuy
         show_credit(4);
         break;
     }
