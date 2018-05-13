@@ -22,7 +22,7 @@ else ifeq ($(FLAVOR), speaker)
 else ifeq ($(FLAVOR), admin)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=ADMIN
 else ifeq ($(FLAVOR), conf)
-	CFLAGS += -DNSEC_CONF_NO_FLAGS
+	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CONF
 else
 all:
 $(error "Unknown flavor `$(FLAVOR)`")
