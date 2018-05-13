@@ -21,6 +21,7 @@ FIRMWARE += builds/nsec18_nrf52_ctf.elf
 FIRMWARE += builds/nsec18_nrf52_admin.elf
 FIRMWARE += builds/nsec18_nrf52_speaker.elf
 FIRMWARE += builds/nsec18_nrf52_conf.elf
+FIRMWARE += builds/nsec18_nrf52_sponsor.elf
 FIRMWARE += builds/nsec18_stm32_debugger.elf
 FIRMWARE += builds/nsec18_stm32_debugger.bin
 FIRMWARE += builds/s132_nrf52_5.0.0_softdevice.hex

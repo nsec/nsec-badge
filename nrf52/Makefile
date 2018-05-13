@@ -23,6 +23,8 @@ else ifeq ($(FLAVOR), admin)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=ADMIN
 else ifeq ($(FLAVOR), conf)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CONF
+else ifeq ($(FLAVOR), sponsor)
+	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPONSOR
 else
 all:
 $(error "Unknown flavor `$(FLAVOR)`")
