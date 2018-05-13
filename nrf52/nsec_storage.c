@@ -408,7 +408,7 @@ static void identity_storage_init(void) {
             #define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
             snprintf(identity_name, 16, NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
 #else
-            snprintf(identity_name, 16, "Comrade #%05ld", (NRF_FICR->DEVICEID[0] & 0xFFFF));
+            snprintf(identity_name, 16, "Cosmonaut #%02ld", (NRF_FICR->DEVICEID[0] & 0xFFFF));
 #endif
         rc = nrf_fstorage_write(&fs_identity, fs_identity.start_addr, identity_name,
                                 16, NULL);
