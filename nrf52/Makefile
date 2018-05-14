@@ -17,6 +17,7 @@ else ifeq ($(FLAVOR), ctf_namechange)
 	CFLAGS += -DNSEC_HIDE_SYNC_KEY_IN_SETTINGS
 else ifeq ($(FLAVOR), ctf)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
+	CFLAGS += -DNSEC_CTF_ADD_FLAGS
 else ifeq ($(FLAVOR), speaker)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPEAKER
 else ifeq ($(FLAVOR), admin)

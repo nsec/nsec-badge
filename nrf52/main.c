@@ -166,7 +166,7 @@ void show_main_menu(void) {
 }
 
 
-#ifndef NSEC_CONF_NO_FLAGS
+#ifdef NSEC_CTF_ADD_FLAGS
 static
 void rot13(void) {
     #define ROT 13
@@ -202,7 +202,7 @@ int main(void) {
 #endif
     g_device_id[9] = '\0';
 
-#ifndef NSEC_CONF_NO_FLAGS
+#ifdef NSEC_CTF_ADD_FLAGS
 static volatile char flag1[] = "FLAG-624bbf3fb2e54f9194057f9adbd66836";
 printf("%s", flag1); // Don't optimize out flag1
 rot13();
