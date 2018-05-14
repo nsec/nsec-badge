@@ -170,8 +170,8 @@ void show_main_menu(void) {
 static
 void rot13(void) {
     #define ROT 13
-    // Rotated: FLAG-CTGcQoaJlslyMOukPOsUgDaJevfMNBbX
-    static char flag2[] = "FLAG-PGTpDbnWyfylZBhxCBfHtQnWrisZAOoK";
+    // Rotated: FLAG-UQKhqeDkniYtZTkVIQemdYfNTqEWPDNu
+    static char flag2[] = "FLAG-HDXudrQxavLgMGxIVDrzqLsAGdRJCQAh";
 
     for (int i = 4; i < strlen(flag2); i++) {
         char *c = &flag2[i];
@@ -203,7 +203,7 @@ int main(void) {
     g_device_id[9] = '\0';
 
 #ifdef NSEC_CTF_ADD_FLAGS
-static volatile char flag1[] = "FLAG-624bbf3fb2e54f9194057f9adbd66836";
+static volatile char flag1[] = "FLAG-60309301fa5b4a4e990392ead6ac7b5f";
 printf("%s", flag1); // Don't optimize out flag1
 rot13();
 #endif
