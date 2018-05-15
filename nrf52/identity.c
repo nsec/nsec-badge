@@ -60,12 +60,15 @@ static ServiceCharacteristic avatar_characteristic;
 
 APP_TIMER_DEF(nsec_render_timer);
 
+#if !(defined(NSEC_ROTATING_MESH))
+#define NSEC_ROTATING_MESH nsec_cube
+#endif
 
 static void nsec_render_3d_mesh(void * context) {
     if(is_at_main_menu) {
         static float current_angle = 0.0f;
         gfx_fillRect(0, 10, 40, 42, SSD1306_BLACK);
-        nsec_draw_rotated_mesh(nsec_cube, (int[2]) {20, 32}, 11,
+        nsec_draw_rotated_mesh(NSEC_ROTATING_MESH, (int[2]) {20, 32}, 11,
                                (float[3]) {current_angle,
                                            current_angle + 1.0f,
                                            current_angle + 2.0f});

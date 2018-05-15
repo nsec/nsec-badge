@@ -54,5 +54,7 @@ typedef struct nsec_mesh_s {
 
 extern nsec_mesh_t * nsec_cube;
 extern nsec_mesh_t * nsec_tetra;
+extern nsec_mesh_t * nsec_icosphere;
+extern nsec_mesh_t * nsec_torus;
 
 void nsec_draw_rotated_mesh(nsec_mesh_t * mesh, int center[2], int size, float angles[3]);

@@ -9,31 +9,10 @@
 #include "3d.h"
 #include "ssd1306.h"
 
-NSEC_DECLARE_MESH(nsec_cube, (
-    {-1, -1, -1},
-    {-1, -1,  1},
-    {-1,  1, -1},
-    {-1,  1,  1},
-    {1,  -1, -1},
-    {1,  -1,  1},
-    {1,   1, -1},
-    {1,   1,  1}
-), (
-    {0, 1}, {1, 3}, {3, 2}, {2, 0},
-    {4, 5}, {5, 7}, {7, 6}, {6, 4},
-    {0, 4}, {1, 5}, {2, 6}, {3, 7}
-));
-
-NSEC_DECLARE_MESH(nsec_tetra, (
-    { 0,  1,  0},
-    {-1, -1, -1},
-    { 1, -1, -1},
-    { 1, -1,  1},
-    {-1, -1,  1},
-), (
-    {0,1}, {0,2}, {0,3}, {0,4},
-    {1,2}, {2,3}, {3,4}, {4,1}
-));
+#include "meshes/cube.c"
+#include "meshes/tetra.c"
+#include "meshes/sphere.c"
+#include "meshes/torus.c"
 
 int nsec_multiply_matrix(nsec_matrix_t * result, nsec_matrix_t * m1, nsec_matrix_t * m2) {
     if(m1 == result || m2 == result) {
