@@ -19,12 +19,15 @@ else ifeq ($(FLAVOR), ctf)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
 else ifeq ($(FLAVOR), speaker)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPEAKER
+	CFLAGS += -DNSEC_ROTATING_MESH=nsec_tetra
 else ifeq ($(FLAVOR), admin)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=ADMIN
+	CFLAGS += -DNSEC_ROTATING_MESH=nsec_torus
 else ifeq ($(FLAVOR), conf)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CONF
 else ifeq ($(FLAVOR), sponsor)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPONSOR
+	CFLAGS += -DNSEC_ROTATING_MESH=nsec_icosphere
 else
 all:
 $(error "Unknown flavor `$(FLAVOR)`")
