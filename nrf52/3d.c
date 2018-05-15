@@ -11,6 +11,8 @@
 
 #include "meshes/cube.c"
 #include "meshes/tetra.c"
+#include "meshes/sphere.c"
+#include "meshes/torus.c"
 
 int nsec_multiply_matrix(nsec_matrix_t * result, nsec_matrix_t * m1, nsec_matrix_t * m2) {
     if(m1 == result || m2 == result) {
