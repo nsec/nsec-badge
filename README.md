@@ -37,11 +37,23 @@ If you wish to build your own badge:
 * [bill of material]()
 
 ## Compiling
+You can either compile the code using CQFD and Docker or you can install the toolchain and build the project
+by yourself. Using CQFD and Docker will make sure you are using the right compiler version and toolchain.
+
+### CQFD ( Preferred method )
+
+Follow the steps to install CQFD and Docker, then simply run:
+
+```
+cqfd init && cqfd
+```
+
+[CQFD](https://github.com/savoirfairelinux/cqfd)
+
+### Getting the toolchain
 
 There is a `Makefile` for each micro-controller, but here are some stuff you'll
 need to make it work.
-
-### Getting the toolchain
 
 To compile the badge firmware from source, your gcc need to be able
 generating `armv6-m` code and link with the nano variant of
