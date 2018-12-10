@@ -133,6 +133,23 @@ void open_battery_status(uint8_t item) {
     show_battery_status();
 }
 
+#ifdef NSEC_FLAVOR_CTF
+menu_item_s main_menu_items[] = {
+    {
+        .label = "LED pattern",
+        .handler = open_led_pattern,
+    }, {
+        .label = "Settings",
+        .handler = open_settings,
+    }, {
+        .label = "Battery status",
+        .handler = open_battery_status,
+    }, {
+        .label = "Battery Warning",
+        .handler = open_warning,
+    }
+};
+#else
 static
 menu_item_s main_menu_items[] = {
     {
@@ -152,6 +169,7 @@ menu_item_s main_menu_items[] = {
         .handler = open_warning,
     }
 };
+#endif
 
 void show_main_menu(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 16) {
