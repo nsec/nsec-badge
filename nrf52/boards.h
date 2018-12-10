@@ -15,33 +15,65 @@
 
 #define UART_BAUDRATE         UART_BAUDRATE_BAUDRATE_Baud115200
 
+#if defined(BOARD_SPUTNIK) || defined(BOARD_SPUTNIK_PROTO)
 //////////////////////////////////////////////
 // PINOUT
 
 // Battery
-#define BATT_VOLTAGE    2
-#define BATT_CHARGE        27
-#define BATT_PGOOD        28
+#define PIN_BATT_VOLTAGE        2
+#define PIN_BATT_CHARGE         27
+#define PIN_BATT_PGOOD          28
 
 // Display
-#define OLED_DATA       4
-#define OLED_CLK        3
-#define OLED_DC_MODE    9
-#define OLED_RESET      7
-#define OLED_CS         11
+#define PIN_OLED_DATA           4
+#define PIN_OLED_CLK            3
+#define PIN_OLED_DC_MODE        9
+#define PIN_OLED_RESET          7
+#define PIN_OLED_CS             11
 
 // Button
-#define INPUT_UP        30
-#define INPUT_DOWN        31
-#define INPUT_BACK        6
-#define INPUT_ENTER        5
+#define PIN_INPUT_UP            30
+#define PIN_INPUT_DOWN          31
+#define PIN_INPUT_BACK          6
+#define PIN_INPUT_ENTER         5
 
 // UART TO STM32
-#define nRF_RXD            13
-#define nRF_TXD            12
-#define nRF_CTS            14
-#define nRF_RTS            15
+#define PIN_nRF_RXD             13
+#define PIN_nRF_TXD             12
+#define PIN_nRF_CTS             14
+#define PIN_nRF_RTS             15
 
-#define NEOPIXEL         26
+#define PIN_NEOPIXEL            26
 
-#endif
+
+#else // BOARD_BRAIN
+
+// TODO: Update PIN when the brain will be used for development
+// Battery
+#define PIN_BATT_VOLTAGE        2
+#define PIN_BATT_CHARGE         27
+#define PIN_BATT_PGOOD          28
+
+// Display
+#define PIN_OLED_DATA           4
+#define PIN_OLED_CLK            3
+#define PIN_OLED_DC_MODE        9
+#define PIN_OLED_RESET          7
+#define PIN_OLED_CS             11
+
+// Button
+#define PIN_INPUT_UP            30
+#define PIN_INPUT_DOWN          31
+#define PIN_INPUT_BACK          6
+#define PIN_INPUT_ENTER         5
+
+// UART TO STM32
+#define PIN_nRF_RXD             13
+#define PIN_nRF_TXD             12
+#define PIN_nRF_CTS             14
+#define PIN_nRF_RTS             15
+
+#define PIN_NEOPIXEL            26
+
+#endif // BOARD_SPUTNIK | BOARD_SPUTNIK_PROTO
+#endif // BOARDS_H

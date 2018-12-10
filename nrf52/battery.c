@@ -83,14 +83,14 @@ bool battery_is_charging() {
     /*
      * RT9525GQW pin CHG, active low.
      */
-    return (nrf_gpio_pin_read(BATT_CHARGE) == 0);
+    return (nrf_gpio_pin_read(PIN_BATT_CHARGE) == 0);
 }
 
 bool battery_is_usb_plugged() {
     /*
      * RT9525GQW pin PGOOD, active low.
      */
-    return (nrf_gpio_pin_read(BATT_PGOOD) == 0);
+    return (nrf_gpio_pin_read(PIN_BATT_PGOOD) == 0);
 }
 
 static
@@ -159,8 +159,8 @@ void saadc_callback(nrf_drv_saadc_evt_t const *p_event) {
 void battery_init() {
     ret_code_t err_code;
 
-    nrf_gpio_cfg_input(BATT_CHARGE, NRF_GPIO_PIN_PULLUP);
-    nrf_gpio_cfg_input(BATT_PGOOD, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(PIN_BATT_CHARGE, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(PIN_BATT_PGOOD, NRF_GPIO_PIN_PULLUP);
 
     /*
      * Initialize the saadc driver, passing NULL as config will use the

@@ -41,19 +41,19 @@ void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action)
 {
     if (button_action == APP_BUTTON_PUSH) {
         switch (pin_no) {
-            case INPUT_UP:
+            case PIN_INPUT_UP:
                 nsec_controls_trigger(BUTTON_UP);
             break;
 
-            case INPUT_DOWN:
+            case PIN_INPUT_DOWN:
                 nsec_controls_trigger(BUTTON_DOWN);
             break;
 
-            case INPUT_BACK:
+            case PIN_INPUT_BACK:
                 nsec_controls_trigger(BUTTON_BACK);
             break;
 
-            case INPUT_ENTER:
+            case PIN_INPUT_ENTER:
                 nsec_controls_trigger(BUTTON_ENTER);
             break;
         }
@@ -70,10 +70,10 @@ void nsec_buttons_init(void) {
     static
     app_button_cfg_t buttons[] =
     {
-        {INPUT_UP,    false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {INPUT_DOWN,  false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {INPUT_BACK,  false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {INPUT_ENTER, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler}
+        {PIN_INPUT_UP,    false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_DOWN,  false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_BACK,  false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_ENTER, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler}
     };
 
     /*

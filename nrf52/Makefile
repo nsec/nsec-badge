@@ -1,5 +1,5 @@
 FLAVOR ?= ctf
-BOARD ?= proto
+BOARD ?= sputnik
 PROJECT_NAME = nsec18_nrf52_$(FLAVOR)
 TARGETS=$(PROJECT_NAME)
 OUTPUT_DIRECTORY := builds
@@ -8,18 +8,22 @@ SDK_VERSION = nRF5_SDK_14.2.0_17b948a
 
 ifeq ($(FLAVOR), ctf)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
-	CFLAGS += -DNSEC_CTF_ADD_FLAGS
+	CFLAGS += -DNSEC_FLAVOR_CTF
 else ifeq ($(FLAVOR), speaker)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=SPEAKER
 	CFLAGS += -DNSEC_ROTATING_MESH=nsec_tetra
+	CFLAGS += -DNSEC_FLAVOR_CONF
 else ifeq ($(FLAVOR), admin)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=ADMIN
 	CFLAGS += -DNSEC_ROTATING_MESH=nsec_torus
+	CFLAGS += -DNSEC_FLAVOR_CONF
 else ifeq ($(FLAVOR), conf)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CONF
+	CFLAGS += -DNSEC_FLAVOR_CONF
 else ifeq ($(FLAVOR), trainer)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=TRAINER
 	CFLAGS += -DNSEC_ROTATING_MESH=nsec_icosphere
+	CFLAGS += -DNSEC_FLAVOR_CONF
 else
 all:
 $(error "Unknown flavor `$(FLAVOR)`")
@@ -28,14 +32,19 @@ endif
 # Temporarly disable BLE identity service because it breaks right now.
 CFLAGS += -DNSEC_IDENTITY_BLE_SERVICE_DISABLE
 
-ifeq ($(BOARD), proto)
+ifeq ($(BOARD), sputnik_proto)
 	# One of the oled screen pin is shared with the
 	# NFC antenna, make sure it's configured as GPIO
 	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+	CFLAGS += -DBOARD_SPUTNIK_PROTO
 else ifeq ($(BOARD), sputnik)
 	# One of the oled screen pin is shared with the
 	# NFC antenna, make sure it's configured as GPIO
 	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+	CFLAGS += -DBOARD_SPUTNIK
+else ifeq ($(BOARD), brain)
+	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+	CFLAGS += -DBOARD_BRAIN_PROTO
 else ifeq ($(BOARD), devboard)
 	#special flags for the devboard
 	ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET

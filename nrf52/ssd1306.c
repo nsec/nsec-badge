@@ -53,10 +53,10 @@ static void spi_init() {
     nrf_drv_spi_config_t spi_config;
 
     spi_config.frequency = NRF_DRV_SPI_FREQ_1M;
-    spi_config.sck_pin = OLED_CLK;
+    spi_config.sck_pin = PIN_OLED_CLK;
     spi_config.miso_pin = NRF_DRV_SPI_PIN_NOT_USED;
-    spi_config.mosi_pin = OLED_DATA;
-    spi_config.ss_pin = OLED_CS;
+    spi_config.mosi_pin = PIN_OLED_DATA;
+    spi_config.ss_pin = PIN_OLED_CS;
     spi_config.bit_order = NRF_DRV_SPI_BIT_ORDER_MSB_FIRST;
     spi_config.mode = NRF_DRV_SPI_MODE_0;
     spi_config.irq_priority = APP_IRQ_PRIORITY_LOW;
@@ -114,15 +114,15 @@ void ssd1306_drawPixel(int16_t x, int16_t y, uint16_t color) {
 void ssd1306_init(void) {
     spi_init();
 
-    nrf_gpio_cfg_output(OLED_RESET);
-    nrf_gpio_cfg_output(OLED_DC_MODE);
+    nrf_gpio_cfg_output(PIN_OLED_RESET);
+    nrf_gpio_cfg_output(PIN_OLED_DC_MODE);
 
-    nrf_gpio_pin_write(OLED_DC_MODE, COMMAND);
-    nrf_gpio_pin_write(OLED_RESET, 1);
+    nrf_gpio_pin_write(PIN_OLED_DC_MODE, COMMAND);
+    nrf_gpio_pin_write(PIN_OLED_RESET, 1);
     nrf_delay_ms(1);
-    nrf_gpio_pin_write(OLED_RESET, 0);
+    nrf_gpio_pin_write(PIN_OLED_RESET, 0);
     nrf_delay_ms(10);
-    nrf_gpio_pin_write(OLED_RESET, 1);
+    nrf_gpio_pin_write(PIN_OLED_RESET, 1);
 
     #if defined SSD1306_128_32
         // Init sequence for 128x32 OLED module
@@ -247,7 +247,7 @@ void ssd1306_invertDisplay(uint8_t i) {
 }
 
 void ssd1306_command(uint8_t c) {
-    nrf_gpio_pin_write(OLED_DC_MODE, COMMAND);
+    nrf_gpio_pin_write(PIN_OLED_DC_MODE, COMMAND);
     spi_master_tx(&c, 1);
 }
 
@@ -357,7 +357,7 @@ void ssd1306_update(void) {
         ssd1306_command(1); // Page end address
     #endif
 
-    nrf_gpio_pin_write(OLED_DC_MODE, DATA);
+    nrf_gpio_pin_write(PIN_OLED_DC_MODE, DATA);
     spi_master_tx(buffer, SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8);
 }
 

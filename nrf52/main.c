@@ -44,6 +44,10 @@
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
 
+#if defined(BOARD_SPUTNIK) || defined(BOARD_SPUTNIK_PROTO)
+#define NSEC18
+#endif
+
 static char g_device_id[10];
 bool is_at_main_menu = false;
 
@@ -166,7 +170,7 @@ void show_main_menu(void) {
 }
 
 
-#ifdef NSEC_CTF_ADD_FLAGS
+#if defined(NSEC_FLAVOR_CTF) && defined(NSEC18)
 static
 void rot13(void) {
     #define ROT 13
@@ -202,7 +206,7 @@ int main(void) {
 #endif
     g_device_id[9] = '\0';
 
-#ifdef NSEC_CTF_ADD_FLAGS
+#if defined(NSEC_FLAVOR_CTF) && defined(NSEC18)
 static volatile char flag1[] = "FLAG-60309301fa5b4a4e990392ead6ac7b5f";
 printf("%s", flag1); // Don't optimize out flag1
 rot13();
