@@ -44,10 +44,6 @@
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
 
-#if defined(BOARD_SPUTNIK) || defined(BOARD_SPUTNIK_PROTO)
-#define NSEC18
-#endif
-
 static char g_device_id[10];
 bool is_at_main_menu = false;
 
@@ -170,7 +166,7 @@ void show_main_menu(void) {
 }
 
 
-#if defined(NSEC_FLAVOR_CTF) && defined(NSEC18)
+#if defined(NSEC_FLAVOR_CTF) && defined(BOARD_NSEC18)
 static
 void rot13(void) {
     #define ROT 13
@@ -232,6 +228,7 @@ rot13();
     nsec_led_ble_init();
     init_identity_service();
     start_advertising();
+
     nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);

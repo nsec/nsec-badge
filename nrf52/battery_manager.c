@@ -54,10 +54,13 @@ void battery_manager_handler(void) {
     static uint16_t prev_voltage = 0;
     uint16_t voltage = battery_get_voltage();
 
+// TODO can we detect that we are charging by comparing ADC values ?
+#ifdef BOARD_NSEC18
     if (battery_is_usb_plugged()) {
         nsec_status_set_battery_status(STATUS_BATTERY_CHARGING);
         goto end_refresh;
     }
+#endif
 
     if (voltage > prev_voltage) {
         if (voltage > BATTERY_100PER_UP_THRES_MV) {

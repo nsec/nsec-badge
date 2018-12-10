@@ -79,6 +79,7 @@ bool battery_is_present() {
     return (m_batt_lvl_in_millivolts > NO_BATTERY_THRESHOLD_MV);
 }
 
+#ifdef BOARD_NSEC18
 bool battery_is_charging() {
     /*
      * RT9525GQW pin CHG, active low.
@@ -92,6 +93,7 @@ bool battery_is_usb_plugged() {
      */
     return (nrf_gpio_pin_read(PIN_BATT_PGOOD) == 0);
 }
+#endif
 
 static
 void calibrate_saadc() {

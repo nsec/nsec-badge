@@ -36,12 +36,12 @@ ifeq ($(BOARD), sputnik_proto)
 	# One of the oled screen pin is shared with the
 	# NFC antenna, make sure it's configured as GPIO
 	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-	CFLAGS += -DBOARD_SPUTNIK_PROTO
+	CFLAGS += -DBOARD_SPUTNIK_PROTO -DBOARD_NSEC18
 else ifeq ($(BOARD), sputnik)
 	# One of the oled screen pin is shared with the
 	# NFC antenna, make sure it's configured as GPIO
 	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-	CFLAGS += -DBOARD_SPUTNIK
+	CFLAGS += -DBOARD_SPUTNIK -DBOARD_NSEC18
 else ifeq ($(BOARD), brain)
 	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
 	CFLAGS += -DBOARD_BRAIN_PROTO
