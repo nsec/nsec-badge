@@ -27,6 +27,9 @@ as well as Adafruit raw 1.8" TFT display
 #include <stdlib.h>
 #include "ST7735.h"
 
+// This increase the bss section by 25k !!!!
+#define USE_DOUBLE_BUFFERING
+
 //*****************************************************************************
 //
 // Local Defines
@@ -112,6 +115,11 @@ static void st7735_data(uint8_t d) {
 // Screen Initialisation
 //
 //*****************************************************************************
+
+#ifdef USE_DOUBLE_BUFFERING
+static uint8_t buffer[SCREEN_HEIGHT * SCREEN_WIDTH * 2] = {0};
+#endif
+
 static const uint8_t
   initCommands[] = {                 // Init for 7735R, (green tab)
     8,                       // 8 commands in list:
@@ -223,6 +231,27 @@ uint16_t swap_colour(uint16_t x)
   return (x << 11) | (x & 0x07E0) | (x >> 11);
 }
 
+void st7735_update(void)
+{
+#ifdef USE_DOUBLE_BUFFERING
+    st7735_command(ST7735_CASET); 
+    st7735_data(0x00);
+    st7735_data(colstart);   
+    st7735_data(0x00);
+    st7735_data(SCREEN_WIDTH + colstart - 1);  
+
+    st7735_command(ST7735_RASET); 
+    st7735_data(0x00);
+    st7735_data(rowstart);  
+    st7735_data(0x00);
+    st7735_data(SCREEN_HEIGHT + rowstart - 1); 
+    st7735_command(ST7735_RAMWR);
+
+    SET_HIGH(st7735_config.dc_pin);
+    spi_master_tx(buffer, SCREEN_HEIGHT * SCREEN_WIDTH * 2);
+#endif
+}
+
 void st7735_set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) 
 {
   st7735_command(ST7735_CASET); 
@@ -251,8 +280,14 @@ void st7735_draw_pixel(int16_t x, int16_t y, uint16_t colour)
 {
   if((x < 0) ||(x >= width) || (y < 0) || (y >= height)) return;
 
-  st7735_set_addr_window(x,y,x+1,y+1);
+#ifdef USE_DOUBLE_BUFFERING
+  uint32_t index = (x + y*SCREEN_WIDTH) * 2;
+  buffer[index] = colour >> 8;
+  buffer[index + 1] = colour;
+#else
+  st7735_set_addr_window(x, y, x+1, y+1);
   st7735_push_colour(colour);
+#endif
 }
 
 
@@ -264,8 +299,16 @@ void st7735_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t colour)
   if((y+h-1) >= height) {
     h = height-y;
   }
+
   uint8_t hi = colour >> 8, lo = colour;
 
+#ifdef USE_DOUBLE_BUFFERING
+  while (h--) {
+    uint32_t index = (x + (y+h)*SCREEN_WIDTH) * 2;
+    buffer[index] = hi;
+    buffer[index + 1] = lo;
+  }
+#else
   st7735_set_addr_window(x, y, x, y+h-1);
   SET_HIGH(st7735_config.dc_pin);
   
@@ -273,6 +316,8 @@ void st7735_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t colour)
     spi_write(hi);
     spi_write(lo);
   }
+#endif
+
 }
 
 
@@ -285,13 +330,21 @@ void st7735_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t colour)
   }
   uint8_t hi = colour >> 8, lo = colour;
 
+#ifdef USE_DOUBLE_BUFFERING
+  while (w--) {
+    uint32_t index = ((x+w) + y*SCREEN_WIDTH) * 2;
+    buffer[index] = hi;
+    buffer[index + 1] = lo;
+  }
+#else
   st7735_set_addr_window(x, y, x+w-1, y);
   SET_HIGH(st7735_config.dc_pin);
-  
+
   while (w--) {
     spi_write(hi);
     spi_write(lo);
   }
+#endif
 }
 
 void st7735_fill_screen(uint16_t colour) 
@@ -309,8 +362,15 @@ void st7735_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h,
   if((y + h - 1) >= height) {
     h = height - y;
   }
+
+#ifdef USE_DOUBLE_BUFFERING
+   for(y=h; y>0; y--) {
+    for(x=w; x>0; x--) {
+      st7735_draw_pixel(x, y, colour);
+    }
+  }
+#else
   uint8_t hi = colour >> 8, lo = colour;
-  
   st7735_set_addr_window(x, y, x+w-1, y+h-1);
   SET_HIGH(st7735_config.dc_pin);
 
@@ -320,6 +380,7 @@ void st7735_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h,
       spi_write(lo);
     }
   }
+#endif
 }
 
 // Pass 8-bit (each) R,G,B, get back 16-bit packed colour
