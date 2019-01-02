@@ -219,5 +219,8 @@ static void home_menu_handle_buttons(button_t button) {
             open_settings_menu();
         }
         break;
+
+    default:
+        break;
     }
 }
