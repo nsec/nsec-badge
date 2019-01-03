@@ -625,10 +625,10 @@ void nsec_schedule_show_talks(uint8_t item) {
 }
 
 void nsec_schedule_show_header(void) {
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(nsec_schedule[schedule_index].menu_items[talk_selected].label);
     gfx_puts("\n");
-    gfx_setTextBackgroundColor(SSD1306_BLACK, SSD1306_WHITE);
+    gfx_set_text_background_color(SSD1306_BLACK, SSD1306_WHITE);
     gfx_puts("By: ");
     gfx_puts((char *) nsec_schedule[schedule_index].presenters[talk_selected]);
     gfx_puts("\n");
@@ -643,8 +643,8 @@ uint16_t nsec_schedule_get_header_length(void) {
 }
 
 void _nsec_schedule_show_details(void) {
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 16);
+    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_set_cursor(0, 16);
 
     nsec_schedule_show_header();
     uint16_t header_length = nsec_schedule_get_header_length();
@@ -658,7 +658,7 @@ void _nsec_schedule_show_details(void) {
     description_index = MAX_CHAR_UNDER_STATUS_BAR - header_length;
     strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected], description_index);
 
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(buffer);
     gfx_update();
 
@@ -683,14 +683,14 @@ void nsec_schedule_scroll_up_details(bool change_direction) {
         return;
     }
 
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
+    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_set_cursor(0, 12);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected] + description_index,
             MAX_CHAR_UNDER_STATUS_BAR);
 
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -700,8 +700,8 @@ void nsec_schedule_scroll_down_details(bool change_direction) {
         return;
     }
 
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 16);
+    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_set_cursor(0, 16);
 
     if (change_direction) {
         description_index += MAX_CHAR_UNDER_STATUS_BAR;
@@ -712,7 +712,7 @@ void nsec_schedule_scroll_down_details(bool change_direction) {
             MAX_CHAR_UNDER_STATUS_BAR);
     description_index += MAX_CHAR_UNDER_STATUS_BAR;
 
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -727,14 +727,14 @@ void nsec_schedule_scroll_up_presenters_details(bool change_direction) {
         }
     }
 
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 16);
+    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_set_cursor(0, 16);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, presenters_detail[presenter_selected] + description_index,
             MAX_CHAR_UNDER_STATUS_BAR);
 
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -744,8 +744,8 @@ void nsec_schedule_scroll_down_presenters_details(bool change_direction) {
         return;
     }
 
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 16);
+    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_set_cursor(0, 16);
 
     if (change_direction) {
         description_index += MAX_CHAR_UNDER_STATUS_BAR;
@@ -756,7 +756,7 @@ void nsec_schedule_scroll_down_presenters_details(bool change_direction) {
             MAX_CHAR_UNDER_STATUS_BAR);
     description_index += MAX_CHAR_UNDER_STATUS_BAR;
 
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -782,9 +782,9 @@ void nsec_schedule_show_presenters_details(uint8_t item) {
     schedule_state = SCHEDULE_STATE_PRESENTERS_DETAILS;
     presenter_selected = item;
     menu_close();
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 16);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_set_cursor(0, 16);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts((char *) presenters_detail[presenter_selected]);
     description_index = MAX_CHAR_UNDER_STATUS_BAR;
     gfx_update();

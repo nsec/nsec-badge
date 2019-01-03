@@ -127,7 +127,7 @@ static void _nsec_ble_hid_adv_uuid_provider(size_t * count, ble_uuid_t * uuids) 
 
 static void _nsec_ble_hid_event_handler(ble_hids_t * p_hids, ble_hids_evt_t * p_evt) {
     char buf[32];
-    gfx_setCursor(0, 0);
+    gfx_set_cursor(0, 0);
     snprintf(buf, sizeof(buf), "Report: %d", p_evt->evt_type);
     gfx_puts(buf);
     gfx_update();

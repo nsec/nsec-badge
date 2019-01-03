@@ -38,9 +38,9 @@ static
 void battery_status_timeout_handler(void *p_context) {
     char msg[256];
 
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_set_cursor(0, 12);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
 
 #ifdef BOARD_NSEC18
     snprintf(msg, sizeof(msg),

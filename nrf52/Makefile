@@ -45,6 +45,7 @@ else ifeq ($(BOARD), sputnik)
 else ifeq ($(BOARD), brain)
 	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
 	CFLAGS += -DBOARD_BRAIN_PROTO
+	CFLAGS += -DBOARD_BRAIN
 else ifeq ($(BOARD), devboard)
 	#special flags for the devboard
 	ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET

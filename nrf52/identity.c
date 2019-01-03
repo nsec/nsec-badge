@@ -10,9 +10,10 @@
 #include <nrf52.h>
 #include <app_timer.h>
 #include "ble/nsec_ble.h"
-#include "ssd1306.h"
 #include "nsec_nearby_badges.h"
 #include "app_glue.h"
+#include "display.h"
+#include "gfx_effect.h"
 #include "3d.h"
 
 #include "ble/ble_device.h"
@@ -32,7 +33,7 @@
 #define UNLOCK_PASSWORD_SIZE 5
 
 static uint16_t on_name_write(CharacteristicWriteEvent* event);
-static uint16_t on_avatar_write(CharacteristicWriteEvent* event);
+//static uint16_t on_avatar_write(CharacteristicWriteEvent* event);
 static uint16_t on_unlock_password_write(CharacteristicWriteEvent* event);
 
 static void configure_service();
@@ -50,7 +51,7 @@ static VendorService identity_ble_service;
 static ServiceCharacteristic name_characteristic;
 static ServiceCharacteristic unlock_password_characteristic;
 static ServiceCharacteristic unlocked_characteristic;
-static ServiceCharacteristic avatar_characteristic;
+//static ServiceCharacteristic avatar_characteristic;
 
 
 #ifndef MIN
@@ -67,7 +68,7 @@ APP_TIMER_DEF(nsec_render_timer);
 static void nsec_render_3d_mesh(void * context) {
     if(is_at_main_menu) {
         static float current_angle = 0.0f;
-        gfx_fillRect(0, 10, 40, 42, SSD1306_BLACK);
+        gfx_fill_rect(0, 10, 40, 42, DISPLAY_BLACK);
         nsec_draw_rotated_mesh(NSEC_ROTATING_MESH, (int[2]) {20, 32}, 11,
                                (float[3]) {current_angle,
                                            current_angle + 1.0f,
@@ -93,32 +94,32 @@ void init_identity_service() {
     set_default_advertised_service(&identity_ble_service);
 }
 
-static void nsec_draw_empty_progress_bar(uint16_t x, uint16_t y, uint16_t w) {
-    gfx_drawRect(x, y, w, 3, SSD1306_BLACK);
-    gfx_drawFastHLine(x + 1, y    , w - 2, SSD1306_WHITE);
-    gfx_drawFastHLine(x + 1, y + 2, w - 2, SSD1306_WHITE);
-    gfx_drawFastVLine(x,         y + 1, 1, SSD1306_WHITE);
-    gfx_drawFastVLine(x + w - 1, y + 1, 1, SSD1306_WHITE);
-}
+/*static void nsec_draw_empty_progress_bar(uint16_t x, uint16_t y, uint16_t w) {
+    gfx_drawRect(x, y, w, 3, DISPLAY_BLACK);
+    gfx_drawFastHLine(x + 1, y    , w - 2, DISPLAY_WHITE);
+    gfx_drawFastHLine(x + 1, y + 2, w - 2, DISPLAY_WHITE);
+    gfx_drawFastVLine(x,         y + 1, 1, DISPLAY_WHITE);
+    gfx_drawFastVLine(x + w - 1, y + 1, 1, DISPLAY_WHITE);
+}*/
 
 void nsec_identity_draw(void) {
-    gfx_fillRect(48, 12, 128-48, 20, SSD1306_BLACK);
-    //gfx_drawBitmapBg(8, 16, identity.avatar, NSEC_IDENTITY_AVATAR_WIDTH, NSEC_IDENTITY_AVATAR_HEIGHT, SSD1306_WHITE, SSD1306_BLACK);
-    gfx_setCursor(48, 30);
+    gfx_fill_rect(48, 12, 128-48, 20, DISPLAY_BLACK);
+    //gfx_draw_bitmapBg(8, 16, identity.avatar, NSEC_IDENTITY_AVATAR_WIDTH, NSEC_IDENTITY_AVATAR_HEIGHT, DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_set_cursor(48, 30);
     char name_with_spaces[NAME_MAX_LEN + 1];
     snprintf(name_with_spaces, NAME_MAX_LEN + 1, "%-14s", identity.name);
     gfx_puts(name_with_spaces);
     gfx_update();
-    //gfx_drawBitmap(59, 32, star_bitmap, star_bitmap_width, star_bitmap_height, SSD1306_WHITE);
+    //gfx_draw_bitmap(59, 32, star_bitmap, star_bitmap_width, star_bitmap_height, DISPLAY_WHITE);
     //nsec_draw_empty_progress_bar(70, 38, 30);
-    //gfx_drawBitmapBg(111, 47, nsec_logo_tiny_bitmap, nsec_logo_tiny_bitmap_width, nsec_logo_tiny_bitmap_height, SSD1306_WHITE, SSD1306_BLACK);
+    //gfx_draw_bitmapBg(111, 47, nsec_logo_tiny_bitmap, nsec_logo_tiny_bitmap_width, nsec_logo_tiny_bitmap_height, DISPLAY_WHITE, DISPLAY_BLACK);
     //nsec_identity_update_nearby();
 }
 
 void nsec_identity_update_nearby(void) {
     int16_t bar_width = (28 * nsec_nearby_badges_current_count()) / (NSEC_MAX_NEARBY_BADGES_COUNT);
-    gfx_drawFastHLine(71, 39, 28, SSD1306_BLACK);
-    gfx_drawFastHLine(71, 39, bar_width, SSD1306_WHITE);
+    gfx_draw_fast_hline(71, 39, 28, DISPLAY_BLACK);
+    gfx_draw_fast_hline(71, 39, bar_width, DISPLAY_WHITE);
 }
 
 void nsec_identity_get_unlock_key(char * data, size_t length) {
@@ -137,7 +138,7 @@ static uint16_t on_name_write(CharacteristicWriteEvent* event){
 	}
 }
 
-static uint16_t on_avatar_write(CharacteristicWriteEvent* event){
+/*static uint16_t on_avatar_write(CharacteristicWriteEvent* event){
 	if(identity.unlocked && event->data_length == AVATAR_SIZE) {
 		memcpy(identity.avatar, event->data_buffer, AVATAR_SIZE);
 		if(is_at_main_menu) {
@@ -147,7 +148,7 @@ static uint16_t on_avatar_write(CharacteristicWriteEvent* event){
 		return BLE_GATT_STATUS_SUCCESS;
 	}
 	return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
-}
+}*/
 
 static uint16_t on_unlock_password_write(CharacteristicWriteEvent* event){
 	char unlock_password[UNLOCK_PASSWORD_SIZE];

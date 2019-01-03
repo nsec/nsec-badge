@@ -14,7 +14,8 @@
 #include "menu.h"
 #include "nsec_led_pattern.h"
 #include "nsec_storage.h"
-#include "ssd1306.h"
+#include "display.h"
+#include "gfx_effect.h"
 #include "ws2812fx.h"
 #include "nsec_led_ble.h"
 
@@ -207,7 +208,7 @@ static menu_item_s led_pattern_items[] = {
 };
 
 void nsec_led_pattern_show(void) {
-    gfx_fillRect(0, 8, 128, 65 - 8, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65 - 8, DISPLAY_BLACK);
     menu_init(0, 12, 128, 64 - 12, ARRAY_SIZE(led_pattern_items), led_pattern_items);
     nsec_controls_add_handler(led_pattern_handle_buttons);
     _state = SETTING_STATE_MENU;
@@ -264,8 +265,8 @@ static void save_letter3(uint8_t item) {
 static uint8_t index_to_unlock;
 static void try_unlock(uint8_t item) {
     strcat(pass, letters[item]);
-    gfx_fillRect(0, 12, 128, 64-12, SSD1306_BLACK);
-    gfx_setCursor(12, 26);
+    gfx_fill_rect(0, 12, 128, 64-12, DISPLAY_BLACK);
+    gfx_set_cursor(12, 26);
     if (nsec_unlock_led_pattern(pass, index_to_unlock)) {
         save_pattern(index_to_unlock);
         gfx_puts("Unlocked !");
@@ -279,9 +280,9 @@ static void try_unlock(uint8_t item) {
 }
 
 static void unlock_led_pattern(uint8_t item) {
-    gfx_fillRect(0, 12, 128, 64-12, SSD1306_BLACK);
-    gfx_setCursor(12, 26);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(0, 12, 128, 64-12, DISPLAY_BLACK);
+    gfx_set_cursor(12, 26);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     char brackets[20] = {0};
     snprintf(brackets, 20, "[ ] [ ] [ ] [ ]");
     gfx_puts(brackets);
@@ -295,9 +296,9 @@ void show_actual_pattern(void) {
     uint8_t mode = getMode_WS2812FX();
     char actual[50] = {0};
 
-    gfx_fillRect(0, 12, 128, 20, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(0, 12, 128, 20, DISPLAY_BLACK);
+    gfx_set_cursor(0, 12);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
 
     snprintf(actual, 50, "Now: %s", getModeName_WS2812FX(mode));
     gfx_puts(actual);
@@ -307,7 +308,7 @@ void show_actual_pattern(void) {
 static bool basic_selected = false;
 static void show_basic_pattern_menu(uint8_t item) {
     basic_selected = true;
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65, DISPLAY_BLACK);
     for (int i=0; i < MODE_BASIC_COUNT; i++) {
         basic_pattern_items[i].label = basic_patterns[i];
         basic_pattern_items[i].handler = save_pattern;
@@ -319,7 +320,7 @@ static void show_basic_pattern_menu(uint8_t item) {
 
 static void show_extra_pattern_menu(uint8_t item) {
     basic_selected = false;
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65, DISPLAY_BLACK);
 
     for (int i=0; i<MODE_EXTRA_COUNT; i++) {
         if (pattern_is_unlock(i)) {

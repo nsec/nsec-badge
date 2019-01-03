@@ -6,6 +6,8 @@
 //
 //
 
+#include <stdbool.h>
+
 #ifndef app_glue_h
 #define app_glue_h
 

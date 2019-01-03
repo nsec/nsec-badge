@@ -5,7 +5,6 @@
 //  License: MIT (see LICENSE for details)
 
 #include "controls.h"
-#include "ssd1306.h"
 #include <app_error.h>
 
 static button_handler handlers[NSEC_CONTROLS_LIMIT_MAX_HANDLERS];

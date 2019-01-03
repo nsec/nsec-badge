@@ -25,7 +25,9 @@ as well as Adafruit raw 1.8" TFT display
 #include <nrf_delay.h>
 #include <app_util_platform.h>
 #include <stdlib.h>
+#include <string.h>
 #include "ST7735.h"
+#include "boards.h"
 
 // This increase the bss section by 25k !!!!
 #define USE_DOUBLE_BUFFERING
@@ -35,9 +37,6 @@ as well as Adafruit raw 1.8" TFT display
 // Local Defines
 //
 //*****************************************************************************
-
-#define SCREEN_WIDTH 80
-#define SCREEN_HEIGHT 160
 
 #define DELAY 0x80
 
@@ -68,6 +67,7 @@ static bool is_init = false;
 // SPI stuff
 //
 //*****************************************************************************
+static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(0); // change for two with real board
 static st7735_config_t st7735_config;
 
 static void spi_init(void) {
@@ -117,7 +117,7 @@ static void st7735_data(uint8_t d) {
 //*****************************************************************************
 
 #ifdef USE_DOUBLE_BUFFERING
-static uint8_t buffer[SCREEN_HEIGHT * SCREEN_WIDTH * 2] = {0};
+static uint8_t buffer[ST7735_HEIGHT * ST7735_WIDTH * 2] = {0};
 #endif
 
 static const uint8_t
@@ -180,13 +180,19 @@ void command_list(const uint8_t *addr)
     }
 }
 
-void st7735_init(st7735_config_t init_st7735_config) 
+void st7735_init(void) 
 {
     if (is_init) {
         return;
     }
 
-    st7735_config = init_st7735_config;
+    st7735_config.spi = spi;
+    st7735_config.sck_pin = PIN_OLED_CLK;
+    st7735_config.miso_pin = NRF_DRV_SPI_PIN_NOT_USED;
+    st7735_config.mosi_pin = PIN_OLED_DATA;
+    st7735_config.cs_pin = PIN_OLED_CS;
+    st7735_config.dc_pin = PIN_OLED_DC_MODE;
+    st7735_config.rst_pin = PIN_OLED_RESET;
 
     spi_init();
 
@@ -205,8 +211,8 @@ void st7735_init(st7735_config_t init_st7735_config)
     /* Initialise default values */
     colstart = 0;
     rowstart = 0;
-    width = SCREEN_WIDTH;
-    height = SCREEN_HEIGHT;
+    width = ST7735_WIDTH;
+    height = ST7735_HEIGHT;
     wrap = 1;
     cursor_y = 0;
     cursor_x = 0;
@@ -238,17 +244,17 @@ void st7735_update(void)
     st7735_data(0x00);
     st7735_data(colstart);   
     st7735_data(0x00);
-    st7735_data(SCREEN_WIDTH + colstart - 1);  
+    st7735_data(ST7735_WIDTH + colstart - 1);  
 
     st7735_command(ST7735_RASET); 
     st7735_data(0x00);
     st7735_data(rowstart);  
     st7735_data(0x00);
-    st7735_data(SCREEN_HEIGHT + rowstart - 1); 
+    st7735_data(ST7735_HEIGHT + rowstart - 1); 
     st7735_command(ST7735_RAMWR);
 
     SET_HIGH(st7735_config.dc_pin);
-    spi_master_tx(buffer, SCREEN_HEIGHT * SCREEN_WIDTH * 2);
+    spi_master_tx(buffer, ST7735_HEIGHT * ST7735_WIDTH * 2);
 #endif
 }
 
@@ -281,7 +287,7 @@ void st7735_draw_pixel(int16_t x, int16_t y, uint16_t colour)
   if((x < 0) ||(x >= width) || (y < 0) || (y >= height)) return;
 
 #ifdef USE_DOUBLE_BUFFERING
-  uint32_t index = (x + y*SCREEN_WIDTH) * 2;
+  uint32_t index = (x + y*ST7735_WIDTH) * 2;
   buffer[index] = colour >> 8;
   buffer[index + 1] = colour;
 #else
@@ -304,13 +310,14 @@ void st7735_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t colour)
 
 #ifdef USE_DOUBLE_BUFFERING
   while (h--) {
-    uint32_t index = (x + (y+h)*SCREEN_WIDTH) * 2;
+    uint32_t index = (x + (y+h)*ST7735_WIDTH) * 2;
     buffer[index] = hi;
     buffer[index + 1] = lo;
   }
 #else
   st7735_set_addr_window(x, y, x, y+h-1);
   SET_HIGH(st7735_config.dc_pin);
+  
   
   while (h--) {
     spi_write(hi);
@@ -332,7 +339,7 @@ void st7735_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t colour)
 
 #ifdef USE_DOUBLE_BUFFERING
   while (w--) {
-    uint32_t index = ((x+w) + y*SCREEN_WIDTH) * 2;
+    uint32_t index = ((x+w) + y*ST7735_WIDTH) * 2;
     buffer[index] = hi;
     buffer[index + 1] = lo;
   }
@@ -344,6 +351,24 @@ void st7735_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t colour)
     spi_write(hi);
     spi_write(lo);
   }
+#endif
+}
+
+void st7735_fill_screen_black(void)
+{
+#ifdef USE_DOUBLE_BUFFERING
+    memset(buffer, 0x00, sizeof(buffer));
+#else
+    st7735_fill_screen(ST7735_BLACK);
+#endif
+}
+
+void st7735_fill_screen_white(void)
+{
+#ifdef USE_DOUBLE_BUFFERING
+    memset(buffer, 0xFF, sizeof(buffer));
+#else
+    st7735_fill_screen(ST7735_WHITE);
 #endif
 }
 
@@ -396,28 +421,28 @@ void st7735_set_rotation(uint8_t m)
   switch (rotation) {
    case 0:
      st7735_data(MADCTL_MX | MADCTL_MY | MADCTL_BGR);
-     width  = SCREEN_WIDTH;
-     height = SCREEN_HEIGHT;
+     width  = ST7735_WIDTH;
+     height = ST7735_HEIGHT;
      break;
    case 1:
      st7735_data(MADCTL_MY | MADCTL_MV | MADCTL_BGR);
-     width  = SCREEN_HEIGHT;
-     height = SCREEN_WIDTH;
+     width  = ST7735_HEIGHT;
+     height = ST7735_WIDTH;
      break;
   case 2:
      st7735_data(MADCTL_BGR);
-     width  = SCREEN_WIDTH;
-     height = SCREEN_HEIGHT;
+     width  = ST7735_WIDTH;
+     height = ST7735_HEIGHT;
     break;
    case 3:
      st7735_data(MADCTL_MX | MADCTL_MV | MADCTL_BGR);
-     width  = SCREEN_HEIGHT;
-     height = SCREEN_WIDTH;
+     width  = ST7735_HEIGHT;
+     height = ST7735_WIDTH;
      break;
   }
 }
 
-void st7735_invert_display(int8_t i) 
+void st7735_invert_display(uint8_t i) 
 {
   st7735_command(i ? ST7735_INVON : ST7735_INVOFF);
 }
@@ -536,46 +561,6 @@ void fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,
   }
 }
 
-/* Bresenham's algorithm */
-void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t colour) {
-  int16_t steep = abs(y1 - y0) > abs(x1 - x0);
-  if (steep) {
-    swap(x0, y0);
-    swap(x1, y1);
-  }
-
-  if (x0 > x1) {
-    swap(x0, x1);
-    swap(y0, y1);
-  }
-
-  int16_t dx, dy;
-  dx = x1 - x0;
-  dy = abs(y1 - y0);
-
-  int16_t err = dx / 2;
-  int16_t ystep;
-
-  if (y0 < y1) {
-    ystep = 1;
-  } else {
-    ystep = -1;
-  }
-
-  for (; x0<=x1; x0++) {
-    if (steep) {
-      st7735_draw_pixel(y0, x0, colour);
-    } else {
-      st7735_draw_pixel(x0, y0, colour);
-    }
-    err -= dy;
-    if (err < 0) {
-      y0 += ystep;
-      err += dx;
-    }
-  }
-}
-
 void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t colour) 
 {
   st7735_draw_fast_hline(x, y, w, colour);
@@ -682,123 +667,3 @@ void fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
     st7735_draw_fast_hline(a, y, b-a+1, colour);
   }
 }
-
-/* Draw a 1-bit colour bitmap at the specified x, y position from the
- * provided bitmap buffer using colour as the foreground colour and 
- * bg as the background colour. */
-void drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h,
-            uint16_t colour, uint16_t bg) 
-{
-  int16_t i, j, byteWidth = (w + 7) / 8;
-  
-  for(j=0; j<h; j++) {
-    for(i=0; i<w; i++ ) {
-      if(*(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7))) {
-        st7735_draw_pixel(x+i, y+j, colour);
-      }
-      else {
-        st7735_draw_pixel(x+i, y+j, bg);
-      }
-    }
-  }
-}
-
-/* Draw XBitMap Files (*.xbm), exported from GIMP,
- * Usage: Export from GIMP to *.xbm, rename *.xbm to *.c and open in editor.
- * C Array can be directly used with this function */
-void drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap, 
-            int16_t w, int16_t h, uint16_t colour) 
-{
-  int16_t i, j, byteWidth = (w + 7) / 8;
-  
-  for(j=0; j<h; j++) {
-    for(i=0; i<w; i++ ) {
-      if(*(bitmap + j * byteWidth + i / 8) & (1 << (i % 8))) {
-        st7735_draw_pixel(x+i, y+j, colour);
-      }
-    }
-  }
-}
-
-void drawString(char *c, int16_t x, int16_t y, uint16_t colour, uint16_t bg, uint8_t size) {
-  cursor_x = x;
-  cursor_y = y;
-  textsize = size;
-  textcolour = colour;
-  textbgcolour = bg;
-
-  while(*c) {
-    if (*c == '\n') {
-      cursor_y += textsize*8;
-      cursor_x  = 0;
-    } else if (*c == '\r') {
-      // Skip
-    } else {
-      drawChar(cursor_x, cursor_y, *c, textcolour, textbgcolour, textsize);
-      cursor_x += textsize*6;
-      if (wrap && (cursor_x > (width - textsize*6))) {
-        cursor_y += textsize*8;
-        cursor_x = 0;
-      }
-    }
-    c++;
-  }
-}
-
-void drawChar(int16_t x, int16_t y, unsigned char c,
-          uint16_t colour, uint16_t bg, uint8_t size) {
-
-  if((x >= width)              || 
-     (y >= height)             || 
-     ((x + 6 * size - 1) < 0)  || 
-     ((y + 8 * size - 1) < 0)) 
-    return;
-
-  for (int8_t i=0; i<6; i++ ) {
-    uint8_t line;
-    if (i == 5) 
-      line = 0x0;
-    else 
-      line = *(font+(c*5)+i);
-    for (int8_t j = 0; j<8; j++) {
-      if (line & 0x1) {
-        if (size == 1) // default size
-          st7735_draw_pixel(x+i, y+j, colour);
-        else {  // big size
-          st7735_fill_rect(x+(i*size), y+(j*size), size, size, colour);
-        } 
-      } else if (bg != colour) {
-        if (size == 1) // default size
-          st7735_draw_pixel(x+i, y+j, bg);
-        else {  // big size
-          st7735_fill_rect(x+i*size, y+j*size, size, size, bg);
-        }
-      }
-      line >>= 1;
-    }
-  }
-}
-
-void setCursor(int16_t x, int16_t y) 
-{
-  cursor_x = x;
-  cursor_y = y;
-}
-
-void setTextSize(uint8_t s) 
-{
-  textsize = (s > 0) ? s : 1;
-}
-
-void setTextColour(uint16_t c, uint16_t b) 
-{
-  textcolour   = c;
-  textbgcolour = b; 
-}
-
-void setTextWrap(uint16_t w) 
-{
-  wrap = w;
-}
-
-

@@ -7,7 +7,8 @@
 #include <string.h>
 #include <math.h>
 #include "3d.h"
-#include "ssd1306.h"
+#include "display.h"
+#include "gfx_effect.h"
 
 #include "meshes/cube.c"
 #include "meshes/tetra.c"
@@ -82,8 +83,8 @@ void nsec_draw_rotated_mesh(nsec_mesh_t * mesh, int center[2], int size, float a
     for(int i = 0; i < mesh->edge_count; i++) {
       nsec_vertex_t * v1 = &rotated_vertices[mesh->edges[i].vertex_index[0]];
       nsec_vertex_t * v2 = &rotated_vertices[mesh->edges[i].vertex_index[1]];
-      gfx_drawLine(v1->position[0] * size + center[0], v1->position[1] * size + center[1],
+      gfx_draw_line(v1->position[0] * size + center[0], v1->position[1] * size + center[1],
                    v2->position[0] * size + center[0], v2->position[1] * size + center[1],
-                   SSD1306_WHITE);
+                   DISPLAY_WHITE);
     }
 }
