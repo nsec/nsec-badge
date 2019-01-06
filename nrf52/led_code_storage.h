@@ -24,26 +24,26 @@
 #define SPONSOR_15      15
 
 const char *sponsor_password[] = {
-	"84C6", // Color wipe Random
-	"74D2", // Random color
-	"5798", // Fire Flicker (Intense)
-	"0F18", // Multi Dynamic
-	"00FF", // Rainbow
-	"CF8E", // Rainbow Cycle
-	"0D17", // Theater Chase Rainbow
-	"BC2F", // Twinkle Random
-	"F6B1", // Twinkle Fade Random
-	"1B6F", // Running Random
-	"AF10", // Tricolor Chase
-	"4B57", // Chase Rainbow
-	"6851", // Chase Rainbow White
-	"DB22", // Color Sweep Random
-	"51F8",
-	"5ED4",
+    "84C6", // Color wipe Random
+    "74D2", // Random color
+    "5798", // Fire Flicker (Intense)
+    "0F18", // Multi Dynamic
+    "00FF", // Rainbow
+    "CF8E", // Rainbow Cycle
+    "0D17", // Theater Chase Rainbow
+    "BC2F", // Twinkle Random
+    "F6B1", // Twinkle Fade Random
+    "1B6F", // Running Random
+    "AF10", // Tricolor Chase
+    "4B57", // Chase Rainbow
+    "6851", // Chase Rainbow White
+    "DB22", // Color Sweep Random
+    "51F8",
+    "5ED4",
 };
 
-#define MASTER_PW	"92DC"
+#define MASTER_PW "92DC"
 
-#define SPONSOR_PW_SIZE	16
+#define SPONSOR_PW_SIZE 16
 
 #endif

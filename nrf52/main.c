@@ -179,13 +179,13 @@ void rot13(void) {
         if (*c >= 'A' && *c <= 'Z') {
             if ((*c + ROT) <= 'Z') {
                 *c = *c + ROT;
-	    } else {
+        } else {
                 *c = *c - ROT;
             }
         } else if (*c >= 'a' && *c <= 'z') {
             if ((*c + ROT) <= 'z') {
                 *c = *c + ROT;
-	    } else {
+        } else {
                 *c = *c - ROT;
             }
         }
