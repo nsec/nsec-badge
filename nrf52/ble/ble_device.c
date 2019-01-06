@@ -45,10 +45,10 @@ typedef struct{
 } BleDevice;
 
 typedef struct{
-	uint16_t characteristic_handle;
-	uint16_t write_offset;
-	uint16_t write_length;
-	uint8_t write_buffer[1];
+    uint16_t characteristic_handle;
+    uint16_t write_offset;
+    uint16_t write_length;
+    uint8_t write_buffer[1];
 } QueuedWrite;
 
 static BleDevice* ble_device = NULL;
@@ -149,10 +149,10 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
         {
             const ble_gatts_evt_write_t * event = &p_ble_evt->evt.gatts_evt.params.write;
             if(event->op == BLE_GATTS_OP_EXEC_WRITE_REQ_NOW){
-            	on_execute_queued_write_commands();
+                on_execute_queued_write_commands();
             }
             else{
-            	on_characteristic_write_command_event(event);
+                on_characteristic_write_command_event(event);
             }
             break;
         }
@@ -167,17 +167,17 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
                 const ble_gatts_evt_write_t * event = &p_ble_evt->evt.gatts_evt.params.authorize_request.request.write;
                 uint16_t connection_handle = p_ble_evt->evt.gatts_evt.conn_handle;
                 switch(event->op){
-                	case BLE_GATTS_OP_WRITE_REQ:
-                		on_characteristic_write_request_event(event, connection_handle);
-                		break;
-                	case BLE_GATTS_OP_PREP_WRITE_REQ:
-                		on_prepare_write_request(event, connection_handle);
-                		break;
-                	case BLE_GATTS_OP_EXEC_WRITE_REQ_NOW:
-                		on_execute_queued_write_requests(connection_handle);
-                		break;
-                	default:
-                		break;
+                    case BLE_GATTS_OP_WRITE_REQ:
+                        on_characteristic_write_request_event(event, connection_handle);
+                        break;
+                    case BLE_GATTS_OP_PREP_WRITE_REQ:
+                        on_prepare_write_request(event, connection_handle);
+                        break;
+                    case BLE_GATTS_OP_EXEC_WRITE_REQ_NOW:
+                        on_execute_queued_write_requests(connection_handle);
+                        break;
+                    default:
+                        break;
                 }
             }
             break;
@@ -243,15 +243,15 @@ static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * 
 }
 
 static void on_execute_queued_write_commands(){
-	APP_ERROR_CHECK(buffer == NULL);
-	CharacteristicWriteEvent event;
-	uint16_t characteristic_handle = parse_queued_write_events(&event);
-	if(characteristic_handle != BLE_GATT_HANDLE_INVALID){
-		ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
-		if(characteristic != NULL && characteristic->on_write_command != NULL){
-			characteristic->on_write_command(&event);
-		}
-	}
+    APP_ERROR_CHECK(buffer == NULL);
+    CharacteristicWriteEvent event;
+    uint16_t characteristic_handle = parse_queued_write_events(&event);
+    if(characteristic_handle != BLE_GATT_HANDLE_INVALID){
+        ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
+        if(characteristic != NULL && characteristic->on_write_command != NULL){
+            characteristic->on_write_command(&event);
+        }
+    }
 }
 
 static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle){
@@ -288,72 +288,72 @@ static void on_characteristic_read_request_event(const ble_gatts_evt_read_t * re
 }
 
 static void on_prepare_write_request(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle){
-	if(get_characteristic_handle_for_queued_writes() == write_event->handle){
-		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_SUCCESS, connection_handle, NULL, 0);
-	}
-	else{
-		/* Queuing multiple writes to different characteristics should be allowed, but it would be difficult to handle properly and simply. */
-		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED, connection_handle, write_event->data, write_event->len);
-	}
+    if(get_characteristic_handle_for_queued_writes() == write_event->handle){
+        reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_SUCCESS, connection_handle, NULL, 0);
+    }
+    else{
+        /* Queuing multiple writes to different characteristics should be allowed, but it would be difficult to handle properly and simply. */
+        reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED, connection_handle, write_event->data, write_event->len);
+    }
 }
 
 static void on_execute_queued_write_requests(uint16_t connection_handle){
-	APP_ERROR_CHECK(buffer == NULL);
-	uint16_t status_code = BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
-	CharacteristicWriteEvent event;
-	uint16_t characteristic_handle = parse_queued_write_events(&event);
-	if(characteristic_handle != BLE_GATT_HANDLE_INVALID){
-		ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
-		if(characteristic != NULL && characteristic->on_write_request != NULL){
-			status_code = characteristic->on_write_request(&event);
-		}
-	}
-	if(status_code == BLE_GATT_STATUS_SUCCESS){
-		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, status_code, connection_handle, NULL, 0);
-	}
-	else{
-		reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED,
-				connection_handle, NULL, 0);
-	}
+    APP_ERROR_CHECK(buffer == NULL);
+    uint16_t status_code = BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
+    CharacteristicWriteEvent event;
+    uint16_t characteristic_handle = parse_queued_write_events(&event);
+    if(characteristic_handle != BLE_GATT_HANDLE_INVALID){
+        ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
+        if(characteristic != NULL && characteristic->on_write_request != NULL){
+            status_code = characteristic->on_write_request(&event);
+        }
+    }
+    if(status_code == BLE_GATT_STATUS_SUCCESS){
+        reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, status_code, connection_handle, NULL, 0);
+    }
+    else{
+        reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_WRITE, BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED,
+                connection_handle, NULL, 0);
+    }
 }
 
 static uint16_t parse_queued_write_events(CharacteristicWriteEvent* event){
-	uint8_t* current_read_index_in_buffer = buffer;
-	QueuedWrite* write = (QueuedWrite*)current_read_index_in_buffer;
-	event->data_length = 0;
-	uint16_t characteristic_handle = write->characteristic_handle;
+    uint8_t* current_read_index_in_buffer = buffer;
+    QueuedWrite* write = (QueuedWrite*)current_read_index_in_buffer;
+    event->data_length = 0;
+    uint16_t characteristic_handle = write->characteristic_handle;
 
-	while(write->characteristic_handle != BLE_GATT_HANDLE_INVALID){
-		if(current_read_index_in_buffer - buffer > LONG_WRITE_MAX_LENGTH){
-			event->data_buffer = NULL;
-			event->data_length = 0;
-			event->write_offset = 0;
-			return BLE_GATT_HANDLE_INVALID;
-		}
-		if(characteristic_handle != write->characteristic_handle){
-			// Writing to different characteristic in a queued requests should be supported but it is not for the moment, so reject the write.
-			// It should not happen to often.
-			event->data_buffer = NULL;
-			event->data_length = 0;
-			return BLE_GATT_HANDLE_INVALID;
-		}
+    while(write->characteristic_handle != BLE_GATT_HANDLE_INVALID){
+        if(current_read_index_in_buffer - buffer > LONG_WRITE_MAX_LENGTH){
+            event->data_buffer = NULL;
+            event->data_length = 0;
+            event->write_offset = 0;
+            return BLE_GATT_HANDLE_INVALID;
+        }
+        if(characteristic_handle != write->characteristic_handle){
+            // Writing to different characteristic in a queued requests should be supported but it is not for the moment, so reject the write.
+            // It should not happen to often.
+            event->data_buffer = NULL;
+            event->data_length = 0;
+            return BLE_GATT_HANDLE_INVALID;
+        }
 
-		current_read_index_in_buffer += sizeof(write->characteristic_handle) + sizeof(write->write_length)
-				+ sizeof(write->write_offset);
-		characteristic_handle = write->characteristic_handle;
-		uint16_t copy_size = write->write_length;
-		uint8_t* copy_buffer = malloc(copy_size);
-		// beyond this point, write doesn't point to a valid structure anymore, as the memcpy to defrag the data overwrite it.
-		memcpy(copy_buffer, current_read_index_in_buffer, copy_size);
-		memcpy(buffer + event->data_length, copy_buffer, copy_size);
-		free(copy_buffer);
-		event->data_length += copy_size;
-		current_read_index_in_buffer += copy_size;
-		write = (QueuedWrite*)current_read_index_in_buffer;
-	}
-	event->data_buffer = buffer;
-	event->write_offset = 0;
-	return characteristic_handle;
+        current_read_index_in_buffer += sizeof(write->characteristic_handle) + sizeof(write->write_length)
+                + sizeof(write->write_offset);
+        characteristic_handle = write->characteristic_handle;
+        uint16_t copy_size = write->write_length;
+        uint8_t* copy_buffer = malloc(copy_size);
+        // beyond this point, write doesn't point to a valid structure anymore, as the memcpy to defrag the data overwrite it.
+        memcpy(copy_buffer, current_read_index_in_buffer, copy_size);
+        memcpy(buffer + event->data_length, copy_buffer, copy_size);
+        free(copy_buffer);
+        event->data_length += copy_size;
+        current_read_index_in_buffer += copy_size;
+        write = (QueuedWrite*)current_read_index_in_buffer;
+    }
+    event->data_buffer = buffer;
+    event->write_offset = 0;
+    return characteristic_handle;
 }
 
 static void reply_to_client_request(uint8_t operation, uint16_t status_code, uint16_t connection_handle,
@@ -381,21 +381,21 @@ static ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle){
     for(int i = 0; i < ble_device->vendor_service_count; i++){
         VendorService* service = ble_device->vendor_services[i];
         for(int j = 0; j < service->characteristic_count; j++){
-        	ServiceCharacteristic* characteristic = service->characteristics[j];
-        	if(characteristic->handle == handle){
-        		return characteristic;
-        	}
+            ServiceCharacteristic* characteristic = service->characteristics[j];
+            if(characteristic->handle == handle){
+                return characteristic;
+            }
         }
     }
     return NULL;
 }
 
 static uint16_t get_characteristic_handle_for_queued_writes(){
-	if(buffer == NULL){
-		return BLE_GATT_HANDLE_INVALID;
-	}
-	uint16_t handle = *((uint16_t*)buffer);
-	return handle;
+    if(buffer == NULL){
+        return BLE_GATT_HANDLE_INVALID;
+    }
+    uint16_t handle = *((uint16_t*)buffer);
+    return handle;
 }
 
 static void _nsec_ble_softdevice_init() {

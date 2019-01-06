@@ -30,8 +30,8 @@ void menu_take_over(void);
 void update_all_characteristics_value(void);
 
 typedef struct segment_ble {
-	bool	 active;
-	uint8_t  index;
+    bool     active;
+    uint8_t  index;
     uint16_t start;
     uint16_t stop;
     uint16_t speed;
