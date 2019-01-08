@@ -238,10 +238,10 @@ $(PROJECT_NAME): $(SDK_PATH)
 clean: clean-bitmaps
 
 %_bitmap.c: %.png
-	python2 gen_image.py -i $< -o $@
+	python3 gen_image.py $< $@
 
 images/font_bitmap.c: images/font.png
-	python2 gen_image.py -i $< -o $@ -r
+	python3 gen_image.py -r $< $@
 
 bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard images/*.png))
 

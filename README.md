@@ -69,7 +69,7 @@ https://launchpad.net/gcc-arm-embedded.
 You will also need some python libraries, on Ubuntu / Debian:
 
 ```
-sudo apt install python-pil python-pycparser
+sudo apt install python3-pil python3-pycparser
 ```
 
 ### Dependencies
