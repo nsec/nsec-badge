@@ -9,8 +9,14 @@ void log_error_code(const char* function_name, uint32_t error_code){
     }
 }
 
+#ifdef BOARD_PCA10040
 void log_init(){
     ret_code_t err_code = NRF_LOG_INIT(NULL);
     APP_ERROR_CHECK(err_code);
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 }
+#else
+void log_init() {
+
+}
+#endif

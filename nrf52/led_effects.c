@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include "boards.h"
 #include "led_effects.h"
 #include "nrf.h"
 #include "nrf_gpio.h"
@@ -26,7 +27,7 @@ struct Nsec_pixels {
 
 struct Nsec_pixels *nsec_pixels;
 
-uint32_t mapConnect[] = {LED_PIN, NRF_PWM_PIN_NOT_CONNECTED,
+uint32_t mapConnect[] = {PIN_NEOPIXEL, NRF_PWM_PIN_NOT_CONNECTED,
                     NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
 
 uint32_t mapDisconnect[] = {NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
@@ -49,8 +50,8 @@ void nsec_neoPixel_init() {
     memset(nsec_pixels->pixels, 0, nsec_pixels->numBytes);
 
     //Configure pin
-    nrf_gpio_cfg_output(LED_PIN);
-    nrf_gpio_pin_clear(LED_PIN);
+    nrf_gpio_cfg_output(PIN_NEOPIXEL);
+    nrf_gpio_pin_clear(PIN_NEOPIXEL);
 
     return;
 }
@@ -216,7 +217,7 @@ void show_with_DWT(void) {
 
                 cycle = DWT->CYCCNT;
 
-                nrf_gpio_pin_set(LED_PIN);
+                nrf_gpio_pin_set(PIN_NEOPIXEL);
 
                 if (pix & mask) {
                     while(DWT->CYCCNT - cycle < CYCLES_800_T1H);
@@ -224,7 +225,7 @@ void show_with_DWT(void) {
                     while(DWT->CYCCNT - cycle < CYCLES_800_T0H);
                 }
 
-                nrf_gpio_pin_clear(LED_PIN);
+                nrf_gpio_pin_clear(PIN_NEOPIXEL);
             }
         }
 

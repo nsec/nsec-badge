@@ -133,6 +133,23 @@ void open_battery_status(uint8_t item) {
     show_battery_status();
 }
 
+#ifdef NSEC_FLAVOR_CTF
+menu_item_s main_menu_items[] = {
+    {
+        .label = "LED pattern",
+        .handler = open_led_pattern,
+    }, {
+        .label = "Settings",
+        .handler = open_settings,
+    }, {
+        .label = "Battery status",
+        .handler = open_battery_status,
+    }, {
+        .label = "Battery Warning",
+        .handler = open_warning,
+    }
+};
+#else
 static
 menu_item_s main_menu_items[] = {
     {
@@ -152,6 +169,7 @@ menu_item_s main_menu_items[] = {
         .handler = open_warning,
     }
 };
+#endif
 
 void show_main_menu(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 16) {
@@ -166,7 +184,7 @@ void show_main_menu(void) {
 }
 
 
-#ifdef NSEC_CTF_ADD_FLAGS
+#if defined(NSEC_FLAVOR_CTF) && defined(BOARD_NSEC18)
 static
 void rot13(void) {
     #define ROT 13
@@ -202,7 +220,7 @@ int main(void) {
 #endif
     g_device_id[9] = '\0';
 
-#ifdef NSEC_CTF_ADD_FLAGS
+#if defined(NSEC_FLAVOR_CTF) && defined(NSEC18)
 static volatile char flag1[] = "FLAG-60309301fa5b4a4e990392ead6ac7b5f";
 printf("%s", flag1); // Don't optimize out flag1
 rot13();
@@ -228,6 +246,7 @@ rot13();
     nsec_led_ble_init();
     init_identity_service();
     start_advertising();
+
     nsec_battery_manager_init();
     nsec_status_bar_init();
     nsec_status_set_name(g_device_id);

@@ -42,6 +42,7 @@ void battery_status_timeout_handler(void *p_context) {
     gfx_setCursor(0, 12);
     gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
 
+#ifdef BOARD_NSEC18
     snprintf(msg, sizeof(msg),
         "Battery status:\n"
         " Voltage: %04d mV\n"
@@ -50,6 +51,12 @@ void battery_status_timeout_handler(void *p_context) {
         battery_get_voltage(),
         battery_is_charging() ? "Yes" : "No",
         battery_is_usb_plugged() ? "Yes" : "No");
+#else 
+    snprintf(msg, sizeof(msg),
+        "Battery status:\n"
+        " Voltage: %04d mV\n",
+        battery_get_voltage());
+#endif
 
     gfx_puts(msg);
     gfx_update();
