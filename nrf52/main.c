@@ -184,34 +184,6 @@ void show_main_menu(void) {
 }
 
 
-#if defined(NSEC_FLAVOR_CTF) && defined(BOARD_NSEC18)
-static
-void rot13(void) {
-    #define ROT 13
-    // Rotated: FLAG-UQKhqeDkniYtZTkVIQemdYfNTqEWPDNu
-    static char flag2[] = "FLAG-HDXudrQxavLgMGxIVDrzqLsAGdRJCQAh";
-
-    for (int i = 4; i < strlen(flag2); i++) {
-        char *c = &flag2[i];
-
-        if (*c >= 'A' && *c <= 'Z') {
-            if ((*c + ROT) <= 'Z') {
-                *c = *c + ROT;
-        } else {
-                *c = *c - ROT;
-            }
-        } else if (*c >= 'a' && *c <= 'z') {
-            if ((*c + ROT) <= 'z') {
-                *c = *c + ROT;
-        } else {
-                *c = *c - ROT;
-            }
-        }
-    }
-    printf("%s", flag2); // Don't optimize out flag2
-}
-#endif
-
 int main(void) {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
@@ -219,12 +191,6 @@ int main(void) {
     sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
 #endif
     g_device_id[9] = '\0';
-
-#if defined(NSEC_FLAVOR_CTF) && defined(NSEC18)
-static volatile char flag1[] = "FLAG-60309301fa5b4a4e990392ead6ac7b5f";
-printf("%s", flag1); // Don't optimize out flag1
-rot13();
-#endif
 
     /*
      * Initialize base hardware
