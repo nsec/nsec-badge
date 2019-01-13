@@ -12,3 +12,15 @@ stm32/src/*.map
 xcuserdata
 nrf52/flash_config.gdb
 stm32/flash_config.gdb
+# python
+__pycache__/
+*.py[cod]
+
+# OS X temp files
+*.DS_Store
+
+# Xcode project bundle file
+*.xcodeproj
+
+# Sublime Text project file
+*.sublime-*
