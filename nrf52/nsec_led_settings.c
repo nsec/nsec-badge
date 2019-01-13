@@ -31,6 +31,7 @@
 #include "nsec_led_settings.h"
 #include "nsec_settings.h"
 #include "menu.h"
+#include "gfx_effect.h"
 #include "ssd1306.h"
 #include "ws2812fx.h"
 #include "nsec_storage.h"
@@ -209,7 +210,7 @@ static menu_item_s control_items[] = {
 };
 
 void nsec_show_led_settings(void) {
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65, SSD1306_BLACK);
     menu_init(0, 12, 128, 64 - 12, ARRAY_SIZE(settings_items), settings_items);
     nsec_controls_add_handler(setting_handle_buttons);
     _state = SETTING_STATE_MENU;
@@ -230,15 +231,15 @@ void show_actual_brightness(void) {
         snprintf(actual, 50, "Now: %s", "Max");
     }
 
-    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_set_cursor(0, 12);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(actual);
 }
 
 static void show_brightness_menu(uint8_t item) {
     menu_close();
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65, SSD1306_BLACK);
     show_actual_brightness();
     menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(brightness_items), brightness_items);
     _state = SETTING_STATE_BRIGHTNESS;
@@ -285,15 +286,15 @@ void show_actual_speed(void) {
         snprintf(actual, 50, "Now: %s", "Super fast");
     }
 
-    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_set_cursor(0, 12);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(actual);
 }
 
 static void show_speed_menu(uint8_t item) {
     menu_close();
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65, SSD1306_BLACK);
     show_actual_speed();
     menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(speed_items), speed_items);
     _state = SETTING_STATE_SPEED;
@@ -356,9 +357,9 @@ void show_actual_color(void) {
         snprintf(actual, 50, "Now: %s", "Orange");
     }
 
-    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_set_cursor(0, 12);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(actual);
 }
 
@@ -371,7 +372,7 @@ static void show_color_menu(uint8_t item) {
         _state = SETTING_STATE_THIRD_COLOR;
     }
     menu_close();
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65, SSD1306_BLACK);
     show_actual_color();
     menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(color_items), color_items);
 }
@@ -439,15 +440,15 @@ void show_actual_reverse(void) {
         snprintf(actual, 50, "Now: %s", "False");
     }
 
-    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_set_cursor(0, 12);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(actual);
 }
 
 static void show_reverse_menu(uint8_t item) {
     menu_close();
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65, SSD1306_BLACK);
     show_actual_reverse();
     menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(reverse_items), reverse_items);
     _state = SETTING_STATE_REVERSE;
@@ -469,15 +470,15 @@ void show_actual_control(void) {
         snprintf(actual, 50, "Now: %s", "OFF");
     }
 
-    gfx_fillRect(12, 20, 128, 65, SSD1306_BLACK);
-    gfx_setCursor(0, 12);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(12, 20, 128, 65, SSD1306_BLACK);
+    gfx_set_cursor(0, 12);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     gfx_puts(actual);
 }
 
 static void show_control_menu(uint8_t item) {
     menu_close();
-    gfx_fillRect(0, 8, 128, 65, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65, SSD1306_BLACK);
     show_actual_control();
     menu_init(0, 24, 128, 64 - 24, ARRAY_SIZE(control_items), control_items);
     _state = SETTING_STATE_CONTROL;

@@ -39,7 +39,8 @@
 #include "nsec_led_settings.h"
 #include "power.h"
 #include "identity.h"
-#include "ssd1306.h"
+#include "display.h"
+#include "gfx_effect.h"
 
 #define PAGE_START_MAGIC    0xDEADC0DE
 

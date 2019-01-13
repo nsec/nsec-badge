@@ -65,7 +65,7 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
                  err_info->p_file_name, (unsigned int)err_info->line_num,
                  (unsigned int)err_info->err_code);
         puts(error_msg);
-        gfx_setCursor(0, 0);
+        gfx_set_cursor(0, 0);
         gfx_puts(error_msg);
         gfx_update();
         error_displayed = 1;
@@ -90,14 +90,14 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
 static
 void nsec_intro(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 8) {
-        gfx_fillScreen(SSD1306_BLACK);
-        gfx_drawBitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, SSD1306_WHITE);
+        gfx_fill_screen(SSD1306_BLACK);
+        gfx_draw_bitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, SSD1306_WHITE);
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
     for(uint8_t noise = 0; noise <= 128; noise += 8) {
-        gfx_fillScreen(SSD1306_BLACK);
-        gfx_drawBitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, SSD1306_WHITE);
+        gfx_fill_screen(SSD1306_BLACK);
+        gfx_draw_bitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, SSD1306_WHITE);
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
@@ -173,7 +173,7 @@ menu_item_s main_menu_items[] = {
 
 void show_main_menu(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 16) {
-        gfx_fillScreen(SSD1306_BLACK);
+        gfx_fill_screen(SSD1306_BLACK);
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
@@ -201,7 +201,7 @@ int main(void) {
     timer_init();
     init_WS2812FX();
     ssd1306_init();
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
     nsec_buttons_init();
 
     /*

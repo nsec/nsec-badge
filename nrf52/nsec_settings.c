@@ -10,7 +10,8 @@
 #include "nsec_settings.h"
 #include "nsec_led_settings.h"
 #include "menu.h"
-#include "ssd1306.h"
+#include "display.h"
+#include "gfx_effect.h"
 #include "ble/nsec_ble.h"
 #include "status_bar.h"
 #include "app_glue.h"
@@ -20,7 +21,7 @@
 #include "nsec_storage.h"
 #include "timer.h"
 
-static void toggle_bluetooth(uint8_t item);
+//static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
 static void show_led_settings(uint8_t item);
@@ -90,9 +91,9 @@ static menu_item_s members_items[] = {
 
 static void show_member_details(uint8_t item) {
     menu_close();
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 8);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 56, DISPLAY_BLACK);
+    gfx_set_cursor(0, 8);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     _state = SETTING_STATE_CREDIT_DETAILS;
 
     switch (item) {
@@ -139,21 +140,21 @@ static void show_led_settings(uint8_t item) {
     nsec_show_led_settings();
 }
 
-static void toggle_bluetooth(uint8_t item) {
+/*static void toggle_bluetooth(uint8_t item) {
     if(nsec_ble_toggle()) {
         nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
     }
     else {
         nsec_status_set_ble_status(STATUS_BLUETOOTH_OFF);
     }
-}
+}*/
 
 static void show_credit(uint8_t item) {
     _state = SETTING_STATE_CREDIT;
     menu_close();
-    gfx_fillRect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_setCursor(0, 8);
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 56, DISPLAY_BLACK);
+    gfx_set_cursor(0, 8);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts("nsec 2018 badge team:");
     menu_init(0, 16, 128, 64 - 12, ARRAY_SIZE(members_items), members_items);
     gfx_update();
@@ -169,7 +170,7 @@ void show_battery_status(void) {
 static void toggle_flashlight(uint8_t item) {
     _state = SETTING_STATE_FLASHLIGHT;
     menu_close();
-    gfx_fillScreen(SSD1306_WHITE);
+    gfx_fill_screen(DISPLAY_WHITE);
     gfx_update();
     setMode_WS2812FX(FX_MODE_STATIC);
     setBrightness_WS2812FX(255);
@@ -178,7 +179,7 @@ static void toggle_flashlight(uint8_t item) {
 
 static void turn_off_screen(uint8_t item) {
     menu_close();
-    gfx_fillScreen(SSD1306_BLACK);
+    gfx_fill_screen(DISPLAY_BLACK);
     gfx_update();
     _state = SETTING_STATE_SCREEN_OFF;
 }
@@ -191,7 +192,7 @@ void nsec_setting_show(void) {
 #else
     snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
 #endif
-    gfx_fillRect(0, 8, 128, 65 - 8, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, 128, 65 - 8, DISPLAY_BLACK);
     menu_init(0, 12, 128, 64 - 12, ARRAY_SIZE(settings_items), settings_items);
     nsec_controls_add_handler(setting_handle_buttons);
     _state = SETTING_STATE_MENU;
