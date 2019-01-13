@@ -5,7 +5,7 @@ default: all
 builds:
 	mkdir builds
 
-builds/nsec18_stm32_%: builds
+builds/nsec19_stm32_%: builds
 	$(MAKE) -C stm32 $@
 	cp stm32/$@ $@
 
@@ -22,8 +22,8 @@ FIRMWARE += builds/nsec18_nrf52_admin.elf
 FIRMWARE += builds/nsec18_nrf52_speaker.elf
 FIRMWARE += builds/nsec18_nrf52_conf.elf
 FIRMWARE += builds/nsec18_nrf52_trainer.elf
-FIRMWARE += builds/nsec18_stm32_debugger.elf
-FIRMWARE += builds/nsec18_stm32_debugger.bin
+FIRMWARE += builds/nsec19_stm32_debugger.elf
+FIRMWARE += builds/nsec19_stm32_debugger.bin
 FIRMWARE += builds/s132_nrf52_5.0.0_softdevice.hex
 
 all: $(FIRMWARE)
