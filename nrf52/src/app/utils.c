@@ -6,7 +6,7 @@
 #include <nrf.h>
 #include <nrf_delay.h>
 #include "nrf_sdh.h"
-#include "ws2812fx.h"
+#include "drivers/ws2812fx.h"
 
 // https://www.arduino.cc/reference/en/language/functions/math/constrain/
 uint32_t constrain(uint32_t x, uint32_t a, uint32_t b)

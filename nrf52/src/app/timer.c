@@ -8,9 +8,9 @@
 #include <nrf_drv_clock.h>
 
 #include "timer.h"
-#include "battery.h"
-#include "ssd1306.h"
-#include "battery_manager.h"
+#include "../drivers/battery.h"
+#include "../drivers/ssd1306.h"
+#include "../drivers/battery_manager.h"
 
 uint64_t heartbeat_timeout_count = 0;
 

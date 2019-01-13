@@ -5,9 +5,9 @@
 //  License: MIT (see LICENSE for details)
 
 #include "menu.h"
-#include "ssd1306.h"
+#include "drivers/ssd1306.h"
 #include "string.h"
-#include "controls.h"
+#include "drivers/controls.h"
 
 // SSD1306_LCDHEIGHT
 // SSD1306_LCDWIDTH

@@ -26,9 +26,9 @@
 #include <nrf_gpio.h>
 
 #include "battery.h"
-#include "status_bar.h"
+#include "app/status_bar.h"
 #include "boards.h"
-#include "timer.h"
+#include "app/timer.h"
 
 #define BATTERY_HISTERESIS_MV 20
 

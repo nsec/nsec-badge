@@ -31,7 +31,7 @@
 
 #include <stdbool.h>
 #include "led_effects.h"
-#include "random.h"
+#include "app/random.h"
 
 #define DEFAULT_BRIGHTNESS 50
 #define DEFAULT_MODE 0

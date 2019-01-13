@@ -23,11 +23,11 @@
 #include <stdio.h>
 #include <string.h>
 #include "menu.h"
-#include "ssd1306.h"
+#include "../drivers/ssd1306.h"
 #include "gfx_effect.h"
 #include "status_bar.h"
-#include "app_glue.h"
-#include "controls.h"
+#include "../../include/app_glue.h"
+#include "../drivers/controls.h"
 
 #define ROW_COUNT                   7 // 8 - status bar
 #define COLUMN_COUNT                21

@@ -59,8 +59,8 @@
 #include <arm_math.h>
 #include "ws2812fx.h"
 #include "led_effects.h"
-#include "utils.h"
-#include "timer.h"
+#include "app/utils.h"
+#include "app/timer.h"
 
 uint8_t get_random_wheel_index(uint8_t);
 void strip_off_WS2812FX(void);

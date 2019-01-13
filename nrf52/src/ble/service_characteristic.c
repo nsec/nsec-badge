@@ -7,7 +7,7 @@
 #include "service_characteristic.h"
 #include <stddef.h>
 #include <app_error.h>
-#include "../logs.h"
+#include "app/logs.h"
 
 
 #define NO_CONNECTION_HANDLE_REQUIRED BLE_CONN_HANDLE_INVALID

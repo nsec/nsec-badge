@@ -10,13 +10,13 @@
 #include <string.h>
 
 #include "app_glue.h"
-#include "controls.h"
+#include "drivers/controls.h"
 #include "menu.h"
 #include "nsec_led_pattern.h"
-#include "nsec_storage.h"
-#include "display.h"
+#include "drivers/nsec_storage.h"
+#include "drivers/display.h"
 #include "gfx_effect.h"
-#include "ws2812fx.h"
+#include "drivers/ws2812fx.h"
 #include "nsec_led_ble.h"
 
 enum setting_state {

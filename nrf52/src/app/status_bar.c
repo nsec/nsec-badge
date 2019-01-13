@@ -5,13 +5,13 @@
 //  License: MIT (see LICENSE for details)
 
 #include "status_bar.h"
-#include "display.h"
+#include "../drivers/display.h"
 #include "gfx_effect.h"
 #include <string.h>
 
-#include "images/ble_logo_bitmap.c"
-#include "images/battery_charging_bitmap.c"
-#include "images/battery_bitmap.c"
+#include "../images/ble_logo_bitmap.c"
+#include "../images/battery_charging_bitmap.c"
+#include "../images/battery_bitmap.c"
 
 static char status_bar_name[9];
 static char badge_class[10];

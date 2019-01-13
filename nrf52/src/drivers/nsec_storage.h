@@ -23,7 +23,7 @@
 #ifndef _NSEC_STORAGE_H
 #define _NSEC_STORAGE_H
 
-#include "nsec_led_ble.h"
+#include "app/nsec_led_ble.h"
 
 void nsec_storage_init(void);
 void nsec_storage_update(void);

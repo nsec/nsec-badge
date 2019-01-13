@@ -18,11 +18,11 @@
 #include <app_scheduler.h>
 #include <nrf_ble_gatt.h>
 
-#include "../boards.h"
+#include "boards.h"
 #include <nrf_gpio.h>
 #include <nrf_delay.h>
-#include "../led_effects.h"
-#include "../logs.h"
+#include "drivers/led_effects.h"
+#include "app/logs.h"
 #include "nrf_log.h"
 #include "gap_configuration.h"
 #include "nsec_ble.h"

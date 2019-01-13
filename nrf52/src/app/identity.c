@@ -12,7 +12,7 @@
 #include "ble/nsec_ble.h"
 #include "nsec_nearby_badges.h"
 #include "app_glue.h"
-#include "display.h"
+#include "drivers/display.h"
 #include "gfx_effect.h"
 #include "3d.h"
 
@@ -23,7 +23,7 @@
 #include "images/nsec_logo_tiny_bitmap.c"
 #include "images/star_bitmap.c"
 #include "ble/gap_configuration.h"
-#include "nsec_storage.h"
+#include "drivers/nsec_storage.h"
 
 
 #define AVATAR_SIZE \

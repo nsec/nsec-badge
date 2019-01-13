@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "ws2812fx.h"
+#include "drivers/ws2812fx.h"
 
 #ifndef NSEC_LED_BLE_H
 #define NSEC_LED_BLE_H

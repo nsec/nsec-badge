@@ -60,13 +60,10 @@ $(error "Unknown board `$(BOARD)`")
 endif
 
 
-SRC_FILES  = $(notdir $(wildcard *.c))
-SRC_FILES += ble/ble_device.c
-SRC_FILES += ble/gap_configuration.c
-SRC_FILES += ble/ble_vendor_service.c
-SRC_FILES += ble/vendor_service.c
-SRC_FILES += ble/service_characteristic.c
-#SRC_FILES += $(wildcard ble/*.c)
+SRC_FILES  = $(wildcard src/app/*.c)
+SRC_FILES += $(wildcard src/ble/*.c)
+SRC_FILES += $(wildcard src/drivers/*.c)
+#SRC_FILES += $(wildcard src/meshes/*.c)
 SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
 SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
 SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
@@ -121,7 +118,8 @@ SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh.c
 SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_soc.c
 
 
-INC_FOLDERS  = .
+INC_FOLDERS  = include
+INC_FOLDERS += src
 INC_FOLDERS += $(SDK_PATH)
 INC_FOLDERS += $(SDK_PATH)/toolchain
 INC_FOLDERS += $(SDK_PATH)/toolchain/gcc
@@ -218,7 +216,7 @@ ASMFLAGS += -D__HEAP_SIZE=0
 # Linker flags
 LDFLAGS += $(OPTIMIZATIONS)
 LDFLAGS += $(ARCH)
-LDFLAGS += -L $(TEMPLATE_PATH) -T nsec_badge.ld
+LDFLAGS += -L $(TEMPLATE_PATH) -T src/nsec_badge.ld
 # Store the stack frame pointer in a register (why?)
 LDFLAGS += -fno-omit-frame-pointer
 # let linker dump unused sections
@@ -239,18 +237,18 @@ $(PROJECT_NAME): $(SDK_PATH)
 clean: clean-bitmaps
 
 %_bitmap.c: %.png
-	python3 gen_image.py $< $@
+	python3 utils/gen_image.py $< $@
 
-images/font_bitmap.c: images/font.png
-	python3 gen_image.py -r $< $@
+src/images/font_bitmap.c: src/images/font.png
+	python3 utils/gen_image.py -r $< $@
 
-bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard images/*.png))
+bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard src/images/*.png))
 
 clean-bitmaps:
-	rm -f images/*.c
+	rm -f src/images/*.c
 
 $(SDK_PATH):
-	./install-sdk.sh $@ $(SDK_VERSION)
+	./utils/install-sdk.sh $@ $(SDK_VERSION)
 	# Restart make so that the include of Makefile.common below works and
 	# update targets.
 	$(MAKE) $(MAKECMDGOALS)

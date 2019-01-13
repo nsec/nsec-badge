@@ -30,7 +30,7 @@
 #include "ble/gap_configuration.h"
 #include "ble/ble_device.h"
 #include "app_glue.h"
-#include "nsec_storage.h"
+#include "drivers/nsec_storage.h"
 #include "identity.h"
 #include "nsec_led_pattern.h"
 

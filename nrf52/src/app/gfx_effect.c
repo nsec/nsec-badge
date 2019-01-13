@@ -6,7 +6,7 @@
 
 #include <string.h>
 #include "gfx_effect.h"
-#include "display.h"
+#include "drivers/display.h"
 #include "random.h"
 #include "images/font_bitmap.c"
 

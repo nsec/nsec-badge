@@ -2,6 +2,8 @@
 
 set -e
 
+SCRIPTPATH=$(dirname $0)
+
 SDK_DIR=$1
 SDK_VER=$2
 
@@ -40,7 +42,7 @@ GNU_INSTALL_ROOT ?= \$(shell dirname \$(shell which \$(GNU_PREFIX)-gcc))/
 GNU_VERSION ?= \$(shell \"\$(GNU_INSTALL_ROOT)\$(GNU_PREFIX)-gcc\" -dumpversion)" > "${SDK_DIR}/toolchain/gcc/Makefile.posix"
 
 # Patch
-patch -p0 --binary < fix_fstorage_init.patch
+patch -p0 --binary < "$SCRIPTPATH/../patches/fix_fstorage_init.patch"
 
 # Cleanup
 rmdir "${SDK_VER}/documentation"

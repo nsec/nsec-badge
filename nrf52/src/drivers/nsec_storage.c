@@ -36,11 +36,11 @@
 #include "nsec_storage.h"
 #include "led_code_storage.h"
 #include "ws2812fx.h"
-#include "nsec_led_settings.h"
+#include "app/nsec_led_settings.h"
 #include "power.h"
-#include "identity.h"
+#include "app/identity.h"
 #include "display.h"
-#include "gfx_effect.h"
+#include "app/gfx_effect.h"
 
 #define PAGE_START_MAGIC    0xDEADC0DE
 

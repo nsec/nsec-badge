@@ -33,7 +33,7 @@ All text above, and the splash screen below must be included in any redistributi
 #include "ssd1306.h"
 
 //TODO TO REMOVE WHEN GFX WILL BE DONE MOVING TO gfx_effect
-#include "gfx_effect.h"
+#include "app/gfx_effect.h"
 
 static uint8_t gfx_rotation = 0;
 uint8_t ssd1306_vccstate = SSD1306_SWITCHCAPVCC;

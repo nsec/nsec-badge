@@ -4,7 +4,7 @@
 //  License: MIT (see LICENSE for details)
 
 #include "vendor_service.h"
-#include "logs.h"
+#include "app/logs.h"
 #include <app_error.h>
 #include <ble.h>
 #include "service_characteristic.h"

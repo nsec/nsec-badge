@@ -9,8 +9,8 @@
 #include <string.h>
 #include "nsec_conf_schedule.h"
 #include "menu.h"
-#include "ssd1306.h"
-#include "controls.h"
+#include "drivers/ssd1306.h"
+#include "drivers/controls.h"
 #include "app_glue.h"
 
 #define ROW_COUNT                   6 // 8 - status bar

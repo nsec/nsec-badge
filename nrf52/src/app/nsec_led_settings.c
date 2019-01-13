@@ -27,14 +27,14 @@
 #include "ble/nsec_ble.h"
 #include "status_bar.h"
 #include "app_glue.h"
-#include "controls.h"
+#include "drivers/controls.h"
 #include "nsec_led_settings.h"
 #include "nsec_settings.h"
 #include "menu.h"
 #include "gfx_effect.h"
-#include "ssd1306.h"
-#include "ws2812fx.h"
-#include "nsec_storage.h"
+#include "drivers/ssd1306.h"
+#include "drivers/ws2812fx.h"
+#include "drivers/nsec_storage.h"
 
 #define BRIGHNESS_MENU_INDEX        0
 

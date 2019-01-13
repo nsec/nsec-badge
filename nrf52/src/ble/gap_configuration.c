@@ -5,7 +5,7 @@
 
 
 #include "gap_configuration.h"
-#include "../logs.h"
+#include "app/logs.h"
 
 #include <ble_gap.h>
 #include <peer_manager.h>
