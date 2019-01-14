@@ -4,4 +4,4 @@
 [submodule "stm32/blackmagic"]
 	path = stm32/blackmagic
 	url = git@github.com:nsec/blackmagic-dev.git
-	branch = nsec18
+	branch = nsec19
