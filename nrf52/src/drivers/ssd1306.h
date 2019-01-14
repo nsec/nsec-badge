@@ -119,20 +119,20 @@ All text above, and the splash screen must be included in any redistribution
 
 void ssd1306_draw_pixel(int16_t x, int16_t y, uint16_t color);
 void ssd1306_init(void);
-void ssd1306_invert_display(uint8_t i);
+void ssd1306_invert_display(uint8_t issd1306_drawFastVLine);
 void ssd1306_command(uint8_t c);
-void ssd1306_startscrollright(uint8_t start, uint8_t stop);
-void ssd1306_startscrollleft(uint8_t start, uint8_t stop);
-void ssd1306_startscrolldiagright(uint8_t start, uint8_t stop);
-void ssd1306_startscrolldiagleft(uint8_t start, uint8_t stop);
-void ssd1306_stopscroll(void);
+void ssd1306_start_scroll_right(uint8_t start, uint8_t stop);
+void ssd1306_start_scroll_left(uint8_t start, uint8_t stop);
+void ssd1306_start_scroll_diag_right(uint8_t start, uint8_t stop);
+void ssd1306_start_scroll_diag_left(uint8_t start, uint8_t stop);
+void ssd1306_stop_scroll(void);
 void ssd1306_dim(bool dim);
 void ssd1306_update(void);
-void ssd1306_clearDisplay(void);
-void ssd1306_drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-void ssd1306_drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color);
-void ssd1306_drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-void ssd1306_drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t color);
+void ssd1306_clear_display(void);
+void ssd1306_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color);
+void ssd1306_draw_fast_hline_internal(int16_t x, int16_t y, int16_t w, uint16_t color);
+void ssd1306_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color);
+void ssd1306_draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, uint16_t color);
 void ssd1306_fill_screen_black(void);
 void ssd1306_fill_screen_white(void);
 

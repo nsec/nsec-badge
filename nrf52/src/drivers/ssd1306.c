@@ -255,7 +255,7 @@ void ssd1306_command(uint8_t c) {
 // Activate a right handed scroll for rows start through stop
 // Hint, the display is 16 rows tall. To scroll the whole display, run:
 // display.scrollright(0x00, 0x0F)
-void ssd1306_startscrollright(uint8_t start, uint8_t stop){
+void ssd1306_start_scroll_right(uint8_t start, uint8_t stop){
     ssd1306_command(SSD1306_RIGHT_HORIZONTAL_SCROLL);
     ssd1306_command(0X00);
     ssd1306_command(start);
@@ -270,7 +270,7 @@ void ssd1306_startscrollright(uint8_t start, uint8_t stop){
 // Activate a right handed scroll for rows start through stop
 // Hint, the display is 16 rows tall. To scroll the whole display, run:
 // display.scrollright(0x00, 0x0F)
-void ssd1306_startscrollleft(uint8_t start, uint8_t stop){
+void ssd1306_start_scroll_left(uint8_t start, uint8_t stop){
     ssd1306_command(SSD1306_LEFT_HORIZONTAL_SCROLL);
     ssd1306_command(0X00);
     ssd1306_command(start);
@@ -285,7 +285,7 @@ void ssd1306_startscrollleft(uint8_t start, uint8_t stop){
 // Activate a diagonal scroll for rows start through stop
 // Hint, the display is 16 rows tall. To scroll the whole display, run:
 // display.scrollright(0x00, 0x0F)
-void ssd1306_startscrolldiagright(uint8_t start, uint8_t stop){
+void ssd1306_start_scroll_diag_right(uint8_t start, uint8_t stop){
     ssd1306_command(SSD1306_SET_VERTICAL_SCROLL_AREA);
     ssd1306_command(0X00);
     ssd1306_command(SSD1306_LCDHEIGHT);
@@ -302,7 +302,7 @@ void ssd1306_startscrolldiagright(uint8_t start, uint8_t stop){
 // Activate a diagonal scroll for rows start through stop
 // Hint, the display is 16 rows tall. To scroll the whole display, run:
 // display.scrollright(0x00, 0x0F)
-void ssd1306_startscrolldiagleft(uint8_t start, uint8_t stop){
+void ssd1306_start_scroll_diag_left(uint8_t start, uint8_t stop){
     ssd1306_command(SSD1306_SET_VERTICAL_SCROLL_AREA);
     ssd1306_command(0X00);
     ssd1306_command(SSD1306_LCDHEIGHT);
@@ -315,7 +315,7 @@ void ssd1306_startscrolldiagleft(uint8_t start, uint8_t stop){
     ssd1306_command(SSD1306_ACTIVATE_SCROLL);
 }
 
-void ssd1306_stopscroll(void){
+void ssd1306_stop_scroll(void){
     ssd1306_command(SSD1306_DEACTIVATE_SCROLL);
 }
 
@@ -362,11 +362,11 @@ void ssd1306_update(void) {
 }
 
 // clear everything
-void ssd1306_clearDisplay(void) {
+void ssd1306_clear_display(void) {
     memset(buffer, 0, (SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8));
 }
 
-void ssd1306_drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void ssd1306_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color) {
   bool bSwap = false;
   switch(gfx_rotation) {
     case 0:
@@ -394,13 +394,13 @@ void ssd1306_drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
   }
 
   if(bSwap) {
-    ssd1306_drawFastVLineInternal(x, y, w, color);
+    ssd1306_draw_fast_vline_internal(x, y, w, color);
   } else {
-    ssd1306_drawFastHLineInternal(x, y, w, color);
+    ssd1306_draw_fast_hline_internal(x, y, w, color);
   }
 }
 
-void ssd1306_drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void ssd1306_draw_fast_hline_internal(int16_t x, int16_t y, int16_t w, uint16_t color) {
   // Do bounds/limit checks
   if(y < 0 || y >= SSD1306_LCDHEIGHT) { return; }
 
@@ -435,7 +435,7 @@ void ssd1306_drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t col
   }
 }
 
-void ssd1306_drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void ssd1306_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color) {
   bool bSwap = false;
   switch(gfx_rotation) {
     case 0:
@@ -462,14 +462,14 @@ void ssd1306_drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
   }
 
   if(bSwap) {
-    ssd1306_drawFastHLineInternal(x, y, h, color);
+    ssd1306_draw_fast_hline_internal(x, y, h, color);
   } else {
-    ssd1306_drawFastVLineInternal(x, y, h, color);
+    ssd1306_draw_fast_vline_internal(x, y, h, color);
   }
 }
 
 
-void ssd1306_drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t color) {
+void ssd1306_draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, uint16_t color) {
 
   // do nothing if we're off the left or right side of the screen
   if(x < 0 || x >= SSD1306_LCDWIDTH) { return; }
