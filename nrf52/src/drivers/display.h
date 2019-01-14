@@ -33,14 +33,17 @@
 #define DISPLAY_WIDTH 	160
 
 // Colors
-#define	DISPLAY_BLACK 	0x0000
-#define	DISPLAY_RED 	0x001F
-#define	DISPLAY_BLUE 	0xF800
-#define	DISPLAY_GREEN	0x07E0
-#define DISPLAY_CYAN	0x07FF
-#define DISPLAY_MAGENTA	0xF81F
-#define DISPLAY_YELLOW	0xFFE0  
-#define DISPLAY_WHITE	0xFFFF
+#define	DISPLAY_BLACK        0x0000
+#define DISPLAY_RED          0xF800
+#define DISPLAY_GREEN        0x07E0
+#define DISPLAY_BLUE         0x001F
+#define DISPLAY_CYAN         0x07FF
+#define DISPLAY_MAGENTA      0xF81F
+#define DISPLAY_YELLOW       0xFFE0
+#define DISPLAY_ORANGE       0xFC00
+#define DISPLAY_WHITE        0xFFFF
+
+
 
 #else
 // Size
@@ -66,19 +69,5 @@ void display_fill_screen_black(void);
 void display_fill_screen_white(void);
 void display_update(void);
 
-/*
-void ssd1306_command(uint8_t c);
-void ssd1306_startscrollright(uint8_t start, uint8_t stop);
-void ssd1306_startscrollleft(uint8_t start, uint8_t stop);
-void ssd1306_startscrolldiagright(uint8_t start, uint8_t stop);
-void ssd1306_startscrolldiagleft(uint8_t start, uint8_t stop);
-void ssd1306_stopscroll(void);
-void ssd1306_dim(bool dim);
-void ssd1306_update(void);
-void ssd1306_clearDisplay(void);
-void ssd1306_drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-void ssd1306_drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color);
-void ssd1306_drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-void ssd1306_drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t color);
-*/
+
 #endif //_DISPLAY_H
