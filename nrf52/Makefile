@@ -1,6 +1,6 @@
 FLAVOR ?= ctf
-BOARD ?= sputnik
-PROJECT_NAME = nsec18_nrf52_$(FLAVOR)
+BOARD ?= brain
+PROJECT_NAME = nsec19_nrf52_$(FLAVOR)
 TARGETS=$(PROJECT_NAME)
 OUTPUT_DIRECTORY := builds
 SDK_PATH = nordicsdk
