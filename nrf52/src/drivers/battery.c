@@ -161,8 +161,10 @@ void saadc_callback(nrf_drv_saadc_evt_t const *p_event) {
 void battery_init() {
     ret_code_t err_code;
 
+#ifdef BOARD_SPUTNIK
     nrf_gpio_cfg_input(PIN_BATT_CHARGE, NRF_GPIO_PIN_PULLUP);
     nrf_gpio_cfg_input(PIN_BATT_PGOOD, NRF_GPIO_PIN_PULLUP);
+#endif
 
     /*
      * Initialize the saadc driver, passing NULL as config will use the
