@@ -74,7 +74,7 @@ static st7735_config_t st7735_config;
 static void spi_init(void) {
     nrf_drv_spi_config_t spi_config;
 
-    spi_config.frequency = NRF_DRV_SPI_FREQ_1M;
+    spi_config.frequency = NRF_DRV_SPI_FREQ_8M;
     spi_config.sck_pin = st7735_config.sck_pin;
     spi_config.miso_pin = st7735_config.miso_pin;
     spi_config.mosi_pin = st7735_config.mosi_pin;
