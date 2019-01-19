@@ -93,14 +93,15 @@ as well as Adafruit raw 1.8" TFT display
 // Colour Definitions
 //
 //*****************************************************************************
-#define	ST7735_BLACK   0x0000
-#define	ST7735_RED     0x001F
-#define	ST7735_BLUE    0xF800
-#define	ST7735_GREEN   0x07E0
-#define ST7735_CYAN    0x07FF
-#define ST7735_MAGENTA 0xF81F
-#define ST7735_YELLOW  0xFFE0  
-#define ST7735_WHITE   0xFFFF
+#define ST7735_BLACK      0x0000
+#define ST7735_RED        0xF800
+#define ST7735_GREEN      0x07E0
+#define ST7735_BLUE       0x001F
+#define ST7735_CYAN       0x07FF
+#define ST7735_MAGENTA    0xF81F
+#define ST7735_YELLOW     0xFFE0
+#define ST7735_ORANGE     0xFC00
+#define ST7735_WHITE      0xFFFF
 
 //*****************************************************************************
 //

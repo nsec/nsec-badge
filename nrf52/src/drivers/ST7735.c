@@ -27,6 +27,7 @@ as well as Adafruit raw 1.8" TFT display
 #include <stdlib.h>
 #include <string.h>
 #include "ST7735.h"
+#include "app/gfx_effect.h"
 #include "boards.h"
 
 // This increase the bss section by 25k !!!!
@@ -237,8 +238,8 @@ void st7735_init(void)
     nrf_delay_ms(500);
 
     /* Initialise default values */
-    colstart = 24;
-    rowstart = 0;
+    colstart = 0;
+    rowstart = 24;
     width = ST7735_WIDTH;
     height = ST7735_HEIGHT;
     wrap = 1;
@@ -250,6 +251,9 @@ void st7735_init(void)
 
     /* Initialise LCD screen */
     command_list(initCommands);
+
+    st7735_set_rotation(3);
+    st7735_fill_screen(ST7735_BLACK);
 
     is_init = true;
 }
@@ -468,6 +472,8 @@ void st7735_set_rotation(uint8_t m)
      height = ST7735_WIDTH;
      break;
   }
+
+  gfx_set_rotation(m);
 }
 
 void st7735_invert_display(uint8_t i) 
