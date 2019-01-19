@@ -10,8 +10,8 @@
 #include "random.h"
 #include "images/font_bitmap.c"
 
-static int16_t gfx_width = DISPLAY_WIDTH;
-static int16_t gfx_height = DISPLAY_HEIGHT;
+int16_t gfx_width = DISPLAY_WIDTH;
+int16_t gfx_height = DISPLAY_HEIGHT;
 static int16_t gfx_cursor_y = 0;
 static int16_t gfx_cursor_x = 0;
 static uint8_t gfx_textsize = 1;
@@ -20,6 +20,38 @@ static uint16_t gfx_textbgcolor = 0xFFFF;
 static bool gfx_wrap = true;
 
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
+
+void gfx_set_rotation(uint8_t r)
+{
+  switch (r) {
+   case 0:
+     gfx_width  = DISPLAY_WIDTH;
+     gfx_height = DISPLAY_HEIGHT;
+     break;
+   case 1:
+     gfx_width  = DISPLAY_HEIGHT;
+     gfx_height = DISPLAY_WIDTH;
+     break;
+  case 2:
+     gfx_width  = DISPLAY_WIDTH;
+     gfx_height = DISPLAY_HEIGHT;
+    break;
+   case 3:
+     gfx_width  = DISPLAY_HEIGHT;
+     gfx_height = DISPLAY_WIDTH;
+     break;
+  }
+}
+
+uint16_t gfx_get_width(void)
+{
+  return gfx_width;
+}
+
+uint16_t gfx_get_height(void)
+{
+  return gfx_height;
+}
 
 void nsec_gfx_effect_addNoise(uint8_t noise_amount) {
     for(int16_t y = 0; y < DISPLAY_HEIGHT; y++) {
@@ -80,13 +112,11 @@ void gfx_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t colo
 
 
 void gfx_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color) {
-    // Update in subclasses if desired!
-    gfx_draw_line(x, y, x, y+h-1, color);
+    display_draw_fast_vline(x, y, h, color);
 }
 
 void gfx_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color) {
-    // Update in subclasses if desired!
-    gfx_draw_line(x, y, x+w-1, y, color);
+    display_draw_fast_hline(x, y, w, color);
 }
 
 // Draw a rectangle
