@@ -29,8 +29,8 @@
 
 #ifdef BOARD_BRAIN
 // Size
-#define DISPLAY_HEIGHT 	80
-#define DISPLAY_WIDTH 	160
+#define DISPLAY_HEIGHT 	160
+#define DISPLAY_WIDTH 	80
 
 // Colors
 #define	DISPLAY_BLACK        0x0000
@@ -67,6 +67,8 @@ void display_draw_pixel(uint16_t x, uint16_t y, uint16_t color);
 void display_invert_display(uint8_t i);
 void display_fill_screen_black(void);
 void display_fill_screen_white(void);
+void display_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color);
+void display_draw_fast_vline(int16_t x, int16_t y, int16_t w, uint16_t color);
 void display_update(void);
 
 
