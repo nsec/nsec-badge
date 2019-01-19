@@ -23,6 +23,12 @@
 #include "drivers/uart.h"
 
 #include "drivers/buttons.h"
+#include "drivers/display.h"
+#include "drivers/power.h"
+#include "drivers/softdevice.h"
+#include "drivers/ws2812fx.h"
+#include "drivers/nsec_storage.h"
+
 #include "logs.h"
 #include "gfx_effect.h"
 #include "identity.h"
@@ -30,13 +36,8 @@
 #include "nsec_conf_schedule.h"
 #include "nsec_settings.h"
 #include "timer.h"
-#include "drivers/power.h"
-#include "drivers/softdevice.h"
 #include "status_bar.h"
-#include "drivers/ssd1306.h"
 #include "utils.h"
-#include "drivers/ws2812fx.h"
-#include "drivers/nsec_storage.h"
 #include "nsec_led_pattern.h"
 #include "nsec_warning.h"
 #include "nsec_led_ble.h"
@@ -47,6 +48,9 @@
 
 static char g_device_id[10];
 bool is_at_main_menu = false;
+
+extern uint16_t gfx_width;
+extern uint16_t gfx_height;
 
 /*
  * Callback function when APP_ERROR_CHECK() fails
@@ -91,14 +95,14 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
 static
 void nsec_intro(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 8) {
-        gfx_fill_screen(SSD1306_BLACK);
-        gfx_draw_bitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, SSD1306_WHITE);
+        gfx_fill_screen(DISPLAY_BLACK);
+        gfx_draw_bitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, DISPLAY_BLUE);
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
     for(uint8_t noise = 0; noise <= 128; noise += 8) {
-        gfx_fill_screen(SSD1306_BLACK);
-        gfx_draw_bitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, SSD1306_WHITE);
+        gfx_fill_screen(DISPLAY_BLACK);
+        gfx_draw_bitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, DISPLAY_BLUE);
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
@@ -173,14 +177,8 @@ menu_item_s main_menu_items[] = {
 #endif
 
 void show_main_menu(void) {
-    for(uint8_t noise = 128; noise <= 128; noise -= 16) {
-        gfx_fill_screen(SSD1306_BLACK);
-        nsec_gfx_effect_addNoise(noise);
-        gfx_update();
-    }
-    nsec_identity_draw();
-    nsec_status_bar_ui_redraw();
-    menu_init(0, 64-8, 128, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
+    //nsec_identity_draw();
+    menu_init(0, gfx_height-8, gfx_width, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
     is_at_main_menu = true;
 }
 
@@ -202,8 +200,8 @@ int main(void) {
     uart_init();
     timer_init();
     init_WS2812FX();
-    ssd1306_init();
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    display_init();
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     nsec_buttons_init();
 
     /*
@@ -212,18 +210,19 @@ int main(void) {
     create_ble_device(g_device_id);
     configure_advertising();
     nsec_led_ble_init();
-    init_identity_service();
+    //init_identity_service();
     start_advertising();
 
-    nsec_battery_manager_init();
     nsec_status_bar_init();
+    nsec_battery_manager_init();
     nsec_status_set_name(g_device_id);
     nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     load_stored_led_settings();
 
-    nsec_intro();
+    // nsec_intro like before work really bad on the new screen, we need something new
+    //nsec_intro();
     show_main_menu();
 
     /*
