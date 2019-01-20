@@ -241,7 +241,7 @@ void gfx_fill_circle_helper(int16_t x0, int16_t y0, int16_t r, uint8_t cornernam
   }
 }
 
-void draw_round_rect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t colour)
+void gfx_draw_round_rect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t colour)
 {
   gfx_draw_fast_hline(x+r  , y    , w-2*r, colour);
   gfx_draw_fast_hline(x+r  , y+h-1, w-2*r, colour);
@@ -253,7 +253,7 @@ void draw_round_rect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint
   gfx_draw_circle_helper(x+r    , y+h-r-1, r, 8, colour);
 }
 
-void fill_round_rect(int16_t x, int16_t y, int16_t w, int16_t h,
+void gfx_fill_round_rect(int16_t x, int16_t y, int16_t w, int16_t h,
         int16_t r, uint16_t colour)
 {
   gfx_fill_rect(x+r, y, w-2*r, h, colour);
