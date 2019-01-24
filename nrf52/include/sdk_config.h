@@ -10,6 +10,14 @@
 #define SPIS1_ENABLED 1
 #define SPIS2_ENABLED 0
 
+// UART to STM32
+#define UART_ENABLED 1
+#define UART_EASY_DMA_SUPPORT 0
+#define UART_LEGACY_SUPPORT 1
+
+#define UART0_ENABLED 1
+#define UART0_CONFIG_USE_EASY_DMA 0
+
 // Enable the power driver
 #define POWER_ENABLED 1
 

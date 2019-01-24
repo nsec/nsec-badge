@@ -20,6 +20,7 @@
 #include "ble/ble_device.h"
 #include "drivers/battery.h"
 #include "drivers/battery_manager.h"
+#include "drivers/uart.h"
 
 #include "drivers/buttons.h"
 #include "logs.h"
@@ -198,6 +199,7 @@ int main(void) {
     log_init();
     power_init();
     softdevice_init();
+    uart_init();
     timer_init();
     init_WS2812FX();
     ssd1306_init();
