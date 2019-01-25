@@ -12,6 +12,7 @@
 #include "drivers/ssd1306.h"
 #include "drivers/controls.h"
 #include "app_glue.h"
+#include "gfx_effect.h"
 
 #define ROW_COUNT                   6 // 8 - status bar
 #define COLUMN_COUNT                21
