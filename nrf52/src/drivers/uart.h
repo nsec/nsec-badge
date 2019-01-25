@@ -23,7 +23,9 @@
 #ifndef SRC_DRIVERS_UART_H_
 #define SRC_DRIVERS_UART_H_
 
-void uart_init();
-void uart_send(const char *data);
+#include <sdk_errors.h>
+
+ret_code_t uart_init();
+ret_code_t uart_send(const char *data);
 
 #endif /* SRC_DRIVERS_UART_H_ */

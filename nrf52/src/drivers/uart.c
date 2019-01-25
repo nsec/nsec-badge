@@ -33,17 +33,22 @@
 
 static nrf_drv_uart_t instance = NRF_DRV_UART_INSTANCE(0);
 
-void uart_init()
+/*
+ * Initialize the uart in blocking mode, send function will return once the
+ * transfer is complete.
+ */
+ret_code_t uart_init()
 {
 	nrf_drv_uart_config_t config = NRF_DRV_UART_DEFAULT_CONFIG;
 	config.pseltxd = PIN_nRF_TXD;
 	config.pselrxd = PIN_nRF_RXD;
 	config.pselcts = PIN_nRF_CTS;
 	config.pselrts = PIN_nRF_RTS;
-	nrf_drv_uart_init(&instance, &config, NULL);
+
+	return nrf_drv_uart_init(&instance, &config, NULL);
 }
 
-void uart_send(const char *data)
+ret_code_t uart_send(const char *data)
 {
-    nrf_drv_uart_tx(&instance, (unsigned char*)data, strlen(data));
+    return nrf_drv_uart_tx(&instance, (unsigned char*)data, strlen(data));
 }
