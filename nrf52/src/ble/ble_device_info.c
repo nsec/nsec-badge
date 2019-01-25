@@ -10,7 +10,6 @@
 #include <ble_dis.h>
 
 static void _nsec_ble_add_device_information_service_raw(ble_dis_init_t * raw_dis);
-static void _nsec_ble_device_info_uuid_provider(size_t * uuid_count, ble_uuid_t * uuids);
 
 void nsec_ble_add_device_information_service(char * manufacturer_name,
                                              char * model,
@@ -53,15 +52,4 @@ void nsec_ble_add_device_information_service(char * manufacturer_name,
 static void _nsec_ble_add_device_information_service_raw(ble_dis_init_t * raw_dis) {
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&raw_dis->dis_attr_md.read_perm);
     APP_ERROR_CHECK(ble_dis_init(raw_dis));
-}
-
-static void _nsec_ble_device_info_uuid_provider(size_t * uuid_count, ble_uuid_t * uuids) {
-    if(*uuid_count < 1) {
-        return;
-    }
-    uuids[0] = (ble_uuid_t) {
-        .uuid = BLE_UUID_DEVICE_INFORMATION_SERVICE,
-        .type = BLE_UUID_TYPE_BLE
-    };
-    *uuid_count = 1;
 }
