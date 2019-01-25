@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 
+#include <drivers/uart.h>
 #include "boards.h"
 #include "buttons.h"
 #include "controls.h"

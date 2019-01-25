@@ -23,6 +23,7 @@
 #include <nordic_common.h>
 #include <app_util_platform.h>
 #include <nrf_drv_uart.h>
+#include <string.h>
 #include "boards.h"
 
 #define UART_DEFAULT_CONFIG_HWFC NRF_UART_HWFC_DISABLED
@@ -44,5 +45,5 @@ void uart_init()
 
 void uart_send(const char *data)
 {
-    nrf_drv_uart_tx(&instance, data, strlen(data));
+    nrf_drv_uart_tx(&instance, (unsigned char*)data, strlen(data));
 }
