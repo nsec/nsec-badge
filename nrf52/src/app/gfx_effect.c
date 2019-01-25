@@ -10,8 +10,8 @@
 #include "random.h"
 #include "images/font_bitmap.c"
 
-static int16_t gfx_width = DISPLAY_WIDTH;
-static int16_t gfx_height = DISPLAY_HEIGHT;
+int16_t gfx_width = DISPLAY_WIDTH;
+int16_t gfx_height = DISPLAY_HEIGHT;
 static int16_t gfx_cursor_y = 0;
 static int16_t gfx_cursor_x = 0;
 static uint8_t gfx_textsize = 1;
@@ -21,13 +21,45 @@ static bool gfx_wrap = true;
 
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 
+void gfx_set_rotation(uint8_t r)
+{
+  switch (r) {
+   case 0:
+     gfx_width  = DISPLAY_WIDTH;
+     gfx_height = DISPLAY_HEIGHT;
+     break;
+   case 1:
+     gfx_width  = DISPLAY_HEIGHT;
+     gfx_height = DISPLAY_WIDTH;
+     break;
+  case 2:
+     gfx_width  = DISPLAY_WIDTH;
+     gfx_height = DISPLAY_HEIGHT;
+    break;
+   case 3:
+     gfx_width  = DISPLAY_HEIGHT;
+     gfx_height = DISPLAY_WIDTH;
+     break;
+  }
+}
+
+uint16_t gfx_get_width(void)
+{
+  return gfx_width;
+}
+
+uint16_t gfx_get_height(void)
+{
+  return gfx_height;
+}
+
 void nsec_gfx_effect_addNoise(uint8_t noise_amount) {
     for(int16_t y = 0; y < DISPLAY_HEIGHT; y++) {
         for(int16_t x = 0; x < DISPLAY_WIDTH; x++) {
             uint8_t r;
             nsec_random_get(&r, 1);
             if(r < noise_amount) {
-            	// TODO do something in mode st7735 instead of reversing the color
+            	// TODO do something in mode display instead of reversing the color
                 display_draw_pixel(x, y, 2);
             }
         }
@@ -80,13 +112,11 @@ void gfx_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t colo
 
 
 void gfx_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color) {
-    // Update in subclasses if desired!
-    gfx_draw_line(x, y, x, y+h-1, color);
+    display_draw_fast_vline(x, y, h, color);
 }
 
 void gfx_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color) {
-    // Update in subclasses if desired!
-    gfx_draw_line(x, y, x+w-1, y, color);
+    display_draw_fast_hline(x, y, w, color);
 }
 
 // Draw a rectangle
@@ -102,6 +132,212 @@ void gfx_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
     for (int16_t i=x; i<x+w; i++) {
         gfx_draw_fast_vline(i, y, h, color);
     }
+}
+
+void gfx_draw_circle(int16_t x0, int16_t y0, int16_t r, uint16_t colour)
+{
+  int16_t f = 1 - r;
+  int16_t ddF_x = 1;
+  int16_t ddF_y = -2 * r;
+  int16_t x = 0;
+  int16_t y = r;
+
+  display_draw_pixel(x0  , y0+r, colour);
+  display_draw_pixel(x0  , y0-r, colour);
+  display_draw_pixel(x0+r, y0  , colour);
+  display_draw_pixel(x0-r, y0  , colour);
+
+  while (x<y) {
+    if (f >= 0) {
+      y--;
+      ddF_y += 2;
+      f += ddF_y;
+    }
+    x++;
+    ddF_x += 2;
+    f += ddF_x;
+
+    display_draw_pixel(x0 + x, y0 + y, colour);
+    display_draw_pixel(x0 - x, y0 + y, colour);
+    display_draw_pixel(x0 + x, y0 - y, colour);
+    display_draw_pixel(x0 - x, y0 - y, colour);
+    display_draw_pixel(x0 + y, y0 + x, colour);
+    display_draw_pixel(x0 - y, y0 + x, colour);
+    display_draw_pixel(x0 + y, y0 - x, colour);
+    display_draw_pixel(x0 - y, y0 - x, colour);
+  }
+}
+
+void gfx_draw_circle_helper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t colour)
+{
+  int16_t f     = 1 - r;
+  int16_t ddF_x = 1;
+  int16_t ddF_y = -2 * r;
+  int16_t x     = 0;
+  int16_t y     = r;
+
+  while (x<y) {
+    if (f >= 0) {
+      y--;
+      ddF_y += 2;
+      f     += ddF_y;
+    }
+    x++;
+    ddF_x += 2;
+    f     += ddF_x;
+    if (cornername & 0x4) {
+      display_draw_pixel(x0 + x, y0 + y, colour);
+      display_draw_pixel(x0 + y, y0 + x, colour);
+    }
+    if (cornername & 0x2) {
+      display_draw_pixel(x0 + x, y0 - y, colour);
+      display_draw_pixel(x0 + y, y0 - x, colour);
+    }
+    if (cornername & 0x8) {
+      display_draw_pixel(x0 - y, y0 + x, colour);
+      display_draw_pixel(x0 - x, y0 + y, colour);
+    }
+    if (cornername & 0x1) {
+      display_draw_pixel(x0 - y, y0 - x, colour);
+      display_draw_pixel(x0 - x, y0 - y, colour);
+    }
+  }
+}
+
+void gfx_fill_circle(int16_t x0, int16_t y0, int16_t r, uint16_t colour)
+{
+  gfx_draw_fast_vline(x0, y0-r, 2*r+1, colour);
+  gfx_fill_circle_helper(x0, y0, r, 3, 0, colour);
+}
+
+void gfx_fill_circle_helper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,
+      int16_t delta, uint16_t colour)
+{
+
+  int16_t f     = 1 - r;
+  int16_t ddF_x = 1;
+  int16_t ddF_y = -2 * r;
+  int16_t x     = 0;
+  int16_t y     = r;
+
+  while (x<y) {
+    if (f >= 0) {
+      y--;
+      ddF_y += 2;
+      f     += ddF_y;
+    }
+    x++;
+    ddF_x += 2;
+    f     += ddF_x;
+
+    if (cornername & 0x1) {
+      gfx_draw_fast_vline(x0+x, y0-y, 2*y+1+delta, colour);
+      gfx_draw_fast_vline(x0+y, y0-x, 2*x+1+delta, colour);
+    }
+    if (cornername & 0x2) {
+      gfx_draw_fast_vline(x0-x, y0-y, 2*y+1+delta, colour);
+      gfx_draw_fast_vline(x0-y, y0-x, 2*x+1+delta, colour);
+    }
+  }
+}
+
+void gfx_draw_round_rect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t colour)
+{
+  gfx_draw_fast_hline(x+r  , y    , w-2*r, colour);
+  gfx_draw_fast_hline(x+r  , y+h-1, w-2*r, colour);
+  gfx_draw_fast_vline(x    , y+r  , h-2*r, colour);
+  gfx_draw_fast_vline(x+w-1, y+r  , h-2*r, colour);
+  gfx_draw_circle_helper(x+r    , y+r    , r, 1, colour);
+  gfx_draw_circle_helper(x+w-r-1, y+r    , r, 2, colour);
+  gfx_draw_circle_helper(x+w-r-1, y+h-r-1, r, 4, colour);
+  gfx_draw_circle_helper(x+r    , y+h-r-1, r, 8, colour);
+}
+
+void gfx_fill_round_rect(int16_t x, int16_t y, int16_t w, int16_t h,
+        int16_t r, uint16_t colour)
+{
+  gfx_fill_rect(x+r, y, w-2*r, h, colour);
+  gfx_fill_circle_helper(x+w-r-1, y+r, r, 1, h-2*r-1, colour);
+  gfx_fill_circle_helper(x+r    , y+r, r, 2, h-2*r-1, colour);
+}
+
+void gfx_draw_triangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
+        int16_t x2, int16_t y2, uint16_t colour)
+{
+  gfx_draw_line(x0, y0, x1, y1, colour);
+  gfx_draw_line(x1, y1, x2, y2, colour);
+  gfx_draw_line(x2, y2, x0, y0, colour);
+}
+
+void gfx_fill_triangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
+          int16_t x2, int16_t y2, uint16_t colour)
+{
+  int16_t a, b, y, last;
+
+  // Sort coordinates by Y order (y2 >= y1 >= y0)
+  if (y0 > y1) {
+    swap(y0, y1); swap(x0, x1);
+  }
+  if (y1 > y2) {
+    swap(y2, y1); swap(x2, x1);
+  }
+  if (y0 > y1) {
+    swap(y0, y1); swap(x0, x1);
+  }
+
+  if(y0 == y2) { // Handle awkward all-on-same-line case as its own thing
+    a = b = x0;
+    if(x1 < a)      a = x1;
+    else if(x1 > b) b = x1;
+    if(x2 < a)      a = x2;
+    else if(x2 > b) b = x2;
+    gfx_draw_fast_hline(a, y0, b-a+1, colour);
+    return;
+  }
+
+  int16_t
+    dx01 = x1 - x0,
+    dy01 = y1 - y0,
+    dx02 = x2 - x0,
+    dy02 = y2 - y0,
+    dx12 = x2 - x1,
+    dy12 = y2 - y1;
+  int32_t
+    sa   = 0,
+    sb   = 0;
+
+  // For upper part of triangle, find scanline crossings for segments
+  // 0-1 and 0-2.  If y1=y2 (flat-bottomed triangle), the scanline y1
+  // is included here (and second loop will be skipped, avoiding a /0
+  // error there), otherwise scanline y1 is skipped here and handled
+  // in the second loop...which also avoids a /0 error here if y0=y1
+  // (flat-topped triangle).
+  if(y1 == y2) last = y1;   // Include y1 scanline
+  else         last = y1-1; // Skip it
+
+  for(y=y0; y<=last; y++) {
+    a   = x0 + sa / dy01;
+    b   = x0 + sb / dy02;
+    sa += dx01;
+    sb += dx02;
+
+    if(a > b) swap(a,b);
+    gfx_draw_fast_hline(a, y, b-a+1, colour);
+  }
+
+  // For lower part of triangle, find scanline crossings for segments
+  // 0-2 and 1-2.  This loop is skipped if y1=y2.
+  sa = dx12 * (y - y1);
+  sb = dx02 * (y - y0);
+  for(; y<=y2; y++) {
+    a   = x1 + sa / dy12;
+    b   = x0 + sb / dy02;
+    sa += dx12;
+    sb += dx02;
+
+    if(a > b) swap(a,b);
+    gfx_draw_fast_hline(a, y, b-a+1, colour);
+  }
 }
 
 void gfx_fill_screen(uint16_t color) {

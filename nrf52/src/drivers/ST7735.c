@@ -27,10 +27,11 @@ as well as Adafruit raw 1.8" TFT display
 #include <stdlib.h>
 #include <string.h>
 #include "ST7735.h"
+#include "app/gfx_effect.h"
 #include "boards.h"
 
 // This increase the bss section by 25k !!!!
-#define USE_DOUBLE_BUFFERING
+//#define USE_DOUBLE_BUFFERING
 
 //*****************************************************************************
 //
@@ -73,7 +74,7 @@ static st7735_config_t st7735_config;
 static void spi_init(void) {
     nrf_drv_spi_config_t spi_config;
 
-    spi_config.frequency = NRF_DRV_SPI_FREQ_1M;
+    spi_config.frequency = NRF_DRV_SPI_FREQ_8M;
     spi_config.sck_pin = st7735_config.sck_pin;
     spi_config.miso_pin = st7735_config.miso_pin;
     spi_config.mosi_pin = st7735_config.mosi_pin;
@@ -122,33 +123,61 @@ static uint8_t buffer[ST7735_HEIGHT * ST7735_WIDTH * 2] = {0};
 
 static const uint8_t
   initCommands[] = {                 // Init for 7735R, (green tab)
-    8,                       // 8 commands in list:
-    ST7735_SWRESET,   DELAY,  //  1: Software reset, 0 args, w/delay
-      150,                    //     150 ms delay
-
-    ST7735_SLPOUT ,   DELAY,  //  2: Out of sleep mode, 0 args, w/delay
-      255,                    //     500 ms delay
-
-    ST7735_COLMOD , 1      ,  // 15: set colour mode, 1 arg, no delay:
-      0x05 ,                 //     16-bit colour
-
-    ST7735_MADCTL  ,  DELAY,  
-      255,                    //     500 ms delay
-
-    ST7735_MADCTL , 1      ,  
-      0xc8 ,                 
-    ST7735_GMCTRP1, 16      , //  1: Magical unicorn dust, 16 args, no delay:
+    21,                             // 21 commands in list:
+    ST7735_SWRESET,   DELAY, //  1: Software reset, 0 args, w/delay
+      150,                          //     150 ms delay
+    ST7735_SLPOUT ,   DELAY, //  2: Out of sleep mode, 0 args, w/delay
+      255,                          //     500 ms delay
+    ST7735_FRMCTR1, 3,              //  3: Framerate ctrl - normal mode, 3 arg:
+      0x01, 0x2C, 0x2D,             //     Rate = fosc/(1x2+40) * (LINE+2C+2D)
+    ST7735_FRMCTR2, 3,              //  4: Framerate ctrl - idle mode, 3 args:
+      0x01, 0x2C, 0x2D,             //     Rate = fosc/(1x2+40) * (LINE+2C+2D)
+    ST7735_FRMCTR3, 6,              //  5: Framerate - partial mode, 6 args:
+      0x01, 0x2C, 0x2D,             //     Dot inversion mode
+      0x01, 0x2C, 0x2D,             //     Line inversion mode
+    ST7735_INVCTR , 1,              //  6: Display inversion ctrl, 1 arg:
+      0x07,                         //     No inversion
+    ST7735_PWCTR1 , 3,              //  7: Power control, 3 args, no delay:
+      0xA2,
+      0x02,                         //     -4.6V
+      0x84,                         //     AUTO mode
+    ST7735_PWCTR2 , 1,              //  8: Power control, 1 arg, no delay:
+      0xC5,                         //     VGH25=2.4C VGSEL=-10 VGH=3 * AVDD
+    ST7735_PWCTR3 , 2,              //  9: Power control, 2 args, no delay:
+      0x0A,                         //     Opamp current small
+      0x00,                         //     Boost frequency
+    ST7735_PWCTR4 , 2,              // 10: Power control, 2 args, no delay:
+      0x8A,                         //     BCLK/2,
+      0x2A,                         //     opamp current small & medium low
+    ST7735_PWCTR5 , 2,              // 11: Power control, 2 args, no delay:
+      0x8A, 0xEE,
+    ST7735_VMCTR1 , 1,              // 12: Power control, 1 arg, no delay:
+      0x0E,
+    ST7735_INVOFF , 0,              // 13: Don't invert display, no args
+    ST7735_MADCTL , 1,              // 14: Mem access ctl (directions), 1 arg:
+      0xC8,                         //     row/col addr, bottom-top refresh
+    ST7735_COLMOD , 1,              // 15: set color mode, 1 arg, no delay:
+      0x05,                       //     16-bit color                  //     100 ms delay
+    ST7735_CASET  , 4,              //  1: Column addr set, 4 args, no delay:
+      0x00, 0x00,                   //     XSTART = 0
+      0x00, 0x7F,                   //     XEND = 79
+    ST7735_RASET  , 4,              //  2: Row addr set, 4 args, no delay:
+      0x00, 0x00,                   //     XSTART = 0
+      0x00, 0x9F,                 //     XEND = 159
+     ST7735_GMCTRP1, 16      ,       //  1: Gamma setting, I think?
       0x02, 0x1c, 0x07, 0x12,
       0x37, 0x32, 0x29, 0x2d,
       0x29, 0x25, 0x2B, 0x39,
       0x00, 0x01, 0x03, 0x10,
-    ST7735_GMCTRN1, 16      , //  2: Sparkles and rainbows, 16 args, no delay:
+    ST7735_GMCTRN1, 16      ,       //  2: More gamma?
       0x03, 0x1d, 0x07, 0x06,
       0x2E, 0x2C, 0x29, 0x2D,
       0x2E, 0x2E, 0x37, 0x3F,
       0x00, 0x00, 0x02, 0x10,
-    ST7735_DISPON ,    DELAY, //  4: Main screen turn on, no args w/delay
-      100 };                  //     100 ms delay
+    ST7735_NORON  ,   DELAY, //  3: Normal display on, no args, w/delay
+      10,                           //     10 ms delay
+    ST7735_DISPON ,   DELAY, //  4: Main screen turn on, no args w/delay
+      100 };                        //     100 ms delay
 
 // Companion code to the above table.  Reads and issues
 // a series of LCD commands stored in byte array.
@@ -210,7 +239,7 @@ void st7735_init(void)
 
     /* Initialise default values */
     colstart = 0;
-    rowstart = 0;
+    rowstart = 24;
     width = ST7735_WIDTH;
     height = ST7735_HEIGHT;
     wrap = 1;
@@ -222,6 +251,9 @@ void st7735_init(void)
 
     /* Initialise LCD screen */
     command_list(initCommands);
+
+    st7735_set_rotation(3);
+    st7735_fill_screen(ST7735_BLACK);
 
     is_init = true;
 }
@@ -440,230 +472,11 @@ void st7735_set_rotation(uint8_t m)
      height = ST7735_WIDTH;
      break;
   }
+
+  gfx_set_rotation(m);
 }
 
 void st7735_invert_display(uint8_t i) 
 {
   st7735_command(i ? ST7735_INVON : ST7735_INVOFF);
-}
-
-
-//*****************************************************************************
-//
-// Graphics Functions
-//
-//*****************************************************************************
-
-void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t colour) 
-{
-  int16_t f = 1 - r;
-  int16_t ddF_x = 1;
-  int16_t ddF_y = -2 * r;
-  int16_t x = 0;
-  int16_t y = r;
-
-  st7735_draw_pixel(x0  , y0+r, colour);
-  st7735_draw_pixel(x0  , y0-r, colour);
-  st7735_draw_pixel(x0+r, y0  , colour);
-  st7735_draw_pixel(x0-r, y0  , colour);
-
-  while (x<y) {
-    if (f >= 0) {
-      y--;
-      ddF_y += 2;
-      f += ddF_y;
-    }
-    x++;
-    ddF_x += 2;
-    f += ddF_x;
-  
-    st7735_draw_pixel(x0 + x, y0 + y, colour);
-    st7735_draw_pixel(x0 - x, y0 + y, colour);
-    st7735_draw_pixel(x0 + x, y0 - y, colour);
-    st7735_draw_pixel(x0 - x, y0 - y, colour);
-    st7735_draw_pixel(x0 + y, y0 + x, colour);
-    st7735_draw_pixel(x0 - y, y0 + x, colour);
-    st7735_draw_pixel(x0 + y, y0 - x, colour);
-    st7735_draw_pixel(x0 - y, y0 - x, colour);
-  }
-}
-
-void drawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t colour) 
-{
-  int16_t f     = 1 - r;
-  int16_t ddF_x = 1;
-  int16_t ddF_y = -2 * r;
-  int16_t x     = 0;
-  int16_t y     = r;
-
-  while (x<y) {
-    if (f >= 0) {
-      y--;
-      ddF_y += 2;
-      f     += ddF_y;
-    }
-    x++;
-    ddF_x += 2;
-    f     += ddF_x;
-    if (cornername & 0x4) {
-      st7735_draw_pixel(x0 + x, y0 + y, colour);
-      st7735_draw_pixel(x0 + y, y0 + x, colour);
-    } 
-    if (cornername & 0x2) {
-      st7735_draw_pixel(x0 + x, y0 - y, colour);
-      st7735_draw_pixel(x0 + y, y0 - x, colour);
-    }
-    if (cornername & 0x8) {
-      st7735_draw_pixel(x0 - y, y0 + x, colour);
-      st7735_draw_pixel(x0 - x, y0 + y, colour);
-    }
-    if (cornername & 0x1) {
-      st7735_draw_pixel(x0 - y, y0 - x, colour);
-      st7735_draw_pixel(x0 - x, y0 - y, colour);
-    }
-  }
-}
-
-void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t colour) 
-{
-  st7735_draw_fast_vline(x0, y0-r, 2*r+1, colour);
-  fillCircleHelper(x0, y0, r, 3, 0, colour);
-}
-
-void fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, 
-      int16_t delta, uint16_t colour) 
-{
-
-  int16_t f     = 1 - r;
-  int16_t ddF_x = 1;
-  int16_t ddF_y = -2 * r;
-  int16_t x     = 0;
-  int16_t y     = r;
-
-  while (x<y) {
-    if (f >= 0) {
-      y--;
-      ddF_y += 2;
-      f     += ddF_y;
-    }
-    x++;
-    ddF_x += 2;
-    f     += ddF_x;
-
-    if (cornername & 0x1) {
-      st7735_draw_fast_vline(x0+x, y0-y, 2*y+1+delta, colour);
-      st7735_draw_fast_vline(x0+y, y0-x, 2*x+1+delta, colour);
-    }
-    if (cornername & 0x2) {
-      st7735_draw_fast_vline(x0-x, y0-y, 2*y+1+delta, colour);
-      st7735_draw_fast_vline(x0-y, y0-x, 2*x+1+delta, colour);
-    }
-  }
-}
-
-void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t colour) 
-{
-  st7735_draw_fast_hline(x, y, w, colour);
-  st7735_draw_fast_hline(x, y+h-1, w, colour);
-  st7735_draw_fast_vline(x, y, h, colour);
-  st7735_draw_fast_vline(x+w-1, y, h, colour);
-}
-
-void drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t colour) 
-{
-  st7735_draw_fast_hline(x+r  , y    , w-2*r, colour); 
-  st7735_draw_fast_hline(x+r  , y+h-1, w-2*r, colour);
-  st7735_draw_fast_vline(x    , y+r  , h-2*r, colour);
-  st7735_draw_fast_vline(x+w-1, y+r  , h-2*r, colour);
-  drawCircleHelper(x+r    , y+r    , r, 1, colour);
-  drawCircleHelper(x+w-r-1, y+r    , r, 2, colour);
-  drawCircleHelper(x+w-r-1, y+h-r-1, r, 4, colour);
-  drawCircleHelper(x+r    , y+h-r-1, r, 8, colour);
-}
-
-void fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, 
-        int16_t r, uint16_t colour) 
-{
-  st7735_fill_rect(x+r, y, w-2*r, h, colour);
-  fillCircleHelper(x+w-r-1, y+r, r, 1, h-2*r-1, colour);
-  fillCircleHelper(x+r    , y+r, r, 2, h-2*r-1, colour);
-}
-
-void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-        int16_t x2, int16_t y2, uint16_t colour) 
-{
-  drawLine(x0, y0, x1, y1, colour);
-  drawLine(x1, y1, x2, y2, colour);
-  drawLine(x2, y2, x0, y0, colour);
-}
-
-void fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-          int16_t x2, int16_t y2, uint16_t colour) 
-{
-  int16_t a, b, y, last;
-
-  // Sort coordinates by Y order (y2 >= y1 >= y0)
-  if (y0 > y1) {
-    swap(y0, y1); swap(x0, x1);
-  }
-  if (y1 > y2) {
-    swap(y2, y1); swap(x2, x1);
-  }
-  if (y0 > y1) {
-    swap(y0, y1); swap(x0, x1);
-  }
-
-  if(y0 == y2) { // Handle awkward all-on-same-line case as its own thing
-    a = b = x0;
-    if(x1 < a)      a = x1;
-    else if(x1 > b) b = x1;
-    if(x2 < a)      a = x2;
-    else if(x2 > b) b = x2;
-    st7735_draw_fast_hline(a, y0, b-a+1, colour);
-    return;
-  }
-
-  int16_t
-    dx01 = x1 - x0,
-    dy01 = y1 - y0,
-    dx02 = x2 - x0,
-    dy02 = y2 - y0,
-    dx12 = x2 - x1,
-    dy12 = y2 - y1;
-  int32_t
-    sa   = 0,
-    sb   = 0;
-
-  // For upper part of triangle, find scanline crossings for segments
-  // 0-1 and 0-2.  If y1=y2 (flat-bottomed triangle), the scanline y1
-  // is included here (and second loop will be skipped, avoiding a /0
-  // error there), otherwise scanline y1 is skipped here and handled
-  // in the second loop...which also avoids a /0 error here if y0=y1
-  // (flat-topped triangle).
-  if(y1 == y2) last = y1;   // Include y1 scanline
-  else         last = y1-1; // Skip it
-
-  for(y=y0; y<=last; y++) {
-    a   = x0 + sa / dy01;
-    b   = x0 + sb / dy02;
-    sa += dx01;
-    sb += dx02;
-
-    if(a > b) swap(a,b);
-    st7735_draw_fast_hline(a, y, b-a+1, colour);
-  }
-
-  // For lower part of triangle, find scanline crossings for segments
-  // 0-2 and 1-2.  This loop is skipped if y1=y2.
-  sa = dx12 * (y - y1);
-  sb = dx02 * (y - y0);
-  for(; y<=y2; y++) {
-    a   = x1 + sa / dy12;
-    b   = x0 + sb / dy02;
-    sa += dx12;
-    sb += dx02;
-
-    if(a > b) swap(a,b);
-    st7735_draw_fast_hline(a, y, b-a+1, colour);
-  }
 }

@@ -10,6 +10,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+void gfx_set_rotation(uint8_t r);
+uint16_t gfx_get_width(void);
+uint16_t gfx_get_height(void);
+
 void nsec_gfx_effect_addNoise(uint8_t noise_amount);
 
 void gfx_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t colour);
