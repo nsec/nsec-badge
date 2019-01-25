@@ -1,0 +1,11 @@
+nRF52832 (Main CPU)
+https://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.0.pdf
+
+STM32F070F6 (Blackmagic CPU)
+https://www.st.com/resource/en/datasheet/stm32f070f6.pdf
+https://www.st.com/content/ccc/resource/technical/document/reference_manual/cf/10/a8/c4/29/fb/4c/42/DM00091010.pdf/files/DM00091010.pdf/jcr:content/translations/en.DM00091010.pdf
+
+AT25SF041 (Flash)
+http://www.adestotech.com/wp-content/uploads/DS-AT25SF041_044.pdf
+
+
