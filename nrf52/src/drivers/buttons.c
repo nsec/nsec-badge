@@ -42,18 +42,22 @@ void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action)
     if (button_action == APP_BUTTON_PUSH) {
         switch (pin_no) {
             case PIN_INPUT_UP:
+            	uart_send("+ btn up\n");
                 nsec_controls_trigger(BUTTON_UP);
             break;
 
             case PIN_INPUT_DOWN:
+            	uart_send("+ btn down\n");
                 nsec_controls_trigger(BUTTON_DOWN);
             break;
 
             case PIN_INPUT_BACK:
+            	uart_send("+ btn back\n");
                 nsec_controls_trigger(BUTTON_BACK);
             break;
 
             case PIN_INPUT_ENTER:
+            	uart_send("+ btn enter\n");
                 nsec_controls_trigger(BUTTON_ENTER);
             break;
         }
