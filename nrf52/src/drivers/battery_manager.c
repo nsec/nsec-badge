@@ -96,7 +96,10 @@ void battery_manager_handler(void) {
         }
     }
 
+#ifdef BOARD_NSEC18
 end_refresh:
+#endif
+
     battery_refresh();
 }
 

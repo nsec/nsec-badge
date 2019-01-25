@@ -8,6 +8,7 @@
 #include "drivers/ssd1306.h"
 #include "string.h"
 #include "drivers/controls.h"
+#include "gfx_effect.h"
 
 // SSD1306_LCDHEIGHT
 // SSD1306_LCDWIDTH

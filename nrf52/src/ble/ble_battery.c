@@ -11,7 +11,7 @@
 
 static ble_bas_t _nsec_ble_bas;
 
-static void _nsec_ble_battery_event_dispatch(ble_evt_t * p_evt);
+static void _nsec_ble_battery_event_dispatch(ble_evt_t const *p_ble_evt, void *p_context);
 
 void nsec_ble_battery_add(void) {
     ble_bas_init_t init;
@@ -24,8 +24,8 @@ void nsec_ble_battery_add(void) {
     nsec_ble_register_evt_handler(_nsec_ble_battery_event_dispatch);
 }
 
-static void _nsec_ble_battery_event_dispatch(ble_evt_t * p_evt) {
-    ble_bas_on_ble_evt(&_nsec_ble_bas, p_evt);
+static void _nsec_ble_battery_event_dispatch(ble_evt_t const *p_ble_evt, void *p_context) {
+    ble_bas_on_ble_evt(p_ble_evt, &_nsec_ble_bas);
 }
 
 void nsec_battery_set_level(uint8_t level) {

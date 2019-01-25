@@ -11,6 +11,7 @@
 #include "drivers/battery.h"
 #include "drivers/ssd1306.h"
 #include "drivers/battery_manager.h"
+#include "gfx_effect.h"
 
 uint64_t heartbeat_timeout_count = 0;
 

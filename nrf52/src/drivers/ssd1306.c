@@ -602,10 +602,10 @@ void gfx_drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) {
   int16_t x = 0;
   int16_t y = r;
 
-  ssd1306_drawPixel(x0  , y0+r, color);
-  ssd1306_drawPixel(x0  , y0-r, color);
-  ssd1306_drawPixel(x0+r, y0  , color);
-  ssd1306_drawPixel(x0-r, y0  , color);
+  ssd1306_draw_pixel(x0  , y0+r, color);
+  ssd1306_draw_pixel(x0  , y0-r, color);
+  ssd1306_draw_pixel(x0+r, y0  , color);
+  ssd1306_draw_pixel(x0-r, y0  , color);
 
   while (x<y) {
     if (f >= 0) {
@@ -617,14 +617,14 @@ void gfx_drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) {
     ddF_x += 2;
     f += ddF_x;
 
-    ssd1306_drawPixel(x0 + x, y0 + y, color);
-    ssd1306_drawPixel(x0 - x, y0 + y, color);
-    ssd1306_drawPixel(x0 + x, y0 - y, color);
-    ssd1306_drawPixel(x0 - x, y0 - y, color);
-    ssd1306_drawPixel(x0 + y, y0 + x, color);
-    ssd1306_drawPixel(x0 - y, y0 + x, color);
-    ssd1306_drawPixel(x0 + y, y0 - x, color);
-    ssd1306_drawPixel(x0 - y, y0 - x, color);
+    ssd1306_draw_pixel(x0 + x, y0 + y, color);
+    ssd1306_draw_pixel(x0 - x, y0 + y, color);
+    ssd1306_draw_pixel(x0 + x, y0 - y, color);
+    ssd1306_draw_pixel(x0 - x, y0 - y, color);
+    ssd1306_draw_pixel(x0 + y, y0 + x, color);
+    ssd1306_draw_pixel(x0 - y, y0 + x, color);
+    ssd1306_draw_pixel(x0 + y, y0 - x, color);
+    ssd1306_draw_pixel(x0 - y, y0 - x, color);
   }
 }
 
@@ -645,31 +645,31 @@ void gfx_drawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername
     ddF_x += 2;
     f     += ddF_x;
     if (cornername & 0x4) {
-      ssd1306_drawPixel(x0 + x, y0 + y, color);
-      ssd1306_drawPixel(x0 + y, y0 + x, color);
+      ssd1306_draw_pixel(x0 + x, y0 + y, color);
+      ssd1306_draw_pixel(x0 + y, y0 + x, color);
     }
     if (cornername & 0x2) {
-      ssd1306_drawPixel(x0 + x, y0 - y, color);
-      ssd1306_drawPixel(x0 + y, y0 - x, color);
+      ssd1306_draw_pixel(x0 + x, y0 - y, color);
+      ssd1306_draw_pixel(x0 + y, y0 - x, color);
     }
     if (cornername & 0x8) {
-      ssd1306_drawPixel(x0 - y, y0 + x, color);
-      ssd1306_drawPixel(x0 - x, y0 + y, color);
+      ssd1306_draw_pixel(x0 - y, y0 + x, color);
+      ssd1306_draw_pixel(x0 - x, y0 + y, color);
     }
     if (cornername & 0x1) {
-      ssd1306_drawPixel(x0 - y, y0 - x, color);
-      ssd1306_drawPixel(x0 - x, y0 - y, color);
+      ssd1306_draw_pixel(x0 - y, y0 - x, color);
+      ssd1306_draw_pixel(x0 - x, y0 - y, color);
     }
   }
 }
 
 void gfx_fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color) {
-  gfx_drawFastVLine(x0, y0-r, 2*r+1, color);
-  gfx_fillCircleHelper(x0, y0, r, 3, 0, color);
+  gfx_draw_fast_vline(x0, y0-r, 2*r+1, color);
+  gfx_fill_circle_helper(x0, y0, r, 3, 0, color);
 }
 
 // Used to do circles and roundrects
-void gfx_fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, int16_t delta, uint16_t color) {
+void gfx_fill_circle_helper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, int16_t delta, uint16_t color) {
   int16_t f     = 1 - r;
   int16_t ddF_x = 1;
   int16_t ddF_y = -2 * r;
@@ -687,12 +687,12 @@ void gfx_fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,
     f     += ddF_x;
 
     if (cornername & 0x1) {
-      gfx_drawFastVLine(x0+x, y0-y, 2*y+1+delta, color);
-      gfx_drawFastVLine(x0+y, y0-x, 2*x+1+delta, color);
+      gfx_draw_fast_vline(x0+x, y0-y, 2*y+1+delta, color);
+      gfx_draw_fast_vline(x0+y, y0-x, 2*x+1+delta, color);
     }
     if (cornername & 0x2) {
-      gfx_drawFastVLine(x0-x, y0-y, 2*y+1+delta, color);
-      gfx_drawFastVLine(x0-y, y0-x, 2*x+1+delta, color);
+      gfx_draw_fast_vline(x0-x, y0-y, 2*y+1+delta, color);
+      gfx_draw_fast_vline(x0-y, y0-x, 2*x+1+delta, color);
     }
   }
 }
@@ -700,10 +700,10 @@ void gfx_fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,
 // Draw a rounded rectangle
 void gfx_drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color) {
   // smarter version
-  gfx_drawFastHLine(x+r  , y    , w-2*r, color); // Top
-  gfx_drawFastHLine(x+r  , y+h-1, w-2*r, color); // Bottom
-  gfx_drawFastVLine(x    , y+r  , h-2*r, color); // Left
-  gfx_drawFastVLine(x+w-1, y+r  , h-2*r, color); // Right
+  gfx_draw_fast_hline(x+r  , y    , w-2*r, color); // Top
+  gfx_draw_fast_hline(x+r  , y+h-1, w-2*r, color); // Bottom
+  gfx_draw_fast_vline(x    , y+r  , h-2*r, color); // Left
+  gfx_draw_fast_vline(x+w-1, y+r  , h-2*r, color); // Right
   // draw four corners
   gfx_drawCircleHelper(x+r    , y+r    , r, 1, color);
   gfx_drawCircleHelper(x+w-r-1, y+r    , r, 2, color);
@@ -717,8 +717,8 @@ void gfx_fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, ui
   gfx_fill_rect(x+r, y, w-2*r, h, color);
 
   // draw four corners
-  gfx_fillCircleHelper(x+w-r-1, y+r, r, 1, h-2*r-1, color);
-  gfx_fillCircleHelper(x+r    , y+r, r, 2, h-2*r-1, color);
+  gfx_fill_circle_helper(x+w-r-1, y+r, r, 1, h-2*r-1, color);
+  gfx_fill_circle_helper(x+r    , y+r, r, 2, h-2*r-1, color);
 }
 
 void gfx_drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color) {
@@ -747,7 +747,7 @@ void gfx_fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t 
     else if(x1 > b) b = x1;
     if(x2 < a)      a = x2;
     else if(x2 > b) b = x2;
-    gfx_drawFastHLine(a, y0, b-a+1, color);
+    gfx_draw_fast_hline(a, y0, b-a+1, color);
     return;
   }
 
@@ -781,7 +781,7 @@ void gfx_fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t 
     b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
     */
     if(a > b) swap(a,b);
-    gfx_drawFastHLine(a, y, b-a+1, color);
+    gfx_draw_fast_hline(a, y, b-a+1, color);
   }
 
   // For lower part of triangle, find scanline crossings for segments
@@ -798,7 +798,7 @@ void gfx_fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t 
     b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
     */
     if(a > b) swap(a,b);
-    gfx_drawFastHLine(a, y, b-a+1, color);
+    gfx_draw_fast_hline(a, y, b-a+1, color);
   }
 }
 
