@@ -24,6 +24,7 @@
 #include "drivers/display.h"
 #include "drivers/power.h"
 #include "drivers/softdevice.h"
+#include "drivers/uart.h"
 #include "drivers/ws2812fx.h"
 #include "drivers/nsec_storage.h"
 
