@@ -6,8 +6,10 @@
 
 #include <app_timer.h>
 #include <nrf_drv_clock.h>
+#include <nrf_gpio.h>
 
 #include "timer.h"
+#include "boards.h"
 #include "drivers/battery.h"
 #include "drivers/ssd1306.h"
 #include "drivers/battery_manager.h"
@@ -16,6 +18,7 @@
 uint64_t heartbeat_timeout_count = 0;
 
 APP_TIMER_DEF(m_heartbeat_timer_id);
+APP_TIMER_DEF(m_status_timer_id);
 APP_TIMER_DEF(m_battery_status_timer_id);
 APP_TIMER_DEF(m_battery_manager_timer_id);
 
@@ -30,6 +33,14 @@ void _battery_manager_handler(void *p_context) {
 static
 void heartbeat_timeout_handler(void *p_context) {
     heartbeat_timeout_count++;
+}
+
+/*
+ * Callback function when the status timeout expires
+ */
+static
+void status_timeout_handler(void *p_context) {
+   nrf_gpio_pin_toggle(PIN_LED_STATUS_1);
 }
 
 /*
@@ -82,6 +93,19 @@ void timer_init(void) {
     // Start the heartbeat timer
     err_code = app_timer_start(m_heartbeat_timer_id,
                 APP_TIMER_TICKS(HEARTBEAT_TIMER_TIMEOUT), NULL);
+    APP_ERROR_CHECK(err_code);
+
+    nrf_gpio_cfg_output(PIN_LED_STATUS_1);
+
+    // Create the status timer
+    err_code = app_timer_create(&m_status_timer_id,
+                APP_TIMER_MODE_REPEATED,
+                status_timeout_handler);
+    APP_ERROR_CHECK(err_code);
+
+    // Start the status timer
+    err_code = app_timer_start(m_status_timer_id,
+                APP_TIMER_TICKS(STATUS_TIMER_TIMEOUT), NULL);
     APP_ERROR_CHECK(err_code);
 
     // Create the battery status timer
