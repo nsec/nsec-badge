@@ -23,6 +23,7 @@ as well as Adafruit raw 1.8" TFT display
 #include <nrf.h>
 #include <nrf_gpio.h>
 #include <nrf_delay.h>
+#include <nrf_drv_pwm.h>
 #include <app_util_platform.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,6 +63,59 @@ int16_t wrap,cursor_y,cursor_x;
 uint16_t textcolour,textbgcolour;
 uint32_t width, height;
 static bool is_init = false;
+static st7735_config_t st7735_config;
+
+//*****************************************************************************
+//
+// PWM stuff
+//
+//*****************************************************************************
+static nrf_drv_pwm_t m_pwm2 = NRF_DRV_PWM_INSTANCE(2);
+
+nrf_pwm_values_individual_t seq_values[1] = {0};
+nrf_pwm_sequence_t const seq =
+{
+    .values.p_individual = seq_values,
+    .length          = NRF_PWM_VALUES_LENGTH(seq_values),
+    .repeats         = 0,
+    .end_delay       = 0
+};
+
+static void pwm_init(void)
+{
+
+    nrf_drv_pwm_config_t const config0 =
+    {
+        .output_pins =
+        {
+            st7735_config.blk_pin,                // channel 0
+            NRF_DRV_PWM_PIN_NOT_USED,             // channel 1
+            NRF_DRV_PWM_PIN_NOT_USED,             // channel 2
+            NRF_DRV_PWM_PIN_NOT_USED,             // channel 3
+        },
+        .irq_priority = APP_IRQ_PRIORITY_LOWEST,
+        .base_clock   = NRF_PWM_CLK_16MHz,
+        .count_mode   = NRF_PWM_MODE_UP,
+        .top_value    = 100,
+        .load_mode    = NRF_PWM_LOAD_INDIVIDUAL,
+        .step_mode    = NRF_PWM_STEP_AUTO
+    };
+    // Init PWM without error handler
+    APP_ERROR_CHECK(nrf_drv_pwm_init(&m_pwm2, &config0, NULL));
+}
+
+void st7735_set_brightness(uint8_t brightness)
+{
+    
+    // Check if value is outside of range. If so, set to 100%
+    if(brightness >= 100) {
+        seq_values->channel_0 = 0;
+    } else {
+        seq_values->channel_0 = 100 - brightness;
+    }
+    
+    nrf_drv_pwm_simple_playback(&m_pwm2, &seq, 1, NRF_DRV_PWM_FLAG_LOOP);
+}
 
 //*****************************************************************************
 //
@@ -69,7 +123,6 @@ static bool is_init = false;
 //
 //*****************************************************************************
 static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(0); // change for two with real board
-static st7735_config_t st7735_config;
 
 static void spi_init(void) {
     nrf_drv_spi_config_t spi_config;
@@ -222,8 +275,10 @@ void st7735_init(void)
     st7735_config.cs_pin = PIN_OLED_CS;
     st7735_config.dc_pin = PIN_OLED_DC_MODE;
     st7735_config.rst_pin = PIN_OLED_RESET;
+    st7735_config.blk_pin = PIN_OLED_BLK;
 
     spi_init();
+    pwm_init();
 
     /* Set st7735_config.dc_pin and RST Pins as outputs for manual toggling */
     nrf_gpio_cfg_output(st7735_config.dc_pin);
@@ -252,6 +307,7 @@ void st7735_init(void)
     /* Initialise LCD screen */
     command_list(initCommands);
 
+    st7735_set_brightness(50);
     st7735_set_rotation(3);
     st7735_fill_screen(ST7735_BLACK);
 

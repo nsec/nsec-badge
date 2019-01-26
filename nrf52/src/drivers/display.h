@@ -70,6 +70,7 @@ void display_fill_screen_white(void);
 void display_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color);
 void display_draw_fast_vline(int16_t x, int16_t y, int16_t w, uint16_t color);
 void display_update(void);
+void display_set_brightness(uint8_t brightness);
 
 
 #endif //_DISPLAY_H
