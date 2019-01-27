@@ -43,16 +43,6 @@ void gfx_set_rotation(uint8_t r)
   }
 }
 
-uint16_t gfx_get_width(void)
-{
-  return gfx_width;
-}
-
-uint16_t gfx_get_height(void)
-{
-  return gfx_height;
-}
-
 void nsec_gfx_effect_addNoise(uint8_t noise_amount) {
     for(int16_t y = 0; y < DISPLAY_HEIGHT; y++) {
         for(int16_t x = 0; x < DISPLAY_WIDTH; x++) {
