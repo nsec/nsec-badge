@@ -25,6 +25,8 @@
 #include "ble/gap_configuration.h"
 #include "drivers/nsec_storage.h"
 
+extern uint16_t gfx_width;
+extern uint16_t gfx_height;
 
 #define AVATAR_SIZE \
     ((NSEC_IDENTITY_AVATAR_WIDTH * NSEC_IDENTITY_AVATAR_HEIGHT + 1) / 8)
@@ -103,7 +105,7 @@ void init_identity_service() {
 }*/
 
 void nsec_identity_draw(void) {
-    gfx_fill_rect(48, 12, 128-48, 20, DISPLAY_BLACK);
+    gfx_fill_rect(48, 12, gfx_width-48, 20, DISPLAY_BLACK);
     //gfx_draw_bitmapBg(8, 16, identity.avatar, NSEC_IDENTITY_AVATAR_WIDTH, NSEC_IDENTITY_AVATAR_HEIGHT, DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_set_cursor(48, 30);
     char name_with_spaces[NAME_MAX_LEN + 1];
