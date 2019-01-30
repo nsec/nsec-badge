@@ -31,6 +31,7 @@ struct display_ops {
 	void (*fill_screen_white)(void);
 	void (*draw_fast_hline)(int16_t x, int16_t y, int16_t w, uint16_t color);
 	void (*draw_fast_vline)(int16_t x, int16_t y, int16_t h, uint16_t color);
+	void (*set_brightness)(uint8_t brightness);
 	void (*update)(void);
 };
 
@@ -44,6 +45,7 @@ static struct display_ops st7735_ops =
 		&st7735_fill_screen_white,
 		&st7735_draw_fast_hline,
 		&st7735_draw_fast_vline,
+		&st7735_set_brightness,
 		&st7735_update
 	};
 static struct display_ops *ops = &st7735_ops;
@@ -59,6 +61,7 @@ static struct display_ops ssd1306_ops =
 		&ssd1306_fill_screen_white,
 		&ssd1306_draw_fast_hline,
 		&ssd1306_draw_fast_vline,
+		NULL,
 		&ssd1306_update
 	};
 static struct display_ops *ops = &ssd1306_ops;
@@ -97,6 +100,13 @@ void display_draw_fast_hline(int16_t x, int16_t y, int16_t h, uint16_t color)
 void display_draw_fast_vline(int16_t x, int16_t y, int16_t w, uint16_t color)
 {
 	ops->draw_fast_vline(x, y, w, color);
+}
+
+void display_set_brightness(uint8_t brightness)
+{
+	if (ops->set_brightness) {
+		ops->set_brightness(brightness);
+	}
 }
 
 void display_update(void)

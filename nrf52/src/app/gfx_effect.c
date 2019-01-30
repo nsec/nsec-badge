@@ -43,16 +43,6 @@ void gfx_set_rotation(uint8_t r)
   }
 }
 
-uint16_t gfx_get_width(void)
-{
-  return gfx_width;
-}
-
-uint16_t gfx_get_height(void)
-{
-  return gfx_height;
-}
-
 void nsec_gfx_effect_addNoise(uint8_t noise_amount) {
     for(int16_t y = 0; y < DISPLAY_HEIGHT; y++) {
         for(int16_t x = 0; x < DISPLAY_WIDTH; x++) {
@@ -338,6 +328,26 @@ void gfx_fill_triangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
     if(a > b) swap(a,b);
     gfx_draw_fast_hline(a, y, b-a+1, colour);
   }
+}
+
+void draw_round_rect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t colour) 
+{
+  gfx_draw_fast_hline(x+r  , y    , w-2*r, colour); 
+  gfx_draw_fast_hline(x+r  , y+h-1, w-2*r, colour);
+  gfx_draw_fast_vline(x    , y+r  , h-2*r, colour);
+  gfx_draw_fast_vline(x+w-1, y+r  , h-2*r, colour);
+  gfx_draw_circle_helper(x+r    , y+r    , r, 1, colour);
+  gfx_draw_circle_helper(x+w-r-1, y+r    , r, 2, colour);
+  gfx_draw_circle_helper(x+w-r-1, y+h-r-1, r, 4, colour);
+  gfx_draw_circle_helper(x+r    , y+h-r-1, r, 8, colour);
+}
+
+void fill_round_rect(int16_t x, int16_t y, int16_t w, int16_t h, 
+        int16_t r, uint16_t colour) 
+{
+  gfx_fill_rect(x+r, y, w-2*r, h, colour);
+  gfx_fill_circle_helper(x+w-r-1, y+r, r, 1, h-2*r-1, colour);
+  gfx_fill_circle_helper(x+r    , y+r, r, 2, h-2*r-1, colour);
 }
 
 void gfx_fill_screen(uint16_t color) {
