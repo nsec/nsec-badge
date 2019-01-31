@@ -184,6 +184,13 @@ void show_main_menu(void) {
 
 
 int main(void) {
+#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
+    sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
+#else
+    sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
+#endif
+    g_device_id[9] = '\0';
+
     /*
      * Initialize base hardware
      */
@@ -196,13 +203,6 @@ int main(void) {
     display_init();
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     nsec_buttons_init();
-
-#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
-    sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
-#else
-    sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
-#endif
-    g_device_id[9] = '\0';
 
     /*
      * Initialize bluetooth stack
