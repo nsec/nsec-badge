@@ -17,15 +17,13 @@ static char status_bar_name[9];
 static char badge_class[10];
 static status_bluetooth_status ble_status;
 static status_battery_state battery_state;
-static uint16_t width;
-static uint16_t height;
+extern uint16_t gfx_width;
+extern uint16_t gfx_height;
 
 void nsec_status_bar_init() {
     status_bar_name[0] = '\0';
     badge_class[0] = '\0';
-    width = gfx_get_width();
-    height = gfx_get_height();
-    gfx_fill_rect(0, 0, width, 8, DISPLAY_BLACK);
+    gfx_fill_rect(0, 0, gfx_width, 8, DISPLAY_BLACK);
     gfx_update();
 }
 
@@ -50,7 +48,7 @@ void nsec_status_set_ble_status(status_bluetooth_status status) {
         ble_status = status;
         gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
         if(ble_status == STATUS_BLUETOOTH_ON) {
-            gfx_draw_bitmap(width - 18, 0, ble_logo_bitmap, ble_logo_bitmap_width, ble_logo_bitmap_height, DISPLAY_WHITE);
+            gfx_draw_bitmap(gfx_width - 18, 0, ble_logo_bitmap, ble_logo_bitmap_width, ble_logo_bitmap_height, DISPLAY_BLUE);
         }
     }
 }
@@ -60,9 +58,9 @@ void nsec_status_set_battery_status(status_battery_state state) {
         battery_state = state;
         gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
         if(battery_state == STATUS_BATTERY_CHARGING) {
-            gfx_draw_bitmap(width - 11, 0, battery_charging_bitmap, battery_charging_bitmap_width, battery_charging_bitmap_height, DISPLAY_WHITE);
+            gfx_draw_bitmap(gfx_width - 11, 0, battery_charging_bitmap, battery_charging_bitmap_width, battery_charging_bitmap_height, DISPLAY_WHITE);
         } else {
-            gfx_draw_bitmap(width - 11, 1, battery_bitmap, battery_bitmap_width, battery_bitmap_height, DISPLAY_WHITE);
+            gfx_draw_bitmap(gfx_width - 11, 1, battery_bitmap, battery_bitmap_width, battery_bitmap_height, DISPLAY_WHITE);
             uint8_t width;
             switch (battery_state) {
                 case STATUS_BATTERY_25_PERCENT:
@@ -81,14 +79,14 @@ void nsec_status_set_battery_status(status_battery_state state) {
                     width = 0;
                     break;
             }
-            gfx_fill_rect(width - 10, 2, width, 3, DISPLAY_WHITE);
+            gfx_fill_rect(gfx_width - 10, 2, width, 3, DISPLAY_GREEN);
         }
         gfx_update();
     }
 }
 
 void nsec_status_bar_ui_redraw(void) {
-    gfx_fill_rect(0, 0, width, 8, DISPLAY_BLACK);
+    gfx_fill_rect(0, 0, gfx_width, 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 0);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(status_bar_name);
@@ -97,13 +95,13 @@ void nsec_status_bar_ui_redraw(void) {
     gfx_puts(badge_class);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     if(ble_status == STATUS_BLUETOOTH_ON) {
-        gfx_draw_bitmap(width - 18, 0, ble_logo_bitmap, ble_logo_bitmap_width, ble_logo_bitmap_height, DISPLAY_WHITE);
+        gfx_draw_bitmap(gfx_width - 18, 0, ble_logo_bitmap, ble_logo_bitmap_width, ble_logo_bitmap_height, DISPLAY_BLUE);
     }
     if(battery_state == STATUS_BATTERY_CHARGING) {
-        gfx_draw_bitmap(width - 11, 0, battery_charging_bitmap, battery_charging_bitmap_width, battery_charging_bitmap_height, DISPLAY_WHITE);
+        gfx_draw_bitmap(gfx_width - 11, 0, battery_charging_bitmap, battery_charging_bitmap_width, battery_charging_bitmap_height, DISPLAY_WHITE);
     }
     else {
-        gfx_draw_bitmap(width - 11, 1, battery_bitmap, battery_bitmap_width, battery_bitmap_height, DISPLAY_WHITE);
+        gfx_draw_bitmap(gfx_width - 11, 1, battery_bitmap, battery_bitmap_width, battery_bitmap_height, DISPLAY_WHITE);
         uint8_t width;
         switch (battery_state) {
             case STATUS_BATTERY_25_PERCENT:
@@ -122,7 +120,7 @@ void nsec_status_bar_ui_redraw(void) {
                 width = 0;
                 break;
         }
-        gfx_fill_rect(width - 10, 2, width, 3, DISPLAY_WHITE);
+        gfx_fill_rect(gfx_width - 10, 2, width, 3, DISPLAY_GREEN);
     }
     gfx_update();
 }

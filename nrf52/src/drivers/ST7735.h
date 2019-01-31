@@ -118,6 +118,7 @@ typedef struct
     uint8_t         cs_pin;
     uint8_t         dc_pin;
     uint8_t         rst_pin;
+    uint8_t         blk_pin;
 } st7735_config_t;
 
 //*****************************************************************************
@@ -139,22 +140,7 @@ void st7735_fill_screen_black(void);
 void st7735_fill_screen_white(void);
 void st7735_set_rotation(uint8_t m);
 void st7735_invert_display(uint8_t i);
-
+void st7735_set_brightness(uint8_t brightness);
 uint16_t st7735_color_565(uint8_t r, uint8_t g, uint8_t b);
-
-void drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t colour);
-void drawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t colour);
-void fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t colour);
-void fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername, 
-      int16_t delta, uint16_t colour);
-void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t colour);
-void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t colour);
-void drawRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t colour);
-void fillRoundRect(int16_t x, int16_t y, int16_t w, int16_t h, 
-        int16_t r, uint16_t colour);
-void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-        int16_t x2, int16_t y2, uint16_t colour);
-void fillTriangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1,
-          int16_t x2, int16_t y2, uint16_t colour);
 
 #endif

@@ -30,6 +30,8 @@ enum setting_state {
 #define MODE_BASIC_COUNT 42
 #define MODE_EXTRA_COUNT 14
 
+extern uint16_t gfx_width;
+extern uint16_t gfx_height;
 
 char *letters[] = {"0", "1", "2", "3", "4", "5", "6", "7",
                     "8", "9", "A", "B", "C", "D", "E", "F",};
@@ -208,8 +210,8 @@ static menu_item_s led_pattern_items[] = {
 };
 
 void nsec_led_pattern_show(void) {
-    gfx_fill_rect(0, 8, 128, 65 - 8, DISPLAY_BLACK);
-    menu_init(0, 12, 128, 64 - 12, ARRAY_SIZE(led_pattern_items), led_pattern_items);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
+    menu_init(0, 12, gfx_width, gfx_height - 12, ARRAY_SIZE(led_pattern_items), led_pattern_items);
     nsec_controls_add_handler(led_pattern_handle_buttons);
     _state = SETTING_STATE_MENU;
 }
@@ -265,7 +267,7 @@ static void save_letter3(uint8_t item) {
 static uint8_t index_to_unlock;
 static void try_unlock(uint8_t item) {
     strcat(pass, letters[item]);
-    gfx_fill_rect(0, 12, 128, 64-12, DISPLAY_BLACK);
+    gfx_fill_rect(0, 12, gfx_width, gfx_height-12, DISPLAY_BLACK);
     gfx_set_cursor(12, 26);
     if (nsec_unlock_led_pattern(pass, index_to_unlock)) {
         save_pattern(index_to_unlock);
@@ -280,7 +282,7 @@ static void try_unlock(uint8_t item) {
 }
 
 static void unlock_led_pattern(uint8_t item) {
-    gfx_fill_rect(0, 12, 128, 64-12, DISPLAY_BLACK);
+    gfx_fill_rect(0, 12, gfx_width, gfx_height-12, DISPLAY_BLACK);
     gfx_set_cursor(12, 26);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     char brackets[20] = {0};
@@ -296,7 +298,7 @@ void show_actual_pattern(void) {
     uint8_t mode = getMode_WS2812FX();
     char actual[50] = {0};
 
-    gfx_fill_rect(0, 12, 128, 20, DISPLAY_BLACK);
+    gfx_fill_rect(0, 12, gfx_width, 20, DISPLAY_BLACK);
     gfx_set_cursor(0, 12);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
 
@@ -308,19 +310,19 @@ void show_actual_pattern(void) {
 static bool basic_selected = false;
 static void show_basic_pattern_menu(uint8_t item) {
     basic_selected = true;
-    gfx_fill_rect(0, 8, 128, 65, DISPLAY_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, 65, DISPLAY_BLACK);
     for (int i=0; i < MODE_BASIC_COUNT; i++) {
         basic_pattern_items[i].label = basic_patterns[i];
         basic_pattern_items[i].handler = save_pattern;
     }
     show_actual_pattern();
-    menu_init(0, 32, 128, 64 - 32, ARRAY_SIZE(basic_pattern_items), basic_pattern_items);
+    menu_init(0, 32, gfx_width, gfx_height - 32, ARRAY_SIZE(basic_pattern_items), basic_pattern_items);
     _state = SETTING_STATE_BASIC_PATTERN;
 }
 
 static void show_extra_pattern_menu(uint8_t item) {
     basic_selected = false;
-    gfx_fill_rect(0, 8, 128, 65, DISPLAY_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, 65, DISPLAY_BLACK);
 
     for (int i=0; i<MODE_EXTRA_COUNT; i++) {
         if (pattern_is_unlock(i)) {
@@ -333,7 +335,7 @@ static void show_extra_pattern_menu(uint8_t item) {
     }
     menu_close();
     show_actual_pattern();
-    menu_init(0, 32, 128, 64 - 32, ARRAY_SIZE(extra_pattern_items), extra_pattern_items);
+    menu_init(0, 32, gfx_width, gfx_height - 32, ARRAY_SIZE(extra_pattern_items), extra_pattern_items);
     _state = SETTING_STATE_EXTRA_PATTERN;
 }
 

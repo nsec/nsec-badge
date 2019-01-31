@@ -23,23 +23,32 @@
 #include <stdio.h>
 #include <string.h>
 #include "menu.h"
-#include "drivers/ssd1306.h"
+#include "drivers/display.h"
 #include "gfx_effect.h"
 #include "status_bar.h"
 #include "../include/app_glue.h"
 #include "drivers/controls.h"
 
-#define ROW_COUNT                   7 // 8 - status bar
-#define COLUMN_COUNT                21
+#ifdef BOARD_BRAIN
+#define ROW_COUNT                   9 // 10 - status bar
+#define COLUMN_COUNT                26  
 #define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
+#else
+#define ROW_COUNT                   7 // 8 - status bar
+#define COLUMN_COUNT                21  
+#define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
+#endif
 
 static void warning_handle_buttons(button_t button);
 static uint16_t text_index = 0;
 static bool in_warning_page = false;
 const char * warning_notice = "That device is equipped with a protected lithium-ion battery. However, it is still a lithium-ion battery and it should be manipulated with caution. - Do not put the battery under excessive heat or direct sunlight.                  - Do not reverse the battery polarity to avoid damaging your badge.                 - Do not use an unprotected lithium-ion battery into the badge, the badge does not have an under voltage protection. The actual battery in the badge will automatically shutdown when reaching 2.5V. An unprotected battery will drain until 0V and it can be dangerous to recharge afterwards.       - Do not use the battery to power a device that required AA battery. Those batteries are the same size as the one in the badge but the voltage of an AA battery is 1.5V and the voltage of this battery is between 4.2V and 2.5V depending on the charge. You could fry your beautiful TV remote and we don't want that.";
 
+extern uint16_t gfx_width;
+extern uint16_t gfx_height;
+
 void show_warning(void) {
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 8);
 
     // We calculate the number of character we can use
@@ -48,7 +57,7 @@ void show_warning(void) {
     text_index = MAX_CHAR_UNDER_STATUS_BAR;
     strncpy(buffer, warning_notice, text_index);
 
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -64,13 +73,13 @@ void scroll_up_warning(bool change_direction) {
         return;
     }
 
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 8);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, warning_notice + text_index, MAX_CHAR_UNDER_STATUS_BAR);
 
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -80,7 +89,7 @@ void scroll_down_warning(bool change_direction) {
         return;
     }
 
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 8);   
 
     if (change_direction) {
@@ -91,7 +100,7 @@ void scroll_down_warning(bool change_direction) {
     strncpy(buffer, warning_notice + text_index, MAX_CHAR_UNDER_STATUS_BAR);
     text_index += MAX_CHAR_UNDER_STATUS_BAR;
 
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }

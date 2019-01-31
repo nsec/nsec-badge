@@ -20,12 +20,11 @@
 #include "ble/ble_device.h"
 #include "drivers/battery.h"
 #include "drivers/battery_manager.h"
-#include "drivers/uart.h"
-
 #include "drivers/buttons.h"
 #include "drivers/display.h"
 #include "drivers/power.h"
 #include "drivers/softdevice.h"
+#include "drivers/uart.h"
 #include "drivers/ws2812fx.h"
 #include "drivers/nsec_storage.h"
 
@@ -177,7 +176,7 @@ menu_item_s main_menu_items[] = {
 #endif
 
 void show_main_menu(void) {
-    //nsec_identity_draw();
+    nsec_identity_draw();
     menu_init(0, gfx_height-8, gfx_width, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
     is_at_main_menu = true;
 }
@@ -210,7 +209,7 @@ int main(void) {
     create_ble_device(g_device_id);
     configure_advertising();
     nsec_led_ble_init();
-    //init_identity_service();
+    init_identity_service();
     start_advertising();
 
     nsec_status_bar_init();

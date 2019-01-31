@@ -9,16 +9,25 @@
 #include <string.h>
 #include "nsec_conf_schedule.h"
 #include "menu.h"
-#include "drivers/ssd1306.h"
+#include "drivers/display.h"
 #include "drivers/controls.h"
 #include "app_glue.h"
 #include "gfx_effect.h"
 
-#define ROW_COUNT                   6 // 8 - status bar
+#ifdef BOARD_BRAIN
+#define ROW_COUNT                   9 // 10 - status bar
+#define COLUMN_COUNT                26
+#define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
+#else
+#define ROW_COUNT                   7 // 8 - status bar
 #define COLUMN_COUNT                21
 #define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
+#endif
 
 #define PRESENTER_COUNT             40
+
+extern uint16_t gfx_width;
+extern uint16_t gfx_height;
 
 static void nsec_schedule_button_handler(button_t button);
 void nsec_schedule_show_talks(uint8_t item);
@@ -606,7 +615,7 @@ static uint8_t presenter_selected = 0;
 static uint8_t schedule_index = 0; // Keep track of our index in the scheduler array
 
 void nsec_schedule_show_dates(void) {
-    menu_init(0, 12, 128, 56, ARRAY_SIZE(days_schedule_items), days_schedule_items);
+    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(days_schedule_items), days_schedule_items);
     schedule_state = SCHEDULE_STATE_DATES;
     nsec_controls_add_handler(nsec_schedule_button_handler);
 }
@@ -621,15 +630,15 @@ void nsec_schedule_return_to_talks(void) {
 void nsec_schedule_show_talks(uint8_t item) {
     track_selected = item;
     schedule_index = (date_selected * 3) + track_selected;
-    menu_init(0, 12, 128, 56, nsec_schedule[schedule_index].item_count, nsec_schedule[schedule_index].menu_items);
+    menu_init(0, 12, gfx_width, gfx_height - 8, nsec_schedule[schedule_index].item_count, nsec_schedule[schedule_index].menu_items);
     schedule_state = SCHEDULE_STATE_TALKS;
 }
 
 void nsec_schedule_show_header(void) {
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(nsec_schedule[schedule_index].menu_items[talk_selected].label);
     gfx_puts("\n");
-    gfx_set_text_background_color(SSD1306_BLACK, SSD1306_WHITE);
+    gfx_set_text_background_color(DISPLAY_BLACK, DISPLAY_WHITE);
     gfx_puts("By: ");
     gfx_puts((char *) nsec_schedule[schedule_index].presenters[talk_selected]);
     gfx_puts("\n");
@@ -644,7 +653,7 @@ uint16_t nsec_schedule_get_header_length(void) {
 }
 
 void _nsec_schedule_show_details(void) {
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 16);
 
     nsec_schedule_show_header();
@@ -659,7 +668,7 @@ void _nsec_schedule_show_details(void) {
     description_index = MAX_CHAR_UNDER_STATUS_BAR - header_length;
     strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected], description_index);
 
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(buffer);
     gfx_update();
 
@@ -684,14 +693,14 @@ void nsec_schedule_scroll_up_details(bool change_direction) {
         return;
     }
 
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 12);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected] + description_index,
             MAX_CHAR_UNDER_STATUS_BAR);
 
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -701,7 +710,7 @@ void nsec_schedule_scroll_down_details(bool change_direction) {
         return;
     }
 
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 16);
 
     if (change_direction) {
@@ -713,7 +722,7 @@ void nsec_schedule_scroll_down_details(bool change_direction) {
             MAX_CHAR_UNDER_STATUS_BAR);
     description_index += MAX_CHAR_UNDER_STATUS_BAR;
 
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -728,14 +737,14 @@ void nsec_schedule_scroll_up_presenters_details(bool change_direction) {
         }
     }
 
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 16);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, presenters_detail[presenter_selected] + description_index,
             MAX_CHAR_UNDER_STATUS_BAR);
 
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -745,7 +754,7 @@ void nsec_schedule_scroll_down_presenters_details(bool change_direction) {
         return;
     }
 
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 16);
 
     if (change_direction) {
@@ -757,7 +766,7 @@ void nsec_schedule_scroll_down_presenters_details(bool change_direction) {
             MAX_CHAR_UNDER_STATUS_BAR);
     description_index += MAX_CHAR_UNDER_STATUS_BAR;
 
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -771,7 +780,7 @@ void nsec_schedule_show_details(uint8_t item) {
 }
 
 void nsec_schedule_show_tracks (uint8_t item) {
-    menu_init(0, 12, 128, 56, ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items);
+    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items);
     date_selected = item;
     schedule_state = SCHEDULE_STATE_TRACK;
 }
@@ -783,9 +792,9 @@ void nsec_schedule_show_presenters_details(uint8_t item) {
     schedule_state = SCHEDULE_STATE_PRESENTERS_DETAILS;
     presenter_selected = item;
     menu_close();
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
+    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
     gfx_set_cursor(0, 16);
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts((char *) presenters_detail[presenter_selected]);
     description_index = MAX_CHAR_UNDER_STATUS_BAR;
     gfx_update();
@@ -803,7 +812,7 @@ void nsec_schedule_show_presenters(uint8_t item) {
         presenters_items[i].label = presenters_all[i];
         presenters_items[i].handler = nsec_schedule_show_presenters_details;
     }
-    menu_init(0, 12, 128, 56, ARRAY_SIZE(presenters_items), presenters_items);
+    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(presenters_items), presenters_items);
     description_index = 0;
     schedule_state = SCHEDULE_STATE_PRESENTERS;
 }

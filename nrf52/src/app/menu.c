@@ -9,7 +9,6 @@
 #include "gfx_effect.h"
 #include "string.h"
 #include "drivers/controls.h"
-#include "gfx_effect.h"
 
 #define FONT_SIZE_WIDTH  (6)
 #define FONT_SIZE_HEIGHT (8)
