@@ -75,9 +75,6 @@ static menu_item_s members_items[] = {
         .label = "Eric Tremblay",
         .handler = show_member_details,
     }, {
-        .label = "Marc-Etienne Leveille",
-        .handler = show_member_details,
-    }, {
         .label = "Michael Jeanson",
         .handler = show_member_details,
     }, {
@@ -92,7 +89,6 @@ static menu_item_s members_items[] = {
     }, {
         .label = "Victor Nikulshin",
         .handler = show_member_details,
-    },
     }, {
         .label = "Yannick Lamarre",
         .handler = show_member_details,
@@ -117,15 +113,7 @@ static void show_member_details(uint8_t item) {
         gfx_puts("Software\n");
         break;
 
-        case 1: // Marc-Etienne Leveille
-        gfx_puts("Badge veteran nsec19\n");
-        gfx_puts("Marc-Etienne Leveille\n");
-        gfx_puts("marc-etienne@nsec.io\n");
-        gfx_puts("@marc_etienne_\n");
-        gfx_puts("shape//soft//new dad\n");
-        break;
-
-        case 2: //Michael Jeanson
+        case 1: //Michael Jeanson
         gfx_puts("Badge drone nsec 2019\n");
         gfx_puts("Michael Jeanson\n");
         gfx_puts("mjeanson@gmail.com\n");
@@ -133,23 +121,23 @@ static void show_member_details(uint8_t item) {
         gfx_puts("Software\n");
         break;
 
-        case 3: // Nicolas Aubry
+        case 2: // Nicolas Aubry
         show_credit(4);
         break;
 
-        case 4: //Simon Marchi
+        case 3: //Simon Marchi
         show_credit(4);
         break;
 
-        case 5: //Thomas Dupuy
+        case 4: //Thomas Dupuy
         show_credit(4);
         break;
 
-        case 6: //Victor Nikulshin
+        case 5: //Victor Nikulshin
         show_credit(4);
         break;
 
-        case 7: //Yannick Lamarre
+        case 6: //Yannick Lamarre
         show_credit(4);
         break;
     }
