@@ -142,11 +142,11 @@ static void show_member_details(uint8_t item) {
         show_credit(4);
         break;
 
-        case 6: //Yannick Lamarre
+        case 6: //Victor Nikulshin
         show_credit(4);
         break;
 
-        case 6: //Yannick Lamarre
+        case 7: //Yannick Lamarre
         show_credit(4);
         break;
     }
