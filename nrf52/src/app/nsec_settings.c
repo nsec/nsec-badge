@@ -71,10 +71,7 @@ static menu_item_s members_items[] = {
     {
         .label = "Eric Tremblay",
         .handler = show_member_details,
-    }, /*{
-        .label = "Francois Charbonneau",
-        .handler = show_member_details,
-    }, */{
+    }, {
         .label = "Marc-Etienne Leveille",
         .handler = show_member_details,
     }, {
@@ -84,7 +81,17 @@ static menu_item_s members_items[] = {
         .label = "Nicolas Aubry",
         .handler = show_member_details,
     }, {
+        .label = "Simon Marchi",
+        .handler = show_member_details,
+    }, {
         .label = "Thomas Dupuy",
+        .handler = show_member_details,
+    }, {
+        .label = "Victor Nikulshin",
+        .handler = show_member_details,
+    },
+    }, {
+        .label = "Yannick Lamarre",
         .handler = show_member_details,
     },
 };
@@ -100,7 +107,7 @@ static void show_member_details(uint8_t item) {
         //Line   |                     | 21 character
         // There is 7 lines under the status bar
         case 0: //Eric Tremblay
-        gfx_puts("VP Badge nsec 2018\n");
+        gfx_puts("VP Badge nsec 2019\n");
         gfx_puts("etremblay.16@\n");
         gfx_puts("            gmail.com");
         gfx_puts("Hardware\n");
@@ -108,7 +115,7 @@ static void show_member_details(uint8_t item) {
         break;
 
         case 1: // Marc-Etienne Leveille
-        gfx_puts("Badge veteran nsec18\n");
+        gfx_puts("Badge veteran nsec19\n");
         gfx_puts("Marc-Etienne Leveille\n");
         gfx_puts("marc-etienne@nsec.io\n");
         gfx_puts("@marc_etienne_\n");
@@ -116,7 +123,7 @@ static void show_member_details(uint8_t item) {
         break;
 
         case 2: //Michael Jeanson
-        gfx_puts("Badge drone nsec 2018\n");
+        gfx_puts("Badge drone nsec 2019\n");
         gfx_puts("Michael Jeanson\n");
         gfx_puts("mjeanson@gmail.com\n");
         gfx_puts("@mjeanson\n");
@@ -127,7 +134,19 @@ static void show_member_details(uint8_t item) {
         show_credit(4);
         break;
 
-        case 4: //Thomas Dupuy
+        case 4: //Simon Marchi
+        show_credit(4);
+        break;
+
+        case 5: //Thomas Dupuy
+        show_credit(4);
+        break;
+
+        case 6: //Yannick Lamarre
+        show_credit(4);
+        break;
+
+        case 6: //Yannick Lamarre
         show_credit(4);
         break;
     }
@@ -155,7 +174,7 @@ static void show_credit(uint8_t item) {
     gfx_fill_rect(0, 8, 128, 56, DISPLAY_BLACK);
     gfx_set_cursor(0, 8);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_puts("nsec 2018 badge team:");
+    gfx_puts("nsec 2019 badge team:");
     menu_init(0, 16, 128, 64 - 12, ARRAY_SIZE(members_items), members_items);
     gfx_update();
 }
