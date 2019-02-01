@@ -67,7 +67,8 @@ static st7735_config_t st7735_config;
 
 // Using a complete double buffer is a little bit too intense on the memory
 // we will use a buffer that can contain 25% of the screen. 6400 bytes
-#define BUFFER_SIZE (ST7735_HEIGHT * ST7735_WIDTH * 2)/4
+#define BYTES_PER_PIXEL 2       
+#define BUFFER_SIZE (ST7735_HEIGHT * ST7735_WIDTH * BYTES_PER_PIXEL)/4
 static uint8_t buffer[BUFFER_SIZE] = {0};
 
 //*****************************************************************************
