@@ -46,7 +46,7 @@ static struct display_ops st7735_ops =
 		&st7735_draw_fast_hline,
 		&st7735_draw_fast_vline,
 		&st7735_set_brightness,
-		&st7735_update
+		NULL
 	};
 static struct display_ops *ops = &st7735_ops;
 
@@ -111,22 +111,7 @@ void display_set_brightness(uint8_t brightness)
 
 void display_update(void)
 {
-	ops->update();
+	if (ops->update) {
+		ops->update();
+	}
 }
-
-
-/*
-void ssd1306_command(uint8_t c);
-void ssd1306_startscrollright(uint8_t start, uint8_t stop);
-void ssd1306_startscrollleft(uint8_t start, uint8_t stop);
-void ssd1306_startscrolldiagright(uint8_t start, uint8_t stop);
-void ssd1306_startscrolldiagleft(uint8_t start, uint8_t stop);
-void ssd1306_stopscroll(void);
-void ssd1306_dim(bool dim);
-void ssd1306_update(void);
-void ssd1306_clearDisplay(void);
-void ssd1306_drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-void ssd1306_drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color);
-void ssd1306_drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-void ssd1306_drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t color);
-*/

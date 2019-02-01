@@ -128,7 +128,6 @@ typedef struct
 //*****************************************************************************
 
 void st7735_init(void);
-void st7735_update(void);
 void st7735_set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
 void st7735_push_color(uint16_t color);
 void st7735_draw_pixel(int16_t x, int16_t y, uint16_t color);
