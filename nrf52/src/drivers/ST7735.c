@@ -65,6 +65,11 @@ uint32_t width, height;
 static bool is_init = false;
 static st7735_config_t st7735_config;
 
+// Using a complete double buffer is a little bit too intense on the memory
+// we will use a buffer that can contain 25% of the screen. 6400 bytes
+#define BUFFER_SIZE (ST7735_HEIGHT * ST7735_WIDTH * 2)/4
+static uint8_t buffer[BUFFER_SIZE] = {0};
+
 //*****************************************************************************
 //
 // PWM stuff
@@ -170,13 +175,9 @@ static void st7735_data(uint8_t d) {
 //
 //*****************************************************************************
 
-#ifdef USE_DOUBLE_BUFFERING
-static uint8_t buffer[ST7735_HEIGHT * ST7735_WIDTH * 2] = {0};
-#endif
-
 static const uint8_t
-  initCommands[] = {                 // Init for 7735R, (green tab)
-    21,                             // 21 commands in list:
+    initCommands[] = {                 // Init for 7735R, (green tab)
+      21,                             // 21 commands in list:
     ST7735_SWRESET,   DELAY, //  1: Software reset, 0 args, w/delay
       150,                          //     150 ms delay
     ST7735_SLPOUT ,   DELAY, //  2: Out of sleep mode, 0 args, w/delay
@@ -325,40 +326,24 @@ uint16_t swap_colour(uint16_t x)
   return (x << 11) | (x & 0x07E0) | (x >> 11);
 }
 
-void st7735_update(void)
-{
-#ifdef USE_DOUBLE_BUFFERING
-    st7735_command(ST7735_CASET); 
-    st7735_data(0x00);
-    st7735_data(colstart);   
-    st7735_data(0x00);
-    st7735_data(ST7735_WIDTH + colstart - 1);  
-
-    st7735_command(ST7735_RASET); 
-    st7735_data(0x00);
-    st7735_data(rowstart);  
-    st7735_data(0x00);
-    st7735_data(ST7735_HEIGHT + rowstart - 1); 
-    st7735_command(ST7735_RAMWR);
-
-    SET_HIGH(st7735_config.dc_pin);
-    spi_master_tx(buffer, ST7735_HEIGHT * ST7735_WIDTH * 2);
-#endif
-}
-
 void st7735_set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) 
 {
+  buffer[0] = 0x00;
+  buffer[2] = 0x00;
+
   st7735_command(ST7735_CASET); 
-  st7735_data(0x00);
-  st7735_data(x0+colstart);   
-  st7735_data(0x00);
-  st7735_data(x1+colstart);  
+
+  SET_HIGH(st7735_config.dc_pin);
+  buffer[1] = x0+colstart;
+  buffer[3] = x1+colstart;
+  spi_master_tx(buffer, 4);
 
   st7735_command(ST7735_RASET); 
-  st7735_data(0x00);
-  st7735_data(y0+rowstart);  
-  st7735_data(0x00);
-  st7735_data(y1+rowstart); 
+
+  SET_HIGH(st7735_config.dc_pin);
+  buffer[1] = y0+rowstart;
+  buffer[3] = y1+rowstart;
+  spi_master_tx(buffer, 4);
 
   st7735_command(ST7735_RAMWR);
 }
@@ -366,134 +351,129 @@ void st7735_set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
 void st7735_push_colour(uint16_t colour) 
 {
   SET_HIGH(st7735_config.dc_pin);
-  spi_write(colour >> 8);
-  spi_write(colour);
+  buffer[0] = colour >> 8;
+  buffer[1] = colour;
+  spi_master_tx(buffer, 2);
 }
 
 void st7735_draw_pixel(int16_t x, int16_t y, uint16_t colour) 
 {
-  if((x < 0) ||(x >= width) || (y < 0) || (y >= height)) return;
+    if((x < 0) ||(x >= width) || (y < 0) || (y >= height)) {
+        return;
+    }
 
-#ifdef USE_DOUBLE_BUFFERING
-  uint32_t index = (x + y*ST7735_WIDTH) * 2;
-  buffer[index] = colour >> 8;
-  buffer[index + 1] = colour;
-#else
-  st7735_set_addr_window(x, y, x+1, y+1);
-  st7735_push_colour(colour);
-#endif
+    st7735_set_addr_window(x, y, x+1, y+1);
+    st7735_push_colour(colour);
 }
-
 
 void st7735_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t colour) 
 {
-  // Rudimentary clipping
-  if((x >= width) || (y >= height)) return;
-  
-  if((y+h-1) >= height) {
-    h = height-y;
-  }
 
-  uint8_t hi = colour >> 8, lo = colour;
+    uint32_t i = 0;
+    uint8_t hi, lo;
 
-#ifdef USE_DOUBLE_BUFFERING
-  while (h--) {
-    uint32_t index = (x + (y+h)*ST7735_WIDTH) * 2;
-    buffer[index] = hi;
-    buffer[index + 1] = lo;
-  }
-#else
-  st7735_set_addr_window(x, y, x, y+h-1);
-  SET_HIGH(st7735_config.dc_pin);
+    // Rudimentary clipping
+    if((x >= width) || (y >= height)) {
+        return;
+    }
   
-  
-  while (h--) {
-    spi_write(hi);
-    spi_write(lo);
-  }
-#endif
+    if((y+h-1) >= height) {
+        h = height-y;
+    }
 
+    hi = colour >> 8;
+    lo = colour;
+
+    st7735_set_addr_window(x, y, x, y+h-1);
+    SET_HIGH(st7735_config.dc_pin);
+  
+    while (h--) {
+        buffer[i++] = hi;
+        buffer[i++] = lo;
+    }
+
+    spi_master_tx(buffer, i);
 }
-
 
 void st7735_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t colour) 
 {
-  // Rudimentary clipping
-  if((x >= width) || (y >= height)) return;
-  if((x+w-1) >= width)  {
-    w = width-x;
-  }
-  uint8_t hi = colour >> 8, lo = colour;
+    uint32_t i = 0;
+    uint8_t hi, lo;
 
-#ifdef USE_DOUBLE_BUFFERING
-  while (w--) {
-    uint32_t index = ((x+w) + y*ST7735_WIDTH) * 2;
-    buffer[index] = hi;
-    buffer[index + 1] = lo;
-  }
-#else
-  st7735_set_addr_window(x, y, x+w-1, y);
-  SET_HIGH(st7735_config.dc_pin);
+    // Rudimentary clipping
+    if((x >= width) || (y >= height)) {
+        return;
+    }
 
-  while (w--) {
-    spi_write(hi);
-    spi_write(lo);
-  }
-#endif
+    if((x+w-1) >= width)  {
+        w = width-x;
+    }
+
+    hi = colour >> 8;
+    lo = colour;
+
+    st7735_set_addr_window(x, y, x+w-1, y);
+    SET_HIGH(st7735_config.dc_pin);
+
+    while (w--) {
+        buffer[i++] = hi;
+        buffer[i++] = lo;
+    }
+
+    spi_master_tx(buffer, i);
 }
 
 void st7735_fill_screen_black(void)
 {
-#ifdef USE_DOUBLE_BUFFERING
-    memset(buffer, 0x00, sizeof(buffer));
-#else
     st7735_fill_screen(ST7735_BLACK);
-#endif
 }
 
 void st7735_fill_screen_white(void)
 {
-#ifdef USE_DOUBLE_BUFFERING
-    memset(buffer, 0xFF, sizeof(buffer));
-#else
     st7735_fill_screen(ST7735_WHITE);
-#endif
 }
 
 void st7735_fill_screen(uint16_t colour) 
 {
-  st7735_fill_rect(0, 0,  width, height, colour);
+    st7735_fill_rect(0, 0,  width, height, colour);
 }
 
 void st7735_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h,
-  uint16_t colour) 
+                      uint16_t colour) 
 {
-  if((x >= width) || (y >= height)) return;
-  if((x + w - 1) >= width)  {
-    w = width  - x;
-  }
-  if((y + h - 1) >= height) {
-    h = height - y;
-  }
+    uint32_t i = 0;
+    uint8_t hi, lo;
 
-#ifdef USE_DOUBLE_BUFFERING
-   for(y=h; y>0; y--) {
-    for(x=w; x>0; x--) {
-      st7735_draw_pixel(x, y, colour);
+    if((x >= width) || (y >= height)) {
+        return;
     }
-  }
-#else
-  uint8_t hi = colour >> 8, lo = colour;
-  st7735_set_addr_window(x, y, x+w-1, y+h-1);
-  SET_HIGH(st7735_config.dc_pin);
 
-  for(y=h; y>0; y--) {
-    for(x=w; x>0; x--) {
-      spi_write(hi);
-      spi_write(lo);
+    if((x + w - 1) >= width)  {
+        w = width  - x;
     }
-  }
-#endif
+
+    if((y + h - 1) >= height) {
+        h = height - y;
+    }
+
+    hi = colour >> 8;
+    lo = colour;
+    st7735_set_addr_window(x, y, x+w-1, y+h-1);
+    SET_HIGH(st7735_config.dc_pin);
+
+    for(y=h; y>0; y--) {
+        for(x=w; x>0; x--) {
+            buffer[i++] = hi;
+            buffer[i++] = lo;
+            // Here its possible to overflow the buffer size
+            if (i == BUFFER_SIZE) {
+                spi_master_tx(buffer, i);
+                i = 0;
+            }
+        }
+    }
+
+    spi_master_tx(buffer, i);
 }
 
 // Pass 8-bit (each) R,G,B, get back 16-bit packed colour
@@ -504,32 +484,32 @@ uint16_t st7735_colour_565(uint8_t r, uint8_t g, uint8_t b)
 
 void st7735_set_rotation(uint8_t m) 
 {
-  st7735_command(ST7735_MADCTL);
-  rotation = m % 4; // can't be higher than 3
-  switch (rotation) {
-   case 0:
-     st7735_data(MADCTL_MX | MADCTL_MY | MADCTL_BGR);
-     width  = ST7735_WIDTH;
-     height = ST7735_HEIGHT;
-     break;
-   case 1:
-     st7735_data(MADCTL_MY | MADCTL_MV | MADCTL_BGR);
-     width  = ST7735_HEIGHT;
-     height = ST7735_WIDTH;
-     break;
-  case 2:
-     st7735_data(MADCTL_BGR);
-     width  = ST7735_WIDTH;
-     height = ST7735_HEIGHT;
-    break;
-   case 3:
-     st7735_data(MADCTL_MX | MADCTL_MV | MADCTL_BGR);
-     width  = ST7735_HEIGHT;
-     height = ST7735_WIDTH;
-     break;
-  }
+    st7735_command(ST7735_MADCTL);
+    rotation = m % 4; // can't be higher than 3
+    switch (rotation) {
+    case 0:
+        st7735_data(MADCTL_MX | MADCTL_MY | MADCTL_BGR);
+        width  = ST7735_WIDTH;
+        height = ST7735_HEIGHT;
+        break;
+    case 1:
+        st7735_data(MADCTL_MY | MADCTL_MV | MADCTL_BGR);
+        width  = ST7735_HEIGHT;
+        height = ST7735_WIDTH;
+        break;
+    case 2:
+        st7735_data(MADCTL_BGR);
+        width  = ST7735_WIDTH;
+        height = ST7735_HEIGHT;
+        break;
+    case 3:
+        st7735_data(MADCTL_MX | MADCTL_MV | MADCTL_BGR);
+        width  = ST7735_HEIGHT;
+        height = ST7735_WIDTH;
+        break;
+    }
 
-  gfx_set_rotation(m);
+    gfx_set_rotation(m);
 }
 
 void st7735_invert_display(uint8_t i) 
