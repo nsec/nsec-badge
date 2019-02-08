@@ -176,7 +176,6 @@ menu_item_s main_menu_items[] = {
 #endif
 
 void show_main_menu(void) {
-    nsec_identity_draw();
     menu_init(0, gfx_height-8, gfx_width, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
     is_at_main_menu = true;
 }
@@ -200,7 +199,7 @@ int main(void) {
     timer_init();
     init_WS2812FX();
     display_init();
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    //gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     nsec_buttons_init();
 
     /*
@@ -209,12 +208,12 @@ int main(void) {
     create_ble_device(g_device_id);
     configure_advertising();
     nsec_led_ble_init();
-    init_identity_service();
+    //init_identity_service();
     start_advertising();
 
     nsec_status_bar_init();
     nsec_battery_manager_init();
-    nsec_status_set_name(g_device_id);
+    //nsec_status_set_name(g_device_id);
     nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
