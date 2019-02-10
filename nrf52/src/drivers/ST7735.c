@@ -78,7 +78,7 @@ static uint8_t buffer[BUFFER_SIZE] = {0};
 //*****************************************************************************
 static nrf_drv_pwm_t m_pwm2 = NRF_DRV_PWM_INSTANCE(2);
 
-nrf_pwm_values_individual_t seq_values[1] = {0};
+nrf_pwm_values_individual_t seq_values[1] = {{0, 0, 0, 0}};
 nrf_pwm_sequence_t const seq =
 {
     .values.p_individual = seq_values,
