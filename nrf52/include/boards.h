@@ -74,11 +74,6 @@
 #define PIN_BATT_VOLTAGE        2
 // Brain does not have pin for PGOOD and CHG
 
-// SPI
-#define PIN_MOSI                9
-#define PIN_MISO                8
-#define PIN_SCK                 7
-
 // TWI
 #define PIN_TWI_SDA             27
 #define PIN_TW_SCL              26
@@ -90,8 +85,8 @@
 #define PIN_FLASH_CS            6
 
 // Display
-#define PIN_OLED_DATA           PIN_MOSI
-#define PIN_OLED_CLK            PIN_SCK
+#define PIN_OLED_DATA           9
+#define PIN_OLED_CLK            7
 #define PIN_OLED_DC_MODE        11
 #define PIN_OLED_RESET          10
 #define PIN_OLED_CS             12
