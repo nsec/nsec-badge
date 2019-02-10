@@ -75,8 +75,9 @@
 // Brain does not have pin for PGOOD and CHG
 
 // TWI
-#define PIN_TWI_SDA             27
-#define PIN_TW_SCL              26
+#define PIN_SAO_SDA             27
+#define PIN_SAO_SCL             26
+#define CONF_SAO_TWI_INST       1
 
 // Flash SPI
 #define PIN_FLASH_MOSI          3
