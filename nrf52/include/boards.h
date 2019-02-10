@@ -43,6 +43,8 @@
 #define PIN_OLED_DC_MODE        9
 #define PIN_OLED_RESET          7
 #define PIN_OLED_CS             11
+#define CONF_OLED_SPI_INST       2
+#define CONF_OLED_PWM_INST       2
 
 // Button
 #define PIN_INPUT_UP            30
@@ -94,6 +96,8 @@
 #define PIN_OLED_RESET          10
 #define PIN_OLED_CS             12
 #define PIN_OLED_BLK            13
+#define CONF_OLED_SPI_INST       2
+#define CONF_OLED_PWM_INST       2
 
 // Button
 #define PIN_INPUT_UP            30

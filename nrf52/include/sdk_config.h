@@ -4,11 +4,8 @@
 #define SPI0_ENABLED 1
 #define SPI0_USE_EASY_DMA 0
 #define SPI1_ENABLED 0
-#define SPI2_ENABLED 0
-#define SPIS_ENABLED 1
-#define SPIS0_ENABLED 0
-#define SPIS1_ENABLED 1
-#define SPIS2_ENABLED 0
+#define SPI2_ENABLED 1
+#define SPI2_USE_EASY_DMA 0
 
 // UART to STM32
 #define UART_ENABLED 1

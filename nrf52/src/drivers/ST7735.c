@@ -76,7 +76,7 @@ static uint8_t buffer[BUFFER_SIZE] = {0};
 // PWM stuff
 //
 //*****************************************************************************
-static nrf_drv_pwm_t m_pwm2 = NRF_DRV_PWM_INSTANCE(2);
+static nrf_drv_pwm_t m_pwm2 = NRF_DRV_PWM_INSTANCE(CONF_OLED_PWM_INST);
 
 nrf_pwm_values_individual_t seq_values[1] = {{0, 0, 0, 0}};
 nrf_pwm_sequence_t const seq =
@@ -128,7 +128,7 @@ void st7735_set_brightness(uint8_t brightness)
 // SPI stuff
 //
 //*****************************************************************************
-static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(0); // change for two with real board
+static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(CONF_OLED_SPI_INST);
 
 static void spi_init(void) {
     nrf_drv_spi_config_t spi_config;
