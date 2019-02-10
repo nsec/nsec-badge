@@ -47,7 +47,7 @@ typedef enum {
 /*
  * SPI stuff
  */
-static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(0);
+static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(CONF_OLED_SPI_INST);
 
 static void spi_init() {
     nrf_drv_spi_config_t spi_config;

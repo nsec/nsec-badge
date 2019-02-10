@@ -32,22 +32,15 @@ endif
 # Temporarly disable BLE identity service because it breaks right now.
 CFLAGS += -DNSEC_IDENTITY_BLE_SERVICE_DISABLE
 
-ifeq ($(BOARD), sputnik_proto)
+ifeq ($(BOARD), sputnik)
 	# One of the oled screen pin is shared with the
 	# NFC antenna, make sure it's configured as GPIO
 	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-	CFLAGS += -DBOARD_SPUTNIK_PROTO -DBOARD_NSEC18
-else ifeq ($(BOARD), sputnik)
-	# One of the oled screen pin is shared with the
-	# NFC antenna, make sure it's configured as GPIO
-	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-	CFLAGS += -DBOARD_SPUTNIK -DBOARD_NSEC18
+	CFLAGS += -DBOARD_SPUTNIK
 else ifeq ($(BOARD), brain)
 	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-	CFLAGS += -DBOARD_BRAIN_PROTO
 	CFLAGS += -DBOARD_BRAIN
-	CFLAGS += -DCONFIG_GPIO_AS_PINRESET
-else ifeq ($(BOARD), devboard)
+else ifeq ($(BOARD), pca10040)
 	#special flags for the devboard
 	ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
 	ASMFLAGS += -DBOARD_PCA10040
@@ -84,6 +77,7 @@ SRC_FILES += $(SDK_PATH)/drivers_nrf/pwm/nrf_drv_pwm.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/saadc/nrf_drv_saadc.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/nrf_drv_spi.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_slave/nrf_drv_spis.c
+SRC_FILES += $(SDK_PATH)/drivers_nrf/twi_master/nrf_drv_twi.c
 SRC_FILES += $(SDK_PATH)/drivers_nrf/uart/nrf_drv_uart.c
 SRC_FILES += $(SDK_PATH)/external/fprintf/nrf_fprintf.c
 SRC_FILES += $(SDK_PATH)/external/fprintf/nrf_fprintf_format.c
@@ -140,6 +134,7 @@ INC_FOLDERS += $(SDK_PATH)/drivers_nrf/pwm/
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/saadc
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/spi_master
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/spi_slave
+INC_FOLDERS += $(SDK_PATH)/drivers_nrf/twi_master
 INC_FOLDERS += $(SDK_PATH)/drivers_nrf/uart
 INC_FOLDERS += $(SDK_PATH)/libraries/atomic
 INC_FOLDERS += $(SDK_PATH)/libraries/atomic_fifo

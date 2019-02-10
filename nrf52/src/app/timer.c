@@ -54,7 +54,7 @@ void battery_status_timeout_handler(void *p_context) {
     gfx_set_cursor(0, 12);
     gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
 
-#ifdef BOARD_NSEC18
+#ifdef BOARD_SPUTNIK
     snprintf(msg, sizeof(msg),
         "Battery status:\n"
         " Voltage: %04d mV\n"
