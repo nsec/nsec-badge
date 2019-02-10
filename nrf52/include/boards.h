@@ -83,6 +83,7 @@
 #define PIN_FLASH_MISO          5
 #define PIN_FLASH_CLK           4
 #define PIN_FLASH_CS            6
+#define CONF_FLASH_SPI_INST     0
 
 // Display
 #define PIN_OLED_DATA           9
