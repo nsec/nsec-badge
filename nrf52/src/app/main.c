@@ -40,6 +40,7 @@
 #include "nsec_led_pattern.h"
 #include "nsec_warning.h"
 #include "nsec_led_ble.h"
+#include "home_menu.h"
 
 #include "images/nsec_logo_bitmap.c"
 #include "ble/service_characteristic.h"
@@ -176,6 +177,7 @@ menu_item_s main_menu_items[] = {
 #endif
 
 void show_main_menu(void) {
+
     menu_init(0, gfx_height-8, gfx_width, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
     is_at_main_menu = true;
 }
@@ -208,20 +210,20 @@ int main(void) {
     create_ble_device(g_device_id);
     configure_advertising();
     nsec_led_ble_init();
-    //init_identity_service();
+    init_identity_service();
     start_advertising();
 
     nsec_status_bar_init();
     nsec_battery_manager_init();
     //nsec_status_set_name(g_device_id);
-    nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
+    //nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     load_stored_led_settings();
 
     // nsec_intro like before work really bad on the new screen, we need something new
     //nsec_intro();
-    show_main_menu();
+    //home_menu_init();
 
     /*
      * Main loop
