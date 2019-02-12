@@ -1,4 +1,4 @@
-FLAVOR ?= ctf
+FLAVOR ?= conf
 BOARD ?= brain
 PROJECT_NAME = nsec19_nrf52_$(FLAVOR)
 TARGETS=$(PROJECT_NAME)
@@ -237,15 +237,16 @@ $(PROJECT_NAME): $(SDK_PATH)
 clean: clean-bitmaps
 
 %_bitmap.c: %.png
-	python utils/gen_image.py $< $@
+	python utils/gen_image.py $< $(basename $@)
 
 src/images/font_bitmap.c: src/images/font.png
-	python utils/gen_image.py -r $< $@
+	python utils/gen_image.py -r $< $(basename $@)
 
 bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard src/images/*.png))
 
 clean-bitmaps:
 	rm -f src/images/*.c
+	rm -f src/images/*.h
 
 $(SDK_PATH):
 	./utils/install-sdk.sh $@ $(SDK_VERSION)
