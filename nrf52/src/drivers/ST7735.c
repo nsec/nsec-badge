@@ -483,6 +483,40 @@ uint16_t st7735_colour_565(uint8_t r, uint8_t g, uint8_t b)
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
+void st7735_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
+    int16_t w, int16_t h, uint16_t bg_color)
+{
+    uint16_t i, j;
+    uint8_t hi, lo;
+    i = j = 0;
+
+    st7735_set_addr_window(x, y, x+w-1, y+h-1);
+    SET_HIGH(st7735_config.dc_pin);
+
+    hi = bg_color >> 8;
+    lo = bg_color;
+
+    for(y=h; y>0; y--) {
+        for(x=w; x>0; x--) {
+            if ((bitmap[j] == 0) && (bitmap[j+1] == 0)) {
+                buffer[i++] = hi;
+                buffer[i++] = lo;
+                j += 2;
+            } else {
+                buffer[i++] = bitmap[j++];
+                buffer[i++] = bitmap[j++];
+            }
+            // Here its possible to overflow the buffer size
+            if (i == BUFFER_SIZE) {
+                spi_master_tx(buffer, i);
+                i = 0;
+            }
+        }
+    }
+
+    spi_master_tx(buffer, i);
+}
+
 void st7735_set_rotation(uint8_t m) 
 {
     st7735_command(ST7735_MADCTL);

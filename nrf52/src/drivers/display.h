@@ -57,7 +57,7 @@
 #define	DISPLAY_GREEN	1
 #define DISPLAY_CYAN	1
 #define DISPLAY_MAGENTA	1
-#define DISPLAY_YELLOW	1  
+#define DISPLAY_YELLOW	1
 #define DISPLAY_WHITE	1
 #endif
 
@@ -69,6 +69,8 @@ void display_fill_screen_black(void);
 void display_fill_screen_white(void);
 void display_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color);
 void display_draw_fast_vline(int16_t x, int16_t y, int16_t w, uint16_t color);
+void display_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
+    int16_t w, int16_t h, uint16_t bg_color);
 void display_update(void);
 void display_set_brightness(uint8_t brightness);
 

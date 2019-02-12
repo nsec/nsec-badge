@@ -1,8 +1,6 @@
 # !/usr/bin/env python
 #
-# Copyright 2016-2017 Benjamin Vanheuverzwijn <bvanheu@gmail.com>
-#           2016-2017 Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
-#           2019 Michael Jeanson <mjeanson@gmail.com>
+# Copyright 2019 Thomas Dupuy <thom4s.d@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -39,17 +37,43 @@ const unsigned int {var_name:s}_width = {width:d};
 const unsigned int {var_name:s}_height = {height:d};
 """
 
+
+def RGBA_to_RGB(im):
+    """ _in: tuple RGBA
+        _out: list RGB565
+    """
+    _bytes = []
+    for pix in im.getdata():
+        # filter out Alpha
+        r, g, b, _ = pix
+        # rrrrrggggggbbbbb
+        r = r >> 3
+        g = g >> 2
+        b = b >> 3
+        merged = (r << 11) | (g << 5) | b
+        h = merged >> 8
+        l = merged & 0xff
+        _bytes.append(hex(h))
+        _bytes.append(hex(l))
+    return _bytes
+
+
 def encode_image(input_file_path, output_file_path, rotate=False):
     image = Image.open(input_file_path)
-    if image.mode != '1':
-        raise Exception("Image must be in 1-bit color mode.")
+    if image.mode == '1':
+        pass
+    elif 'RGBA' in image.mode:
+        pass
+    else:
+        sys.exit("Image must be in 1-bit or 2-bit color mode.")
 
     if rotate:
         image = image.transpose(Image.ROTATE_270)
     if sys.version_info >= (3, 0):
         array = ','.join('0x{:02x}'.format(b) for b in image.tobytes())
     else:
-        array = ','.join('0x{:02x}'.format(ord(b)) for b in image.tobytes())
+        array = ','.join(RGBA_to_RGB(image))
+
     with open(output_file_path, "w") as f:
         f.write(C_TEMPLATE.format(
             byte_array=array,
