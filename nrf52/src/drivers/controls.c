@@ -7,7 +7,12 @@
 #include "controls.h"
 #include <app_error.h>
 
-static button_handler handlers[NSEC_CONTROLS_LIMIT_MAX_HANDLERS];
+struct handler {
+    button_handler handler;
+    bool active;
+};
+
+static struct handler handlers[NSEC_CONTROLS_LIMIT_MAX_HANDLERS];
 static uint8_t handler_count = 0;
 
 void nsec_controls_add_handler(button_handler handler) {
@@ -15,15 +20,30 @@ void nsec_controls_add_handler(button_handler handler) {
         return;
     }
     for(int i = 0; i < handler_count; i++) {
-        if(handlers[i] == handler) {
+        if(handlers[i].handler == handler) {
+            handlers[i].active = true;
             return;
         }
     }
-    handlers[handler_count++] = handler;
+    handlers[handler_count++] = (struct handler) {
+        .handler = handler,
+        .active = true
+    };
+}
+
+void nsec_controls_suspend_handler(button_handler handler) {
+    for(int i = 0; i < handler_count; i++) {
+        if(handlers[i].handler == handler) {
+            handlers[i].active = false;
+            return;
+        }
+    }
 }
 
 void nsec_controls_trigger(button_t button) {
     for(int i = 0; i < handler_count; i++) {
-        handlers[i](button);
+        if (handlers[i].active) {
+            handlers[i].handler(button);
+        }
     }
 }

@@ -224,6 +224,7 @@ int main(void) {
     // nsec_intro like before work really bad on the new screen, we need something new
     //nsec_intro();
     //home_menu_init();
+    show_main_menu();
 
     /*
      * Main loop

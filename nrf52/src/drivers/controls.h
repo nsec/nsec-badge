@@ -21,7 +21,7 @@ typedef enum {
 typedef void (*button_handler)(button_t button);
 
 void nsec_controls_add_handler(button_handler handler);
-
+void nsec_controls_suspend_handler(button_handler handler);
 void nsec_controls_trigger(button_t button);
 
 #endif /* controls_h */
