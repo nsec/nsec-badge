@@ -41,17 +41,16 @@ H_TEMPLATE = """/*
 #include <bitmap.h>
 
 __attribute__((weak))
-uint8_t {var_name:s}_bytes[] = {{
+const uint8_t {var_name:s}_bytes[] = {{
     {byte_array:s}
 }};
 
 __attribute__((weak))
-struct bitmap {var_name:s} = {{
+const struct bitmap {var_name:s} = {{
     .image={var_name:s}_bytes,
     .width={width:d},
     .height={height:d},
     .encoding=image_encoding_{encoding:s},
-    .bg_color=0
 }};
 
 #endif /* {var_name:s}_h */

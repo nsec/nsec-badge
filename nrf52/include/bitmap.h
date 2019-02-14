@@ -10,7 +10,6 @@ struct bitmap {
     uint32_t width;
     uint32_t height;
     enum image_encoding encoding;
-    uint16_t bg_color;
 };
 
 #endif // bitmap_h
