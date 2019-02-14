@@ -40,7 +40,7 @@ static uint8_t bytes[] = {{
     {byte_array:s}
 }};
 
-struct bitmap = {{
+struct bitmap {var_name:s} = (struct bitmap){{
     .image=bytes,
     .width={width:d},
     .height={height:d},
@@ -69,26 +69,12 @@ H_TEMPLATE = """/*
 #define {var_name:s}_h
 
 #include <stdint.h>
-
-// Temporary, in the end these definitions will be checked somewhere in the code
-// base.
-enum image_encoding {{
-    image_encoding_1bit,
-    image_encoding_565bits
-}};
-struct bitmap {{
-    const uint8_t *image;
-    uint32_t width;
-    uint32_t height;
-    enum image_encoding encoding;
-    uint16_t bg_color;
-}};
+#include <bitmap.h>
 
 extern struct bitmap {var_name:s};
 
 #endif /* {var_name:s}_h */
 """
-
 
 def RGBA_to_RGB888(image):
     """ _in: tuple(RGBA)
