@@ -53,8 +53,8 @@ all:
 $(error "Unknown board `$(BOARD)`")
 endif
 
-
-SRC_FILES  = $(wildcard src/app/*.c)
+SRC_FILES = $(wildcard src/images/*.c)
+SRC_FILES += $(wildcard src/app/*.c)
 SRC_FILES += $(wildcard src/ble/*.c)
 SRC_FILES += $(wildcard src/drivers/*.c)
 #SRC_FILES += $(wildcard src/meshes/*.c)

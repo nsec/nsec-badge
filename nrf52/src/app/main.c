@@ -41,9 +41,9 @@
 #include "nsec_warning.h"
 #include "nsec_led_ble.h"
 
-#include "images/nsec_logo_bitmap.c"
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
+#include "images/nsec_logo_bitmap.h"
 
 static char g_device_id[10];
 bool is_at_main_menu = false;
@@ -95,13 +95,15 @@ static
 void nsec_intro(void) {
     for(uint8_t noise = 128; noise <= 128; noise -= 8) {
         gfx_fill_screen(DISPLAY_BLACK);
-        gfx_draw_bitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, DISPLAY_BLUE);
+        gfx_draw_bitmap(17, 11, nsec_logo_bitmap.image, nsec_logo_bitmap.width,
+                        nsec_logo_bitmap.height, DISPLAY_BLUE);
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }
     for(uint8_t noise = 0; noise <= 128; noise += 8) {
         gfx_fill_screen(DISPLAY_BLACK);
-        gfx_draw_bitmap(17, 11, nsec_logo_bitmap, nsec_logo_bitmap_width, nsec_logo_bitmap_height, DISPLAY_BLUE);
+        gfx_draw_bitmap(17, 11, nsec_logo_bitmap.image, nsec_logo_bitmap.width,
+                        nsec_logo_bitmap.height, DISPLAY_BLUE);
         nsec_gfx_effect_addNoise(noise);
         gfx_update();
     }

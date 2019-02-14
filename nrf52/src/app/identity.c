@@ -17,13 +17,13 @@
 #include "3d.h"
 
 #include "ble/ble_device.h"
+#include "ble/gap_configuration.h"
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
-#include "images/default_avatar_bitmap.c"
-#include "images/nsec_logo_tiny_bitmap.c"
-#include "images/star_bitmap.c"
-#include "ble/gap_configuration.h"
 #include "drivers/nsec_storage.h"
+#include "images/default_avatar_bitmap.h"
+#include "images/nsec_logo_tiny_bitmap.h"
+#include "images/star_bitmap.h"
 
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
