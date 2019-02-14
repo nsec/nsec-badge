@@ -53,8 +53,7 @@ all:
 $(error "Unknown board `$(BOARD)`")
 endif
 
-SRC_FILES = $(wildcard src/images/*.c)
-SRC_FILES += $(wildcard src/app/*.c)
+SRC_FILES = $(wildcard src/app/*.c)
 SRC_FILES += $(wildcard src/ble/*.c)
 SRC_FILES += $(wildcard src/drivers/*.c)
 #SRC_FILES += $(wildcard src/meshes/*.c)
@@ -194,7 +193,7 @@ ARCH = -mthumb -mabi=aapcs -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 # C flags common to all targets
 CFLAGS += $(OPTIMIZATIONS)
 CFLAGS += $(ARCH)
-CFLAGS += -Wall -Werror -Wno-unused-function
+CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable
 # keep every function in a separate section, this allows linker to discard unused ones
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
 CFLAGS += -fno-builtin -fshort-enums
@@ -236,16 +235,15 @@ $(PROJECT_NAME): $(SDK_PATH)
 
 clean: clean-bitmaps
 
-%_bitmap.c: %.png
+%_bitmap.h: %.png
 	python utils/gen_image.py $< $(basename $@)
 
-src/images/font_bitmap.c: src/images/font.png
+src/images/font_bitmap.h: src/images/font.png
 	python utils/gen_image.py -r $< $(basename $@)
 
-bitmaps: $(patsubst %.png,%_bitmap.c,$(wildcard src/images/*.png))
+bitmaps: $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
 
 clean-bitmaps:
-	rm -f src/images/*.c
 	rm -f src/images/*.h
 
 $(SDK_PATH):
