@@ -52,11 +52,13 @@ H_TEMPLATE = """/*
 #include <stdint.h>
 #include <bitmap.h>
 
-static uint8_t {var_name:s}_bytes[] = {{
+__attribute__((weak))
+uint8_t {var_name:s}_bytes[] = {{
     {byte_array:s}
 }};
 
-static struct bitmap {var_name:s} = (struct bitmap){{
+__attribute__((weak))
+struct bitmap {var_name:s} = (struct bitmap){{
     .image={var_name:s}_bytes,
     .width={width:d},
     .height={height:d},
