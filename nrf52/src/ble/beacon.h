@@ -15,7 +15,7 @@ struct AdvertisingName{
     ble_advdata_name_type_t name_type;
 };
 
-void set_broadcast_data(uint8_array_t data);
+void set_broadcast_data(uint8_t* data, uint16_t size);
 void set_beacon_name(struct AdvertisingName*);
 void set_advertising_interval_ms(uint16_t interval);
 void test_advertising();

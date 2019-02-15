@@ -33,9 +33,10 @@ static struct BeaconConfig {
 } beacon_config;
 
 
-void set_broadcast_data(uint8_array_t data){
+void set_broadcast_data(uint8_t* data, uint16_t size){
     beacon_config.broadcast_data.company_identifier = 0x1234;
-    beacon_config.broadcast_data.data = data;
+    beacon_config.broadcast_data.data.p_data = data;
+    beacon_config.broadcast_data.data.size = size;
 }
 
 void set_beacon_name(struct AdvertisingName* name){
