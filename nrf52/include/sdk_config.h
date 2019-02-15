@@ -1,9 +1,19 @@
 #include <device/nrf52832_peripherals.h>
 
+// SPI
+
 #define SPI_ENABLED 1
+
+/// SPI0 for flash
+
 #define SPI0_ENABLED 1
 #define SPI0_USE_EASY_DMA 0
+
+/// SPI1 unused
 #define SPI1_ENABLED 0
+
+/// SPI2 for display/ssd1306
+
 #define SPI2_ENABLED 1
 #define SPI2_USE_EASY_DMA 0
 
