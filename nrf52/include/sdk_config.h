@@ -25,6 +25,8 @@
 #define UART0_ENABLED 1
 #define UART0_CONFIG_USE_EASY_DMA 0
 
+#define CRC32_ENABLED 1
+
 // PWM
 #define PWM_ENABLED 1
 #define PWM2_ENABLED 1

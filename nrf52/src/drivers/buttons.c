@@ -95,3 +95,25 @@ void nsec_buttons_init(void) {
     err_code = app_button_enable();
     APP_ERROR_CHECK(err_code);
 }
+
+bool nsec_button_is_pushed(button_t button) {
+  int idx;
+  switch (button) {
+    case BUTTON_UP:
+      idx = 0;
+      break;
+    case BUTTON_DOWN:
+      idx = 1;
+      break;
+    case BUTTON_BACK:
+      idx = 2;
+      break;
+    case BUTTON_ENTER:
+      idx = 3;
+      break;
+    default:
+        return false;
+  }
+
+  return app_button_is_pushed(idx);
+}

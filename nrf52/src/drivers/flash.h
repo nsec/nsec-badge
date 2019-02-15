@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Eric Tremblay <habscup@gmail.com>
+ * Copyright 2019 Simon Marchi <simon.marchi@polymtl.ca>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,14 @@
  * SOFTWARE.
  */
 
-#ifndef buttons_h
-#define buttons_h
+#ifndef SRC_DRIVERS_FLASH_H
+#define SRC_DRIVERS_FLASH_H
 
-#include <app_button.h>
-#include <app_error.h>
-#include <app_timer.h>
+#include <sdk_errors.h>
 
-#include "controls.h"
+void flash_init ();
+ret_code_t flash_erase_chip ();
+ret_code_t flash_read_128 (int address, uint8_t *data);
+ret_code_t flash_write_128 (int address, const uint8_t *data);
 
-void nsec_buttons_init(void);
-bool nsec_button_is_pushed(button_t button);
-
-#endif
+#endif // SRC_DRIVERS_FLASH_H
