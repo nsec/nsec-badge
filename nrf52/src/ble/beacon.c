@@ -18,7 +18,7 @@ static void configure_advertising_parameters(ble_gap_adv_params_t* adv_params);
 static void configure_advertising_data();
 
 
-struct Advertiser beacon =
+static struct Advertiser beacon =
     {
         &start_broadcasting,
         &stop_broadcasting,
@@ -52,8 +52,8 @@ void set_advertising_interval_ms(uint16_t interval){
     beacon_config.advertising_interval = (uint16_t) interval_0_625_ms;
 }
 
-void test_advertising(){
-    start_broadcasting();
+struct Advertiser* get_beacon(){
+    return &beacon;
 }
 
 static void start_broadcasting(){
