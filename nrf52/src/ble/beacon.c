@@ -26,7 +26,7 @@ static struct Advertiser beacon =
     };
 
 static struct BeaconConfig {
-    struct AdvertisingName* name;
+    const char* name;
     ble_advdata_t adv_data;
     ble_advdata_manuf_data_t broadcast_data;
     uint16_t advertising_interval;
@@ -39,7 +39,7 @@ void set_broadcast_data(uint8_t* data, uint16_t size){
     beacon_config.broadcast_data.data.size = size;
 }
 
-void set_beacon_name(struct AdvertisingName* name){
+void set_beacon_name(const char* name){
     beacon_config.name = name;
 }
 
@@ -73,11 +73,11 @@ static void configure_advertising_data(){
     memset(&beacon_config.adv_data, 0, sizeof(beacon_config.adv_data));
 
     ble_gap_conn_sec_mode_t security_mode;
-    beacon_config.adv_data.name_type = beacon_config.name->name_type;
-    if(beacon_config.name->name_type == BLE_ADVDATA_SHORT_NAME)
-        beacon_config.adv_data.short_name_len = (uint8_t) max(beacon_config.name->name_length, 8);
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&security_mode);
-    APP_ERROR_CHECK(sd_ble_gap_device_name_set(&security_mode, beacon_config.name->name, beacon_config.name->name_length));
+    // Always use full name, as the encoding lib will use the appropriate name type in the end.
+    beacon_config.adv_data.name_type = BLE_ADVDATA_FULL_NAME;
+    uint16_t name_length = (uint16_t)strlen(beacon_config.name);
+    APP_ERROR_CHECK(sd_ble_gap_device_name_set(&security_mode, (uint8_t*)beacon_config.name, name_length));
 
     beacon_config.adv_data.include_appearance = false;
     beacon_config.adv_data.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
