@@ -31,6 +31,7 @@
 #include <crc32.h>
 
 // Includes from our code.
+#include "gfx_effect.h"
 #include <drivers/flash.h>
 #include <drivers/uart.h>
 
@@ -252,6 +253,9 @@ static void handle_command(const char *command) {
 // The only way to get out of this mode is to reset the chip.
 void flash_mode() {
   uart_puts("Entering flash mode!\n");
+  gfx_set_cursor(0, 0);
+  gfx_puts("Flash!");
+  gfx_update();
 
   // The space required for the flash write command is 256 bytes (hex encoded
   // data) plus the text of the command before that.  300 bytes should be more
