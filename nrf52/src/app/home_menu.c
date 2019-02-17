@@ -12,11 +12,12 @@
 
 #include "images/settings_off_bitmap.c"
 #include "images/settings_on_bitmap.c"
+#include "images/neurosoft_logo_bitmap.c"
 
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
-static struct bitmap settings_off, settings_on;
+static struct bitmap settings_off, settings_on, neurosoft_logo;
 
 static void home_menu_handle_buttons(button_t button);
 
@@ -79,6 +80,7 @@ static void draw_home_menu(void)
     // TODO Show logo screen instead
     gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, gfx_height,
         DISPLAY_BLACK);
+    gfx_draw_16bit_bitmap(0, 0, &neurosoft_logo);
 }
 
 void show_home_menu(void)
@@ -95,6 +97,13 @@ void show_home_menu(void)
         .width = settings_on_bitmap_width,
         .height = settings_on_bitmap_height,
         .bg_color = DISPLAY_WHITE
+    };
+
+    neurosoft_logo = (struct bitmap){
+        .image = neurosoft_logo_bitmap,
+        .width = neurosoft_logo_bitmap_width,
+        .height = neurosoft_logo_bitmap_height,
+        .bg_color = DISPLAY_BLACK
     };
 
     _state = HOME_STATE_MENU;
