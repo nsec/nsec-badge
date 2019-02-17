@@ -21,11 +21,14 @@
 
 import serial
 import binascii
+import argparse
 
 
 class FlashClient:
-    def __init__(self, ser):
+    def __init__(self, ser, verbose):
         self._ser = ser
+        self._verbose = verbose
+
         # Send the magic byte that clears the command buffer.
         self._ser.write(b'\x00')
 
@@ -54,7 +57,8 @@ class FlashClient:
 
         full_cmd = full_cmd + b'\n'
 
-        print('pc -> badge: ', full_cmd)
+        if self._verbose:
+            print('pc -> badge: ', full_cmd)
         self._ser.write(full_cmd)
 
         ok_msg = cmd + b' ok'
@@ -62,7 +66,9 @@ class FlashClient:
 
         while True:
             line = self._ser.readline()
-            print('pc <- badge: ', line)
+
+            if self._verbose:
+                print('pc <- badge: ', line)
 
             if line.startswith(error_msg):
                 raise RuntimeError(line[len(error_msg) + 1:])
@@ -143,26 +149,38 @@ class FlashClient:
 
 
 def main():
-    # This is an example of using this client to program the flash on the badge.
-    with serial.Serial('/dev/ttyACM1', 38400) as ser:
-        client = FlashClient(ser)
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('file-to-flash', help='File to write on the flash.')
+    argparser.add_argument('--verbose', '-v', help='Be verbose.', action='store_true')
+    args = argparser.parse_args()
 
+    with serial.Serial('/dev/ttyACM1', 38400) as ser:
+        with open(vars(args)['file-to-flash'], 'rb') as inputfile:
+            contents = inputfile.read()
+
+        if len(contents) % 128 != 0:
+            missing = 128 - (len(contents) % 128)
+            contents = contents + b'\xaa' * missing
+            assert len(contents) % 128 == 0
+
+        nsegments = len(contents) // 128
+        cursegment = 1
+
+        print(' > erasing')
+        client = FlashClient(ser, args.verbose)
         client.erase()
 
-        # 128 bytes of CAFEBABE
-        data = b'\xca\xfe\xba\xbe' * 32
-        client.write(0x200, data)
+        address = 0
+        while address < len(contents):
+            print(' > segment {}/{}'.format(cursegment, nsegments))
+            data = contents[address:address + 128]
+            client.write(address, data)
+            address += 128
+            cursegment += 1
 
-        data = client.read(0x200)
-        assert data == b'\xca\xfe\xba\xbe' * 32
-        data = client.read(0x1c0)
-        assert data == b'\xff' * 64 + b'\xca\xfe\xba\xbe' * 16
-        data = client.read(0x240)
-        assert data == b'\xca\xfe\xba\xbe' * 16 + b'\xff' * 64
-
-        target_checksum = client.checksum(0x200, 256)
-        our_checksum = binascii.crc32(
-            b'\xca\xfe\xba\xbe' * 32 + b'\xff' * 128)
+        print(' > checksuming')
+        our_checksum = binascii.crc32(contents)
+        target_checksum = client.checksum(0, len(contents))
         assert target_checksum == our_checksum
 
 

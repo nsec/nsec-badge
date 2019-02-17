@@ -10,6 +10,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+struct bitmap_ext;
+
 void gfx_set_rotation(uint8_t r);
 
 void nsec_gfx_effect_addNoise(uint8_t noise_amount);
@@ -36,6 +38,7 @@ void gfx_fill_triangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t
 void gfx_draw_bitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
 void gfx_draw_bitmap_bg(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
 void gfx_draw_xbitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
+void gfx_draw_bitmap_ext_flash(int16_t x, int16_t y, const struct bitmap_ext *bitmap);
 
 void gfx_write(uint8_t c);
 void gfx_putc(char c);
