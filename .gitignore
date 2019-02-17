@@ -1,6 +1,6 @@
 builds
 nrf52/*.jlink
-nrf52/src/images/*.c
+nrf52/src/images/*.h
 nrf52/nordicsdk
 nrf52/mergehex
 nrf52/nrfjprog

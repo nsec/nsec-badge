@@ -4,11 +4,11 @@
 //
 //  License: MIT (see LICENSE for details)
 
-#include <string.h>
 #include "gfx_effect.h"
 #include "drivers/display.h"
+#include "images/font_bitmap.h"
 #include "random.h"
-#include "images/font_bitmap.c"
+#include <string.h>
 
 int16_t gfx_width = DISPLAY_WIDTH;
 int16_t gfx_height = DISPLAY_HEIGHT;
@@ -427,7 +427,7 @@ void gfx_draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16
     if (i == 5)
       line = 0x0;
     else
-      line = pgm_read_byte(font_bitmap+(c*5)+i);
+        line = pgm_read_byte(font_bitmap.image + (c * 5) + i);
     for (int8_t j = 0; j<8; j++) {
       if (line & 0x1) {
         if (size == 1){ // default size

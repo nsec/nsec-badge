@@ -55,7 +55,7 @@ void battery_manager_handler(void) {
     uint16_t voltage = battery_get_voltage();
 
 // TODO can we detect that we are charging by comparing ADC values ?
-#ifdef BOARD_NSEC18
+#ifdef BOARD_SPUTNIK
     if (battery_is_usb_plugged()) {
         nsec_status_set_battery_status(STATUS_BATTERY_CHARGING);
         goto end_refresh;
@@ -96,7 +96,7 @@ void battery_manager_handler(void) {
         }
     }
 
-#ifdef BOARD_NSEC18
+#ifdef BOARD_SPUTNIK
 end_refresh:
 #endif
 

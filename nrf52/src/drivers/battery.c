@@ -79,7 +79,7 @@ bool battery_is_present() {
     return (m_batt_lvl_in_millivolts > NO_BATTERY_THRESHOLD_MV);
 }
 
-#ifdef BOARD_NSEC18
+#ifdef BOARD_SPUTNIK
 bool battery_is_charging() {
     /*
      * RT9525GQW pin CHG, active low.
