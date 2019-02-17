@@ -235,13 +235,20 @@ $(PROJECT_NAME): $(SDK_PATH)
 
 clean: clean-bitmaps
 
+GEN_IMAGE_SCRIPT = utils/gen_image.py
+
 %_bitmap.h: %.png
-	python utils/gen_image.py $< $(basename $@)
+	python $(GEN_IMAGE_SCRIPT) $< $(basename $@)
 
 src/images/font_bitmap.h: src/images/font.png
-	python utils/gen_image.py -r $< $(basename $@)
+	python $(GEN_IMAGE_SCRIPT) -r $< $(basename $@)
 
-bitmaps: $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
+BITMAPS_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
+
+bitmaps: $(BITMAPS_HDRS)
+
+# If the gen_image script changes, we want to re-generate the images.
+$(BITMAPS_HDRS): $(GEN_IMAGE_SCRIPT)
 
 clean-bitmaps:
 	rm -f src/images/*.h
