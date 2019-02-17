@@ -1,4 +1,4 @@
-FLAVOR ?= conf
+FLAVOR ?= ctf
 BOARD ?= brain
 PROJECT_NAME = nsec19_nrf52_$(FLAVOR)
 TARGETS=$(PROJECT_NAME)
