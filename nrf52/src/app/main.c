@@ -48,6 +48,8 @@
 #include "ble/vendor_service.h"
 #include "images/nsec_logo_bitmap.h"
 
+#include "ble/resistance_bar_beacon.h"
+
 static char g_device_id[10];
 
 extern uint16_t gfx_width;
@@ -141,9 +143,8 @@ int main(void) {
      * Initialize bluetooth stack
      */
     create_ble_device(g_device_id);
-    configure_advertising();
-    nsec_led_ble_init();
-    init_identity_service();
+    init_resistance_bar_beacon();
+    set_advertiser(get_resistance_bar_beacon());
     start_advertising();
 
     nsec_status_bar_init();
