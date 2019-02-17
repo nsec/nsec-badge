@@ -56,6 +56,7 @@ const struct bitmap {var_name:s} = {{
 #endif /* {var_name:s}_h */
 """
 
+
 def RGBA_to_RGB888(image):
     """ _in: tuple(RGBA)
         _out: list(tuple(RGB))
@@ -74,11 +75,11 @@ def RGB888_to_RGB565(image):
         green = green >> 2
         blue = blue >> 3
         merged = (red << 11) | (green << 5) | blue
-        h = merged >> 8
-        l = merged & 0xff
+        high = merged >> 8
+        low = merged & 0xff
         # TODO: do something better
-        _bytes.append(hex(h))
-        _bytes.append(hex(l))
+        _bytes.append(hex(high))
+        _bytes.append(hex(low))
     return ','.join(_bytes)
 
 
@@ -110,11 +111,11 @@ def encode_image(input_file_path, output_file_path, rotate=False):
         sys.exit("Image must be in 1-bit or 2-bit color mode ({}).".format(image.mode))
 
     args = {
-        "byte_array":array,
-        "var_name":os.path.splitext(os.path.basename(output_file_path))[0],
-        "width":image.width,
-        "height":image.height,
-        "encoding":encoding
+        "byte_array": array,
+        "var_name": os.path.splitext(os.path.basename(output_file_path))[0],
+        "width": image.width,
+        "height": image.height,
+        "encoding": encoding
     }
 
     with open('{}.h'.format(output_file_path), "w") as f:
@@ -126,7 +127,7 @@ def decode_image(input_file_path, output_file_path, width, rotate=False):
     if len(tree.ext) != 1:
         raise Exception("C file has more than one element.")
     font = tree.ext[0]
-    if not "char" in font.type.type.type.names:
+    if "char" not in font.type.type.type.names:
         raise Exception("Array must be of type char.")
     buf = b""
     for con in font.init.exprs:
