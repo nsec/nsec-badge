@@ -44,6 +44,7 @@ typedef enum {
 typedef struct {
     uint16_t handle;
     uint16_t value_length;
+    ble_uuid_t uuid;
     ReadMode read_mode;
     WriteMode write_mode;
     on_characteristic_write_command on_write_command;
@@ -52,7 +53,7 @@ typedef struct {
 } ServiceCharacteristic;
 
 
-void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write);
+void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid);
 
 void configure_characteristic(ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
         ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute);

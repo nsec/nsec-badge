@@ -28,6 +28,7 @@
 #include "nsec_ble.h"
 #include "vendor_service.h"
 #include "service_characteristic.h"
+#include "uuid.h"
 
 
 #define APP_BLE_OBSERVER_PRIO 3
@@ -91,6 +92,7 @@ ret_code_t create_ble_device(char* device_name){
         for(int i = 0; i < MAX_VENDOR_SERVICE_COUNT; i++){
             ble_device->vendor_services[i] = NULL;
         }
+        register_nsec_vendor_specific_uuid();
         return NRF_SUCCESS;
     }
     return -1;
@@ -204,7 +206,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
 uint32_t add_vendor_service(VendorService* service){
     if(ble_device->vendor_service_count >= MAX_VENDOR_SERVICE_COUNT)
         return 1;
-    create_uuid_for_vendor_service(&service->uuid, ble_device->vendor_service_count);
     uint32_t error_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &service->uuid, &service->handle);
     APP_ERROR_CHECK(error_code);
     ble_device->vendor_services[ble_device->vendor_service_count] = service;
@@ -371,8 +372,9 @@ static void reply_to_client_request(uint8_t operation, uint16_t status_code, uin
 static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid){
     for(int i = 0; i < ble_device->vendor_service_count; i++){
         VendorService* service = ble_device->vendor_services[i];
-        if(service->uuid.uuid == (uuid & UUID_SERVICE_PART_MASK))
-            return get_characteristic(service, uuid);
+        ServiceCharacteristic* characteristic = get_characteristic(service, uuid);
+        if(characteristic != NULL)
+            return characteristic;
     }
     return NULL;
 }
