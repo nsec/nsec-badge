@@ -6,6 +6,7 @@
 #include <sdk_errors.h>
 #include "vendor_service.h"
 #include "service_characteristic.h"
+#include "abstract_advertiser.h"
 
 ret_code_t create_ble_device(char* device_name);
 
@@ -13,7 +14,11 @@ void destroy_ble_device();
 
 void configure_advertising();
 
+void set_advertiser(struct Advertiser*);
+
 void start_advertising();
+
+void stop_advertising();
 
 uint32_t add_vendor_service(VendorService*);
 

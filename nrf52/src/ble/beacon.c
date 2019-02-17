@@ -5,10 +5,9 @@
 
 #include "beacon.h"
 #include "abstract_advertiser.h"
-#include "utils.h"
 
+#include <app_error.h>
 #include <ble_gap.h>
-#include <logs.h>
 
 
 static void start_broadcasting();
@@ -61,8 +60,8 @@ static void start_broadcasting(){
     ble_gap_adv_params_t adv_params;
     configure_advertising_parameters(&adv_params);
 
-    log_error_code("ble_advdata_set", ble_advdata_set(&beacon_config.adv_data, NULL));
-    log_error_code("sd_ble_gap_adv_start", sd_ble_gap_adv_start(&adv_params, 0));
+    APP_ERROR_CHECK(ble_advdata_set(&beacon_config.adv_data, NULL));
+    APP_ERROR_CHECK(sd_ble_gap_adv_start(&adv_params, 0));
 }
 
 static void stop_broadcasting(){
