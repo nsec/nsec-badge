@@ -156,13 +156,13 @@ def main():
         data = client.read(0x200)
         assert data == b'\xca\xfe\xba\xbe' * 32
         data = client.read(0x1c0)
-        assert data == b'\xff\xff\xff\xff' * 16 + b'\xca\xfe\xba\xbe' * 16
+        assert data == b'\xff' * 64 + b'\xca\xfe\xba\xbe' * 16
         data = client.read(0x240)
-        assert data == b'\xca\xfe\xba\xbe' * 16 + b'\xff\xff\xff\xff' * 16
+        assert data == b'\xca\xfe\xba\xbe' * 16 + b'\xff' * 64
 
-        target_checksum = client.checksum(0x240, 128)
+        target_checksum = client.checksum(0x200, 256)
         our_checksum = binascii.crc32(
-            b'\xca\xfe\xba\xbe' * 16 + b'\xff\xff\xff\xff' * 16)
+            b'\xca\xfe\xba\xbe' * 32 + b'\xff' * 128)
         assert target_checksum == our_checksum
 
 

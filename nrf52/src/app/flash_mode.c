@@ -200,7 +200,7 @@ static void handle_erase(void) {
 static void handle_checksum(const char *args) {
   const char *start = args;
   char *end;
-  long address = strtoul(start, &end, 16);
+  long startAddress = strtoul(start, &end, 16);
   start = end;
   long length = strtoul(start, &end, 16);
 
@@ -213,7 +213,7 @@ static void handle_checksum(const char *args) {
 
   uint32_t crc;
   uint32_t *p_crc = NULL;
-  while (length > 0) {
+  for (int address = startAddress; address < (startAddress + length); address += 128) {
     uint8_t data[128];
     ret_code_t ret = flash_read_128(address, data);
     if (ret != NRF_SUCCESS) {
@@ -224,7 +224,6 @@ static void handle_checksum(const char *args) {
     crc = crc32_compute(data, 128, p_crc);
 
     p_crc = &crc;
-    length -= 128;
   }
 
   uart_printf("checksum ok 0x%x\n", crc);
