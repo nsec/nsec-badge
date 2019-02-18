@@ -10,14 +10,12 @@
 #include "gui.h"
 #include <string.h>
 
-#include "images/settings_off_bitmap.c"
-#include "images/settings_on_bitmap.c"
-#include "images/neurosoft_logo_bitmap.c"
+#include "images/settings_off_bitmap.h"
+#include "images/settings_on_bitmap.h"
+#include "images/neurosoft_logo_bitmap.h"
 
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
-
-static struct bitmap settings_off, settings_on, neurosoft_logo;
 
 static void home_menu_handle_buttons(button_t button);
 
@@ -73,39 +71,19 @@ static void draw_home_menu(void)
         HOME_MENU_BG_COLOR);
 
     draw_burger_menu_icon(BURGER_MENU_POS, DISPLAY_WHITE);
-    gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_off);
+    gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_off_bitmap,
+        HOME_MENU_BG_COLOR);
 
     draw_cursor();
 
     // TODO Show logo screen instead
     gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, gfx_height,
         DISPLAY_BLACK);
-    gfx_draw_16bit_bitmap(0, 0, &neurosoft_logo);
+    gfx_draw_16bit_bitmap(0, 0, &neurosoft_logo_bitmap, DISPLAY_BLACK);
 }
 
 void show_home_menu(void)
 {
-    settings_off = (struct bitmap){
-        .image = settings_off_bitmap,
-        .width = settings_off_bitmap_width,
-        .height = settings_off_bitmap_height,
-        .bg_color = HOME_MENU_BG_COLOR
-    };
-
-    settings_on = (struct bitmap){
-        .image = settings_on_bitmap,
-        .width = settings_on_bitmap_width,
-        .height = settings_on_bitmap_height,
-        .bg_color = DISPLAY_WHITE
-    };
-
-    neurosoft_logo = (struct bitmap){
-        .image = neurosoft_logo_bitmap,
-        .width = neurosoft_logo_bitmap_width,
-        .height = neurosoft_logo_bitmap_height,
-        .bg_color = DISPLAY_BLACK
-    };
-
     _state = HOME_STATE_MENU;
 
     nsec_controls_add_handler(home_menu_handle_buttons);
@@ -137,7 +115,7 @@ static void open_settings_menu(void)
     gfx_fill_rect(HOME_MENU_POS_X, HOME_MENU_POS_Y + (HOME_MENU_HEIGHT / 2),
         HOME_MENU_WIDTH, HOME_MENU_HEIGHT / 2, DISPLAY_WHITE);
 
-    gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_on);
+    gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_on_bitmap, DISPLAY_WHITE);
 
     gfx_set_cursor(SETTINGS_MENU_TITLE_X, 5);
     gfx_set_text_size(2);

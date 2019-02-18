@@ -9,13 +9,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-struct bitmap {
-	const uint8_t *image;
-	uint32_t width;
-	uint32_t height;
-	uint16_t bg_color;
-};
+#include <bitmap.h>
 
 void gfx_set_rotation(uint8_t r);
 
@@ -40,7 +34,7 @@ void gfx_draw_triangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x
 void gfx_fill_triangle ( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
 
 void gfx_draw_bitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
-void gfx_draw_16bit_bitmap(int16_t x, int16_t y, struct bitmap *bitmap);
+void gfx_draw_16bit_bitmap(int16_t x, int16_t y, const struct bitmap *bitmap, uint16_t bg_color);
 void gfx_draw_bitmap_bg(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
 void gfx_draw_xbitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
 

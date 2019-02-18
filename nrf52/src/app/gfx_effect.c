@@ -363,10 +363,9 @@ void gfx_fill_screen(uint16_t color) {
 }
 
 /* handled by the display layer to use the buffer */
-void gfx_draw_16bit_bitmap(int16_t x, int16_t y, struct bitmap *bitmap)
+void gfx_draw_16bit_bitmap(int16_t x, int16_t y, const struct bitmap *bitmap, uint16_t bg_color)
 {
-    display_draw_16bit_bitmap(x, y, bitmap->image, bitmap->width, bitmap->height,
-        bitmap->bg_color);
+    display_draw_16bit_bitmap(x, y, bitmap->image, bitmap->width, bitmap->height, bg_color);
 }
 
 void gfx_draw_bitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color) {
