@@ -60,7 +60,7 @@ static void draw_cursor(void)
 
         gfx_fill_triangle(HOME_MENU_POS_X + 1, SETTINGS_MENU_CUR_Y,
             HOME_MENU_POS_X + 7, SETTINGS_MENU_CUR_Y + 5,
-            HOME_MENU_POS_X + 1, SETTINGS_MENU_CUR_Y + 5,
+            HOME_MENU_POS_X + 1, SETTINGS_MENU_CUR_Y + 10,
             DISPLAY_RED);
     }
 }
@@ -76,10 +76,13 @@ static void draw_home_menu(void)
 
     draw_cursor();
 
-    // TODO Show logo screen instead
     gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, gfx_height,
         DISPLAY_BLACK);
-    gfx_draw_16bit_bitmap(0, 0, &neurosoft_logo_bitmap, DISPLAY_BLACK);
+    // TODO :
+    // -    Replace by logo without Red circle and animate the
+    //      red circle
+    // -    In Conf mode replace by Nsec logo
+    gfx_draw_16bit_bitmap(NEUROSOFT_LOGO_POS, &neurosoft_logo_bitmap, DISPLAY_BLACK);
 }
 
 void show_home_menu(void)

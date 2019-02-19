@@ -44,4 +44,6 @@
 #define SETTINGS_MENU_CUR_Y		58
 #define SETTINGS_MENU_TITLE_X	20
 
+#define NEUROSOFT_LOGO_POS      30, 10
+
 #endif // GUI_H
