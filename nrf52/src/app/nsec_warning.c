@@ -23,10 +23,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "menu.h"
+#include "home_menu.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"
 #include "status_bar.h"
-#include "../include/app_glue.h"
 #include "drivers/controls.h"
 
 #ifdef BOARD_BRAIN
@@ -116,7 +116,7 @@ static void warning_handle_buttons(button_t button) {
     if (in_warning_page) {
         if (button == BUTTON_BACK) {
             in_warning_page = false;
-            show_main_menu();
+            show_home_menu(HOME_STATE_MENU_SELECTED);
         } else if (button == BUTTON_UP) {
                if (last_pressed_button == BUTTON_DOWN) {
                    scroll_up_warning(true);

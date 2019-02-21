@@ -7,6 +7,8 @@
 #include <nrf.h>
 #include <nordic_common.h>
 #include <stdio.h>
+#include "home_menu.h"
+#include "gui.h"
 #include "nsec_settings.h"
 #include "nsec_led_settings.h"
 #include "menu.h"
@@ -14,7 +16,6 @@
 #include "gfx_effect.h"
 #include "ble/nsec_ble.h"
 #include "status_bar.h"
-#include "app_glue.h"
 #include "drivers/controls.h"
 #include "identity.h"
 #include "drivers/ws2812fx.h"
@@ -97,18 +98,17 @@ static menu_item_s members_items[] = {
 
 static void show_member_details(uint8_t item) {
     menu_close();
-    gfx_fill_rect(0, 8, gfx_width, 56, DISPLAY_BLACK);
-    gfx_set_cursor(0, 8);
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    gfx_set_cursor(GEN_MENU_POS);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     _state = SETTING_STATE_CREDIT_DETAILS;
 
     switch (item) {
         //Line   |                     | 21 character
-        // There is 7 lines under the status bar
+        // There are 7 lines under the title
         case 0: //Eric Tremblay
         gfx_puts("VP Badge nsec 2019\n");
-        gfx_puts("etremblay.16@\n");
-        gfx_puts("            gmail.com");
+        gfx_puts("habscup@gmail.com\n");
         gfx_puts("Hardware\n");
         gfx_puts("Software\n");
         break;
@@ -162,11 +162,13 @@ static void show_led_settings(uint8_t item) {
 static void show_credit(uint8_t item) {
     _state = SETTING_STATE_CREDIT;
     menu_close();
-    gfx_fill_rect(0, 8, gfx_width, 56, DISPLAY_BLACK);
-    gfx_set_cursor(0, 8);
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    gfx_set_cursor(GEN_MENU_POS);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts("nsec 2019 badge team:");
-    menu_init(0, 16, gfx_width, gfx_height - 12, ARRAY_SIZE(members_items), members_items);
+    menu_init(GEN_MENU_POS_X, GEN_MENU_POS_Y + 8, GEN_MENU_WIDTH,
+        GEN_MENU_HEIGHT - 8, ARRAY_SIZE(members_items), members_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_update();
 }
 
@@ -196,14 +198,18 @@ static void turn_off_screen(uint8_t item) {
 
 void nsec_setting_show(void) {
     char key[8];
+
     nsec_identity_get_unlock_key(key, sizeof(key));
 #ifdef NSEC_HIDE_SYNC_KEY_IN_SETTINGS
     snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", "XXXX");
 #else
     snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
 #endif
-    gfx_fill_rect(0, 8, gfx_width, 65 - 8, DISPLAY_BLACK);
-    menu_init(0, 12, gfx_width, gfx_height - 12, ARRAY_SIZE(settings_items), settings_items);
+
+    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+        ARRAY_SIZE(settings_items), settings_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
     nsec_controls_add_handler(setting_handle_buttons);
     _state = SETTING_STATE_MENU;
 }
@@ -214,7 +220,7 @@ static void setting_handle_buttons(button_t button) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;
                 menu_close();
-                show_main_menu();
+                show_home_menu(HOME_STATE_SETTINGS_SELECTED);
                 break;
 
             case SETTING_STATE_CREDIT_DETAILS:
@@ -228,7 +234,7 @@ static void setting_handle_buttons(button_t button) {
                 // code change
                 _state = SETTING_STATE_CLOSED;
                 menu_close();
-                show_main_menu();
+                show_home_menu(HOME_STATE_SETTINGS_SELECTED);
                 break;
 
             case SETTING_STATE_FLASHLIGHT:
@@ -236,6 +242,8 @@ static void setting_handle_buttons(button_t button) {
                 // no break
             case SETTING_STATE_SCREEN_OFF:
                 nsec_status_bar_ui_redraw();
+                draw_home_menu_bar();
+                draw_title();
                 // no break
             case SETTING_STATE_CREDIT:
                 nsec_setting_show();

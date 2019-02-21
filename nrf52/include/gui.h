@@ -46,4 +46,21 @@
 
 #define NEUROSOFT_LOGO_POS      30, 10
 
+/* General Menu */
+#define GEN_MENU_POS_X			0
+#define GEN_MENU_POS_Y			20
+#define GEN_MENU_POS			GEN_MENU_POS_X, GEN_MENU_POS_Y
+#define GEN_MENU_WIDTH			128
+#define GEN_MENU_HEIGHT			60
+
+/* Led Settings */
+#define LED_SET_VAL_POS_X		0
+#define LED_SET_VAL_POS_Y		20
+#define LED_SET_VAL_POS			LED_SET_VAL_POS_X, LED_SET_VAL_POS_Y
+#define LED_SET_POS_X			0
+#define LED_SET_POS_Y			32
+#define LED_SET_POS				LED_SET_POS_X, LED_SET_POS_Y
+#define LED_SET_WIDTH			128
+#define LED_SET_HEIGHT			48
+
 #endif // GUI_H

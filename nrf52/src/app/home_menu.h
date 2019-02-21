@@ -7,6 +7,16 @@
 #ifndef home_menu_h
 #define home_menu_h
 
-void show_home_menu(void);
+enum home_state {
+    HOME_STATE_CLOSED,
+    HOME_STATE_MENU,
+    HOME_STATE_MENU_SELECTED,
+    HOME_STATE_SETTINGS,
+    HOME_STATE_SETTINGS_SELECTED
+};
+
+void show_home_menu(enum home_state state);
+void draw_home_menu_bar(void);
+void draw_title(void);
 
 #endif /* home_menu_h */

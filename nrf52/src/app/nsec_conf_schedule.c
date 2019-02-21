@@ -11,7 +11,7 @@
 #include "menu.h"
 #include "drivers/display.h"
 #include "drivers/controls.h"
-#include "app_glue.h"
+#include "home_menu.h"
 #include "gfx_effect.h"
 
 #ifdef BOARD_BRAIN
@@ -615,7 +615,7 @@ static uint8_t presenter_selected = 0;
 static uint8_t schedule_index = 0; // Keep track of our index in the scheduler array
 
 void nsec_schedule_show_dates(void) {
-    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(days_schedule_items), days_schedule_items);
+    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(days_schedule_items), days_schedule_items, DISPLAY_WHITE, DISPLAY_BLACK);
     schedule_state = SCHEDULE_STATE_DATES;
     nsec_controls_add_handler(nsec_schedule_button_handler);
 }
@@ -630,7 +630,7 @@ void nsec_schedule_return_to_talks(void) {
 void nsec_schedule_show_talks(uint8_t item) {
     track_selected = item;
     schedule_index = (date_selected * 3) + track_selected;
-    menu_init(0, 12, gfx_width, gfx_height - 8, nsec_schedule[schedule_index].item_count, nsec_schedule[schedule_index].menu_items);
+    menu_init(0, 12, gfx_width, gfx_height - 8, nsec_schedule[schedule_index].item_count, nsec_schedule[schedule_index].menu_items, DISPLAY_WHITE, DISPLAY_BLACK);
     schedule_state = SCHEDULE_STATE_TALKS;
 }
 
@@ -780,7 +780,7 @@ void nsec_schedule_show_details(uint8_t item) {
 }
 
 void nsec_schedule_show_tracks (uint8_t item) {
-    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items);
+    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items, DISPLAY_WHITE, DISPLAY_BLACK);
     date_selected = item;
     schedule_state = SCHEDULE_STATE_TRACK;
 }
@@ -812,7 +812,7 @@ void nsec_schedule_show_presenters(uint8_t item) {
         presenters_items[i].label = presenters_all[i];
         presenters_items[i].handler = nsec_schedule_show_presenters_details;
     }
-    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(presenters_items), presenters_items);
+    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(presenters_items), presenters_items, DISPLAY_WHITE, DISPLAY_BLACK);
     description_index = 0;
     schedule_state = SCHEDULE_STATE_PRESENTERS;
 }
@@ -870,7 +870,7 @@ static void nsec_schedule_button_handler(button_t button) {
                 break;
             case SCHEDULE_STATE_DATES:
                 schedule_state = SCHEDULE_STATE_CLOSED;
-                show_main_menu();
+                show_home_menu(HOME_STATE_MENU_SELECTED);
                 break;
 
             default:

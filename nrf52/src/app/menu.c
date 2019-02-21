@@ -22,6 +22,8 @@ typedef struct {
     uint8_t selected_item;
     uint8_t item_on_top;
     uint8_t is_handling_buttons;
+    uint16_t text_color;
+    uint16_t bg_color;
     menu_item_s items[MENU_LIMIT_MAX_ITEM_COUNT];
 } menu_state_t;
 
@@ -30,17 +32,23 @@ static menu_state_t menu;
 static void menu_ui_redraw_items(uint8_t start, uint8_t end);
 void menu_button_handler(button_t button);
 
-void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height, uint8_t item_count, menu_item_s * items) {
+void menu_handler_init(void)
+{
+    nsec_controls_add_handler(menu_button_handler);
+}
+
+void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height, uint8_t item_count, menu_item_s * items, uint16_t text_color, uint16_t bg_color) {
     menu.item_count = 0;
     menu.selected_item = 0;
     menu.item_on_top = 0;
+    menu.text_color = text_color;
+    menu.bg_color = bg_color;
     menu_set_position(pos_x, pos_y, width, height);
-    gfx_fill_rect(pos_x, pos_y, width, height, DISPLAY_BLACK);
+    gfx_fill_rect(pos_x, pos_y, width, height, bg_color);
     for(uint8_t i = 0; i < item_count; i++) {
         menu_add_item(items + i);
     }
     menu.is_handling_buttons = 1;
-    nsec_controls_add_handler(menu_button_handler);
 }
 
 void menu_close(void) {
@@ -81,18 +89,19 @@ static void menu_ui_redraw_items(uint8_t start, uint8_t end) {
     else if(end < start) {
         return;
     }
+    gfx_set_text_size(1);
     gfx_fill_rect(menu.pos_x,
                  menu.pos_y + FONT_SIZE_HEIGHT * (start - menu.item_on_top),
                  menu.col_width * FONT_SIZE_WIDTH,
                  (end - start + 1) * FONT_SIZE_HEIGHT,
-                 DISPLAY_BLACK);
+                 menu.bg_color);
     for(int item_index = start; item_index < menu.item_count && item_index <= end; item_index++) {
         gfx_set_cursor(menu.pos_x, menu.pos_y + (item_index - menu.item_on_top) * FONT_SIZE_HEIGHT);
         if(item_index == menu.selected_item) {
-            gfx_set_text_background_color(DISPLAY_BLACK, DISPLAY_WHITE);
+            gfx_set_text_background_color(menu.bg_color, menu.text_color);
         }
         else {
-            gfx_set_text_background_color(DISPLAY_WHITE,DISPLAY_BLACK);
+            gfx_set_text_background_color(menu.text_color, menu.bg_color);
         }
         const char * string = menu.items[item_index].label;
         if(strlen(string) <= menu.col_width) {

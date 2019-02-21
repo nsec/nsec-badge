@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "app_glue.h"
+#include "home_menu.h"
 #include "drivers/controls.h"
 #include "menu.h"
 #include "nsec_led_pattern.h"
@@ -211,7 +211,7 @@ static menu_item_s led_pattern_items[] = {
 
 void nsec_led_pattern_show(void) {
     gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    menu_init(0, 12, gfx_width, gfx_height - 12, ARRAY_SIZE(led_pattern_items), led_pattern_items);
+    menu_init(0, 12, gfx_width, gfx_height - 12, ARRAY_SIZE(led_pattern_items), led_pattern_items, DISPLAY_WHITE, DISPLAY_BLACK);
     nsec_controls_add_handler(led_pattern_handle_buttons);
     _state = SETTING_STATE_MENU;
 }
@@ -231,7 +231,7 @@ static void save_letter0(void) {
         letters_items[i].handler = save_letter1;
     }
     menu_close();
-    menu_init(18, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items);
+    menu_init(18, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items, DISPLAY_WHITE, DISPLAY_BLACK);
 }
 
 static void save_letter1(uint8_t item) {
@@ -241,7 +241,7 @@ static void save_letter1(uint8_t item) {
         letters_items[i].handler = save_letter2;
     }
     menu_close();
-    menu_init(42, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items);
+    menu_init(42, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items, DISPLAY_WHITE, DISPLAY_BLACK);
 }
 
 static void save_letter2(uint8_t item) {
@@ -251,7 +251,7 @@ static void save_letter2(uint8_t item) {
         letters_items[i].handler = save_letter3;
     }
     menu_close();
-    menu_init(66, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items);
+    menu_init(66, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items, DISPLAY_WHITE, DISPLAY_BLACK);
 }
 
 static void save_letter3(uint8_t item) {
@@ -261,7 +261,7 @@ static void save_letter3(uint8_t item) {
         letters_items[i].handler = try_unlock;
     }
     menu_close();
-    menu_init(90, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items);
+    menu_init(90, 26, 8, 4, ARRAY_SIZE(letters_items), letters_items, DISPLAY_WHITE, DISPLAY_BLACK);
 }
 
 static uint8_t index_to_unlock;
@@ -316,7 +316,7 @@ static void show_basic_pattern_menu(uint8_t item) {
         basic_pattern_items[i].handler = save_pattern;
     }
     show_actual_pattern();
-    menu_init(0, 32, gfx_width, gfx_height - 32, ARRAY_SIZE(basic_pattern_items), basic_pattern_items);
+    menu_init(0, 32, gfx_width, gfx_height - 32, ARRAY_SIZE(basic_pattern_items), basic_pattern_items, DISPLAY_WHITE, DISPLAY_BLACK);
     _state = SETTING_STATE_BASIC_PATTERN;
 }
 
@@ -335,7 +335,7 @@ static void show_extra_pattern_menu(uint8_t item) {
     }
     menu_close();
     show_actual_pattern();
-    menu_init(0, 32, gfx_width, gfx_height - 32, ARRAY_SIZE(extra_pattern_items), extra_pattern_items);
+    menu_init(0, 32, gfx_width, gfx_height - 32, ARRAY_SIZE(extra_pattern_items), extra_pattern_items, DISPLAY_WHITE, DISPLAY_BLACK);
     _state = SETTING_STATE_EXTRA_PATTERN;
 }
 
@@ -359,7 +359,7 @@ static void led_pattern_handle_buttons(button_t button) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;
                 menu_close();
-                show_main_menu();
+                show_home_menu(HOME_STATE_MENU_SELECTED);
                 break;
             case SETTING_STATE_EXTRA_PATTERN:
             case SETTING_STATE_BASIC_PATTERN:
