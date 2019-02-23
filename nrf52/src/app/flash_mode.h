@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Eric Tremblay <habscup@gmail.com>
+ * Copyright 2019 Simon Marchi <simon.marchi@polymtl.ca>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,9 @@
  * SOFTWARE.
  */
 
-#ifndef buttons_h
-#define buttons_h
+#ifndef FLASH_MODE_H
+#define FLASH_MODE_H
 
-#include <app_button.h>
-#include <app_error.h>
-#include <app_timer.h>
-
-#include "controls.h"
-
-void nsec_buttons_init(void);
-bool nsec_button_is_pushed(button_t button);
+void flash_mode();
 
 #endif

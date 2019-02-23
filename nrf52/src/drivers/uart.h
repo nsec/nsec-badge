@@ -24,8 +24,14 @@
 #define SRC_DRIVERS_UART_H_
 
 #include <sdk_errors.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 ret_code_t uart_init();
-ret_code_t uart_send(const char *data);
+ret_code_t uart_send(const uint8_t *data, size_t len);
+ret_code_t uart_puts(const char *str);
+ret_code_t uart_printf(const char *fmt, ...);
+bool uart_read(uint8_t *out);
+void uart_clear_errors();
 
 #endif /* SRC_DRIVERS_UART_H_ */

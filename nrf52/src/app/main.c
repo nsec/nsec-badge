@@ -22,6 +22,7 @@
 #include "drivers/battery_manager.h"
 #include "drivers/buttons.h"
 #include "drivers/display.h"
+#include "drivers/flash.h"
 #include "drivers/power.h"
 #include "drivers/softdevice.h"
 #include "drivers/uart.h"
@@ -40,6 +41,7 @@
 #include "nsec_led_pattern.h"
 #include "nsec_warning.h"
 #include "nsec_led_ble.h"
+#include "flash_mode.h"
 #include "home_menu.h"
 
 #include "ble/service_characteristic.h"
@@ -125,9 +127,15 @@ int main(void) {
     softdevice_init();
     uart_init();
     timer_init();
+    flash_init();
     init_WS2812FX();
     display_init();
     nsec_buttons_init();
+
+    // Enter flash mode if the "up" button is pressed.
+    if (nsec_button_is_pushed(BUTTON_UP)) {
+      flash_mode();
+    }
 
     /*
      * Initialize bluetooth stack

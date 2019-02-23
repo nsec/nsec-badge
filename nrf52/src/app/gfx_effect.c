@@ -9,6 +9,8 @@
 #include "images/font_bitmap.h"
 #include "random.h"
 #include <string.h>
+#include "external_flash.h"
+#include "drivers/flash.h"
 
 int16_t gfx_width = DISPLAY_WIDTH;
 int16_t gfx_height = DISPLAY_HEIGHT;
@@ -411,6 +413,35 @@ void gfx_draw_xbitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, in
       }
     }
   }
+}
+
+void gfx_draw_bitmap_ext_flash(int16_t x, int16_t y,
+                               const struct bitmap_ext *bitmap) {
+    static uint8_t buf[128];
+    unsigned int buf_idx = sizeof(buf);
+    unsigned int flash_address = bitmap->flash_data->offset;
+
+    unsigned int width = bitmap->width;
+    unsigned int height = bitmap->height;
+
+    for (uint16_t j = 0; j < height; j++) {
+        for (uint16_t i = 0; i < width; i++) {
+            if (buf_idx >= sizeof(buf)) {
+                ret_code_t ret = flash_read_128(flash_address, buf);
+                if (ret != NRF_SUCCESS) {
+                    return;
+                }
+                flash_address += 128;
+                buf_idx = 0;
+            }
+
+            uint8_t high = buf[buf_idx++];
+            uint8_t low = buf[buf_idx++];
+            uint16_t color = (high << 8) | low;
+
+            display_draw_pixel(x + i, y + j, color);
+        }
+    }
 }
 
 // Draw a character

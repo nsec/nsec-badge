@@ -11,6 +11,8 @@
 #include <stdbool.h>
 #include <bitmap.h>
 
+struct bitmap_ext;
+
 void gfx_set_rotation(uint8_t r);
 
 void nsec_gfx_effect_addNoise(uint8_t noise_amount);
@@ -37,6 +39,7 @@ void gfx_draw_bitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int
 void gfx_draw_16bit_bitmap(int16_t x, int16_t y, const struct bitmap *bitmap, uint16_t bg_color);
 void gfx_draw_bitmap_bg(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg);
 void gfx_draw_xbitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
+void gfx_draw_bitmap_ext_flash(int16_t x, int16_t y, const struct bitmap_ext *bitmap);
 
 void gfx_write(uint8_t c);
 void gfx_putc(char c);

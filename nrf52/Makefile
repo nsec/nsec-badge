@@ -1,4 +1,4 @@
-FLAVOR ?= conf
+FLAVOR ?= ctf
 BOARD ?= brain
 PROJECT_NAME = nsec19_nrf52_$(FLAVOR)
 TARGETS=$(PROJECT_NAME)
@@ -86,6 +86,7 @@ SRC_FILES += $(SDK_PATH)/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c
 SRC_FILES += $(SDK_PATH)/libraries/atomic_fifo/nrf_atfifo.c
 SRC_FILES += $(SDK_PATH)/libraries/balloc/nrf_balloc.c
 SRC_FILES += $(SDK_PATH)/libraries/button/app_button.c
+SRC_FILES += $(SDK_PATH)/libraries/crc32/crc32.c
 SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_backend_rtt.c
 SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_backend_serial.c
 SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_default_backends.c
@@ -139,6 +140,7 @@ INC_FOLDERS += $(SDK_PATH)/libraries/atomic
 INC_FOLDERS += $(SDK_PATH)/libraries/atomic_fifo
 INC_FOLDERS += $(SDK_PATH)/libraries/balloc/
 INC_FOLDERS += $(SDK_PATH)/libraries/button
+INC_FOLDERS += $(SDK_PATH)/libraries/crc32
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_log
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_log/src
 INC_FOLDERS += $(SDK_PATH)/libraries/experimental_memobj
@@ -229,7 +231,7 @@ LIB_FILES += -lc -lnosys -lm
 
 TERMINAL = dup
 
-default: bitmaps $(PROJECT_NAME)
+default: bitmaps external-flash $(PROJECT_NAME)
 
 $(PROJECT_NAME): $(SDK_PATH)
 
@@ -240,18 +242,51 @@ GEN_IMAGE_SCRIPT = utils/gen_image.py
 %_bitmap.h: %.png
 	python $(GEN_IMAGE_SCRIPT) $< $(basename $@)
 
+# Bitmaps written to the external flash.
+src/images/external/%_bitmap.h src/images/external/%_bitmap.bitmapbin: src/images/external/%.png
+	python $(GEN_IMAGE_SCRIPT) --external-flash $< $(basename $@)
+
+# Bitmaps written to the internal flash.
 src/images/font_bitmap.h: src/images/font.png
 	python $(GEN_IMAGE_SCRIPT) -r $< $(basename $@)
 
-BITMAPS_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
+BITMAPS_INT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
+BITMAPS_EXT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/external/*.png))
+BITMAPS_EXT_BINS = $(patsubst %.png,%_bitmap.bitmapbin,$(wildcard src/images/external/*.png))
+BITMAPS_HDRS = $(BITMAPS_INT_HDRS) $(BITMAPS_EXT_HDRS)
 
 bitmaps: $(BITMAPS_HDRS)
 
 # If the gen_image script changes, we want to re-generate the images.
-$(BITMAPS_HDRS): $(GEN_IMAGE_SCRIPT)
+$(BITMAPS_HDRS) $(BITMAPS_EXT_BINS): $(GEN_IMAGE_SCRIPT)
 
 clean-bitmaps:
 	rm -f src/images/*.h
+	rm -f src/images/external/*.h
+	rm -f src/images/external/*.bitmapbin
+
+# external-flash: Pack files in a single file and generate a "table of contents" as a .h.
+
+external-flash: src/app/external_flash.h src/app/external_flash.flashbin
+
+EXTERNAL_FLASH_PACK_SCRIPT = utils/pack_flash.py
+EXTERNAL_FLASH_FILES = $(BITMAPS_EXT_BINS)
+src/app/external_flash.h src/app/external_flash.flashbin: $(EXTERNAL_FLASH_FILES)
+	echo $(EXTERNAL_FLASH_FILES)
+	python3 $(EXTERNAL_FLASH_PACK_SCRIPT) src/app/external_flash $(filter-out $(EXTERNAL_FLASH_PACK_SCRIPT), $^)
+
+src/app/external_flash.h src/app/external_flash.flashbin: $(EXTERNAL_FLASH_PACK_SCRIPT)
+
+clean: clean-external-flash
+clean-external-flash:
+	rm -f src/app/external_flash.h
+	rm -f src/app/external_flash.flashbin
+
+# Write the contents of the external flash.  The badge must be ready to accept
+# external flash commands.
+
+flash-external-flash: src/app/external_flash.flashbin
+	python3 utils/flash_client.py src/app/external_flash.flashbin
 
 $(SDK_PATH):
 	./utils/install-sdk.sh $@ $(SDK_VERSION)
@@ -283,4 +318,4 @@ merge: $(OUTPUT_DIRECTORY)/program.hex
 sdk_config: $(SDK_PATH)
 	java -jar $(SDK_PATH)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar sdk_config.h
 
-.PHONY: bitmaps clean clean-bitmaps clean-$(SDK_PATH) flash-devboard merge sdk_config
+.PHONY: bitmaps external-flash clean clean-bitmaps clean-external-flash clean-$(SDK_PATH) flash-devboard merge sdk_config

@@ -43,22 +43,22 @@ void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action)
     if (button_action == APP_BUTTON_PUSH) {
         switch (pin_no) {
             case PIN_INPUT_UP:
-            	uart_send("+ btn up\n");
+                uart_puts("+ btn up\n");
                 nsec_controls_trigger(BUTTON_UP);
             break;
 
             case PIN_INPUT_DOWN:
-            	uart_send("+ btn down\n");
+                uart_puts("+ btn down\n");
                 nsec_controls_trigger(BUTTON_DOWN);
             break;
 
             case PIN_INPUT_BACK:
-            	uart_send("+ btn back\n");
+                uart_puts("+ btn back\n");
                 nsec_controls_trigger(BUTTON_BACK);
             break;
 
             case PIN_INPUT_ENTER:
-            	uart_send("+ btn enter\n");
+                uart_puts("+ btn enter\n");
                 nsec_controls_trigger(BUTTON_ENTER);
             break;
         }
@@ -94,4 +94,26 @@ void nsec_buttons_init(void) {
      */
     err_code = app_button_enable();
     APP_ERROR_CHECK(err_code);
+}
+
+bool nsec_button_is_pushed(button_t button) {
+  int idx;
+  switch (button) {
+    case BUTTON_UP:
+      idx = 0;
+      break;
+    case BUTTON_DOWN:
+      idx = 1;
+      break;
+    case BUTTON_BACK:
+      idx = 2;
+      break;
+    case BUTTON_ENTER:
+      idx = 3;
+      break;
+    default:
+        return false;
+  }
+
+  return app_button_is_pushed(idx);
 }
