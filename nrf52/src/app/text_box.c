@@ -21,24 +21,21 @@
  */
 
 #include "text_box.h"
-#include "ssd1306.h"
+#include "drivers/display.h"
+#include "gfx_effect.h"
 #include "string.h"
-#include "controls.h"
+#include "drivers/controls.h"
 #include "utils.h"
-
-// SSD1306_LCDHEIGHT
-// SSD1306_LCDWIDTH
-
-#define ROW_COUNT                   8
-#define COLUMN_COUNT                21
-#define MAX_CHAR        COLUMN_COUNT * ROW_COUNT
+#include "gui.h"
 
 typedef struct {
     bool is_at_top;
     bool is_at_bottom;
     bool is_handling_buttons;
-    bool is_fullscreen;
-    int16_t y_offset;
+    uint16_t columns;
+    uint16_t rows;
+    uint16_t max_char;
+    struct text_box_config *config;
     int16_t text_index;
     uint16_t text_length;
     const char * text;
@@ -49,38 +46,37 @@ static text_box_state_t text_box;
 void text_box_button_handler(button_t button);
 void text_box_show_page(void);
 
-void text_box_init(const char *text, bool use_wordwrap, bool use_fullscreen) {
+void text_box_init(const char *text, struct text_box_config *config)
+{
     text_box.is_handling_buttons = true;
     text_box.is_at_top = true;
     text_box.is_at_bottom = false;
-    text_box.is_fullscreen = use_fullscreen;
     text_box.text_index = 0;
     text_box.text_length = strlen(text);
-
-    if (use_wordwrap) {
-        text_box.text = nsec_word_wrap(text, COLUMN_COUNT);
-    } else {
-        text_box.text = text;
-    }
+    text_box.text = text;
+    text_box.columns = config->width / TEXT_BASE_WIDTH;
+    text_box.rows = config->height / TEXT_BASE_HEIGHT;
+    text_box.max_char = text_box.columns * text_box.rows;
+    text_box.config = config;
 
     nsec_controls_add_handler(text_box_button_handler);
 
-    text_box.y_offset = (use_fullscreen) ? 0 : 16;
+    gfx_set_wrap_line(config->width);
+
     text_box_show_page();
 }
 
 void text_box_show_page(void) {
-    char buffer[MAX_CHAR] = {0};
+    struct text_box_config *config = text_box.config;
+    char buffer[text_box.max_char];
 
-    gfx_fillRect(0, 0, 128, 64 - text_box.y_offset, SSD1306_BLACK);
-    gfx_setCursor(0, text_box.y_offset);
-    if (text_box.is_fullscreen) {
-        strncpy(buffer, text_box.text + text_box.text_index, MAX_CHAR);
-    } else {
-        strncpy(buffer, text_box.text + text_box.text_index, MAX_CHAR - COLUMN_COUNT);
-    }
+    memset(buffer, 0, text_box.max_char);
 
-    gfx_setTextBackgroundColor(SSD1306_WHITE, SSD1306_BLACK);
+    strncpy(buffer, text_box.text + text_box.text_index, text_box.max_char);
+
+    gfx_fill_rect(config->x, config->y, config->width, config->height, config->bg_color);
+    gfx_set_cursor(config->x, config->y);
+    gfx_set_text_background_color(config->text_color, config->bg_color);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -92,14 +88,14 @@ void scroll_up(void) {
 
     if (text_box.is_at_bottom) {
         //change direction
-        text_box.text_index -= MAX_CHAR;
+        text_box.text_index -= text_box.max_char;
     }
 
-    if (text_box.text_index - MAX_CHAR < 0) {
+    if (text_box.text_index - text_box.max_char < 0) {
         text_box.text_index = 0;
         text_box.is_at_top = true;
     } else {
-        text_box.text_index -= MAX_CHAR;
+        text_box.text_index -= text_box.max_char;
         text_box.is_at_bottom = false;
     }
 
@@ -111,12 +107,12 @@ void scroll_down(void) {
         return;
     }
 
-    if (text_box.text_index + MAX_CHAR >= text_box.text_length) {
+    if (text_box.text_index + text_box.max_char >= text_box.text_length) {
         text_box.text_index = text_box.text_length;
         text_box.is_at_bottom = true;
         return;
     } else {
-        text_box.text_index += MAX_CHAR;
+        text_box.text_index += text_box.max_char;
         text_box.is_at_top = false;
     }
 
@@ -144,6 +140,8 @@ void text_box_button_handler(button_t button) {
                     scroll_down();
                 }
                 break;
+            case BUTTON_BACK:
+                text_box_close();
             default:
                 break;
         }
