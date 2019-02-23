@@ -1,4 +1,4 @@
-# !/usr/bin/env python
+# !/usr/bin/env python3
 #
 # Copyright 2016-2017 Benjamin Vanheuverzwijn <bvanheu@gmail.com>
 #           2016-2017 Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
