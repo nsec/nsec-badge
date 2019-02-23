@@ -240,15 +240,15 @@ clean: clean-bitmaps
 GEN_IMAGE_SCRIPT = utils/gen_image.py
 
 %_bitmap.h: %.png
-	python $(GEN_IMAGE_SCRIPT) $< $(basename $@)
+	python3 $(GEN_IMAGE_SCRIPT) $< $(basename $@)
 
 # Bitmaps written to the external flash.
 src/images/external/%_bitmap.h src/images/external/%_bitmap.bitmapbin: src/images/external/%.png
-	python $(GEN_IMAGE_SCRIPT) --external-flash $< $(basename $@)
+	python3 $(GEN_IMAGE_SCRIPT) --external-flash $< $(basename $@)
 
 # Bitmaps written to the internal flash.
 src/images/font_bitmap.h: src/images/font.png
-	python $(GEN_IMAGE_SCRIPT) -r $< $(basename $@)
+	python3 $(GEN_IMAGE_SCRIPT) -r $< $(basename $@)
 
 BITMAPS_INT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
 BITMAPS_EXT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/external/*.png))
