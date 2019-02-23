@@ -42,16 +42,19 @@ void open_conference_schedule(uint8_t item) {
 
 void open_led_pattern(uint8_t item) {
     menu_close();
+    _state = MAIN_MENU_STATE_CLOSED;
     nsec_led_pattern_show();
 }
 
 void open_warning(uint8_t item) {
     menu_close();
+    _state = MAIN_MENU_STATE_CLOSED;
     nsec_warning_show();
 }
 
 void open_battery_status(uint8_t item) {
     menu_close();
+    _state = MAIN_MENU_STATE_CLOSED;
     show_battery_status();
 }
 
@@ -88,7 +91,7 @@ static void main_handle_buttons(button_t button) {
             case MAIN_MENU_STATE_MENU:
                 _state = MAIN_MENU_STATE_CLOSED;
                 menu_close();
-                show_home_menu(HOME_STATE_MENU_SELECTED);
+                show_home_menu(HOME_STATE_MENU);
                 break;
 
             default:

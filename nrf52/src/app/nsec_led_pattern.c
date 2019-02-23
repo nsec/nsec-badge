@@ -10,6 +10,8 @@
 #include <string.h>
 
 #include "home_menu.h"
+#include "main_menu.h"
+#include "gui.h"
 #include "drivers/controls.h"
 #include "menu.h"
 #include "nsec_led_pattern.h"
@@ -210,8 +212,12 @@ static menu_item_s led_pattern_items[] = {
 };
 
 void nsec_led_pattern_show(void) {
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    menu_init(0, 12, gfx_width, gfx_height - 12, ARRAY_SIZE(led_pattern_items), led_pattern_items, DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+
+    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+        ARRAY_SIZE(led_pattern_items), led_pattern_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
     nsec_controls_add_handler(led_pattern_handle_buttons);
     _state = SETTING_STATE_MENU;
 }
@@ -298,9 +304,9 @@ void show_actual_pattern(void) {
     uint8_t mode = getMode_WS2812FX();
     char actual[50] = {0};
 
-    gfx_fill_rect(0, 12, gfx_width, 20, DISPLAY_BLACK);
-    gfx_set_cursor(0, 12);
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_fill_rect(LED_SET_VAL_POS, GEN_MENU_WIDTH, TEXT_BASE_HEIGHT, DISPLAY_WHITE);
+    gfx_set_cursor(LED_SET_VAL_POS);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
     snprintf(actual, 50, "Now: %s", getModeName_WS2812FX(mode));
     gfx_puts(actual);
@@ -310,19 +316,24 @@ void show_actual_pattern(void) {
 static bool basic_selected = false;
 static void show_basic_pattern_menu(uint8_t item) {
     basic_selected = true;
-    gfx_fill_rect(0, 8, gfx_width, 65, DISPLAY_BLACK);
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+
     for (int i=0; i < MODE_BASIC_COUNT; i++) {
         basic_pattern_items[i].label = basic_patterns[i];
         basic_pattern_items[i].handler = save_pattern;
     }
     show_actual_pattern();
-    menu_init(0, 32, gfx_width, gfx_height - 32, ARRAY_SIZE(basic_pattern_items), basic_pattern_items, DISPLAY_WHITE, DISPLAY_BLACK);
+
+    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+        ARRAY_SIZE(basic_pattern_items), basic_pattern_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
     _state = SETTING_STATE_BASIC_PATTERN;
 }
 
 static void show_extra_pattern_menu(uint8_t item) {
     basic_selected = false;
-    gfx_fill_rect(0, 8, gfx_width, 65, DISPLAY_BLACK);
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
     for (int i=0; i<MODE_EXTRA_COUNT; i++) {
         if (pattern_is_unlock(i)) {
@@ -335,7 +346,11 @@ static void show_extra_pattern_menu(uint8_t item) {
     }
     menu_close();
     show_actual_pattern();
-    menu_init(0, 32, gfx_width, gfx_height - 32, ARRAY_SIZE(extra_pattern_items), extra_pattern_items, DISPLAY_WHITE, DISPLAY_BLACK);
+
+    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+        ARRAY_SIZE(extra_pattern_items), extra_pattern_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
     _state = SETTING_STATE_EXTRA_PATTERN;
 }
 
@@ -359,7 +374,7 @@ static void led_pattern_handle_buttons(button_t button) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;
                 menu_close();
-                show_home_menu(HOME_STATE_MENU_SELECTED);
+                show_main_menu();
                 break;
             case SETTING_STATE_EXTRA_PATTERN:
             case SETTING_STATE_BASIC_PATTERN:

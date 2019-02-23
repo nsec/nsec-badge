@@ -6,6 +6,9 @@
 #ifndef GUI_H
 #define GUI_H
 
+/* TEXT */
+#define TEXT_BASE_HEIGHT 		8
+#define TEXT_BASE_WIDTH			6
 
 /* Status bar */
 #define STATUS_BAR_POS_X		128

@@ -220,7 +220,7 @@ static void setting_handle_buttons(button_t button) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;
                 menu_close();
-                show_home_menu(HOME_STATE_SETTINGS_SELECTED);
+                show_home_menu(HOME_STATE_SETTINGS);
                 break;
 
             case SETTING_STATE_CREDIT_DETAILS:
@@ -234,7 +234,7 @@ static void setting_handle_buttons(button_t button) {
                 // code change
                 _state = SETTING_STATE_CLOSED;
                 menu_close();
-                show_home_menu(HOME_STATE_SETTINGS_SELECTED);
+                show_home_menu(HOME_STATE_SETTINGS);
                 break;
 
             case SETTING_STATE_FLASHLIGHT:

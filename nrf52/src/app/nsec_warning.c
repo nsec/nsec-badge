@@ -28,14 +28,15 @@
 #include "gfx_effect.h"
 #include "status_bar.h"
 #include "drivers/controls.h"
+#include "gui.h"
 
 #ifdef BOARD_BRAIN
 #define ROW_COUNT                   9 // 10 - status bar
-#define COLUMN_COUNT                26  
+#define COLUMN_COUNT                26
 #define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
 #else
 #define ROW_COUNT                   7 // 8 - status bar
-#define COLUMN_COUNT                21  
+#define COLUMN_COUNT                21
 #define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
 #endif
 
@@ -48,8 +49,8 @@ extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
 void show_warning(void) {
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 8);
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    gfx_set_cursor(GEN_MENU_POS);
 
     // We calculate the number of character we can use
     // we keep that value for scrolling
@@ -57,7 +58,7 @@ void show_warning(void) {
     text_index = MAX_CHAR_UNDER_STATUS_BAR;
     strncpy(buffer, warning_notice, text_index);
 
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -73,13 +74,13 @@ void scroll_up_warning(bool change_direction) {
         return;
     }
 
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 8);
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    gfx_set_cursor(GEN_MENU_POS);
 
     char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
     strncpy(buffer, warning_notice + text_index, MAX_CHAR_UNDER_STATUS_BAR);
 
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts(buffer);
     gfx_update();
 }
@@ -89,8 +90,8 @@ void scroll_down_warning(bool change_direction) {
         return;
     }
 
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 8);   
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    gfx_set_cursor(GEN_MENU_POS);
 
     if (change_direction) {
         text_index += MAX_CHAR_UNDER_STATUS_BAR;
@@ -100,7 +101,7 @@ void scroll_down_warning(bool change_direction) {
     strncpy(buffer, warning_notice + text_index, MAX_CHAR_UNDER_STATUS_BAR);
     text_index += MAX_CHAR_UNDER_STATUS_BAR;
 
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts(buffer);
     gfx_update();
 }
