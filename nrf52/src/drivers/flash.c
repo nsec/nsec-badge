@@ -44,7 +44,7 @@ static const nrf_drv_spi_t m_spi_master_0 = NRF_DRV_SPI_INSTANCE(0);
 void flash_init() {
   nrf_drv_spi_config_t config = NRF_DRV_SPI_DEFAULT_CONFIG;
 
-  config.frequency = NRF_DRV_SPI_FREQ_125K;
+  config.frequency = NRF_DRV_SPI_FREQ_8M;
   config.mosi_pin = PIN_FLASH_MOSI;
   config.miso_pin = PIN_FLASH_MISO;
   config.sck_pin = PIN_FLASH_CLK;
