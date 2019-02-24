@@ -154,7 +154,7 @@ def main():
     argparser.add_argument('--verbose', '-v', help='Be verbose.', action='store_true')
     args = argparser.parse_args()
 
-    with serial.Serial('/dev/ttyACM1', 38400) as ser:
+    with serial.Serial('/dev/ttyACM1', 115200) as ser:
         with open(vars(args)['file-to-flash'], 'rb') as inputfile:
             contents = inputfile.read()
 
