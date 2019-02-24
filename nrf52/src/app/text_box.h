@@ -25,11 +25,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef enum {
-    TEXT_DIRECTION_UP,
-    TEXT_DIRECTION_DOWN,
-} TEXT_DIRECTION;
-
 struct text_box_config {
 	uint8_t x;
 	uint8_t y;
@@ -39,6 +34,6 @@ struct text_box_config {
 	uint16_t bg_color;
 };
 
-void text_box_init(const char *text, struct text_box_config *config);
+void text_box_init(char *text, struct text_box_config *config);
 
 #endif

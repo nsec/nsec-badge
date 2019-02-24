@@ -21,113 +21,143 @@
  */
 
 #include "text_box.h"
-#include "drivers/display.h"
-#include "gfx_effect.h"
-#include "string.h"
-#include "drivers/controls.h"
-#include "utils.h"
-#include "gui.h"
 
-typedef struct {
+// Standard includes.
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Includes from our code.
+#include "drivers/display.h"
+#include "drivers/controls.h"
+#include "gui.h"
+#include "gfx_effect.h"
+#include "utils.h"
+
+#define MAX_LINE 250
+#define MAX_TEXT_LENGHT 2048
+
+struct text_box {
+    struct text_box_config *config;
     bool is_at_top;
     bool is_at_bottom;
     bool is_handling_buttons;
     uint16_t columns;
     uint16_t rows;
-    uint16_t max_char;
-    struct text_box_config *config;
-    int16_t text_index;
-    uint16_t text_length;
-    const char * text;
-} text_box_state_t;
+    uint16_t line_offset[MAX_LINE];
+    uint16_t line_count;
+    uint16_t line_index;
+    char text[MAX_TEXT_LENGHT];
+};
 
-static text_box_state_t text_box;
+static struct text_box text_box;
 
-void text_box_button_handler(button_t button);
-void text_box_show_page(void);
+static void text_box_button_handler(button_t button);
+static void text_box_show_page(void);
 
-void text_box_init(const char *text, struct text_box_config *config)
+void text_box_init(char *text, struct text_box_config *config)
 {
+    uint32_t len = strlen(text);
+    uint32_t i;
+
+    memset(&text_box, 0, sizeof(text_box));
+
     text_box.is_handling_buttons = true;
     text_box.is_at_top = true;
     text_box.is_at_bottom = false;
-    text_box.text_index = 0;
-    text_box.text_length = strlen(text);
-    text_box.text = text;
     text_box.columns = config->width / TEXT_BASE_WIDTH;
-    text_box.rows = config->height / TEXT_BASE_HEIGHT;
-    text_box.max_char = text_box.columns * text_box.rows;
+    text_box.rows = (config->height / TEXT_BASE_HEIGHT);
     text_box.config = config;
 
-    nsec_controls_add_handler(text_box_button_handler);
+    strncpy(text_box.text, text, MAX_TEXT_LENGHT);
 
-    gfx_set_wrap_line(config->width);
+    // If last charactere is not a \n add it
+    if (text_box.text[len - 1] != '\n') {
+        text_box.text[len] = '\n';
+        text_box.text[len + 1] = '\0';
+    }
+
+    word_wrap(text_box.text, text_box.columns);
+
+    // Count the number of lines and assign offset into an array
+    text_box.line_count++;
+    for (i=0; i < len; i++) {
+        if (text_box.text[i] == '\n') {
+            text_box.line_offset[text_box.line_count] = i + 1;
+            text_box.line_count++;
+        }
+    }
+
+    nsec_controls_add_handler(text_box_button_handler);
 
     text_box_show_page();
 }
 
-void text_box_show_page(void) {
+static void text_box_show_page(void) {
+    uint8_t i, k;
     struct text_box_config *config = text_box.config;
-    char buffer[text_box.max_char];
-
-    memset(buffer, 0, text_box.max_char);
-
-    strncpy(buffer, text_box.text + text_box.text_index, text_box.max_char);
+    char buffer[text_box.columns + 1];
 
     gfx_fill_rect(config->x, config->y, config->width, config->height, config->bg_color);
-    gfx_set_cursor(config->x, config->y);
+    gfx_set_cursor(config->x + 1, config->y);
     gfx_set_text_background_color(config->text_color, config->bg_color);
-    gfx_puts(buffer);
-    gfx_update();
+
+    for (i = 0; i < text_box.rows; i++) {
+        int16_t line_end = text_box.line_offset[text_box.line_index + i + 1];
+        int16_t line_start = text_box.line_offset[text_box.line_index + i];
+        int16_t line_size =  line_end - line_start;
+        if (line_size < 0) {
+            return;
+        }
+
+        memset(buffer, '\0', text_box.columns + 1);
+        strncpy(buffer, text_box.text + text_box.line_offset[text_box.line_index + i], line_size);
+        gfx_puts(buffer);
+    }
 }
 
-void scroll_up(void) {
+static void scroll_up(void) {
     if (text_box.is_at_top) {
         return;
     }
 
     if (text_box.is_at_bottom) {
-        //change direction
-        text_box.text_index -= text_box.max_char;
+        text_box.line_index -= text_box.rows;
     }
 
-    if (text_box.text_index - text_box.max_char < 0) {
-        text_box.text_index = 0;
+    if (text_box.line_index - text_box.rows < 0) {
+        text_box.line_index = 0;
         text_box.is_at_top = true;
     } else {
-        text_box.text_index -= text_box.max_char;
+        text_box.line_index -= text_box.rows;
         text_box.is_at_bottom = false;
     }
 
     text_box_show_page();
 }
 
-void scroll_down(void) {
+static void scroll_down(void) {
     if (text_box.is_at_bottom) {
         return;
     }
 
-    if (text_box.text_index + text_box.max_char >= text_box.text_length) {
-        text_box.text_index = text_box.text_length;
+    if (text_box.line_index + text_box.rows >= text_box.line_count) {
+        text_box.line_index = text_box.line_count - text_box.rows;
         text_box.is_at_bottom = true;
         return;
     } else {
-        text_box.text_index += text_box.max_char;
+        text_box.line_index += text_box.rows;
         text_box.is_at_top = false;
     }
 
     text_box_show_page();
 }
 
-void text_box_close(void) {
+static void text_box_close(void) {
     text_box.is_handling_buttons = 0;
 }
 
-void text_box_open(void) {
-    text_box.is_handling_buttons = 1;
-}
-
-void text_box_button_handler(button_t button) {
+static void text_box_button_handler(button_t button) {
     if(text_box.is_handling_buttons) {
         switch (button) {
             case BUTTON_UP:
