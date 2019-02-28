@@ -21,7 +21,8 @@ typedef enum {
     MENU_DIRECTION_DOWN,
 } MENU_DIRECTION;
 
-void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height, uint8_t item_count, menu_item_s * items);
+void menu_handler_init(void);
+void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height, uint8_t item_count, menu_item_s * items, uint16_t text_color, uint16_t bg_color);
 void menu_set_position(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height);
 void menu_add_item(menu_item_s * new_item);
 void menu_ui_redraw_all(void);

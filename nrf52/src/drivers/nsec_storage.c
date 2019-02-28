@@ -44,7 +44,7 @@
 
 #define PAGE_START_MAGIC    0xDEADC0DE
 
-extern bool is_at_main_menu;
+extern bool is_at_home_menu;
 
 /* Led settings */
 typedef struct LedSettings_t {
@@ -139,7 +139,7 @@ void nsec_storage_update() {
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_identity);
 
-        if (is_at_main_menu) {
+        if (is_at_home_menu) {
             nsec_identity_draw();
             gfx_update();
         }

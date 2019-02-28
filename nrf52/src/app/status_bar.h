@@ -21,11 +21,10 @@ typedef enum {
     STATUS_BLUETOOTH_ON,
 } status_bluetooth_status;
 
-void nsec_status_bar_init();
+void nsec_status_bar_init(void);
 void nsec_status_set_name(char * name);
-void nsec_status_set_badge_class(char * class);
 void nsec_status_set_ble_status(status_bluetooth_status status);
 void nsec_status_set_battery_status(status_battery_state state);
-void nsec_status_bar_ui_redraw();
+void nsec_status_bar_ui_redraw(void);
 
 #endif /* status_bar_h */

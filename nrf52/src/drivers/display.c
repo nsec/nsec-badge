@@ -31,12 +31,14 @@ struct display_ops {
 	void (*fill_screen_white)(void);
 	void (*draw_fast_hline)(int16_t x, int16_t y, int16_t w, uint16_t color);
 	void (*draw_fast_vline)(int16_t x, int16_t y, int16_t h, uint16_t color);
+	void (*draw_16bit_bitmap)(int16_t x, int16_t y, const uint8_t *bitmap,
+                int16_t w, int16_t h, uint16_t bg_color);
 	void (*set_brightness)(uint8_t brightness);
 	void (*update)(void);
 };
 
 #ifdef BOARD_BRAIN
-static struct display_ops st7735_ops = 
+static struct display_ops st7735_ops =
 	{
 		&st7735_init,
 		&st7735_draw_pixel,
@@ -45,6 +47,7 @@ static struct display_ops st7735_ops =
 		&st7735_fill_screen_white,
 		&st7735_draw_fast_hline,
 		&st7735_draw_fast_vline,
+		&st7735_draw_16bit_bitmap,
 		&st7735_set_brightness,
 		NULL
 	};
@@ -52,7 +55,7 @@ static struct display_ops *ops = &st7735_ops;
 
 #else
 
-static struct display_ops ssd1306_ops = 
+static struct display_ops ssd1306_ops =
 	{
 		&ssd1306_init,
 		&ssd1306_draw_pixel,
@@ -61,6 +64,7 @@ static struct display_ops ssd1306_ops =
 		&ssd1306_fill_screen_white,
 		&ssd1306_draw_fast_hline,
 		&ssd1306_draw_fast_vline,
+		NULL,
 		NULL,
 		&ssd1306_update
 	};
@@ -100,6 +104,14 @@ void display_draw_fast_hline(int16_t x, int16_t y, int16_t h, uint16_t color)
 void display_draw_fast_vline(int16_t x, int16_t y, int16_t w, uint16_t color)
 {
 	ops->draw_fast_vline(x, y, w, color);
+}
+
+void display_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
+    int16_t w, int16_t h, uint16_t bg_color)
+{
+	if (ops->draw_16bit_bitmap) {
+		ops->draw_16bit_bitmap(x, y, bitmap, w, h, bg_color);
+	}
 }
 
 void display_set_brightness(uint8_t brightness)

@@ -11,7 +11,6 @@
 #include <app_timer.h>
 #include "ble/nsec_ble.h"
 #include "nsec_nearby_badges.h"
-#include "app_glue.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"
 #include "3d.h"
@@ -67,7 +66,7 @@ APP_TIMER_DEF(nsec_render_timer);
 #define NSEC_ROTATING_MESH nsec_cube
 #endif
 
-static void nsec_render_3d_mesh(void * context) {
+/*static void nsec_render_3d_mesh(void * context) {
     if(is_at_main_menu) {
         static float current_angle = 0.0f;
         gfx_fill_rect(0, 10, 40, 42, DISPLAY_BLACK);
@@ -81,13 +80,13 @@ static void nsec_render_3d_mesh(void * context) {
         }
         gfx_update();
     }
-}
+}*/
 
 void init_identity_service() {
     memset(identity.name, 0, sizeof(identity.name));
 
-    app_timer_create(&nsec_render_timer, APP_TIMER_MODE_REPEATED, nsec_render_3d_mesh);
-    app_timer_start(nsec_render_timer, APP_TIMER_TICKS(40), NULL);
+    //app_timer_create(&nsec_render_timer, APP_TIMER_MODE_REPEATED, nsec_render_3d_mesh);
+    //app_timer_start(nsec_render_timer, APP_TIMER_TICKS(40), NULL);
 
     load_stored_identity(identity.name);
     //memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));

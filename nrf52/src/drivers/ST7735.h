@@ -140,6 +140,8 @@ void st7735_fill_screen_white(void);
 void st7735_set_rotation(uint8_t m);
 void st7735_invert_display(uint8_t i);
 void st7735_set_brightness(uint8_t brightness);
+void st7735_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
+    int16_t w, int16_t h, uint16_t bg_color);
 uint16_t st7735_color_565(uint8_t r, uint8_t g, uint8_t b);
 
 #endif

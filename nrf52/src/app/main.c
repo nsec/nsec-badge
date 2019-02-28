@@ -42,13 +42,13 @@
 #include "nsec_warning.h"
 #include "nsec_led_ble.h"
 #include "flash_mode.h"
+#include "home_menu.h"
 
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
 #include "images/nsec_logo_bitmap.h"
 
 static char g_device_id[10];
-bool is_at_main_menu = false;
 
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
@@ -111,81 +111,6 @@ void nsec_intro(void) {
     }
 }
 
-void open_conference_schedule(uint8_t item) {
-    menu_close();
-    is_at_main_menu = false;
-    nsec_schedule_show_dates();
-}
-
-void open_led_pattern(uint8_t item) {
-    menu_close();
-    is_at_main_menu = false;
-    nsec_led_pattern_show();
-}
-
-void open_settings(uint8_t item) {
-    menu_close();
-    is_at_main_menu = false;
-    nsec_setting_show();
-}
-
-void open_warning(uint8_t item) {
-    menu_close();
-    is_at_main_menu = false;
-    nsec_warning_show();
-}
-
-void open_battery_status(uint8_t item) {
-    menu_close();
-    is_at_main_menu = false;
-    show_battery_status();
-}
-
-#ifdef NSEC_FLAVOR_CTF
-menu_item_s main_menu_items[] = {
-    {
-        .label = "LED pattern",
-        .handler = open_led_pattern,
-    }, {
-        .label = "Settings",
-        .handler = open_settings,
-    }, {
-        .label = "Battery status",
-        .handler = open_battery_status,
-    }, {
-        .label = "Battery Warning",
-        .handler = open_warning,
-    }
-};
-#else
-static
-menu_item_s main_menu_items[] = {
-    {
-        .label = "Conference schedule",
-        .handler = open_conference_schedule,
-    }, {
-        .label = "LED pattern",
-        .handler = open_led_pattern,
-    }, {
-        .label = "Settings",
-        .handler = open_settings,
-    }, {
-        .label = "Battery status",
-        .handler = open_battery_status,
-    }, {
-        .label = "Battery Warning",
-        .handler = open_warning,
-    }
-};
-#endif
-
-void show_main_menu(void) {
-    nsec_identity_draw();
-    menu_init(0, gfx_height-8, gfx_width, 8, sizeof(main_menu_items) / sizeof(main_menu_items[0]), main_menu_items);
-    is_at_main_menu = true;
-}
-
-
 int main(void) {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
@@ -205,7 +130,6 @@ int main(void) {
     flash_init();
     init_WS2812FX();
     display_init();
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     nsec_buttons_init();
 
     // Enter flash mode if the "up" button is pressed.
@@ -224,15 +148,15 @@ int main(void) {
 
     nsec_status_bar_init();
     nsec_battery_manager_init();
-    nsec_status_set_name(g_device_id);
-    nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
+    //nsec_status_set_name(g_device_id);
+    //nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     load_stored_led_settings();
 
-    // nsec_intro like before work really bad on the new screen, we need something new
-    //nsec_intro();
-    show_main_menu();
+    // This is needed since we do not do the first menu_init without a button event
+    menu_handler_init();
+    show_home_menu(HOME_STATE_MENU);
 
     /*
      * Main loop
