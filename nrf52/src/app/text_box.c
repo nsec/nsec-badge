@@ -55,7 +55,8 @@ static struct text_box text_box;
 static void text_box_button_handler(button_t button);
 static void text_box_show_page(void);
 
-void text_box_init(char *text, struct text_box_config *config) {
+void text_box_init(const char *text, struct text_box_config *config)
+{
     uint32_t len = strlen(text);
     uint32_t i;
 

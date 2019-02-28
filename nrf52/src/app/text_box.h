@@ -34,6 +34,6 @@ struct text_box_config {
     uint16_t bg_color;
 };
 
-void text_box_init(char *text, struct text_box_config *config);
+void text_box_init(const char *text, struct text_box_config *config);
 
 #endif
