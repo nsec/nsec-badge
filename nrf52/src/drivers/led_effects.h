@@ -15,7 +15,7 @@
 #define CYCLES_800_T1H  41 // ~0.76 us
 #define CYCLES_800      71 // ~1.25 us
 
-#define NEOPIXEL_COUNT  8
+#define NEOPIXEL_COUNT  15
 
 void nsec_neoPixel_init(void);
 void nsec_neoPixel_clear(void);
