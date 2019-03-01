@@ -11,9 +11,10 @@
 #include "timer.h"
 #include "boards.h"
 #include "drivers/battery.h"
-#include "drivers/ssd1306.h"
+#include "drivers/display.h"
 #include "drivers/battery_manager.h"
 #include "gfx_effect.h"
+#include "gui.h"
 
 uint64_t heartbeat_timeout_count = 0;
 
@@ -50,9 +51,8 @@ static
 void battery_status_timeout_handler(void *p_context) {
     char msg[256];
 
-    gfx_fill_rect(0, 8, 128, 56, SSD1306_BLACK);
-    gfx_set_cursor(0, 12);
-    gfx_set_text_background_color(SSD1306_WHITE, SSD1306_BLACK);
+    gfx_set_cursor(GEN_MENU_POS);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
 #ifdef BOARD_SPUTNIK
     snprintf(msg, sizeof(msg),
@@ -63,7 +63,7 @@ void battery_status_timeout_handler(void *p_context) {
         battery_get_voltage(),
         battery_is_charging() ? "Yes" : "No",
         battery_is_usb_plugged() ? "Yes" : "No");
-#else 
+#else
     snprintf(msg, sizeof(msg),
         "Battery status:\n"
         " Voltage: %04d mV\n",
@@ -129,6 +129,8 @@ void start_battery_status_timer(void) {
     err_code = app_timer_start(m_battery_status_timer_id,
                 APP_TIMER_TICKS(BATTERY_STATUS_TIMER_TIMEOUT), NULL);
     APP_ERROR_CHECK(err_code);
+
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
     battery_status_timeout_handler(NULL);
 }
