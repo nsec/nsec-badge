@@ -5,6 +5,7 @@
 
 #include <nrf.h>
 #include <nrf_delay.h>
+#include <ctype.h>
 #include "nrf_sdh.h"
 #include "drivers/ws2812fx.h"
 
@@ -58,4 +59,33 @@ void led_show_error(ret_code_t rc, uint32_t delay) {
     if (stop_before_quit) {
         stop_WS2812FX();
     }
+}
+
+static inline int wordlen(const char * str){
+   int tempindex=0;
+   while(str[tempindex]!=' ' && str[tempindex] != 0 && str[tempindex] != '\n'){
+      ++tempindex;
+   }
+   return(tempindex);
+}
+
+char* word_wrap(char *s, const int wrapline)
+{
+    volatile int index = 0;
+    int current_line_len = 0;
+
+    while (s[index] != '\0') {
+        if (s[index] == '\n') {
+            current_line_len = 0;
+        } else if (isspace(s[index])) {
+            if (current_line_len + wordlen(&s[index+1]) >= wrapline) {
+                s[index] = '\n';
+                current_line_len = 0;
+            }
+        }
+        current_line_len++;
+        index++;
+   }
+
+   return s;
 }

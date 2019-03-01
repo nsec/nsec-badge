@@ -481,7 +481,7 @@ void gfx_draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16
 void gfx_write(uint8_t c) {
   if (c == '\n') {
     gfx_cursor_y += gfx_textsize*8;
-    gfx_cursor_x  = 0;
+    gfx_cursor_x  = 1;
   } else if (c == '\r') {
     // skip em
   } else {
@@ -489,7 +489,7 @@ void gfx_write(uint8_t c) {
     gfx_cursor_x += gfx_textsize*6;
     if (gfx_wrap && (gfx_cursor_x > (gfx_width - gfx_textsize*6))) {
       gfx_cursor_y += gfx_textsize*8;
-      gfx_cursor_x = 0;
+      gfx_cursor_x = 1;
     }
   }
 }
