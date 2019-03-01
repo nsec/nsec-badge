@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <app_error.h>
 #include "app/logs.h"
+#include "uuid.h"
 
 
 #define NO_CONNECTION_HANDLE_REQUIRED BLE_CONN_HANDLE_INVALID
@@ -20,13 +21,14 @@ static void set_attribute(ServiceCharacteristic*, ble_gatts_attr_t*, ble_gatts_a
 static void configure_permission(ServiceCharacteristic*, ble_gatts_attr_md_t*);
 
 
-void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write){
+void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid){
     characteristic->read_mode = read;
     characteristic->write_mode = write;
     characteristic->value_length = value_length;
     characteristic->on_write_command = NULL;
     characteristic->on_write_request = NULL;
     characteristic->on_read_request = NULL;
+    characteristic->uuid = (ble_uuid_t){uuid, TYPE_NSEC_UUID};
 }
 
 void configure_characteristic(ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,

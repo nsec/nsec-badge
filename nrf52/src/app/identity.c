@@ -18,6 +18,7 @@
 #include "ble/ble_device.h"
 #include "ble/gap_configuration.h"
 #include "ble/service_characteristic.h"
+#include "ble/uuid.h"
 #include "ble/vendor_service.h"
 #include "drivers/nsec_storage.h"
 #include "images/default_avatar_bitmap.h"
@@ -53,6 +54,11 @@ static ServiceCharacteristic name_characteristic;
 static ServiceCharacteristic unlock_password_characteristic;
 static ServiceCharacteristic unlocked_characteristic;
 //static ServiceCharacteristic avatar_characteristic;
+
+static uint16_t service_uuid = 0x0100;
+static uint16_t name_char_uuid = 0x0101;
+static uint16_t unlocked_password_char_uuid = 0x0102;
+static uint16_t unlocked_char_uuid = 0x0103;
 
 
 #ifndef MIN
@@ -166,10 +172,11 @@ static uint16_t on_unlock_password_write(CharacteristicWriteEvent* event){
 }
 
 static void configure_service(){
-    create_vendor_service(&identity_ble_service);
+    create_vendor_service(&identity_ble_service, service_uuid);
     add_vendor_service(&identity_ble_service);
 
-    add_characteristic_to_vendor_service(&identity_ble_service, &name_characteristic, NAME_MAX_LEN, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&name_characteristic, NAME_MAX_LEN, AUTO_READ, REQUEST_WRITE, name_char_uuid);
+    add_characteristic_to_vendor_service(&identity_ble_service, &name_characteristic);
     add_write_request_handler(&name_characteristic, on_name_write);
     set_characteristic_value(&name_characteristic, (uint8_t*)identity.name);
 
@@ -179,9 +186,11 @@ static void configure_service(){
     set_characteristic_value(&avatar_characteristic, identity.avatar);
     */
 
-    add_characteristic_to_vendor_service(&identity_ble_service, &unlock_password_characteristic, UNLOCK_PASSWORD_SIZE, DENY_READ, REQUEST_WRITE);
+    create_characteristic(&unlock_password_characteristic, UNLOCK_PASSWORD_SIZE, DENY_READ, REQUEST_WRITE, unlocked_password_char_uuid);
+    add_characteristic_to_vendor_service(&identity_ble_service, &unlock_password_characteristic);
     add_write_request_handler(&unlock_password_characteristic, on_unlock_password_write);
 
-    add_characteristic_to_vendor_service(&identity_ble_service, &unlocked_characteristic, sizeof(identity.unlocked), AUTO_READ, DENY_WRITE);
+    create_characteristic(&unlocked_characteristic, sizeof(identity.unlocked), AUTO_READ, DENY_WRITE, unlocked_char_uuid);
+    add_characteristic_to_vendor_service(&identity_ble_service, &unlocked_characteristic);
     set_characteristic_value(&unlocked_characteristic, &identity.unlocked);
 }

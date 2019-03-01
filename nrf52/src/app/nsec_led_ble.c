@@ -32,6 +32,7 @@
 #include "drivers/nsec_storage.h"
 #include "identity.h"
 #include "nsec_led_pattern.h"
+#include "ble/uuid.h"
 
 uint16_t set_segment_index_char_callback(CharacteristicWriteEvent *event);
 uint16_t set_start_segment_char_callback(CharacteristicWriteEvent *event);
@@ -83,40 +84,52 @@ void nsec_led_ble_init(void) {
         segment_array[i].colors[2] = BLUE;
     }
 
-    create_vendor_service(&led_service);
+
+    create_vendor_service(&led_service, 0x7ED0);
     add_vendor_service(&led_service);
 
-    add_characteristic_to_vendor_service(&led_service, &segment_index_char, 1, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&segment_index_char, 1, AUTO_READ, REQUEST_WRITE, 0x7ED1);
+    add_characteristic_to_vendor_service(&led_service, &segment_index_char);
     add_write_request_handler(&segment_index_char, set_segment_index_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &start_segment_char, 2, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&start_segment_char, 2, AUTO_READ, REQUEST_WRITE, 0x7ED2);
+    add_characteristic_to_vendor_service(&led_service, &start_segment_char);
     add_write_request_handler(&start_segment_char, set_start_segment_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &stop_segment_char, 2, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&stop_segment_char, 2, AUTO_READ, REQUEST_WRITE, 0x7ED3);
+    add_characteristic_to_vendor_service(&led_service, &stop_segment_char);
     add_write_request_handler(&stop_segment_char, set_stop_segment_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &pattern_char, 1, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&pattern_char, 1, AUTO_READ, REQUEST_WRITE, 0x7ED4);
+    add_characteristic_to_vendor_service(&led_service, &pattern_char);
     add_write_request_handler(&pattern_char, set_pattern_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &colors_char, 12, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&colors_char, 12, AUTO_READ, REQUEST_WRITE, 0x7ED5);
+    add_characteristic_to_vendor_service(&led_service, &colors_char);
     add_write_request_handler(&colors_char, set_colors_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &speed_char, 2, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&speed_char, 2, AUTO_READ, REQUEST_WRITE, 0x7ED6);
+    add_characteristic_to_vendor_service(&led_service, &speed_char);
     add_write_request_handler(&speed_char, set_speed_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &reverse_char, 1, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&reverse_char, 1, AUTO_READ, REQUEST_WRITE, 0x7ED7);
+    add_characteristic_to_vendor_service(&led_service, &reverse_char);
     add_write_request_handler(&reverse_char, set_reverse_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &active_char, 1, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&active_char, 1, AUTO_READ, REQUEST_WRITE, 0x7ED8);
+    add_characteristic_to_vendor_service(&led_service, &active_char);
     add_write_request_handler(&active_char, set_active_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &brightness_char, 1, AUTO_READ, REQUEST_WRITE);
+    create_characteristic(&brightness_char, 1, AUTO_READ, REQUEST_WRITE, 0x7ED9);
+    add_characteristic_to_vendor_service(&led_service, &brightness_char);
     add_write_request_handler(&brightness_char, set_brightness_char_callback);
 
-    add_characteristic_to_vendor_service(&led_service, &unlock_char, 1, AUTO_READ, DENY_WRITE);
+    create_characteristic(&unlock_char, 1, AUTO_READ, DENY_WRITE, 0x7EDA);
+    add_characteristic_to_vendor_service(&led_service, &unlock_char);
     set_characteristic_value(&unlock_char, (uint8_t *)&unlock_state);
 
-    add_characteristic_to_vendor_service(&led_service, &sync_char, 8, DENY_READ, REQUEST_WRITE);
+    create_characteristic(&sync_char, 8, DENY_READ, REQUEST_WRITE, 0x7EDB);
+    add_characteristic_to_vendor_service(&led_service, &sync_char);
     add_write_request_handler(&sync_char, unlock_service_callback);
 
     update_all_characteristics_value();
