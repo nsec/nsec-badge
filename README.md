@@ -1,4 +1,4 @@
-Northsec 2018 Badge
+Northsec 2019 Badge
 ===================
 
 Brought to you by the Team badge for NorthSec.
@@ -8,7 +8,7 @@ Brought to you by the Team badge for NorthSec.
 
 ## Hardware overview
 
-The NorthSec 2018 badge has two programmable micro-controllers:
+The NorthSec 2019 badge has two programmable micro-controllers:
 
  - The [Nordic Semiconductor](https://www.nordicsemi.com) [`nRF52832`](https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy2/nRF52832) (nRF52) and
  - The [STMicroelectronics](http://www.st.com/) [`STM32F070F6P6`](http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32-mainstream-mcus/stm32f0-series/stm32f0x0-value-line/stm32f070f6.html) (stm32).
@@ -29,7 +29,7 @@ The badge can be supplied by 1 ICR14500 3.7v Li-ion rechargeable battery and/or 
 battery can be charged from the USB port but the power switch must be turned ON for the duration
 of the charge.
 
-The [schematic](http://xn--rr8b.ga/northsec_2018_schematics.pdf) are available.
+The [schematic](http://xn--rr8b.ga/northsec_2019_schematics.pdf) are available.
 
 If you wish to build your own badge:
 
@@ -130,12 +130,12 @@ attach 1
 set mem inaccessible-by-default off
 set debug arm
 load builds/s132_nrf52_5.0.0_softdevice.hex
-load builds/nsec18_nrf52_conf.elf
+load builds/nsec19_nrf52_conf.elf
 quit
 ```
 
 The stm32 can be flashed in a similar fashion, although you will want to
-`load builds/nsec18_stm32_debugger.elf` instead.
+`load builds/nsec19_stm32_debugger.elf` instead.
 
 You can also use the (more expensive) STLink, but we do not have the hardware
 to test instructions for it.
@@ -160,32 +160,32 @@ Use a DFU compliant software to flash the STM32:
 
 To make a `bin` file from an ELF, run the following:
 
-    % arm-none-eabi-objcopy -O binary builds/nsec18_stm32_debugger.elf builds/nsec18_stm32_debugger.bin
+    % arm-none-eabi-objcopy -O binary builds/nsec19_stm32_debugger.elf builds/nsec19_stm32_debugger.bin
 
 Run the following command:
 
-    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec18_stm32_debugger.bin
+    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec19_stm32_debugger.bin
 
 The STM32 should reset automagically, running the newly downloaded firmware. The
 address of 0x08000000 is important, this is where the stm32 flash is mapped into
 memory.
 
-## Firmware of NorthSec 2018
+## Firmware of NorthSec 2019
 
-There were 6 firmware images built for the NorthSec 2018 event.
+There were 6 firmware images built for the NorthSec 2019 event.
 
-### `nsec18_stm32_debugger.elf`
+### `nsec19_stm32_debugger.elf`
 
 The firmware of the stm32 used during the NorthSec conference. It has the
 BlackMagic gdb stub exposed via the USB to reprogram and debug the nRF52 chip.
 
-### `nsec18_stm32_crossdebug.elf`
+### `nsec19_stm32_crossdebug.elf`
 
 Same as the stm32 conference firmware, except the debugger uses the external
 pins to allow programming and debugging the stm32 micro-controller of another
 badge.
 
-### `nsec18_nrf52_{conf,admin,speaker,ctf}.elf`
+### `nsec19_nrf52_{conf,admin,speaker,ctf}.elf`
 
 The firmware of the nRF52 used during the NorthSec conference and CTF. It
 exposes a BLE service to change you avatar image and name. `admin`, `speaker`
@@ -208,7 +208,7 @@ To compile the blackmagic firmware for the stm32:
 
     % git submodule init
     % git submodule update
-    % make builds/nsec18_stm32_debugger.bin
+    % make builds/nsec19_stm32_debugger.bin
 
 #### Flashing the firmware
 
@@ -223,7 +223,7 @@ Make sure you see a DFU device:
 
 Use [dfu-util](http://dfu-util.sourceforge.net/) to flash the firmware:
 
-    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec18_stm32_debugger.bin
+    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec19_stm32_debugger.bin
 
 ### nRF52
 
