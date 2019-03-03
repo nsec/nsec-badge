@@ -318,4 +318,10 @@ merge: $(OUTPUT_DIRECTORY)/program.hex
 sdk_config: $(SDK_PATH)
 	java -jar $(SDK_PATH)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar sdk_config.h
 
+install-sdk-doc:
+	mkdir -p sdk-doc
+	wget -c https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.2.0_offline_doc.zip \
+		-O sdk-doc/nRF5_SDK_14.2.0_offline_doc.zip
+	cd sdk-doc && unzip -f nRF5_SDK_14.2.0_offline_doc.zip
+
 .PHONY: bitmaps external-flash clean clean-bitmaps clean-external-flash clean-$(SDK_PATH) flash-devboard merge sdk_config
