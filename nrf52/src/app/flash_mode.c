@@ -252,6 +252,8 @@ static void handle_command(const char *command) {
 //
 // The only way to get out of this mode is to reset the chip.
 void flash_mode() {
+  uart_init();
+
   uart_puts("Entering flash mode!\n");
   gfx_draw_bitmap_ext_flash(0, 0, &the_flash_bitmap);
   gfx_update();
