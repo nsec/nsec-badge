@@ -22,16 +22,16 @@
 #ifndef text_box_h
 #define text_box_h
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 struct text_box_config {
-	uint8_t x;
-	uint8_t y;
-	uint8_t width;
-	uint8_t height;
-	uint16_t text_color;
-	uint16_t bg_color;
+    uint8_t x;
+    uint8_t y;
+    uint8_t width;
+    uint8_t height;
+    uint16_t text_color;
+    uint16_t bg_color;
 };
 
 void text_box_init(char *text, struct text_box_config *config);

@@ -23,15 +23,15 @@
 #include "text_box.h"
 
 // Standard includes.
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <string.h>
 
 // Includes from our code.
-#include "drivers/display.h"
 #include "drivers/controls.h"
-#include "gui.h"
+#include "drivers/display.h"
 #include "gfx_effect.h"
+#include "gui.h"
 #include "utils.h"
 
 #define MAX_LINE 250
@@ -55,8 +55,7 @@ static struct text_box text_box;
 static void text_box_button_handler(button_t button);
 static void text_box_show_page(void);
 
-void text_box_init(char *text, struct text_box_config *config)
-{
+void text_box_init(char *text, struct text_box_config *config) {
     uint32_t len = strlen(text);
     uint32_t i;
 
@@ -81,7 +80,7 @@ void text_box_init(char *text, struct text_box_config *config)
 
     // Count the number of lines and assign offset into an array
     text_box.line_count++;
-    for (i=0; i < len; i++) {
+    for (i = 0; i < len; i++) {
         if (text_box.text[i] == '\n') {
             text_box.line_offset[text_box.line_count] = i + 1;
             text_box.line_count++;
@@ -98,20 +97,23 @@ static void text_box_show_page(void) {
     struct text_box_config *config = text_box.config;
     char buffer[text_box.columns + 1];
 
-    gfx_fill_rect(config->x, config->y, config->width, config->height, config->bg_color);
+    gfx_fill_rect(config->x, config->y, config->width, config->height,
+                  config->bg_color);
     gfx_set_cursor(config->x + 1, config->y);
     gfx_set_text_background_color(config->text_color, config->bg_color);
 
     for (i = 0; i < text_box.rows; i++) {
         int16_t line_end = text_box.line_offset[text_box.line_index + i + 1];
         int16_t line_start = text_box.line_offset[text_box.line_index + i];
-        int16_t line_size =  line_end - line_start;
+        int16_t line_size = line_end - line_start;
         if (line_size < 0) {
             return;
         }
 
         memset(buffer, '\0', text_box.columns + 1);
-        strncpy(buffer, text_box.text + text_box.line_offset[text_box.line_index + i], line_size);
+        strncpy(buffer,
+                text_box.text + text_box.line_offset[text_box.line_index + i],
+                line_size);
         gfx_puts(buffer);
     }
 }
@@ -153,27 +155,25 @@ static void scroll_down(void) {
     text_box_show_page();
 }
 
-static void text_box_close(void) {
-    text_box.is_handling_buttons = 0;
-}
+static void text_box_close(void) { text_box.is_handling_buttons = 0; }
 
 static void text_box_button_handler(button_t button) {
-    if(text_box.is_handling_buttons) {
+    if (text_box.is_handling_buttons) {
         switch (button) {
-            case BUTTON_UP:
-                if (!text_box.is_at_top) {
-                    scroll_up();
-                }
-                break;
-            case BUTTON_DOWN:
-                if (!text_box.is_at_bottom) {
-                    scroll_down();
-                }
-                break;
-            case BUTTON_BACK:
-                text_box_close();
-            default:
-                break;
+        case BUTTON_UP:
+            if (!text_box.is_at_top) {
+                scroll_up();
+            }
+            break;
+        case BUTTON_DOWN:
+            if (!text_box.is_at_bottom) {
+                scroll_down();
+            }
+            break;
+        case BUTTON_BACK:
+            text_box_close();
+        default:
+            break;
         }
     }
 }
