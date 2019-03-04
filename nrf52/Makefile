@@ -322,6 +322,6 @@ install-sdk-doc:
 	mkdir -p sdk-doc
 	wget -c https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.2.0_offline_doc.zip \
 		-O sdk-doc/nRF5_SDK_14.2.0_offline_doc.zip
-	cd sdk-doc && unzip -f nRF5_SDK_14.2.0_offline_doc.zip
+	cd sdk-doc && unzip -n nRF5_SDK_14.2.0_offline_doc.zip
 
 .PHONY: bitmaps external-flash clean clean-bitmaps clean-external-flash clean-$(SDK_PATH) flash-devboard merge sdk_config
