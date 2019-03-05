@@ -32,55 +32,55 @@
 
 // Includes from our code.
 #include "gfx_effect.h"
+#include "images/external/the_flash_bitmap.h"
 #include <drivers/flash.h>
 #include <drivers/uart.h>
-#include "images/external/the_flash_bitmap.h"
 
 static const char *skip_spaces(const char *p) {
-  while (*p == ' ') {
-    p++;
-  }
+    while (*p == ' ') {
+        p++;
+    }
 
-  return p;
+    return p;
 }
 
 static bool hex_nibble_decode(char nibble_hex, uint8_t *nibble) {
-  if (nibble_hex >= 'a' && nibble_hex <= 'f') {
-    *nibble = nibble_hex - 'a' + 0xa;
-    return true;
-  }
+    if (nibble_hex >= 'a' && nibble_hex <= 'f') {
+        *nibble = nibble_hex - 'a' + 0xa;
+        return true;
+    }
 
-  if (nibble_hex >= 'A' && nibble_hex <= 'F') {
-    *nibble = nibble_hex - 'A' + 0xa;
-    return true;
-  }
+    if (nibble_hex >= 'A' && nibble_hex <= 'F') {
+        *nibble = nibble_hex - 'A' + 0xa;
+        return true;
+    }
 
-  if (nibble_hex >= '0' && nibble_hex <= '9') {
-    *nibble = nibble_hex - '0';
-    return true;
-  }
+    if (nibble_hex >= '0' && nibble_hex <= '9') {
+        *nibble = nibble_hex - '0';
+        return true;
+    }
 
-  return false;
+    return false;
 }
 
 static bool hex_decode(const char *hex, uint8_t *bin, size_t n_bytes) {
-  for (size_t i = 0; i < n_bytes; i++) {
-    char high_c = hex[i * 2];
-    char low_c = hex[i * 2 + 1];
+    for (size_t i = 0; i < n_bytes; i++) {
+        char high_c = hex[i * 2];
+        char low_c = hex[i * 2 + 1];
 
-    uint8_t high, low;
-    if (!hex_nibble_decode(high_c, &high)) {
-      return false;
+        uint8_t high, low;
+        if (!hex_nibble_decode(high_c, &high)) {
+            return false;
+        }
+
+        if (!hex_nibble_decode(low_c, &low)) {
+            return false;
+        }
+
+        bin[i] = high << 4 | low;
     }
 
-    if (!hex_nibble_decode(low_c, &low)) {
-      return false;
-    }
-
-    bin[i] = high << 4 | low;
-  }
-
-  return true;
+    return true;
 }
 
 // Write a 128-bytes block at the given address.  The data is read back from
@@ -94,58 +94,59 @@ static bool hex_decode(const char *hex, uint8_t *bin, size_t n_bytes) {
 //   -->  write 0x200 aabbcc...ff
 //   <--  write ok 0x12345678
 static void handle_write(const char *args) {
-  const char *start = args;
-  char *end;
+    const char *start = args;
+    char *end;
 
-  long address = strtoul(start, &end, 16);
+    long address = strtoul(start, &end, 16);
 
-  if (address % 128 != 0) {
-    uart_printf("write error The address is not a multiple of 128 (got %d).\n",
-                address);
-    return;
-  }
+    if (address % 128 != 0) {
+        uart_printf(
+            "write error The address is not a multiple of 128 (got %d).\n",
+            address);
+        return;
+    }
 
-  start = skip_spaces(end);
+    start = skip_spaces(end);
 
-  // The remainder should contain exactly 256 chars (128 data bytes)
-  int hex_encoded_len = strlen(start);
-  if (hex_encoded_len != 256) {
-    uart_printf(
-        "write error Unexpected length of hex-encoded byte string. Got %d, "
-        "expected 256.\n",
-        hex_encoded_len);
-    return;
-  }
+    // The remainder should contain exactly 256 chars (128 data bytes)
+    int hex_encoded_len = strlen(start);
+    if (hex_encoded_len != 256) {
+        uart_printf(
+            "write error Unexpected length of hex-encoded byte string. Got %d, "
+            "expected 256.\n",
+            hex_encoded_len);
+        return;
+    }
 
-  uint8_t binary[128];
-  if (!hex_decode(start, binary, 128)) {
-    uart_printf("write error Couldn't decode hex-encoded binary.\n");
-    return;
-  }
+    uint8_t binary[128];
+    if (!hex_decode(start, binary, 128)) {
+        uart_printf("write error Couldn't decode hex-encoded binary.\n");
+        return;
+    }
 
-  ret_code_t ret = flash_write_128(address, binary);
-  if (ret != NRF_SUCCESS) {
-    uart_printf("write error flash_write_128 failed with code %d.\n", ret);
-    return;
-  }
+    ret_code_t ret = flash_write_128(address, binary);
+    if (ret != NRF_SUCCESS) {
+        uart_printf("write error flash_write_128 failed with code %d.\n", ret);
+        return;
+    }
 
-  uint8_t validation[128];
-  ret = flash_read_128(address, validation);
-  if (ret != NRF_SUCCESS) {
-    uart_printf("write error flash_read_128 failed with code %d.\n", ret);
-    return;
-  }
+    uint8_t validation[128];
+    ret = flash_read_128(address, validation);
+    if (ret != NRF_SUCCESS) {
+        uart_printf("write error flash_read_128 failed with code %d.\n", ret);
+        return;
+    }
 
-  if (memcmp(binary, validation, 128) != 0) {
-    uart_printf(
-        "write error The data read from the flash does not match what we "
-        "wrote.\n");
-    return;
-  }
+    if (memcmp(binary, validation, 128) != 0) {
+        uart_printf(
+            "write error The data read from the flash does not match what we "
+            "wrote.\n");
+        return;
+    }
 
-  uint32_t crc = crc32_compute(validation, 128, NULL);
+    uint32_t crc = crc32_compute(validation, 128, NULL);
 
-  uart_printf("write ok 0x%lx\n", crc);
+    uart_printf("write ok 0x%lx\n", crc);
 }
 
 // Reads 128 bytes of data.  The address does not have to be aligned.
@@ -157,22 +158,22 @@ static void handle_write(const char *args) {
 //   -->  read 0x200
 //   <--  read ok aabbcc...dd
 static void handle_read(const char *args) {
-  long address = strtoul(args, NULL, 16);
+    long address = strtoul(args, NULL, 16);
 
-  uint8_t data[128];
-  ret_code_t ret = flash_read_128(address, data);
-  if (ret != NRF_SUCCESS) {
-    uart_printf("read error flash_read_128 failed with code %d.\n", ret);
-    return;
-  }
+    uint8_t data[128];
+    ret_code_t ret = flash_read_128(address, data);
+    if (ret != NRF_SUCCESS) {
+        uart_printf("read error flash_read_128 failed with code %d.\n", ret);
+        return;
+    }
 
-  uart_puts("read ok ");
+    uart_puts("read ok ");
 
-  for (int i = 0; i < 128; i++) {
-    uart_printf("%02x", data[i]);
-  }
+    for (int i = 0; i < 128; i++) {
+        uart_printf("%02x", data[i]);
+    }
 
-  uart_puts("\n");
+    uart_puts("\n");
 }
 
 // Erase the whole flash chip.
@@ -180,13 +181,13 @@ static void handle_read(const char *args) {
 // Synopsis: erase
 // Response: erase ok
 static void handle_erase(void) {
-  ret_code_t ret = flash_erase_chip();
-  if (ret != NRF_SUCCESS) {
-    uart_printf("erase error flash_erase_chip failed with code %d\n", ret);
-    return;
-  }
+    ret_code_t ret = flash_erase_chip();
+    if (ret != NRF_SUCCESS) {
+        uart_printf("erase error flash_erase_chip failed with code %d\n", ret);
+        return;
+    }
 
-  uart_printf("erase ok\n");
+    uart_printf("erase ok\n");
 }
 
 // Compute the CRC32 of a region of flash.  The length of the region must be a
@@ -199,51 +200,53 @@ static void handle_erase(void) {
 //   -->  checksum 0x1000 0x100
 //   <--  checksum ok 0x12345678
 static void handle_checksum(const char *args) {
-  const char *start = args;
-  char *end;
-  long startAddress = strtoul(start, &end, 16);
-  start = end;
-  long length = strtoul(start, &end, 16);
+    const char *start = args;
+    char *end;
+    long startAddress = strtoul(start, &end, 16);
+    start = end;
+    long length = strtoul(start, &end, 16);
 
-  if (length % 128 != 0) {
-    uart_printf(
-        "checksum error The length is not a multiple of 128 (got %d).\n",
-        length);
-    return;
-  }
-
-  uint32_t crc;
-  uint32_t *p_crc = NULL;
-  for (int address = startAddress; address < (startAddress + length); address += 128) {
-    uint8_t data[128];
-    ret_code_t ret = flash_read_128(address, data);
-    if (ret != NRF_SUCCESS) {
-      uart_printf("read error flash_read_128 failed with code %d.\n", ret);
-      return;
+    if (length % 128 != 0) {
+        uart_printf(
+            "checksum error The length is not a multiple of 128 (got %d).\n",
+            length);
+        return;
     }
 
-    crc = crc32_compute(data, 128, p_crc);
+    uint32_t crc;
+    uint32_t *p_crc = NULL;
+    for (int address = startAddress; address < (startAddress + length);
+         address += 128) {
+        uint8_t data[128];
+        ret_code_t ret = flash_read_128(address, data);
+        if (ret != NRF_SUCCESS) {
+            uart_printf("read error flash_read_128 failed with code %d.\n",
+                        ret);
+            return;
+        }
 
-    p_crc = &crc;
-  }
+        crc = crc32_compute(data, 128, p_crc);
 
-  uart_printf("checksum ok 0x%x\n", crc);
+        p_crc = &crc;
+    }
+
+    uart_printf("checksum ok 0x%x\n", crc);
 }
 
 static void handle_command(const char *command) {
-  if (strncmp(command, "write ", strlen("write ")) == 0) {
-    handle_write(command + strlen("write "));
-  } else if (strncmp(command, "read ", strlen("read ")) == 0) {
-    handle_read(command + strlen("read "));
-  } else if (strcmp(command, "erase") == 0) {
-    handle_erase();
-  } else if (strncmp(command, "checksum ", strlen("checksum ")) == 0) {
-    handle_checksum(command + strlen("checksum "));
-  } else {
-    uart_puts("error: unknown command: ");
-    uart_puts(command);
-    uart_puts("\n");
-  }
+    if (strncmp(command, "write ", strlen("write ")) == 0) {
+        handle_write(command + strlen("write "));
+    } else if (strncmp(command, "read ", strlen("read ")) == 0) {
+        handle_read(command + strlen("read "));
+    } else if (strcmp(command, "erase") == 0) {
+        handle_erase();
+    } else if (strncmp(command, "checksum ", strlen("checksum ")) == 0) {
+        handle_checksum(command + strlen("checksum "));
+    } else {
+        uart_puts("error: unknown command: ");
+        uart_puts(command);
+        uart_puts("\n");
+    }
 }
 
 // Enter flash mode.  In this mode, we are blocked waiting on the UART.
@@ -252,40 +255,40 @@ static void handle_command(const char *command) {
 //
 // The only way to get out of this mode is to reset the chip.
 void flash_mode() {
-  uart_init();
+    uart_init();
 
-  uart_puts("Entering flash mode!\n");
-  gfx_draw_bitmap_ext_flash(0, 0, &the_flash_bitmap);
-  gfx_update();
+    uart_puts("Entering flash mode!\n");
+    gfx_draw_bitmap_ext_flash(0, 0, &the_flash_bitmap);
+    gfx_update();
 
-  // The space required for the flash write command is 256 bytes (hex encoded
-  // data) plus the text of the command before that.  300 bytes should be more
-  // than enough.
-  char command[300];
-  int size = 0;
-  while (1) {
-    uint8_t c;
-    ret_code_t ret = uart_read(&c);
-    if (ret != NRF_SUCCESS) {
-      uart_printf("error 0x%x\n", ret);
-      uart_clear_errors();
-      size = 0;
-      continue;
+    // The space required for the flash write command is 256 bytes (hex encoded
+    // data) plus the text of the command before that.  300 bytes should be more
+    // than enough.
+    char command[300];
+    int size = 0;
+    while (1) {
+        uint8_t c;
+        ret_code_t ret = uart_read(&c);
+        if (ret != NRF_SUCCESS) {
+            uart_printf("error 0x%x\n", ret);
+            uart_clear_errors();
+            size = 0;
+            continue;
+        }
+
+        if (c == '\n') {
+            // End of line/command.
+            command[size] = '\0';
+            handle_command(command);
+            size = 0;
+        } else if (c == '\0') {
+            // Magic byte to clear buffer.
+            size = 0;
+        } else if (size < sizeof(command)) {
+            command[size] = c;
+            size++;
+        } else {
+            // Drop character, buffer is full.
+        }
     }
-
-    if (c == '\n') {
-      // End of line/command.
-      command[size] = '\0';
-      handle_command(command);
-      size = 0;
-    } else if (c == '\0') {
-      // Magic byte to clear buffer.
-      size = 0;
-    } else if (size < sizeof(command)) {
-      command[size] = c;
-      size++;
-    } else {
-      // Drop character, buffer is full.
-    }
-  }
 }
