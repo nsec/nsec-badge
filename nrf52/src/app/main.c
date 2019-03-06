@@ -25,10 +25,10 @@
 #include "drivers/flash.h"
 #include "drivers/power.h"
 #include "drivers/softdevice.h"
-#include "drivers/uart.h"
 #include "drivers/ws2812fx.h"
 #include "drivers/nsec_storage.h"
 
+#include "cli.h"
 #include "logs.h"
 #include "gfx_effect.h"
 #include "identity.h"
@@ -125,7 +125,6 @@ int main(void) {
     log_init();
     power_init();
     softdevice_init();
-    uart_init();
     timer_init();
     flash_init();
     init_WS2812FX();
@@ -136,6 +135,10 @@ int main(void) {
     if (nsec_button_is_pushed(BUTTON_UP)) {
       flash_mode();
     }
+
+    // cli_init depends on timer_init, and also needs to be after flash_mode
+    // (the CLI takes over the UART, which the flash mode uses).
+    cli_init();
 
     /*
      * Initialize bluetooth stack
@@ -162,6 +165,7 @@ int main(void) {
      * Main loop
      */
     while(true) {
+        cli_process();
         service_WS2812FX();
         nsec_storage_update();
         power_manage();

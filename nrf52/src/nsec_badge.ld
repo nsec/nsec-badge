@@ -26,6 +26,13 @@ SECTIONS
     KEEP(*(SORT(.log_dynamic_data*)))
     PROVIDE(__stop_log_dynamic_data = .);
   } > RAM
+  .cli_sorted_cmd_ptrs :
+  {
+    PROVIDE(__start_cli_sorted_cmd_ptrs = .);
+    KEEP(*(.cli_sorted_cmd_ptrs))
+    PROVIDE(__stop_cli_sorted_cmd_ptrs = .);
+  } > RAM
+
 } INSERT AFTER .data;
 
 /* I have no idea what it does, but without that the softdevice doesn't compile, I'll check that later.*/
@@ -34,6 +41,12 @@ SECTIONS
   .mem_section_dummy_rom :
   {
   }
+  .cli_command :
+  {
+    PROVIDE(__start_cli_command = .);
+    KEEP(*(.cli_command))
+    PROVIDE(__stop_cli_command = .);
+  } > FLASH
   .sdh_soc_observers :
   {
     PROVIDE(__start_sdh_soc_observers = .);

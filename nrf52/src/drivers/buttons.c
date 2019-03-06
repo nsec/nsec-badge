@@ -21,10 +21,10 @@
  * SOFTWARE.
  */
 
-#include <drivers/uart.h>
-#include "boards.h"
 #include "buttons.h"
+#include "boards.h"
 #include "controls.h"
+#include <drivers/cli_uart.h>
 
 /*
  * Delay from a GPIOTE event until a button is reported as pushed (in number of
@@ -43,22 +43,22 @@ void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action)
     if (button_action == APP_BUTTON_PUSH) {
         switch (pin_no) {
             case PIN_INPUT_UP:
-                uart_puts("+ btn up\n");
+                cli_uart_printf("btn up\r\n");
                 nsec_controls_trigger(BUTTON_UP);
             break;
 
             case PIN_INPUT_DOWN:
-                uart_puts("+ btn down\n");
+                cli_uart_printf("+ btn down\r\n");
                 nsec_controls_trigger(BUTTON_DOWN);
             break;
 
             case PIN_INPUT_BACK:
-                uart_puts("+ btn back\n");
+                cli_uart_printf("+ btn back\r\n");
                 nsec_controls_trigger(BUTTON_BACK);
             break;
 
             case PIN_INPUT_ENTER:
-                uart_puts("+ btn enter\n");
+                cli_uart_printf("+ btn enter\r\n");
                 nsec_controls_trigger(BUTTON_ENTER);
             break;
         }
