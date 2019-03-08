@@ -26,7 +26,7 @@
 #include <sdk_errors.h>
 
 void flash_init ();
-ret_code_t flash_erase_chip ();
+ret_code_t flash_erase(int address);
 ret_code_t flash_read_128 (int address, uint8_t *data);
 ret_code_t flash_write_128 (int address, const uint8_t *data);
 

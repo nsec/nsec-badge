@@ -23,6 +23,13 @@ import serial
 import binascii
 import argparse
 
+# Complete size of the flash.
+FLASH_SIZE_IN_BYTES = 512 * 1024
+
+# The space available for this stuff: everything minus the last 4096 bytes
+# block, reserved for persistent config.
+FLASH_AVAILABLE_SIZE_IN_BYTES = FLASH_SIZE_IN_BYTES - 4096
+
 
 class FlashClient:
     def __init__(self, ser, verbose):
@@ -76,9 +83,13 @@ class FlashClient:
             if line.startswith(ok_msg):
                 return line[len(ok_msg) + 1:]
 
-    def erase(self):
-        """Erase the whole chip."""
-        self._run_command('erase')
+    def erase(self, address):
+        """Erase the 4 kiB block of data which contains address."""
+        if type(address) != int:
+            raise TypeError('address should be an int.')
+
+        address_hex = hex(address)
+        self._run_command('erase', address_hex)
 
     def write(self, address, data):
         """Write 128 bytes of data.
@@ -148,6 +159,17 @@ class FlashClient:
         return int(checksum_hex, 16)
 
 
+def erase_as_needed(client, size):
+    '''Erase as much as needed to fit SIZE bytes of data.'''
+
+    address = 0
+
+    while size > 0:
+        client.erase(address)
+        address = address + 4096
+        size = size - 4096
+
+
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('file-to-flash', help='File to write on the flash.')
@@ -158,17 +180,22 @@ def main():
         with open(vars(args)['file-to-flash'], 'rb') as inputfile:
             contents = inputfile.read()
 
+        # Pad to get a size that is multiple of 128 bytes.
         if len(contents) % 128 != 0:
             missing = 128 - (len(contents) % 128)
             contents = contents + b'\xaa' * missing
             assert len(contents) % 128 == 0
+
+        if len(contents) > FLASH_AVAILABLE_SIZE_IN_BYTES:
+            raise ValueError('Data exceeds available space: {} > {}'.format(
+                len(contents), FLASH_AVAILABLE_SIZE_IN_BYTES))
 
         nsegments = len(contents) // 128
         cursegment = 1
 
         print(' > erasing')
         client = FlashClient(ser, args.verbose)
-        client.erase()
+        erase_as_needed(client, len(contents))
 
         address = 0
         while address < len(contents):

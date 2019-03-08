@@ -176,14 +176,18 @@ static void handle_read(const char *args) {
     uart_puts("\n");
 }
 
-// Erase the whole flash chip.
+// Erase the block of 4kiB that contains the given address.
 //
-// Synopsis: erase
+// Synopsis: erase <address contained in block to erase>
 // Response: erase ok
-static void handle_erase(void) {
-    ret_code_t ret = flash_erase_chip();
+static void handle_erase(const char *args) {
+    const char *start = args;
+    char *end;
+    long address = strtoul(start, &end, 16);
+
+    ret_code_t ret = flash_erase(address);
     if (ret != NRF_SUCCESS) {
-        uart_printf("erase error flash_erase_chip failed with code %d\n", ret);
+        uart_printf("erase error flash_erase failed with code %d\n", ret);
         return;
     }
 
@@ -238,8 +242,8 @@ static void handle_command(const char *command) {
         handle_write(command + strlen("write "));
     } else if (strncmp(command, "read ", strlen("read ")) == 0) {
         handle_read(command + strlen("read "));
-    } else if (strcmp(command, "erase") == 0) {
-        handle_erase();
+    } else if (strncmp(command, "erase ", strlen("erase ")) == 0) {
+        handle_erase(command + strlen("erase "));
     } else if (strncmp(command, "checksum ", strlen("checksum ")) == 0) {
         handle_checksum(command + strlen("checksum "));
     } else {

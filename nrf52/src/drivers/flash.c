@@ -33,7 +33,7 @@
 #define FLASH_READ_COMMAND 0x3
 #define READ_STATUS_REGISTER_1_COMMAND 0x5
 #define WRITE_ENABLE_COMMAND 0x6
-#define CHIP_ERASE_COMMAND 0x60
+#define FLASH_ERASE_4K_COMMAND 0x20
 
 #define READ_STATUS_REGISTER_1_BUSY 0x1
 
@@ -109,15 +109,18 @@ static ret_code_t write_enable() {
   return nrf_drv_spi_transfer(&m_spi_master_0, &tx, 1, NULL, 0);
 }
 
-/* Erase the whole chip.  */
+/* Erase the 4096-bytes block of data containing ADDRESS.  */
 
-ret_code_t flash_erase_chip ()
-{
+ret_code_t flash_erase(int address) {
     ret_code_t ret = write_enable();
     if (ret != NRF_SUCCESS) return ret;
 
-    uint8_t tx = CHIP_ERASE_COMMAND;
-    ret = nrf_drv_spi_transfer(&m_spi_master_0, &tx, 1, NULL, 0);
+    uint8_t tx[4];
+    tx[0] = FLASH_ERASE_4K_COMMAND;
+    tx[1] = (address >> 16) & 0xff;
+    tx[2] = (address >> 8) & 0xff;
+    tx[3] = address & 0xff;
+    ret = nrf_drv_spi_transfer(&m_spi_master_0, tx, sizeof(tx), NULL, 0);
     if (ret != NRF_SUCCESS) return ret;
 
     return flash_wait_for_completion();
