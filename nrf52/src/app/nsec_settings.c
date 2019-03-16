@@ -191,8 +191,7 @@ static void toggle_flashlight(uint8_t item) {
 
 static void turn_off_screen(uint8_t item) {
     menu_close();
-    gfx_fill_screen(DISPLAY_BLACK);
-    gfx_update();
+    display_set_brightness(0);
     _state = SETTING_STATE_SCREEN_OFF;
 }
 
@@ -214,7 +213,8 @@ void nsec_setting_show(void) {
     _state = SETTING_STATE_MENU;
 }
 
-static void setting_handle_buttons(button_t button) {
+static void setting_handle_buttons(button_t button)
+{
     if (button == BUTTON_BACK) {
         switch (_state) {
             case SETTING_STATE_MENU:
@@ -239,11 +239,13 @@ static void setting_handle_buttons(button_t button) {
 
             case SETTING_STATE_FLASHLIGHT:
                 load_stored_led_settings();
-                // no break
-            case SETTING_STATE_SCREEN_OFF:
                 nsec_status_bar_ui_redraw();
                 draw_home_menu_bar();
                 draw_title();
+
+                // no break
+            case SETTING_STATE_SCREEN_OFF:
+                display_set_brightness(100);
                 // no break
             case SETTING_STATE_CREDIT:
                 nsec_setting_show();
