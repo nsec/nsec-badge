@@ -25,6 +25,8 @@
 
 #include <nrf.h>
 
+struct bitmap_ext;
+
 #define swap(a, b)                                                             \
     {                                                                          \
         int16_t t = a;                                                         \
@@ -74,6 +76,9 @@ void display_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color);
 void display_draw_fast_vline(int16_t x, int16_t y, int16_t w, uint16_t color);
 void display_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
                                int16_t w, int16_t h, uint16_t bg_color);
+void display_draw_16bit_ext_bitmap(int16_t x, int16_t y,
+                                   const struct bitmap_ext *bitmap_ext,
+                                   uint16_t bg_color);
 void display_update(void);
 void display_set_brightness(uint8_t brightness);
 

@@ -25,6 +25,8 @@ as well as Adafruit raw 1.8" TFT display
 
 #include <nrf_drv_spi.h>
 
+struct bitmap_ext;
+
 //*****************************************************************************
 //
 // Screen commands
@@ -142,6 +144,9 @@ void st7735_invert_display(uint8_t i);
 void st7735_set_brightness(uint8_t brightness);
 void st7735_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
                               int16_t w, int16_t h, uint16_t bg_color);
+void st7735_draw_16bit_ext_bitmap(int16_t x, int16_t y,
+                                  const struct bitmap_ext *bitmap_ext,
+                                  uint16_t bg_color);
 uint16_t st7735_color_565(uint8_t r, uint8_t g, uint8_t b);
 
 #endif

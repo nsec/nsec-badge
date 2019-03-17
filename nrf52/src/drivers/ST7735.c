@@ -21,8 +21,11 @@ as well as Adafruit raw 1.8" TFT display
   Ported to nrf52 by Eric Tremblay.
  ****************************************************/
 #include "ST7735.h"
+#include "app/external_flash.h"
 #include "app/gfx_effect.h"
+#include "bitmap.h"
 #include "boards.h"
+#include "flash.h"
 #include <app_util_platform.h>
 #include <nrf.h>
 #include <nrf_delay.h>
@@ -550,6 +553,54 @@ void st7735_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
     }
 
     spi_master_tx(buffer, i);
+}
+
+// Draw an image from the external flash.
+// TODO: this was duplicated from st7735_draw_16bit_bitmap, maybe it could
+// share some code with it.
+void st7735_draw_16bit_ext_bitmap(int16_t x, int16_t y,
+                                  const struct bitmap_ext *bitmap_ext,
+                                  uint16_t bg_color) {
+    static uint8_t flash_buffer[128];
+    uint16_t output_idx = 0;
+    uint32_t w = bitmap_ext->width;
+    uint32_t h = bitmap_ext->height;
+
+    st7735_set_addr_window(x, y, x + w - 1, y + h - 1);
+    SET_HIGH(st7735_config.dc_pin);
+
+    uint8_t bg_hi = bg_color >> 8;
+    uint8_t bg_lo = bg_color;
+
+    uint8_t flash_buffer_idx = 128;
+    uint32_t flash_addr = bitmap_ext->flash_data->offset;
+
+    for (y = h; y > 0; y--) {
+        for (x = w; x > 0; x--) {
+            if (flash_buffer_idx >= 128) {
+                flash_read_128(flash_addr, flash_buffer);
+                flash_addr += 128;
+                flash_buffer_idx = 0;
+            }
+
+            if ((flash_buffer[flash_buffer_idx] == 0) &&
+                (flash_buffer[flash_buffer_idx + 1] == 0)) {
+                buffer[output_idx++] = bg_hi;
+                buffer[output_idx++] = bg_lo;
+                flash_buffer_idx += 2;
+            } else {
+                buffer[output_idx++] = flash_buffer[flash_buffer_idx++];
+                buffer[output_idx++] = flash_buffer[flash_buffer_idx++];
+            }
+            // Here its possible to overflow the buffer size
+            if (output_idx == BUFFER_SIZE) {
+                spi_master_tx(buffer, output_idx);
+                output_idx = 0;
+            }
+        }
+    }
+
+    spi_master_tx(buffer, output_idx);
 }
 
 void st7735_set_rotation(uint8_t m) {

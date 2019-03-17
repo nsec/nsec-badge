@@ -33,6 +33,7 @@
 // Includes from our code.
 #include "gfx_effect.h"
 #include "images/external/the_flash_bitmap.h"
+#include <drivers/display.h>
 #include <drivers/flash.h>
 #include <drivers/uart.h>
 
@@ -262,7 +263,7 @@ void flash_mode() {
     uart_init();
 
     uart_puts("Entering flash mode!\n");
-    gfx_draw_bitmap_ext_flash(0, 0, &the_flash_bitmap);
+    display_draw_16bit_ext_bitmap(0, 0, &the_flash_bitmap, 0);
     gfx_update();
 
     // The space required for the flash write command is 256 bytes (hex encoded

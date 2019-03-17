@@ -33,6 +33,9 @@ struct display_ops {
     void (*draw_fast_vline)(int16_t x, int16_t y, int16_t h, uint16_t color);
     void (*draw_16bit_bitmap)(int16_t x, int16_t y, const uint8_t *bitmap,
                               int16_t w, int16_t h, uint16_t bg_color);
+    void (*draw_16bit_ext_bitmap)(int16_t x, int16_t y,
+                                  const struct bitmap_ext *bitmap,
+                                  uint16_t bg_color);
     void (*set_brightness)(uint8_t brightness);
     void (*update)(void);
 };
@@ -46,6 +49,7 @@ static struct display_ops st7735_ops = {&st7735_init,
                                         &st7735_draw_fast_hline,
                                         &st7735_draw_fast_vline,
                                         &st7735_draw_16bit_bitmap,
+                                        &st7735_draw_16bit_ext_bitmap,
                                         &st7735_set_brightness,
                                         NULL};
 static struct display_ops *ops = &st7735_ops;
@@ -59,6 +63,7 @@ static struct display_ops ssd1306_ops = {&ssd1306_init,
                                          &ssd1306_fill_screen_white,
                                          &ssd1306_draw_fast_hline,
                                          &ssd1306_draw_fast_vline,
+                                         NULL,
                                          NULL,
                                          NULL,
                                          &ssd1306_update};
@@ -89,6 +94,14 @@ void display_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
                                int16_t w, int16_t h, uint16_t bg_color) {
     if (ops->draw_16bit_bitmap) {
         ops->draw_16bit_bitmap(x, y, bitmap, w, h, bg_color);
+    }
+}
+
+void display_draw_16bit_ext_bitmap(int16_t x, int16_t y,
+                                   const struct bitmap_ext *bitmap_ext,
+                                   uint16_t bg_color) {
+    if (ops->draw_16bit_ext_bitmap) {
+        ops->draw_16bit_ext_bitmap(x, y, bitmap_ext, bg_color);
     }
 }
 
