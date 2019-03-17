@@ -25,21 +25,21 @@
 
 #include "boards.h"
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-#include <nrf.h>
-#include <nordic_common.h>
-#include <nrf_gpio.h>
-#include <nrf_delay.h>
-#include <nrf_nvic.h>
 #include <app_util_platform.h>
+#include <nordic_common.h>
+#include <nrf.h>
+#include <nrf_delay.h>
 #include <nrf_drv_saadc.h>
+#include <nrf_gpio.h>
+#include <nrf_nvic.h>
 
 #include "battery.h"
 
 // Reference voltage is 0.6V
-#define ADC_REF_VOLTAGE_MV   600
+#define ADC_REF_VOLTAGE_MV 600
 
 #define ADC_RES_10BITS 1024
 
@@ -49,10 +49,10 @@
 // Physical voltage divider
 #define BATTERY_VOLTAGE_DIVIDER (4.7 / (4.7 + 10.0))
 
-#define ADC_RESULT_IN_MILLIVOLTS(ADC_VALUE) \
-(\
- ((((ADC_VALUE) * ADC_REF_VOLTAGE_MV) / ADC_RES_10BITS) * ADC_PRE_SCALING_COMPENSATION) / BATTERY_VOLTAGE_DIVIDER \
-)
+#define ADC_RESULT_IN_MILLIVOLTS(ADC_VALUE)                                    \
+    (((((ADC_VALUE)*ADC_REF_VOLTAGE_MV) / ADC_RES_10BITS) *                    \
+      ADC_PRE_SCALING_COMPENSATION) /                                          \
+     BATTERY_VOLTAGE_DIVIDER)
 
 // Even with the pulldown, the voltage is not 0 when the battery is not present.
 #define NO_BATTERY_THRESHOLD_MV 200
@@ -71,9 +71,7 @@ void battery_refresh(void) {
     APP_ERROR_CHECK(err_code);
 }
 
-uint16_t battery_get_voltage() {
-    return m_batt_lvl_in_millivolts;
-}
+uint16_t battery_get_voltage() { return m_batt_lvl_in_millivolts; }
 
 bool battery_is_present() {
     return (m_batt_lvl_in_millivolts > NO_BATTERY_THRESHOLD_MV);
@@ -95,8 +93,7 @@ bool battery_is_usb_plugged() {
 }
 #endif
 
-static
-void calibrate_saadc() {
+static void calibrate_saadc() {
     ret_code_t err_code;
 
     /*
@@ -108,7 +105,7 @@ void calibrate_saadc() {
     /*
      * The calibration is non-blocking, wait for it to complete.
      */
-    while(true) {
+    while (true) {
         if (saadc_calibration_done) {
             break;
         }
@@ -131,30 +128,32 @@ void saadc_callback(nrf_drv_saadc_evt_t const *p_event) {
     /*
      * A new sample is available in the buffer, convert it to millivolts.
      */
-    case NRF_DRV_SAADC_EVT_DONE:
-    {
+    case NRF_DRV_SAADC_EVT_DONE: {
         uint16_t average = 0;
         ret_code_t err_code;
 
-    /*
-     * Convert the raw adc value to millivolts and compute the average
-     * value of the samples.
-     */
+        /*
+         * Convert the raw adc value to millivolts and compute the average
+         * value of the samples.
+         */
         for (int i = 0; i < SAMPLES_IN_BUFFER; i++) {
-            average += ADC_RESULT_IN_MILLIVOLTS(p_event->data.done.p_buffer[i]) / SAMPLES_IN_BUFFER;
-    }
+            average +=
+                ADC_RESULT_IN_MILLIVOLTS(p_event->data.done.p_buffer[i]) /
+                SAMPLES_IN_BUFFER;
+        }
         m_batt_lvl_in_millivolts = average;
 
-    /*
-     * Switch buffer for next sampling.
-     */
-        err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer, SAMPLES_IN_BUFFER);
+        /*
+         * Switch buffer for next sampling.
+         */
+        err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer,
+                                                SAMPLES_IN_BUFFER);
         APP_ERROR_CHECK(err_code);
-    break;
+        break;
     }
 
     case NRF_DRV_SAADC_EVT_LIMIT:
-    break;
+        break;
     }
 }
 
@@ -203,8 +202,10 @@ void battery_init() {
     /*
      * Setup double buffering.
      */
-    err_code = nrf_drv_saadc_buffer_convert(m_buffer_pool[0], SAMPLES_IN_BUFFER);
-    err_code = nrf_drv_saadc_buffer_convert(m_buffer_pool[1], SAMPLES_IN_BUFFER);
+    err_code =
+        nrf_drv_saadc_buffer_convert(m_buffer_pool[0], SAMPLES_IN_BUFFER);
+    err_code =
+        nrf_drv_saadc_buffer_convert(m_buffer_pool[1], SAMPLES_IN_BUFFER);
 
     /*
      * Collect first battery voltage value.

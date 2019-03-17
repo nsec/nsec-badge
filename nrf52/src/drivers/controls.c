@@ -6,8 +6,8 @@
 
 #include "controls.h"
 
-#include <nrf_queue.h>
 #include <app_error.h>
+#include <nrf_queue.h>
 
 struct handler {
     button_handler handler;
@@ -18,10 +18,10 @@ static struct handler handlers[NSEC_CONTROLS_LIMIT_MAX_HANDLERS];
 static uint8_t handler_count = 0;
 
 NRF_QUEUE_DEF(button_t, event_queue, NSEC_CONTROLS_MAX_EVENT,
-    NRF_QUEUE_MODE_NO_OVERFLOW);
+              NRF_QUEUE_MODE_NO_OVERFLOW);
 
 static void nsec_controls_trigger(button_t button) {
-    for(int i = 0; i < handler_count; i++) {
+    for (int i = 0; i < handler_count; i++) {
         if (handlers[i].active) {
             handlers[i].handler(button);
         }
@@ -29,24 +29,22 @@ static void nsec_controls_trigger(button_t button) {
 }
 
 void nsec_controls_add_handler(button_handler handler) {
-    if(handler_count >= NSEC_CONTROLS_LIMIT_MAX_HANDLERS) {
+    if (handler_count >= NSEC_CONTROLS_LIMIT_MAX_HANDLERS) {
         return;
     }
-    for(int i = 0; i < handler_count; i++) {
-        if(handlers[i].handler == handler) {
+    for (int i = 0; i < handler_count; i++) {
+        if (handlers[i].handler == handler) {
             handlers[i].active = true;
             return;
         }
     }
-    handlers[handler_count++] = (struct handler) {
-        .handler = handler,
-        .active = true
-    };
+    handlers[handler_count++] =
+        (struct handler){.handler = handler, .active = true};
 }
 
 void nsec_controls_suspend_handler(button_handler handler) {
-    for(int i = 0; i < handler_count; i++) {
-        if(handlers[i].handler == handler) {
+    for (int i = 0; i < handler_count; i++) {
+        if (handlers[i].handler == handler) {
             handlers[i].active = false;
             return;
         }
@@ -57,8 +55,7 @@ void nsec_controls_add_event(button_t button) {
     nrf_queue_push(&event_queue, &button);
 }
 
-void nsec_controls_process(void)
-{
+void nsec_controls_process(void) {
     button_t event;
     ret_code_t ret;
 

@@ -27,7 +27,7 @@
 
 #include <nrf_sdh.h>
 
-void state_evt_handler(nrf_sdh_state_evt_t state, void * p_context);
+void state_evt_handler(nrf_sdh_state_evt_t state, void *p_context);
 void softdevice_init(void);
 
 #endif

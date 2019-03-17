@@ -26,28 +26,23 @@
 
 #include "softdevice.h"
 
-NRF_SDH_STATE_OBSERVER(m_state_observer, 0) =
-{
-    .handler   = state_evt_handler,
-    .p_context = NULL
-};
+NRF_SDH_STATE_OBSERVER(m_state_observer, 0) = {.handler = state_evt_handler,
+                                               .p_context = NULL};
 
-void state_evt_handler(nrf_sdh_state_evt_t state, void * p_context)
-{
-    switch (state)
-    {
-        case NRF_SDH_EVT_STATE_ENABLE_PREPARE:
-            // SoftDevice is about to be enabled.
-            break;
-        case NRF_SDH_EVT_STATE_ENABLED:
-            // SoftDevice is now enabled.
-            break;
-        case NRF_SDH_EVT_STATE_DISABLE_PREPARE:
-            // SoftDevice is about to be disabled.
-            break;
-        case NRF_SDH_EVT_STATE_DISABLED:
-            // SoftDevice is now disabled.
-            break;
+void state_evt_handler(nrf_sdh_state_evt_t state, void *p_context) {
+    switch (state) {
+    case NRF_SDH_EVT_STATE_ENABLE_PREPARE:
+        // SoftDevice is about to be enabled.
+        break;
+    case NRF_SDH_EVT_STATE_ENABLED:
+        // SoftDevice is now enabled.
+        break;
+    case NRF_SDH_EVT_STATE_DISABLE_PREPARE:
+        // SoftDevice is about to be disabled.
+        break;
+    case NRF_SDH_EVT_STATE_DISABLED:
+        // SoftDevice is now disabled.
+        break;
     }
 }
 

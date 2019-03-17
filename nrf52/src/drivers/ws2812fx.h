@@ -29,9 +29,9 @@
 #ifndef WS2812FX_h
 #define WS2812FX_h
 
-#include <stdbool.h>
-#include "led_effects.h"
 #include "app/random.h"
+#include "led_effects.h"
+#include <stdbool.h>
 
 #define DEFAULT_BRIGHTNESS 50
 #define DEFAULT_MODE 0
@@ -43,83 +43,83 @@
 #define BRIGHTNESS_MIN 0
 #define BRIGHTNESS_MAX 255
 
-/* each segment uses 36 bytes of SRAM memory, so if you're application fails because of
-  insufficient memory, decreasing MAX_NUM_SEGMENTS may help */
+/* each segment uses 36 bytes of SRAM memory, so if you're application fails
+  because of insufficient memory, decreasing MAX_NUM_SEGMENTS may help */
 #define MAX_NUM_SEGMENTS 15
-#define NUM_COLORS 3     /* number of colors per segment */
+#define NUM_COLORS 3 /* number of colors per segment */
 
 // some common colors
-#define RED        0xFF0000
-#define GREEN      0x00FF00
-#define BLUE       0x0000FF
-#define WHITE      0xFFFFFF
-#define BLACK      0x000000
-#define YELLOW     0xFFFF00
-#define CYAN       0x00FFFF
-#define MAGENTA    0xFF00FF
-#define PURPLE     0x400080
-#define ORANGE     0xFF3000
+#define RED 0xFF0000
+#define GREEN 0x00FF00
+#define BLUE 0x0000FF
+#define WHITE 0xFFFFFF
+#define BLACK 0x000000
+#define YELLOW 0xFFFF00
+#define CYAN 0x00FFFF
+#define MAGENTA 0xFF00FF
+#define PURPLE 0x400080
+#define ORANGE 0xFF3000
 #define ULTRAWHITE 0xFFFFFFFF
 
 #define MODE_COUNT 57
 
-#define FX_MODE_STATIC                   0
-#define FX_MODE_BLINK                    1
-#define FX_MODE_BREATH                   2
-#define FX_MODE_COLOR_WIPE               3
-#define FX_MODE_COLOR_WIPE_INV           4 
-#define FX_MODE_COLOR_WIPE_REV           5
-#define FX_MODE_COLOR_WIPE_REV_INV       6
-#define FX_MODE_COLOR_WIPE_RANDOM        7
-#define FX_MODE_RANDOM_COLOR             8
-#define FX_MODE_SINGLE_DYNAMIC           9
-#define FX_MODE_MULTI_DYNAMIC           10
-#define FX_MODE_RAINBOW                 11
-#define FX_MODE_RAINBOW_CYCLE           12
-#define FX_MODE_SCAN                    13
-#define FX_MODE_DUAL_SCAN               14
-#define FX_MODE_FADE                    15
-#define FX_MODE_THEATER_CHASE           16
-#define FX_MODE_THEATER_CHASE_RAINBOW   17
-#define FX_MODE_RUNNING_LIGHTS          18
-#define FX_MODE_TWINKLE                 19
-#define FX_MODE_TWINKLE_RANDOM          20
-#define FX_MODE_TWINKLE_FADE            21
-#define FX_MODE_TWINKLE_FADE_RANDOM     22
-#define FX_MODE_SPARKLE                 23
-#define FX_MODE_FLASH_SPARKLE           24
-#define FX_MODE_HYPER_SPARKLE           25
-#define FX_MODE_STROBE                  26
-#define FX_MODE_STROBE_RAINBOW          27
-#define FX_MODE_MULTI_STROBE            28
-#define FX_MODE_BLINK_RAINBOW           29
-#define FX_MODE_CHASE_WHITE             30
-#define FX_MODE_CHASE_COLOR             31
-#define FX_MODE_CHASE_RANDOM            32
-#define FX_MODE_CHASE_RAINBOW           33
-#define FX_MODE_CHASE_FLASH             34
-#define FX_MODE_CHASE_FLASH_RANDOM      35
-#define FX_MODE_CHASE_RAINBOW_WHITE     36
-#define FX_MODE_CHASE_BLACKOUT          37
-#define FX_MODE_CHASE_BLACKOUT_RAINBOW  38
-#define FX_MODE_COLOR_SWEEP_RANDOM      39
-#define FX_MODE_RUNNING_COLOR           40
-#define FX_MODE_RUNNING_RED_BLUE        41
-#define FX_MODE_RUNNING_RANDOM          42
-#define FX_MODE_LARSON_SCANNER          43
-#define FX_MODE_COMET                   44
-#define FX_MODE_FIREWORKS               45
-#define FX_MODE_FIREWORKS_RANDOM        46
-#define FX_MODE_MERRY_CHRISTMAS         47
-#define FX_MODE_FIRE_FLICKER            48
-#define FX_MODE_FIRE_FLICKER_SOFT       49
-#define FX_MODE_FIRE_FLICKER_INTENSE    50
-#define FX_MODE_CIRCUS_COMBUSTUS        51
-#define FX_MODE_HALLOWEEN               52
-#define FX_MODE_BICOLOR_CHASE           53
-#define FX_MODE_TRICOLOR_CHASE          54
-#define FX_MODE_ICU                     55
-#define FX_MODE_CUSTOM                  56
+#define FX_MODE_STATIC 0
+#define FX_MODE_BLINK 1
+#define FX_MODE_BREATH 2
+#define FX_MODE_COLOR_WIPE 3
+#define FX_MODE_COLOR_WIPE_INV 4
+#define FX_MODE_COLOR_WIPE_REV 5
+#define FX_MODE_COLOR_WIPE_REV_INV 6
+#define FX_MODE_COLOR_WIPE_RANDOM 7
+#define FX_MODE_RANDOM_COLOR 8
+#define FX_MODE_SINGLE_DYNAMIC 9
+#define FX_MODE_MULTI_DYNAMIC 10
+#define FX_MODE_RAINBOW 11
+#define FX_MODE_RAINBOW_CYCLE 12
+#define FX_MODE_SCAN 13
+#define FX_MODE_DUAL_SCAN 14
+#define FX_MODE_FADE 15
+#define FX_MODE_THEATER_CHASE 16
+#define FX_MODE_THEATER_CHASE_RAINBOW 17
+#define FX_MODE_RUNNING_LIGHTS 18
+#define FX_MODE_TWINKLE 19
+#define FX_MODE_TWINKLE_RANDOM 20
+#define FX_MODE_TWINKLE_FADE 21
+#define FX_MODE_TWINKLE_FADE_RANDOM 22
+#define FX_MODE_SPARKLE 23
+#define FX_MODE_FLASH_SPARKLE 24
+#define FX_MODE_HYPER_SPARKLE 25
+#define FX_MODE_STROBE 26
+#define FX_MODE_STROBE_RAINBOW 27
+#define FX_MODE_MULTI_STROBE 28
+#define FX_MODE_BLINK_RAINBOW 29
+#define FX_MODE_CHASE_WHITE 30
+#define FX_MODE_CHASE_COLOR 31
+#define FX_MODE_CHASE_RANDOM 32
+#define FX_MODE_CHASE_RAINBOW 33
+#define FX_MODE_CHASE_FLASH 34
+#define FX_MODE_CHASE_FLASH_RANDOM 35
+#define FX_MODE_CHASE_RAINBOW_WHITE 36
+#define FX_MODE_CHASE_BLACKOUT 37
+#define FX_MODE_CHASE_BLACKOUT_RAINBOW 38
+#define FX_MODE_COLOR_SWEEP_RANDOM 39
+#define FX_MODE_RUNNING_COLOR 40
+#define FX_MODE_RUNNING_RED_BLUE 41
+#define FX_MODE_RUNNING_RANDOM 42
+#define FX_MODE_LARSON_SCANNER 43
+#define FX_MODE_COMET 44
+#define FX_MODE_FIREWORKS 45
+#define FX_MODE_FIREWORKS_RANDOM 46
+#define FX_MODE_MERRY_CHRISTMAS 47
+#define FX_MODE_FIRE_FLICKER 48
+#define FX_MODE_FIRE_FLICKER_SOFT 49
+#define FX_MODE_FIRE_FLICKER_INTENSE 50
+#define FX_MODE_CIRCUS_COMBUSTUS 51
+#define FX_MODE_HALLOWEEN 52
+#define FX_MODE_BICOLOR_CHASE 53
+#define FX_MODE_TRICOLOR_CHASE 54
+#define FX_MODE_ICU 55
+#define FX_MODE_CUSTOM 56
 
 void init_WS2812FX(void);
 void service_WS2812FX(void);
@@ -140,8 +140,11 @@ void increaseBrightness_WS2812FX(uint8_t s);
 void decreaseBrightness_WS2812FX(uint8_t s);
 void trigger_WS2812FX(void);
 void setNumSegments_WS2812FX(uint8_t n);
-void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,   uint16_t speed, bool reverse);
-void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse);
+void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode,
+                         uint32_t color, uint16_t speed, bool reverse);
+void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop,
+                                     uint8_t mode, const uint32_t colors[],
+                                     uint16_t speed, bool reverse);
 void resetSegments_WS2812FX();
 
 bool isRunning_WS2812FX(void);
@@ -157,6 +160,6 @@ uint16_t getLength_WS2812FX(void);
 uint32_t getColor_WS2812FX(void);
 uint32_t getArrayColor_WS2812FX(uint8_t index);
 
-const char* getModeName_WS2812FX(uint8_t m);
+const char *getModeName_WS2812FX(uint8_t m);
 
 #endif

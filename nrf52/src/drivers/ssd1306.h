@@ -19,15 +19,15 @@ All text above, and the splash screen must be included in any redistribution
 #ifndef SSD1306_H
 #define SSD1306_H
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #define SSD1306_BLACK 0
 #define SSD1306_WHITE 1
 #define SSD1306_INVERSE 2
 
-#define SSD1306_I2C_ADDRESS   0x3C    // 011110+SA0+RW - 0x3C or 0x3D
-// Address for 128x32 is 0x3C
+#define SSD1306_I2C_ADDRESS 0x3C // 011110+SA0+RW - 0x3C or 0x3D
+                                 // Address for 128x32 is 0x3C
 // Address for 128x64 is 0x3D (default) or 0x3C (if SA0 is grounded)
 
 /*=========================================================================
@@ -44,29 +44,29 @@ All text above, and the splash screen must be included in any redistribution
     SSD1306_96_16
 
     -----------------------------------------------------------------------*/
-   #define SSD1306_128_64
+#define SSD1306_128_64
 //   #define SSD1306_128_32
 //   #define SSD1306_96_16
 /*=========================================================================*/
 
 #if defined SSD1306_128_64 && defined SSD1306_128_32
-  #error "Only one SSD1306 display can be specified at once in SSD1306.h"
+#error "Only one SSD1306 display can be specified at once in SSD1306.h"
 #endif
 #if !defined SSD1306_128_64 && !defined SSD1306_128_32 && !defined SSD1306_96_16
-  #error "At least one SSD1306 display must be specified in SSD1306.h"
+#error "At least one SSD1306 display must be specified in SSD1306.h"
 #endif
 
 #if defined SSD1306_128_64
-  #define SSD1306_LCDWIDTH                  128
-  #define SSD1306_LCDHEIGHT                 64
+#define SSD1306_LCDWIDTH 128
+#define SSD1306_LCDHEIGHT 64
 #endif
 #if defined SSD1306_128_32
-  #define SSD1306_LCDWIDTH                  128
-  #define SSD1306_LCDHEIGHT                 32
+#define SSD1306_LCDWIDTH 128
+#define SSD1306_LCDHEIGHT 32
 #endif
 #if defined SSD1306_96_16
-  #define SSD1306_LCDWIDTH                  96
-  #define SSD1306_LCDHEIGHT                 16
+#define SSD1306_LCDWIDTH 96
+#define SSD1306_LCDHEIGHT 16
 #endif
 
 #define SSD1306_SETCONTRAST 0x81
@@ -94,7 +94,7 @@ All text above, and the splash screen must be included in any redistribution
 
 #define SSD1306_MEMORYMODE 0x20
 #define SSD1306_COLUMNADDR 0x21
-#define SSD1306_PAGEADDR   0x22
+#define SSD1306_PAGEADDR 0x22
 
 #define SSD1306_COMSCANINC 0xC0
 #define SSD1306_COMSCANDEC 0xC8
@@ -115,7 +115,12 @@ All text above, and the splash screen must be included in any redistribution
 #define SSD1306_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL 0x29
 #define SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL 0x2A
 
-#define swap(a, b) { int16_t t = a; a = b; b = t; }
+#define swap(a, b)                                                             \
+    {                                                                          \
+        int16_t t = a;                                                         \
+        a = b;                                                                 \
+        b = t;                                                                 \
+    }
 
 void ssd1306_draw_pixel(int16_t x, int16_t y, uint16_t color);
 void ssd1306_init(void);
@@ -130,9 +135,11 @@ void ssd1306_dim(bool dim);
 void ssd1306_update(void);
 void ssd1306_clear_display(void);
 void ssd1306_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color);
-void ssd1306_draw_fast_hline_internal(int16_t x, int16_t y, int16_t w, uint16_t color);
+void ssd1306_draw_fast_hline_internal(int16_t x, int16_t y, int16_t w,
+                                      uint16_t color);
 void ssd1306_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color);
-void ssd1306_draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, uint16_t color);
+void ssd1306_draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h,
+                                      uint16_t color);
 void ssd1306_fill_screen_black(void);
 void ssd1306_fill_screen_white(void);
 

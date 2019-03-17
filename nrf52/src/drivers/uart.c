@@ -40,43 +40,43 @@ static nrf_drv_uart_t instance = NRF_DRV_UART_INSTANCE(0);
  * transfer is complete.
  */
 ret_code_t uart_init() {
-  nrf_drv_uart_config_t config = NRF_DRV_UART_DEFAULT_CONFIG;
-  config.pseltxd = PIN_nRF_TXD;
-  config.pselrxd = PIN_nRF_RXD;
-  config.pselcts = PIN_nRF_CTS;
-  config.pselrts = PIN_nRF_RTS;
+    nrf_drv_uart_config_t config = NRF_DRV_UART_DEFAULT_CONFIG;
+    config.pseltxd = PIN_nRF_TXD;
+    config.pselrxd = PIN_nRF_RXD;
+    config.pselcts = PIN_nRF_CTS;
+    config.pselrts = PIN_nRF_RTS;
 
-  ret_code_t ret = nrf_drv_uart_init(&instance, &config, NULL);
-  if (ret != NRF_SUCCESS)
-    return ret;
+    ret_code_t ret = nrf_drv_uart_init(&instance, &config, NULL);
+    if (ret != NRF_SUCCESS)
+        return ret;
 
-  nrf_drv_uart_rx_enable(&instance);
+    nrf_drv_uart_rx_enable(&instance);
 
-  return NRF_SUCCESS;
+    return NRF_SUCCESS;
 }
 
 /* Write the LEN bytes pointed to by DATA to the UART.  */
 
 ret_code_t uart_send(const uint8_t *data, size_t len) {
-  return nrf_drv_uart_tx(&instance, data, len);
+    return nrf_drv_uart_tx(&instance, data, len);
 }
 
 /* Send the null-terminated string pointed to by STR.  */
 
 ret_code_t uart_puts(const char *str) {
-  return uart_send((const uint8_t *)str, strlen(str));
+    return uart_send((const uint8_t *)str, strlen(str));
 }
 
 /* For the string printf-style and send it.  */
 
 ret_code_t uart_printf(const char *fmt, ...) {
-  static char str[100];
-  va_list args;
-  va_start(args, fmt);
-  int len = vsprintf(str, fmt, args);
-  ret_code_t ret = uart_send((uint8_t *)str, len);
-  va_end(args);
-  return ret;
+    static char str[100];
+    va_list args;
+    va_start(args, fmt);
+    int len = vsprintf(str, fmt, args);
+    ret_code_t ret = uart_send((uint8_t *)str, len);
+    va_end(args);
+    return ret;
 }
 
 /* Read one byte from the UART rx fifo (blocking if necessary), place it in

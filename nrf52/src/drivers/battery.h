@@ -25,9 +25,8 @@
 #ifndef BATTERY_H
 #define BATTERY_H
 
-#include <stdint.h>
 #include <stdbool.h>
-
+#include <stdint.h>
 
 void battery_init(void);
 

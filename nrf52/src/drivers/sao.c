@@ -26,21 +26,19 @@
 #include <boards.h>
 #include <drivers/sao.h>
 
-
-static const nrf_drv_twi_t sao_twi_master = NRF_DRV_TWI_INSTANCE(CONF_SAO_TWI_INST);
+static const nrf_drv_twi_t sao_twi_master =
+    NRF_DRV_TWI_INSTANCE(CONF_SAO_TWI_INST);
 
 #ifdef PIN_SAO_SCL
 void sao_init(void) {
     ret_code_t err_code;
 
-    const nrf_drv_twi_config_t sao_twi_config =
-    {
-       .scl                = PIN_SAO_SCL,
-       .sda                = PIN_SAO_SDA,
-       .frequency          = NRF_TWI_FREQ_400K,
-       .interrupt_priority = TWI_DEFAULT_CONFIG_IRQ_PRIORITY,
-       .clear_bus_init     = false
-    };
+    const nrf_drv_twi_config_t sao_twi_config = {
+        .scl = PIN_SAO_SCL,
+        .sda = PIN_SAO_SDA,
+        .frequency = NRF_TWI_FREQ_400K,
+        .interrupt_priority = TWI_DEFAULT_CONFIG_IRQ_PRIORITY,
+        .clear_bus_init = false};
 
     err_code = nrf_drv_twi_init(&sao_twi_master, &sao_twi_config, NULL, NULL);
     APP_ERROR_CHECK(err_code);

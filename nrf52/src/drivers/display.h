@@ -25,40 +25,43 @@
 
 #include <nrf.h>
 
-#define swap(a, b) { int16_t t = a; a = b; b = t; }
+#define swap(a, b)                                                             \
+    {                                                                          \
+        int16_t t = a;                                                         \
+        a = b;                                                                 \
+        b = t;                                                                 \
+    }
 
 #ifdef BOARD_BRAIN
 // Size
-#define DISPLAY_HEIGHT 	160
-#define DISPLAY_WIDTH 	80
+#define DISPLAY_HEIGHT 160
+#define DISPLAY_WIDTH 80
 
 // Colors
-#define	DISPLAY_BLACK        0x0000
-#define DISPLAY_RED          0xF800
-#define DISPLAY_GREEN        0x07E0
-#define DISPLAY_BLUE         0x001F
-#define DISPLAY_CYAN         0x07FF
-#define DISPLAY_MAGENTA      0xF81F
-#define DISPLAY_YELLOW       0xFFE0
-#define DISPLAY_ORANGE       0xFC00
-#define DISPLAY_WHITE        0xFFFF
-
-
+#define DISPLAY_BLACK 0x0000
+#define DISPLAY_RED 0xF800
+#define DISPLAY_GREEN 0x07E0
+#define DISPLAY_BLUE 0x001F
+#define DISPLAY_CYAN 0x07FF
+#define DISPLAY_MAGENTA 0xF81F
+#define DISPLAY_YELLOW 0xFFE0
+#define DISPLAY_ORANGE 0xFC00
+#define DISPLAY_WHITE 0xFFFF
 
 #else
 // Size
-#define DISPLAY_HEIGHT 	128
-#define DISPLAY_WIDTH 	64
+#define DISPLAY_HEIGHT 128
+#define DISPLAY_WIDTH 64
 
 // Colors
-#define DISPLAY_BLACK 	0
-#define	DISPLAY_RED 	1
-#define	DISPLAY_BLUE 	1
-#define	DISPLAY_GREEN	1
-#define DISPLAY_CYAN	1
-#define DISPLAY_MAGENTA	1
-#define DISPLAY_YELLOW	1
-#define DISPLAY_WHITE	1
+#define DISPLAY_BLACK 0
+#define DISPLAY_RED 1
+#define DISPLAY_BLUE 1
+#define DISPLAY_GREEN 1
+#define DISPLAY_CYAN 1
+#define DISPLAY_MAGENTA 1
+#define DISPLAY_YELLOW 1
+#define DISPLAY_WHITE 1
 #endif
 
 // Function
@@ -70,9 +73,8 @@ void display_fill_screen_white(void);
 void display_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color);
 void display_draw_fast_vline(int16_t x, int16_t y, int16_t w, uint16_t color);
 void display_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
-    int16_t w, int16_t h, uint16_t bg_color);
+                               int16_t w, int16_t h, uint16_t bg_color);
 void display_update(void);
 void display_set_brightness(uint8_t brightness);
-
 
 #endif //_DISPLAY_H

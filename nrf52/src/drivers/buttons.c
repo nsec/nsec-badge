@@ -30,36 +30,34 @@
  * Delay from a GPIOTE event until a button is reported as pushed (in number of
  * timer ticks).
  */
-#define BUTTON_DETECTION_DELAY          APP_TIMER_TICKS(50)
+#define BUTTON_DETECTION_DELAY APP_TIMER_TICKS(50)
 
 /**@brief Function for handling events from the button handler module.
  *
  * @param[in] pin_no        The pin that the event applies to.
  * @param[in] button_action The button action (press/release).
  */
-static
-void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action)
-{
+static void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action) {
     if (button_action == APP_BUTTON_PUSH) {
         switch (pin_no) {
-            case PIN_INPUT_UP:
-                cli_uart_printf("btn up\r\n");
-                nsec_controls_add_event(BUTTON_UP);
+        case PIN_INPUT_UP:
+            cli_uart_printf("btn up\r\n");
+            nsec_controls_add_event(BUTTON_UP);
             break;
 
-            case PIN_INPUT_DOWN:
-                cli_uart_printf("+ btn down\r\n");
-                nsec_controls_add_event(BUTTON_DOWN);
+        case PIN_INPUT_DOWN:
+            cli_uart_printf("+ btn down\r\n");
+            nsec_controls_add_event(BUTTON_DOWN);
             break;
 
-            case PIN_INPUT_BACK:
-                cli_uart_printf("+ btn back\r\n");
-                nsec_controls_add_event(BUTTON_BACK);
+        case PIN_INPUT_BACK:
+            cli_uart_printf("+ btn back\r\n");
+            nsec_controls_add_event(BUTTON_BACK);
             break;
 
-            case PIN_INPUT_ENTER:
-                cli_uart_printf("+ btn enter\r\n");
-                nsec_controls_add_event(BUTTON_ENTER);
+        case PIN_INPUT_ENTER:
+            cli_uart_printf("+ btn enter\r\n");
+            nsec_controls_add_event(BUTTON_ENTER);
             break;
         }
     }
@@ -72,21 +70,18 @@ void nsec_buttons_init(void) {
      * The array must be static because a pointer to it will be saved in the
      * button handler module.
      */
-    static
-    app_button_cfg_t buttons[] =
-    {
-        {PIN_INPUT_UP,    false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_DOWN,  false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_BACK,  false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_ENTER, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler}
-    };
+    static app_button_cfg_t buttons[] = {
+        {PIN_INPUT_UP, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_DOWN, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_BACK, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_ENTER, false, NRF_GPIO_PIN_PULLUP,
+         nsec_button_event_handler}};
 
     /*
      * Configure the button library
      */
-    err_code = app_button_init(buttons,
-            sizeof(buttons) / sizeof(buttons[0]),
-                    BUTTON_DETECTION_DELAY);
+    err_code = app_button_init(buttons, sizeof(buttons) / sizeof(buttons[0]),
+                               BUTTON_DETECTION_DELAY);
     APP_ERROR_CHECK(err_code);
 
     /*
@@ -97,23 +92,23 @@ void nsec_buttons_init(void) {
 }
 
 bool nsec_button_is_pushed(button_t button) {
-  int idx;
-  switch (button) {
+    int idx;
+    switch (button) {
     case BUTTON_UP:
-      idx = 0;
-      break;
+        idx = 0;
+        break;
     case BUTTON_DOWN:
-      idx = 1;
-      break;
+        idx = 1;
+        break;
     case BUTTON_BACK:
-      idx = 2;
-      break;
+        idx = 2;
+        break;
     case BUTTON_ENTER:
-      idx = 3;
-      break;
+        idx = 3;
+        break;
     default:
         return false;
-  }
+    }
 
-  return app_button_is_pushed(idx);
+    return app_button_is_pushed(idx);
 }

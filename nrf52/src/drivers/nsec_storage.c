@@ -20,29 +20,29 @@
  * SOFTWARE.
  */
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <string.h>
 
+#include "boards.h"
+#include "nordic_common.h"
 #include "nrf.h"
 #include <nrf_delay.h>
-#include "nordic_common.h"
-#include "boards.h"
 
+#include "nrf_fstorage_sd.h"
 #include "nrf_sdh.h"
 #include "nrf_sdh_ble.h"
-#include "nrf_fstorage_sd.h"
 
-#include "nsec_storage.h"
-#include "led_code_storage.h"
-#include "ws2812fx.h"
-#include "app/nsec_led_settings.h"
-#include "power.h"
-#include "app/identity.h"
-#include "display.h"
 #include "app/gfx_effect.h"
+#include "app/identity.h"
+#include "app/nsec_led_settings.h"
+#include "display.h"
+#include "led_code_storage.h"
+#include "nsec_storage.h"
+#include "power.h"
+#include "ws2812fx.h"
 
-#define PAGE_START_MAGIC    0xDEADC0DE
+#define PAGE_START_MAGIC 0xDEADC0DE
 
 extern bool is_at_home_menu;
 
@@ -64,40 +64,36 @@ LedSettings actual_settings;
 LedSettings default_settings;
 bool need_led_settings_update = false;
 
-NRF_FSTORAGE_DEF(nrf_fstorage_t fs_led_settings) =
-{
+NRF_FSTORAGE_DEF(nrf_fstorage_t fs_led_settings) = {
     .evt_handler = NULL,
     .start_addr = 0x68000,
-    .end_addr   = 0x68FFF,
+    .end_addr = 0x68FFF,
 };
 
 /* password */
 uint32_t stored_password = 0;
 
-NRF_FSTORAGE_DEF(nrf_fstorage_t fs_password) =
-{
+NRF_FSTORAGE_DEF(nrf_fstorage_t fs_password) = {
     .evt_handler = NULL,
     .start_addr = 0x69000,
-    .end_addr   = 0x69FFF,
+    .end_addr = 0x69FFF,
 };
 bool need_password_update = false;
 
 /* identity */
 char identity_name[17];
 
-NRF_FSTORAGE_DEF(nrf_fstorage_t fs_identity) =
-{
+NRF_FSTORAGE_DEF(nrf_fstorage_t fs_identity) = {
     .evt_handler = NULL,
     .start_addr = 0x70000,
-    .end_addr   = 0x70FFF,
+    .end_addr = 0x70FFF,
 };
 
 bool need_identity_update = false;
 
 bool is_init = false;
 
-static void wait_for_flash_ready(nrf_fstorage_t const * p_fstorage)
-{
+static void wait_for_flash_ready(nrf_fstorage_t const *p_fstorage) {
     /* While fstorage is busy*/
     while (nrf_fstorage_is_busy(p_fstorage)) {
         power_manage();
@@ -108,12 +104,14 @@ void nsec_storage_update() {
     ret_code_t rc;
 
     if (need_led_settings_update) {
-        rc = nrf_fstorage_erase(&fs_led_settings, fs_led_settings.start_addr, 1, NULL);
+        rc = nrf_fstorage_erase(&fs_led_settings, fs_led_settings.start_addr, 1,
+                                NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_led_settings);
 
-        rc = nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr, &actual_settings,
-                                sizeof(actual_settings), NULL);
+        rc =
+            nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr,
+                               &actual_settings, sizeof(actual_settings), NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_led_settings);
         need_led_settings_update = false;
@@ -124,7 +122,8 @@ void nsec_storage_update() {
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_password);
 
-        rc = nrf_fstorage_write(&fs_password, fs_password.start_addr, &stored_password, 4, NULL);
+        rc = nrf_fstorage_write(&fs_password, fs_password.start_addr,
+                                &stored_password, 4, NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_password);
         need_password_update = false;
@@ -135,8 +134,8 @@ void nsec_storage_update() {
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_identity);
 
-        rc = nrf_fstorage_write(&fs_identity, fs_identity.start_addr, identity_name, 
-                                16, NULL);
+        rc = nrf_fstorage_write(&fs_identity, fs_identity.start_addr,
+                                identity_name, 16, NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_identity);
 
@@ -148,13 +147,11 @@ void nsec_storage_update() {
     }
 }
 
-uint8_t get_stored_display_brightness(void)
-{
+uint8_t get_stored_display_brightness(void) {
     return actual_settings.display_brightness;
 }
 
-void update_stored_display_brightness(uint8_t brightness)
-{
+void update_stored_display_brightness(uint8_t brightness) {
     actual_settings.display_brightness = brightness;
     need_led_settings_update = true;
 }
@@ -251,13 +248,14 @@ void load_stored_led_settings(void) {
         set_ble_controlled(true);
         for (int i = 0; i < ARRAY_SIZE(actual_settings.segment_array); i++) {
             if (actual_settings.segment_array[i].active) {
-                setSegment_color_array_WS2812FX(actual_settings.segment_array[i].index,
-                actual_settings.segment_array[i].start,
-                actual_settings.segment_array[i].stop,
-                actual_settings.segment_array[i].mode, 
-                actual_settings.segment_array[i].colors,
-                actual_settings.segment_array[i].speed,
-                actual_settings.segment_array[i].reverse);
+                setSegment_color_array_WS2812FX(
+                    actual_settings.segment_array[i].index,
+                    actual_settings.segment_array[i].start,
+                    actual_settings.segment_array[i].stop,
+                    actual_settings.segment_array[i].mode,
+                    actual_settings.segment_array[i].colors,
+                    actual_settings.segment_array[i].speed,
+                    actual_settings.segment_array[i].reverse);
             }
         }
         update_all_characteristics_value();
@@ -265,9 +263,9 @@ void load_stored_led_settings(void) {
 }
 
 void load_stored_led_default_settings(void) {
-     memcpy(&actual_settings, &default_settings, sizeof(LedSettings));
-     need_led_settings_update = true;
-     load_stored_led_settings();
+    memcpy(&actual_settings, &default_settings, sizeof(LedSettings));
+    need_led_settings_update = true;
+    load_stored_led_settings();
 }
 
 /* code interface */
@@ -286,7 +284,7 @@ static void unlock_pattern(uint32_t sponsor_index) {
     }
 }
 
-const char * nsec_get_pattern_pw(uint32_t sponsor_index) {
+const char *nsec_get_pattern_pw(uint32_t sponsor_index) {
     if (sponsor_index < SPONSOR_PW_SIZE) {
         return sponsor_password[sponsor_index];
     }
@@ -327,10 +325,11 @@ void load_stored_identity(char *identity) {
     strncpy(identity, identity_name, 16);
 }
 
-static bool is_new_memory_page(nrf_fstorage_t const * p_fstorage) {
+static bool is_new_memory_page(nrf_fstorage_t const *p_fstorage) {
     ret_code_t rc;
     uint32_t new_dev_memory;
-    rc = nrf_fstorage_read(p_fstorage, p_fstorage->start_addr, &new_dev_memory, 4);
+    rc = nrf_fstorage_read(p_fstorage, p_fstorage->start_addr, &new_dev_memory,
+                           4);
     APP_ERROR_CHECK(rc);
     wait_for_flash_ready(p_fstorage);
 
@@ -373,16 +372,17 @@ static void led_settings_storage_init(void) {
     }
 
     if (is_new_memory_page(&fs_led_settings)) {
-        //Store the default settings
-        rc = nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr, &default_settings, 
-                                sizeof(actual_settings), NULL);
+        // Store the default settings
+        rc = nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr,
+                                &default_settings, sizeof(actual_settings),
+                                NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_led_settings);
     }
 
-    //Load actual settings
-    rc = nrf_fstorage_read(&fs_led_settings, fs_led_settings.start_addr, &actual_settings,
-                            sizeof(actual_settings));
+    // Load actual settings
+    rc = nrf_fstorage_read(&fs_led_settings, fs_led_settings.start_addr,
+                           &actual_settings, sizeof(actual_settings));
     APP_ERROR_CHECK(rc);
     wait_for_flash_ready(&fs_led_settings);
 }
@@ -395,16 +395,18 @@ static void password_storage_init(void) {
 
     rc = nrf_fstorage_init(&fs_password, p_fs_api, NULL);
     APP_ERROR_CHECK(rc);
-    
+
     if (is_new_memory_page(&fs_password)) {
-        //Store the default settings
-        rc = nrf_fstorage_write(&fs_password, fs_password.start_addr, &stored_password, 4, NULL);
+        // Store the default settings
+        rc = nrf_fstorage_write(&fs_password, fs_password.start_addr,
+                                &stored_password, 4, NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_password);
     }
 
-    //Load actual settings
-    rc = nrf_fstorage_read(&fs_password, fs_password.start_addr, &stored_password, 4);
+    // Load actual settings
+    rc = nrf_fstorage_read(&fs_password, fs_password.start_addr,
+                           &stored_password, 4);
     APP_ERROR_CHECK(rc);
     wait_for_flash_ready(&fs_password);
 }
@@ -417,30 +419,33 @@ static void identity_storage_init(void) {
 
     rc = nrf_fstorage_init(&fs_identity, p_fs_api, NULL);
     APP_ERROR_CHECK(rc);
-    
+
     if (is_new_memory_page(&fs_identity)) {
-        //Store the default settings
+        // Store the default settings
 #if defined(NSEC_HARDCODED_BADGE_IDENTITY_NAME)
-            #define NSEC_STRINGIFY_(...) #__VA_ARGS__
-            #define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
-            snprintf(identity_name, 16, NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
+#define NSEC_STRINGIFY_(...) #__VA_ARGS__
+#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
+        snprintf(identity_name, 16,
+                 NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
 #else
-            snprintf(identity_name, 16, "Cosmonaut #%02ld", (NRF_FICR->DEVICEID[0] & 0xFFFF));
+        snprintf(identity_name, 16, "Cosmonaut #%02ld",
+                 (NRF_FICR->DEVICEID[0] & 0xFFFF));
 #endif
-        rc = nrf_fstorage_write(&fs_identity, fs_identity.start_addr, identity_name,
-                                16, NULL);
+        rc = nrf_fstorage_write(&fs_identity, fs_identity.start_addr,
+                                identity_name, 16, NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_identity);
     }
 
-    //Load actual settings
-    rc = nrf_fstorage_read(&fs_identity, fs_identity.start_addr, identity_name, 16);
+    // Load actual settings
+    rc = nrf_fstorage_read(&fs_identity, fs_identity.start_addr, identity_name,
+                           16);
     APP_ERROR_CHECK(rc);
     wait_for_flash_ready(&fs_identity);
 }
 
 void nsec_storage_init(void) {
-   
+
     if (is_init) {
         return;
     }

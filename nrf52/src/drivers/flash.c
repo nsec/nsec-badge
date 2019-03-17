@@ -42,19 +42,18 @@ static const nrf_drv_spi_t m_spi_master_0 = NRF_DRV_SPI_INSTANCE(0);
 /* Initialize the external flash module.  */
 
 void flash_init() {
-  nrf_drv_spi_config_t config = NRF_DRV_SPI_DEFAULT_CONFIG;
+    nrf_drv_spi_config_t config = NRF_DRV_SPI_DEFAULT_CONFIG;
 
-  config.frequency = NRF_DRV_SPI_FREQ_8M;
-  config.mosi_pin = PIN_FLASH_MOSI;
-  config.miso_pin = PIN_FLASH_MISO;
-  config.sck_pin = PIN_FLASH_CLK;
-  config.ss_pin = PIN_FLASH_CS;
+    config.frequency = NRF_DRV_SPI_FREQ_8M;
+    config.mosi_pin = PIN_FLASH_MOSI;
+    config.miso_pin = PIN_FLASH_MISO;
+    config.sck_pin = PIN_FLASH_CLK;
+    config.ss_pin = PIN_FLASH_CS;
 
-  APP_ERROR_CHECK(nrf_drv_spi_init(&m_spi_master_0, &config, NULL, NULL));
+    APP_ERROR_CHECK(nrf_drv_spi_init(&m_spi_master_0, &config, NULL, NULL));
 }
 
-static ret_code_t flash_read_status_register_1(uint8_t *value)
-{
+static ret_code_t flash_read_status_register_1(uint8_t *value) {
     uint8_t tx = READ_STATUS_REGISTER_1_COMMAND;
     uint8_t rx[2];
 
@@ -69,8 +68,7 @@ static ret_code_t flash_read_status_register_1(uint8_t *value)
 
 /* Wait until the "busy" bit is cleared.  */
 
-static ret_code_t flash_wait_for_completion()
-{
+static ret_code_t flash_wait_for_completion() {
     while (1) {
         uint8_t status;
         ret_code_t ret = flash_read_status_register_1(&status);
@@ -84,36 +82,37 @@ static ret_code_t flash_wait_for_completion()
 
 /* Read 128 bytes of flash.  */
 
-ret_code_t flash_read_128 (int address, uint8_t *data) {
-  uint8_t tx[4];
-  tx[0] = FLASH_READ_COMMAND;
-  tx[1] = (address >> 16) & 0xff;
-  tx[2] = (address >> 8) & 0xff;
-  tx[3] = address & 0xff;
+ret_code_t flash_read_128(int address, uint8_t *data) {
+    uint8_t tx[4];
+    tx[0] = FLASH_READ_COMMAND;
+    tx[1] = (address >> 16) & 0xff;
+    tx[2] = (address >> 8) & 0xff;
+    tx[3] = address & 0xff;
 
-  uint8_t rx[sizeof(tx) + 128];
-  ret_code_t ret =
-      nrf_drv_spi_transfer(&m_spi_master_0, tx, sizeof(tx), rx, sizeof(rx));
-  if (ret != NRF_SUCCESS) {
-      return ret;
-  }
+    uint8_t rx[sizeof(tx) + 128];
+    ret_code_t ret =
+        nrf_drv_spi_transfer(&m_spi_master_0, tx, sizeof(tx), rx, sizeof(rx));
+    if (ret != NRF_SUCCESS) {
+        return ret;
+    }
 
-  memcpy(data, rx + sizeof(tx), 128);
+    memcpy(data, rx + sizeof(tx), 128);
 
-  return NRF_SUCCESS;
+    return NRF_SUCCESS;
 }
 
 static ret_code_t write_enable() {
-  uint8_t tx = WRITE_ENABLE_COMMAND;
+    uint8_t tx = WRITE_ENABLE_COMMAND;
 
-  return nrf_drv_spi_transfer(&m_spi_master_0, &tx, 1, NULL, 0);
+    return nrf_drv_spi_transfer(&m_spi_master_0, &tx, 1, NULL, 0);
 }
 
 /* Erase the 4096-bytes block of data containing ADDRESS.  */
 
 ret_code_t flash_erase(int address) {
     ret_code_t ret = write_enable();
-    if (ret != NRF_SUCCESS) return ret;
+    if (ret != NRF_SUCCESS)
+        return ret;
 
     uint8_t tx[4];
     tx[0] = FLASH_ERASE_4K_COMMAND;
@@ -121,7 +120,8 @@ ret_code_t flash_erase(int address) {
     tx[2] = (address >> 8) & 0xff;
     tx[3] = address & 0xff;
     ret = nrf_drv_spi_transfer(&m_spi_master_0, tx, sizeof(tx), NULL, 0);
-    if (ret != NRF_SUCCESS) return ret;
+    if (ret != NRF_SUCCESS)
+        return ret;
 
     return flash_wait_for_completion();
 }
@@ -129,22 +129,24 @@ ret_code_t flash_erase(int address) {
 /* Write 128 bytes of flash.  The address must be a multiple of 128.  */
 
 ret_code_t flash_write_128(int address, const uint8_t *data) {
-  if (address % 128 != 0) {
-    return NRF_ERROR_INVALID_PARAM;
-  }
+    if (address % 128 != 0) {
+        return NRF_ERROR_INVALID_PARAM;
+    }
 
-  ret_code_t ret = write_enable();
-  if (ret != NRF_SUCCESS) return ret;
+    ret_code_t ret = write_enable();
+    if (ret != NRF_SUCCESS)
+        return ret;
 
-  uint8_t tx[1 + 3 + 128];
-  tx[0] = FLASH_WRITE_COMMAND;
-  tx[1] = (address >> 16) & 0xff;
-  tx[2] = (address >> 8) & 0xff;
-  tx[3] = address & 0xff;
-  memcpy(tx + 4, data, 128);
+    uint8_t tx[1 + 3 + 128];
+    tx[0] = FLASH_WRITE_COMMAND;
+    tx[1] = (address >> 16) & 0xff;
+    tx[2] = (address >> 8) & 0xff;
+    tx[3] = address & 0xff;
+    memcpy(tx + 4, data, 128);
 
-  ret = nrf_drv_spi_transfer(&m_spi_master_0, tx, sizeof(tx), NULL, 0);
-  if (ret != NRF_SUCCESS) return ret;
+    ret = nrf_drv_spi_transfer(&m_spi_master_0, tx, sizeof(tx), NULL, 0);
+    if (ret != NRF_SUCCESS)
+        return ret;
 
-  return flash_wait_for_completion();
+    return flash_wait_for_completion();
 }

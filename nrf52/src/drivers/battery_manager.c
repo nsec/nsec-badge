@@ -25,10 +25,10 @@
 #include <app_timer.h>
 #include <nrf_gpio.h>
 
-#include "battery.h"
 #include "app/status_bar.h"
-#include "boards.h"
 #include "app/timer.h"
+#include "battery.h"
+#include "boards.h"
 
 #define BATTERY_HISTERESIS_MV 20
 
@@ -37,23 +37,29 @@
 #define BATTERY_50PER_THRES_MV 3300
 #define BATTERY_25PER_THRES_MV 3000
 
-#define BATTERY_100PER_UP_THRES_MV (BATTERY_100PER_THRES_MV + BATTERY_HISTERESIS_MV)
-#define BATTERY_75PER_UP_THRES_MV (BATTERY_75PER_THRES_MV + BATTERY_HISTERESIS_MV)
-#define BATTERY_50PER_UP_THRES_MV (BATTERY_50PER_THRES_MV + BATTERY_HISTERESIS_MV)
-#define BATTERY_25PER_UP_THRES_MV (BATTERY_25PER_THRES_MV + BATTERY_HISTERESIS_MV)
+#define BATTERY_100PER_UP_THRES_MV                                             \
+    (BATTERY_100PER_THRES_MV + BATTERY_HISTERESIS_MV)
+#define BATTERY_75PER_UP_THRES_MV                                              \
+    (BATTERY_75PER_THRES_MV + BATTERY_HISTERESIS_MV)
+#define BATTERY_50PER_UP_THRES_MV                                              \
+    (BATTERY_50PER_THRES_MV + BATTERY_HISTERESIS_MV)
+#define BATTERY_25PER_UP_THRES_MV                                              \
+    (BATTERY_25PER_THRES_MV + BATTERY_HISTERESIS_MV)
 
-#define BATTERY_100PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
-#define BATTERY_75PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
-#define BATTERY_50PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
-#define BATTERY_25PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
+#define BATTERY_100PER_DOWN_THRES_MV                                           \
+    (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
+#define BATTERY_75PER_DOWN_THRES_MV                                            \
+    (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
+#define BATTERY_50PER_DOWN_THRES_MV                                            \
+    (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
+#define BATTERY_25PER_DOWN_THRES_MV                                            \
+    (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
 static bool manager_event = false;
 /*
  * This handler updates the battery icon in the status bar.
  */
 
-void battery_manager_handler(void) {
-    manager_event = true;
-}
+void battery_manager_handler(void) { manager_event = true; }
 
 void battery_manager_process(void) {
 
@@ -77,33 +83,25 @@ void battery_manager_process(void) {
     if (voltage > prev_voltage) {
         if (voltage > BATTERY_100PER_UP_THRES_MV) {
             nsec_status_set_battery_status(STATUS_BATTERY_100_PERCENT);
-        }
-        else if (voltage > BATTERY_75PER_UP_THRES_MV) {
+        } else if (voltage > BATTERY_75PER_UP_THRES_MV) {
             nsec_status_set_battery_status(STATUS_BATTERY_75_PERCENT);
-        }
-        else if (voltage > BATTERY_50PER_UP_THRES_MV) {
+        } else if (voltage > BATTERY_50PER_UP_THRES_MV) {
             nsec_status_set_battery_status(STATUS_BATTERY_50_PERCENT);
-        }
-        else if (voltage > BATTERY_25PER_UP_THRES_MV) {
+        } else if (voltage > BATTERY_25PER_UP_THRES_MV) {
             nsec_status_set_battery_status(STATUS_BATTERY_25_PERCENT);
-        }
-        else {
+        } else {
             nsec_status_set_battery_status(STATUS_BATTERY_0_PERCENT);
         }
     } else {
         if (voltage > BATTERY_100PER_DOWN_THRES_MV) {
             nsec_status_set_battery_status(STATUS_BATTERY_100_PERCENT);
-        }
-        else if (voltage > BATTERY_75PER_DOWN_THRES_MV) {
+        } else if (voltage > BATTERY_75PER_DOWN_THRES_MV) {
             nsec_status_set_battery_status(STATUS_BATTERY_75_PERCENT);
-        }
-        else if (voltage > BATTERY_50PER_DOWN_THRES_MV) {
+        } else if (voltage > BATTERY_50PER_DOWN_THRES_MV) {
             nsec_status_set_battery_status(STATUS_BATTERY_50_PERCENT);
-        }
-        else if (voltage > BATTERY_25PER_DOWN_THRES_MV) {
+        } else if (voltage > BATTERY_25PER_DOWN_THRES_MV) {
             nsec_status_set_battery_status(STATUS_BATTERY_25_PERCENT);
-        }
-        else {
+        } else {
             nsec_status_set_battery_status(STATUS_BATTERY_0_PERCENT);
         }
     }
@@ -116,7 +114,7 @@ end_refresh:
 }
 
 void nsec_battery_manager_init(void) {
-    //ret_code_t err_code;
+    // ret_code_t err_code;
 
     battery_init();
 
