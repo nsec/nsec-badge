@@ -44,22 +44,22 @@ void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action)
         switch (pin_no) {
             case PIN_INPUT_UP:
                 cli_uart_printf("btn up\r\n");
-                nsec_controls_trigger(BUTTON_UP);
+                nsec_controls_add_event(BUTTON_UP);
             break;
 
             case PIN_INPUT_DOWN:
                 cli_uart_printf("+ btn down\r\n");
-                nsec_controls_trigger(BUTTON_DOWN);
+                nsec_controls_add_event(BUTTON_DOWN);
             break;
 
             case PIN_INPUT_BACK:
                 cli_uart_printf("+ btn back\r\n");
-                nsec_controls_trigger(BUTTON_BACK);
+                nsec_controls_add_event(BUTTON_BACK);
             break;
 
             case PIN_INPUT_ENTER:
                 cli_uart_printf("+ btn enter\r\n");
-                nsec_controls_trigger(BUTTON_ENTER);
+                nsec_controls_add_event(BUTTON_ENTER);
             break;
         }
     }

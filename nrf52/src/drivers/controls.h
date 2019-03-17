@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 #define NSEC_CONTROLS_LIMIT_MAX_HANDLERS (8)
+#define NSEC_CONTROLS_MAX_EVENT 8
 
 typedef enum {
     BUTTON_UP,
@@ -22,6 +23,7 @@ typedef void (*button_handler)(button_t button);
 
 void nsec_controls_add_handler(button_handler handler);
 void nsec_controls_suspend_handler(button_handler handler);
-void nsec_controls_trigger(button_t button);
+void nsec_controls_add_event(button_t button);
+void nsec_controls_process(void);
 
 #endif /* controls_h */

@@ -150,7 +150,7 @@ int main(void) {
     start_advertising();
 
     nsec_status_bar_init();
-    nsec_battery_manager_init();
+    //nsec_battery_manager_init();
     //nsec_status_set_name(g_device_id);
     //nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
@@ -166,6 +166,7 @@ int main(void) {
      */
     while(true) {
         cli_process();
+        nsec_controls_process();
         service_WS2812FX();
         nsec_storage_update();
         power_manage();
