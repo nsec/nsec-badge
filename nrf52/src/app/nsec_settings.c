@@ -179,6 +179,7 @@ static void save_brightness(uint8_t item)
 {
     uint8_t b = (item==0) ? 1 : item*25;
     display_set_brightness(b);
+    update_stored_display_brightness(b);
 }
 
 static void show_display_brightness(uint8_t item)
@@ -286,7 +287,7 @@ static void setting_handle_buttons(button_t button)
 
                 // no break
             case SETTING_STATE_SCREEN_OFF:
-                display_set_brightness(100);
+                display_set_brightness(get_stored_display_brightness());
                 // no break
             case SETTING_STATE_DISPLAY:
             case SETTING_STATE_CREDIT:

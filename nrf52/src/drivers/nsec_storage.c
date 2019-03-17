@@ -56,7 +56,8 @@ typedef struct LedSettings_t {
     bool control;
     bool is_ble_controlled;
     bool ble_control_permitted;
-    SegmentBle segment_array[8];
+    SegmentBle segment_array[15];
+    uint8_t display_brightness;
 } LedSettings;
 
 LedSettings actual_settings;
@@ -147,6 +148,17 @@ void nsec_storage_update() {
     }
 }
 
+uint8_t get_stored_display_brightness(void)
+{
+    return actual_settings.display_brightness;
+}
+
+void update_stored_display_brightness(uint8_t brightness)
+{
+    actual_settings.display_brightness = brightness;
+    need_led_settings_update = true;
+}
+
 /* Led Settings interface */
 void update_stored_brightness(uint8_t brightness) {
     actual_settings.brightness = brightness;
@@ -215,6 +227,8 @@ void load_stored_led_settings(void) {
     if (!is_init) {
         nsec_storage_init();
     }
+
+    display_set_brightness(actual_settings.display_brightness);
 
     if (actual_settings.control) {
         start_WS2812FX();
@@ -321,7 +335,7 @@ static bool is_new_memory_page(nrf_fstorage_t const * p_fstorage) {
     wait_for_flash_ready(p_fstorage);
 
     return (new_dev_memory == 0xFFFFFFFF) ? true : false;
-} 
+}
 
 static void led_settings_storage_init(void) {
     ret_code_t rc;
@@ -331,6 +345,8 @@ static void led_settings_storage_init(void) {
 
     rc = nrf_fstorage_init(&fs_led_settings, p_fs_api, NULL);
     APP_ERROR_CHECK(rc);
+
+    default_settings.display_brightness = 50;
 
     default_settings.mode = FX_MODE_STATIC;
     default_settings.speed = MEDIUM_SPEED;
@@ -355,7 +371,7 @@ static void led_settings_storage_init(void) {
         default_settings.segment_array[i].colors[1] = RED;
         default_settings.segment_array[i].colors[2] = GREEN;
     }
-    
+
     if (is_new_memory_page(&fs_led_settings)) {
         //Store the default settings
         rc = nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr, &default_settings, 
