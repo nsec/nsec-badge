@@ -46,11 +46,23 @@
 #define BATTERY_75PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
 #define BATTERY_50PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
 #define BATTERY_25PER_DOWN_THRES_MV (BATTERY_100PER_THRES_MV - BATTERY_HISTERESIS_MV)
-
+static bool manager_event = false;
 /*
  * This handler updates the battery icon in the status bar.
  */
+
 void battery_manager_handler(void) {
+    manager_event = true;
+}
+
+void battery_manager_process(void) {
+
+    if (manager_event) {
+        manager_event = false;
+    } else {
+        return;
+    }
+
     static uint16_t prev_voltage = 0;
     uint16_t voltage = battery_get_voltage();
 
