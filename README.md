@@ -164,7 +164,7 @@ To make a `bin` file from an ELF, run the following:
 
 Run the following command:
 
-    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec19_stm32_debugger.bin
+    % dfu-util --device 0483:df11 --alt 0 --dfuse-address 0x08000000:leave --download builds/nsec19_stm32_debugger.bin
 
 The STM32 should reset automagically, running the newly downloaded firmware. The
 address of 0x08000000 is important, this is where the stm32 flash is mapped into
