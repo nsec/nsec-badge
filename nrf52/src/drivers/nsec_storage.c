@@ -378,6 +378,18 @@ static void led_settings_storage_init(void) {
                                 sizeof(actual_settings), NULL);
         APP_ERROR_CHECK(rc);
         wait_for_flash_ready(&fs_led_settings);
+
+        actual_settings.display_brightness = default_settings.display_brightness;
+        actual_settings.mode = default_settings.mode;
+        actual_settings.speed = default_settings.speed;
+        actual_settings.brightness = default_settings.brightness;
+        actual_settings.colors[0] = default_settings.colors[0];
+        actual_settings.colors[1] = default_settings.colors[1];
+        actual_settings.colors[2] = default_settings.colors[2];
+        actual_settings.reverse = default_settings.reverse;
+        actual_settings.control = default_settings.control;
+        actual_settings.is_ble_controlled = default_settings.is_ble_controlled;
+        actual_settings.ble_control_permitted = default_settings.ble_control_permitted;
     }
 
     //Load actual settings

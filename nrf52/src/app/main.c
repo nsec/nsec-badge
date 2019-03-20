@@ -43,6 +43,8 @@
 #include "nsec_led_ble.h"
 #include "flash_mode.h"
 #include "home_menu.h"
+#include "mode_zombie.h"
+#include "persistency.h"
 
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
@@ -127,9 +129,11 @@ int main(void) {
     softdevice_init();
     timer_init();
     flash_init();
+    load_persistency();
     init_WS2812FX();
     display_init();
     nsec_buttons_init();
+    mode_zombie_init();
 
     // Enter flash mode if the "up" button is pressed.
     if (nsec_button_is_pushed(BUTTON_UP)) {
@@ -168,6 +172,7 @@ int main(void) {
         cli_process();
         nsec_controls_process();
         battery_manager_process();
+        mode_zombie_process();
         service_WS2812FX();
         nsec_storage_update();
         power_manage();
