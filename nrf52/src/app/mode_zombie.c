@@ -32,6 +32,9 @@ static void mode_zombie_glitch(void)
     uint64_t start = get_current_time_millis();
     uint64_t elapse = 0;
 
+    // Make sure Screen is on !
+    display_set_brightness(100);
+
     resetSegments_WS2812FX();
     setMode_WS2812FX(FX_MODE_BLINK);
     setArrayColor_packed_WS2812FX(RED, 0);
@@ -90,6 +93,7 @@ void mode_zombie_process(void)
         load_stored_led_settings();
         show_home_menu(HOME_STATE_MENU);
         nsec_status_bar_ui_redraw();
+        update_stored_display_brightness(get_stored_display_brightness());
     }
 }
 
