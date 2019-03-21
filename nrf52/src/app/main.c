@@ -133,7 +133,10 @@ int main(void) {
     init_WS2812FX();
     display_init();
     nsec_buttons_init();
+
+#ifdef NSEC_FLAVOR_CTF
     mode_zombie_init();
+#endif
 
     // Enter flash mode if the "up" button is pressed.
     if (nsec_button_is_pushed(BUTTON_UP)) {
