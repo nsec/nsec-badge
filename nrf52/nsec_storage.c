@@ -55,7 +55,7 @@ typedef struct LedSettings_t {
     bool control;
     bool is_ble_controlled;
     bool ble_control_permitted;
-    SegmentBle segment_array[8];
+    SegmentBle segment_array[NEOPIXEL_COUNT];
 } LedSettings;
 
 LedSettings actual_settings;

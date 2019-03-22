@@ -63,9 +63,9 @@ ServiceCharacteristic segment_index_char, start_segment_char, stop_segment_char,
 
 bool is_ble_controled = false;
 
-// Possible to set up to 8 segment
+// Possible to set up to NEOPIXEL_COUNT segment
 uint8_t selected_segment = 0;
-SegmentBle segment_array[8];
+SegmentBle segment_array[NEOPIXEL_COUNT];
 uint8_t brightness = 60;
 bool unlock_state = false;
 
