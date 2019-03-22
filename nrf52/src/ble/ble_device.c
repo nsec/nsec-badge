@@ -18,6 +18,7 @@
 #include <app_scheduler.h>
 #include <nrf_ble_gatt.h>
 
+#include "ble_device.h"
 #include "boards.h"
 #include <nrf_gpio.h>
 #include <nrf_delay.h>
@@ -43,6 +44,7 @@ typedef struct{
     ble_gap_adv_params_t advertising_parameters;
     uint16_t vendor_service_count;
     VendorService* vendor_services[MAX_VENDOR_SERVICE_COUNT];
+    struct Advertiser* advertiser;
 } BleDevice;
 
 typedef struct{
@@ -105,11 +107,18 @@ void configure_advertising(){
     set_default_gap_parameters(ble_device->device_name, &(ble_device->advertising_parameters));
 }
 
+void set_advertiser(struct Advertiser* advertiser){
+    ble_device->advertiser = advertiser;
+}
 
 void start_advertising(){
-    if(ble_device == NULL)
+    if(ble_device->advertiser == NULL)
         return;
-    APP_ERROR_CHECK(sd_ble_gap_adv_start(&(ble_device->advertising_parameters), BLE_COMMON_CFG_VS_UUID));
+    ble_device->advertiser->start_advertisement();
+}
+
+void stop_advertising(){
+    ble_device->advertiser->stop_advertisement();
 }
 
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
@@ -199,7 +208,8 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             buffer = NULL;
             break;
         default:
-            break;
+            NRF_LOG_INFO("BLE event %d", p_ble_evt->header.evt_id);
+            ble_device->advertiser->on_ble_advertising_event(p_ble_evt);
     }
 }
 
