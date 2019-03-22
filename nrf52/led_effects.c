@@ -12,6 +12,9 @@
 #include "nrf_pwm.h"
 #include <nrf_delay.h>
 
+#include "boards.h"
+#define LED_PIN NEOPIXEL
+
 void show_with_PWM(void);
 void show_with_DWT(void);
 

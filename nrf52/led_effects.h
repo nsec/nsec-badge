@@ -16,7 +16,6 @@
 #define CYCLES_800      71 // ~1.25 us
 
 #define NEOPIXEL_COUNT  8
-#define LED_PIN         26
 
 void nsec_neoPixel_init(void);
 void nsec_neoPixel_clear(void);
