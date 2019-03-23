@@ -50,7 +50,7 @@
 #define NEUROSOFT_LOGO_POS      30, 10
 
 /* General Menu */
-#define GEN_MENU_POS_X			0
+#define GEN_MENU_POS_X			1
 #define GEN_MENU_POS_Y			20
 #define GEN_MENU_POS			GEN_MENU_POS_X, GEN_MENU_POS_Y
 #define GEN_MENU_WIDTH			128

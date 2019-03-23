@@ -180,10 +180,22 @@ static void save_brightness(uint8_t item)
     update_stored_display_brightness(b);
 }
 
+static void draw_display_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = 25;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "DISPLAY");
+    draw_title(&title);
+}
+
 static void show_display_brightness(uint8_t item)
 {
     menu_close();
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    draw_display_title();
     menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
         ARRAY_SIZE(brightness_items), brightness_items,
         HOME_MENU_BG_COLOR, DISPLAY_WHITE);
@@ -199,10 +211,22 @@ static void show_display_brightness(uint8_t item)
     }
 }*/
 
+static void draw_credit_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = 25;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "CREDIT");
+    draw_title(&title);
+}
+
 static void show_credit(uint8_t item) {
     _state = SETTING_STATE_CREDIT;
     menu_close();
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    draw_credit_title();
     gfx_set_cursor(GEN_MENU_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts("nsec 2019 badge team:");
@@ -256,6 +280,8 @@ void nsec_setting_show(void) {
 #else
     snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
 #endif
+
+    draw_settings_title();
 
     menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
         ARRAY_SIZE(settings_items), settings_items,

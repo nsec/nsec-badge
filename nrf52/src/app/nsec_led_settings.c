@@ -24,6 +24,8 @@
 #include <nordic_common.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
+
 #include "ble/nsec_ble.h"
 #include "gui.h"
 #include "status_bar.h"
@@ -31,6 +33,7 @@
 #include "nsec_led_settings.h"
 #include "nsec_settings.h"
 #include "menu.h"
+#include "home_menu.h"
 #include "gfx_effect.h"
 #include "drivers/display.h"
 #include "drivers/ws2812fx.h"
@@ -212,8 +215,21 @@ static menu_item_s control_items[] = {
     }
 };
 
+static void draw_led_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = 5;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "LED CONFIG");
+    draw_title(&title);
+}
+
 void nsec_show_led_settings(void) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+
+    draw_led_title();
 
     menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
         ARRAY_SIZE(settings_items), settings_items,
