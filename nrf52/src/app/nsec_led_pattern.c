@@ -211,8 +211,21 @@ static menu_item_s led_pattern_items[] = {
     }
 };
 
+static void draw_led_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = 25;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "PATTERN");
+    draw_title(&title);
+}
+
 void nsec_led_pattern_show(void) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+
+    draw_led_title();
 
     menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
         ARRAY_SIZE(led_pattern_items), led_pattern_items,

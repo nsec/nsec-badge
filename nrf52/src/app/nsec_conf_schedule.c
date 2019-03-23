@@ -626,7 +626,20 @@ static uint8_t talk_selected = 0;
 static uint8_t presenter_selected = 0;
 static uint8_t schedule_index = 0; // Keep track of our index in the scheduler array
 
+static void draw_conf_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = 5;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "CONFERENCE");
+    draw_title(&title);
+}
+
 void nsec_schedule_show_dates(void) {
+    draw_conf_title();
+
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
     menu_init(CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,

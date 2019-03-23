@@ -19,8 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <string.h>
+
 #include "text_box.h"
 #include "main_menu.h"
+#include "home_menu.h"
 #include "gui.h"
 #include "drivers/display.h"
 #include "drivers/controls.h"
@@ -31,19 +34,32 @@ const char *warning_notice = "That device is equipped with a protected lithium-i
 static struct text_box_config config = {
     GEN_MENU_POS_X,
     GEN_MENU_POS_Y,
-    GEN_MENU_WIDTH,
+    160,
     GEN_MENU_HEIGHT,
     HOME_MENU_BG_COLOR,
     DISPLAY_WHITE
 };
 
+static void draw_warning_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = 25;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "WARNING");
+    draw_title(&title);
+}
+
 void nsec_warning_show(void) {
     nsec_controls_add_handler(warning_handle_buttons);
+    draw_warning_title();
     text_box_init(warning_notice, &config);
 }
 
 static void warning_handle_buttons(button_t button) {
     if (button == BUTTON_BACK) {
+        redraw_home_menu_burger_selected();
         nsec_controls_suspend_handler(warning_handle_buttons);
         show_main_menu();
     }

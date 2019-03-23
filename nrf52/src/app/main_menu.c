@@ -77,6 +77,7 @@ static menu_item_s main_menu_items[] = {
     }};
 
 void show_main_menu(void) {
+    draw_main_menu_title();
     menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(main_menu_items), main_menu_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);

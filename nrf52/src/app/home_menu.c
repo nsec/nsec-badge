@@ -16,14 +16,6 @@
 #include "images/settings_off_bitmap.h"
 #include "images/settings_on_bitmap.h"
 
-struct title {
-    char title[32];
-    uint8_t pos_x;
-    uint8_t pos_y;
-    uint16_t text_color;
-    uint16_t bg_color;
-};
-
 bool is_at_home_menu = false;
 
 extern uint16_t gfx_width;
@@ -32,7 +24,6 @@ extern uint16_t gfx_height;
 static void home_menu_handle_buttons(button_t button);
 
 static enum home_state _state = HOME_STATE_CLOSED;
-static struct title main_title;
 
 static void draw_burger_menu_icon(int16_t x, int16_t y, uint16_t color) {
     gfx_fill_rect(x, y, 3, 3, color);
@@ -68,17 +59,41 @@ static void draw_cursor(void) {
     }
 }
 
-void draw_title(void) {
+void draw_title(struct title *title) {
     gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, GEN_MENU_POS_Y,
-                  main_title.bg_color);
+                  title->bg_color);
 
-    gfx_set_cursor(main_title.pos_x, main_title.pos_y);
+    gfx_set_cursor(title->pos_x, title->pos_y);
     gfx_set_text_size(2);
-    gfx_set_text_background_color(main_title.text_color, main_title.bg_color);
-    gfx_puts(main_title.title);
+    gfx_set_text_background_color(title->text_color, title->bg_color);
+    gfx_puts(title->text);
+    gfx_set_text_size(1);
 }
 
-void draw_home_menu_bar(void) {
+void draw_settings_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = SETTINGS_MENU_TITLE_X;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "SETTINGS");
+    draw_title(&title);
+}
+
+void draw_main_menu_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = BURGER_MENU_TITLE_X;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "MENU");
+    draw_title(&title);
+}
+
+void draw_home_menu_bar(void)
+{
     gfx_fill_rect(HOME_MENU_POS, HOME_MENU_WIDTH, HOME_MENU_HEIGHT,
                   HOME_MENU_BG_COLOR);
 
@@ -135,12 +150,7 @@ static void open_burger_menu(void) {
 
     draw_burger_menu_icon(BURGER_MENU_POS, HOME_MENU_BG_COLOR);
 
-    main_title.pos_y = 5;
-    main_title.pos_x = BURGER_MENU_TITLE_X;
-    main_title.text_color = DISPLAY_BLUE;
-    main_title.bg_color = DISPLAY_WHITE;
-    strcpy(main_title.title, "MENU");
-    draw_title();
+    draw_main_menu_title();
 
     nsec_controls_suspend_handler(home_menu_handle_buttons);
     _state = HOME_STATE_CLOSED;
@@ -157,12 +167,7 @@ static void open_settings_menu(void) {
     gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_on_bitmap,
                           DISPLAY_WHITE);
 
-    main_title.pos_y = 5;
-    main_title.pos_x = SETTINGS_MENU_TITLE_X;
-    main_title.text_color = DISPLAY_BLUE;
-    main_title.bg_color = DISPLAY_WHITE;
-    strcpy(main_title.title, "SETTINGS");
-    draw_title();
+    draw_settings_title();
 
     nsec_controls_suspend_handler(home_menu_handle_buttons);
     _state = HOME_STATE_CLOSED;

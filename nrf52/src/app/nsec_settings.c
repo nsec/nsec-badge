@@ -8,6 +8,7 @@
 #include <nordic_common.h>
 #include <stdio.h>
 #include "home_menu.h"
+#include "main_menu.h"
 #include "gui.h"
 #include "nsec_settings.h"
 #include "nsec_led_settings.h"
@@ -214,8 +215,20 @@ static void show_credit(uint8_t item) {
     gfx_update();
 }
 
+static void draw_battery_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = 25;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "BATTERY");
+    draw_title(&title);
+}
+
 void show_battery_status(void) {
     _state = SETTING_STATE_BATTERY;
+    draw_battery_title();
     menu_close();
     start_battery_status_timer();
     nsec_controls_add_handler(setting_handle_buttons);
@@ -276,14 +289,14 @@ static void setting_handle_buttons(button_t button)
                 // code change
                 _state = SETTING_STATE_CLOSED;
                 menu_close();
-                show_home_menu(HOME_STATE_SETTINGS);
+                show_main_menu();
                 break;
 
             case SETTING_STATE_FLASHLIGHT:
                 load_stored_led_settings();
                 nsec_status_bar_ui_redraw();
                 draw_home_menu_bar();
-                draw_title();
+                draw_settings_title();
 
                 // no break
             case SETTING_STATE_SCREEN_OFF:
