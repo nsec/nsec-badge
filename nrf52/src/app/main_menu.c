@@ -33,6 +33,7 @@ static void main_handle_buttons(button_t button);
 #ifdef NSEC_FLAVOR_CONF
 void open_conference_schedule(uint8_t item) {
     menu_close();
+    _state = MAIN_MENU_STATE_CLOSED;
     nsec_schedule_show_dates();
 }
 #endif

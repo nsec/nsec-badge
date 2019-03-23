@@ -12,7 +12,10 @@
 #include "drivers/display.h"
 #include "drivers/controls.h"
 #include "home_menu.h"
+#include "main_menu.h"
 #include "gfx_effect.h"
+#include "text_box.h"
+#include "gui.h"
 
 #ifdef BOARD_BRAIN
 #define ROW_COUNT                   9 // 10 - status bar
@@ -29,6 +32,15 @@
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
+static struct text_box_config config = {
+    CONF_POS_X,
+    CONF_POS_Y,
+    CONF_WIDTH,
+    CONF_HEIGHT,
+    HOME_MENU_BG_COLOR,
+    DISPLAY_WHITE
+};
+
 static void nsec_schedule_button_handler(button_t button);
 void nsec_schedule_show_talks(uint8_t item);
 void nsec_schedule_show_details(uint8_t item);
@@ -39,10 +51,10 @@ void nsec_schedule_show_presenters_details(uint8_t item);
 
 static menu_item_s days_schedule_items[] = {
     {
-        .label = "Thursday, May 17th 2018",
+        .label = "Thursday, May 16th",
         .handler = nsec_schedule_show_tracks
     }, {
-        .label = "Friday, May 18th 2018",
+        .label = "Friday, May 17th",
         .handler = nsec_schedule_show_tracks
     }, {
         .label = "Presenters",
@@ -615,7 +627,12 @@ static uint8_t presenter_selected = 0;
 static uint8_t schedule_index = 0; // Keep track of our index in the scheduler array
 
 void nsec_schedule_show_dates(void) {
-    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(days_schedule_items), days_schedule_items, DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+
+    menu_init(CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+        ARRAY_SIZE(days_schedule_items), days_schedule_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
     schedule_state = SCHEDULE_STATE_DATES;
     nsec_controls_add_handler(nsec_schedule_button_handler);
 }
@@ -630,157 +647,32 @@ void nsec_schedule_return_to_talks(void) {
 void nsec_schedule_show_talks(uint8_t item) {
     track_selected = item;
     schedule_index = (date_selected * 3) + track_selected;
-    menu_init(0, 12, gfx_width, gfx_height - 8, nsec_schedule[schedule_index].item_count, nsec_schedule[schedule_index].menu_items, DISPLAY_WHITE, DISPLAY_BLACK);
+
+    menu_init(CONF_POS, CONF_WIDTH, CONF_HEIGHT,
+        nsec_schedule[schedule_index].item_count,
+        nsec_schedule[schedule_index].menu_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
     schedule_state = SCHEDULE_STATE_TALKS;
-}
-
-void nsec_schedule_show_header(void) {
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_puts(nsec_schedule[schedule_index].menu_items[talk_selected].label);
-    gfx_puts("\n");
-    gfx_set_text_background_color(DISPLAY_BLACK, DISPLAY_WHITE);
-    gfx_puts("By: ");
-    gfx_puts((char *) nsec_schedule[schedule_index].presenters[talk_selected]);
-    gfx_puts("\n");
-}
-
-uint16_t nsec_schedule_get_header_length(void) {
-    uint16_t len = strlen(nsec_schedule[schedule_index].menu_items[talk_selected].label) ;
-    uint16_t header_length = len + (len % COLUMN_COUNT);
-    len = strlen(nsec_schedule[schedule_index].presenters[talk_selected]) + 4;
-    header_length += len + (len % COLUMN_COUNT);
-    return header_length;
-}
-
-void _nsec_schedule_show_details(void) {
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 16);
-
-    nsec_schedule_show_header();
-    uint16_t header_length = nsec_schedule_get_header_length();
-
-    // We calculate the number of character we can use for the description
-    // we keep that value for scrolling
-    char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
-    if(header_length >= MAX_CHAR_UNDER_STATUS_BAR) {
-        header_length = MAX_CHAR_UNDER_STATUS_BAR - 1;
-    }
-    description_index = MAX_CHAR_UNDER_STATUS_BAR - header_length;
-    strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected], description_index);
-
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_puts(buffer);
-    gfx_update();
-
-    schedule_state = SCHEDULE_STATE_TALK_DETAILS;
-}
-
-void nsec_schedule_scroll_up_details(bool change_direction) {
-    //Is there enough place for the header ?
-    uint16_t header_length = nsec_schedule_get_header_length();
-
-    if (description_index < MAX_CHAR_UNDER_STATUS_BAR) {
-        description_index = 0;
-    } else {
-        description_index -= MAX_CHAR_UNDER_STATUS_BAR;
-        if (change_direction) {
-            description_index -= MAX_CHAR_UNDER_STATUS_BAR;
-        }
-    }
-
-    if (header_length + description_index < MAX_CHAR_UNDER_STATUS_BAR) {
-        _nsec_schedule_show_details();
-        return;
-    }
-
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 12);
-
-    char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
-    strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected] + description_index,
-            MAX_CHAR_UNDER_STATUS_BAR);
-
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_puts(buffer);
-    gfx_update();
-}
-
-void nsec_schedule_scroll_down_details(bool change_direction) {
-    if (description_index > strlen(nsec_schedule[schedule_index].descriptions[talk_selected])) {
-        return;
-    }
-
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 16);
-
-    if (change_direction) {
-        description_index += MAX_CHAR_UNDER_STATUS_BAR;
-    }
-
-    char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
-    strncpy(buffer, nsec_schedule[schedule_index].descriptions[talk_selected] + description_index,
-            MAX_CHAR_UNDER_STATUS_BAR);
-    description_index += MAX_CHAR_UNDER_STATUS_BAR;
-
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_puts(buffer);
-    gfx_update();
-}
-
-void nsec_schedule_scroll_up_presenters_details(bool change_direction) {
-    if (description_index < MAX_CHAR_UNDER_STATUS_BAR) {
-        description_index = 0;
-    } else {
-        description_index -= MAX_CHAR_UNDER_STATUS_BAR;
-        if (change_direction) {
-            description_index -= MAX_CHAR_UNDER_STATUS_BAR;
-        }
-    }
-
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 16);
-
-    char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
-    strncpy(buffer, presenters_detail[presenter_selected] + description_index,
-            MAX_CHAR_UNDER_STATUS_BAR);
-
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_puts(buffer);
-    gfx_update();
-}
-
-void nsec_schedule_scroll_down_presenters_details(bool change_direction) {
-    if (description_index > strlen(presenters_detail[presenter_selected])) {
-        return;
-    }
-
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 16);
-
-    if (change_direction) {
-        description_index += MAX_CHAR_UNDER_STATUS_BAR;
-    }
-
-    char buffer[MAX_CHAR_UNDER_STATUS_BAR] = {0};
-    strncpy(buffer, presenters_detail[presenter_selected] + description_index,
-            MAX_CHAR_UNDER_STATUS_BAR);
-    description_index += MAX_CHAR_UNDER_STATUS_BAR;
-
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_puts(buffer);
-    gfx_update();
 }
 
 void nsec_schedule_show_details(uint8_t item) {
     talk_selected = item;
     menu_close();
+
     if(item < nsec_schedule[schedule_index].item_count) {
-        _nsec_schedule_show_details();
+        text_box_init(nsec_schedule[schedule_index]
+            .descriptions[talk_selected], &config);
+
+        schedule_state = SCHEDULE_STATE_TALK_DETAILS;
     }
 }
 
 void nsec_schedule_show_tracks (uint8_t item) {
-    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items, DISPLAY_WHITE, DISPLAY_BLACK);
+    menu_init(CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+        ARRAY_SIZE(tracks_schedule_items), tracks_schedule_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
     date_selected = item;
     schedule_state = SCHEDULE_STATE_TRACK;
 }
@@ -792,17 +684,13 @@ void nsec_schedule_show_presenters_details(uint8_t item) {
     schedule_state = SCHEDULE_STATE_PRESENTERS_DETAILS;
     presenter_selected = item;
     menu_close();
-    gfx_fill_rect(0, 8, gfx_width, gfx_height - 8, DISPLAY_BLACK);
-    gfx_set_cursor(0, 16);
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_puts((char *) presenters_detail[presenter_selected]);
-    description_index = MAX_CHAR_UNDER_STATUS_BAR;
-    gfx_update();
+    text_box_init(presenters_detail[presenter_selected], &config);
 }
 
 void nsec_schedule_return_to_presenters(void) {
     description_index = 0;
     schedule_state = SCHEDULE_STATE_PRESENTERS;
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     menu_open();
     menu_ui_redraw_all();
 }
@@ -812,56 +700,27 @@ void nsec_schedule_show_presenters(uint8_t item) {
         presenters_items[i].label = presenters_all[i];
         presenters_items[i].handler = nsec_schedule_show_presenters_details;
     }
-    menu_init(0, 12, gfx_width, gfx_height - 8, ARRAY_SIZE(presenters_items), presenters_items, DISPLAY_WHITE, DISPLAY_BLACK);
+
+    menu_init(CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+        ARRAY_SIZE(presenters_items), presenters_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
     description_index = 0;
     schedule_state = SCHEDULE_STATE_PRESENTERS;
 }
 
 static void nsec_schedule_button_handler(button_t button) {
-    static button_t last_pressed_button = BUTTON_ENTER;
-    if (schedule_state == SCHEDULE_STATE_TALK_DETAILS && button == BUTTON_DOWN) {
-        if (last_pressed_button == BUTTON_UP) {
-            nsec_schedule_scroll_down_details(true);
-        } else {
-            nsec_schedule_scroll_down_details(false);
-        }
-        last_pressed_button = BUTTON_DOWN;
-    } else if (schedule_state == SCHEDULE_STATE_TALK_DETAILS && button == BUTTON_UP) {
-        if (last_pressed_button == BUTTON_DOWN) {
-            nsec_schedule_scroll_up_details(true);
-        } else {
-            nsec_schedule_scroll_up_details(false);
-        }
-        last_pressed_button = BUTTON_UP;
-    }
-
-    if (schedule_state == SCHEDULE_STATE_PRESENTERS_DETAILS && button == BUTTON_DOWN) {
-        if (last_pressed_button == BUTTON_UP) {
-            nsec_schedule_scroll_down_presenters_details(true);
-        } else {
-            nsec_schedule_scroll_down_presenters_details(false);
-        }
-        last_pressed_button = BUTTON_DOWN;
-    } else if (schedule_state == SCHEDULE_STATE_PRESENTERS_DETAILS && button == BUTTON_UP) {
-        if (last_pressed_button == BUTTON_DOWN) {
-            nsec_schedule_scroll_up_presenters_details(true);
-        } else {
-            nsec_schedule_scroll_up_presenters_details(false);
-        }
-        last_pressed_button = BUTTON_UP;
-    }
-
     if(button == BUTTON_BACK) {
         switch (schedule_state) {
             case SCHEDULE_STATE_PRESENTERS_DETAILS:
-                last_pressed_button = BUTTON_ENTER;
+                redraw_home_menu_burger_selected();
                 nsec_schedule_return_to_presenters();
                 break;
             case SCHEDULE_STATE_TALK_DETAILS:
-                last_pressed_button = BUTTON_ENTER;
                 nsec_schedule_return_to_talks();
                 break;
             case SCHEDULE_STATE_TALKS:
+                redraw_home_menu_burger_selected();
                 nsec_schedule_show_tracks(date_selected);
                 break;
             case SCHEDULE_STATE_TRACK:
@@ -869,8 +728,9 @@ static void nsec_schedule_button_handler(button_t button) {
                 nsec_schedule_show_dates();
                 break;
             case SCHEDULE_STATE_DATES:
+                menu_close();
                 schedule_state = SCHEDULE_STATE_CLOSED;
-                show_home_menu(HOME_STATE_MENU_SELECTED);
+                show_main_menu();
                 break;
 
             default:

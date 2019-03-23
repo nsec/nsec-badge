@@ -56,6 +56,13 @@
 #define GEN_MENU_WIDTH			128
 #define GEN_MENU_HEIGHT			60
 
+/* Conference text box */
+#define CONF_POS_X				0
+#define CONF_POS_Y				22
+#define CONF_POS				CONF_POS_X, CONF_POS_Y
+#define CONF_WIDTH				160
+#define CONF_HEIGHT				58
+
 /* Led Settings */
 #define LED_SET_VAL_POS_X		0
 #define LED_SET_VAL_POS_Y		20

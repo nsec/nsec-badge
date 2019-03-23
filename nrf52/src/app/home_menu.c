@@ -83,8 +83,24 @@ void draw_home_menu_bar(void) {
                   HOME_MENU_BG_COLOR);
 
     draw_burger_menu_icon(BURGER_MENU_POS, DISPLAY_WHITE);
+
     gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_off_bitmap,
                           HOME_MENU_BG_COLOR);
+}
+
+void redraw_home_menu_burger_selected(void)
+{
+    gfx_fill_rect(HOME_MENU_POS, HOME_MENU_WIDTH, HOME_MENU_HEIGHT / 2,
+                  DISPLAY_WHITE);
+
+    gfx_fill_rect(HOME_MENU_POS_X, HOME_MENU_POS_Y + (HOME_MENU_HEIGHT / 2),
+                  HOME_MENU_WIDTH, HOME_MENU_HEIGHT / 2, HOME_MENU_BG_COLOR);
+
+    gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_off_bitmap,
+                          HOME_MENU_BG_COLOR);
+
+    draw_burger_menu_icon(BURGER_MENU_POS, HOME_MENU_BG_COLOR);
+
 }
 
 static void draw_home_menu(void) {
@@ -121,7 +137,7 @@ static void open_burger_menu(void) {
 
     main_title.pos_y = 5;
     main_title.pos_x = BURGER_MENU_TITLE_X;
-    main_title.text_color = HOME_MENU_BG_COLOR;
+    main_title.text_color = DISPLAY_BLUE;
     main_title.bg_color = DISPLAY_WHITE;
     strcpy(main_title.title, "MENU");
     draw_title();
@@ -143,7 +159,7 @@ static void open_settings_menu(void) {
 
     main_title.pos_y = 5;
     main_title.pos_x = SETTINGS_MENU_TITLE_X;
-    main_title.text_color = HOME_MENU_BG_COLOR;
+    main_title.text_color = DISPLAY_BLUE;
     main_title.bg_color = DISPLAY_WHITE;
     strcpy(main_title.title, "SETTINGS");
     draw_title();

@@ -17,6 +17,7 @@ enum home_state {
 
 void show_home_menu(enum home_state state);
 void draw_home_menu_bar(void);
+void redraw_home_menu_burger_selected(void);
 void draw_title(void);
 
 #endif /* home_menu_h */
