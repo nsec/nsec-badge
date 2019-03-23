@@ -23,6 +23,9 @@ APP_TIMER_DEF(m_status_timer_id);
 APP_TIMER_DEF(m_battery_status_timer_id);
 APP_TIMER_DEF(m_battery_manager_timer_id);
 
+static bool battery_event = false;
+static bool battery_enable = false;
+
 static
 void _battery_manager_handler(void *p_context) {
     battery_manager_handler();
@@ -49,29 +52,37 @@ void status_timeout_handler(void *p_context) {
  */
 static
 void battery_status_timeout_handler(void *p_context) {
-    char msg[256];
+    battery_event = true;
+}
 
-    gfx_set_cursor(GEN_MENU_POS);
-    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+void battery_status_process(void)
+{
+    if (battery_event && battery_enable) {
+        battery_event = false;
+        char msg[256];
+
+        gfx_set_cursor(GEN_MENU_POS);
+        gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
 #ifdef BOARD_SPUTNIK
-    snprintf(msg, sizeof(msg),
-        "Battery status:\n"
-        " Voltage: %04d mV\n"
-        " Charging: %s\n"
-        " USB plugged: %s\n",
-        battery_get_voltage(),
-        battery_is_charging() ? "Yes" : "No",
-        battery_is_usb_plugged() ? "Yes" : "No");
+        snprintf(msg, sizeof(msg),
+            "Battery status:\n"
+            " Voltage: %04d mV\n"
+            " Charging: %s\n"
+            " USB plugged: %s\n",
+            battery_get_voltage(),
+            battery_is_charging() ? "Yes" : "No",
+            battery_is_usb_plugged() ? "Yes" : "No");
 #else
-    snprintf(msg, sizeof(msg),
-        "Battery status:\n"
-        " Voltage: %04d mV\n",
-        battery_get_voltage());
+        snprintf(msg, sizeof(msg),
+            "Battery status:\n"
+            " Voltage: %04d mV\n",
+            battery_get_voltage());
 #endif
 
-    gfx_puts(msg);
-    gfx_update();
+        gfx_puts(msg);
+        gfx_update();
+    }
 }
 
 /*
@@ -132,6 +143,8 @@ void start_battery_status_timer(void) {
 
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
+    battery_enable = true;
+    battery_event = true;
     battery_status_timeout_handler(NULL);
 }
 
@@ -140,6 +153,8 @@ void stop_battery_status_timer(void) {
 
     err_code = app_timer_stop(m_battery_status_timer_id);
     APP_ERROR_CHECK(err_code);
+
+    battery_enable = false;
 }
 
 void start_battery_manage_timer(void) {

@@ -176,7 +176,8 @@ int main(void) {
         cli_process();
         nsec_controls_process();
         battery_manager_process();
-        mode_zombie_process();
+        battery_status_process();
+		mode_zombie_process();
         service_WS2812FX();
         nsec_storage_update();
         power_manage();

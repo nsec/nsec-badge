@@ -23,9 +23,6 @@
 #include "drivers/nsec_storage.h"
 #include "timer.h"
 
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
 //static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
