@@ -1,9 +1,12 @@
 #include <stdint.h>
 
 #include "application.h"
+#include "drivers/controls.h"
 #include "drivers/display.h"
 
 #include "images/external/mines_splash_bitmap.h"
+
+#define MINES_BUTTON_NONE 255
 
 #define MINES_GAME_GOTO(new_state) p_state->current_state = new_state
 
@@ -24,9 +27,42 @@
 #define MINES_GAME_STATE_FLAG 15
 #define MINES_GAME_STATE_EXIT 255
 
+static uint8_t mines_button_read_value = MINES_BUTTON_NONE;
+
 typedef struct MinesGameState {
     uint8_t current_state;
 } MinesGameState;
+
+static void mines_buttons_handle(button_t button)
+{
+    mines_button_read_value = button;
+}
+
+static uint8_t mines_buttons_read()
+{
+    if (mines_button_read_value != MINES_BUTTON_NONE) {
+        uint8_t value = mines_button_read_value;
+        mines_button_read_value = MINES_BUTTON_NONE;
+
+        return value;
+    }
+
+    return MINES_BUTTON_NONE;
+}
+
+static uint8_t mines_buttons_is_any_pushed()
+{
+    switch (mines_buttons_read()) {
+    case BUTTON_BACK:
+    case BUTTON_DOWN:
+    case BUTTON_ENTER:
+    case BUTTON_UP:
+        return true;
+
+    default:
+        return false;
+    }
+}
 
 static void mines_game_state_boot_handle(MinesGameState *p_state)
 {
@@ -53,6 +89,8 @@ static void mines_game_state_select_level_handle(MinesGameState *p_state) {}
 void mines_application(void (*service_device)())
 {
     MinesGameState state = {.current_state = MINES_GAME_STATE_BOOT};
+
+    nsec_controls_add_handler(mines_buttons_handle);
 
     while (application_get() == mines_application) {
         service_device();
@@ -126,6 +164,8 @@ void mines_application(void (*service_device)())
             state.current_state = MINES_GAME_STATE_EXIT;
         }
     }
+
+    nsec_controls_suspend_handler(mines_buttons_handle);
 
     application_clear();
 }
