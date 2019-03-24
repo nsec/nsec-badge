@@ -1,6 +1,9 @@
 #include <stdint.h>
 
 #include "application.h"
+#include "drivers/display.h"
+
+#include "images/external/mines_splash_bitmap.h"
 
 #define MINES_GAME_GOTO(new_state) p_state->current_state = new_state
 
@@ -25,7 +28,13 @@ typedef struct MinesGameState {
     uint8_t current_state;
 } MinesGameState;
 
-static void mines_game_state_boot_handle(MinesGameState *p_state) {}
+static void mines_game_state_boot_handle(MinesGameState *p_state)
+{
+    display_draw_16bit_ext_bitmap(0, 0, &mines_splash_bitmap, 0);
+
+    MINES_GAME_GOTO(MINES_GAME_STATE_BOOT_SPLASH);
+}
+
 static void mines_game_state_boot_splash_handle(MinesGameState *p_state) {}
 static void mines_game_state_cleared_handle(MinesGameState *p_state) {}
 static void mines_game_state_cleared_msg_handle(MinesGameState *p_state) {}
