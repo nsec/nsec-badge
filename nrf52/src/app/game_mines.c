@@ -3,7 +3,9 @@
 #include "application.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
+#include "gfx_effect.h"
 
+#include "images/external/mines_menu_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
 
 #define MINES_BUTTON_NONE 255
@@ -31,6 +33,9 @@ static uint8_t mines_button_read_value = MINES_BUTTON_NONE;
 
 typedef struct MinesGameState {
     uint8_t current_state;
+
+    uint8_t menu_position;
+    bool menu_rendered;
 } MinesGameState;
 
 static void mines_buttons_handle(button_t button)
@@ -68,10 +73,17 @@ static void mines_game_state_boot_handle(MinesGameState *p_state)
 {
     display_draw_16bit_ext_bitmap(0, 0, &mines_splash_bitmap, 0);
 
+    mines_buttons_read();
     MINES_GAME_GOTO(MINES_GAME_STATE_BOOT_SPLASH);
 }
 
-static void mines_game_state_boot_splash_handle(MinesGameState *p_state) {}
+static void mines_game_state_boot_splash_handle(MinesGameState *p_state)
+{
+    if (mines_buttons_is_any_pushed()) {
+        MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
+    }
+}
+
 static void mines_game_state_cleared_handle(MinesGameState *p_state) {}
 static void mines_game_state_cleared_msg_handle(MinesGameState *p_state) {}
 static void mines_game_state_controls_handle(MinesGameState *p_state) {}
@@ -82,13 +94,74 @@ static void mines_game_state_flag_handle(MinesGameState *p_state) {}
 static void mines_game_state_game_handle(MinesGameState *p_state) {}
 static void mines_game_state_init_game_handle(MinesGameState *p_state) {}
 static void mines_game_state_manual_handle(MinesGameState *p_state) {}
-static void mines_game_state_menu_handle(MinesGameState *p_state) {}
+
+static void mines_game_state_menu_handle(MinesGameState *p_state)
+{
+    uint8_t cursor_x = 0, cursor_y = 0;
+
+    uint8_t menu[] = {MINES_GAME_STATE_SELECT_LEVEL, MINES_GAME_STATE_CONTROLS,
+                      MINES_GAME_STATE_MANUAL, MINES_GAME_STATE_EXIT};
+
+    if (!p_state->menu_rendered) {
+        display_draw_16bit_ext_bitmap(0, 0, &mines_menu_bitmap, 0);
+
+        switch (p_state->menu_position) {
+        case 0:
+            cursor_x = 45;
+            cursor_y = 11;
+            break;
+
+        case 1:
+            cursor_x = 45;
+            cursor_y = 30;
+            break;
+
+        case 2:
+            cursor_x = 45;
+            cursor_y = 47;
+            break;
+
+        case 3:
+            cursor_x = 45;
+            cursor_y = 65;
+            break;
+        }
+
+        gfx_fill_triangle(cursor_x, cursor_y, cursor_x + 4, cursor_y + 2,
+                          cursor_x, cursor_y + 4, DISPLAY_WHITE);
+        gfx_update();
+
+        p_state->menu_rendered = true;
+    }
+
+    switch (mines_buttons_read()) {
+    case BUTTON_DOWN:
+        p_state->menu_position =
+            p_state->menu_position == 3 ? 0 : p_state->menu_position + 1;
+        p_state->menu_rendered = false;
+        break;
+
+    case BUTTON_ENTER:
+        p_state->menu_rendered = false;
+        MINES_GAME_GOTO(menu[p_state->menu_position]);
+        break;
+
+    case BUTTON_UP:
+        p_state->menu_position =
+            p_state->menu_position == 0 ? 3 : p_state->menu_position - 1;
+        p_state->menu_rendered = false;
+        break;
+    }
+}
+
 static void mines_game_state_post_menu_handle(MinesGameState *p_state) {}
 static void mines_game_state_select_level_handle(MinesGameState *p_state) {}
 
 void mines_application(void (*service_device)())
 {
-    MinesGameState state = {.current_state = MINES_GAME_STATE_BOOT};
+    MinesGameState state = {.current_state = MINES_GAME_STATE_BOOT,
+                            .menu_position = 0,
+                            .menu_rendered = false};
 
     nsec_controls_add_handler(mines_buttons_handle);
 
