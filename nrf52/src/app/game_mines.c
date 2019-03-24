@@ -5,6 +5,8 @@
 #include "drivers/display.h"
 #include "gfx_effect.h"
 
+#include "images/external/mines_background_bitmap.h"
+#include "images/external/mines_controls_bitmap.h"
 #include "images/external/mines_menu_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
 
@@ -34,6 +36,9 @@ static uint8_t mines_button_read_value = MINES_BUTTON_NONE;
 typedef struct MinesGameState {
     uint8_t current_state;
 
+    bool controls_rendered;
+    uint8_t manual_position;
+    bool manual_rendered;
     uint8_t menu_position;
     bool menu_rendered;
 } MinesGameState;
@@ -86,14 +91,59 @@ static void mines_game_state_boot_splash_handle(MinesGameState *p_state)
 
 static void mines_game_state_cleared_handle(MinesGameState *p_state) {}
 static void mines_game_state_cleared_msg_handle(MinesGameState *p_state) {}
-static void mines_game_state_controls_handle(MinesGameState *p_state) {}
+
+static void mines_game_state_controls_handle(MinesGameState *p_state)
+{
+    if (!p_state->controls_rendered) {
+        display_draw_16bit_ext_bitmap(0, 0, &mines_controls_bitmap, 0);
+        p_state->controls_rendered = true;
+    }
+
+    if (mines_buttons_is_any_pushed()) {
+        p_state->controls_rendered = false;
+        MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
+    }
+}
+
 static void mines_game_state_draw_canvas_handle(MinesGameState *p_state) {}
 static void mines_game_state_explosion_handle(MinesGameState *p_state) {}
 static void mines_game_state_explosion_msg_handle(MinesGameState *p_state) {}
 static void mines_game_state_flag_handle(MinesGameState *p_state) {}
 static void mines_game_state_game_handle(MinesGameState *p_state) {}
 static void mines_game_state_init_game_handle(MinesGameState *p_state) {}
-static void mines_game_state_manual_handle(MinesGameState *p_state) {}
+
+static void mines_game_state_manual_handle(MinesGameState *p_state)
+{
+    if (!p_state->manual_rendered) {
+        const char strings[3][100] = {
+            "   Your mind is a tool.\n   The more you use it,\n   the better "
+            "you are\n   with it.",
+            "   Schizophrenia and\n   dementia related to\n   the Beyond "
+            "Reality are\n   rare, but possible.",
+            "   Learn to avoid them\n   by playing this\n   fun game!"};
+
+        display_draw_16bit_ext_bitmap(0, 0, &mines_background_bitmap, 0);
+
+        gfx_set_cursor(0, 22);
+        gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_WHITE);
+        gfx_puts(strings[p_state->manual_position]);
+        gfx_update();
+
+        p_state->manual_rendered = true;
+    }
+
+    if (mines_buttons_is_any_pushed()) {
+        p_state->manual_position++;
+        p_state->manual_rendered = false;
+
+        if (p_state->manual_position >= 3) {
+            p_state->manual_position = 0;
+            p_state->manual_rendered = false;
+
+            MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
+        }
+    }
+}
 
 static void mines_game_state_menu_handle(MinesGameState *p_state)
 {
@@ -160,6 +210,9 @@ static void mines_game_state_select_level_handle(MinesGameState *p_state) {}
 void mines_application(void (*service_device)())
 {
     MinesGameState state = {.current_state = MINES_GAME_STATE_BOOT,
+                            .controls_rendered = false,
+                            .manual_position = 0,
+                            .menu_rendered = false,
                             .menu_position = 0,
                             .menu_rendered = false};
 
