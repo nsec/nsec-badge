@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <string.h>
 
 #include <app_timer.h>
 
@@ -6,6 +7,7 @@
 #include "drivers/controls.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"
+#include "random.h"
 
 #include "images/external/mines_background_bitmap.h"
 #include "images/external/mines_controls_bitmap.h"
@@ -76,6 +78,9 @@ typedef struct MinesGameState {
 
     uint8_t current_difficulty;
     uint8_t current_state;
+    bool cursor_activated;
+    uint8_t cursor_x;
+    uint8_t cursor_y;
     uint8_t field_height;
     uint8_t field_width;
     uint8_t flags_placed;
@@ -217,7 +222,49 @@ static void mines_game_state_explosion_handle(MinesGameState *p_state) {}
 static void mines_game_state_explosion_msg_handle(MinesGameState *p_state) {}
 static void mines_game_state_flag_handle(MinesGameState *p_state) {}
 static void mines_game_state_game_handle(MinesGameState *p_state) {}
-static void mines_game_state_init_game_handle(MinesGameState *p_state) {}
+
+static void mines_game_state_init_game_handle(MinesGameState *p_state)
+{
+    uint8_t value;
+
+    memset(p_state->flags, 255, MINES_GAME_LIST_LIMIT);
+    memset(p_state->holds, 255, MINES_GAME_LIST_LIMIT);
+    memset(p_state->mines, 255, MINES_GAME_LIST_LIMIT);
+    memset(p_state->opened, 255, MINES_GAME_LIST_LIMIT);
+
+    p_state->flags_placed = 0;
+    p_state->holds_placed = 0;
+    p_state->opened_count = 0;
+
+    p_state->field_width =
+        mines_difficulty_levels[p_state->current_difficulty][0];
+    p_state->field_height =
+        mines_difficulty_levels[p_state->current_difficulty][1];
+    p_state->mines_total =
+        mines_difficulty_levels[p_state->current_difficulty][2];
+
+    for (uint8_t i = 0; i < p_state->mines_total; i++) {
+        do {
+            value = nsec_random_get_byte(MINES_GAME_FIELD_SIZE - 1);
+        } while (mines_game_has_mine_at(p_state, value));
+
+        p_state->mines[i] = value;
+    }
+
+    do {
+        value = nsec_random_get_byte(MINES_GAME_FIELD_SIZE - 1);
+    } while (mines_game_has_mine_at(p_state, value));
+
+    p_state->cursor_activated = 0;
+    p_state->cursor_x = MINES_GAME_LIST2CELL_X(value);
+    p_state->cursor_y = MINES_GAME_LIST2CELL_Y(value);
+
+    MINES_TIMER_CANCEL(button);
+    MINES_TIMER_CANCEL(cursor);
+    MINES_TIMER_CANCEL(flags_warning);
+
+    MINES_GAME_GOTO(MINES_GAME_STATE_DRAW_CANVAS);
+}
 
 static void mines_game_state_manual_handle(MinesGameState *p_state)
 {
@@ -412,6 +459,9 @@ void mines_application(void (*service_device)())
     MinesGameState state = {.controls_rendered = false,
                             .current_difficulty = 0,
                             .current_state = MINES_GAME_STATE_BOOT,
+                            .cursor_activated = false,
+                            .cursor_x = 0,
+                            .cursor_y = 0,
                             .field_height = 0,
                             .field_width = 0,
                             .flags = {},
