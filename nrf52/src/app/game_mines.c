@@ -20,6 +20,14 @@
 
 #define MINES_BUTTON_NONE 255
 
+#define MINES_GAME_CELL2LIST(x, y) y * p_state->field_width + x
+#define MINES_GAME_LIST2CELL_X(value) value % p_state->field_width
+#define MINES_GAME_LIST2CELL_Y(value) value / p_state->field_width
+
+#define MINES_GAME_FIELD_CELL 8
+#define MINES_GAME_FIELD_SIDEBAR_POSITION 88
+#define MINES_GAME_FIELD_SIZE (p_state->field_width * p_state->field_height)
+
 #define MINES_GAME_GOTO(new_state) p_state->current_state = new_state
 
 #define MINES_GAME_LIST_LIMIT (11 * 8 - 22)
@@ -53,9 +61,27 @@ APP_TIMER_DEF(mines_timer_id);
 
 static uint8_t mines_button_read_value = MINES_BUTTON_NONE;
 
+static uint8_t mines_difficulty_levels[3][3] = {
+    {5, 5, 7}, {7, 7, 11}, {11, 8, 22}};
+//                           ^  ^  ^
+//               field width +  |  |
+//              field height -  +  |
+//           number of mines -  -  +
+
 typedef struct MinesGameState {
+    uint8_t opened[MINES_GAME_LIST_LIMIT];
+    uint8_t mines[MINES_GAME_LIST_LIMIT];
+    uint8_t holds[MINES_GAME_LIST_LIMIT];
+    uint8_t flags[MINES_GAME_LIST_LIMIT];
+
     uint8_t current_difficulty;
     uint8_t current_state;
+    uint8_t field_height;
+    uint8_t field_width;
+    uint8_t flags_placed;
+    uint8_t holds_placed;
+    uint8_t mines_total;
+    uint8_t opened_count;
 
     bool controls_rendered;
     uint8_t manual_position;
@@ -133,6 +159,26 @@ static void mines_remove_from_list(uint8_t list[], uint8_t *tail, uint8_t value)
             (*tail)--;
         }
     }
+}
+
+static bool mines_game_has_flag_at(MinesGameState *p_state, uint8_t value)
+{
+    return mines_is_in_list(p_state->flags, p_state->flags_placed, value);
+}
+
+static bool mines_game_has_hold_at(MinesGameState *p_state, uint8_t value)
+{
+    return mines_is_in_list(p_state->holds, p_state->holds_placed, value);
+}
+
+static bool mines_game_has_mine_at(MinesGameState *p_state, uint8_t value)
+{
+    return mines_is_in_list(p_state->mines, p_state->mines_total, value);
+}
+
+static bool mines_game_is_opened(MinesGameState *p_state, uint8_t value)
+{
+    return mines_is_in_list(p_state->opened, p_state->opened_count, value);
 }
 
 static void mines_game_state_boot_handle(MinesGameState *p_state)
@@ -363,13 +409,23 @@ static void mines_timer_handle(void *p_context)
 
 void mines_application(void (*service_device)())
 {
-    MinesGameState state = {.current_difficulty = 0,
+    MinesGameState state = {.controls_rendered = false,
+                            .current_difficulty = 0,
                             .current_state = MINES_GAME_STATE_BOOT,
-                            .controls_rendered = false,
+                            .field_height = 0,
+                            .field_width = 0,
+                            .flags = {},
+                            .flags_placed = 0,
+                            .holds = {},
+                            .holds_placed = 0,
                             .manual_position = 0,
-                            .menu_rendered = false,
                             .menu_position = 0,
                             .menu_rendered = false,
+                            .menu_rendered = false,
+                            .mines = {},
+                            .mines_total = 0,
+                            .opened = {},
+                            .opened_count = 0,
                             .select_level_highlight = 0,
                             .select_level_rendered = false};
 
