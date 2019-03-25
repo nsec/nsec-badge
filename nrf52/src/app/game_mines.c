@@ -7,6 +7,12 @@
 
 #include "images/external/mines_background_bitmap.h"
 #include "images/external/mines_controls_bitmap.h"
+#include "images/external/mines_level_1_active_bitmap.h"
+#include "images/external/mines_level_1_bitmap.h"
+#include "images/external/mines_level_2_active_bitmap.h"
+#include "images/external/mines_level_2_bitmap.h"
+#include "images/external/mines_level_3_active_bitmap.h"
+#include "images/external/mines_level_3_bitmap.h"
 #include "images/external/mines_menu_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
 
@@ -34,6 +40,7 @@
 static uint8_t mines_button_read_value = MINES_BUTTON_NONE;
 
 typedef struct MinesGameState {
+    uint8_t current_difficulty;
     uint8_t current_state;
 
     bool controls_rendered;
@@ -41,6 +48,8 @@ typedef struct MinesGameState {
     bool manual_rendered;
     uint8_t menu_position;
     bool menu_rendered;
+    uint8_t select_level_highlight;
+    bool select_level_rendered;
 } MinesGameState;
 
 static void mines_buttons_handle(button_t button)
@@ -205,16 +214,98 @@ static void mines_game_state_menu_handle(MinesGameState *p_state)
 }
 
 static void mines_game_state_post_menu_handle(MinesGameState *p_state) {}
-static void mines_game_state_select_level_handle(MinesGameState *p_state) {}
+
+static void mines_game_state_select_level_handle(MinesGameState *p_state)
+{
+    if (!p_state->select_level_rendered) {
+        switch (p_state->current_difficulty) {
+        case 0:
+            display_draw_16bit_ext_bitmap(0, 0, &mines_level_1_bitmap, 0);
+            break;
+
+        case 1:
+            display_draw_16bit_ext_bitmap(0, 0, &mines_level_2_bitmap, 0);
+            break;
+
+        case 2:
+            display_draw_16bit_ext_bitmap(0, 0, &mines_level_3_bitmap, 0);
+            break;
+        }
+
+        p_state->select_level_rendered = true;
+    }
+
+    p_state->select_level_highlight =
+        (p_state->select_level_highlight + 1) % 30;
+
+    switch (p_state->select_level_highlight) {
+    case 15:
+        switch (p_state->current_difficulty) {
+        case 0:
+            display_draw_16bit_ext_bitmap(11, 37, &mines_level_1_active_bitmap,
+                                          0);
+            break;
+
+        case 1:
+            display_draw_16bit_ext_bitmap(11, 37, &mines_level_2_active_bitmap,
+                                          0);
+            break;
+
+        case 2:
+            display_draw_16bit_ext_bitmap(11, 37, &mines_level_3_active_bitmap,
+                                          0);
+            break;
+        }
+
+        break;
+
+    case 29:
+        p_state->select_level_rendered = false;
+        break;
+    }
+
+    switch (mines_buttons_read()) {
+    case BUTTON_BACK:
+        MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
+        p_state->select_level_highlight = 0;
+        p_state->select_level_rendered = false;
+        break;
+
+    case BUTTON_DOWN:
+        p_state->current_difficulty = p_state->current_difficulty == 2
+                                          ? 0
+                                          : p_state->current_difficulty + 1;
+        p_state->select_level_highlight = 0;
+        p_state->select_level_rendered = false;
+        break;
+
+    case BUTTON_ENTER:
+        MINES_GAME_GOTO(MINES_GAME_STATE_INIT_GAME);
+        p_state->select_level_highlight = 0;
+        p_state->select_level_rendered = false;
+        break;
+
+    case BUTTON_UP:
+        p_state->current_difficulty = p_state->current_difficulty == 0
+                                          ? 2
+                                          : p_state->current_difficulty - 1;
+        p_state->select_level_highlight = 0;
+        p_state->select_level_rendered = false;
+        break;
+    }
+}
 
 void mines_application(void (*service_device)())
 {
-    MinesGameState state = {.current_state = MINES_GAME_STATE_BOOT,
+    MinesGameState state = {.current_difficulty = 0,
+                            .current_state = MINES_GAME_STATE_BOOT,
                             .controls_rendered = false,
                             .manual_position = 0,
                             .menu_rendered = false,
                             .menu_position = 0,
-                            .menu_rendered = false};
+                            .menu_rendered = false,
+                            .select_level_highlight = 0,
+                            .select_level_rendered = false};
 
     nsec_controls_add_handler(mines_buttons_handle);
 
