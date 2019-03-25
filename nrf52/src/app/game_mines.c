@@ -22,6 +22,8 @@
 
 #define MINES_GAME_GOTO(new_state) p_state->current_state = new_state
 
+#define MINES_GAME_LIST_LIMIT (11 * 8 - 22)
+
 #define MINES_GAME_STATE_BOOT 1
 #define MINES_GAME_STATE_BOOT_SPLASH 2
 #define MINES_GAME_STATE_MENU 3
@@ -96,6 +98,40 @@ static uint8_t mines_buttons_is_any_pushed()
 
     default:
         return false;
+    }
+}
+
+static bool mines_is_in_list(uint8_t list[], uint8_t tail, uint8_t value)
+{
+    for (uint8_t i = 0; i < tail; i++) {
+        if (list[i] == value) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static void mines_add_to_list(uint8_t list[], uint8_t *tail, uint8_t value)
+{
+    if (!mines_is_in_list(list, *tail, value)) {
+        list[*tail] = value;
+        (*tail)++;
+    }
+}
+
+static void mines_remove_from_list(uint8_t list[], uint8_t *tail, uint8_t value)
+{
+    uint8_t i = 0, t = *tail;
+
+    for (; i < t; i++) {
+        if (list[i] == value) {
+            for (uint8_t j = i + 1; j < t; j++) {
+                list[j - 1] = list[j];
+            }
+
+            (*tail)--;
+        }
     }
 }
 
