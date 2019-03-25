@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#include <app_timer.h>
+
 #include "application.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
@@ -37,6 +39,16 @@
 #define MINES_GAME_STATE_FLAG 15
 #define MINES_GAME_STATE_EXIT 255
 
+#define MINES_TIMER_INTERVAL 10
+
+#define MINES_TIMER_CANCEL(timer) p_state->timer_##timer = 0
+#define MINES_TIMER_ENDED(timer) p_state->timer_##timer == 0
+#define MINES_TIMER_START(timer, end)                                          \
+    p_state->timer_##timer = end / MINES_TIMER_INTERVAL
+#define MINES_TIMER_TICK(timer) p_state->timer_##timer--
+
+APP_TIMER_DEF(mines_timer_id);
+
 static uint8_t mines_button_read_value = MINES_BUTTON_NONE;
 
 typedef struct MinesGameState {
@@ -50,6 +62,10 @@ typedef struct MinesGameState {
     bool menu_rendered;
     uint8_t select_level_highlight;
     bool select_level_rendered;
+
+    uint16_t timer_button;
+    uint16_t timer_cursor;
+    uint16_t timer_flags_warning;
 } MinesGameState;
 
 static void mines_buttons_handle(button_t button)
@@ -295,6 +311,20 @@ static void mines_game_state_select_level_handle(MinesGameState *p_state)
     }
 }
 
+static void mines_timer_handle(void *p_context)
+{
+    MinesGameState *p_state = (MinesGameState *)p_context;
+
+    if (!MINES_TIMER_ENDED(button))
+        MINES_TIMER_TICK(button);
+
+    if (!MINES_TIMER_ENDED(cursor))
+        MINES_TIMER_TICK(cursor);
+
+    if (!MINES_TIMER_ENDED(flags_warning))
+        MINES_TIMER_TICK(flags_warning);
+}
+
 void mines_application(void (*service_device)())
 {
     MinesGameState state = {.current_difficulty = 0,
@@ -307,6 +337,10 @@ void mines_application(void (*service_device)())
                             .select_level_highlight = 0,
                             .select_level_rendered = false};
 
+    app_timer_create(&mines_timer_id, APP_TIMER_MODE_REPEATED,
+                     mines_timer_handle);
+    app_timer_start(mines_timer_id, APP_TIMER_TICKS(MINES_TIMER_INTERVAL),
+                    &state);
     nsec_controls_add_handler(mines_buttons_handle);
 
     while (application_get() == mines_application) {
@@ -382,6 +416,7 @@ void mines_application(void (*service_device)())
         }
     }
 
+    app_timer_stop(mines_timer_id);
     nsec_controls_suspend_handler(mines_buttons_handle);
 
     application_clear();
