@@ -93,12 +93,13 @@ typedef struct MinesGameState {
     bool manual_rendered;
     uint8_t menu_position;
     bool menu_rendered;
-    uint8_t select_level_highlight;
+    bool select_level_highlight;
     bool select_level_rendered;
 
     uint16_t timer_button;
     uint16_t timer_cursor;
     uint16_t timer_flags_warning;
+    uint16_t timer_select_level_highlight;
 } MinesGameState;
 
 static void mines_buttons_handle(button_t button)
@@ -363,6 +364,8 @@ static void mines_game_state_post_menu_handle(MinesGameState *p_state) {}
 static void mines_game_state_select_level_handle(MinesGameState *p_state)
 {
     if (!p_state->select_level_rendered) {
+        MINES_TIMER_START(select_level_highlight, 300);
+
         switch (p_state->current_difficulty) {
         case 0:
             display_draw_16bit_ext_bitmap(0, 0, &mines_level_1_bitmap, 0);
@@ -380,39 +383,38 @@ static void mines_game_state_select_level_handle(MinesGameState *p_state)
         p_state->select_level_rendered = true;
     }
 
-    p_state->select_level_highlight =
-        (p_state->select_level_highlight + 1) % 30;
+    if (MINES_TIMER_ENDED(select_level_highlight)) {
+        if (p_state->select_level_highlight) {
+            p_state->select_level_highlight = false;
+            p_state->select_level_rendered = false;
+        } else {
+            p_state->select_level_highlight = true;
 
-    switch (p_state->select_level_highlight) {
-    case 15:
-        switch (p_state->current_difficulty) {
-        case 0:
-            display_draw_16bit_ext_bitmap(11, 37, &mines_level_1_active_bitmap,
-                                          0);
-            break;
+            switch (p_state->current_difficulty) {
+            case 0:
+                display_draw_16bit_ext_bitmap(11, 37,
+                                              &mines_level_1_active_bitmap, 0);
+                break;
 
-        case 1:
-            display_draw_16bit_ext_bitmap(11, 37, &mines_level_2_active_bitmap,
-                                          0);
-            break;
+            case 1:
+                display_draw_16bit_ext_bitmap(11, 37,
+                                              &mines_level_2_active_bitmap, 0);
+                break;
 
-        case 2:
-            display_draw_16bit_ext_bitmap(11, 37, &mines_level_3_active_bitmap,
-                                          0);
-            break;
+            case 2:
+                display_draw_16bit_ext_bitmap(11, 37,
+                                              &mines_level_3_active_bitmap, 0);
+                break;
+            }
+
+            MINES_TIMER_START(select_level_highlight, 300);
         }
-
-        break;
-
-    case 29:
-        p_state->select_level_rendered = false;
-        break;
     }
 
     switch (mines_buttons_read()) {
     case BUTTON_BACK:
         MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
-        p_state->select_level_highlight = 0;
+        p_state->select_level_highlight = false;
         p_state->select_level_rendered = false;
         break;
 
@@ -420,13 +422,13 @@ static void mines_game_state_select_level_handle(MinesGameState *p_state)
         p_state->current_difficulty = p_state->current_difficulty == 2
                                           ? 0
                                           : p_state->current_difficulty + 1;
-        p_state->select_level_highlight = 0;
+        p_state->select_level_highlight = false;
         p_state->select_level_rendered = false;
         break;
 
     case BUTTON_ENTER:
         MINES_GAME_GOTO(MINES_GAME_STATE_INIT_GAME);
-        p_state->select_level_highlight = 0;
+        p_state->select_level_highlight = false;
         p_state->select_level_rendered = false;
         break;
 
@@ -434,7 +436,7 @@ static void mines_game_state_select_level_handle(MinesGameState *p_state)
         p_state->current_difficulty = p_state->current_difficulty == 0
                                           ? 2
                                           : p_state->current_difficulty - 1;
-        p_state->select_level_highlight = 0;
+        p_state->select_level_highlight = false;
         p_state->select_level_rendered = false;
         break;
     }
@@ -452,6 +454,9 @@ static void mines_timer_handle(void *p_context)
 
     if (!MINES_TIMER_ENDED(flags_warning))
         MINES_TIMER_TICK(flags_warning);
+
+    if (!MINES_TIMER_ENDED(select_level_highlight))
+        MINES_TIMER_TICK(select_level_highlight);
 }
 
 void mines_application(void (*service_device)())
@@ -476,7 +481,7 @@ void mines_application(void (*service_device)())
                             .mines_total = 0,
                             .opened = {},
                             .opened_count = 0,
-                            .select_level_highlight = 0,
+                            .select_level_highlight = false,
                             .select_level_rendered = false};
 
     app_timer_create(&mines_timer_id, APP_TIMER_MODE_REPEATED,
