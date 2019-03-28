@@ -18,6 +18,8 @@
 #include "images/external/mines_level_3_active_bitmap.h"
 #include "images/external/mines_level_3_bitmap.h"
 #include "images/external/mines_menu_bitmap.h"
+#include "images/external/mines_pattern_blank_bitmap.h"
+#include "images/external/mines_sidebar_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
 
 #define MINES_BUTTON_NONE 255
@@ -26,8 +28,8 @@
 #define MINES_GAME_LIST2CELL_X(value) value % p_state->field_width
 #define MINES_GAME_LIST2CELL_Y(value) value / p_state->field_width
 
-#define MINES_GAME_FIELD_CELL 8
-#define MINES_GAME_FIELD_SIDEBAR_POSITION 88
+#define MINES_GAME_FIELD_CELL 9
+#define MINES_GAME_FIELD_SIDEBAR_POSITION 120
 #define MINES_GAME_FIELD_SIZE (p_state->field_width * p_state->field_height)
 
 #define MINES_GAME_GOTO(new_state) p_state->current_state = new_state
@@ -50,6 +52,8 @@
 #define MINES_GAME_STATE_POST_MENU 14
 #define MINES_GAME_STATE_FLAG 15
 #define MINES_GAME_STATE_EXIT 255
+
+#define MINES_PATTERN_BLANK 128
 
 #define MINES_TIMER_INTERVAL 10
 
@@ -102,6 +106,14 @@ typedef struct MinesGameState {
     uint16_t timer_select_level_highlight;
 } MinesGameState;
 
+static void mines_ui_draw_cell_pattern(uint8_t x, uint8_t y, uint8_t pattern_id)
+{
+    if (pattern_id == MINES_PATTERN_BLANK) {
+        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_blank_bitmap,
+                                      0);
+    }
+}
+
 static void mines_buttons_handle(button_t button)
 {
     mines_button_read_value = button;
@@ -131,6 +143,18 @@ static uint8_t mines_buttons_is_any_pushed()
     default:
         return false;
     }
+}
+
+static void mines_calculate_cell_origin(uint8_t x, uint8_t y, uint8_t width,
+                                        uint8_t height, uint8_t *origin_x,
+                                        uint8_t *origin_y)
+{
+    uint8_t offset_x =
+        (MINES_GAME_FIELD_SIDEBAR_POSITION - width * MINES_GAME_FIELD_CELL) / 2;
+    uint8_t offset_y = (80 - height * MINES_GAME_FIELD_CELL) / 2;
+
+    *origin_x = offset_x + x * MINES_GAME_FIELD_CELL;
+    *origin_y = offset_y + y * MINES_GAME_FIELD_CELL + 1;
 }
 
 static bool mines_is_in_list(uint8_t list[], uint8_t tail, uint8_t value)
@@ -218,7 +242,41 @@ static void mines_game_state_controls_handle(MinesGameState *p_state)
     }
 }
 
-static void mines_game_state_draw_canvas_handle(MinesGameState *p_state) {}
+static void mines_game_state_draw_canvas_handle(MinesGameState *p_state)
+{
+    uint8_t origin_x, origin_y;
+
+    uint8_t height = p_state->field_height;
+    uint8_t width = p_state->field_width;
+
+    display_draw_16bit_ext_bitmap(0, 0, &mines_background_bitmap, 0);
+    display_draw_16bit_ext_bitmap(MINES_GAME_FIELD_SIDEBAR_POSITION, 0,
+                                  &mines_sidebar_bitmap, 0);
+
+    mines_calculate_cell_origin(0, 0, width, height, &origin_x, &origin_y);
+
+    gfx_fill_rect(origin_x - 4, origin_y - 4, width * MINES_GAME_FIELD_CELL + 7,
+                  height * MINES_GAME_FIELD_CELL + 7, 0x0063);
+
+    gfx_fill_rect(origin_x - 2, origin_y - 2, width * MINES_GAME_FIELD_CELL + 3,
+                  height * MINES_GAME_FIELD_CELL + 3, 0x11cc);
+
+    gfx_fill_rect(origin_x, origin_y, width * MINES_GAME_FIELD_CELL,
+                  height * MINES_GAME_FIELD_CELL, DISPLAY_WHITE);
+
+    for (uint8_t i = 0; i < width; i++) {
+        for (uint8_t j = 0; j < height; j++) {
+            mines_calculate_cell_origin(i, j, width, height, &origin_x,
+                                        &origin_y);
+            mines_ui_draw_cell_pattern(origin_x, origin_y, MINES_PATTERN_BLANK);
+        }
+    }
+
+    gfx_update();
+
+    MINES_GAME_GOTO(MINES_GAME_STATE_GAME);
+}
+
 static void mines_game_state_explosion_handle(MinesGameState *p_state) {}
 static void mines_game_state_explosion_msg_handle(MinesGameState *p_state) {}
 static void mines_game_state_flag_handle(MinesGameState *p_state) {}
