@@ -27,6 +27,8 @@
 #include "images/external/mines_pattern_7_bitmap.h"
 #include "images/external/mines_pattern_8_bitmap.h"
 #include "images/external/mines_pattern_blank_bitmap.h"
+#include "images/external/mines_pattern_flag_bitmap.h"
+#include "images/external/mines_pattern_hold_bitmap.h"
 #include "images/external/mines_pattern_mine_bitmap.h"
 #include "images/external/mines_sidebar_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
@@ -63,6 +65,8 @@
 #define MINES_GAME_STATE_EXIT 255
 
 #define MINES_PATTERN_BLANK 128
+#define MINES_PATTERN_FLAG 130
+#define MINES_PATTERN_HOLD 131
 #define MINES_PATTERN_MINE 132
 
 #define MINES_TIMER_INTERVAL 10
@@ -167,6 +171,14 @@ static void mines_ui_draw_cell_pattern(uint8_t x, uint8_t y, uint8_t pattern_id)
     case MINES_PATTERN_BLANK:
         display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_blank_bitmap,
                                       0);
+        break;
+
+    case MINES_PATTERN_FLAG:
+        display_draw_16bit_ext_bitmap(x, y, &mines_pattern_flag_bitmap, 0);
+
+        break;
+    case MINES_PATTERN_HOLD:
+        display_draw_16bit_ext_bitmap(x, y, &mines_pattern_hold_bitmap, 0);
         break;
 
     case MINES_PATTERN_MINE:
@@ -334,6 +346,39 @@ static void mines_clear_cursor(MinesGameState *p_state)
     }
 }
 
+static void mines_game_action_flag(void *p)
+{
+    MinesGameState *p_state = (MinesGameState *)p;
+
+    mines_clear_cursor(p_state);
+
+    uint8_t origin_x, origin_y;
+    mines_calculate_cell_origin(p_state->cursor_x, p_state->cursor_y,
+                                p_state->field_width, p_state->field_height,
+                                &origin_x, &origin_y);
+
+    uint8_t value = MINES_GAME_CELL2LIST(p_state->cursor_x, p_state->cursor_y);
+
+    if (mines_game_has_hold_at(p_state, value)) {
+        mines_remove_from_list(p_state->holds, &p_state->holds_placed, value);
+        mines_ui_draw_cell_pattern(origin_x, origin_y, MINES_PATTERN_BLANK);
+    } else if (mines_game_has_flag_at(p_state, value)) {
+        mines_remove_from_list(p_state->flags, &p_state->flags_placed, value);
+        mines_add_to_list(p_state->holds, &p_state->holds_placed, value);
+        mines_ui_draw_cell_pattern(origin_x, origin_y, MINES_PATTERN_HOLD);
+    } else {
+        mines_add_to_list(p_state->flags, &p_state->flags_placed, value);
+        mines_ui_draw_cell_pattern(origin_x, origin_y, MINES_PATTERN_FLAG);
+    }
+}
+
+static void mines_game_action_flags_warn(void *p)
+{
+    MinesGameState *p_state = (MinesGameState *)p;
+
+    MINES_TIMER_START(flags_warning, 1000);
+}
+
 static void mines_game_action_move_down(void *p)
 {
     MinesGameState *p_state = (MinesGameState *)p;
@@ -435,6 +480,23 @@ static void mines_game_state_game_task_buttons(MinesGameState *p_state)
     case BUTTON_ENTER:
         p_state->long_button_cb = NULL;
         p_state->short_button_cb = mines_game_action_move_right;
+
+        if (mines_game_has_flag_at(p_state, value) ||
+            mines_game_has_hold_at(p_state, value)) {
+            MINES_TIMER_START(button, 666);
+            p_state->long_button_cb = mines_game_action_flag;
+        } else if (!mines_game_is_opened(p_state, value)) {
+            uint8_t total_flagged =
+                p_state->flags_placed + p_state->holds_placed;
+
+            MINES_TIMER_START(button, 666);
+            if (total_flagged < p_state->mines_total) {
+                p_state->long_button_cb = mines_game_action_flag;
+            } else {
+                p_state->long_button_cb = mines_game_action_flags_warn;
+            }
+        }
+
         break;
 
     case BUTTON_UP:
