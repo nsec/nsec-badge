@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include <app_timer.h>
+#include <nrf_delay.h>
 
 #include "application.h"
 #include "drivers/controls.h"
@@ -18,6 +19,7 @@
 #include "images/external/mines_level_3_active_bitmap.h"
 #include "images/external/mines_level_3_bitmap.h"
 #include "images/external/mines_menu_bitmap.h"
+#include "images/external/mines_message_boom_bitmap.h"
 #include "images/external/mines_pattern_1_bitmap.h"
 #include "images/external/mines_pattern_2_bitmap.h"
 #include "images/external/mines_pattern_3_bitmap.h"
@@ -27,6 +29,7 @@
 #include "images/external/mines_pattern_7_bitmap.h"
 #include "images/external/mines_pattern_8_bitmap.h"
 #include "images/external/mines_pattern_blank_bitmap.h"
+#include "images/external/mines_pattern_boom_bitmap.h"
 #include "images/external/mines_pattern_flag_bitmap.h"
 #include "images/external/mines_pattern_hold_bitmap.h"
 #include "images/external/mines_pattern_mine_bitmap.h"
@@ -65,6 +68,7 @@
 #define MINES_GAME_STATE_EXIT 255
 
 #define MINES_PATTERN_BLANK 128
+#define MINES_PATTERN_BOOM 129
 #define MINES_PATTERN_FLAG 130
 #define MINES_PATTERN_HOLD 131
 #define MINES_PATTERN_MINE 132
@@ -112,6 +116,7 @@ typedef struct MinesGameState {
     uint8_t opened_count;
 
     bool controls_rendered;
+    bool explosion_rendered;
     uint8_t manual_position;
     bool manual_rendered;
     uint8_t menu_position;
@@ -170,6 +175,11 @@ static void mines_ui_draw_cell_pattern(uint8_t x, uint8_t y, uint8_t pattern_id)
 
     case MINES_PATTERN_BLANK:
         display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_blank_bitmap,
+                                      0);
+        break;
+
+    case MINES_PATTERN_BOOM:
+        display_draw_16bit_ext_bitmap(x - 2, y - 2, &mines_pattern_boom_bitmap,
                                       0);
         break;
 
@@ -607,8 +617,56 @@ static void mines_game_state_draw_canvas_handle(MinesGameState *p_state)
     MINES_GAME_GOTO(MINES_GAME_STATE_GAME);
 }
 
-static void mines_game_state_explosion_handle(MinesGameState *p_state) {}
-static void mines_game_state_explosion_msg_handle(MinesGameState *p_state) {}
+static void mines_game_state_explosion_handle(MinesGameState *p_state)
+{
+    if (!p_state->explosion_rendered) {
+        uint8_t origin_x, origin_y, x, y;
+
+        mines_calculate_cell_origin(p_state->cursor_x, p_state->cursor_y,
+                                    p_state->field_width, p_state->field_height,
+                                    &origin_x, &origin_y);
+
+        nrf_delay_ms(500);
+        mines_ui_draw_cell_pattern(origin_x, origin_y, MINES_PATTERN_BOOM);
+        nrf_delay_ms(500);
+
+        for (uint8_t i = 0; i < p_state->mines_total; i++) {
+            x = MINES_GAME_LIST2CELL_X(p_state->mines[i]);
+            y = MINES_GAME_LIST2CELL_Y(p_state->mines[i]);
+
+            if (x == p_state->cursor_x && y == p_state->cursor_y) {
+                continue;
+            }
+
+            mines_calculate_cell_origin(x, y, p_state->field_width,
+                                        p_state->field_height, &origin_x,
+                                        &origin_y);
+
+            mines_ui_draw_cell_pattern(origin_x, origin_y, MINES_PATTERN_MINE);
+        }
+
+        p_state->explosion_rendered = true;
+    }
+
+    if (mines_buttons_is_any_pushed()) {
+        p_state->explosion_rendered = false;
+        MINES_GAME_GOTO(MINES_GAME_STATE_EXPLOSION_MSG);
+    }
+}
+
+static void mines_game_state_explosion_msg_handle(MinesGameState *p_state)
+{
+    if (!p_state->explosion_rendered) {
+        display_draw_16bit_ext_bitmap(5, 12, &mines_message_boom_bitmap, 0);
+        p_state->explosion_rendered = true;
+    }
+
+    if (mines_buttons_is_any_pushed()) {
+        p_state->explosion_rendered = false;
+        MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
+    }
+}
+
 static void mines_game_state_flag_handle(MinesGameState *p_state) {}
 
 static void mines_game_state_game_handle(MinesGameState *p_state)
@@ -863,6 +921,7 @@ void mines_application(void (*service_device)())
                             .cursor_activated = false,
                             .cursor_x = 0,
                             .cursor_y = 0,
+                            .explosion_rendered = false,
                             .field_height = 0,
                             .field_width = 0,
                             .flags = {},
