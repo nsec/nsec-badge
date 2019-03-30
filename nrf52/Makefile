@@ -24,6 +24,9 @@ else ifeq ($(FLAVOR), trainer)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=TRAINER
 	CFLAGS += -DNSEC_ROTATING_MESH=nsec_icosphere
 	CFLAGS += -DNSEC_FLAVOR_CONF
+else ifeq ($(FLAVOR), bar_beacon)
+	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=BAR
+	CFLAGS += -DNSEC_FLAVOR_BAR_BEACON
 else
 all:
 $(error "Unknown flavor `$(FLAVOR)`")
