@@ -34,6 +34,7 @@
 #include "images/external/mines_pattern_hold_bitmap.h"
 #include "images/external/mines_pattern_mine_bitmap.h"
 #include "images/external/mines_sidebar_bitmap.h"
+#include "images/external/mines_sidebar_warning_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
 
 #define MINES_BUTTON_NONE 255
@@ -123,11 +124,12 @@ typedef struct MinesGameState {
     bool menu_rendered;
     bool select_level_highlight;
     bool select_level_rendered;
+    uint8_t sidebar_warning_hold;
 
     uint16_t timer_button;
     uint16_t timer_cursor;
-    uint16_t timer_flags_warning;
     uint16_t timer_select_level_highlight;
+    uint16_t timer_sidebar;
 
     void (*long_button_cb)(void *p);
     void (*short_button_cb)(void *p);
@@ -386,7 +388,8 @@ static void mines_game_action_flags_warn(void *p)
 {
     MinesGameState *p_state = (MinesGameState *)p;
 
-    MINES_TIMER_START(flags_warning, 1000);
+    p_state->sidebar_warning_hold = 3;
+    MINES_TIMER_CANCEL(sidebar);
 }
 
 static void mines_game_action_move_down(void *p)
@@ -551,6 +554,41 @@ static void mines_game_state_game_task_cursor(MinesGameState *p_state)
     }
 }
 
+static void mines_game_state_game_task_sidebar(MinesGameState *p_state)
+{
+    if (MINES_TIMER_ENDED(sidebar)) {
+        if (p_state->sidebar_warning_hold > 0) {
+            p_state->sidebar_warning_hold--;
+
+            display_draw_16bit_ext_bitmap(MINES_GAME_FIELD_SIDEBAR_POSITION, 0,
+                                          &mines_sidebar_warning_bitmap, 0);
+        } else {
+            char value[3];
+
+            display_draw_16bit_ext_bitmap(MINES_GAME_FIELD_SIDEBAR_POSITION, 0,
+                                          &mines_sidebar_bitmap, 0);
+
+            gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+
+            gfx_set_cursor(MINES_GAME_FIELD_SIDEBAR_POSITION + 7, 14);
+            sprintf(value, "%d", p_state->mines_total);
+            gfx_puts(value);
+
+            gfx_set_cursor(MINES_GAME_FIELD_SIDEBAR_POSITION + 7, 37);
+            sprintf(value, "%d", p_state->flags_placed);
+            gfx_puts(value);
+
+            gfx_set_cursor(MINES_GAME_FIELD_SIDEBAR_POSITION + 7, 61);
+            sprintf(value, "%d", p_state->holds_placed);
+            gfx_puts(value);
+
+            gfx_update();
+        }
+
+        MINES_TIMER_START(sidebar, 1000);
+    }
+}
+
 static void mines_game_state_boot_handle(MinesGameState *p_state)
 {
     display_draw_16bit_ext_bitmap(0, 0, &mines_splash_bitmap, 0);
@@ -673,6 +711,7 @@ static void mines_game_state_game_handle(MinesGameState *p_state)
 {
     mines_game_state_game_task_buttons(p_state);
     mines_game_state_game_task_cursor(p_state);
+    mines_game_state_game_task_sidebar(p_state);
 }
 
 static void mines_game_state_init_game_handle(MinesGameState *p_state)
@@ -716,7 +755,7 @@ static void mines_game_state_init_game_handle(MinesGameState *p_state)
 
     MINES_TIMER_CANCEL(button);
     MINES_TIMER_CANCEL(cursor);
-    MINES_TIMER_CANCEL(flags_warning);
+    MINES_TIMER_CANCEL(sidebar);
 
     MINES_GAME_GOTO(MINES_GAME_STATE_DRAW_CANVAS);
 }
@@ -906,11 +945,11 @@ static void mines_timer_handle(void *p_context)
     if (!MINES_TIMER_ENDED(cursor))
         MINES_TIMER_TICK(cursor);
 
-    if (!MINES_TIMER_ENDED(flags_warning))
-        MINES_TIMER_TICK(flags_warning);
-
     if (!MINES_TIMER_ENDED(select_level_highlight))
         MINES_TIMER_TICK(select_level_highlight);
+
+    if (!MINES_TIMER_ENDED(sidebar))
+        MINES_TIMER_TICK(sidebar);
 }
 
 void mines_application(void (*service_device)())
