@@ -43,6 +43,7 @@ GNU_VERSION ?= \$(shell \"\$(GNU_INSTALL_ROOT)\$(GNU_PREFIX)-gcc\" -dumpversion)
 
 # Patch
 patch -p0 --binary < "$SCRIPTPATH/../patches/fix_fstorage_init.patch"
+patch -p0 --binary < "$SCRIPTPATH/../patches/fix-ringbuf.patch"
 
 # Cleanup
 rmdir "${SDK_VER}/documentation"
