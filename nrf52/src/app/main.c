@@ -51,6 +51,7 @@
 #include "images/nsec_logo_bitmap.h"
 
 #include "ble/resistance_bar_beacon.h"
+#include "resistance_propaganda_observer.h"
 
 static char g_device_id[10];
 
@@ -115,6 +116,18 @@ void nsec_intro(void) {
     }
 }
 
+static void init_ble() {
+    create_ble_device(g_device_id);
+#ifdef NSEC_FLAVOR_BAR_BEACON
+    init_resistance_bar_beacon();
+    set_advertiser(get_resistance_bar_beacon());
+    start_advertising();
+#else
+    add_observer(get_resistance_propaganda_observer());
+    ble_device_start_scan();
+#endif
+}
+
 int main(void) {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
@@ -126,7 +139,6 @@ int main(void) {
     /*
      * Initialize base hardware
      */
-    log_init();
     power_init();
     softdevice_init();
     timer_init();
@@ -149,14 +161,7 @@ int main(void) {
     // (the CLI takes over the UART, which the flash mode uses).
     cli_init();
 
-    /*
-     * Initialize bluetooth stack
-     */
-    create_ble_device(g_device_id);
-    init_resistance_bar_beacon();
-    set_advertiser(get_resistance_bar_beacon());
-    start_advertising();
-
+    init_ble();
     nsec_status_bar_init();
     nsec_battery_manager_init();
     //nsec_status_set_name(g_device_id);

@@ -30,12 +30,15 @@
 #include "vendor_service.h"
 #include "service_characteristic.h"
 #include "uuid.h"
+#include "abstract_ble_observer.h"
+#include "ble_scan.h"
 
 
 #define APP_BLE_OBSERVER_PRIO 3
 #define PEER_ADDRESS_SIZE 6
 #define MAX_VENDOR_SERVICE_COUNT 8
 #define LONG_WRITE_MAX_LENGTH 200
+#define MAX_BLE_OBSERVERS 10
 NRF_BLE_GATT_DEF(m_gatt);
 
 
@@ -45,6 +48,8 @@ typedef struct{
     uint16_t vendor_service_count;
     VendorService* vendor_services[MAX_VENDOR_SERVICE_COUNT];
     struct Advertiser* advertiser;
+    struct BleObserver* ble_observers[MAX_BLE_OBSERVERS];
+    uint8_t ble_observers_count;
 } BleDevice;
 
 typedef struct{
@@ -95,6 +100,7 @@ ret_code_t create_ble_device(char* device_name){
             ble_device->vendor_services[i] = NULL;
         }
         register_nsec_vendor_specific_uuid();
+        ble_device->ble_observers_count = 0;
         return NRF_SUCCESS;
     }
     return -1;
@@ -121,6 +127,22 @@ void stop_advertising(){
     ble_device->advertiser->stop_advertisement();
 }
 
+void add_observer(struct BleObserver* observer){
+    if(ble_device->ble_observers_count < MAX_BLE_OBSERVERS){
+        ble_device->ble_observers[ble_device->ble_observers_count] = observer;
+        ble_device->ble_observers_count++;
+    }
+}
+
+void ble_device_start_scan(){
+    configure_scan(true, 0, 100, 50);
+    start_scan();
+}
+
+void ble_device_stop_scan(){
+    stop_scan();
+}
+
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     //pm_on_ble_evt(p_ble_evt);
     switch (p_ble_evt->header.evt_id){
@@ -134,28 +156,16 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             break;
 
         case BLE_GAP_EVT_ADV_REPORT: {
-            if(_nsec_ble_scan_callback == NULL) {
+            if (ble_device->ble_observers_count == 0) {
                 break;
             }
-            const ble_gap_evt_adv_report_t * rp = &p_ble_evt->evt.gap_evt.params.adv_report;
+            const ble_gap_evt_adv_report_t *rp = &p_ble_evt->evt.gap_evt.params.adv_report;
             int8_t i = 0;
-            while((rp->dlen - i) >= 2) {
-                const uint8_t len = rp->data[i++] - 1; // The type is included in the length
-                const uint8_t type = rp->data[i++];
-                const uint8_t * data = &rp->data[i];
-                i += len;
-
-                if(type == BLE_GAP_AD_TYPE_COMPLETE_LOCAL_NAME) {
-                    if(len == 8 && data[0] == 'N' && data[1] == 'S' && data[2] == 'E' && data[3] == 'C') {
-                        uint16_t other_id = 0;
-                        if(sscanf((const char *) &data[4], "%04hx", &other_id) == 1) {
-                            _nsec_ble_scan_callback(other_id, rp->peer_addr.addr, rp->rssi);
-                        }
-                    }
-                }
-            }
+            for (int c = 0; c < ble_device->ble_observers_count; c++) {
+                ble_device->ble_observers[c]->on_advertising_report(rp);
             }
             break;
+        }
         case BLE_GATTS_EVT_WRITE:
         {
             const ble_gatts_evt_write_t * event = &p_ble_evt->evt.gatts_evt.params.write;
@@ -208,7 +218,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             buffer = NULL;
             break;
         default:
-            NRF_LOG_INFO("BLE event %d", p_ble_evt->header.evt_id);
             ble_device->advertiser->on_ble_advertising_event(p_ble_evt);
     }
 }
