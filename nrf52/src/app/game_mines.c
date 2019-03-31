@@ -7,6 +7,7 @@
 #include "application.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
+#include "game_mines.h"
 #include "gfx_effect.h"
 #include "random.h"
 
@@ -19,6 +20,7 @@
 #include "images/external/mines_level_3_active_bitmap.h"
 #include "images/external/mines_level_3_bitmap.h"
 #include "images/external/mines_menu_bitmap.h"
+#include "images/external/mines_message_bitmap.h"
 #include "images/external/mines_message_boom_bitmap.h"
 #include "images/external/mines_message_cleared_bitmap.h"
 #include "images/external/mines_pattern_1_bitmap.h"
@@ -38,6 +40,7 @@
 #include "images/external/mines_sidebar_bitmap.h"
 #include "images/external/mines_sidebar_warning_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
+#include "images/mines_flag_bitmap.xbm"
 
 #define MINES_BUTTON_NONE 255
 
@@ -759,7 +762,26 @@ static void mines_game_state_explosion_msg_handle(MinesGameState *p_state)
     }
 }
 
-static void mines_game_state_flag_handle(MinesGameState *p_state) {}
+#ifdef NSEC_FLAVOR_CONF
+static void mines_game_state_flag_handle(MinesGameState *p_state)
+{
+    MINES_GAME_GOTO(MINES_GAME_STATE_EXIT);
+}
+#else
+static void mines_game_state_flag_handle(MinesGameState *p_state)
+{
+    gfx_fill_rect(0, 0, DISPLAY_HEIGHT, DISPLAY_WIDTH, DISPLAY_BLACK);
+
+    gfx_draw_xbitmap(15, 35, mines_flag_bitmap, mines_flag_bitmap_width,
+                     mines_flag_bitmap_height, DISPLAY_WHITE);
+
+    gfx_update();
+
+    while (true) {
+        __asm__("NOP");
+    }
+}
+#endif
 
 static void mines_game_state_game_handle(MinesGameState *p_state)
 {
@@ -907,7 +929,37 @@ static void mines_game_state_menu_handle(MinesGameState *p_state)
     }
 }
 
-static void mines_game_state_post_menu_handle(MinesGameState *p_state) {}
+#ifdef NSEC_FLAVOR_CONF
+static void mines_game_state_post_menu_handle(MinesGameState *p_state)
+{
+    MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
+}
+#else
+static void mines_game_state_post_menu_handle(MinesGameState *p_state)
+{
+    display_draw_16bit_ext_bitmap(5, 12, &mines_message_bitmap, 0);
+
+    gfx_set_cursor(10, 39);
+    gfx_set_text_background_color(DISPLAY_BLACK, DISPLAY_WHITE);
+
+    switch (p_state->current_difficulty) {
+    case 0:
+        gfx_puts(MINES_FLAG_PART1);
+        break;
+
+    case 1:
+        gfx_puts(MINES_FLAG_PART2);
+        break;
+
+    case 2:
+        gfx_puts(MINES_FLAG_PART3);
+        break;
+    }
+
+    nrf_delay_ms(2000);
+    MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
+}
+#endif
 
 static void mines_game_state_select_level_handle(MinesGameState *p_state)
 {
