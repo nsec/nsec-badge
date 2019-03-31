@@ -29,5 +29,6 @@ void nsec_controls_add_handler(button_handler handler);
 void nsec_controls_suspend_handler(button_handler handler);
 void nsec_controls_add_event(button_t button);
 void nsec_controls_process(void);
+void nsec_controls_enable(bool state);
 
 #endif /* controls_h */

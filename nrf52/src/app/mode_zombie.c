@@ -8,6 +8,7 @@
 #include "drivers/display.h"
 #include "drivers/nsec_storage.h"
 #include "drivers/ws2812fx.h"
+#include "drivers/controls.h"
 
 #include "application.h"
 #include "home_menu.h"
@@ -50,7 +51,7 @@ static void mode_zombie_glitch(void (*service_device)()) {
     // restore badge
     load_stored_led_settings();
     update_stored_display_brightness(get_stored_display_brightness());
-
+	nsec_controls_enable(true);
     application_clear();
 }
 
@@ -85,6 +86,7 @@ void mode_zombie_process(void) {
     uint16_t rand = nsec_random_get_u16((5760 - odds_modifier) + 1);
 
     if (rand == 1) {
+        nsec_controls_enable(false);
         application_set(mode_zombie_glitch);
 
         // Reset the odds

@@ -16,6 +16,7 @@ struct handler {
 
 static struct handler handlers[NSEC_CONTROLS_LIMIT_MAX_HANDLERS];
 static uint8_t handler_count = 0;
+static bool enable = true;
 
 NRF_QUEUE_DEF(button_t, event_queue, NSEC_CONTROLS_MAX_EVENT,
               NRF_QUEUE_MODE_NO_OVERFLOW);
@@ -32,14 +33,20 @@ void nsec_controls_add_handler(button_handler handler) {
     if (handler_count >= NSEC_CONTROLS_LIMIT_MAX_HANDLERS) {
         return;
     }
+
     for (int i = 0; i < handler_count; i++) {
         if (handlers[i].handler == handler) {
             handlers[i].active = true;
             return;
         }
     }
+
     handlers[handler_count++] =
         (struct handler){.handler = handler, .active = true};
+}
+
+void nsec_controls_enable(bool state) {
+    enable = state;
 }
 
 void nsec_controls_suspend_handler(button_handler handler) {
@@ -52,7 +59,9 @@ void nsec_controls_suspend_handler(button_handler handler) {
 }
 
 void nsec_controls_add_event(button_t button) {
-    nrf_queue_push(&event_queue, &button);
+    if (enable) {
+        nrf_queue_push(&event_queue, &button);
+    }
 }
 
 void nsec_controls_process(void) {
