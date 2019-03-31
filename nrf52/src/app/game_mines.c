@@ -20,6 +20,7 @@
 #include "images/external/mines_level_3_bitmap.h"
 #include "images/external/mines_menu_bitmap.h"
 #include "images/external/mines_message_boom_bitmap.h"
+#include "images/external/mines_message_cleared_bitmap.h"
 #include "images/external/mines_pattern_1_bitmap.h"
 #include "images/external/mines_pattern_2_bitmap.h"
 #include "images/external/mines_pattern_3_bitmap.h"
@@ -30,6 +31,7 @@
 #include "images/external/mines_pattern_8_bitmap.h"
 #include "images/external/mines_pattern_blank_bitmap.h"
 #include "images/external/mines_pattern_boom_bitmap.h"
+#include "images/external/mines_pattern_cleared_bitmap.h"
 #include "images/external/mines_pattern_flag_bitmap.h"
 #include "images/external/mines_pattern_hold_bitmap.h"
 #include "images/external/mines_pattern_mine_bitmap.h"
@@ -70,9 +72,10 @@
 
 #define MINES_PATTERN_BLANK 128
 #define MINES_PATTERN_BOOM 129
-#define MINES_PATTERN_FLAG 130
-#define MINES_PATTERN_HOLD 131
-#define MINES_PATTERN_MINE 132
+#define MINES_PATTERN_CLEARED 130
+#define MINES_PATTERN_FLAG 131
+#define MINES_PATTERN_HOLD 132
+#define MINES_PATTERN_MINE 133
 
 #define MINES_TIMER_INTERVAL 10
 
@@ -116,6 +119,7 @@ typedef struct MinesGameState {
     uint8_t mines_total;
     uint8_t opened_count;
 
+    bool cleared_rendered;
     bool controls_rendered;
     bool explosion_rendered;
     uint8_t manual_position;
@@ -183,6 +187,10 @@ static void mines_ui_draw_cell_pattern(uint8_t x, uint8_t y, uint8_t pattern_id)
     case MINES_PATTERN_BOOM:
         display_draw_16bit_ext_bitmap(x - 2, y - 2, &mines_pattern_boom_bitmap,
                                       0);
+        break;
+
+    case MINES_PATTERN_CLEARED:
+        display_draw_16bit_ext_bitmap(x, y, &mines_pattern_cleared_bitmap, 0);
         break;
 
     case MINES_PATTERN_FLAG:
@@ -589,6 +597,14 @@ static void mines_game_state_game_task_sidebar(MinesGameState *p_state)
     }
 }
 
+static void mines_game_state_game_task_win(MinesGameState *p_state)
+{
+    if (p_state->opened_count + p_state->mines_total >=
+        p_state->field_width * p_state->field_height) {
+        MINES_GAME_GOTO(MINES_GAME_STATE_CLEARED);
+    }
+}
+
 static void mines_game_state_boot_handle(MinesGameState *p_state)
 {
     display_draw_16bit_ext_bitmap(0, 0, &mines_splash_bitmap, 0);
@@ -604,8 +620,46 @@ static void mines_game_state_boot_splash_handle(MinesGameState *p_state)
     }
 }
 
-static void mines_game_state_cleared_handle(MinesGameState *p_state) {}
-static void mines_game_state_cleared_msg_handle(MinesGameState *p_state) {}
+static void mines_game_state_cleared_handle(MinesGameState *p_state)
+{
+    if (!p_state->cleared_rendered) {
+        uint8_t origin_x, origin_y, x, y;
+
+        mines_clear_cursor(p_state);
+
+        for (uint8_t i = 0; i < p_state->mines_total; i++) {
+            x = MINES_GAME_LIST2CELL_X(p_state->mines[i]);
+            y = MINES_GAME_LIST2CELL_Y(p_state->mines[i]);
+
+            mines_calculate_cell_origin(x, y, p_state->field_width,
+                                        p_state->field_height, &origin_x,
+                                        &origin_y);
+
+            mines_ui_draw_cell_pattern(origin_x, origin_y,
+                                       MINES_PATTERN_CLEARED);
+        }
+
+        p_state->cleared_rendered = true;
+    }
+
+    if (mines_buttons_is_any_pushed()) {
+        p_state->cleared_rendered = false;
+        MINES_GAME_GOTO(MINES_GAME_STATE_CLEARED_MSG);
+    }
+}
+
+static void mines_game_state_cleared_msg_handle(MinesGameState *p_state)
+{
+    if (!p_state->cleared_rendered) {
+        display_draw_16bit_ext_bitmap(5, 12, &mines_message_cleared_bitmap, 0);
+        p_state->cleared_rendered = true;
+    }
+
+    if (mines_buttons_is_any_pushed()) {
+        p_state->cleared_rendered = false;
+        MINES_GAME_GOTO(MINES_GAME_STATE_POST_MENU);
+    }
+}
 
 static void mines_game_state_controls_handle(MinesGameState *p_state)
 {
@@ -712,6 +766,7 @@ static void mines_game_state_game_handle(MinesGameState *p_state)
     mines_game_state_game_task_buttons(p_state);
     mines_game_state_game_task_cursor(p_state);
     mines_game_state_game_task_sidebar(p_state);
+    mines_game_state_game_task_win(p_state);
 }
 
 static void mines_game_state_init_game_handle(MinesGameState *p_state)
@@ -954,7 +1009,8 @@ static void mines_timer_handle(void *p_context)
 
 void mines_application(void (*service_device)())
 {
-    MinesGameState state = {.controls_rendered = false,
+    MinesGameState state = {.cleared_rendered = false,
+                            .controls_rendered = false,
                             .current_difficulty = 0,
                             .current_state = MINES_GAME_STATE_BOOT,
                             .cursor_activated = false,
