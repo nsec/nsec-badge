@@ -7,6 +7,7 @@
 #include "ble/abstract_ble_observer.h"
 #include "app/gfx_effect.h"
 #include "drivers/uart.h"
+#include "timer.h"
 
 #include <string.h>
 
@@ -14,6 +15,11 @@
 static void on_advertising_report(const ble_gap_evt_adv_report_t* report);
 
 static void on_scan_timeout(const ble_gap_evt_timeout_t* timeout_event);
+
+static void on_valid_packet_received(const ble_gap_evt_adv_report_t*);
+
+static uint64_t last_adv_evt_timestamp = 0;
+static uint8_t adv_evt_received = 0;
 
 
 static struct BleObserver resistance_propaganda_observer = {
@@ -55,16 +61,26 @@ static void on_advertising_report(const ble_gap_evt_adv_report_t* report) {
 
                 uint16_t manufacturer_id = *((uint16_t*)manufacturer_specific_data.data);
                 if(manufacturer_id == 0x1234) {
-                    if (memcmp(complete_local_name.data, "B4R", strlen("B4R")) == 0) {
-                        uint8_t message_length = manufacturer_specific_data.data_length - sizeof(manufacturer_id);
-                        memcpy(message, manufacturer_specific_data.data + sizeof(manufacturer_id), message_length);
-                        message[message_length] = '\0';
-                        uart_printf("%s\n", message);
-                    }
+                    on_valid_packet_received(report);
                 }
             }
         }
     }
+}
+
+static void on_valid_packet_received(const ble_gap_evt_adv_report_t* report){
+    uint64_t current_time = get_current_time_millis();
+    int8_t rssi_threshold = -65;
+    if(current_time - last_adv_evt_timestamp > 5000 || report->rssi < rssi_threshold)
+        adv_evt_received = 0;
+    else if(report->rssi >= rssi_threshold){
+        adv_evt_received++;
+        if(adv_evt_received > 5){
+            uart_printf("received\n");
+            adv_evt_received = 0;
+        }
+    }
+    last_adv_evt_timestamp = current_time;
 }
 
 static void on_scan_timeout(const ble_gap_evt_timeout_t* timeout_event){
