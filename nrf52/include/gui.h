@@ -46,7 +46,7 @@
 #define HOME_MENU_POS_X         128
 #define HOME_MENU_POS_Y         STATUS_BAR_HEIGHT
 #define HOME_MENU_POS           HOME_MENU_POS_X, HOME_MENU_POS_Y
-#define HOME_MENU_WIDTH         32
+#define HOME_MENU_WIDTH         31
 #define HOME_MENU_HEIGHT        (80 - STATUS_BAR_HEIGHT)
 
 #define BURGER_MENU_POS_X       138
@@ -62,6 +62,7 @@
 #define SETTINGS_MENU_TITLE_X   20
 
 #define NEUROSOFT_LOGO_POS      30, 10
+#define NSEC_LOGO_POS           15, 15
 
 /* General Menu */
 #define GEN_MENU_POS_X          1

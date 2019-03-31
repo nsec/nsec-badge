@@ -18,6 +18,7 @@
 #include <string.h>
 
 #include "images/neurosoft_logo_bitmap.h"
+#include "images/external/nsec_logo_color_bitmap.h"
 #include "images/settings_off_bitmap.h"
 #include "images/settings_on_bitmap.h"
 
@@ -133,9 +134,16 @@ static void draw_home_menu(void) {
     // TODO :
     // -    Replace by logo without Red circle and animate the
     //      red circle
-    // -    In Conf mode replace by Nsec logo
+#ifdef NSEC_FLAVOR_CTF
     gfx_draw_16bit_bitmap(NEUROSOFT_LOGO_POS, &neurosoft_logo_bitmap,
                           DISPLAY_BLACK);
+#else
+    display_draw_16bit_ext_bitmap(NSEC_LOGO_POS, &nsec_logo_color_bitmap,
+                                   DISPLAY_BLACK);
+    gfx_set_cursor(30, 60);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_puts("Conference");
+#endif
 }
 
 void show_home_menu(enum home_state state) {

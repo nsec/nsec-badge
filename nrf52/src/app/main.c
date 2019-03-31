@@ -56,9 +56,6 @@
 
 static char g_device_id[10];
 
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
 /*
  * Callback function when APP_ERROR_CHECK() fails
  *
