@@ -45,6 +45,7 @@
 #include "home_menu.h"
 #include "mode_zombie.h"
 #include "persistency.h"
+#include "soldering.h"
 
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
@@ -172,13 +173,18 @@ int main(void) {
 
     init_ble();
     nsec_status_bar_init();
-    nsec_battery_manager_init();
     //nsec_status_set_name(g_device_id);
     //nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     load_stored_led_settings();
 
+
+#ifdef SOLDERING_TRACK
+    init_soldering_track();
+#else
+    nsec_battery_manager_init();
+#endif
     /*
      * Main loop
      */

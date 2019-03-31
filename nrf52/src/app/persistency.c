@@ -88,6 +88,7 @@ void set_persist_zombie_odds_modifier(uint32_t odds)
     update_persistency();
 }
 
+#ifndef SOLDERING_TRACK
 void load_persistency(void) {
     uint8_t data[128];
     ret_code_t ret;
@@ -125,5 +126,9 @@ void load_persistency(void) {
     is_loaded = true;
 
     return;
-
 }
+#else
+void load_persistency(void)
+{
+}
+#endif

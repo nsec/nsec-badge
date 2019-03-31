@@ -27,6 +27,11 @@ else ifeq ($(FLAVOR), trainer)
 else ifeq ($(FLAVOR), bar_beacon)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=BAR
 	CFLAGS += -DNSEC_FLAVOR_BAR_BEACON
+else ifeq ($(FLAVOR), soldering)
+	CFLAGS += -DSOLDERING_TRACK
+	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
+	CFLAGS += -DNSEC_FLAVOR_CTF
+	
 else
 all:
 $(error "Unknown flavor `$(FLAVOR)`")

@@ -347,6 +347,18 @@ static void led_settings_storage_init(void) {
 
     default_settings.display_brightness = 50;
 
+#ifdef SOLDERING_TRACK
+    default_settings.mode = FX_MODE_FIRE_FLICKER_INTENSE;
+    default_settings.speed = MEDIUM_SPEED;
+    default_settings.brightness = MAX_BRIGHTNESS;
+    default_settings.colors[0] = ORANGE;
+    default_settings.colors[1] = RED;
+    default_settings.colors[2] = GREEN;
+    default_settings.reverse = false;
+    default_settings.control = true;
+    default_settings.is_ble_controlled = false;
+    default_settings.ble_control_permitted = true;
+#else
     default_settings.mode = FX_MODE_STATIC;
     default_settings.speed = MEDIUM_SPEED;
     default_settings.brightness = MEDIUM_BRIGHTNESS;
@@ -357,6 +369,7 @@ static void led_settings_storage_init(void) {
     default_settings.control = true;
     default_settings.is_ble_controlled = false;
     default_settings.ble_control_permitted = true;
+#endif
 
     for (int i = 0; i < ARRAY_SIZE(default_settings.segment_array); i++) {
         default_settings.segment_array[i].active = false;

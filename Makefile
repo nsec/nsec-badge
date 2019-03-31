@@ -22,6 +22,7 @@ FIRMWARE += builds/nsec19_nrf52_admin.elf
 FIRMWARE += builds/nsec19_nrf52_speaker.elf
 FIRMWARE += builds/nsec19_nrf52_conf.elf
 FIRMWARE += builds/nsec19_nrf52_trainer.elf
+FIRMWARE += builds/nsec19_nrf52_soldering.elf
 FIRMWARE += builds/nsec19_stm32_debugger.elf
 FIRMWARE += builds/nsec19_stm32_debugger.bin
 FIRMWARE += builds/nsec19_stm32_soldering.elf
