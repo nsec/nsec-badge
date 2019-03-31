@@ -27,7 +27,7 @@
 
 #include <boards.h>
 
-NRF_CLI_UART_DEF(m_cli_uart_transport, 0, 32, 32);
+NRF_CLI_UART_DEF(m_cli_uart_transport, 0, 512, 512);
 NRF_CLI_DEF(m_cli_uart, "nsec> ", &m_cli_uart_transport.transport, '\r', 4);
 
 const nrf_cli_t *const p_cli_uart = &m_cli_uart;
