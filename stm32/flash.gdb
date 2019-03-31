@@ -9,8 +9,8 @@ set debug arm
 if $FORCE_ERASE_ALL
   monitor erase_mass
 end
-load builds/nsec18_stm32_debugger.bin
-file builds/nsec18_stm32_debugger.bin
+load builds/nsec19_stm32_debugger.bin
+file builds/nsec19_stm32_debugger.bin
 
 define hook-quit
   set confirm off
