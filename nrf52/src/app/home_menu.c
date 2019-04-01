@@ -140,7 +140,7 @@ static void draw_home_menu(void) {
 #else
     display_draw_16bit_ext_bitmap(NSEC_LOGO_POS, &nsec_logo_color_bitmap,
                                    DISPLAY_BLACK);
-    gfx_set_cursor(30, 60);
+    gfx_set_cursor(CONF_STR_POS);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_puts("Conference");
 #endif

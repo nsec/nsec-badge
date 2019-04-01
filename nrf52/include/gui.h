@@ -63,6 +63,7 @@
 
 #define NEUROSOFT_LOGO_POS      30, 10
 #define NSEC_LOGO_POS           15, 15
+#define CONF_STR_POS            35, 60
 
 /* General Menu */
 #define GEN_MENU_POS_X          1
