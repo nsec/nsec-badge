@@ -54,7 +54,7 @@ static void do_nsec(const nrf_cli_t *p_cli, size_t argc, char **argv) {
             p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
             "It looks like you could use some help, here's a flag!\r\n\r\n");
         nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_YELLOW,
-                        "         173f42fc-ade7-4d5e-ac0a-915f180fcb2b\r\n");
+                        "      FLAG-173f42fc-ade7-4d5e-ac0a-915f180fcb2b\r\n");
         return;
     }
 
