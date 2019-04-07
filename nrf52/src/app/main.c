@@ -33,7 +33,6 @@
 #include "logs.h"
 #include "gfx_effect.h"
 #include "identity.h"
-#include "menu.h"
 #include "nsec_conf_schedule.h"
 #include "nsec_settings.h"
 #include "timer.h"
@@ -136,7 +135,6 @@ static void main_service_device() {
     battery_status_process();
     mode_zombie_process();
     service_WS2812FX();
-    nsec_storage_update();
     power_manage();
 }
 
@@ -181,10 +179,6 @@ int main(void) {
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
 
     load_stored_led_settings();
-
-    // This is needed since we do not do the first menu_init without a button event
-    menu_handler_init();
-    show_home_menu(HOME_STATE_MENU);
 
     /*
      * Main loop

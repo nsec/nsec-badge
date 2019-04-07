@@ -3,13 +3,17 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#include "application.h"
 #include "home_menu.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
+#include "drivers/nsec_storage.h"
 #include "gfx_effect.h"
 #include "gui.h"
 #include "main_menu.h"
+#include "menu.h"
 #include "nsec_settings.h"
+#include "status_bar.h"
 #include <string.h>
 
 #include "images/neurosoft_logo_bitmap.h"
@@ -136,8 +140,6 @@ static void draw_home_menu(void) {
 void show_home_menu(enum home_state state) {
     _state = state;
 
-    nsec_controls_add_handler(home_menu_handle_buttons);
-
     is_at_home_menu = true;
     draw_home_menu();
 }
@@ -152,7 +154,6 @@ static void open_burger_menu(void) {
 
     draw_main_menu_title();
 
-    nsec_controls_suspend_handler(home_menu_handle_buttons);
     _state = HOME_STATE_CLOSED;
     is_at_home_menu = false;
     show_main_menu();
@@ -169,13 +170,16 @@ static void open_settings_menu(void) {
 
     draw_settings_title();
 
-    nsec_controls_suspend_handler(home_menu_handle_buttons);
     _state = HOME_STATE_CLOSED;
     is_at_home_menu = false;
     nsec_setting_show();
 }
 
 static void home_menu_handle_buttons(button_t button) {
+    if (!is_at_home_menu) {
+        return;
+    }
+
     switch (button) {
     case BUTTON_BACK:
         if (_state == HOME_STATE_MENU || _state == HOME_STATE_SETTINGS) {
@@ -223,4 +227,19 @@ static void home_menu_handle_buttons(button_t button) {
     default:
         break;
     }
+}
+
+void home_menu_application(void (*service_callback)()) {
+    menu_handler_init();
+    nsec_status_bar_ui_redraw();
+    show_home_menu(HOME_STATE_MENU);
+
+    nsec_controls_add_handler(home_menu_handle_buttons);
+
+    while (application_get() == home_menu_application) {
+        service_callback();
+        nsec_storage_update();
+    }
+
+    nsec_controls_suspend_handler(home_menu_handle_buttons);
 }
