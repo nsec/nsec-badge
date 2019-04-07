@@ -61,7 +61,7 @@ static void animated_brain(void)
         // Start by drawing a white square where we want to draw the real pixel
         for (int x = start_x; x < len + start_x; x+=3) {
             gfx_fill_rect(x + offset_x, start_y + offset_y, 3, 3, DISPLAY_WHITE);
-            nrf_delay_ms(30);
+            nrf_delay_ms(10);
 
             // Draw the 9 pixels
             for (int l = 0; l < 3; l++) {
@@ -74,7 +74,7 @@ static void animated_brain(void)
                         color);
                 }
             }
-            nrf_delay_ms(30);
+            nrf_delay_ms(10);
         }
     }
 }
@@ -87,7 +87,7 @@ static void animated_name(const struct bitmap *bitmap)
 
     for (int x = 0; x < gfx_width; x += 4) {
         gfx_fill_rect(x, offset_y, 4, 10, DISPLAY_WHITE);
-        nrf_delay_ms(50);
+        nrf_delay_ms(30);
         if (x < offset_x || x >= (offset_x + bitmap->width)) {
             gfx_fill_rect(x, offset_y, 4, 10, DISPLAY_BLACK);
         } else {
@@ -108,7 +108,7 @@ static void animated_name(const struct bitmap *bitmap)
 static void nsec_ctf_intro(void)
 {
     gfx_draw_16bit_bitmap(47, 22, &neurosoft_circle_bitmap, DISPLAY_BLACK);
-    nrf_delay_ms(1000);
+    nrf_delay_ms(500);
 
     animated_brain();
     nrf_delay_ms(100);
