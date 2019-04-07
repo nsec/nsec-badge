@@ -12,6 +12,7 @@
 
 #include "application.h"
 #include "game_mines.h"
+#include "game_snake.h"
 #include "gfx_effect.h"
 #include "gui.h"
 #include "home_menu.h"
@@ -19,6 +20,14 @@
 #include "menu.h"
 
 static void nsec_games_menu_button_handler(button_t button);
+
+void nsec_games_start_cortexviper_application(uint8_t item)
+{
+    menu_close();
+    nsec_controls_suspend_handler(nsec_games_menu_button_handler);
+
+    application_set(&snake_application);
+}
 
 void nsec_games_start_mindsweeper_application(uint8_t item)
 {
@@ -29,6 +38,9 @@ void nsec_games_start_mindsweeper_application(uint8_t item)
 }
 
 static menu_item_s nsec_games_menu_items[] = {
+    {.label = "Cortex viper",
+     .handler = nsec_games_start_cortexviper_application},
+
     {.label = "Mindsweeper",
      .handler = nsec_games_start_mindsweeper_application}};
 
