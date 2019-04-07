@@ -6,5 +6,5 @@
 #ifndef SOLDERING_h
 #define SOLDERING_h
 
-void init_soldering_track(void);
+void init_soldering_application(void);
 #endif /* SOLDERING_h */

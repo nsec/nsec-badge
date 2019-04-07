@@ -17,6 +17,7 @@
 #include "timer.h"
 #include "soldering.h"
 #include "gfx_effect.h"
+#include "application.h"
 
 #include "images/flames_bitmap.h"
 
@@ -108,7 +109,7 @@ static void show_soldering_flag(void * p_context)
     APP_ERROR_CHECK(ret);
 }*/
 
-void init_soldering_track(void) {
+static void init_soldering_track(void) {
     uint8_t data[128];
 
     //test_flash();
@@ -146,4 +147,21 @@ void init_soldering_track(void) {
     }
 
     nsec_controls_add_handler(soldering_button_handler);
+}
+
+void soldering_application(void (*service_callback)()) {
+    init_soldering_track();
+
+    while (application_get() == soldering_application) {
+        service_callback();
+    }
+
+    nsec_controls_suspend_handler(soldering_button_handler);
+}
+
+void init_soldering_application(void)
+{
+#ifdef SOLDERING_TRACK
+    application_set(soldering_application);
+#endif
 }
