@@ -177,7 +177,7 @@ static void st7735_data(uint8_t d) {
 //*****************************************************************************
 
 static const uint8_t initCommands[] = { // Init for 7735R, (green tab)
-    21,                                 // 21 commands in list:
+    20,                                 // 21 commands in list:
     ST7735_SWRESET,
     DELAY, //  1: Software reset, 0 args, w/delay
     150,   //     150 ms delay
@@ -286,10 +286,7 @@ static const uint8_t initCommands[] = { // Init for 7735R, (green tab)
     0x10,
     ST7735_NORON,
     DELAY, //  3: Normal display on, no args, w/delay
-    10,    //     10 ms delay
-    ST7735_DISPON,
-    DELAY, //  4: Main screen turn on, no args w/delay
-    100};  //     100 ms delay
+    10};   //     10 ms delay
 
 // Companion code to the above table.  Reads and issues
 // a series of LCD commands stored in byte array.
@@ -366,6 +363,7 @@ void st7735_init(void) {
     st7735_set_brightness(50);
     st7735_set_rotation(3);
     st7735_fill_screen(ST7735_BLACK);
+    st7735_display_on();
 
     is_init = true;
 }
