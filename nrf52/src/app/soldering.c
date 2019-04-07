@@ -36,7 +36,9 @@ static void print_button_flag(void)
 
 static void print_next_action(void)
 {
-    next_action = nsec_random_get_byte(3);
+    do {
+        next_action = nsec_random_get_byte(7);
+    } while (!is_press_action(next_action));
 
     gfx_set_cursor(1, 30);
     gfx_fill_rect(0, 16, 80, 28, DISPLAY_BLACK);
@@ -74,8 +76,10 @@ static void soldering_button_handler(button_t button)
                 print_next_action();
             }
         } else {
-            success = 0;
-            print_next_action();
+            if (is_press_action(button)) {
+                success = 0;
+                print_next_action();
+            }
         }
     }
 }

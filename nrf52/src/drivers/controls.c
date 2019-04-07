@@ -21,6 +21,12 @@ static bool enable = true;
 NRF_QUEUE_DEF(button_t, event_queue, NSEC_CONTROLS_MAX_EVENT,
               NRF_QUEUE_MODE_NO_OVERFLOW);
 
+bool is_press_action(button_t button)
+{
+    return button == BUTTON_UP || button == BUTTON_DOWN ||
+        button == BUTTON_BACK || button == BUTTON_ENTER;
+}
+
 static void nsec_controls_trigger(button_t button) {
     for (int i = 0; i < handler_count; i++) {
         if (handlers[i].active) {
