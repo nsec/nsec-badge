@@ -5,6 +5,7 @@
 
 #include "application.h"
 #include "home_menu.h"
+#include "drivers/battery_manager.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
 #include "drivers/nsec_storage.h"
@@ -237,8 +238,9 @@ void home_menu_application(void (*service_callback)()) {
     nsec_controls_add_handler(home_menu_handle_buttons);
 
     while (application_get() == home_menu_application) {
-        service_callback();
+        battery_manager_process();
         nsec_storage_update();
+        service_callback();
     }
 
     nsec_controls_suspend_handler(home_menu_handle_buttons);
