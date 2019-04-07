@@ -10,12 +10,14 @@
 #include "drivers/controls.h"
 #include "drivers/display.h"
 
+#include "application.h"
 #include "gfx_effect.h"
 #include "gui.h"
 #include "home_menu.h"
 #include "identity.h"
 #include "menu.h"
 #include "nsec_conf_schedule.h"
+#include "nsec_games_menu.h"
 #include "nsec_led_ble.h"
 #include "nsec_led_pattern.h"
 #include "nsec_settings.h"
@@ -56,6 +58,13 @@ void open_battery_status(uint8_t item) {
     show_battery_status();
 }
 
+void open_games_menu(uint8_t item)
+{
+    menu_close();
+    _state = MAIN_MENU_STATE_CLOSED;
+    nsec_games_menu_show();
+}
+
 static menu_item_s main_menu_items[] = {
 #ifdef NSEC_FLAVOR_CONF
     {
@@ -63,6 +72,10 @@ static menu_item_s main_menu_items[] = {
         .handler = open_conference_schedule,
     },
 #endif
+    {
+        .label = "Games",
+        .handler = open_games_menu,
+    },
     {
         .label = "LED pattern",
         .handler = open_led_pattern,
