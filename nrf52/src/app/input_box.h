@@ -5,13 +5,5 @@
 
 #ifndef input_box_h
 #define input_box_h
-
-#include <stdint.h>
-
-typedef enum {
-    input_DIRECTION_UP,
-    input_DIRECTION_DOWN,
-} input_DIRECTION;
-
 void input_box_init(const char *text, const char *password);
 #endif

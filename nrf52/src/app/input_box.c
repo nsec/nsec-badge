@@ -14,10 +14,6 @@
 #include "gui.h"
 #include "string.h"
 
-#define ROW_COUNT 8
-#define COLUMN_COUNT 21
-#define MAX_CHAR ROW_COUNT *COLUMN_COUNT
-
 static struct input_box_t {
     uint8_t input_count;
     uint8_t state;
@@ -111,6 +107,8 @@ static void is_success(uint8_t item) {
         gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
                       DISPLAY_WHITE);
         gfx_set_cursor(GEN_MENU_POS);
+        // in the future move the check out of the input_box
+        // user can decide to do with the result
         if (input_box.success == true) {
             gfx_puts("Congratz !");
         } else {
