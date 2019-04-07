@@ -24,6 +24,9 @@
 
 #include <drivers/cli_uart.h>
 
+#include "drivers/nsec_storage.h"
+#include "drivers/display.h"
+
 static struct {
     const char *n_line, *sec_line;
 } nsec_rows[] = {
@@ -65,7 +68,127 @@ static void do_nsec(const nrf_cli_t *p_cli, size_t argc, char **argv) {
         nrf_fprintf(p_cli->p_fprintf_ctx, "%s\r\n", nsec_rows[i].sec_line);
     }
 }
+
 NRF_CLI_CMD_REGISTER(nsec, NULL, "Welcome to NSEC!", do_nsec);
+
+static void do_display(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    ASSERT(p_cli);
+    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+
+    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
+        nrf_cli_help_print(p_cli, NULL, 0);
+        return;
+    }
+
+    if (argc != 2) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+            "%s: bad parameter count\r\n", argv[0]);
+        return;
+    }
+
+    if (strcmp(argv[1], "brightness")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+            "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
+    }
+}
+
+static void do_display_brightness(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    ASSERT(p_cli);
+    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+
+    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
+        nrf_cli_help_print(p_cli, NULL, 0);
+        return;
+    }
+
+    if (argc != 2) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+            "%s: bad parameter count\r\n", argv[0]);
+        return;
+    }
+
+    if (strcmp(argv[1], "get") || strcmp(argv[1], "set")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+            "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
+    }
+}
+
+static void do_display_brightness_get(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    ASSERT(p_cli);
+    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+
+    if (nrf_cli_help_requested(p_cli)) {
+        nrf_cli_help_print(p_cli, NULL, 0);
+        return;
+    }
+
+    if (argc > 1) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+            "%s: bad parameter count\r\n", argv[0]);
+        return;
+    }
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
+        "%d\r\n", get_stored_display_brightness());
+}
+
+static void do_display_brightness_set(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    ASSERT(p_cli);
+    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+
+    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
+        nrf_cli_help_print(p_cli, NULL, 0);
+        return;
+    }
+
+    if (argc != 2) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+            "%s: bad parameter count\r\n", argv[0]);
+        return;
+    }
+
+    long int val = strtol(argv[1], NULL, 10);
+
+    // strtol will return 0 on bad conversion, lets check if we really want 0
+    if (val == 0 && strcmp(argv[1], "0")) {
+        val = -1;
+    }
+
+    if (val == 0) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
+        "Set display brightness to: %d, display will be turn off\r\n", val);
+    } else if (val > 0 && val <= 100) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
+        "Set display brightness to: %d\r\n", val);
+    } else {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+            "%s: Value out of range\r\n", argv[1]);
+        nrf_cli_help_print(p_cli, NULL, 0);
+        return;
+    }
+
+    display_set_brightness(val);
+    update_stored_display_brightness(val);
+}
+
+NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_brightness)
+{
+    NRF_CLI_CMD(get, NULL, "Get brightness value", do_display_brightness_get),
+    NRF_CLI_CMD(set, NULL, "Set brightness value [0-100]", do_display_brightness_set),
+    NRF_CLI_SUBCMD_SET_END
+};
+
+NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_display)
+{
+    NRF_CLI_CMD(brightness, &sub_brightness, "Get or set the display brightness", do_display_brightness),
+    NRF_CLI_SUBCMD_SET_END
+};
+
+NRF_CLI_CMD_REGISTER(display, &sub_display, "Display configuration", do_display);
 
 /* Initialize the command-line interface module.  */
 
