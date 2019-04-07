@@ -46,6 +46,7 @@
 #include "mode_zombie.h"
 #include "persistency.h"
 #include "soldering.h"
+#include "intro.h"
 
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
@@ -94,24 +95,6 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     }
 
     NVIC_SystemReset();
-}
-
-static
-void nsec_intro(void) {
-    for(uint8_t noise = 128; noise <= 128; noise -= 8) {
-        gfx_fill_screen(DISPLAY_BLACK);
-        gfx_draw_bitmap(17, 11, nsec_logo_bitmap.image, nsec_logo_bitmap.width,
-                        nsec_logo_bitmap.height, DISPLAY_BLUE);
-        nsec_gfx_effect_addNoise(noise);
-        gfx_update();
-    }
-    for(uint8_t noise = 0; noise <= 128; noise += 8) {
-        gfx_fill_screen(DISPLAY_BLACK);
-        gfx_draw_bitmap(17, 11, nsec_logo_bitmap.image, nsec_logo_bitmap.width,
-                        nsec_logo_bitmap.height, DISPLAY_BLUE);
-        nsec_gfx_effect_addNoise(noise);
-        gfx_update();
-    }
 }
 
 static void init_ble() {
@@ -167,6 +150,8 @@ int main(void) {
     // cli_init depends on timer_init, and also needs to be after flash_mode
     // (the CLI takes over the UART, which the flash mode uses).
     cli_init();
+
+    nsec_intro();
 
     init_ble();
     nsec_status_bar_init();
