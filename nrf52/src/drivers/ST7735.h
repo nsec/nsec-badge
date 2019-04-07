@@ -149,4 +149,9 @@ void st7735_draw_16bit_ext_bitmap(int16_t x, int16_t y,
                                   uint16_t bg_color);
 uint16_t st7735_color_565(uint8_t r, uint8_t g, uint8_t b);
 
+void st7735_display_off(void);
+void st7735_display_on(void);
+void st7735_partial_off(void);
+void st7735_partial_on(void);
+
 #endif

@@ -635,3 +635,32 @@ void st7735_set_rotation(uint8_t m) {
 void st7735_invert_display(uint8_t i) {
     st7735_command(i ? ST7735_INVON : ST7735_INVOFF);
 }
+
+/*
+ * Turn display off.
+ * framebuffer memory is not affected.
+ */
+void st7735_display_off(void) {
+    st7735_command(ST7735_DISPOFF);
+}
+
+/*
+ * Turn display on.
+ */
+void st7735_display_on(void) {
+    st7735_command(ST7735_DISPON);
+}
+
+/*
+ * Turn partial mode off.
+ */
+void st7735_partial_off(void) {
+    st7735_command(ST7735_NORON);
+}
+
+/*
+ * Turn partial mode on.
+ */
+void st7735_partial_on(void) {
+    st7735_command(ST7735_PTLON);
+}
