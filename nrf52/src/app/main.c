@@ -28,11 +28,11 @@
 #include "drivers/ws2812fx.h"
 #include "drivers/nsec_storage.h"
 
+#include "application.h"
 #include "cli.h"
 #include "logs.h"
 #include "gfx_effect.h"
 #include "identity.h"
-#include "menu.h"
 #include "nsec_conf_schedule.h"
 #include "nsec_settings.h"
 #include "timer.h"
@@ -128,6 +128,15 @@ static void init_ble() {
 #endif
 }
 
+static void main_service_device() {
+    cli_process();
+    nsec_controls_process();
+    battery_status_process();
+    mode_zombie_process();
+    service_WS2812FX();
+    power_manage();
+}
+
 int main(void) {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
@@ -170,22 +179,16 @@ int main(void) {
 
     load_stored_led_settings();
 
-    // This is needed since we do not do the first menu_init without a button event
-    menu_handler_init();
-    show_home_menu(HOME_STATE_MENU);
-
     /*
      * Main loop
      */
-    while(true) {
-        cli_process();
-        nsec_controls_process();
-        battery_manager_process();
-        battery_status_process();
-		mode_zombie_process();
-        service_WS2812FX();
-        nsec_storage_update();
-        power_manage();
+    while (true) {
+        application_t application = application_get();
+        if (application) {
+            application(main_service_device);
+        }
+
+        main_service_device();
     }
 
     return 0;
