@@ -10,6 +10,7 @@
 #include "drivers/nsec_storage.h"
 #include "drivers/display.h"
 
+#include "application.h"
 #include "timer.h"
 #include "mode_zombie.h"
 #include "persistency.h"
@@ -27,7 +28,7 @@ static void mode_zombie_timer_handler(void *p_context)
     process_mode_zombie = true;
 }
 
-static void mode_zombie_glitch(void)
+static void mode_zombie_glitch(void (*service_device)())
 {
     uint64_t start = get_current_time_millis();
     uint64_t elapse = 0;
@@ -50,6 +51,11 @@ static void mode_zombie_glitch(void)
         elapse = get_current_time_millis() - start;
     }
 
+    // restore badge
+    load_stored_led_settings();
+    update_stored_display_brightness(get_stored_display_brightness());
+
+    application_clear();
 }
 
 void mode_zombie_process(void)
@@ -84,16 +90,10 @@ void mode_zombie_process(void)
     uint16_t rand = nsec_random_get_u16((5760 - odds_modifier) + 1);
 
     if (rand == 1) {
-        mode_zombie_glitch();
+        application_set(mode_zombie_glitch);
 
         // Reset the odds
         set_persist_zombie_odds_modifier(0);
-
-        // restore badge
-        load_stored_led_settings();
-        show_home_menu(HOME_STATE_MENU);
-        nsec_status_bar_ui_redraw();
-        update_stored_display_brightness(get_stored_display_brightness());
     }
 }
 
