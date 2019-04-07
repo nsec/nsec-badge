@@ -1,3 +1,8 @@
+//  Copyright (c) 2018-2019
+//  NorthSec badge team <https://github.com/nsec>
+//
+//  License: MIT (see LICENSE for details)
+
 #ifndef game_mines_h
 #define game_mines_h
 
