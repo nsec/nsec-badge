@@ -5,8 +5,10 @@
 
 #include "application.h"
 #include "gfx_effect.h"
+#include "random.h"
 
 #include "images/external/snake_pattern_collision_bitmap.h"
+#include "images/external/snake_pattern_food_bitmap.h"
 #include "images/external/snake_pattern_scale_bitmap.h"
 #include "images/external/snake_splash_10_bitmap.h"
 #include "images/external/snake_splash_11_bitmap.h"
@@ -52,7 +54,8 @@
 
 #define SNAKE_PATTERN_EMPTY 0
 #define SNAKE_PATTERN_COLLISION 1
-#define SNAKE_PATTERN_SCALE 2
+#define SNAKE_PATTERN_FOOD 2
+#define SNAKE_PATTERN_SCALE 3
 
 APP_TIMER_DEF(snake_game_timer);
 
@@ -74,6 +77,7 @@ typedef struct SnakeGameState {
 
     bool collided;
     bool delay;
+    uint8_t food_delay;
     int16_t grid[SNAKE_GRID_WIDTH * SNAKE_GRID_HEIGHT];
 } SnakeGameState;
 
@@ -133,6 +137,11 @@ static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
                                       &snake_pattern_collision_bitmap, 0);
         break;
 
+    case SNAKE_PATTERN_FOOD:
+        display_draw_16bit_ext_bitmap(origin_x, origin_y,
+                                      &snake_pattern_food_bitmap, 0);
+        break;
+
     case SNAKE_PATTERN_SCALE:
         display_draw_16bit_ext_bitmap(origin_x, origin_y,
                                       &snake_pattern_scale_bitmap, 0);
@@ -154,6 +163,28 @@ static bool snake_game_engine_detect_collision(SnakeGameState *p_state)
 
     default:
         return true;
+    }
+}
+
+static void snake_game_engine_generate_food(SnakeGameState *p_state)
+{
+    if (p_state->food_delay > 0) {
+        p_state->food_delay--;
+        return;
+    }
+
+    p_state->food_delay = 30;
+
+    uint8_t food_position =
+        SNAKE_GRID_CELL(nsec_random_get_byte(SNAKE_GRID_WIDTH - 1),
+                        nsec_random_get_byte(SNAKE_GRID_HEIGHT - 1));
+
+    if (p_state->grid[food_position] == SNAKE_CONTENTS_EMPTY) {
+        p_state->grid[food_position] = SNAKE_CONTENTS_FOOD;
+
+        snake_render_pattern(SNAKE_GRID_CELL_X(food_position),
+                             SNAKE_GRID_CELL_Y(food_position),
+                             SNAKE_PATTERN_FOOD);
     }
 }
 
@@ -317,6 +348,7 @@ static void snake_game_loop(SnakeGameState *p_state)
     }
 
     snake_game_engine_register_position(p_state);
+    snake_game_engine_generate_food(p_state);
 }
 
 static void snake_game_timer_callback(void *p_context)
@@ -328,7 +360,7 @@ static void snake_game_timer_callback(void *p_context)
 
 void snake_application(void (*service_device)())
 {
-    SnakeGameState state = {.collided = false, .delay = true};
+    SnakeGameState state = {.collided = false, .delay = true, .food_delay = 0};
 
     nsec_controls_add_handler(snake_buttons_handle);
 
