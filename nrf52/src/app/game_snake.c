@@ -1,3 +1,5 @@
+#include <app_timer.h>
+
 #include "drivers/controls.h"
 #include "drivers/display.h"
 
@@ -22,6 +24,12 @@
 #include "images/external/snake_splash_bitmap.h"
 
 #define SNAKE_BUTTON_NONE 255
+
+APP_TIMER_DEF(snake_game_timer);
+
+typedef struct SnakeGameState {
+    bool delay;
+} SnakeGameState;
 
 static const struct bitmap_ext *splash_animation[] = {
     &snake_splash_1_bitmap,  &snake_splash_2_bitmap,  &snake_splash_3_bitmap,
@@ -83,15 +91,41 @@ static void snake_boot_sequence(void (*service_device)())
     gfx_update();
 }
 
+static void snake_game_loop(SnakeGameState *p_state)
+{
+    if (p_state->delay) {
+        return;
+    } else {
+        p_state->delay = true;
+    }
+}
+
+static void snake_game_timer_callback(void *p_context)
+{
+    SnakeGameState *p_state = (SnakeGameState *)p_context;
+
+    p_state->delay = false;
+}
+
 void snake_application(void (*service_device)())
 {
+    SnakeGameState state = {.delay = true};
+
     nsec_controls_add_handler(snake_buttons_handle);
 
     snake_boot_sequence(service_device);
 
+    app_timer_create(&snake_game_timer, APP_TIMER_MODE_REPEATED,
+                     snake_game_timer_callback);
+    app_timer_start(snake_game_timer, APP_TIMER_TICKS(150), &state);
+
     while (application_get() == snake_application) {
+        snake_game_loop(&state);
         service_device();
     }
+
+    ret_code_t err_code = app_timer_stop(snake_game_timer);
+    APP_ERROR_CHECK(err_code);
 
     nsec_controls_suspend_handler(snake_buttons_handle);
 }
