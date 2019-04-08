@@ -25,10 +25,38 @@
 
 #define SNAKE_BUTTON_NONE 255
 
+#define SNAKE_CONTENTS_EMPTY -1
+
+#define SNAKE_GRID_CELL(x, y) (y * SNAKE_GRID_WIDTH + x)
+#define SNAKE_GRID_CELL_X(z) (z % SNAKE_GRID_WIDTH)
+#define SNAKE_GRID_CELL_Y(z) (z / SNAKE_GRID_WIDTH)
+#define SNAKE_GRID_HEIGHT 13
+#define SNAKE_GRID_PX_BORDER 1
+#define SNAKE_GRID_PX_CELL 5
+#define SNAKE_GRID_PX_OFFSET_X 1
+#define SNAKE_GRID_PX_OFFSET_Y 1
+#define SNAKE_GRID_WIDTH 24
+
 APP_TIMER_DEF(snake_game_timer);
 
+typedef struct SnakeGamePositionState {
+    int8_t dx;
+    int8_t dy;
+    uint8_t growth;
+    uint8_t head_x;
+    uint8_t head_y;
+    uint8_t prev_x;
+    uint8_t prev_y;
+    uint8_t shrink_delay;
+    uint8_t tail_x;
+    uint8_t tail_y;
+} SnakeGamePositionState;
+
 typedef struct SnakeGameState {
+    SnakeGamePositionState position;
+
     bool delay;
+    int16_t grid[SNAKE_GRID_WIDTH * SNAKE_GRID_HEIGHT];
 } SnakeGameState;
 
 static const struct bitmap_ext *splash_animation[] = {
@@ -91,6 +119,40 @@ static void snake_boot_sequence(void (*service_device)())
     gfx_update();
 }
 
+static void snake_initial_snake(SnakeGameState *p_state)
+{
+    uint8_t initial_length = 3;
+
+    p_state->position = (SnakeGamePositionState){
+        .dx = 1,
+        .dy = 0,
+        .growth = 0,
+        .head_x = 0,
+        .head_y = 0,
+        .prev_x = 0,
+        .prev_y = 0,
+        .shrink_delay = 0,
+        .tail_x = 0,
+        .tail_y = 0,
+    };
+
+    for (uint16_t i = 0; i < SNAKE_GRID_WIDTH * SNAKE_GRID_HEIGHT; i++) {
+        p_state->grid[i] = SNAKE_CONTENTS_EMPTY;
+    }
+
+    SnakeGamePositionState *p_pos = &((*p_state).position);
+
+    p_pos->head_x = p_pos->tail_x = (SNAKE_GRID_WIDTH / 2) - initial_length;
+    p_pos->head_y = p_pos->tail_y = SNAKE_GRID_HEIGHT / 2;
+
+    for (uint8_t i = 1; i < initial_length; i++) {
+        p_pos->head_x++;
+
+        p_state->grid[SNAKE_GRID_CELL(p_pos->head_x - 1, p_pos->head_y)] =
+            SNAKE_GRID_CELL(p_pos->head_x, p_pos->head_y);
+    }
+}
+
 static void snake_game_loop(SnakeGameState *p_state)
 {
     if (p_state->delay) {
@@ -114,6 +176,7 @@ void snake_application(void (*service_device)())
     nsec_controls_add_handler(snake_buttons_handle);
 
     snake_boot_sequence(service_device);
+    snake_initial_snake(&state);
 
     app_timer_create(&snake_game_timer, APP_TIMER_MODE_REPEATED,
                      snake_game_timer_callback);
