@@ -28,6 +28,16 @@
 
 #define SNAKE_CONTENTS_EMPTY -1
 
+#define SNAKE_GOING_LEFT (p_state->position.dx == -1)
+#define SNAKE_GOING_RIGHT (p_state->position.dx == 1)
+#define SNAKE_GOING_UP (p_state->position.dy == -1)
+#define SNAKE_GOING_DOWN (p_state->position.dy == 1)
+
+#define SNAKE_GO_LEFT (p_state->position.dx = -1, p_state->position.dy = 0)
+#define SNAKE_GO_RIGHT (p_state->position.dx = 1, p_state->position.dy = 0)
+#define SNAKE_GO_UP (p_state->position.dx = 0, p_state->position.dy = -1)
+#define SNAKE_GO_DOWN (p_state->position.dx = 0, p_state->position.dy = 1)
+
 #define SNAKE_GRID_CELL(x, y) (y * SNAKE_GRID_WIDTH + x)
 #define SNAKE_GRID_CELL_X(z) (z % SNAKE_GRID_WIDTH)
 #define SNAKE_GRID_CELL_Y(z) (z / SNAKE_GRID_WIDTH)
@@ -38,6 +48,7 @@
 #define SNAKE_GRID_PX_OFFSET_Y 1
 #define SNAKE_GRID_WIDTH 24
 
+#define SNAKE_PATTERN_EMPTY 0
 #define SNAKE_PATTERN_SCALE 1
 
 APP_TIMER_DEF(snake_game_timer);
@@ -108,9 +119,88 @@ static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
                        SNAKE_GRID_PX_OFFSET_Y + SNAKE_GRID_PX_BORDER;
 
     switch (pattern) {
-    case SNAKE_PATTERN_SCALE:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y, &snake_pattern_scale_bitmap, 0);
+    case SNAKE_PATTERN_EMPTY:
+        gfx_fill_rect(origin_x, origin_y, SNAKE_GRID_PX_CELL,
+                      SNAKE_GRID_PX_CELL, DISPLAY_BLACK);
         break;
+
+    case SNAKE_PATTERN_SCALE:
+        display_draw_16bit_ext_bitmap(origin_x, origin_y,
+                                      &snake_pattern_scale_bitmap, 0);
+        break;
+    }
+}
+
+static void snake_game_engine_register_position(SnakeGameState *p_state)
+{
+    SnakeGamePositionState *p_pos = &((*p_state).position);
+
+    p_state->grid[SNAKE_GRID_CELL(p_pos->prev_x, p_pos->prev_y)] =
+        SNAKE_GRID_CELL(p_pos->head_x, p_pos->head_y);
+
+    snake_render_pattern(p_pos->head_x, p_pos->head_y, SNAKE_PATTERN_SCALE);
+
+    if (p_pos->shrink_delay > 0) {
+        p_pos->growth++;
+        p_pos->shrink_delay--;
+    } else {
+        int16_t next_tail =
+            p_state->grid[SNAKE_GRID_CELL(p_pos->tail_x, p_pos->tail_y)];
+
+        p_state->grid[SNAKE_GRID_CELL(p_pos->tail_x, p_pos->tail_y)] =
+            SNAKE_CONTENTS_EMPTY;
+
+        snake_render_pattern(p_pos->tail_x, p_pos->tail_y, SNAKE_PATTERN_EMPTY);
+
+        p_pos->tail_x = SNAKE_GRID_CELL_X(next_tail);
+        p_pos->tail_y = SNAKE_GRID_CELL_Y(next_tail);
+    }
+}
+
+static void snake_game_engine_update_position(SnakeGameState *p_state)
+{
+    switch (snake_buttons_read()) {
+    case BUTTON_BACK:
+        if (SNAKE_GOING_DOWN || SNAKE_GOING_UP) {
+            SNAKE_GO_LEFT;
+        }
+        break;
+
+    case BUTTON_DOWN:
+        if (SNAKE_GOING_LEFT || SNAKE_GOING_RIGHT) {
+            SNAKE_GO_DOWN;
+        }
+        break;
+
+    case BUTTON_ENTER:
+        if (SNAKE_GOING_DOWN || SNAKE_GOING_UP) {
+            SNAKE_GO_RIGHT;
+        }
+        break;
+
+    case BUTTON_UP:
+        if (SNAKE_GOING_LEFT || SNAKE_GOING_RIGHT) {
+            SNAKE_GO_UP;
+        }
+        break;
+    }
+
+    p_state->position.prev_x = p_state->position.head_x;
+    p_state->position.prev_y = p_state->position.head_y;
+
+    p_state->position.head_x += p_state->position.dx;
+    p_state->position.head_y += p_state->position.dy;
+
+    if (p_state->position.head_x > SNAKE_GRID_WIDTH) {
+        p_state->position.head_x = SNAKE_GRID_WIDTH - 1;
+    } else if (p_state->position.head_x == SNAKE_GRID_WIDTH) {
+        p_state->position.head_x = 0;
+    }
+
+    if (p_state->position.head_y > SNAKE_GRID_HEIGHT) {
+        p_state->position.head_y = SNAKE_GRID_HEIGHT - 1;
+    } else if (p_state->position.head_y == SNAKE_GRID_HEIGHT) {
+        p_state->position.head_y = 0;
     }
 }
 
@@ -181,6 +271,9 @@ static void snake_game_loop(SnakeGameState *p_state)
     } else {
         p_state->delay = true;
     }
+
+    snake_game_engine_update_position(p_state);
+    snake_game_engine_register_position(p_state);
 }
 
 static void snake_game_timer_callback(void *p_context)
