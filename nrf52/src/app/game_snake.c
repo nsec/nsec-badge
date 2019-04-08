@@ -6,6 +6,7 @@
 #include "application.h"
 #include "gfx_effect.h"
 
+#include "images/external/snake_pattern_scale_bitmap.h"
 #include "images/external/snake_splash_10_bitmap.h"
 #include "images/external/snake_splash_11_bitmap.h"
 #include "images/external/snake_splash_12_bitmap.h"
@@ -36,6 +37,8 @@
 #define SNAKE_GRID_PX_OFFSET_X 1
 #define SNAKE_GRID_PX_OFFSET_Y 1
 #define SNAKE_GRID_WIDTH 24
+
+#define SNAKE_PATTERN_SCALE 1
 
 APP_TIMER_DEF(snake_game_timer);
 
@@ -96,6 +99,21 @@ static uint8_t snake_buttons_read()
     return SNAKE_BUTTON_NONE;
 }
 
+static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
+{
+    uint8_t origin_x = x * (SNAKE_GRID_PX_CELL + SNAKE_GRID_PX_BORDER) +
+                       SNAKE_GRID_PX_OFFSET_X + SNAKE_GRID_PX_BORDER;
+
+    uint8_t origin_y = y * (SNAKE_GRID_PX_CELL + SNAKE_GRID_PX_BORDER) +
+                       SNAKE_GRID_PX_OFFSET_Y + SNAKE_GRID_PX_BORDER;
+
+    switch (pattern) {
+    case SNAKE_PATTERN_SCALE:
+        display_draw_16bit_ext_bitmap(origin_x, origin_y, &snake_pattern_scale_bitmap, 0);
+        break;
+    }
+}
+
 static void snake_boot_sequence(void (*service_device)())
 {
     service_device();
@@ -145,11 +163,14 @@ static void snake_initial_snake(SnakeGameState *p_state)
     p_pos->head_x = p_pos->tail_x = (SNAKE_GRID_WIDTH / 2) - initial_length;
     p_pos->head_y = p_pos->tail_y = SNAKE_GRID_HEIGHT / 2;
 
+    snake_render_pattern(p_pos->head_x, p_pos->head_y, SNAKE_PATTERN_SCALE);
     for (uint8_t i = 1; i < initial_length; i++) {
         p_pos->head_x++;
 
         p_state->grid[SNAKE_GRID_CELL(p_pos->head_x - 1, p_pos->head_y)] =
             SNAKE_GRID_CELL(p_pos->head_x, p_pos->head_y);
+
+        snake_render_pattern(p_pos->head_x, p_pos->head_y, SNAKE_PATTERN_SCALE);
     }
 }
 
