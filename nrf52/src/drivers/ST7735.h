@@ -90,6 +90,10 @@ struct bitmap_ext;
 #define MADCTL_BGR 0x08
 #define MADCTL_MH 0x04
 
+#define ST7735_PIXEL_12BITS 0x03
+#define ST7735_PIXEL_16BITS 0x05
+#define ST7735_PIXEL_18BITS 0x06 // Default
+
 //*****************************************************************************
 //
 // Colour Definitions

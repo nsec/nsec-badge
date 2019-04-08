@@ -45,9 +45,6 @@ as well as Adafruit raw 1.8" TFT display
 
 #define DELAY 0x80
 
-#define SET_LOW(x) nrf_gpio_pin_write(x, 0)
-#define SET_HIGH(x) nrf_gpio_pin_write(x, 1)
-
 #define swap(a, b)                                                             \
     {                                                                          \
         int16_t t = a;                                                         \
@@ -92,7 +89,8 @@ nrf_pwm_sequence_t const seq = {.values.p_individual = seq_values,
                                 .repeats = 0,
                                 .end_delay = 0};
 
-static void pwm_init(void) {
+static void pwm_init(void)
+{
 
     nrf_drv_pwm_config_t const config0 = {
         .output_pins =
@@ -112,7 +110,8 @@ static void pwm_init(void) {
     APP_ERROR_CHECK(nrf_drv_pwm_init(&m_pwm2, &config0, NULL));
 }
 
-void st7735_set_brightness(uint8_t brightness) {
+void st7735_set_brightness(uint8_t brightness)
+{
 
     // Check if value is outside of range. If so, set to 100%
     if (brightness >= 100) {
@@ -131,7 +130,8 @@ void st7735_set_brightness(uint8_t brightness) {
 //*****************************************************************************
 static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(CONF_OLED_SPI_INST);
 
-static void spi_init(void) {
+static void spi_init(void)
+{
     nrf_drv_spi_config_t spi_config;
 
     spi_config.frequency = NRF_DRV_SPI_FREQ_8M;
@@ -148,7 +148,12 @@ static void spi_init(void) {
         nrf_drv_spi_init(&st7735_config.spi, &spi_config, NULL, NULL));
 }
 
-static void spi_master_tx(const uint8_t *p_tx_data, uint16_t len) {
+
+/*
+ * Send bytes of data to the LCD.
+ */
+static void st7735_data_len(const uint8_t *p_tx_data, uint16_t len)
+{
     while (len > 0) {
         const uint8_t packet_len = MIN(len, UINT8_MAX);
         APP_ERROR_CHECK(nrf_drv_spi_transfer(&st7735_config.spi, p_tx_data,
@@ -158,165 +163,259 @@ static void spi_master_tx(const uint8_t *p_tx_data, uint16_t len) {
     }
 }
 
-static void spi_write(uint8_t byte) { spi_master_tx(&byte, 1); }
+/*
+ * Send 1 byte of data to the LCD.
+ */
+static void st7735_data(uint8_t data)
+{
+    st7735_data_len(&data, 1);
+}
 
-static void st7735_command(uint8_t c) {
+/*
+ * Send a 1 byte command to the LCD.
+ */
+static void st7735_command(uint8_t command)
+{
     nrf_gpio_pin_write(st7735_config.dc_pin, COMMAND);
-    spi_write(c);
-}
-
-static void st7735_data(uint8_t d) {
+    st7735_data_len(&command, 1);
     nrf_gpio_pin_write(st7735_config.dc_pin, DATA);
-    spi_write(d);
 }
 
-//*****************************************************************************
-//
-// Screen Initialisation
-//
-//*****************************************************************************
+/*
+ * Software reset LCD module to default
+ */
+static void st7735_software_reset(void)
+{
+    st7735_command(ST7735_SWRESET);
 
-static const uint8_t initCommands[] = { // Init for 7735R, (green tab)
-    20,                                 // 21 commands in list:
-    ST7735_SWRESET,
-    DELAY, //  1: Software reset, 0 args, w/delay
-    150,   //     150 ms delay
-    ST7735_SLPOUT,
-    DELAY, //  2: Out of sleep mode, 0 args, w/delay
-    255,   //     500 ms delay
-    ST7735_FRMCTR1,
-    3, //  3: Framerate ctrl - normal mode, 3 arg:
-    0x01,
-    0x2C,
-    0x2D, //     Rate = fosc/(1x2+40) * (LINE+2C+2D)
-    ST7735_FRMCTR2,
-    3, //  4: Framerate ctrl - idle mode, 3 args:
-    0x01,
-    0x2C,
-    0x2D, //     Rate = fosc/(1x2+40) * (LINE+2C+2D)
-    ST7735_FRMCTR3,
-    6, //  5: Framerate - partial mode, 6 args:
-    0x01,
-    0x2C,
-    0x2D, //     Dot inversion mode
-    0x01,
-    0x2C,
-    0x2D, //     Line inversion mode
-    ST7735_INVCTR,
-    1,    //  6: Display inversion ctrl, 1 arg:
-    0x07, //     No inversion
-    ST7735_PWCTR1,
-    3, //  7: Power control, 3 args, no delay:
-    0xA2,
-    0x02, //     -4.6V
-    0x84, //     AUTO mode
-    ST7735_PWCTR2,
-    1,    //  8: Power control, 1 arg, no delay:
-    0xC5, //     VGH25=2.4C VGSEL=-10 VGH=3 * AVDD
-    ST7735_PWCTR3,
-    2,    //  9: Power control, 2 args, no delay:
-    0x0A, //     Opamp current small
-    0x00, //     Boost frequency
-    ST7735_PWCTR4,
-    2,    // 10: Power control, 2 args, no delay:
-    0x8A, //     BCLK/2,
-    0x2A, //     opamp current small & medium low
-    ST7735_PWCTR5,
-    2, // 11: Power control, 2 args, no delay:
-    0x8A,
-    0xEE,
-    ST7735_VMCTR1,
-    1, // 12: Power control, 1 arg, no delay:
-    0x0E,
-    ST7735_INVOFF,
-    0, // 13: Don't invert display, no args
-    ST7735_MADCTL,
-    1,    // 14: Mem access ctl (directions), 1 arg:
-    0xC8, //     row/col addr, bottom-top refresh
-    ST7735_COLMOD,
-    1,    // 15: set color mode, 1 arg, no delay:
-    0x05, //     16-bit color                  //     100 ms delay
-    ST7735_CASET,
-    4, //  1: Column addr set, 4 args, no delay:
-    0x00,
-    0x00, //     XSTART = 0
-    0x00,
-    0x7F, //     XEND = 79
-    ST7735_RASET,
-    4, //  2: Row addr set, 4 args, no delay:
-    0x00,
-    0x00, //     XSTART = 0
-    0x00,
-    0x9F, //     XEND = 159
-    ST7735_GMCTRP1,
-    16, //  1: Gamma setting, I think?
-    0x02,
-    0x1c,
-    0x07,
-    0x12,
-    0x37,
-    0x32,
-    0x29,
-    0x2d,
-    0x29,
-    0x25,
-    0x2B,
-    0x39,
-    0x00,
-    0x01,
-    0x03,
-    0x10,
-    ST7735_GMCTRN1,
-    16, //  2: More gamma?
-    0x03,
-    0x1d,
-    0x07,
-    0x06,
-    0x2E,
-    0x2C,
-    0x29,
-    0x2D,
-    0x2E,
-    0x2E,
-    0x37,
-    0x3F,
-    0x00,
-    0x00,
-    0x02,
-    0x10,
-    ST7735_NORON,
-    DELAY, //  3: Normal display on, no args, w/delay
-    10};   //     10 ms delay
-
-// Companion code to the above table.  Reads and issues
-// a series of LCD commands stored in byte array.
-void command_list(const uint8_t *addr) {
-    uint8_t numCommands, numArgs;
-    uint16_t ms;
-
-    numCommands = *(addr++); // Number of commands to follow
-
-    while (numCommands--) {        // For each command...
-        st7735_command(*(addr++)); //   Read, issue command
-        numArgs = *(addr++);       //   Number of args to follow
-        ms = numArgs & DELAY;      //   If hibit set, delay follows args
-        numArgs &= ~DELAY;         //   Mask out delay bit
-
-        while (numArgs--) {         //   For each argument...
-            st7735_data(*(addr++)); //     Read, issue argument
-        }
-
-        if (ms) {
-            ms = *(addr++); // Read post-command delay time (ms)
-            if (ms == 255) {
-                ms = 500; // If 255, delay for 500 ms
-            }
-            nrf_delay_ms(ms);
-        }
-    }
+    /*
+     * Wait 120ms for hardware initialization
+     * before sending the next command.
+     */
+    nrf_delay_ms(120);
 }
 
-void st7735_init(void) {
+/*
+ * Hardware reset LCD module to default
+ */
+static void st7735_hardware_reset(void)
+{
+    /* Send a reset pulse */
+    nrf_gpio_pin_toggle(st7735_config.rst_pin);
+    nrf_delay_ms(1);
+    nrf_gpio_pin_toggle(st7735_config.rst_pin);
+
+    /*
+     * Wait 120ms for hardware initialization
+     * before sending the next command.
+     */
+    nrf_delay_ms(120);
+}
+
+/*
+ * Set the framerate for all modes
+ *
+ * st7735r / st7735s:
+ *   fosc=850kHz
+ *   rate=fosc/((RTNA x 2 + 40) x (LINE + FPA + BPA + 2))
+ *
+ * st7735:
+ *   fosc=333kHz
+ *   rate=fosc/((RTNA + 20) x (LINE + FPA + BPA))
+ */
+static void st7735_set_framerate(void)
+{
+    uint8_t rtna = 0x01;
+    uint8_t fpa = 0x2C;
+    uint8_t bpa = 0x2D;
+
+    /* Normal mode */
+    st7735_command(ST7735_FRMCTR1);
+    st7735_data(fpa);
+    st7735_data(bpa);
+
+    /* Idle mode */
+    st7735_command(ST7735_FRMCTR2);
+    st7735_data(fpa);
+    st7735_data(bpa);
+
+    /* Partial mode */
+    st7735_command(ST7735_FRMCTR3);
+    st7735_data(fpa);
+    st7735_data(bpa);
+    st7735_data(fpa);
+    st7735_data(bpa);
+}
+
+/*
+ * 0x07: Column inversion (default)
+ * 0x00: Dot inversion
+ */
+static void st7735_set_inversion_mode(void)
+{
+    st7735_command(ST7735_INVCTR);
+    st7735_data(0x07);
+}
+
+static void st7735_inversion_on(void)
+{
+    st7735_command(ST7735_INVON);
+}
+
+static void st7735_inversion_off(void)
+{
+    st7735_command(ST7735_INVOFF);
+}
+
+/*
+ * Set the LCD to sleep mode
+ *
+ * Stop DC/DC converter, oscillator and panel scanning.
+ */
+static void st7735_sleep_in(void)
+{
+    st7735_command(ST7735_SLPIN);
+
+    /*
+     * Wait 120ms for the stabilization of
+     * supply voltages.
+     */
+    nrf_delay_ms(120);
+}
+
+/*
+ * Exit sleep mode.
+ *
+ * Enable DC/DC converter, oscillator and start panel scanning.
+ */
+static void st7735_sleep_out(void)
+{
+    st7735_command(ST7735_SLPOUT);
+
+    /*
+     * Wait 120ms for the stabilization of
+     * supply voltages.
+     */
+    nrf_delay_ms(120);
+}
+
+/*
+ * Set the pixel size for RGB data
+ *
+ * 12-bits : 0x03
+ * 16-bits : 0x05
+ * 18-bits : 0x06 (default)
+ */
+static void st7735_set_pixel_format(uint8_t fmt)
+{
+    st7735_command(ST7735_COLMOD);
+    st7735_data(fmt);
+}
+
+static void st7735_set_gamma_pos(uint8_t vrf0p, uint8_t selv0p, uint8_t selv1p,
+                                 uint8_t pk0p, uint8_t pk1p, uint8_t pk2p,
+                                 uint8_t pk3p, uint8_t pk4p, uint8_t pk5p,
+                                 uint8_t pk6p, uint8_t pk7p, uint8_t pk8p,
+                                 uint8_t pk9p, uint8_t selv62p, uint8_t selv63p,
+                                 uint8_t vos0p)
+{
+    st7735_command(ST7735_GMCTRP1);
+    st7735_data(vrf0p);
+    st7735_data(selv0p);
+    st7735_data(selv1p);
+    st7735_data(pk0p);
+    st7735_data(pk1p);
+    st7735_data(pk2p);
+    st7735_data(pk3p);
+    st7735_data(pk4p);
+    st7735_data(pk5p);
+    st7735_data(pk6p);
+    st7735_data(pk7p);
+    st7735_data(pk8p);
+    st7735_data(pk9p);
+    st7735_data(selv62p);
+    st7735_data(selv63p);
+    st7735_data(vos0p);
+}
+
+static void st7735_set_gamma_neg(uint8_t vrf0n, uint8_t selv0n, uint8_t selv1n,
+                                 uint8_t pk0n, uint8_t pk1n, uint8_t pk2n,
+                                 uint8_t pk3n, uint8_t pk4n, uint8_t pk5n,
+                                 uint8_t pk6n, uint8_t pk7n, uint8_t pk8n,
+                                 uint8_t pk9n, uint8_t selv62n, uint8_t selv63n,
+                                 uint8_t vos0n)
+{
+    st7735_command(ST7735_GMCTRN1);
+    st7735_data(vrf0n);
+    st7735_data(selv0n);
+    st7735_data(selv1n);
+    st7735_data(pk0n);
+    st7735_data(pk1n);
+    st7735_data(pk2n);
+    st7735_data(pk3n);
+    st7735_data(pk4n);
+    st7735_data(pk5n);
+    st7735_data(pk6n);
+    st7735_data(pk7n);
+    st7735_data(pk8n);
+    st7735_data(pk9n);
+    st7735_data(selv62n);
+    st7735_data(selv63n);
+    st7735_data(vos0n);
+}
+
+static void st7735_set_power_1(void)
+{
+    st7735_command(ST7735_PWCTR1);
+    st7735_data(0xA2); // AVDD: 5V GVDD: 4.6V
+    st7735_data(0x02); // GVCL: -4.6V
+    st7735_data(0x84); // Auto mode
+}
+
+static void st7735_set_power_2(void)
+{
+    st7735_command(ST7735_PWCTR2);
+    st7735_data(0xC5); // VGH25=2.4C VGSEL=-10 VGH=3 * AVDD
+}
+
+/*
+ * Normal mode, full color
+ */
+static void st7735_set_power_3(void)
+{
+    st7735_command(ST7735_PWCTR3);
+    st7735_data(0x0A); // Opamp current small
+    st7735_data(0x00); // Boost frequency
+}
+
+/*
+ * Idle mode, 8 color
+ */
+static void st7735_set_power_4(void)
+{
+    st7735_command(ST7735_PWCTR4);
+    st7735_data(0x8A); // BCLK/2,
+    st7735_data(0x2A); // opamp current small & medium low
+}
+
+/*
+ * Partial mode, full color
+ */
+static void st7735_set_power_5(void)
+{
+    st7735_command(ST7735_PWCTR5);
+    st7735_data(0x8A); //
+    st7735_data(0xEE);
+}
+
+static void st7735_set_vcom(void)
+{
+    st7735_command(ST7735_VMCTR1);
+    st7735_data(0x0E); // -0.775
+}
+
+void st7735_init(void)
+{
     if (is_init) {
         return;
     }
@@ -337,13 +436,13 @@ void st7735_init(void) {
     nrf_gpio_cfg_output(st7735_config.dc_pin);
     nrf_gpio_cfg_output(st7735_config.rst_pin);
 
-    /* Toggle reset */
-    SET_HIGH(st7735_config.rst_pin);
-    nrf_delay_ms(500);
-    SET_LOW(st7735_config.rst_pin);
-    nrf_delay_ms(500);
-    SET_HIGH(st7735_config.rst_pin);
-    nrf_delay_ms(500);
+    /* Set transfer to DATA mode by default, we toggle to COMMAND only when
+     * issuing a command
+     */
+    nrf_gpio_pin_write(st7735_config.dc_pin, DATA);
+
+    /* Reset pin has to be held high to enable the LCD */
+    nrf_gpio_pin_set(st7735_config.rst_pin);
 
     /* Initialise default values */
     colstart = 0;
@@ -358,11 +457,19 @@ void st7735_init(void) {
     textbgcolour = 0xFFFF;
 
     /* Initialise LCD screen */
-    command_list(initCommands);
+    st7735_software_reset();
+    st7735_sleep_out();
+
+    /* Use 16-bits pixels */
+    st7735_set_pixel_format(ST7735_PIXEL_16BITS);
 
     st7735_set_brightness(50);
     st7735_set_rotation(3);
+
+    /* Initialize the framebuffer, content is random after reset */
     st7735_fill_screen(ST7735_BLACK);
+
+    /* And finally, start displaying */
     st7735_display_on();
 
     is_init = true;
@@ -374,39 +481,40 @@ void st7735_init(void) {
 //
 //*****************************************************************************
 
-uint16_t swap_colour(uint16_t x) {
+uint16_t swap_colour(uint16_t x)
+{
     return (x << 11) | (x & 0x07E0) | (x >> 11);
 }
 
-void st7735_set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
+void st7735_set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
+{
     buffer[0] = 0x00;
     buffer[2] = 0x00;
 
     st7735_command(ST7735_CASET);
 
-    SET_HIGH(st7735_config.dc_pin);
     buffer[1] = x0 + colstart;
     buffer[3] = x1 + colstart;
-    spi_master_tx(buffer, 4);
+    st7735_data_len(buffer, 4);
 
     st7735_command(ST7735_RASET);
 
-    SET_HIGH(st7735_config.dc_pin);
     buffer[1] = y0 + rowstart;
     buffer[3] = y1 + rowstart;
-    spi_master_tx(buffer, 4);
+    st7735_data_len(buffer, 4);
 
     st7735_command(ST7735_RAMWR);
 }
 
-void st7735_push_colour(uint16_t colour) {
-    SET_HIGH(st7735_config.dc_pin);
+void st7735_push_colour(uint16_t colour)
+{
     buffer[0] = colour >> 8;
     buffer[1] = colour;
-    spi_master_tx(buffer, 2);
+    st7735_data_len(buffer, 2);
 }
 
-void st7735_draw_pixel(int16_t x, int16_t y, uint16_t colour) {
+void st7735_draw_pixel(int16_t x, int16_t y, uint16_t colour)
+{
     if ((x < 0) || (x >= width) || (y < 0) || (y >= height)) {
         return;
     }
@@ -415,7 +523,8 @@ void st7735_draw_pixel(int16_t x, int16_t y, uint16_t colour) {
     st7735_push_colour(colour);
 }
 
-void st7735_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t colour) {
+void st7735_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t colour)
+{
 
     uint32_t i = 0;
     uint8_t hi, lo;
@@ -433,17 +542,17 @@ void st7735_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t colour) {
     lo = colour;
 
     st7735_set_addr_window(x, y, x, y + h - 1);
-    SET_HIGH(st7735_config.dc_pin);
 
     while (h--) {
         buffer[i++] = hi;
         buffer[i++] = lo;
     }
 
-    spi_master_tx(buffer, i);
+    st7735_data_len(buffer, i);
 }
 
-void st7735_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t colour) {
+void st7735_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t colour)
+{
     uint32_t i = 0;
     uint8_t hi, lo;
 
@@ -460,26 +569,33 @@ void st7735_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t colour) {
     lo = colour;
 
     st7735_set_addr_window(x, y, x + w - 1, y);
-    SET_HIGH(st7735_config.dc_pin);
 
     while (w--) {
         buffer[i++] = hi;
         buffer[i++] = lo;
     }
 
-    spi_master_tx(buffer, i);
+    st7735_data_len(buffer, i);
 }
 
-void st7735_fill_screen_black(void) { st7735_fill_screen(ST7735_BLACK); }
+void st7735_fill_screen_black(void)
+{
+    st7735_fill_screen(ST7735_BLACK);
+}
 
-void st7735_fill_screen_white(void) { st7735_fill_screen(ST7735_WHITE); }
+void st7735_fill_screen_white(void)
+{
+    st7735_fill_screen(ST7735_WHITE);
+}
 
-void st7735_fill_screen(uint16_t colour) {
+void st7735_fill_screen(uint16_t colour)
+{
     st7735_fill_rect(0, 0, width, height, colour);
 }
 
 void st7735_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h,
-                      uint16_t colour) {
+                      uint16_t colour)
+{
     uint32_t i = 0;
     uint8_t hi, lo;
 
@@ -498,7 +614,6 @@ void st7735_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h,
     hi = colour >> 8;
     lo = colour;
     st7735_set_addr_window(x, y, x + w - 1, y + h - 1);
-    SET_HIGH(st7735_config.dc_pin);
 
     for (y = h; y > 0; y--) {
         for (x = w; x > 0; x--) {
@@ -506,28 +621,29 @@ void st7735_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h,
             buffer[i++] = lo;
             // Here its possible to overflow the buffer size
             if (i == BUFFER_SIZE) {
-                spi_master_tx(buffer, i);
+                st7735_data_len(buffer, i);
                 i = 0;
             }
         }
     }
 
-    spi_master_tx(buffer, i);
+    st7735_data_len(buffer, i);
 }
 
 // Pass 8-bit (each) R,G,B, get back 16-bit packed colour
-uint16_t st7735_colour_565(uint8_t r, uint8_t g, uint8_t b) {
+uint16_t st7735_colour_565(uint8_t r, uint8_t g, uint8_t b)
+{
     return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
 void st7735_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
-                              int16_t w, int16_t h, uint16_t bg_color) {
+                              int16_t w, int16_t h, uint16_t bg_color)
+{
     uint16_t i, j;
     uint8_t hi, lo;
     i = j = 0;
 
     st7735_set_addr_window(x, y, x + w - 1, y + h - 1);
-    SET_HIGH(st7735_config.dc_pin);
 
     hi = bg_color >> 8;
     lo = bg_color;
@@ -544,13 +660,13 @@ void st7735_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
             }
             // Here its possible to overflow the buffer size
             if (i == BUFFER_SIZE) {
-                spi_master_tx(buffer, i);
+                st7735_data_len(buffer, i);
                 i = 0;
             }
         }
     }
 
-    spi_master_tx(buffer, i);
+    st7735_data_len(buffer, i);
 }
 
 // Draw an image from the external flash.
@@ -558,14 +674,14 @@ void st7735_draw_16bit_bitmap(int16_t x, int16_t y, const uint8_t *bitmap,
 // share some code with it.
 void st7735_draw_16bit_ext_bitmap(int16_t x, int16_t y,
                                   const struct bitmap_ext *bitmap_ext,
-                                  uint16_t bg_color) {
+                                  uint16_t bg_color)
+{
     static uint8_t flash_buffer[128];
     uint16_t output_idx = 0;
     uint32_t w = bitmap_ext->width;
     uint32_t h = bitmap_ext->height;
 
     st7735_set_addr_window(x, y, x + w - 1, y + h - 1);
-    SET_HIGH(st7735_config.dc_pin);
 
     uint8_t bg_hi = bg_color >> 8;
     uint8_t bg_lo = bg_color;
@@ -592,16 +708,17 @@ void st7735_draw_16bit_ext_bitmap(int16_t x, int16_t y,
             }
             // Here its possible to overflow the buffer size
             if (output_idx == BUFFER_SIZE) {
-                spi_master_tx(buffer, output_idx);
+                st7735_data_len(buffer, output_idx);
                 output_idx = 0;
             }
         }
     }
 
-    spi_master_tx(buffer, output_idx);
+    st7735_data_len(buffer, output_idx);
 }
 
-void st7735_set_rotation(uint8_t m) {
+void st7735_set_rotation(uint8_t m)
+{
     st7735_command(ST7735_MADCTL);
     rotation = m % 4; // can't be higher than 3
     switch (rotation) {
@@ -630,7 +747,8 @@ void st7735_set_rotation(uint8_t m) {
     gfx_set_rotation(m);
 }
 
-void st7735_invert_display(uint8_t i) {
+void st7735_invert_display(uint8_t i)
+{
     st7735_command(i ? ST7735_INVON : ST7735_INVOFF);
 }
 
@@ -638,27 +756,31 @@ void st7735_invert_display(uint8_t i) {
  * Turn display off.
  * framebuffer memory is not affected.
  */
-void st7735_display_off(void) {
+void st7735_display_off(void)
+{
     st7735_command(ST7735_DISPOFF);
 }
 
 /*
  * Turn display on.
  */
-void st7735_display_on(void) {
+void st7735_display_on(void)
+{
     st7735_command(ST7735_DISPON);
 }
 
 /*
  * Turn partial mode off.
  */
-void st7735_partial_off(void) {
+void st7735_partial_off(void)
+{
     st7735_command(ST7735_NORON);
 }
 
 /*
  * Turn partial mode on.
  */
-void st7735_partial_on(void) {
+void st7735_partial_on(void)
+{
     st7735_command(ST7735_PTLON);
 }
