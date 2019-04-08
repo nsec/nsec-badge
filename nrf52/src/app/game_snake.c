@@ -6,6 +6,7 @@
 #include "application.h"
 #include "gfx_effect.h"
 
+#include "images/external/snake_pattern_collision_bitmap.h"
 #include "images/external/snake_pattern_scale_bitmap.h"
 #include "images/external/snake_splash_10_bitmap.h"
 #include "images/external/snake_splash_11_bitmap.h"
@@ -27,6 +28,7 @@
 #define SNAKE_BUTTON_NONE 255
 
 #define SNAKE_CONTENTS_EMPTY -1
+#define SNAKE_CONTENTS_FOOD -2
 
 #define SNAKE_GOING_LEFT (p_state->position.dx == -1)
 #define SNAKE_GOING_RIGHT (p_state->position.dx == 1)
@@ -49,7 +51,8 @@
 #define SNAKE_GRID_WIDTH 24
 
 #define SNAKE_PATTERN_EMPTY 0
-#define SNAKE_PATTERN_SCALE 1
+#define SNAKE_PATTERN_COLLISION 1
+#define SNAKE_PATTERN_SCALE 2
 
 APP_TIMER_DEF(snake_game_timer);
 
@@ -69,6 +72,7 @@ typedef struct SnakeGamePositionState {
 typedef struct SnakeGameState {
     SnakeGamePositionState position;
 
+    bool collided;
     bool delay;
     int16_t grid[SNAKE_GRID_WIDTH * SNAKE_GRID_HEIGHT];
 } SnakeGameState;
@@ -124,10 +128,32 @@ static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
                       SNAKE_GRID_PX_CELL, DISPLAY_BLACK);
         break;
 
+    case SNAKE_PATTERN_COLLISION:
+        display_draw_16bit_ext_bitmap(origin_x, origin_y,
+                                      &snake_pattern_collision_bitmap, 0);
+        break;
+
     case SNAKE_PATTERN_SCALE:
         display_draw_16bit_ext_bitmap(origin_x, origin_y,
                                       &snake_pattern_scale_bitmap, 0);
         break;
+    }
+}
+
+static bool snake_game_engine_detect_collision(SnakeGameState *p_state)
+{
+    SnakeGamePositionState *p_pos = &((*p_state).position);
+
+    switch (p_state->grid[SNAKE_GRID_CELL(p_pos->head_x, p_pos->head_y)]) {
+    case SNAKE_CONTENTS_EMPTY:
+        return false;
+
+    case SNAKE_CONTENTS_FOOD:
+        p_pos->shrink_delay++;
+        return false;
+
+    default:
+        return true;
     }
 }
 
@@ -266,6 +292,14 @@ static void snake_initial_snake(SnakeGameState *p_state)
 
 static void snake_game_loop(SnakeGameState *p_state)
 {
+    if (p_state->collided) {
+        if (snake_buttons_read() != SNAKE_BUTTON_NONE) {
+            application_clear();
+        }
+
+        return;
+    }
+
     if (p_state->delay) {
         return;
     } else {
@@ -273,6 +307,15 @@ static void snake_game_loop(SnakeGameState *p_state)
     }
 
     snake_game_engine_update_position(p_state);
+
+    if (snake_game_engine_detect_collision(p_state)) {
+        snake_render_pattern(p_state->position.head_x, p_state->position.head_y,
+                             SNAKE_PATTERN_COLLISION);
+
+        p_state->collided = true;
+        return;
+    }
+
     snake_game_engine_register_position(p_state);
 }
 
@@ -285,7 +328,7 @@ static void snake_game_timer_callback(void *p_context)
 
 void snake_application(void (*service_device)())
 {
-    SnakeGameState state = {.delay = true};
+    SnakeGameState state = {.collided = false, .delay = true};
 
     nsec_controls_add_handler(snake_buttons_handle);
 
