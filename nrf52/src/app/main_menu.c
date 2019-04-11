@@ -11,6 +11,7 @@
 #include "drivers/display.h"
 
 #include "application.h"
+#include "challenges.h"
 #include "gfx_effect.h"
 #include "gui.h"
 #include "home_menu.h"
@@ -39,6 +40,12 @@ void open_conference_schedule(uint8_t item) {
     nsec_schedule_show_dates();
 }
 #endif
+
+void open_challenges(uint8_t item) {
+    menu_close();
+    _state = MAIN_MENU_STATE_CLOSED;
+    nsec_challenges_show();
+}
 
 void open_led_pattern(uint8_t item) {
     menu_close();
@@ -75,6 +82,10 @@ static menu_item_s main_menu_items[] = {
     {
         .label = "Games",
         .handler = open_games_menu,
+    },
+    {
+        .label = "Challenges",
+        .handler = open_challenges,
     },
     {
         .label = "LED pattern",
