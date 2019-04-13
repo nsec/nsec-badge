@@ -9,8 +9,10 @@
 
 #include "images/external/snake_pattern_collision_bitmap.h"
 #include "images/external/snake_pattern_food_bitmap.h"
+#include "images/external/snake_pattern_mirror_bitmap.h"
 #include "images/external/snake_pattern_scale_bitmap.h"
 #include "images/external/snake_pattern_steroids_bitmap.h"
+#include "images/external/snake_pattern_trimmer_bitmap.h"
 #include "images/external/snake_splash_10_bitmap.h"
 #include "images/external/snake_splash_11_bitmap.h"
 #include "images/external/snake_splash_12_bitmap.h"
@@ -32,7 +34,9 @@
 
 #define SNAKE_CONTENTS_EMPTY -1
 #define SNAKE_CONTENTS_FOOD -2
-#define SNAKE_CONTENTS_STEROIDS -3
+#define SNAKE_CONTENTS_MIRROR -3
+#define SNAKE_CONTENTS_STEROIDS -4
+#define SNAKE_CONTENTS_TRIMMER -5
 
 #define SNAKE_GOING_LEFT (p_state->position.dx == -1)
 #define SNAKE_GOING_RIGHT (p_state->position.dx == 1)
@@ -54,11 +58,13 @@
 #define SNAKE_GRID_PX_OFFSET_Y 1
 #define SNAKE_GRID_WIDTH 24
 
-#define SNAKE_PATTERN_EMPTY 0
 #define SNAKE_PATTERN_COLLISION 1
-#define SNAKE_PATTERN_FOOD 2
-#define SNAKE_PATTERN_SCALE 3
-#define SNAKE_PATTERN_STEROIDS 4
+#define SNAKE_PATTERN_EMPTY 2
+#define SNAKE_PATTERN_FOOD 3
+#define SNAKE_PATTERN_MIRROR 4
+#define SNAKE_PATTERN_SCALE 5
+#define SNAKE_PATTERN_STEROIDS 6
+#define SNAKE_PATTERN_TRIMMER 7
 
 APP_TIMER_DEF(snake_game_timer);
 
@@ -68,11 +74,13 @@ typedef struct SnakeGamePositionState {
     uint8_t growth;
     uint8_t head_x;
     uint8_t head_y;
+    bool mirror;
     uint8_t prev_x;
     uint8_t prev_y;
     uint8_t shrink_delay;
     uint8_t tail_x;
     uint8_t tail_y;
+    uint8_t trim_count;
 } SnakeGamePositionState;
 
 typedef struct SnakeGameState {
@@ -145,6 +153,11 @@ static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
                                       &snake_pattern_food_bitmap, 0);
         break;
 
+    case SNAKE_PATTERN_MIRROR:
+        display_draw_16bit_ext_bitmap(origin_x, origin_y,
+                                      &snake_pattern_mirror_bitmap, 0);
+        break;
+
     case SNAKE_PATTERN_SCALE:
         display_draw_16bit_ext_bitmap(origin_x, origin_y,
                                       &snake_pattern_scale_bitmap, 0);
@@ -153,6 +166,11 @@ static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
     case SNAKE_PATTERN_STEROIDS:
         display_draw_16bit_ext_bitmap(origin_x, origin_y,
                                       &snake_pattern_steroids_bitmap, 0);
+        break;
+
+    case SNAKE_PATTERN_TRIMMER:
+        display_draw_16bit_ext_bitmap(origin_x, origin_y,
+                                      &snake_pattern_trimmer_bitmap, 0);
         break;
     }
 }
@@ -169,8 +187,18 @@ static bool snake_game_engine_detect_collision(SnakeGameState *p_state)
         p_pos->shrink_delay++;
         return false;
 
+    case SNAKE_CONTENTS_MIRROR:
+        p_pos->mirror = true;
+        return false;
+
     case SNAKE_CONTENTS_STEROIDS:
         p_pos->shrink_delay += 10;
+        p_pos->trim_count = 0;
+        return false;
+
+    case SNAKE_CONTENTS_TRIMMER:
+        p_pos->shrink_delay = 0;
+        p_pos->trim_count += 5;
         return false;
 
     default:
@@ -191,13 +219,17 @@ static void snake_game_engine_generate_food(SnakeGameState *p_state)
         p_state->food_delay = 30;
     }
 
-    switch (nsec_random_get_byte(50)) {
-    case 0:
+    uint8_t chance = nsec_random_get_byte(100);
+    if (chance >= 99) {
+        contents = SNAKE_CONTENTS_MIRROR;
+        pattern = SNAKE_PATTERN_MIRROR;
+    } else if (chance >= 94) {
+        contents = SNAKE_CONTENTS_TRIMMER;
+        pattern = SNAKE_PATTERN_TRIMMER;
+    } else if (chance >= 88) {
         contents = SNAKE_CONTENTS_STEROIDS;
         pattern = SNAKE_PATTERN_STEROIDS;
-        break;
-
-    default:
+    } else {
         contents = SNAKE_CONTENTS_FOOD;
         pattern = SNAKE_PATTERN_FOOD;
     }
@@ -227,16 +259,79 @@ static void snake_game_engine_register_position(SnakeGameState *p_state)
         p_pos->growth++;
         p_pos->shrink_delay--;
     } else {
-        int16_t next_tail =
-            p_state->grid[SNAKE_GRID_CELL(p_pos->tail_x, p_pos->tail_y)];
+        uint8_t trim = 1;
+        if (p_pos->trim_count > 0) {
+            p_pos->trim_count--;
+            trim = 2;
+        }
 
-        p_state->grid[SNAKE_GRID_CELL(p_pos->tail_x, p_pos->tail_y)] =
-            SNAKE_CONTENTS_EMPTY;
+        for (uint8_t i = 0; i < trim; i++) {
+            int16_t next_tail =
+                p_state->grid[SNAKE_GRID_CELL(p_pos->tail_x, p_pos->tail_y)];
 
-        snake_render_pattern(p_pos->tail_x, p_pos->tail_y, SNAKE_PATTERN_EMPTY);
+            p_state->grid[SNAKE_GRID_CELL(p_pos->tail_x, p_pos->tail_y)] =
+                SNAKE_CONTENTS_EMPTY;
 
-        p_pos->tail_x = SNAKE_GRID_CELL_X(next_tail);
-        p_pos->tail_y = SNAKE_GRID_CELL_Y(next_tail);
+            snake_render_pattern(p_pos->tail_x, p_pos->tail_y,
+                                 SNAKE_PATTERN_EMPTY);
+
+            p_pos->tail_x = SNAKE_GRID_CELL_X(next_tail);
+            p_pos->tail_y = SNAKE_GRID_CELL_Y(next_tail);
+        }
+    }
+}
+
+static void snake_game_engine_mirror_position(SnakeGameState *p_state)
+{
+    SnakeGamePositionState *p_pos = &((*p_state).position);
+
+    if (p_pos->mirror) {
+        p_pos->mirror = false;
+
+        int16_t old_head = SNAKE_GRID_CELL(p_pos->head_x, p_pos->head_y);
+        int16_t old_tail = SNAKE_GRID_CELL(p_pos->tail_x, p_pos->tail_y);
+
+        // Fix movement direction after reversing the snake.
+        int16_t next_tail = p_state->grid[old_tail];
+
+        if (next_tail < old_tail) {
+            if (old_tail - next_tail == 1) {
+                p_pos->dx = 1;
+                p_pos->dy = 0;
+            } else {
+                p_pos->dx = 0;
+                p_pos->dy = 1;
+            }
+        } else {
+            if (next_tail - old_tail == 1) {
+                p_pos->dx = -1;
+                p_pos->dy = 0;
+            } else {
+                p_pos->dx = 0;
+                p_pos->dy = -1;
+            }
+        }
+
+        int16_t new_head = old_tail;
+        int16_t new_tail = old_tail;
+
+        int16_t next = old_tail;
+        int16_t prev = SNAKE_CONTENTS_EMPTY;
+
+        while (new_tail >= 0) {
+            next = p_state->grid[new_tail];
+            p_state->grid[new_tail] = prev;
+            prev = new_tail;
+            new_tail = next;
+        }
+
+        new_tail = old_head;
+
+        p_pos->head_x = SNAKE_GRID_CELL_X(new_head);
+        p_pos->head_y = SNAKE_GRID_CELL_Y(new_head);
+
+        p_pos->tail_x = SNAKE_GRID_CELL_X(new_tail);
+        p_pos->tail_y = SNAKE_GRID_CELL_Y(new_tail);
     }
 }
 
@@ -320,11 +415,13 @@ static void snake_initial_snake(SnakeGameState *p_state)
         .growth = 0,
         .head_x = 0,
         .head_y = 0,
+        .mirror = false,
         .prev_x = 0,
         .prev_y = 0,
         .shrink_delay = 0,
         .tail_x = 0,
         .tail_y = 0,
+        .trim_count = 0,
     };
 
     for (uint16_t i = 0; i < SNAKE_GRID_WIDTH * SNAKE_GRID_HEIGHT; i++) {
@@ -363,6 +460,7 @@ static void snake_game_loop(SnakeGameState *p_state)
         p_state->delay = true;
     }
 
+    snake_game_engine_mirror_position(p_state);
     snake_game_engine_update_position(p_state);
 
     if (snake_game_engine_detect_collision(p_state)) {
