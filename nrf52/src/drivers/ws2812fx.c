@@ -376,6 +376,20 @@ void setReverse_WS2812FX(bool reverse) {
     fx->segments[0].reverse = reverse;
 }
 
+void setSegmentReverse_WS2812FX(uint8_t segment_index, bool reverse) {
+    if (segment_index < fx->num_segments) {
+        RESET_RUNTIME;
+        fx->segments[segment_index].reverse = reverse;
+    }
+}
+
+uint8_t getSegmentReverse_WS2812FX(uint8_t segment_index) {
+    if (segment_index < fx->num_segments) {
+        return fx->segments[segment_index].reverse;
+    }
+    return 0;
+}
+
 void increaseSpeed_WS2812FX(uint8_t s) {
     uint16_t newSpeed = constrain(SEGMENT.speed + s, SPEED_MIN, SPEED_MAX);
     setSpeed_WS2812FX(newSpeed);
