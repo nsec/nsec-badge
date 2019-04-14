@@ -10,6 +10,7 @@
 #include "main_menu.h"
 #include <string.h>
 #include "nrf_delay.h"
+#include "app_intro.h"
 
 #include "images/neurosoft_logo_bitmap.h"
 #include "images/neurosoft_circle_bitmap.h"
@@ -104,8 +105,9 @@ static void animated_name(const struct bitmap *bitmap)
     }
 }
 
+#ifdef NSEC_FLAVOR_CTF
 //TODO improve with some neopixeling ?
-static void nsec_ctf_intro(void)
+void app_intro(void (*service_callback)())
 {
     gfx_draw_16bit_bitmap(47, 22, &neurosoft_circle_bitmap, DISPLAY_BLACK);
     nrf_delay_ms(500);
@@ -118,18 +120,15 @@ static void nsec_ctf_intro(void)
 
     animated_name(&beyond_reality_bitmap);
     nrf_delay_ms(100);
-}
 
-static void nsec_conf_intro(void)
+    /* Return to default app */
+    application_clear();
+}
+#else
+void app_intro(void (*service_callback)())
 {
     //todo
+    /* Return to default app */
+    application_clear();
 }
-
-void nsec_intro(void)
-{
-#ifdef NSEC_FLAVOR_CTF
-    nsec_ctf_intro();
-#else
-    nsec_conf_intro();
 #endif
-}

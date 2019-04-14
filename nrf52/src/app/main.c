@@ -46,7 +46,7 @@
 #include "mode_zombie.h"
 #include "persistency.h"
 #include "soldering.h"
-#include "intro.h"
+#include "app_intro.h"
 
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
@@ -151,8 +151,6 @@ int main(void) {
     // (the CLI takes over the UART, which the flash mode uses).
     cli_init();
 
-    nsec_intro();
-
     init_ble();
     nsec_status_bar_init();
     nsec_battery_manager_init();
@@ -162,7 +160,12 @@ int main(void) {
 
     load_stored_led_settings();
 
-    init_soldering_application();
+#ifdef SOLDERING_TRACK
+    application_set(soldering_application);
+#else
+    /* Set the intro as the first app to run */
+    application_set(app_intro);
+#endif
 
     /*
      * Main loop
