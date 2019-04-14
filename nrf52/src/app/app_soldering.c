@@ -15,7 +15,7 @@
 #include "drivers/controls.h"
 
 #include "timer.h"
-#include "soldering.h"
+#include "app_soldering.h"
 #include "gfx_effect.h"
 #include "application.h"
 
@@ -149,19 +149,12 @@ static void init_soldering_track(void) {
     nsec_controls_add_handler(soldering_button_handler);
 }
 
-void soldering_application(void (*service_callback)()) {
+void app_soldering(void (*service_callback)()) {
     init_soldering_track();
 
-    while (application_get() == soldering_application) {
+    while (application_get() == app_soldering) {
         service_callback();
     }
 
     nsec_controls_suspend_handler(soldering_button_handler);
-}
-
-void init_soldering_application(void)
-{
-#ifdef SOLDERING_TRACK
-    application_set(soldering_application);
-#endif
 }

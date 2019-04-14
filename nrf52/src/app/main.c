@@ -45,7 +45,7 @@
 #include "home_menu.h"
 #include "mode_zombie.h"
 #include "persistency.h"
-#include "soldering.h"
+#include "app_soldering.h"
 #include "app_intro.h"
 
 #include "ble/service_characteristic.h"
@@ -161,7 +161,7 @@ int main(void) {
     load_stored_led_settings();
 
 #ifdef SOLDERING_TRACK
-    application_set(soldering_application);
+    application_set(app_soldering);
 #else
     /* Set the intro as the first app to run */
     application_set(app_intro);
