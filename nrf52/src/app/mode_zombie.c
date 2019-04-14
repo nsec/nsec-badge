@@ -26,32 +26,40 @@ static void mode_zombie_timer_handler(void *p_context) {
     process_mode_zombie = true;
 }
 
-static void mode_zombie_glitch(void (*service_device)()) {
+void app_mode_zombie(void (*service_device)()) {
     uint64_t start = get_current_time_millis();
     uint64_t elapse = 0;
 
     // Make sure Screen is on !
     display_set_brightness(100);
 
+    /* Set the neopixel pattern */
     resetSegments_WS2812FX();
     setMode_WS2812FX(FX_MODE_BLINK);
     setArrayColor_packed_WS2812FX(RED, 0);
     setArrayColor_packed_WS2812FX(ORANGE, 1);
     setSpeed_WS2812FX(100);
 
-    while (elapse <= 15000) { // 15 sec
-        uint8_t x = nsec_random_get_byte(160);
-        uint8_t y = nsec_random_get_byte(80);
-        uint16_t color = nsec_random_get_u16(0xFFFF);
-        display_draw_pixel(x, y, color);
-        service_WS2812FX();
+    while (elapse <= ZOMBIE_MODE_DURATION) {
+        for (int i=0; i < 32; i++) {
+            uint8_t x = nsec_random_get_byte(160);
+            uint8_t y = nsec_random_get_byte(80);
+            uint16_t color = nsec_random_get_u16(0xFFFF);
+            display_draw_pixel(x, y, color);
+	}
+	/* Service device and wait for next interrupt */
+        service_device();
         elapse = get_current_time_millis() - start;
     }
 
-    // restore badge
+    /* Restore badge normal state */
     load_stored_led_settings();
     update_stored_display_brightness(get_stored_display_brightness());
-	nsec_controls_enable(true);
+
+    /* Re-enable buttons */
+    nsec_controls_enable(true);
+
+    /* Return to default app */
     application_clear();
 }
 
@@ -87,7 +95,11 @@ void mode_zombie_process(void) {
 
     if (rand == 1) {
         nsec_controls_enable(false);
-        application_set(mode_zombie_glitch);
+
+	/* Set zombie as the next app to run if it's not already */
+	if (application_get() != app_mode_zombie) {
+            application_set(app_mode_zombie);
+	}
 
         // Reset the odds
         set_persist_zombie_odds_modifier(0);

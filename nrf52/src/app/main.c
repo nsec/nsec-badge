@@ -115,6 +115,8 @@ static void main_service_device() {
     battery_status_process();
     mode_zombie_process();
     service_WS2812FX();
+
+    /* Wait until next event */
     power_manage();
 }
 
