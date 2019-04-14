@@ -9,13 +9,13 @@
 #include "gfx_effect.h"
 #include "random.h"
 
-#include "images/external/snake_pattern_collision_bitmap.h"
-#include "images/external/snake_pattern_food_bitmap.h"
-#include "images/external/snake_pattern_mirror_bitmap.h"
-#include "images/external/snake_pattern_scale_bitmap.h"
-#include "images/external/snake_pattern_steroids_bitmap.h"
-#include "images/external/snake_pattern_trimmer_bitmap.h"
 #include "images/external/snake_splash_bitmap.h"
+#include "images/snake_pattern_collision_bitmap.h"
+#include "images/snake_pattern_food_bitmap.h"
+#include "images/snake_pattern_mirror_bitmap.h"
+#include "images/snake_pattern_scale_bitmap.h"
+#include "images/snake_pattern_steroids_bitmap.h"
+#include "images/snake_pattern_trimmer_bitmap.h"
 
 #define SNAKE_BUTTON_NONE 255
 
@@ -260,33 +260,33 @@ static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
         break;
 
     case SNAKE_PATTERN_COLLISION:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_collision_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y,
+                              &snake_pattern_collision_bitmap, 0);
         break;
 
     case SNAKE_PATTERN_FOOD:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_food_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y, &snake_pattern_food_bitmap,
+                              0);
         break;
 
     case SNAKE_PATTERN_MIRROR:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_mirror_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y, &snake_pattern_mirror_bitmap,
+                              0);
         break;
 
     case SNAKE_PATTERN_SCALE:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_scale_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y, &snake_pattern_scale_bitmap,
+                              0);
         break;
 
     case SNAKE_PATTERN_STEROIDS:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_steroids_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y,
+                              &snake_pattern_steroids_bitmap, 0);
         break;
 
     case SNAKE_PATTERN_TRIMMER:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_trimmer_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y, &snake_pattern_trimmer_bitmap,
+                              0);
         break;
     }
 }
