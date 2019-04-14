@@ -56,7 +56,7 @@
 #define SNAKE_GRID_PX_CELL 5
 #define SNAKE_GRID_PX_OFFSET_X 1
 #define SNAKE_GRID_PX_OFFSET_Y 1
-#define SNAKE_GRID_WIDTH 24
+#define SNAKE_GRID_WIDTH 23
 
 #define SNAKE_PATTERN_COLLISION 1
 #define SNAKE_PATTERN_EMPTY 2
@@ -66,12 +66,13 @@
 #define SNAKE_PATTERN_STEROIDS 6
 #define SNAKE_PATTERN_TRIMMER 7
 
+#define SNAKE_SIDEBAR_COLOR 0x2945
+
 APP_TIMER_DEF(snake_game_timer);
 
 typedef struct SnakeGamePositionState {
     int8_t dx;
     int8_t dy;
-    uint8_t growth;
     uint8_t head_x;
     uint8_t head_y;
     bool mirror;
@@ -88,6 +89,7 @@ typedef struct SnakeGameState {
 
     bool collided;
     bool delay;
+    uint8_t growth;
     uint8_t food_delay;
     int16_t grid[SNAKE_GRID_WIDTH * SNAKE_GRID_HEIGHT];
 } SnakeGameState;
@@ -175,34 +177,34 @@ static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
     }
 }
 
-static bool snake_game_engine_detect_collision(SnakeGameState *p_state)
+static uint8_t snake_game_engine_detect_collision(SnakeGameState *p_state)
 {
     SnakeGamePositionState *p_pos = &((*p_state).position);
 
     switch (p_state->grid[SNAKE_GRID_CELL(p_pos->head_x, p_pos->head_y)]) {
     case SNAKE_CONTENTS_EMPTY:
-        return false;
+        return 0;
 
     case SNAKE_CONTENTS_FOOD:
         p_pos->shrink_delay++;
-        return false;
+        return 1;
 
     case SNAKE_CONTENTS_MIRROR:
         p_pos->mirror = true;
-        return false;
+        return 1;
 
     case SNAKE_CONTENTS_STEROIDS:
         p_pos->shrink_delay += 10;
         p_pos->trim_count = 0;
-        return false;
+        return 1;
 
     case SNAKE_CONTENTS_TRIMMER:
         p_pos->shrink_delay = 0;
         p_pos->trim_count += 5;
-        return false;
+        return 1;
 
     default:
-        return true;
+        return 2;
     }
 }
 
@@ -256,7 +258,6 @@ static void snake_game_engine_register_position(SnakeGameState *p_state)
     snake_render_pattern(p_pos->head_x, p_pos->head_y, SNAKE_PATTERN_SCALE);
 
     if (p_pos->shrink_delay > 0) {
-        p_pos->growth++;
         p_pos->shrink_delay--;
     } else {
         uint8_t trim = 1;
@@ -382,6 +383,18 @@ static void snake_game_engine_update_position(SnakeGameState *p_state)
     }
 }
 
+static void snake_update_sidebar(SnakeGameState *p_state)
+{
+    char count[4];
+    sprintf(count, "%03d", p_state->growth);
+
+    gfx_set_text_background_color(DISPLAY_WHITE, SNAKE_SIDEBAR_COLOR);
+    gfx_set_cursor(141, 2);
+    gfx_puts(count);
+
+    gfx_update();
+}
+
 static void snake_boot_sequence(void (*service_device)())
 {
     service_device();
@@ -400,9 +413,6 @@ static void snake_boot_sequence(void (*service_device)())
     do {
         service_device();
     } while (snake_buttons_read() == SNAKE_BUTTON_NONE);
-
-    gfx_fill_rect(0, 0, DISPLAY_HEIGHT, DISPLAY_WIDTH, DISPLAY_BLACK);
-    gfx_update();
 }
 
 static void snake_initial_snake(SnakeGameState *p_state)
@@ -412,7 +422,6 @@ static void snake_initial_snake(SnakeGameState *p_state)
     p_state->position = (SnakeGamePositionState){
         .dx = 1,
         .dy = 0,
-        .growth = 0,
         .head_x = 0,
         .head_y = 0,
         .mirror = false,
@@ -444,6 +453,17 @@ static void snake_initial_snake(SnakeGameState *p_state)
     }
 }
 
+static void snake_prepare_field(SnakeGameState *p_state)
+{
+    gfx_fill_rect(0, 0, DISPLAY_HEIGHT, DISPLAY_WIDTH, DISPLAY_BLACK);
+    gfx_fill_rect(139, 0, 1, DISPLAY_HEIGHT, SNAKE_SIDEBAR_COLOR);
+    gfx_fill_rect(140, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT, SNAKE_SIDEBAR_COLOR);
+
+    gfx_update();
+
+    snake_update_sidebar(p_state);
+}
+
 static void snake_game_loop(SnakeGameState *p_state)
 {
     if (p_state->collided) {
@@ -463,16 +483,23 @@ static void snake_game_loop(SnakeGameState *p_state)
     snake_game_engine_mirror_position(p_state);
     snake_game_engine_update_position(p_state);
 
-    if (snake_game_engine_detect_collision(p_state)) {
+    switch (snake_game_engine_detect_collision(p_state)) {
+    case 2:
         snake_render_pattern(p_state->position.head_x, p_state->position.head_y,
                              SNAKE_PATTERN_COLLISION);
 
         p_state->collided = true;
-        return;
-    }
+        break;
 
-    snake_game_engine_register_position(p_state);
-    snake_game_engine_generate_food(p_state);
+    case 1:
+        p_state->growth++;
+        snake_update_sidebar(p_state);
+        // fall through
+
+    default:
+        snake_game_engine_register_position(p_state);
+        snake_game_engine_generate_food(p_state);
+    }
 }
 
 static void snake_game_timer_callback(void *p_context)
@@ -489,6 +516,7 @@ void snake_application(void (*service_device)())
     nsec_controls_add_handler(snake_buttons_handle);
 
     snake_boot_sequence(service_device);
+    snake_prepare_field(&state);
     snake_initial_snake(&state);
 
     app_timer_create(&snake_game_timer, APP_TIMER_MODE_REPEATED,
