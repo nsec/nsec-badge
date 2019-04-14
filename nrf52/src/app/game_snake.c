@@ -96,6 +96,11 @@ typedef struct SnakeGameState {
     uint8_t growth;
     uint8_t food_delay;
     int16_t grid[SNAKE_GRID_WIDTH * SNAKE_GRID_HEIGHT];
+
+    uint32_t z1;
+    uint32_t z2;
+    uint32_t z3;
+    uint32_t z4;
 } SnakeGameState;
 
 static const struct bitmap_ext *splash_animation[] = {
@@ -231,6 +236,34 @@ static void snake_init_sidebar_blob()
         } else {
             snake_sidebar_blob[i] = SNAKE_SIDEBAR_COLOR >> 8;
         }
+    }
+}
+#endif
+
+#ifndef NSEC_FLAVOR_CONF
+static void snake_mutate_sidebar_blob(SnakeGameState *p_state)
+{
+    uint32_t b;
+    b = ((p_state->z1 << 6) ^ p_state->z1) >> 13;
+    p_state->z1 = ((p_state->z1 & 4294967294U) << 18) ^ b;
+    b = ((p_state->z2 << 2) ^ p_state->z2) >> 27;
+    p_state->z2 = ((p_state->z2 & 4294967288U) << 2) ^ b;
+    b = ((p_state->z3 << 13) ^ p_state->z3) >> 21;
+    p_state->z3 = ((p_state->z3 & 4294967280U) << 7) ^ b;
+    b = ((p_state->z4 << 3) ^ p_state->z4) >> 12;
+    p_state->z4 = ((p_state->z4 & 4294967168U) << 13) ^ b;
+
+    uint32_t xor = p_state->z1 ^ p_state->z2 ^ p_state->z3 ^ p_state->z4;
+
+    for (uint16_t i = 0; i < 1292; i += 4) {
+        for (uint8_t j = 0; j < 4; j++) {
+            snake_sidebar_blob[i + j] =
+                snake_sidebar_blob[i + j] ^ ((xor >> (j * 8)) & 0xFF);
+        }
+    }
+
+    for (uint16_t i = 0; i < 1292; i += p_state->growth) {
+        snake_sidebar_blob[i] ^= ((xor >> 16) & 0xFF) ^ (p_state->growth - 1);
     }
 }
 #endif
@@ -600,6 +633,11 @@ static void snake_game_loop(SnakeGameState *p_state)
 
     case 1:
         p_state->growth++;
+
+#ifndef NSEC_FLAVOR_CONF
+        snake_mutate_sidebar_blob(p_state);
+#endif
+
         snake_update_sidebar(p_state);
         // fall through
 
@@ -618,7 +656,13 @@ static void snake_game_timer_callback(void *p_context)
 
 void snake_application(void (*service_device)())
 {
-    SnakeGameState state = {.collided = false, .delay = true, .food_delay = 0};
+    SnakeGameState state = {.collided = false,
+                            .delay = true,
+                            .food_delay = 0,
+                            .z1 = 5,
+                            .z2 = 14,
+                            .z3 = 97,
+                            .z4 = 372};
 
     nsec_controls_add_handler(snake_buttons_handle);
 
