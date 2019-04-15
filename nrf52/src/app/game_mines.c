@@ -59,7 +59,7 @@
 
 #define MINES_GAME_GOTO(new_state) p_state->current_state = new_state
 
-#define MINES_GAME_LIST_LIMIT (11 * 8 - 22)
+#define MINES_GAME_LIST_LIMIT (11 * 8 - 20)
 
 #define MINES_GAME_STATE_BOOT 1
 #define MINES_GAME_STATE_BOOT_SPLASH 2
@@ -98,7 +98,7 @@ APP_TIMER_DEF(mines_timer_id);
 static uint8_t mines_button_read_value = MINES_BUTTON_NONE;
 
 static uint8_t mines_difficulty_levels[3][3] = {
-    {5, 5, 7}, {7, 7, 11}, {11, 8, 22}};
+    {5, 5, 5}, {7, 7, 10}, {11, 8, 20}};
 //                           ^  ^  ^
 //               field width +  |  |
 //              field height -  +  |
