@@ -1,4 +1,4 @@
-.PHONY: all default clean
+.PHONY: all nrf stm default clean
 
 default: all
 
@@ -17,19 +17,23 @@ builds/s132_nrf52_5.0.0_softdevice.hex:
 	$(MAKE) -C nrf52 nordicsdk
 	cp nrf52/nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex $@
 
-FIRMWARE += builds/nsec19_nrf52_ctf.elf
-FIRMWARE += builds/nsec19_nrf52_admin.elf
-FIRMWARE += builds/nsec19_nrf52_speaker.elf
-FIRMWARE += builds/nsec19_nrf52_conf.elf
-FIRMWARE += builds/nsec19_nrf52_trainer.elf
-FIRMWARE += builds/nsec19_nrf52_soldering.elf
-FIRMWARE += builds/nsec19_stm32_debugger.elf
-FIRMWARE += builds/nsec19_stm32_debugger.bin
-FIRMWARE += builds/nsec19_stm32_soldering.elf
-FIRMWARE += builds/nsec19_stm32_soldering.bin
-FIRMWARE += builds/s132_nrf52_5.0.0_softdevice.hex
+FIRMWARE_NRF += builds/nsec19_nrf52_ctf.elf
+FIRMWARE_NRF += builds/nsec19_nrf52_admin.elf
+FIRMWARE_NRF += builds/nsec19_nrf52_speaker.elf
+FIRMWARE_NRF += builds/nsec19_nrf52_conf.elf
+FIRMWARE_NRF += builds/nsec19_nrf52_trainer.elf
+FIRMWARE_NRF += builds/nsec19_nrf52_soldering.elf
+FIRMWARE_NRF += builds/s132_nrf52_5.0.0_softdevice.hex
 
-all: $(FIRMWARE)
+FIRMWARE_STM += builds/nsec19_stm32_debugger.elf
+FIRMWARE_STM += builds/nsec19_stm32_debugger.bin
+FIRMWARE_STM += builds/nsec19_stm32_soldering.elf
+FIRMWARE_STM += builds/nsec19_stm32_soldering.bin
+
+
+all: $(FIRMWARE_NRF) $(FIRMWARE_STM)
+nrf: $(FIRMWARE_NRF)
+stm: $(FIRMWARE_STM)
 
 clean:
 	$(MAKE) -C stm32 clean
