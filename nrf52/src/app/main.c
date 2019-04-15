@@ -44,6 +44,7 @@
 #include "persistency.h"
 #include "app_soldering.h"
 #include "app_intro.h"
+#include "app_sleep.h"
 
 #include "ble/resistance_bar_beacon.h"
 #include "ble/service_advertiser.h"
@@ -162,6 +163,8 @@ int main(void) {
     // cli_init depends on timer_init, and also needs to be after flash_mode
     // (the CLI takes over the UART, which the flash mode uses).
     cli_init();
+
+    sleep_init();
 
     init_ble();
 

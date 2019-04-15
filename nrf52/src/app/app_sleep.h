@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Victor Nikulshin
+ * Copyright 2019 Michael Jeanson <mjeanson@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,14 @@
  * SOFTWARE.
  */
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#ifndef APP_SLEEP_H
+#define APP_SLEEP_H
 
-#include <stdbool.h>
+#define SLEEP_TIMER_TIMEOUT 1000 /* ms */
+#define SLEEP_DELAY 15000
 
-typedef void (*application_t)(void (*service_callback)());
+void sleep_init(void);
+void sleep_reset(void);
+void app_sleep(void (*service_device)());
 
-void application_clear(void);
-application_t application_get(void);
-application_t application_get_default(void);
-bool application_is_default(void);
-void application_set(application_t callback);
-
-#endif
+#endif /* APP_SLEEP_H */

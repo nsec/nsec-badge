@@ -14,6 +14,7 @@
 #include "menu.h"
 #include "nsec_settings.h"
 #include "status_bar.h"
+#include "app_sleep.h"
 #include <string.h>
 
 #include "images/neurosoft_logo_bitmap.h"
@@ -296,6 +297,7 @@ static void home_menu_handle_buttons(button_t button) {
 
     switch (button) {
     case BUTTON_BACK:
+        sleep_reset();
         if (_state == HOME_STATE_MENU || _state == HOME_STATE_SETTINGS) {
             // Close menu (show intro ???); or maybe nothing
         } else if (_state == HOME_STATE_MENU_SELECTED) {
@@ -308,6 +310,7 @@ static void home_menu_handle_buttons(button_t button) {
         break;
 
     case BUTTON_DOWN:
+        sleep_reset();
         if (_state == HOME_STATE_MENU) {
             _state = HOME_STATE_SETTINGS;
             draw_cursor();
@@ -318,6 +321,7 @@ static void home_menu_handle_buttons(button_t button) {
         break;
 
     case BUTTON_UP:
+        sleep_reset();
         if (_state == HOME_STATE_MENU) {
             _state = HOME_STATE_SETTINGS;
             draw_cursor();
@@ -329,6 +333,7 @@ static void home_menu_handle_buttons(button_t button) {
         break;
 
     case BUTTON_ENTER:
+        sleep_reset();
         if (_state == HOME_STATE_MENU) {
             _state = HOME_STATE_MENU_SELECTED;
             open_burger_menu();
@@ -344,6 +349,7 @@ static void home_menu_handle_buttons(button_t button) {
 }
 
 void home_menu_application(void (*service_callback)()) {
+    sleep_reset();
     menu_handler_init();
     nsec_status_bar_init();
     nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);

@@ -23,12 +23,43 @@
 #include "application.h"
 #include "home_menu.h"
 
-static application_t application = 0;
+#define DEFAULT_APP home_menu_application
 
-void application_clear() { application = 0; }
+static application_t application = DEFAULT_APP;
 
-application_t application_get() {
-    return application ? application : home_menu_application;
+void application_clear()
+{
+    application = DEFAULT_APP;
 }
 
-void application_set(application_t callback) { application = callback; }
+/*
+ * Return the current application, if none return the default.
+ */
+application_t application_get(void)
+{
+    return application;
+}
+
+/*
+ * Return the default application
+ */
+application_t application_get_default(void)
+{
+    return DEFAULT_APP;
+}
+
+/*
+ * Return true if the current app is the default app.
+ */
+bool application_is_default(void)
+{
+	return application == DEFAULT_APP;
+}
+
+/*
+ * Set the next application to run
+ */
+void application_set(application_t callback)
+{
+    application = callback;
+}
