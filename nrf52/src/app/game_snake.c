@@ -9,28 +9,13 @@
 #include "gfx_effect.h"
 #include "random.h"
 
-#include "images/external/snake_pattern_collision_bitmap.h"
-#include "images/external/snake_pattern_food_bitmap.h"
-#include "images/external/snake_pattern_mirror_bitmap.h"
-#include "images/external/snake_pattern_scale_bitmap.h"
-#include "images/external/snake_pattern_steroids_bitmap.h"
-#include "images/external/snake_pattern_trimmer_bitmap.h"
-#include "images/external/snake_splash_10_bitmap.h"
-#include "images/external/snake_splash_11_bitmap.h"
-#include "images/external/snake_splash_12_bitmap.h"
-#include "images/external/snake_splash_13_bitmap.h"
-#include "images/external/snake_splash_14_bitmap.h"
-#include "images/external/snake_splash_15_bitmap.h"
-#include "images/external/snake_splash_1_bitmap.h"
-#include "images/external/snake_splash_2_bitmap.h"
-#include "images/external/snake_splash_3_bitmap.h"
-#include "images/external/snake_splash_4_bitmap.h"
-#include "images/external/snake_splash_5_bitmap.h"
-#include "images/external/snake_splash_6_bitmap.h"
-#include "images/external/snake_splash_7_bitmap.h"
-#include "images/external/snake_splash_8_bitmap.h"
-#include "images/external/snake_splash_9_bitmap.h"
 #include "images/external/snake_splash_bitmap.h"
+#include "images/snake_pattern_collision_bitmap.h"
+#include "images/snake_pattern_food_bitmap.h"
+#include "images/snake_pattern_mirror_bitmap.h"
+#include "images/snake_pattern_scale_bitmap.h"
+#include "images/snake_pattern_steroids_bitmap.h"
+#include "images/snake_pattern_trimmer_bitmap.h"
 
 #define SNAKE_BUTTON_NONE 255
 
@@ -102,14 +87,6 @@ typedef struct SnakeGameState {
     uint32_t z3;
     uint32_t z4;
 } SnakeGameState;
-
-static const struct bitmap_ext *splash_animation[] = {
-    &snake_splash_1_bitmap,  &snake_splash_2_bitmap,  &snake_splash_3_bitmap,
-    &snake_splash_4_bitmap,  &snake_splash_5_bitmap,  &snake_splash_6_bitmap,
-    &snake_splash_7_bitmap,  &snake_splash_8_bitmap,  &snake_splash_9_bitmap,
-    &snake_splash_10_bitmap, &snake_splash_11_bitmap, &snake_splash_12_bitmap,
-    &snake_splash_13_bitmap, &snake_splash_14_bitmap, &snake_splash_15_bitmap,
-};
 
 static uint8_t snake_button_read_value = SNAKE_BUTTON_NONE;
 
@@ -283,33 +260,33 @@ static void snake_render_pattern(uint8_t x, uint8_t y, uint8_t pattern)
         break;
 
     case SNAKE_PATTERN_COLLISION:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_collision_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y,
+                              &snake_pattern_collision_bitmap, 0);
         break;
 
     case SNAKE_PATTERN_FOOD:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_food_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y, &snake_pattern_food_bitmap,
+                              0);
         break;
 
     case SNAKE_PATTERN_MIRROR:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_mirror_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y, &snake_pattern_mirror_bitmap,
+                              0);
         break;
 
     case SNAKE_PATTERN_SCALE:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_scale_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y, &snake_pattern_scale_bitmap,
+                              0);
         break;
 
     case SNAKE_PATTERN_STEROIDS:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_steroids_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y,
+                              &snake_pattern_steroids_bitmap, 0);
         break;
 
     case SNAKE_PATTERN_TRIMMER:
-        display_draw_16bit_ext_bitmap(origin_x, origin_y,
-                                      &snake_pattern_trimmer_bitmap, 0);
+        gfx_draw_16bit_bitmap(origin_x, origin_y, &snake_pattern_trimmer_bitmap,
+                              0);
         break;
     }
 }
@@ -541,15 +518,6 @@ static void snake_boot_sequence(void (*service_device)())
     display_draw_16bit_ext_bitmap(0, 0, &snake_splash_bitmap, 0);
 
     snake_buttons_read();
-    do {
-        service_device();
-    } while (snake_buttons_read() == SNAKE_BUTTON_NONE);
-
-    for (uint8_t i = 0; i < 15; i++) {
-        service_device();
-        display_draw_16bit_ext_bitmap(40, 0, splash_animation[i], 0);
-    }
-
     do {
         service_device();
     } while (snake_buttons_read() == SNAKE_BUTTON_NONE);
