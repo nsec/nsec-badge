@@ -961,7 +961,7 @@ static void mines_game_state_post_menu_handle(MinesGameState *p_state)
         break;
     }
 
-    nrf_delay_ms(2000);
+    nrf_delay_ms(5000);
     MINES_GAME_GOTO(MINES_GAME_STATE_MENU);
 }
 #endif
