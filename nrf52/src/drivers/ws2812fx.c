@@ -383,9 +383,44 @@ void setSegmentReverse_WS2812FX(uint8_t segment_index, bool reverse) {
     }
 }
 
-uint8_t getSegmentReverse_WS2812FX(uint8_t segment_index) {
+bool getSegmentReverse_WS2812FX(uint8_t segment_index) {
     if (segment_index < fx->num_segments) {
         return fx->segments[segment_index].reverse;
+    }
+    return 0;
+}
+
+uint8_t getSegmentStart_WS2812FX(uint8_t segment_index) {
+    if (segment_index < fx->num_segments) {
+        return fx->segments[segment_index].start;
+    }
+    return 0;
+}
+
+uint8_t getSegmentStop_WS2812FX(uint8_t segment_index) {
+    if (segment_index < fx->num_segments) {
+        return fx->segments[segment_index].stop;
+    }
+    return 0;
+}
+
+const char* getSegmentModeString_WS2812FX(uint8_t segment_index) {
+    if (segment_index < fx->num_segments) {
+        return name[fx->segments[segment_index].mode];
+    }
+    return "Unknown";
+}
+
+uint16_t getSegmentSpeed_WS2812FX(uint8_t segment_index) {
+    if (segment_index < fx->num_segments) {
+        return fx->segments[segment_index].speed;
+    }
+    return 0;
+}
+
+uint16_t getSegmentColor_WS2812FX(uint8_t segment_index, uint8_t color_index) {
+    if (segment_index < fx->num_segments) {
+        return fx->segments[segment_index].colors[color_index];
     }
     return 0;
 }
