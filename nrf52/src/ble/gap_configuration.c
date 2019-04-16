@@ -27,7 +27,7 @@ void set_default_gap_parameters(const char * device_name, ble_gap_adv_params_t* 
     set_default_connection_parameters(device_name);
 }
 
-void set_default_advertised_service(VendorService* service){
+void set_default_advertised_service(struct VendorService* service){
     set_default_advertising_data(&service->uuid);
 }
 

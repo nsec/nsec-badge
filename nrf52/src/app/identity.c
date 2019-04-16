@@ -49,7 +49,7 @@ typedef struct {
 } BadgeIdentity;
 
 static BadgeIdentity identity;
-static VendorService identity_ble_service;
+static struct VendorService identity_ble_service;
 static ServiceCharacteristic name_characteristic;
 static ServiceCharacteristic unlock_password_characteristic;
 static ServiceCharacteristic unlocked_characteristic;
@@ -98,7 +98,6 @@ void init_identity_service() {
     //memcpy(identity.avatar, default_avatar_bitmap, sizeof(identity.avatar));
     identity.unlocked = 0;
     configure_service();
-    set_default_advertised_service(&identity_ble_service);
 }
 
 /*static void nsec_draw_empty_progress_bar(uint16_t x, uint16_t y, uint16_t w) {

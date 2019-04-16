@@ -32,6 +32,7 @@
 #include "uuid.h"
 #include "abstract_ble_observer.h"
 #include "ble_scan.h"
+#include "drivers/uart.h"
 
 
 #define APP_BLE_OBSERVER_PRIO 3
@@ -46,7 +47,7 @@ typedef struct{
     const char* device_name;
     ble_gap_adv_params_t advertising_parameters;
     uint16_t vendor_service_count;
-    VendorService* vendor_services[MAX_VENDOR_SERVICE_COUNT];
+    struct VendorService* vendor_services[MAX_VENDOR_SERVICE_COUNT];
     struct Advertiser* advertiser;
     struct BleObserver* ble_observers[MAX_BLE_OBSERVERS];
     uint8_t ble_observers_count;
@@ -101,29 +102,23 @@ ret_code_t create_ble_device(char* device_name){
         }
         register_nsec_vendor_specific_uuid();
         ble_device->ble_observers_count = 0;
+        gatt_init();
         return NRF_SUCCESS;
     }
     return -1;
-}
-
-void configure_advertising(){
-    if(ble_device == NULL)
-        return;
-    gatt_init();
-    set_default_gap_parameters(ble_device->device_name, &(ble_device->advertising_parameters));
 }
 
 void set_advertiser(struct Advertiser* advertiser){
     ble_device->advertiser = advertiser;
 }
 
-void start_advertising(){
+void ble_start_advertising(){
     if(ble_device->advertiser == NULL)
         return;
     ble_device->advertiser->start_advertisement();
 }
 
-void stop_advertising(){
+void ble_stop_advertising(){
     ble_device->advertiser->stop_advertisement();
 }
 
@@ -147,7 +142,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     //pm_on_ble_evt(p_ble_evt);
     switch (p_ble_evt->header.evt_id){
         case BLE_GAP_EVT_DISCONNECTED:
-            start_advertising();
+            ble_start_advertising();
             break;
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             const uint16_t conn = p_ble_evt->evt.gatts_evt.conn_handle;
@@ -218,11 +213,12 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             buffer = NULL;
             break;
         default:
+            uart_printf("ble event received: %d", p_ble_evt->header.evt_id);
             ble_device->advertiser->on_ble_advertising_event(p_ble_evt);
     }
 }
 
-uint32_t add_vendor_service(VendorService* service){
+uint32_t add_vendor_service(struct VendorService* service){
     if(ble_device->vendor_service_count >= MAX_VENDOR_SERVICE_COUNT)
         return 1;
     uint32_t error_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &service->uuid, &service->handle);
@@ -390,7 +386,7 @@ static void reply_to_client_request(uint8_t operation, uint16_t status_code, uin
 
 static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid){
     for(int i = 0; i < ble_device->vendor_service_count; i++){
-        VendorService* service = ble_device->vendor_services[i];
+        struct VendorService* service = ble_device->vendor_services[i];
         ServiceCharacteristic* characteristic = get_characteristic(service, uuid);
         if(characteristic != NULL)
             return characteristic;
@@ -400,7 +396,7 @@ static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid){
 
 static ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle){
     for(int i = 0; i < ble_device->vendor_service_count; i++){
-        VendorService* service = ble_device->vendor_services[i];
+        struct VendorService* service = ble_device->vendor_services[i];
         for(int j = 0; j < service->characteristic_count; j++){
             ServiceCharacteristic* characteristic = service->characteristics[j];
             if(characteristic->handle == handle){

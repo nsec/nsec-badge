@@ -121,7 +121,7 @@
 #define NRF_SDH_BLE_GAP_EVENT_LENGTH 3 //The time set aside for this connection on every connection interval in 1.25 ms units.
 
 // Defines related to logging
-#define NRF_LOG_ENABLED 1
+#define NRF_LOG_ENABLED 0
 #define NRF_CLI_LOG_BACKEND 1
 #define NRF_LOG_BACKEND_RTT_ENABLED 1
 #define NRF_LOG_BACKEND_RTT_TEMP_BUFFER_SIZE 64
@@ -168,7 +168,7 @@
 #define NRF_BLE_CONN_PARAMS_MAX_SUPERVISION_TIMEOUT_DEVIATION 65535
 #define BLE_CONN_PARAMS_BLE_OBSERVER_PRIO 1
 #define BLE_CONN_STATE_BLE_OBSERVER_PRIO 0
-#define BLE_ADVERTISING_ENABLED 0 //Will be used in the future.
+#define BLE_ADVERTISING_ENABLED 1
 #define NRF_BLE_QWR_ENABLED 0  //Will be used in the future: Queued writes support module (prepare/execute write)
 #define PM_MAX_REGISTRANTS 3  //Number of event handlers that can be registered.
 #define PM_FLASH_BUFFERS 2  //Number of internal buffers for flash operations.

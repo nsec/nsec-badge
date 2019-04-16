@@ -29,7 +29,6 @@
 
 #include "application.h"
 #include "cli.h"
-#include "logs.h"
 #include "gfx_effect.h"
 #include "identity.h"
 #include "nsec_conf_schedule.h"
@@ -46,11 +45,13 @@
 #include "app_soldering.h"
 #include "app_intro.h"
 
+#include "ble/resistance_bar_beacon.h"
+#include "ble/service_advertiser.h"
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
+
 #include "images/nsec_logo_bitmap.h"
 
-#include "ble/resistance_bar_beacon.h"
 #include "resistance_propaganda_observer.h"
 
 static char g_device_id[10];
@@ -100,10 +101,19 @@ static void init_ble() {
 #ifdef NSEC_FLAVOR_BAR_BEACON
     init_resistance_bar_beacon();
     set_advertiser(get_resistance_bar_beacon());
-    start_advertising();
+    ble_start_advertising();
 #else
-    add_observer(get_resistance_propaganda_observer());
-    ble_device_start_scan();
+    init_adv_module();
+    enable_fast_advertising_mode(60);
+    enable_slow_advertising_mode(200);
+    set_device_name(g_device_id);
+    nsec_led_ble_init();
+    set_vendor_service_in_advertising_packet(get_led_service(), false);
+    set_advertiser(get_service_advertiser());
+    ble_start_advertising();
+
+    //add_observer(get_resistance_propaganda_observer());
+    //ble_device_start_scan();
 #endif
 }
 

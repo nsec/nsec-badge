@@ -17,9 +17,9 @@ void configure_advertising();
 
 void set_advertiser(struct Advertiser*);
 
-void start_advertising();
+void ble_start_advertising();
 
-void stop_advertising();
+void ble_stop_advertising();
 
 void add_observer(struct BleObserver*);
 
@@ -27,6 +27,4 @@ void ble_device_start_scan();
 
 void ble_device_stop_scan();
 
-uint32_t add_vendor_service(VendorService*);
-
-void config_dummy_service(VendorService*, ServiceCharacteristic*);
+uint32_t add_vendor_service(struct VendorService*);

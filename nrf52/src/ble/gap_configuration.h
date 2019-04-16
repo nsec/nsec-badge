@@ -10,4 +10,4 @@
 
 void set_default_gap_parameters(const char* device_name, ble_gap_adv_params_t* advertising_parameters);
 
-void set_default_advertised_service(VendorService*);
+void set_default_advertised_service(struct VendorService*);
