@@ -16,5 +16,6 @@ void init_identity_service(void);
 void nsec_identity_draw(void);
 void nsec_identity_get_unlock_key(char * data, size_t length);
 void nsec_identity_update_nearby(void);
+struct VendorService* nsec_identity_get_service();
 
 #endif /* identity_h */

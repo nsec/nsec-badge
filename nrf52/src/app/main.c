@@ -108,7 +108,9 @@ static void init_ble() {
     enable_slow_advertising_mode(200);
     set_device_name(g_device_id);
     nsec_led_ble_init();
-    set_vendor_service_in_advertising_packet(get_led_service(), false);
+    init_identity_service();
+    set_vendor_service_in_advertising_packet(get_led_service(), true);
+    set_vendor_service_in_scan_response(nsec_identity_get_service(), true);
     set_advertiser(get_service_advertiser());
     ble_start_advertising();
 

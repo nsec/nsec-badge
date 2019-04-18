@@ -132,16 +132,15 @@ void nsec_identity_get_unlock_key(char * data, size_t length) {
     snprintf(data, length, "%04lX", ((NRF_FICR->DEVICEID[1] % 0xFFFF) ^ 0xC3C3));
 }
 
+struct VendorService* nsec_identity_get_service(){
+    return &identity_ble_service;
+}
+
 static uint16_t on_name_write(CharacteristicWriteEvent* event){
-    if(identity.unlocked) {
-        memset(identity.name, 0, NAME_MAX_LEN);
-        strncpy(identity.name, (char *) event->data_buffer, MIN(event->data_length, NAME_MAX_LEN));
-        update_identity(identity.name);
-        return BLE_GATT_STATUS_SUCCESS;
-    }
-    else{
-        return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
-    }
+    memset(identity.name, 0, NAME_MAX_LEN);
+    strncpy(identity.name, (char *) event->data_buffer, MIN(event->data_length, NAME_MAX_LEN));
+    update_identity(identity.name);
+    return BLE_GATT_STATUS_SUCCESS;
 }
 
 /*static uint16_t on_avatar_write(CharacteristicWriteEvent* event){

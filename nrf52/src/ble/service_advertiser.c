@@ -70,8 +70,8 @@ void set_vendor_service_in_advertising_packet(struct VendorService* service, boo
 
 void set_vendor_service_in_scan_response(struct VendorService* service, bool more_available){
     if(more_available){
-        advertising_params.advdata.uuids_more_available.uuid_cnt = 1;
-        advertising_params.advdata.uuids_more_available.p_uuids = &service->uuid;
+        advertising_params.srdata.uuids_more_available.uuid_cnt = 1;
+        advertising_params.srdata.uuids_more_available.p_uuids = &service->uuid;
     }
     else{
         advertising_params.srdata.uuids_complete.uuid_cnt = 1;
