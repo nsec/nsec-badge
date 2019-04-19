@@ -126,6 +126,7 @@ void service_WS2812FX(void);
 void start_WS2812FX(void);
 void stop_WS2812FX(void);
 void setMode_WS2812FX(uint8_t m);
+void setSegmentMode_WS2812FX(uint8_t segment_index, uint8_t m);
 void setCustomMode_WS2812FX(uint16_t (*p)());
 void setSpeed_WS2812FX(uint16_t s);
 void setReverse_WS2812FX(bool reverse);

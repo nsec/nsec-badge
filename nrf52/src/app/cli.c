@@ -23,9 +23,10 @@
 #include "cli.h"
 
 #include <drivers/cli_uart.h>
-
 #include "drivers/display.h"
 #include "drivers/nsec_storage.h"
+
+#include "nsec_led_pattern.h"
 
 static bool standard_check(const nrf_cli_t *p_cli, size_t argc,
                            size_t minimum_arg, char **argv,
@@ -228,7 +229,7 @@ static void do_led_create(const nrf_cli_t *p_cli, size_t argc, char **argv)
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
                         argv[1]);
         return;
-    } else if (val >= NEOPIXEL_COUNT) {
+    } else if (val >= NEOPIXEL_COUNT || val < 0) {
         nrf_cli_fprintf(
             p_cli, NRF_CLI_ERROR,
             "%s: Invalid parameter, start need to be 0 <= start <= %d\r\n",
@@ -244,7 +245,7 @@ static void do_led_create(const nrf_cli_t *p_cli, size_t argc, char **argv)
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
                         argv[2]);
         return;
-    } else if (val >= NEOPIXEL_COUNT) {
+    } else if (val >= NEOPIXEL_COUNT || val < 0) {
         nrf_cli_fprintf(
             p_cli, NRF_CLI_ERROR,
             "%s: Invalid parameter, stop need to be 0 <= start <= %d\r\n",
@@ -295,7 +296,7 @@ static void do_led_delete(const nrf_cli_t *p_cli, size_t argc, char **argv)
     } else if (val == 0) {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Can't delete segment 0\r\n");
         return;
-    } else if (val >= segment_count) {
+    } else if (val >= segment_count || val < 0) {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Segment does not exist\r\n");
         return;
     } else {
@@ -409,10 +410,10 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
                         argv[1]);
         return;
-    } else if (val >= getNumSegments_WS2812FX()) {
+    } else if (val >= getNumSegments_WS2812FX() && val >= 0) {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
-                        "%s: index is greater than total segment count: %d\r\n",
-                        argv[1], getNumSegments_WS2812FX());
+                        "%s: index must be between 0 and %d\r\n",
+                        argv[1], getNumSegments_WS2812FX() - 1);
         return;
     } else {
         segment_index = val;
@@ -430,6 +431,11 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
             nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
                         argv[1]);
             return;
+        } else if (val < 0) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                            "%s: Invalid parameter must be positive\r\n",
+                            argv[1]);
+            return;
         }
         start_index = val;
 
@@ -441,6 +447,11 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
         } else if (val < start_index) {
             nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
                             "Last LED must be >= First LED\r\n");
+            return;
+        } else if (val < 0) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                            "%s: Invalid parameter must be positive\r\n",
+                            argv[1]);
             return;
         }
         stop_index = val;
@@ -459,13 +470,83 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
     }
 }
 
+static void do_mode_list(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
+        return;
+    }
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Available pattern: \r\n");
+
+    for (int i = 0; i < MODE_COUNT - 1; i++) {
+        uint8_t index_ps = get_extra_array_index(i);
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%d: %s %s\r\n", i,
+            getModeName_WS2812FX(i),
+            pattern_is_unlock(index_ps) ? "<Locked>" : "");
+    }
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "Go see sponsors and enter password on your badge to "
+                    "unlock locked passwords :)\r\n");
+}
+
 static void do_led_mode(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    ASSERT(p_cli);
-    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+    long int val;
+    uint8_t segment_index = 0;
 
-    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-        nrf_cli_help_print(p_cli, NULL, 0);
+    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
+        return;
+    }
+
+    if (!strcmp("list", argv[1])) {
+        return;
+    }
+
+    val = strtol(argv[1], NULL, 10);
+    if (val == 0 && strcmp(argv[1], "0")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+        return;
+    } else if (val >= getNumSegments_WS2812FX() || val < 0) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                        "%s: index must be between 0 and %d\r\n",
+                        argv[1], getNumSegments_WS2812FX() - 1);
+        return;
+    } else {
+        segment_index = val;
+    }
+
+    if (argc == 2) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%s\r\n",
+                    getSegmentModeString_WS2812FX(segment_index));
+        return;
+    } else if (argc == 3) {
+        val = strtol(argv[2], NULL, 10);
+        if (val == 0 && strcmp(argv[1], "0")) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+            return;
+        } else if (val >= MODE_COUNT || val < 0) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                            "%s: Index must be between 0 and %d\r\n", argv[2],
+                            MODE_COUNT - 1);
+            return;
+        } else if (pattern_is_unlock(val)) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                            "%s: Pattern is locked, go see sponsor and enter "
+                            "the password in the badge :)\r\n",
+                            argv[2]);
+            return;
+        } else {
+            setSegmentMode_WS2812FX(segment_index, val);
+            nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                            "Segment %d, now use %s pattern\r\n", segment_index,
+                            getSegmentModeString_WS2812FX(segment_index));
+        }
+    } else {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",
+                        "set", argv[2]);
         return;
     }
 }
@@ -542,10 +623,10 @@ static void do_led_reverse(const nrf_cli_t *p_cli, size_t argc, char **argv)
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
                         argv[1]);
         return;
-    } else if (val >= getNumSegments_WS2812FX()) {
+    } else if (val >= getNumSegments_WS2812FX() || val < 0) {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
-                        "%s: index is greater than total segment count: %d\r\n",
-                        argv[1], getNumSegments_WS2812FX());
+                        "%s: index must be between 0 and %d\r\n",
+                        argv[1], getNumSegments_WS2812FX() - 1);
         return;
     } else {
         segment_index = val;
@@ -601,12 +682,18 @@ static void do_led(const nrf_cli_t *p_cli, size_t argc, char **argv)
     "Reset segments configuration to factory default a confirmation will be "  \
     "asked.\r\n Usage: ledctl segment reset {cancel}"
 
-NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_segment){
+NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_segment) {
     NRF_CLI_CMD(create, NULL, create_help, do_led_create),
     NRF_CLI_CMD(delete, NULL, delete_help, do_led_delete),
     NRF_CLI_CMD(show, NULL, "Show all configured segment", do_led_show),
     NRF_CLI_CMD(reset, NULL, reset_help, do_led_reset),
-    NRF_CLI_SUBCMD_SET_END};
+    NRF_CLI_SUBCMD_SET_END
+};
+
+NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_mode) {
+    NRF_CLI_CMD(list, NULL, "List all available mode with index", do_mode_list),
+    NRF_CLI_SUBCMD_SET_END
+};
 
 #define index_select_help                                                      \
     "Get or set first and last led of a segment\r\n"                           \
@@ -627,10 +714,17 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_segment){
     "Set: ledctl brightness {0-100}\r\n"                                       \
     "Get: ledctl brightness\r\n"                                               \
 
+#define mode_help                                                              \
+    "Get or set the leds mode for a segment\r\n"                               \
+    "Usage:\r\n"                                                               \
+    "Set: ledctl mode {segment_index} {0-56}\r\n"                              \
+    "Get: ledctl mode {segment_index}\r\n"                                     \
+    "list: ledctl mode list\r\n"                                               \
+
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_led){
     NRF_CLI_CMD(segment, &sub_segment, "Manage LED segments", do_led_segment),
     NRF_CLI_CMD(index_select, NULL, index_select_help, do_index_select),
-    NRF_CLI_CMD(mode, NULL, "Control LED mode", do_led_mode),
+    NRF_CLI_CMD(mode, &sub_mode, mode_help, do_led_mode),
     NRF_CLI_CMD(color, NULL, "Control LED color array", do_led_color),
     NRF_CLI_CMD(speed, NULL, "Control LED mode execution speed", do_led_speed),
     NRF_CLI_CMD(brightness, NULL, brightness_help, do_led_brightness),

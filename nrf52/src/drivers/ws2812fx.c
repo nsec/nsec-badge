@@ -366,6 +366,14 @@ void setMode_WS2812FX(uint8_t m) {
     setBrightness_WS2812FX(fx->brightness);
 }
 
+void setSegmentMode_WS2812FX(uint8_t segment_index, uint8_t m) {
+    if (segment_index < fx->num_segments) {
+        RESET_RUNTIME;
+        fx->segments[segment_index].mode = constrain(m, 0, MODE_COUNT - 1);
+        setBrightness_WS2812FX(fx->brightness);
+    }
+}
+
 void setSpeed_WS2812FX(uint16_t s) {
     RESET_RUNTIME;
     fx->segments[0].speed = constrain(s, SPEED_MIN, SPEED_MAX);
@@ -518,12 +526,11 @@ uint32_t getArrayColor_WS2812FX(uint8_t index) {
     }
 }
 
-// Todo c'est pas bon sa
 const char *getModeName_WS2812FX(uint8_t m) {
     if (m < MODE_COUNT) {
         return name[m];
     } else {
-        return "";
+        return "Unknown";
     }
 }
 
