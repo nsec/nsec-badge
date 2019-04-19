@@ -327,7 +327,6 @@ static void turn_off_screen(uint8_t item) {
 void nsec_setting_show(void) {
     char key[8];
 
-    nsec_identity_get_unlock_key(key, sizeof(key));
 #ifdef NSEC_HIDE_SYNC_KEY_IN_SETTINGS
     snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", "XXXX");
 #else
