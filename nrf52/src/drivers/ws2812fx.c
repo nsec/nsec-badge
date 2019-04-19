@@ -437,6 +437,12 @@ uint16_t getSegmentSpeed_WS2812FX(uint8_t segment_index) {
     return 0;
 }
 
+void setSegmentSpeed_WS2812FX(uint8_t segment_index, uint16_t segment_speed) {
+    if (segment_index < fx->num_segments) {
+        fx->segments[segment_index].speed = segment_speed;
+    }
+}
+
 uint16_t getSegmentColor_WS2812FX(uint8_t segment_index, uint8_t color_index) {
     if (segment_index < fx->num_segments) {
         return fx->segments[segment_index].colors[color_index];

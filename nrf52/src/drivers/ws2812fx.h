@@ -138,6 +138,7 @@ uint8_t getSegmentStop_WS2812FX(uint8_t segment_index);
 void setSegmentStop_WS2812FX(uint8_t segment_index, uint8_t stop);
 const char* getSegmentModeString_WS2812FX(uint8_t segment_index);
 uint16_t getSegmentSpeed_WS2812FX(uint8_t segment_index);
+void setSegmentSpeed_WS2812FX(uint8_t segment_index, uint16_t segment_speed);
 uint16_t getSegmentColor_WS2812FX(uint8_t segment_index, uint8_t color_index);
 void increaseSpeed_WS2812FX(uint8_t s);
 void decreaseSpeed_WS2812FX(uint8_t s);
