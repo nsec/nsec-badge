@@ -430,14 +430,8 @@ static void do_led_speed(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 static void do_led_brightness(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    ASSERT(p_cli);
-    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
-
-    static const nrf_cli_getopt_option_t opt[] = {
-        NRF_CLI_OPT("--set", "-s", "Set the brightness value [0-100]")};
-
-    if (nrf_cli_help_requested(p_cli)) {
-        nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
+    long int val;
+    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
         return;
     }
 
@@ -447,34 +441,26 @@ static void do_led_brightness(const nrf_cli_t *p_cli, size_t argc, char **argv)
         return;
     }
 
-    if (argc != 3) {
+    if (argc != 2) {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
                         argv[0]);
         return;
     }
 
-    if (!strcmp(argv[1], "-s") || !strcmp(argv[1], "--set")) {
-        long int val = strtol(argv[2], NULL, 10);
-
-        // strtol will return 0 on bad conversion, lets check if we really want
-        // 0
-        if (val == 0 && strcmp(argv[2], "0")) {
-            val = -1;
-        }
-
-        if (val >= 0 && val <= 100) {
-            nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                            "Set leds brightness to: %d\r\n", val);
-            setBrightness_WS2812FX(val);
-            update_stored_brightness(val);
-        } else {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Value out of range\r\n",
-                            argv[2]);
-            nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
-        }
+    val = strtol(argv[1], NULL, 10);
+    if (val == 0 && strcmp(argv[1], "0")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+        return;
+    } else if (val >= 0 && val <= 100) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                        "Set leds brightness to: %d\r\n", val);
+        setBrightness_WS2812FX(val);
+        update_stored_brightness(val);
     } else {
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",
-                        argv[0], argv[1]);
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Value out of range\r\n",
+                        argv[2]);
+        nrf_cli_help_print(p_cli, NULL, 0);
     }
 }
 
@@ -558,16 +544,20 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_segment){
     NRF_CLI_SUBCMD_SET_END};
 
 #define reverse_help                                                           \
-    "Get or set mode execution direction.\r\n Usage:\r\n Set: ledctl reverse " \
-    "{segment_index} {normal|reverse} \r\n Get: ledctl reverse "               \
+    "Get or set mode execution direction\r\n Usage:\r\n Set: ledctl reverse "  \
+    "{segment_index} {normal|reverse} \r\n Get: ledctl reverse "                \
     "{segment_index}"
+
+#define brightness_help                                                        \
+    "Get or set the leds brightness\r\n Usage:\r\n Set: ledctl brightness "    \
+    "{0-100} \r\n Get: ledctl brightness"
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_led){
     NRF_CLI_CMD(segment, &sub_segment, "Manage LED segments", do_led_segment),
     NRF_CLI_CMD(mode, NULL, "Control LED mode", do_led_mode),
     NRF_CLI_CMD(color, NULL, "Control LED color array", do_led_color),
     NRF_CLI_CMD(speed, NULL, "Control LED mode execution speed", do_led_speed),
-    NRF_CLI_CMD(brightness, NULL, "Control LED brightness", do_led_brightness),
+    NRF_CLI_CMD(brightness, NULL, brightness_help, do_led_brightness),
     NRF_CLI_CMD(reverse, NULL, reverse_help, do_led_reverse),
     NRF_CLI_SUBCMD_SET_END};
 
