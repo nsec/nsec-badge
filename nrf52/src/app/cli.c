@@ -353,13 +353,36 @@ static void do_led_show(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 static void do_led_reset(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    ASSERT(p_cli);
-    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+    static bool called = false;
 
-    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
+    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
+        return;
+    }
+
+    if (argc == 2 && !strcmp("cancel", argv[1])) {
+        called = false;
+        return;
+    } else if (argc == 2) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
+                        argv[0]);
         nrf_cli_help_print(p_cli, NULL, 0);
         return;
     }
+
+    if (!called) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                        "Are you sure you want to reset segment configuration "
+                        "? If yes, call the command again. If no, call it with "
+                        "the option 'cancel' \r\n");
+        called = true;
+    } else {
+        resetSegments_WS2812FX();
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                        "Segments restored to factory default\r\n");
+        called = false;
+    }
+
+    // Todo persist
 }
 
 static void do_led_segment(const nrf_cli_t *p_cli, size_t argc, char **argv)
@@ -595,12 +618,15 @@ static void do_led(const nrf_cli_t *p_cli, size_t argc, char **argv)
     "Delete a segment of leds and combine it with the previous one.\r\n "      \
     "Usage: ledctl segment delete {segment_index}"
 
+#define reset_help                                                             \
+    "Reset segments configuration to factory default a confirmation will be "  \
+    "asked.\r\n Usage: ledctl segment reset {cancel}"
+
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_segment){
     NRF_CLI_CMD(create, NULL, create_help, do_led_create),
     NRF_CLI_CMD(delete, NULL, delete_help, do_led_delete),
     NRF_CLI_CMD(show, NULL, "Show all configured segment", do_led_show),
-    NRF_CLI_CMD(reset, NULL, "Reset segment configuration to default",
-                do_led_reset),
+    NRF_CLI_CMD(reset, NULL, reset_help, do_led_reset),
     NRF_CLI_SUBCMD_SET_END};
 
 #define reverse_help "Control mode execution direction [normal|reverse]"
