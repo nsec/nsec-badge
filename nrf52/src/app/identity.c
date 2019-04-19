@@ -24,7 +24,9 @@
 #include "images/star_bitmap.h"
 
 #define NAME_MAX_LEN 16
+#ifdef NSEC_FLAVOR_CTF
 #define NAME_CHECK_FLAG "FLAG-badStrcmp:("
+#endif
 
 static uint16_t on_name_write(CharacteristicWriteEvent* event);
 
@@ -73,7 +75,7 @@ static bool is_name_valid(const char* name){
     }
     return true;
 }
-
+#ifdef NSEC_FLAVOR_CTF
 /**
  * show the flag if the name verification was successfully exploited
  */
@@ -90,13 +92,16 @@ static void show_flag() {
         memcpy(badge_name, NAME_CHECK_FLAG, NAME_MAX_LEN);
     }
 }
+#endif
 
 static uint16_t on_name_write(CharacteristicWriteEvent* event){
     if (is_name_valid((const char*)event->data_buffer)){
         memset(badge_name, 0, NAME_MAX_LEN);
         memcpy(badge_name, event->data_buffer, event->data_length);
         update_identity(badge_name);
+#ifdef NSEC_FLAVOR_CTF
         show_flag();
+#endif
         // erase the end of the old name in the characteristic (e.g. writing "1" over "ABC" would become "1BC" without this).
         event->data_buffer = (uint8_t*)badge_name;
         event->data_length = NAME_MAX_LEN;
