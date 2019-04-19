@@ -132,6 +132,7 @@ void setReverse_WS2812FX(bool reverse);
 void setSegmentReverse_WS2812FX(uint8_t segment_index, bool reverse);
 bool getSegmentReverse_WS2812FX(uint8_t segment_index);
 uint8_t getSegmentStart_WS2812FX(uint8_t segment_index);
+void setSegmentStart_WS2812FX(uint8_t segment_index, uint8_t start_index);
 uint8_t getSegmentStop_WS2812FX(uint8_t segment_index);
 void setSegmentStop_WS2812FX(uint8_t segment_index, uint8_t stop);
 const char* getSegmentModeString_WS2812FX(uint8_t segment_index);

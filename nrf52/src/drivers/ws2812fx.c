@@ -397,6 +397,11 @@ uint8_t getSegmentStart_WS2812FX(uint8_t segment_index) {
     return 0;
 }
 
+void setSegmentStart_WS2812FX(uint8_t segment_index, uint8_t start) {
+    if (segment_index < fx->num_segments) {
+        fx->segments[segment_index].start = start;
+    }
+}
 uint8_t getSegmentStop_WS2812FX(uint8_t segment_index) {
     if (segment_index < fx->num_segments) {
         return fx->segments[segment_index].stop;

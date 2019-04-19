@@ -395,6 +395,70 @@ static void do_led_segment(const nrf_cli_t *p_cli, size_t argc, char **argv)
                     argv[0], argv[1]);
 }
 
+static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    long int val;
+    uint8_t segment_index = 0;
+
+    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+        return;
+    }
+
+    val = strtol(argv[1], NULL, 10);
+    if (val == 0 && strcmp(argv[1], "0")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+        return;
+    } else if (val >= getNumSegments_WS2812FX()) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                        "%s: index is greater than total segment count: %d\r\n",
+                        argv[1], getNumSegments_WS2812FX());
+        return;
+    } else {
+        segment_index = val;
+    }
+
+    if (argc == 2) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "First: %d, Last: %d\r\n",
+                        getSegmentStart_WS2812FX(segment_index),
+                        getSegmentStop_WS2812FX(segment_index));
+        return;
+    } else if (argc == 4) {
+        uint8_t start_index, stop_index;
+        val = strtol(argv[2], NULL, 10);
+        if (val == 0 && strcmp(argv[1], "0")) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+            return;
+        }
+        start_index = val;
+
+        val = strtol(argv[3], NULL, 10);
+        if (val == 0 && strcmp(argv[1], "0")) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                            argv[1]);
+            return;
+        } else if (val < start_index) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                            "Last LED must be >= First LED\r\n");
+            return;
+        }
+        stop_index = val;
+
+        setSegmentStart_WS2812FX(segment_index, start_index);
+        setSegmentStop_WS2812FX(segment_index, stop_index);
+
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+            "Segment %d, now start at %d and finish at %d\r\n", segment_index,
+            start_index, stop_index);
+    } else {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
+                        argv[0]);
+        nrf_cli_help_print(p_cli, NULL, 0);
+        return;
+    }
+}
+
 static void do_led_mode(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
     ASSERT(p_cli);
@@ -479,7 +543,8 @@ static void do_led_reverse(const nrf_cli_t *p_cli, size_t argc, char **argv)
                         argv[1]);
         return;
     } else if (val >= getNumSegments_WS2812FX()) {
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: index is greater than total segment count: %d\r\n",
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                        "%s: index is greater than total segment count: %d\r\n",
                         argv[1], getNumSegments_WS2812FX());
         return;
     } else {
@@ -543,17 +608,28 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_segment){
     NRF_CLI_CMD(reset, NULL, reset_help, do_led_reset),
     NRF_CLI_SUBCMD_SET_END};
 
+#define index_select_help                                                      \
+    "Get or set first and last led of a segment\r\n"                           \
+    "Usage:\r\n"                                                               \
+    "Set: ledctl index_select {segment index} {First led [0-14]} "             \
+    "{Last led [1-14]}\r\n"                                                    \
+    "Get: ledctl index_select {segment_index}\r\n"
+
 #define reverse_help                                                           \
-    "Get or set mode execution direction\r\n Usage:\r\n Set: ledctl reverse "  \
-    "{segment_index} {normal|reverse} \r\n Get: ledctl reverse "                \
-    "{segment_index}"
+    "Get or set mode execution direction\r\n"                                  \
+    "Usage:\r\n"                                                               \
+    "Set: ledctl reverse {segment_index} {normal|reverse}\r\n"                 \
+    "Get: ledctl reverse {segment_index}\r\n"
 
 #define brightness_help                                                        \
-    "Get or set the leds brightness\r\n Usage:\r\n Set: ledctl brightness "    \
-    "{0-100} \r\n Get: ledctl brightness"
+    "Get or set the leds brightness\r\n"                                       \
+    "Usage:\r\n"                                                               \
+    "Set: ledctl brightness {0-100}\r\n"                                       \
+    "Get: ledctl brightness\r\n"                                               \
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_led){
     NRF_CLI_CMD(segment, &sub_segment, "Manage LED segments", do_led_segment),
+    NRF_CLI_CMD(index_select, NULL, index_select_help, do_index_select),
     NRF_CLI_CMD(mode, NULL, "Control LED mode", do_led_mode),
     NRF_CLI_CMD(color, NULL, "Control LED color array", do_led_color),
     NRF_CLI_CMD(speed, NULL, "Control LED mode execution speed", do_led_speed),
