@@ -404,6 +404,12 @@ uint8_t getSegmentStop_WS2812FX(uint8_t segment_index) {
     return 0;
 }
 
+void setSegmentStop_WS2812FX(uint8_t segment_index, uint8_t stop) {
+    if (segment_index < fx->num_segments) {
+        fx->segments[segment_index].stop = stop;
+    }
+}
+
 const char* getSegmentModeString_WS2812FX(uint8_t segment_index) {
     if (segment_index < fx->num_segments) {
         return name[fx->segments[segment_index].mode];
@@ -555,6 +561,10 @@ void resetSegments_WS2812FX() {
     fx->num_segments = 1;
     setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT, FX_MODE_STATIC, DEFAULT_COLOR,
                         DEFAULT_SPEED, false);
+}
+
+void moveSegment_WS2812FX(uint8_t src, uint8_t dest) {
+    fx->segments[dest] = fx->segments[src];
 }
 
 /* #####################################################

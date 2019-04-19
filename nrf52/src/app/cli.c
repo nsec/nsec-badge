@@ -209,24 +209,116 @@ NRF_CLI_CMD_REGISTER(display, &sub_display, "Display configuration",
 
 static void do_led_create(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    ASSERT(p_cli);
-    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+    long int val;
+    uint8_t segment_index, start_index, stop_index;
 
-    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-        nrf_cli_help_print(p_cli, NULL, 0);
+    if (!standard_check(p_cli, argc, 3, argv, NULL)) {
         return;
     }
+
+    segment_index = getNumSegments_WS2812FX();
+    if (segment_index >= MAX_NUM_SEGMENTS) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                        "Can't create more segment (limit = 15) \r\n");
+        return;
+    }
+
+    val = strtol(argv[1], NULL, 10);
+    if (val == 0 && strcmp(argv[1], "0")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+        return;
+    } else if (val >= NEOPIXEL_COUNT) {
+        nrf_cli_fprintf(
+            p_cli, NRF_CLI_ERROR,
+            "%s: Invalid parameter, start need to be 0 <= start <= %d\r\n",
+            argv[1], NEOPIXEL_COUNT - 1);
+        return;
+    } else {
+        start_index = val;
+    }
+
+
+    val = strtol(argv[2], NULL, 10);
+    if (val == 0 && strcmp(argv[2], "0")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[2]);
+        return;
+    } else if (val >= NEOPIXEL_COUNT) {
+        nrf_cli_fprintf(
+            p_cli, NRF_CLI_ERROR,
+            "%s: Invalid parameter, stop need to be 0 <= start <= %d\r\n",
+            argv[1], NEOPIXEL_COUNT - 1);
+        return;
+    } else if (val < start_index) {
+        nrf_cli_fprintf(
+            p_cli, NRF_CLI_ERROR,
+            "%s: Invalid parameter, stop need to be <= start\r\n", argv[2]);
+        return;
+    } else {
+        stop_index = val;
+    }
+
+    setSegment_WS2812FX(segment_index, start_index, stop_index, FX_MODE_BLINK,
+                         BLUE, DEFAULT_SPEED, false);
+
+    //TODO Persist
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "New segment created! You can now configure your segment "
+                    "with the other commands. Please note that segment can and "
+                    "will overlap with eachother.\r\n");
 }
 
 static void do_led_delete(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    ASSERT(p_cli);
-    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+    long int val;
+    uint8_t segment_index;
 
-    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-        nrf_cli_help_print(p_cli, NULL, 0);
+    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
         return;
     }
+
+    uint8_t segment_count = getNumSegments_WS2812FX();
+
+    if (segment_count == 1) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                        "Can't delete the last segment\r\n");
+        return;
+    }
+
+    val = strtol(argv[1], NULL, 10);
+    if (val == 0 && strcmp(argv[1], "0")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+        return;
+    } else if (val == 0) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Can't delete segment 0\r\n");
+        return;
+    } else if (val >= segment_count) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Segment does not exist\r\n");
+        return;
+    } else {
+        segment_index = val;
+    }
+
+    setSegmentStop_WS2812FX(segment_index - 1,
+                            getSegmentStop_WS2812FX(segment_index));
+
+    setNumSegments_WS2812FX(segment_count - 1);
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Segment %d was deleted.\r\n",
+                    segment_index);
+
+    if (segment_index == segment_count - 1) {
+        return;
+    }
+
+    for (int i = segment_count - 1; i != segment_index; i--) {
+        moveSegment_WS2812FX(i, i-1);
+    }
+
+    //TODO persist
 }
 
 static void do_led_show(const nrf_cli_t *p_cli, size_t argc, char **argv)
@@ -495,9 +587,17 @@ static void do_led(const nrf_cli_t *p_cli, size_t argc, char **argv)
                     argv[0], argv[1]);
 }
 
+#define create_help                                                            \
+    "Create a new segment of leds \r\n Usage: ledctl segment create "          \
+    "{start_index} {stop_index}"
+
+#define delete_help                                                            \
+    "Delete a segment of leds and combine it with the previous one.\r\n "      \
+    "Usage: ledctl segment delete {segment_index}"
+
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_segment){
-    NRF_CLI_CMD(create, NULL, "Create a new segment", do_led_create),
-    NRF_CLI_CMD(delete, NULL, "Delete a segment", do_led_delete),
+    NRF_CLI_CMD(create, NULL, create_help, do_led_create),
+    NRF_CLI_CMD(delete, NULL, delete_help, do_led_delete),
     NRF_CLI_CMD(show, NULL, "Show all configured segment", do_led_show),
     NRF_CLI_CMD(reset, NULL, "Reset segment configuration to default",
                 do_led_reset),

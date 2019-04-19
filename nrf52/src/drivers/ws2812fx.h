@@ -133,6 +133,7 @@ void setSegmentReverse_WS2812FX(uint8_t segment_index, bool reverse);
 bool getSegmentReverse_WS2812FX(uint8_t segment_index);
 uint8_t getSegmentStart_WS2812FX(uint8_t segment_index);
 uint8_t getSegmentStop_WS2812FX(uint8_t segment_index);
+void setSegmentStop_WS2812FX(uint8_t segment_index, uint8_t stop);
 const char* getSegmentModeString_WS2812FX(uint8_t segment_index);
 uint16_t getSegmentSpeed_WS2812FX(uint8_t segment_index);
 uint16_t getSegmentColor_WS2812FX(uint8_t segment_index, uint8_t color_index);
@@ -153,6 +154,7 @@ void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop,
                                      uint8_t mode, const uint32_t colors[],
                                      uint16_t speed, bool reverse);
 void resetSegments_WS2812FX();
+void moveSegment_WS2812FX(uint8_t src, uint8_t dest);
 
 bool isRunning_WS2812FX(void);
 
