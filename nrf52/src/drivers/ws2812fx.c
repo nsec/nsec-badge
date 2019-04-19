@@ -473,6 +473,14 @@ void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index) {
     }
 }
 
+void setSegmentArrayColor_packed(uint8_t segment_index, uint8_t color_index, uint32_t c) {
+    if (color_index < NUM_COLORS && segment_index < fx->num_segments) {
+        RESET_RUNTIME;
+        fx->segments[segment_index].colors[color_index] = c;
+        setBrightness_WS2812FX(fx->brightness);
+    }
+}
+
 void setColor_packed_WS2812FX(uint32_t c) {
     RESET_RUNTIME;
     fx->segments[0].colors[0] = c;

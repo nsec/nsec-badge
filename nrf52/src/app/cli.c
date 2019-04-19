@@ -427,7 +427,7 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
     } else if (argc == 4) {
         uint8_t start_index, stop_index;
         val = strtol(argv[2], NULL, 10);
-        if (val == 0 && strcmp(argv[1], "0")) {
+        if (val == 0 && strcmp(argv[2], "0")) {
             nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
                         argv[1]);
             return;
@@ -440,7 +440,7 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
         start_index = val;
 
         val = strtol(argv[3], NULL, 10);
-        if (val == 0 && strcmp(argv[1], "0")) {
+        if (val == 0 && strcmp(argv[3], "0")) {
             nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
                             argv[1]);
             return;
@@ -495,7 +495,7 @@ static void do_led_mode(const nrf_cli_t *p_cli, size_t argc, char **argv)
     long int val;
     uint8_t segment_index = 0;
 
-    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
         return;
     }
 
@@ -523,7 +523,7 @@ static void do_led_mode(const nrf_cli_t *p_cli, size_t argc, char **argv)
         return;
     } else if (argc == 3) {
         val = strtol(argv[2], NULL, 10);
-        if (val == 0 && strcmp(argv[1], "0")) {
+        if (val == 0 && strcmp(argv[2], "0")) {
             nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
                         argv[1]);
             return;
@@ -553,11 +553,103 @@ static void do_led_mode(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 static void do_led_color(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    ASSERT(p_cli);
-    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+    long int val;
+    uint8_t segment_index = 0;
 
-    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-        nrf_cli_help_print(p_cli, NULL, 0);
+    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+        return;
+    }
+
+    val = strtol(argv[1], NULL, 10);
+    if (val == 0 && strcmp(argv[1], "0")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+        return;
+    } else if (val >= getNumSegments_WS2812FX() || val < 0) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                        "%s: index must be between 0 and %d\r\n",
+                        argv[1], getNumSegments_WS2812FX() - 1);
+        return;
+    } else {
+        segment_index = val;
+    }
+
+    if (argc == 2) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                        "1: %d(%02X)\r\n2: %d(%02X)\r\n3: %d(%02X)\r\n",
+                        getSegmentColor_WS2812FX(segment_index, 0),
+                        getSegmentColor_WS2812FX(segment_index, 0),
+                        getSegmentColor_WS2812FX(segment_index, 1),
+                        getSegmentColor_WS2812FX(segment_index, 1),
+                        getSegmentColor_WS2812FX(segment_index, 2),
+                        getSegmentColor_WS2812FX(segment_index, 2));
+        return;
+    } else if (argc == 4) {
+        uint8_t color_index;
+        uint16_t color;
+        val = strtol(argv[2], NULL, 10);
+        if (val == 0 && strcmp(argv[2], "0")) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+            return;
+        } else if (val >= 3 || val < 0) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                            "%s: Index must be between 0 and 2\r\n", argv[2]);
+            return;
+        }
+        color_index = val;
+
+        val = strtol(argv[3], NULL, 10);
+        if (val == 0 && strcmp(argv[3], "0")) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+            return;
+        } else if (val >= 0xFFFFFF || val < 0) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                            "%s: Index must be between 0 and 16777215\r\n",
+                            argv[3]);
+            return;
+        }
+        color = val;
+
+        setSegmentArrayColor_packed(segment_index, color_index, color);
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+            "Segment %d, color %d is now: %d(%02X)\r\n", segment_index,
+            color_index, color, color);
+    } else if (argc == 5) {
+        uint16_t color[3];
+        for (int i = 0; i < 3; i++) {
+            val = strtol(argv[i + 2], NULL, 10);
+            if (val == 0 && strcmp(argv[i + 2], "0")) {
+                nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                                "%s: Invalid parameter\r\n", argv[i + 2]);
+                return;
+            } else if (val >= 0xFFFFFF || val < 0) {
+                nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                                "%s: Index must be between 0 and 16777215\r\n",
+                                argv[i + 2]);
+
+                return;
+            }
+            color[i] = val;
+        }
+
+        setSegmentArrayColor_packed(segment_index, 0, color[0]);
+        setSegmentArrayColor_packed(segment_index, 1, color[1]);
+        setSegmentArrayColor_packed(segment_index, 2, color[2]);
+        nrf_cli_fprintf(
+            p_cli, NRF_CLI_DEFAULT,
+            "Segment %d color are now: \n\r1: %d(%02X)\r\n2: %d(%02X)\r\n3: "
+            "%d(%02X)\r\n", segment_index,
+            getSegmentColor_WS2812FX(segment_index, 0),
+            getSegmentColor_WS2812FX(segment_index, 0),
+            getSegmentColor_WS2812FX(segment_index, 1),
+            getSegmentColor_WS2812FX(segment_index, 1),
+            getSegmentColor_WS2812FX(segment_index, 2),
+            getSegmentColor_WS2812FX(segment_index, 2));
+    } else {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",
+                        "set", argv[2]);
         return;
     }
 }
@@ -721,11 +813,20 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_mode) {
     "Get: ledctl mode {segment_index}\r\n"                                     \
     "list: ledctl mode list\r\n"                                               \
 
+#define color_help                                                             \
+    "Get or set three primary color for the segments\r\n"                      \
+    "Colors are expressed in RGB format\r\n"                               \
+    "The segment are using three colors to build there pattern\r\n"            \
+    "Usage:\r\n"                                                               \
+    "Set all: ledctl color {segment_index} {0-16777215} {0-16777215} {0-16777215}\r\n"   \
+    "Set by index: ledctl color {segment_index} {0-2} {0-16777215}\r\n"            \
+    "Get: ledctl mode {segment_index}\r\n"                                     \
+
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_led){
     NRF_CLI_CMD(segment, &sub_segment, "Manage LED segments", do_led_segment),
     NRF_CLI_CMD(index_select, NULL, index_select_help, do_index_select),
     NRF_CLI_CMD(mode, &sub_mode, mode_help, do_led_mode),
-    NRF_CLI_CMD(color, NULL, "Control LED color array", do_led_color),
+    NRF_CLI_CMD(color, NULL, color_help, do_led_color),
     NRF_CLI_CMD(speed, NULL, "Control LED mode execution speed", do_led_speed),
     NRF_CLI_CMD(brightness, NULL, brightness_help, do_led_brightness),
     NRF_CLI_CMD(reverse, NULL, reverse_help, do_led_reverse),

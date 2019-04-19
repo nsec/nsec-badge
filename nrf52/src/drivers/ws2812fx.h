@@ -145,6 +145,7 @@ void setColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b);
 void setArrayColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b, uint8_t index);
 void setColor_packed_WS2812FX(uint32_t c);
 void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index);
+void setSegmentArrayColor_packed(uint8_t segment_index, uint8_t color_index, uint32_t c);
 void setBrightness_WS2812FX(uint8_t b);
 void increaseBrightness_WS2812FX(uint8_t s);
 void decreaseBrightness_WS2812FX(uint8_t s);
