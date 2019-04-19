@@ -40,7 +40,6 @@
 #include "utils.h"
 #include "nsec_led_pattern.h"
 #include "nsec_warning.h"
-#include "nsec_led_ble.h"
 #include "flash_mode.h"
 #include "home_menu.h"
 #include "mode_zombie.h"

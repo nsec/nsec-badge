@@ -19,7 +19,6 @@
 #include "menu.h"
 #include "nsec_conf_schedule.h"
 #include "nsec_games_menu.h"
-#include "nsec_led_ble.h"
 #include "nsec_led_pattern.h"
 #include "nsec_settings.h"
 #include "nsec_warning.h"

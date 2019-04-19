@@ -23,8 +23,6 @@
 #ifndef _NSEC_STORAGE_H
 #define _NSEC_STORAGE_H
 
-#include "app/nsec_led_ble.h"
-
 void nsec_storage_init(void);
 void nsec_storage_update(void);
 
@@ -40,7 +38,6 @@ void update_stored_speed(uint16_t speed);
 void update_stored_color(uint32_t color, uint8_t index);
 void update_stored_reverse(bool reverse);
 void update_stored_control(bool control);
-void update_stored_segment(SegmentBle *segment, int index);
 void update_is_ble_controlled(bool ble_controlled);
 void update_ble_control_permitted(bool permitted);
 

@@ -54,9 +54,6 @@ typedef struct LedSettings_t {
     uint32_t colors[NUM_COLORS];
     bool reverse;
     bool control;
-    bool is_ble_controlled;
-    bool ble_control_permitted;
-    SegmentBle segment_array[15];
     uint8_t display_brightness;
 } LedSettings;
 
@@ -189,7 +186,7 @@ void update_stored_control(bool control) {
     need_led_settings_update = true;
 }
 
-void update_stored_segment(SegmentBle *segment, int index) {
+/*void update_stored_segment(SegmentBle *segment, int index) {
     if (actual_settings.ble_control_permitted) {
         if (actual_settings.is_ble_controlled) {
             actual_settings.segment_array[index].active = segment->active;
@@ -206,19 +203,7 @@ void update_stored_segment(SegmentBle *segment, int index) {
             need_led_settings_update = true;
         }
     }
-}
-
-void update_is_ble_controlled(bool ble_controlled) {
-    if (actual_settings.ble_control_permitted) {
-        actual_settings.is_ble_controlled = ble_controlled;
-        need_led_settings_update = true;
-    }
-}
-
-void update_ble_control_permitted(bool permitted) {
-    actual_settings.ble_control_permitted = permitted;
-    need_led_settings_update = true;
-}
+}*/
 
 void load_stored_led_settings(void) {
     if (!is_init) {
@@ -234,32 +219,13 @@ void load_stored_led_settings(void) {
     }
 
     resetSegments_WS2812FX();
-
-    if (!actual_settings.is_ble_controlled) {
-        set_ble_controlled(false);
-        setBrightness_WS2812FX(actual_settings.brightness);
-        setMode_WS2812FX(actual_settings.mode);
-        setSpeed_WS2812FX(actual_settings.speed);
-        setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
-        setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);
-        setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
-        setReverse_WS2812FX(actual_settings.reverse);
-    } else {
-        set_ble_controlled(true);
-        for (int i = 0; i < ARRAY_SIZE(actual_settings.segment_array); i++) {
-            if (actual_settings.segment_array[i].active) {
-                setSegment_color_array_WS2812FX(
-                    actual_settings.segment_array[i].index,
-                    actual_settings.segment_array[i].start,
-                    actual_settings.segment_array[i].stop,
-                    actual_settings.segment_array[i].mode,
-                    actual_settings.segment_array[i].colors,
-                    actual_settings.segment_array[i].speed,
-                    actual_settings.segment_array[i].reverse);
-            }
-        }
-        update_all_characteristics_value();
-    }
+    setBrightness_WS2812FX(actual_settings.brightness);
+    setMode_WS2812FX(actual_settings.mode);
+    setSpeed_WS2812FX(actual_settings.speed);
+    setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
+    setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);
+    setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
+    setReverse_WS2812FX(actual_settings.reverse);
 }
 
 void load_stored_led_default_settings(void) {
@@ -356,8 +322,6 @@ static void led_settings_storage_init(void) {
     default_settings.colors[2] = GREEN;
     default_settings.reverse = false;
     default_settings.control = true;
-    default_settings.is_ble_controlled = false;
-    default_settings.ble_control_permitted = true;
 #else
     default_settings.mode = FX_MODE_STATIC;
     default_settings.speed = MEDIUM_SPEED;
@@ -367,11 +331,9 @@ static void led_settings_storage_init(void) {
     default_settings.colors[2] = GREEN;
     default_settings.reverse = false;
     default_settings.control = true;
-    default_settings.is_ble_controlled = false;
-    default_settings.ble_control_permitted = true;
 #endif
 
-    for (int i = 0; i < ARRAY_SIZE(default_settings.segment_array); i++) {
+ /*   for (int i = 0; i < ARRAY_SIZE(default_settings.segment_array); i++) {
         default_settings.segment_array[i].active = false;
         default_settings.segment_array[i].index = 0;
         default_settings.segment_array[i].start = 0;
@@ -382,7 +344,7 @@ static void led_settings_storage_init(void) {
         default_settings.segment_array[i].colors[0] = BLUE;
         default_settings.segment_array[i].colors[1] = RED;
         default_settings.segment_array[i].colors[2] = GREEN;
-    }
+    }*/
 
     if (is_new_memory_page(&fs_led_settings)) {
         // Store the default settings
@@ -401,8 +363,6 @@ static void led_settings_storage_init(void) {
         actual_settings.colors[2] = default_settings.colors[2];
         actual_settings.reverse = default_settings.reverse;
         actual_settings.control = default_settings.control;
-        actual_settings.is_ble_controlled = default_settings.is_ble_controlled;
-        actual_settings.ble_control_permitted = default_settings.ble_control_permitted;
     }
 
     // Load actual settings

@@ -272,7 +272,6 @@ static void show_brightness_menu(uint8_t item) {
 }
 
 static void save_brightness(uint8_t item) {
-    menu_take_over();
     switch(item) {
         case SUPER_LOW_BRIGHTNESS_INDEX:
             setBrightness_WS2812FX(SUPER_LOW_BRIGHTNESS);
@@ -330,7 +329,6 @@ static void show_speed_menu(uint8_t item) {
 }
 
 static void save_speed(uint8_t item) {
-    menu_take_over();
     switch(item) {
         case SUPER_SLOW_SPEED_INDEX:
             setSpeed_WS2812FX(SUPER_SLOW_SPEED);
@@ -422,7 +420,6 @@ void set_color(uint32_t color) {
 }
 
 static void save_color(uint8_t item) {
-    menu_take_over();
     switch(item) {
         case RED_INDEX:
             set_color(RED);
@@ -458,7 +455,6 @@ static void save_color(uint8_t item) {
             break;
     }
 
-    menu_take_over();
     show_color_menu(0);
 }
 
@@ -489,7 +485,6 @@ static void show_reverse_menu(uint8_t item) {
 }
 
 static void save_reverse(uint8_t item) {
-    menu_take_over();
     setReverse_WS2812FX((bool)item);
     update_stored_reverse((bool)item);
     show_reverse_menu(0);
