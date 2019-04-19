@@ -478,126 +478,54 @@ static void do_led_brightness(const nrf_cli_t *p_cli, size_t argc, char **argv)
     }
 }
 
-static void do_led_reverse_set(const nrf_cli_t *p_cli, size_t argc, char **argv)
-{
-    uint8_t value_index = 0;
-    uint8_t segment_index = 0;
-
-    static const nrf_cli_getopt_option_t opt[] = {
-        NRF_CLI_OPT("--index", "-i", "Specified the segment, default: 0")};
-
-    if (!standard_check(p_cli, argc, 1, argv, opt)) {
-        return;
-    }
-
-    if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--index")) {
-        if (argc < 3) {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
-                            argv[0]);
-            nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
-            return;
-        }
-
-        value_index = 3;
-        long int val = strtol(argv[2], NULL, 10);
-
-        // strtol will return 0 on bad conversion, lets check if we really want
-        // 0
-        if (val == 0 && strcmp(argv[2], "0")) {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
-                            "%s: invalid parameter: %s\r\n", argv[0], argv[2]);
-            nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
-            return;
-        }
-
-        if (val >= getNumSegments_WS2812FX()) {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
-                            "%s: specified segment does not exist: %s\r\n",
-                            argv[0], argv[2]);
-            nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
-            return;
-        } else {
-            segment_index = val;
-        }
-    } else {
-        value_index = 1;
-    }
-
-    if (!strcmp(argv[value_index], "normal")) {
-        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                        "Set led execution direction to: %s\r\n",
-                        argv[value_index]);
-        setSegmentReverse_WS2812FX(segment_index, false);
-        update_stored_reverse(false);
-        return;
-    } else if (!strcmp(argv[value_index], "reverse")) {
-        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                        "Set led execution direction to: %s\r\n",
-                        argv[value_index]);
-        setSegmentReverse_WS2812FX(segment_index, true);
-        update_stored_reverse(true);
-        return;
-    } else {
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",
-                        "set", argv[value_index]);
-        return;
-    }
-}
-
-static void do_led_reverse_get(const nrf_cli_t *p_cli, size_t argc, char **argv)
-{
-    uint8_t segment_index = 0;
-
-    static const nrf_cli_getopt_option_t opt[] = {
-        NRF_CLI_OPT("--index", "-i", "Specified the segment, default: 0")};
-
-    if (!standard_check(p_cli, argc, 1, argv, opt)) {
-        return;
-    }
-
-    if (!strcmp(argv[1], "-i") || !strcmp(argv[1], "--index")) {
-        if (argc < 2) {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
-                            argv[0]);
-            nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
-            return;
-        }
-
-        long int val = strtol(argv[2], NULL, 10);
-
-        // strtol will return 0 on bad conversion, lets check if we really want
-        // 0
-        if (val == 0 && strcmp(argv[2], "0")) {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
-                            "%s: invalid parameter: %s\r\n", argv[0], argv[2]);
-            nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
-            return;
-        }
-
-        if (val >= getNumSegments_WS2812FX()) {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
-                            "%s: specified segment does not exist: %s\r\n",
-                            argv[0], argv[2]);
-            nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
-            return;
-        } else {
-            segment_index = val;
-        }
-    }
-
-    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%s\r\n",
-                    getSegmentReverse_WS2812FX(segment_index) ? "reverse"
-                                                              : "normal");
-}
-
 static void do_led_reverse(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
+    long int val;
+    uint8_t segment_index = 0;
+
     if (!standard_check(p_cli, argc, 2, argv, NULL)) {
         return;
     }
 
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",
-                    argv[0], argv[1]);
+    val = strtol(argv[1], NULL, 10);
+    if (val == 0 && strcmp(argv[1], "0")) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+        return;
+    } else if (val >= getNumSegments_WS2812FX()) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: index is greater than total segment count: %d\r\n",
+                        argv[1], getNumSegments_WS2812FX());
+        return;
+    } else {
+        segment_index = val;
+    }
+
+    if (argc == 2) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%s\r\n",
+                    getSegmentReverse_WS2812FX(segment_index) ? "reverse"
+                                                              : "normal");
+        return;
+    } else if (argc == 3) {
+        if (!strcmp(argv[2], "normal")) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                            "Set led execution direction to: %s\r\n",
+                            argv[2]);
+            setSegmentReverse_WS2812FX(segment_index, false);
+            update_stored_reverse(false);
+            return;
+        } else if (!strcmp(argv[2], "reverse")) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                            "Set led execution direction to: %s\r\n",
+                            argv[2]);
+            setSegmentReverse_WS2812FX(segment_index, true);
+            update_stored_reverse(true);
+            return;
+        } else {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",
+                            "set", argv[2]);
+            return;
+        }
+    }
 }
 
 static void do_led(const nrf_cli_t *p_cli, size_t argc, char **argv)
@@ -629,12 +557,10 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_segment){
     NRF_CLI_CMD(reset, NULL, reset_help, do_led_reset),
     NRF_CLI_SUBCMD_SET_END};
 
-#define reverse_help "Control mode execution direction [normal|reverse]"
-
-NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_reverse){
-    NRF_CLI_CMD(set, NULL, "Set mode execution direction", do_led_reverse_set),
-    NRF_CLI_CMD(get, NULL, "Get mode execution direction", do_led_reverse_get),
-    NRF_CLI_SUBCMD_SET_END};
+#define reverse_help                                                           \
+    "Get or set mode execution direction.\r\n Usage:\r\n Set: ledctl reverse " \
+    "{segment_index} {normal|reverse} \r\n Get: ledctl reverse "               \
+    "{segment_index}"
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_led){
     NRF_CLI_CMD(segment, &sub_segment, "Manage LED segments", do_led_segment),
@@ -642,7 +568,7 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_led){
     NRF_CLI_CMD(color, NULL, "Control LED color array", do_led_color),
     NRF_CLI_CMD(speed, NULL, "Control LED mode execution speed", do_led_speed),
     NRF_CLI_CMD(brightness, NULL, "Control LED brightness", do_led_brightness),
-    NRF_CLI_CMD(reverse, &sub_reverse, reverse_help, do_led_reverse),
+    NRF_CLI_CMD(reverse, NULL, reverse_help, do_led_reverse),
     NRF_CLI_SUBCMD_SET_END};
 
 NRF_CLI_CMD_REGISTER(ledctl, &sub_led, "Control LEDs configuration", do_led);
