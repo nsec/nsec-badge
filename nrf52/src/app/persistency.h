@@ -43,4 +43,8 @@ void update_stored_color(uint8_t segment_index, uint32_t color, uint8_t index);
 void update_stored_reverse(uint8_t segment_index, bool reverse);
 void update_stored_control(bool control);
 void load_stored_led_default_settings(void);
+
+void update_identity(char *new_identity);
+void load_stored_identity(char *identity);
+
 #endif

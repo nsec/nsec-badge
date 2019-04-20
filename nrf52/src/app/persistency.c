@@ -54,10 +54,10 @@ struct persistency {
     uint32_t zombie_odds_modifier;      // 4 bytes
     uint8_t display_brightness;         // 1 bytes
     struct led_settings led_settings;   // 303 bytes
+    char identity_name[17];             // 17 bytes
     // Add password
-    // Add identity
     // Add Other things
-    uint8_t padding[4096 - 308 - 4]; // 4k - (used memory) - CRC
+    uint8_t padding[4096 - 325 - 4]; // 4k - (used memory) - CRC
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
 
@@ -105,6 +105,9 @@ static void set_default_persistency(void)
     // Add here default config for your data
     persistency->zombie_odds_modifier = 0;
     persistency->display_brightness = 50;
+
+    snprintf(persistency->identity_name, 16, "Citizen #%02ld",
+                 (NRF_FICR->DEVICEID[0] & 0xFFFF));
 
     set_default_led_settings();
 
@@ -198,6 +201,18 @@ void load_stored_led_default_settings(void) {
     set_default_led_settings();
     load_led_settings();
     update_persistency();
+}
+
+/* IDENTITY */
+void update_identity(char *new_identity) {
+    memset(persistency->identity_name, 0, 16);
+    strncpy(persistency->identity_name, new_identity, 16);
+    update_persistency();
+}
+
+void load_stored_identity(char *identity) {
+    memset(identity, 0, 16);
+    strncpy(identity, persistency->identity_name, 16);
 }
 
 #ifndef SOLDERING_TRACK

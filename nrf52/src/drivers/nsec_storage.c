@@ -56,17 +56,6 @@ NRF_FSTORAGE_DEF(nrf_fstorage_t fs_password) = {
 };
 bool need_password_update = false;
 
-/* identity */
-char identity_name[17];
-
-NRF_FSTORAGE_DEF(nrf_fstorage_t fs_identity) = {
-    .evt_handler = NULL,
-    .start_addr = 0x70000,
-    .end_addr = 0x70FFF,
-};
-
-bool need_identity_update = false;
-
 bool is_init = false;
 
 static void wait_for_flash_ready(nrf_fstorage_t const *p_fstorage) {
@@ -90,43 +79,7 @@ void nsec_storage_update() {
         wait_for_flash_ready(&fs_password);
         need_password_update = false;
     }
-
-    if (need_identity_update) {
-        rc = nrf_fstorage_erase(&fs_identity, fs_identity.start_addr, 1, NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_identity);
-
-        rc = nrf_fstorage_write(&fs_identity, fs_identity.start_addr,
-                                identity_name, 16, NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_identity);
-
-        if (is_at_home_menu) {
-            nsec_identity_draw();
-            gfx_update();
-        }
-        need_identity_update = false;
-    }
 }
-
-/*void update_stored_segment(SegmentBle *segment, int index) {
-    if (actual_settings.ble_control_permitted) {
-        if (actual_settings.is_ble_controlled) {
-            actual_settings.segment_array[index].active = segment->active;
-            actual_settings.segment_array[index].index = segment->index;
-            actual_settings.segment_array[index].start = segment->start;
-            actual_settings.segment_array[index].stop = segment->stop;
-            actual_settings.segment_array[index].speed = segment->speed;
-            actual_settings.segment_array[index].mode = segment->mode;
-            actual_settings.segment_array[index].reverse = segment->reverse;
-            actual_settings.segment_array[index].colors[0] = segment->colors[0];
-            actual_settings.segment_array[index].colors[1] = segment->colors[1];
-            actual_settings.segment_array[index].colors[2] = segment->colors[2];
-
-            need_led_settings_update = true;
-        }
-    }
-}*/
 
 /* code interface */
 
@@ -170,21 +123,6 @@ bool nsec_unlock_led_pattern(char *password, uint8_t index) {
     return false;
 }
 
-// identity
-void update_identity(char *new_identity) {
-    memset(identity_name, 0, 16);
-    strncpy(identity_name, new_identity, 16);
-    need_identity_update = true;
-}
-
-void load_stored_identity(char *identity) {
-    if (!is_init) {
-        nsec_storage_init();
-    }
-    memset(identity, 0, 16);
-    strncpy(identity, identity_name, 16);
-}
-
 static bool is_new_memory_page(nrf_fstorage_t const *p_fstorage) {
     ret_code_t rc;
     uint32_t new_dev_memory;
@@ -220,39 +158,6 @@ static void password_storage_init(void) {
     wait_for_flash_ready(&fs_password);
 }
 
-static void identity_storage_init(void) {
-    ret_code_t rc;
-
-    nrf_fstorage_api_t *p_fs_api;
-    p_fs_api = &nrf_fstorage_sd;
-
-    rc = nrf_fstorage_init(&fs_identity, p_fs_api, NULL);
-    APP_ERROR_CHECK(rc);
-
-    if (is_new_memory_page(&fs_identity)) {
-        // Store the default settings
-#if defined(NSEC_HARDCODED_BADGE_IDENTITY_NAME)
-#define NSEC_STRINGIFY_(...) #__VA_ARGS__
-#define NSEC_STRINGIFY(...) NSEC_STRINGIFY_(__VA_ARGS__)
-        snprintf(identity_name, 16,
-                 NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_IDENTITY_NAME));
-#else
-        snprintf(identity_name, 16, "Cosmonaut #%02ld",
-                 (NRF_FICR->DEVICEID[0] & 0xFFFF));
-#endif
-        rc = nrf_fstorage_write(&fs_identity, fs_identity.start_addr,
-                                identity_name, 16, NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_identity);
-    }
-
-    // Load actual settings
-    rc = nrf_fstorage_read(&fs_identity, fs_identity.start_addr, identity_name,
-                           16);
-    APP_ERROR_CHECK(rc);
-    wait_for_flash_ready(&fs_identity);
-}
-
 void nsec_storage_init(void) {
 
     if (is_init) {
@@ -260,7 +165,6 @@ void nsec_storage_init(void) {
     }
 
     password_storage_init();
-    identity_storage_init();
 
     is_init = true;
 }
