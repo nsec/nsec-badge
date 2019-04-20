@@ -23,7 +23,7 @@
 #define SPONSOR_14      14
 #define SPONSOR_15      15
 
-const char *sponsor_password[] = {
+static const char *sponsor_password[] = {
     "84C6", // Color wipe Random
     "74D2", // Random color
     "5798", // Fire Flicker (Intense)

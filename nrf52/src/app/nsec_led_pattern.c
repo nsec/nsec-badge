@@ -20,6 +20,7 @@
 #include "drivers/display.h"
 #include "gfx_effect.h"
 #include "drivers/ws2812fx.h"
+#include "led_code_storage.h"
 
 enum setting_state {
     SETTING_STATE_CLOSED,
@@ -210,6 +211,48 @@ static menu_item_s led_pattern_items[] = {
         .handler = show_extra_pattern_menu,
     }
 };
+
+static void unlock_all_pattern() {
+    uint32_t stored_password = get_stored_pattern_bf();
+    if (stored_password != 0x00FFFFFF) {
+        stored_password = 0x00FFFFFF;
+        update_stored_pattern_bf(stored_password);
+    }
+}
+
+static void unlock_pattern(uint32_t sponsor_index) {
+    if (sponsor_index < 31) {
+        uint32_t stored_password = get_stored_pattern_bf();
+        SET_BIT(stored_password, sponsor_index);
+        update_stored_pattern_bf(stored_password);
+    }
+}
+
+const char *nsec_get_pattern_pw(uint32_t sponsor_index) {
+    if (sponsor_index < SPONSOR_PW_SIZE) {
+        return sponsor_password[sponsor_index];
+    }
+    return 0;
+}
+
+bool pattern_is_unlock(uint32_t sponsor_index) {
+    return IS_SET(get_stored_pattern_bf(), sponsor_index);
+}
+
+// true valid, false invalid
+bool nsec_unlock_led_pattern(char *password, uint8_t index) {
+    if (strcmp(password, MASTER_PW) == 0) {
+        unlock_all_pattern();
+        return true;
+    }
+    if (strcmp(password, sponsor_password[index]) == 0) {
+        if (!pattern_is_unlock(index)) {
+            unlock_pattern(index);
+        }
+        return true;
+    }
+    return false;
+}
 
 static void draw_led_title(void)
 {

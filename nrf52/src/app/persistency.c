@@ -55,7 +55,7 @@ struct persistency {
     uint8_t display_brightness;         // 1 bytes
     struct led_settings led_settings;   // 303 bytes
     char identity_name[17];             // 17 bytes
-    // Add password
+    uint32_t unlocked_pattern_bf;       // 4 bytes
     // Add Other things
     uint8_t padding[4096 - 325 - 4]; // 4k - (used memory) - CRC
     uint32_t crc; // 4 bytes
@@ -105,6 +105,7 @@ static void set_default_persistency(void)
     // Add here default config for your data
     persistency->zombie_odds_modifier = 0;
     persistency->display_brightness = 50;
+    persistency->unlocked_pattern_bf = 0;
 
     snprintf(persistency->identity_name, 16, "Citizen #%02ld",
                  (NRF_FICR->DEVICEID[0] & 0xFFFF));
@@ -213,6 +214,16 @@ void update_identity(char *new_identity) {
 void load_stored_identity(char *identity) {
     memset(identity, 0, 16);
     strncpy(identity, persistency->identity_name, 16);
+}
+
+/* PATTERN */
+uint32_t get_stored_pattern_bf(void) {
+    return persistency->unlocked_pattern_bf;
+}
+
+void update_stored_pattern_bf(uint32_t bf) {
+    persistency->unlocked_pattern_bf = bf;
+    update_persistency();
 }
 
 #ifndef SOLDERING_TRACK

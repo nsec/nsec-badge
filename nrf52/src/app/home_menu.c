@@ -249,7 +249,6 @@ void home_menu_application(void (*service_callback)()) {
 
     while (application_get() == home_menu_application) {
         battery_manager_process();
-        nsec_storage_update();
         service_callback();
     }
 

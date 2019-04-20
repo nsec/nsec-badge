@@ -46,16 +46,6 @@
 
 extern bool is_at_home_menu;
 
-/* password */
-uint32_t stored_password = 0;
-
-NRF_FSTORAGE_DEF(nrf_fstorage_t fs_password) = {
-    .evt_handler = NULL,
-    .start_addr = 0x69000,
-    .end_addr = 0x69FFF,
-};
-bool need_password_update = false;
-
 bool is_init = false;
 
 static void wait_for_flash_ready(nrf_fstorage_t const *p_fstorage) {
@@ -65,63 +55,7 @@ static void wait_for_flash_ready(nrf_fstorage_t const *p_fstorage) {
     }
 }
 
-void nsec_storage_update() {
-    ret_code_t rc;
-
-    if (need_password_update) {
-        rc = nrf_fstorage_erase(&fs_password, fs_password.start_addr, 1, NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_password);
-
-        rc = nrf_fstorage_write(&fs_password, fs_password.start_addr,
-                                &stored_password, 4, NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_password);
-        need_password_update = false;
-    }
-}
-
 /* code interface */
-
-static void unlock_all_pattern() {
-    if (stored_password != 0x00FFFFFF) {
-        stored_password = 0x00FFFFFF;
-        need_password_update = true;
-    }
-}
-
-static void unlock_pattern(uint32_t sponsor_index) {
-    if (sponsor_index < 31) {
-        SET_BIT(stored_password, sponsor_index);
-        need_password_update = true;
-    }
-}
-
-const char *nsec_get_pattern_pw(uint32_t sponsor_index) {
-    if (sponsor_index < SPONSOR_PW_SIZE) {
-        return sponsor_password[sponsor_index];
-    }
-    return 0;
-}
-
-bool pattern_is_unlock(uint32_t sponsor_index) {
-    return IS_SET(stored_password, sponsor_index);
-}
-
-// true valid, false invalid
-bool nsec_unlock_led_pattern(char *password, uint8_t index) {
-    if (strcmp(password, MASTER_PW) == 0) {
-        unlock_all_pattern();
-        return true;
-    }
-    if (strcmp(password, sponsor_password[index]) == 0) {
-        if (!pattern_is_unlock(index)) {
-            unlock_pattern(index);
-        }
-        return true;
-    }
-    return false;
-}
 
 static bool is_new_memory_page(nrf_fstorage_t const *p_fstorage) {
     ret_code_t rc;
@@ -134,37 +68,11 @@ static bool is_new_memory_page(nrf_fstorage_t const *p_fstorage) {
     return (new_dev_memory == 0xFFFFFFFF) ? true : false;
 }
 
-static void password_storage_init(void) {
-    ret_code_t rc;
-
-    nrf_fstorage_api_t *p_fs_api;
-    p_fs_api = &nrf_fstorage_sd;
-
-    rc = nrf_fstorage_init(&fs_password, p_fs_api, NULL);
-    APP_ERROR_CHECK(rc);
-
-    if (is_new_memory_page(&fs_password)) {
-        // Store the default settings
-        rc = nrf_fstorage_write(&fs_password, fs_password.start_addr,
-                                &stored_password, 4, NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_password);
-    }
-
-    // Load actual settings
-    rc = nrf_fstorage_read(&fs_password, fs_password.start_addr,
-                           &stored_password, 4);
-    APP_ERROR_CHECK(rc);
-    wait_for_flash_ready(&fs_password);
-}
-
 void nsec_storage_init(void) {
 
     if (is_init) {
         return;
     }
-
-    password_storage_init();
 
     is_init = true;
 }
