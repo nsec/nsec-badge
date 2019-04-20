@@ -50,16 +50,16 @@ struct led_settings {
     uint8_t mode;
     bool reverse;
     bool control;
-    uint8_t display_brightness;
 }__attribute__((packed));
 
 struct persistency {
-    uint32_t zombie_odds_modifier; // 4 bytes
-    struct led_settings led_settings; // 19 bytes
+    uint32_t zombie_odds_modifier;      // 4 bytes
+    uint8_t display_brightness;         // 1 bytes
+    struct led_settings led_settings;   // 18 bytes
     // Add password
     // Add identity
     // Add Other things
-    uint8_t padding[4096 - 4 - 19 - 4]; // 4k - (used memory) - CRC
+    uint8_t padding[4096 - 23 - 4]; // 4k - (used memory) - CRC
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
 
@@ -85,7 +85,6 @@ static void update_persistency(void)
 static void set_default_led_settings(void)
 {
     persistency->led_settings.mode = FX_MODE_STATIC;
-    persistency->led_settings.display_brightness = 50;
     persistency->led_settings.speed = MEDIUM_SPEED;
     persistency->led_settings.brightness = MEDIUM_BRIGHTNESS;
     persistency->led_settings.colors[0] = BLUE;
@@ -101,6 +100,7 @@ static void set_default_persistency(void)
 
     // Add here default config for your data
     persistency->zombie_odds_modifier = 0;
+    persistency->display_brightness = 50;
 
     set_default_led_settings();
 
@@ -121,11 +121,11 @@ void set_persist_zombie_odds_modifier(uint32_t odds)
 
 /* DISPLAY SETTINGS */
 uint8_t get_stored_display_brightness(void) {
-    return persistency->led_settings.display_brightness;
+    return persistency->display_brightness;
 }
 
 void update_stored_display_brightness(uint8_t brightness) {
-    persistency->led_settings.display_brightness = brightness;
+    persistency->display_brightness = brightness;
     update_persistency();
 }
 
@@ -163,8 +163,6 @@ void update_stored_control(bool control) {
 }
 
 void load_led_settings(void) {
-    display_set_brightness(persistency->led_settings.display_brightness);
-
     if (persistency->led_settings.control) {
         start_WS2812FX();
     } else {
@@ -221,6 +219,7 @@ void load_persistency(void) {
     }
 
     load_led_settings();
+    display_set_brightness(persistency->display_brightness);
 
     is_loaded = true;
 
