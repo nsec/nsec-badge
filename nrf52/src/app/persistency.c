@@ -44,22 +44,20 @@
 
 /* Led settings  19 bytes*/
 struct led_settings {
-    uint32_t colors[NUM_COLORS];
-    uint16_t speed;
-    uint8_t brightness;
-    uint8_t mode;
-    bool reverse;
+    segment segment[15]; // 20 * 15 = 300bytes
+    uint8_t num_segment;
     bool control;
+    uint8_t brightness;
 }__attribute__((packed));
 
 struct persistency {
     uint32_t zombie_odds_modifier;      // 4 bytes
     uint8_t display_brightness;         // 1 bytes
-    struct led_settings led_settings;   // 18 bytes
+    struct led_settings led_settings;   // 303 bytes
     // Add password
     // Add identity
     // Add Other things
-    uint8_t padding[4096 - 23 - 4]; // 4k - (used memory) - CRC
+    uint8_t padding[4096 - 308 - 4]; // 4k - (used memory) - CRC
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
 
@@ -84,14 +82,20 @@ static void update_persistency(void)
 
 static void set_default_led_settings(void)
 {
-    persistency->led_settings.mode = FX_MODE_STATIC;
-    persistency->led_settings.speed = MEDIUM_SPEED;
     persistency->led_settings.brightness = MEDIUM_BRIGHTNESS;
-    persistency->led_settings.colors[0] = BLUE;
-    persistency->led_settings.colors[1] = RED;
-    persistency->led_settings.colors[2] = GREEN;
-    persistency->led_settings.reverse = false;
     persistency->led_settings.control = true;
+    persistency->led_settings.num_segment = 1;
+
+    for (int i = 0 ; i < 15; i++) {
+        persistency->led_settings.segment[i].start = 0;
+        persistency->led_settings.segment[i].stop = 14;
+        persistency->led_settings.segment[i].mode = FX_MODE_STATIC;
+        persistency->led_settings.segment[i].speed = MEDIUM_SPEED;
+        persistency->led_settings.segment[i].colors[0] = BLUE;
+        persistency->led_settings.segment[i].colors[1] = RED;
+        persistency->led_settings.segment[i].colors[2] = GREEN;
+        persistency->led_settings.segment[i].reverse = false;
+    }
 }
 
 static void set_default_persistency(void)
@@ -135,26 +139,26 @@ void update_stored_brightness(uint8_t brightness) {
     update_persistency();
 }
 
-void update_stored_mode(uint8_t mode) {
-    persistency->led_settings.mode = mode;
+void update_stored_mode(uint8_t segment_index, uint8_t mode) {
+    persistency->led_settings.segment[segment_index].mode = mode;
     update_persistency();
 }
 
-void update_stored_speed(uint16_t speed) {
-    persistency->led_settings.speed = speed;
+void update_stored_speed(uint8_t segment_index, uint16_t speed) {
+    persistency->led_settings.segment[segment_index].speed = speed;
     update_persistency();
 }
 
-void update_stored_color(uint32_t color, uint8_t index) {
+void update_stored_color(uint8_t segment_index, uint32_t color, uint8_t index) {
     if (index < NUM_COLORS) {
-        persistency->led_settings.colors[index] = color;
+        persistency->led_settings.segment[segment_index].colors[index] = color;
         update_persistency();
     }
 }
 
-void update_stored_reverse(bool reverse) {
-    persistency->led_settings.reverse = reverse;
-   update_persistency();
+void update_stored_reverse(uint8_t segment_index, bool reverse) {
+    persistency->led_settings.segment[segment_index].reverse = reverse;
+    update_persistency();
 }
 
 void update_stored_control(bool control) {
@@ -170,14 +174,24 @@ void load_led_settings(void) {
     }
 
     resetSegments_WS2812FX();
-
     setBrightness_WS2812FX(persistency->led_settings.brightness);
-    setMode_WS2812FX(persistency->led_settings.mode);
-    setSpeed_WS2812FX(persistency->led_settings.speed);
-    setArrayColor_packed_WS2812FX(persistency->led_settings.colors[0], 0);
-    setArrayColor_packed_WS2812FX(persistency->led_settings.colors[1], 1);
-    setArrayColor_packed_WS2812FX(persistency->led_settings.colors[2], 2);
-    setReverse_WS2812FX(persistency->led_settings.reverse);
+
+    for (int i = 0; i < persistency->led_settings.num_segment; i++) {
+        setSegmentStart_WS2812FX(i, persistency->led_settings.segment[i].start);
+        setSegmentStop_WS2812FX(i, persistency->led_settings.segment[i].stop);
+        setSegmentMode_WS2812FX(i, persistency->led_settings.segment[i].mode);
+        setSegmentSpeed_WS2812FX(i, persistency->led_settings.segment[i].speed);
+        setSegmentArrayColor_packed_WS2812FX(
+            i, persistency->led_settings.segment[i].colors[0], 0);
+        setSegmentArrayColor_packed_WS2812FX(
+            i, persistency->led_settings.segment[i].colors[1], 1);
+        setSegmentArrayColor_packed_WS2812FX(
+            i, persistency->led_settings.segment[i].colors[2], 2);
+        setSegmentReverse_WS2812FX(
+            i, persistency->led_settings.segment[i].reverse);
+    }
+
+    setNumSegments_WS2812FX(persistency->led_settings.num_segment);
 }
 
 void load_stored_led_default_settings(void) {

@@ -121,6 +121,16 @@
 #define FX_MODE_ICU 55
 #define FX_MODE_CUSTOM 56
 
+// segment parameters
+typedef struct Segment { // 20 bytes
+    uint16_t start;
+    uint16_t stop;
+    uint16_t speed;
+    uint8_t mode;
+    bool reverse;
+    uint32_t colors[3];
+}__attribute__((packed))segment;
+
 void init_WS2812FX(void);
 void service_WS2812FX(void);
 void start_WS2812FX(void);
@@ -146,7 +156,8 @@ void setColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b);
 void setArrayColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b, uint8_t index);
 void setColor_packed_WS2812FX(uint32_t c);
 void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index);
-void setSegmentArrayColor_packed(uint8_t segment_index, uint8_t color_index, uint32_t c);
+void setSegmentArrayColor_packed_WS2812FX(uint8_t segment_index,
+                                          uint8_t color_index, uint32_t c);
 void setBrightness_WS2812FX(uint8_t b);
 void increaseBrightness_WS2812FX(uint8_t s);
 void decreaseBrightness_WS2812FX(uint8_t s);

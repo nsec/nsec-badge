@@ -16,6 +16,7 @@
 #include "menu.h"
 #include "nsec_led_pattern.h"
 #include "drivers/nsec_storage.h"
+#include "persistency.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"
 #include "drivers/ws2812fx.h"
@@ -375,7 +376,7 @@ static void save_pattern(uint8_t item) {
     }
 
     setMode_WS2812FX(index);
-    update_stored_mode(index);
+    update_stored_mode(0, index);
     show_actual_pattern();
 }
 

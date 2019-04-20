@@ -28,6 +28,7 @@
 #include "drivers/ws2812fx.h"
 
 #include "nsec_led_pattern.h"
+#include "persistency.h"
 
 static void do_led_create(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
@@ -433,7 +434,7 @@ static void do_led_color(const nrf_cli_t *p_cli, size_t argc, char **argv)
         }
         color = val;
 
-        setSegmentArrayColor_packed(segment_index, color_index, color);
+        setSegmentArrayColor_packed_WS2812FX(segment_index, color_index, color);
         nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
             "Segment %d, color %d is now: %d(%02X)\r\n", segment_index,
             color_index, color, color);
@@ -455,9 +456,9 @@ static void do_led_color(const nrf_cli_t *p_cli, size_t argc, char **argv)
             color[i] = val;
         }
 
-        setSegmentArrayColor_packed(segment_index, 0, color[0]);
-        setSegmentArrayColor_packed(segment_index, 1, color[1]);
-        setSegmentArrayColor_packed(segment_index, 2, color[2]);
+        setSegmentArrayColor_packed_WS2812FX(segment_index, 0, color[0]);
+        setSegmentArrayColor_packed_WS2812FX(segment_index, 1, color[1]);
+        setSegmentArrayColor_packed_WS2812FX(segment_index, 2, color[2]);
         nrf_cli_fprintf(
             p_cli, NRF_CLI_DEFAULT,
             "Segment %d color are now: \n\r1: %d(%02X)\r\n2: %d(%02X)\r\n3: "
@@ -595,14 +596,14 @@ static void do_led_reverse(const nrf_cli_t *p_cli, size_t argc, char **argv)
                             "Set led execution direction to: %s\r\n",
                             argv[2]);
             setSegmentReverse_WS2812FX(segment_index, false);
-            update_stored_reverse(false);
+            update_stored_reverse(segment_index, false);
             return;
         } else if (!strcmp(argv[2], "reverse")) {
             nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                             "Set led execution direction to: %s\r\n",
                             argv[2]);
             setSegmentReverse_WS2812FX(segment_index, true);
-            update_stored_reverse(true);
+            update_stored_reverse(segment_index, true);
             return;
         } else {
             nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",

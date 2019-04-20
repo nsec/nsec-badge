@@ -265,16 +265,6 @@ uint32_t SPEED_MAX = 65535;
 #define RESET_RUNTIME                                                          \
     memset(fx->segment_runtimes, 0, sizeof(fx->segment_runtimes))
 
-// segment parameters
-typedef struct Segment { // 20 bytes
-    uint16_t start;
-    uint16_t stop;
-    uint16_t speed;
-    uint8_t mode;
-    bool reverse;
-    uint32_t colors[NUM_COLORS];
-} segment;
-
 // segment runtime parameters
 typedef struct Segment_runtime { // 16 bytes
     unsigned long next_time;
@@ -479,7 +469,9 @@ void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index) {
     }
 }
 
-void setSegmentArrayColor_packed(uint8_t segment_index, uint8_t color_index, uint32_t c) {
+void setSegmentArrayColor_packed_WS2812FX(uint8_t segment_index,
+                                          uint8_t color_index, uint32_t c)
+{
     if (color_index < NUM_COLORS && segment_index < fx->num_segments) {
         RESET_RUNTIME;
         fx->segments[segment_index].colors[color_index] = c;

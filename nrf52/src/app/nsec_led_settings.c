@@ -349,7 +349,7 @@ static void save_speed(uint8_t item) {
             break;
     }
 
-    update_stored_speed(getSpeed_WS2812FX());
+    update_stored_speed(0, getSpeed_WS2812FX());
     show_speed_menu(0);
 }
 
@@ -409,13 +409,13 @@ static void show_color_menu(uint8_t item) {
 void set_color(uint32_t color) {
     if (_state == SETTING_STATE_FIRST_COLOR) {
         setArrayColor_packed_WS2812FX(color, 0);
-        update_stored_color(color, 0);
+        update_stored_color(0, color, 0);
     } else if (_state == SETTING_STATE_SECOND_COLOR) {
         setArrayColor_packed_WS2812FX(color, 1);
-        update_stored_color(color, 1);
+        update_stored_color(0, color, 1);
     } else {
         setArrayColor_packed_WS2812FX(color, 2);
-        update_stored_color(color, 2);
+        update_stored_color(0, color, 2);
     }
 }
 
@@ -486,7 +486,7 @@ static void show_reverse_menu(uint8_t item) {
 
 static void save_reverse(uint8_t item) {
     setReverse_WS2812FX((bool)item);
-    update_stored_reverse((bool)item);
+    update_stored_reverse(0, (bool)item);
     show_reverse_menu(0);
 }
 
