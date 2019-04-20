@@ -46,27 +46,6 @@
 
 extern bool is_at_home_menu;
 
-/* Led settings */
-typedef struct LedSettings_t {
-    uint8_t mode;
-    uint16_t speed;
-    uint8_t brightness;
-    uint32_t colors[NUM_COLORS];
-    bool reverse;
-    bool control;
-    uint8_t display_brightness;
-} LedSettings;
-
-LedSettings actual_settings;
-LedSettings default_settings;
-bool need_led_settings_update = false;
-
-NRF_FSTORAGE_DEF(nrf_fstorage_t fs_led_settings) = {
-    .evt_handler = NULL,
-    .start_addr = 0x68000,
-    .end_addr = 0x68FFF,
-};
-
 /* password */
 uint32_t stored_password = 0;
 
@@ -100,20 +79,6 @@ static void wait_for_flash_ready(nrf_fstorage_t const *p_fstorage) {
 void nsec_storage_update() {
     ret_code_t rc;
 
-    if (need_led_settings_update) {
-        rc = nrf_fstorage_erase(&fs_led_settings, fs_led_settings.start_addr, 1,
-                                NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_led_settings);
-
-        rc =
-            nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr,
-                               &actual_settings, sizeof(actual_settings), NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_led_settings);
-        need_led_settings_update = false;
-    }
-
     if (need_password_update) {
         rc = nrf_fstorage_erase(&fs_password, fs_password.start_addr, 1, NULL);
         APP_ERROR_CHECK(rc);
@@ -144,48 +109,6 @@ void nsec_storage_update() {
     }
 }
 
-uint8_t get_stored_display_brightness(void) {
-    return actual_settings.display_brightness;
-}
-
-void update_stored_display_brightness(uint8_t brightness) {
-    actual_settings.display_brightness = brightness;
-    need_led_settings_update = true;
-}
-
-/* Led Settings interface */
-void update_stored_brightness(uint8_t brightness) {
-    actual_settings.brightness = brightness;
-    need_led_settings_update = true;
-}
-
-void update_stored_mode(uint8_t mode) {
-    actual_settings.mode = mode;
-    need_led_settings_update = true;
-}
-
-void update_stored_speed(uint16_t speed) {
-    actual_settings.speed = speed;
-    need_led_settings_update = true;
-}
-
-void update_stored_color(uint32_t color, uint8_t index) {
-    if (index < NUM_COLORS) {
-        actual_settings.colors[index] = color;
-        need_led_settings_update = true;
-    }
-}
-
-void update_stored_reverse(bool reverse) {
-    actual_settings.reverse = reverse;
-    need_led_settings_update = true;
-}
-
-void update_stored_control(bool control) {
-    actual_settings.control = control;
-    need_led_settings_update = true;
-}
-
 /*void update_stored_segment(SegmentBle *segment, int index) {
     if (actual_settings.ble_control_permitted) {
         if (actual_settings.is_ble_controlled) {
@@ -204,35 +127,6 @@ void update_stored_control(bool control) {
         }
     }
 }*/
-
-void load_stored_led_settings(void) {
-    if (!is_init) {
-        nsec_storage_init();
-    }
-
-    display_set_brightness(actual_settings.display_brightness);
-
-    if (actual_settings.control) {
-        start_WS2812FX();
-    } else {
-        stop_WS2812FX();
-    }
-
-    resetSegments_WS2812FX();
-    setBrightness_WS2812FX(actual_settings.brightness);
-    setMode_WS2812FX(actual_settings.mode);
-    setSpeed_WS2812FX(actual_settings.speed);
-    setArrayColor_packed_WS2812FX(actual_settings.colors[0], 0);
-    setArrayColor_packed_WS2812FX(actual_settings.colors[1], 1);
-    setArrayColor_packed_WS2812FX(actual_settings.colors[2], 2);
-    setReverse_WS2812FX(actual_settings.reverse);
-}
-
-void load_stored_led_default_settings(void) {
-    memcpy(&actual_settings, &default_settings, sizeof(LedSettings));
-    need_led_settings_update = true;
-    load_stored_led_settings();
-}
 
 /* code interface */
 
@@ -302,76 +196,6 @@ static bool is_new_memory_page(nrf_fstorage_t const *p_fstorage) {
     return (new_dev_memory == 0xFFFFFFFF) ? true : false;
 }
 
-static void led_settings_storage_init(void) {
-    ret_code_t rc;
-
-    nrf_fstorage_api_t *p_fs_api;
-    p_fs_api = &nrf_fstorage_sd;
-
-    rc = nrf_fstorage_init(&fs_led_settings, p_fs_api, NULL);
-    APP_ERROR_CHECK(rc);
-
-    default_settings.display_brightness = 50;
-
-#ifdef SOLDERING_TRACK
-    default_settings.mode = FX_MODE_FIRE_FLICKER_INTENSE;
-    default_settings.speed = MEDIUM_SPEED;
-    default_settings.brightness = MAX_BRIGHTNESS;
-    default_settings.colors[0] = ORANGE;
-    default_settings.colors[1] = RED;
-    default_settings.colors[2] = GREEN;
-    default_settings.reverse = false;
-    default_settings.control = true;
-#else
-    default_settings.mode = FX_MODE_STATIC;
-    default_settings.speed = MEDIUM_SPEED;
-    default_settings.brightness = MEDIUM_BRIGHTNESS;
-    default_settings.colors[0] = BLUE;
-    default_settings.colors[1] = RED;
-    default_settings.colors[2] = GREEN;
-    default_settings.reverse = false;
-    default_settings.control = true;
-#endif
-
- /*   for (int i = 0; i < ARRAY_SIZE(default_settings.segment_array); i++) {
-        default_settings.segment_array[i].active = false;
-        default_settings.segment_array[i].index = 0;
-        default_settings.segment_array[i].start = 0;
-        default_settings.segment_array[i].stop = 0;
-        default_settings.segment_array[i].speed = 1000;
-        default_settings.segment_array[i].mode = 0;
-        default_settings.segment_array[i].reverse = false;
-        default_settings.segment_array[i].colors[0] = BLUE;
-        default_settings.segment_array[i].colors[1] = RED;
-        default_settings.segment_array[i].colors[2] = GREEN;
-    }*/
-
-    if (is_new_memory_page(&fs_led_settings)) {
-        // Store the default settings
-        rc = nrf_fstorage_write(&fs_led_settings, fs_led_settings.start_addr,
-                                &default_settings, sizeof(actual_settings),
-                                NULL);
-        APP_ERROR_CHECK(rc);
-        wait_for_flash_ready(&fs_led_settings);
-
-        actual_settings.display_brightness = default_settings.display_brightness;
-        actual_settings.mode = default_settings.mode;
-        actual_settings.speed = default_settings.speed;
-        actual_settings.brightness = default_settings.brightness;
-        actual_settings.colors[0] = default_settings.colors[0];
-        actual_settings.colors[1] = default_settings.colors[1];
-        actual_settings.colors[2] = default_settings.colors[2];
-        actual_settings.reverse = default_settings.reverse;
-        actual_settings.control = default_settings.control;
-    }
-
-    // Load actual settings
-    rc = nrf_fstorage_read(&fs_led_settings, fs_led_settings.start_addr,
-                           &actual_settings, sizeof(actual_settings));
-    APP_ERROR_CHECK(rc);
-    wait_for_flash_ready(&fs_led_settings);
-}
-
 static void password_storage_init(void) {
     ret_code_t rc;
 
@@ -435,7 +259,6 @@ void nsec_storage_init(void) {
         return;
     }
 
-    led_settings_storage_init();
     password_storage_init();
     identity_storage_init();
 

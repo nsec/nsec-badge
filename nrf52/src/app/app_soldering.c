@@ -18,6 +18,7 @@
 #include "app_soldering.h"
 #include "gfx_effect.h"
 #include "application.h"
+#include "nsec_led_settings.h"
 
 #include "images/flames_bitmap.h"
 
@@ -111,8 +112,12 @@ static void show_soldering_flag(void * p_context)
 
 static void init_soldering_track(void) {
     uint8_t data[128];
+    const uint32_t colors[3] = {ORANGE, RED, GREEN};
 
     //test_flash();
+
+    setSegment_color_array_WS2812FX(0, 0, 14, FX_MODE_FIRE_FLICKER_INTENSE,
+                         colors, MEDIUM_SPEED, false);
 
     gfx_fill_screen(DISPLAY_BLACK);
 

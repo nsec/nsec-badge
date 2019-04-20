@@ -37,7 +37,7 @@
 #include "gfx_effect.h"
 #include "drivers/display.h"
 #include "drivers/ws2812fx.h"
-#include "drivers/nsec_storage.h"
+#include "persistency.h"
 
 #define BRIGHNESS_MENU_INDEX        0
 

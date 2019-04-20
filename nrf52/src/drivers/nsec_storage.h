@@ -26,12 +26,6 @@
 void nsec_storage_init(void);
 void nsec_storage_update(void);
 
-void load_stored_led_settings(void);
-void load_stored_led_default_settings(void);
-
-void update_stored_display_brightness(uint8_t brightness);
-uint8_t get_stored_display_brightness(void);
-
 void update_stored_brightness(uint8_t brightness);
 void update_stored_mode(uint8_t mode);
 void update_stored_speed(uint16_t speed);

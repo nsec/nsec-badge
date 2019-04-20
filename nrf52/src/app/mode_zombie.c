@@ -6,7 +6,6 @@
 #include <app_timer.h>
 
 #include "drivers/display.h"
-#include "drivers/nsec_storage.h"
 #include "drivers/ws2812fx.h"
 #include "drivers/controls.h"
 
@@ -53,8 +52,7 @@ void app_mode_zombie(void (*service_device)()) {
     }
 
     /* Restore badge normal state */
-    load_stored_led_settings();
-    update_stored_display_brightness(get_stored_display_brightness());
+    load_led_settings();
 
     /* Re-enable buttons */
     nsec_controls_enable(true);

@@ -20,7 +20,7 @@
 #include "drivers/controls.h"
 #include "identity.h"
 #include "drivers/ws2812fx.h"
-#include "drivers/nsec_storage.h"
+#include "persistency.h"
 #include "timer.h"
 
 //static void toggle_bluetooth(uint8_t item);
@@ -316,7 +316,7 @@ static void setting_handle_buttons(button_t button)
                 break;
 
             case SETTING_STATE_FLASHLIGHT:
-                load_stored_led_settings();
+                load_led_settings();
                 nsec_status_bar_ui_redraw();
                 draw_home_menu_bar();
                 draw_settings_title();

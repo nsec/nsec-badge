@@ -25,9 +25,22 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 void load_persistency(void);
 
 uint32_t get_persist_zombie_odds_modifier(void);
 void set_persist_zombie_odds_modifier(uint32_t odds);
+
+uint8_t get_stored_display_brightness(void);
+void update_stored_display_brightness(uint8_t brightness);
+
+void load_led_settings(void);
+void update_stored_brightness(uint8_t brightness);
+void update_stored_mode(uint8_t mode);
+void update_stored_speed(uint16_t speed);
+void update_stored_color(uint32_t color, uint8_t index);
+void update_stored_reverse(bool reverse);
+void update_stored_control(bool control);
+void load_stored_led_default_settings(void);
 #endif

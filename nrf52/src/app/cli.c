@@ -24,7 +24,7 @@
 
 #include <drivers/cli_uart.h>
 #include "drivers/display.h"
-#include "drivers/nsec_storage.h"
+#include "persistency.h"
 
 bool standard_check(const nrf_cli_t *p_cli, size_t argc, size_t minimum_arg,
                     char **argv, nrf_cli_getopt_option_t const *p_opt,
