@@ -50,9 +50,10 @@ static struct {
     // clang-format on
 };
 
-static void do_nsec(const nrf_cli_t *p_cli, size_t argc, char **argv) {
+static void do_nsec(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+#ifdef NSEC_FLAVOR_CTF
     if (nrf_cli_help_requested(p_cli)) {
-
         nrf_cli_fprintf(
             p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
             "It looks like you could use some help, here's a flag!\r\n\r\n");
@@ -60,6 +61,7 @@ static void do_nsec(const nrf_cli_t *p_cli, size_t argc, char **argv) {
                         "      FLAG-173f42fc-ade7-4d5e-ac0a-915f180fcb2b\r\n");
         return;
     }
+#endif
 
     for (int i = 0; i < ARRAY_SIZE(nsec_rows); i++) {
         nrf_fprintf(p_cli->p_fprintf_ctx, "\x1b[38;2;19;118;188m");
