@@ -34,7 +34,7 @@ static void do_led_create(const nrf_cli_t *p_cli, size_t argc, char **argv)
     long int val;
     uint8_t segment_index, start_index, stop_index;
 
-    if (!standard_check(p_cli, argc, 3, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 3, argv, NULL, 0)) {
         return;
     }
 
@@ -97,7 +97,7 @@ static void do_led_delete(const nrf_cli_t *p_cli, size_t argc, char **argv)
     long int val;
     uint8_t segment_index;
 
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
@@ -145,7 +145,7 @@ static void do_led_delete(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 static void do_led_show(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
         return;
     }
 
@@ -177,7 +177,7 @@ static void do_led_reset(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
     static bool called = false;
 
-    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
         return;
     }
 
@@ -209,7 +209,7 @@ static void do_led_reset(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 static void do_led_segment(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
@@ -222,7 +222,7 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
     long int val;
     uint8_t segment_index = 0;
 
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
@@ -293,7 +293,7 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 static void do_mode_list(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
         return;
     }
 
@@ -316,7 +316,7 @@ static void do_led_mode(const nrf_cli_t *p_cli, size_t argc, char **argv)
     long int val;
     uint8_t segment_index = 0;
 
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
@@ -377,7 +377,7 @@ static void do_led_color(const nrf_cli_t *p_cli, size_t argc, char **argv)
     long int val;
     uint8_t segment_index = 0;
 
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
@@ -480,7 +480,7 @@ static void do_led_speed(const nrf_cli_t *p_cli, size_t argc, char **argv)
     long int val;
     uint8_t segment_index = 0;
 
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
@@ -528,7 +528,7 @@ static void do_led_speed(const nrf_cli_t *p_cli, size_t argc, char **argv)
 static void do_led_brightness(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
     long int val;
-    if (!standard_check(p_cli, argc, 1, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
         return;
     }
 
@@ -566,7 +566,7 @@ static void do_led_reverse(const nrf_cli_t *p_cli, size_t argc, char **argv)
     long int val;
     uint8_t segment_index = 0;
 
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
@@ -614,7 +614,7 @@ static void do_led_reverse(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 static void do_led(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 

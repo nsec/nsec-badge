@@ -26,22 +26,22 @@
 #include "drivers/display.h"
 #include "drivers/nsec_storage.h"
 
-bool standard_check(const nrf_cli_t *p_cli, size_t argc,
-                           size_t minimum_arg, char **argv,
-                           nrf_cli_getopt_option_t const *p_opt)
+bool standard_check(const nrf_cli_t *p_cli, size_t argc, size_t minimum_arg,
+                    char **argv, nrf_cli_getopt_option_t const *p_opt,
+                    size_t opt_len)
 {
     ASSERT(p_cli);
     ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
 
     if (nrf_cli_help_requested(p_cli)) {
-        nrf_cli_help_print(p_cli, p_opt, ARRAY_SIZE(p_opt));
+        nrf_cli_help_print(p_cli, p_opt, opt_len);
         return false;
     }
 
     if (argc < minimum_arg) {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
                         argv[0]);
-        nrf_cli_help_print(p_cli, p_opt, ARRAY_SIZE(p_opt));
+        nrf_cli_help_print(p_cli, p_opt, opt_len);
         return false;
     }
 
@@ -163,7 +163,7 @@ static void do_display_brightness_get(const nrf_cli_t *p_cli, size_t argc,
 static void do_display_brightness_set(const nrf_cli_t *p_cli, size_t argc,
                                       char **argv)
 {
-    if (!standard_check(p_cli, argc, 2, argv, NULL)) {
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
