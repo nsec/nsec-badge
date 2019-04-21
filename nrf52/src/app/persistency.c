@@ -61,6 +61,9 @@ struct persistency {
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
 
+// Static assert to make sure the size of struct persistency is as expected.
+static int persistency_size_static[(sizeof(struct persistency) == 4096) ? 1 : -1] __attribute__((unused));
+
 static uint8_t persistency_bin[4096];
 static struct persistency *persistency = (struct persistency*)persistency_bin;
 static bool is_loaded = false;
