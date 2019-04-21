@@ -39,10 +39,10 @@
 
 #define PERSISTENCY_BASE_ADDRESS 0x07F000
 #define PERSISTENCY_SIZE 4096
-
+#define PERISTENCY_REVISION 1
 /* TODO migrate nsec_storage here */
 
-/* Led settings  19 bytes*/
+/* Led settings  303 bytes*/
 struct led_settings {
     segment segment[15]; // 20 * 15 = 300bytes
     uint8_t num_segment;
@@ -56,8 +56,8 @@ struct persistency {
     struct led_settings led_settings;   // 303 bytes
     char identity_name[17];             // 17 bytes
     uint32_t unlocked_pattern_bf;       // 4 bytes
-    // Add Other things
-    uint8_t padding[4096 - 325 - 4]; // 4k - (used memory) - CRC
+    uint8_t padding[4096 - 329 - 5];    // 4k - (used memory) - rev - CRC
+    uint8_t revision;
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
 
@@ -106,6 +106,7 @@ static void set_default_persistency(void)
     persistency->zombie_odds_modifier = 0;
     persistency->display_brightness = 50;
     persistency->unlocked_pattern_bf = 0;
+    persistency->revision = PERISTENCY_REVISION;
 
     snprintf(persistency->identity_name, 16, "Citizen #%02ld",
                  (NRF_FICR->DEVICEID[0] & 0xFFFF));
@@ -178,6 +179,7 @@ void load_led_settings(void) {
     }
 
     resetSegments_WS2812FX();
+    setNumSegments_WS2812FX(persistency->led_settings.num_segment);
     setBrightness_WS2812FX(persistency->led_settings.brightness);
 
     for (int i = 0; i < persistency->led_settings.num_segment; i++) {
@@ -186,16 +188,14 @@ void load_led_settings(void) {
         setSegmentMode_WS2812FX(i, persistency->led_settings.segment[i].mode);
         setSegmentSpeed_WS2812FX(i, persistency->led_settings.segment[i].speed);
         setSegmentArrayColor_packed_WS2812FX(
-            i, persistency->led_settings.segment[i].colors[0], 0);
+            i, 0, persistency->led_settings.segment[i].colors[0]);
         setSegmentArrayColor_packed_WS2812FX(
-            i, persistency->led_settings.segment[i].colors[1], 1);
+            i, 1, persistency->led_settings.segment[i].colors[1]);
         setSegmentArrayColor_packed_WS2812FX(
-            i, persistency->led_settings.segment[i].colors[2], 2);
+            i, 2, persistency->led_settings.segment[i].colors[2]);
         setSegmentReverse_WS2812FX(
             i, persistency->led_settings.segment[i].reverse);
     }
-
-    setNumSegments_WS2812FX(persistency->led_settings.num_segment);
 }
 
 void load_stored_led_default_settings(void) {
@@ -255,6 +255,10 @@ void load_persistency(void) {
 
     uint32_t c_crc = crc32_compute(persistency_bin, 4092, NULL);
     if (c_crc != persistency->crc) {
+        set_default_persistency();
+    }
+
+    if (persistency->revision != PERISTENCY_REVISION) {
         set_default_persistency();
     }
 

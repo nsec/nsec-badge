@@ -520,7 +520,10 @@ uint8_t getModeCount_WS2812FX(void) { return MODE_COUNT; }
 
 uint8_t getNumSegments_WS2812FX(void) { return fx->num_segments; }
 
-void setNumSegments_WS2812FX(uint8_t n) { fx->num_segments = n; }
+void setNumSegments_WS2812FX(uint8_t n) {
+    RESET_RUNTIME;
+    fx->num_segments = n;
+}
 
 uint32_t getColor_WS2812FX(void) { return fx->segments[0].colors[0]; }
 
