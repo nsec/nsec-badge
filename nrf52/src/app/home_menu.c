@@ -8,7 +8,6 @@
 #include "drivers/battery_manager.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
-#include "drivers/nsec_storage.h"
 #include "gfx_effect.h"
 #include "gui.h"
 #include "main_menu.h"

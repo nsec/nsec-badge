@@ -9,7 +9,6 @@
 #include <string.h>
 
 #include "drivers/ws2812fx.h"
-#include "drivers/nsec_storage.h"
 #include "drivers/display.h"
 #include "drivers/flash.h"
 #include "drivers/controls.h"

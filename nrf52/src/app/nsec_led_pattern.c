@@ -15,7 +15,6 @@
 #include "drivers/controls.h"
 #include "menu.h"
 #include "nsec_led_pattern.h"
-#include "drivers/nsec_storage.h"
 #include "persistency.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"

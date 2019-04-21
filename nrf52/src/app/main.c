@@ -26,7 +26,6 @@
 #include "drivers/power.h"
 #include "drivers/softdevice.h"
 #include "drivers/ws2812fx.h"
-#include "drivers/nsec_storage.h"
 
 #include "application.h"
 #include "cli.h"

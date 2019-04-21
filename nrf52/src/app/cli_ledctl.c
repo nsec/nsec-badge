@@ -24,7 +24,6 @@
 
 #include <drivers/cli_uart.h>
 #include "drivers/display.h"
-#include "drivers/nsec_storage.h"
 #include "drivers/ws2812fx.h"
 
 #include "nsec_led_pattern.h"
