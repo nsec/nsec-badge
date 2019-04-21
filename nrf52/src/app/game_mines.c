@@ -152,7 +152,7 @@ static void mines_ui_draw_cell_pattern(uint8_t x, uint8_t y, uint8_t pattern_id)
     switch (pattern_id) {
     case 0:
         gfx_fill_rect(x - 1, y - 1, MINES_GAME_FIELD_CELL + 1,
-                      MINES_GAME_FIELD_CELL + 1, 0x9492);
+                      MINES_GAME_FIELD_CELL + 1, 0xce79);
         break;
 
     case 1:
@@ -217,12 +217,12 @@ static void mines_ui_draw_cell_pattern(uint8_t x, uint8_t y, uint8_t pattern_id)
 
 static void mines_ui_draw_cursor(uint8_t x, uint8_t y, uint8_t variant)
 {
-    uint16_t color = 0x9001;
+    uint16_t color = 0xf000;
 
     if (variant == 1) {
-        color = 0xd6db;
+        color = 0xffff;
     } else if (variant == 2) {
-        color = 0x9492;
+        color = 0xce79;
     }
 
     gfx_draw_rect(x, y, MINES_GAME_FIELD_CELL - 1, MINES_GAME_FIELD_CELL - 1,
