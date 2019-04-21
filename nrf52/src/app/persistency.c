@@ -39,7 +39,7 @@
 
 #define PERSISTENCY_BASE_ADDRESS 0x07F000
 #define PERSISTENCY_SIZE 4096
-#define PERISTENCY_REVISION 1
+#define PERSISTENCY_REVISION 1
 /* TODO migrate nsec_storage here */
 
 /* Led settings  303 bytes*/
@@ -109,7 +109,7 @@ static void set_default_persistency(void)
     persistency->zombie_odds_modifier = 0;
     persistency->display_brightness = 50;
     persistency->unlocked_pattern_bf = 0;
-    persistency->revision = PERISTENCY_REVISION;
+    persistency->revision = PERSISTENCY_REVISION;
 
     snprintf(persistency->identity_name, 16, "Citizen #%02ld",
                  (NRF_FICR->DEVICEID[0] & 0xFFFF));
@@ -261,7 +261,7 @@ void load_persistency(void) {
         set_default_persistency();
     }
 
-    if (persistency->revision != PERISTENCY_REVISION) {
+    if (persistency->revision != PERSISTENCY_REVISION) {
         set_default_persistency();
     }
 
