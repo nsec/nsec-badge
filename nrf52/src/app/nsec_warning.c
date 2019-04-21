@@ -33,7 +33,7 @@ const char *warning_notice = "That device is equipped with a protected lithium-i
 
 static struct text_box_config config = {
     GEN_MENU_POS_X,
-    GEN_MENU_POS_Y,
+    22,
     160,
     GEN_MENU_HEIGHT,
     HOME_MENU_BG_COLOR,

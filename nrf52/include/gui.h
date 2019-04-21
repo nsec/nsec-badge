@@ -46,7 +46,7 @@
 #define HOME_MENU_POS_X         128
 #define HOME_MENU_POS_Y         STATUS_BAR_HEIGHT
 #define HOME_MENU_POS           HOME_MENU_POS_X, HOME_MENU_POS_Y
-#define HOME_MENU_WIDTH         31
+#define HOME_MENU_WIDTH         32
 #define HOME_MENU_HEIGHT        (80 - STATUS_BAR_HEIGHT)
 
 #define BURGER_MENU_POS_X       138
@@ -69,21 +69,21 @@
 #define GEN_MENU_POS_X          1
 #define GEN_MENU_POS_Y          20
 #define GEN_MENU_POS            GEN_MENU_POS_X, GEN_MENU_POS_Y
-#define GEN_MENU_WIDTH          128
+#define GEN_MENU_WIDTH          127
 #define GEN_MENU_HEIGHT         60
 
 /* Conference text box */
-#define CONF_POS_X              0
+#define CONF_POS_X              1
 #define CONF_POS_Y              22
 #define CONF_POS                CONF_POS_X, CONF_POS_Y
 #define CONF_WIDTH              160
 #define CONF_HEIGHT             58
 
 /* Led Settings */
-#define LED_SET_VAL_POS_X       0
+#define LED_SET_VAL_POS_X       1
 #define LED_SET_VAL_POS_Y       20
 #define LED_SET_VAL_POS         LED_SET_VAL_POS_X, LED_SET_VAL_POS_Y
-#define LED_SET_POS_X           0
+#define LED_SET_POS_X           1
 #define LED_SET_POS_Y           32
 #define LED_SET_POS             LED_SET_POS_X, LED_SET_POS_Y
 #define LED_SET_WIDTH           128
