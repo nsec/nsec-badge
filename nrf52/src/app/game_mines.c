@@ -28,24 +28,24 @@
 #include "images/external/mines_message_bitmap.h"
 #include "images/external/mines_message_boom_bitmap.h"
 #include "images/external/mines_message_cleared_bitmap.h"
-#include "images/external/mines_pattern_1_bitmap.h"
-#include "images/external/mines_pattern_2_bitmap.h"
-#include "images/external/mines_pattern_3_bitmap.h"
-#include "images/external/mines_pattern_4_bitmap.h"
-#include "images/external/mines_pattern_5_bitmap.h"
-#include "images/external/mines_pattern_6_bitmap.h"
-#include "images/external/mines_pattern_7_bitmap.h"
-#include "images/external/mines_pattern_8_bitmap.h"
-#include "images/external/mines_pattern_blank_bitmap.h"
-#include "images/external/mines_pattern_boom_bitmap.h"
-#include "images/external/mines_pattern_cleared_bitmap.h"
-#include "images/external/mines_pattern_flag_bitmap.h"
-#include "images/external/mines_pattern_hold_bitmap.h"
-#include "images/external/mines_pattern_mine_bitmap.h"
 #include "images/external/mines_sidebar_bitmap.h"
 #include "images/external/mines_sidebar_warning_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
 #include "images/mines_flag_bitmap.xbm"
+#include "images/mines_pattern_1_bitmap.h"
+#include "images/mines_pattern_2_bitmap.h"
+#include "images/mines_pattern_3_bitmap.h"
+#include "images/mines_pattern_4_bitmap.h"
+#include "images/mines_pattern_5_bitmap.h"
+#include "images/mines_pattern_6_bitmap.h"
+#include "images/mines_pattern_7_bitmap.h"
+#include "images/mines_pattern_8_bitmap.h"
+#include "images/mines_pattern_blank_bitmap.h"
+#include "images/mines_pattern_boom_bitmap.h"
+#include "images/mines_pattern_cleared_bitmap.h"
+#include "images/mines_pattern_flag_bitmap.h"
+#include "images/mines_pattern_hold_bitmap.h"
+#include "images/mines_pattern_mine_bitmap.h"
 
 #define MINES_BUTTON_NONE 255
 
@@ -156,61 +156,61 @@ static void mines_ui_draw_cell_pattern(uint8_t x, uint8_t y, uint8_t pattern_id)
         break;
 
     case 1:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_1_bitmap, 0);
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_1_bitmap, 0);
         break;
 
     case 2:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_2_bitmap, 0);
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_2_bitmap, 0);
         break;
 
     case 3:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_3_bitmap, 0);
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_3_bitmap, 0);
         break;
 
     case 4:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_4_bitmap, 0);
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_4_bitmap, 0);
         break;
 
     case 5:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_5_bitmap, 0);
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_5_bitmap, 0);
         break;
 
     case 6:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_6_bitmap, 0);
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_6_bitmap, 0);
         break;
 
     case 7:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_7_bitmap, 0);
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_7_bitmap, 0);
         break;
 
     case 8:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_8_bitmap, 0);
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_8_bitmap, 0);
         break;
 
     case MINES_PATTERN_BLANK:
-        display_draw_16bit_ext_bitmap(x - 1, y - 1, &mines_pattern_blank_bitmap,
+        gfx_draw_16bit_bitmap(x - 1, y - 1, &mines_pattern_blank_bitmap,
                                       0);
         break;
 
     case MINES_PATTERN_BOOM:
-        display_draw_16bit_ext_bitmap(x - 2, y - 2, &mines_pattern_boom_bitmap,
+        gfx_draw_16bit_bitmap(x - 2, y - 2, &mines_pattern_boom_bitmap,
                                       0);
         break;
 
     case MINES_PATTERN_CLEARED:
-        display_draw_16bit_ext_bitmap(x, y, &mines_pattern_cleared_bitmap, 0);
+        gfx_draw_16bit_bitmap(x, y, &mines_pattern_cleared_bitmap, 0);
         break;
 
     case MINES_PATTERN_FLAG:
-        display_draw_16bit_ext_bitmap(x, y, &mines_pattern_flag_bitmap, 0);
+        gfx_draw_16bit_bitmap(x, y, &mines_pattern_flag_bitmap, 0);
 
         break;
     case MINES_PATTERN_HOLD:
-        display_draw_16bit_ext_bitmap(x, y, &mines_pattern_hold_bitmap, 0);
+        gfx_draw_16bit_bitmap(x, y, &mines_pattern_hold_bitmap, 0);
         break;
 
     case MINES_PATTERN_MINE:
-        display_draw_16bit_ext_bitmap(x, y, &mines_pattern_mine_bitmap, 0);
+        gfx_draw_16bit_bitmap(x, y, &mines_pattern_mine_bitmap, 0);
         break;
     }
 }
