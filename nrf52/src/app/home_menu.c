@@ -240,7 +240,9 @@ static void home_menu_handle_buttons(button_t button) {
 
 void home_menu_application(void (*service_callback)()) {
     menu_handler_init();
-    nsec_status_bar_ui_redraw();
+    nsec_status_bar_init();
+    nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
+    nsec_battery_manager_init();
     show_home_menu(HOME_STATE_MENU);
 
     nsec_controls_add_handler(home_menu_handle_buttons);
