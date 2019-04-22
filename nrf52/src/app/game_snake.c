@@ -644,10 +644,14 @@ void snake_application(void (*service_device)())
                      snake_game_timer_callback);
     app_timer_start(snake_game_timer, APP_TIMER_TICKS(150), &state);
 
+    display_slow_down();
+
     while (application_get() == snake_application) {
         snake_game_loop(&state);
         service_device();
     }
+
+    display_speed_up();
 
     ret_code_t err_code = app_timer_stop(snake_game_timer);
     APP_ERROR_CHECK(err_code);
