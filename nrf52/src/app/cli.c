@@ -206,6 +206,33 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_display){
 NRF_CLI_CMD_REGISTER(display, &sub_display, "Display configuration",
                      do_display);
 
+static void do_identity(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
+        return;
+    }
+
+    if (argc == 1) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Identity: %s\r\n", get_stored_identity());
+        return;
+    } else if (argc == 2) {
+        char new_identity[17];
+        snprintf(new_identity, 16, "%s", argv[1]);
+        new_identity[16] = '\0';
+        update_identity(new_identity);
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Identity: %s\r\n", get_stored_identity());
+    } else {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
+                        argv[0]);
+        return;
+    }
+}
+
+    NRF_CLI_CMD_REGISTER(identity, NULL,
+                         "Get or set the badge identity\r\nUsage:\r\nGet: "
+                         "identity\r\nSet: identity "
+                         "{new_identity}\r\nMaximum of 16 char",
+                         do_identity);
 
 /* Initialize the command-line interface module.  */
 
