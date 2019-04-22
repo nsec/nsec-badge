@@ -29,6 +29,14 @@ void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_
     characteristic->on_write_request = NULL;
     characteristic->on_read_request = NULL;
     characteristic->uuid = (ble_uuid_t){uuid, TYPE_NSEC_UUID};
+    characteristic->read_permission = READ_OPEN;
+    characteristic->write_permission = WRITE_OPEN;
+}
+
+void set_characteristic_permission(struct ServiceCharacteristic* characteristic, ReadPermission read_perm,
+                                  WritePermission write_perm){
+    characteristic->read_permission = read_perm;
+    characteristic->write_permission = write_perm;
 }
 
 void configure_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
@@ -98,13 +106,22 @@ static void set_default_metadata_for_attribute(struct ServiceCharacteristic* cha
 static void configure_permission(struct ServiceCharacteristic* characteristic, ble_gatts_attr_md_t* attribute_metadata){
     if(characteristic->read_mode == DENY_READ)
         BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attribute_metadata->read_perm);
-    else
-        BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->read_perm);
+    else {
+        if(characteristic->read_permission == READ_OPEN)
+            BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->read_perm);
+        else
+            BLE_GAP_CONN_SEC_MODE_SET_ENC_WITH_MITM(&attribute_metadata->read_perm);
+    }
+
     attribute_metadata->rd_auth = characteristic->read_mode == REQUEST_READ;
 
     if(characteristic->write_mode == DENY_WRITE)
         BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attribute_metadata->write_perm);
-    else
-        BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->write_perm);
+    else {
+        if(characteristic->write_permission == WRITE_OPEN)
+            BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->write_perm);
+        else
+            BLE_GAP_CONN_SEC_MODE_SET_ENC_WITH_MITM(&attribute_metadata->write_perm);
+    }
     attribute_metadata->wr_auth = characteristic->write_mode == AUTH_WRITE_REQUEST;
 }

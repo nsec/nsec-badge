@@ -6,6 +6,7 @@
 #include "application.h"
 #include "gfx_effect.h"
 #include "drivers/display.h"
+#include "drivers/buttons.h"
 
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
@@ -21,7 +22,9 @@ void nsec_ble_show_pairing_menu(const char* key){
 }
 
 void nsec_ble_hide_pairing_menu(){
-    application_clear();
+    if(application_get() == pairing_menu_application){
+        application_clear();
+    }
 }
 
 static void draw_pairing_menu(){
@@ -36,10 +39,20 @@ static void draw_pairing_menu(){
     gfx_update();
 }
 
+/**
+ * Pressing any button will hide the menu.
+ */
+static void pairing_menu_handle_buttons(button_t button){
+    nsec_ble_hide_pairing_menu();
+}
+
 void pairing_menu_application(void (*service_callback)()) {
     draw_pairing_menu();
+
+    nsec_controls_add_handler(pairing_menu_handle_buttons);
 
     while (application_get() == pairing_menu_application) {
         service_callback();
     }
+    nsec_controls_suspend_handler(pairing_menu_handle_buttons);
 }

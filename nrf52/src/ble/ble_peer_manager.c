@@ -9,6 +9,7 @@
 #include <peer_manager.h>
 #include <ble/peer_manager/peer_manager_types.h>
 #include "app/pairing_menu.h"
+#include "drivers/cli_uart.h"
 
 
 static void set_security_params(ble_gap_sec_params_t*);
@@ -16,22 +17,29 @@ static void set_security_params(ble_gap_sec_params_t*);
 static void peer_event_handler(pm_evt_t const* peer_event){
     switch(peer_event->evt_id){
         case PM_EVT_CONN_SEC_START: //pairing process started
+            cli_uart_printf("Connection started\r\n");
             break;
         case PM_EVT_CONN_SEC_SUCCEEDED: //link encrypted
             nsec_ble_hide_pairing_menu();
         case PM_EVT_BONDED_PEER_CONNECTED: // connected with a bonded peer
+            cli_uart_printf("connected with a bonded peer\r\n");
             break;
         case PM_EVT_CONN_SEC_FAILED:
+            cli_uart_printf("Secure connection failed\r\n");
+            nsec_ble_hide_pairing_menu();
             break;
         case PM_EVT_CONN_SEC_PARAMS_REQ:
+            cli_uart_printf("connection security params requested\r\n");
             break;
         case PM_EVT_CONN_SEC_CONFIG_REQ: // event for bonding
         {
+            cli_uart_printf("connection security config requested\r\n");
             pm_conn_sec_config_t config;
             config.allow_repairing = true;
             pm_conn_sec_config_reply(peer_event->conn_handle, &config);
         }
         default:
+            cli_uart_printf("received event 0x%x\r\n", peer_event->evt_id);
             break;
     }
 }

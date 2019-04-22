@@ -41,6 +41,16 @@ typedef enum {
     DENY_WRITE          // All write requests will be denied by the soft device. No callback is invoked.
 } WriteMode;
 
+typedef enum {
+    READ_OPEN,
+    READ_PAIRING_REQUIRED,
+} ReadPermission;
+
+typedef enum {
+    WRITE_OPEN,
+    WRITE_PAIRING_REQUIRED,
+} WritePermission;
+
 struct ServiceCharacteristic {
     uint16_t handle;
     uint16_t value_length;
@@ -50,10 +60,14 @@ struct ServiceCharacteristic {
     on_characteristic_write_command on_write_operation_done;
     on_characteristic_write_request on_write_request;
     on_characteristic_read_request on_read_request;
+    ReadPermission read_permission;
+    WritePermission write_permission;
 };
 
 
 void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid);
+
+void set_characteristic_permission(struct ServiceCharacteristic*, ReadPermission, WritePermission);
 
 void configure_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
         ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute);
