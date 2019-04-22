@@ -38,6 +38,8 @@ struct display_ops {
                                   uint16_t bg_color);
     void (*set_brightness)(uint8_t brightness);
     void (*update)(void);
+    void (*slow_down)(void);
+    void (*speed_up)(void);
 };
 
 #ifdef BOARD_BRAIN
@@ -51,7 +53,9 @@ static struct display_ops st7735_ops = {&st7735_init,
                                         &st7735_draw_16bit_bitmap,
                                         &st7735_draw_16bit_ext_bitmap,
                                         &st7735_set_brightness,
-                                        NULL};
+                                        NULL,
+                                        &st7735_slow_down,
+                                        &st7735_speed_up};
 static struct display_ops *ops = &st7735_ops;
 
 #else
@@ -66,7 +70,9 @@ static struct display_ops ssd1306_ops = {&ssd1306_init,
                                          NULL,
                                          NULL,
                                          NULL,
-                                         &ssd1306_update};
+                                         &ssd1306_update,
+                                         NULL,
+                                         NULL};
 static struct display_ops *ops = &ssd1306_ops;
 #endif
 
@@ -108,6 +114,18 @@ void display_draw_16bit_ext_bitmap(int16_t x, int16_t y,
 void display_set_brightness(uint8_t brightness) {
     if (ops->set_brightness) {
         ops->set_brightness(brightness);
+    }
+}
+
+void display_slow_down() {
+    if (ops->slow_down) {
+        ops->slow_down();
+    }
+}
+
+void display_speed_up() {
+    if (ops->speed_up) {
+        ops->speed_up();
     }
 }
 

@@ -130,11 +130,11 @@ void st7735_set_brightness(uint8_t brightness)
 //*****************************************************************************
 static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(CONF_OLED_SPI_INST);
 
-static void spi_init(void)
+static void spi_init(nrf_drv_spi_frequency_t spi_config_frequency)
 {
     nrf_drv_spi_config_t spi_config;
 
-    spi_config.frequency = NRF_DRV_SPI_FREQ_8M;
+    spi_config.frequency = spi_config_frequency;
     spi_config.sck_pin = st7735_config.sck_pin;
     spi_config.miso_pin = st7735_config.miso_pin;
     spi_config.mosi_pin = st7735_config.mosi_pin;
@@ -148,6 +148,10 @@ static void spi_init(void)
         nrf_drv_spi_init(&st7735_config.spi, &spi_config, NULL, NULL));
 }
 
+static void spi_uninit(void)
+{
+    nrf_drv_spi_uninit(&st7735_config.spi);
+}
 
 /*
  * Send bytes of data to the LCD.
@@ -429,7 +433,7 @@ void st7735_init(void)
     st7735_config.rst_pin = PIN_OLED_RESET;
     st7735_config.blk_pin = PIN_OLED_BLK;
 
-    spi_init();
+    spi_init(NRF_DRV_SPI_FREQ_8M);
     pwm_init();
 
     /* Set st7735_config.dc_pin and RST Pins as outputs for manual toggling */
@@ -783,4 +787,22 @@ void st7735_partial_off(void)
 void st7735_partial_on(void)
 {
     st7735_command(ST7735_PTLON);
+}
+
+/*
+ * Reinitialize display SPI with a very low frequency.
+ */
+void st7735_slow_down(void)
+{
+    spi_uninit();
+    spi_init(NRF_DRV_SPI_FREQ_125K);
+}
+
+/*
+ * Reinitialize display SPI with normal frequency.
+ */
+void st7735_speed_up(void)
+{
+    spi_uninit();
+    spi_init(NRF_DRV_SPI_FREQ_8M);
 }

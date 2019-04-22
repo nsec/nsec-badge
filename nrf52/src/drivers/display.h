@@ -81,5 +81,7 @@ void display_draw_16bit_ext_bitmap(int16_t x, int16_t y,
                                    uint16_t bg_color);
 void display_update(void);
 void display_set_brightness(uint8_t brightness);
+void display_slow_down(void);
+void display_speed_up(void);
 
 #endif //_DISPLAY_H
