@@ -288,6 +288,11 @@ external-flash: src/app/external_flash.h src/app/external_flash.flashbin
 
 EXTERNAL_FLASH_PACK_SCRIPT = utils/pack_flash.py
 EXTERNAL_FLASH_FILES = $(BITMAPS_EXT_BINS)
+
+ifeq ($(FLAVOR), ctf)
+EXTERNAL_FLASH_FILES += src/app/flag-external-flash.txt
+endif
+
 src/app/external_flash.h src/app/external_flash.flashbin: $(EXTERNAL_FLASH_FILES)
 	echo $(EXTERNAL_FLASH_FILES)
 	python3 $(EXTERNAL_FLASH_PACK_SCRIPT) src/app/external_flash $(filter-out $(EXTERNAL_FLASH_PACK_SCRIPT), $^)
