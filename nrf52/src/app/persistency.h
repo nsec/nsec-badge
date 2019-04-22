@@ -57,6 +57,7 @@ void load_stored_led_default_settings(void);
 
 void update_identity(char *new_identity);
 void load_stored_identity(char *identity);
+char* get_stored_identity(void);
 
 uint32_t get_stored_pattern_bf(void);
 void update_stored_pattern_bf(uint32_t bf);

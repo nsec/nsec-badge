@@ -280,12 +280,17 @@ void load_stored_led_default_settings(void) {
 void update_identity(char *new_identity) {
     memset(persistency->identity_name, 0, 16);
     strncpy(persistency->identity_name, new_identity, 16);
+    persistency->identity_name[16] = '\0';
     update_persistency();
 }
 
 void load_stored_identity(char *identity) {
     memset(identity, 0, 16);
     strncpy(identity, persistency->identity_name, 16);
+}
+
+char* get_stored_identity(void) {
+    return persistency->identity_name;
 }
 
 /* PATTERN */

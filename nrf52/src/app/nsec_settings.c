@@ -34,6 +34,7 @@ static void confirm_factory_reset(uint8_t item);
 static void do_factory_reset(uint8_t item);
 static void toggle_flashlight(uint8_t item);
 static void show_member_details(uint8_t item);
+static void show_badge_info(uint8_t item);
 static void setting_handle_buttons(button_t button);
 
 enum setting_state {
@@ -45,14 +46,16 @@ enum setting_state {
     SETTING_STATE_FLASHLIGHT,
     SETTING_STATE_BATTERY,
     SETTING_STATE_DISPLAY,
-    SETTING_CONFIRM_FACTORY
+    SETTING_CONFIRM_FACTORY,
+    SETTING_STATE_BADGE_INFO
 };
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
 
 static void setting_handle_buttons(button_t button);
 
-static char sync_key_string[] = "Sync key: XXXX";
+static char identity_string[] = "Id: Citizen #XXXXXXX";
+static char ble_id_string[] = "BLE id: NSECXXXX";
 
 static menu_item_s settings_items[] = {
     {
@@ -64,6 +67,9 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Factory Reset",
         .handler = do_factory_reset,
+    }, {
+        .label = "Badge info",
+        .handler = show_badge_info,
     },/*{
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
@@ -76,9 +82,6 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Credit",
         .handler = show_credit,
-    }, {
-        .label = sync_key_string,
-        .handler = NULL,
     }
 };
 
@@ -135,6 +138,28 @@ static menu_item_s confirm_items[] = {
         .handler = confirm_factory_reset,
     }
 };
+
+static menu_item_s badge_info_items[] = {
+    {
+        .label = identity_string,
+        .handler = NULL,
+    }, {
+        .label = ble_id_string,
+        .handler = NULL,
+    }
+};
+
+static void show_badge_info(uint8_t item)
+{
+    menu_close();
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+
+    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+              ARRAY_SIZE(badge_info_items), badge_info_items,
+              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
+    _state = SETTING_STATE_BADGE_INFO;
+}
 
 static void confirm_factory_reset(uint8_t item)
 {
@@ -325,13 +350,14 @@ static void turn_off_screen(uint8_t item) {
 }
 
 void nsec_setting_show(void) {
-    char key[8];
 
-#ifdef NSEC_HIDE_SYNC_KEY_IN_SETTINGS
-    snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", "XXXX");
+#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
+    sprintf(ble_id_string, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
 #else
-    snprintf(sync_key_string, sizeof(sync_key_string), "Sync key: %s", key);
+    sprintf(ble_id_string, "BLE id: NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
 #endif
+
+    sprintf(identity_string, "Id: %s", get_stored_identity());
 
     draw_settings_title();
 
@@ -379,6 +405,7 @@ static void setting_handle_buttons(button_t button)
                 // no break
             case SETTING_STATE_DISPLAY:
             case SETTING_STATE_CREDIT:
+            case SETTING_STATE_BADGE_INFO:
                 nsec_setting_show();
                 break;
 
