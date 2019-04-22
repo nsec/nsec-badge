@@ -6,6 +6,8 @@
 #include "resistance_propaganda_observer.h"
 #include "ble/abstract_ble_observer.h"
 #include "app/gfx_effect.h"
+#include "application.h"
+#include "resistance_slideshow.h"
 #include "timer.h"
 
 #include <string.h>
@@ -69,13 +71,13 @@ static void on_advertising_report(const ble_gap_evt_adv_report_t* report) {
 
 static void on_valid_packet_received(const ble_gap_evt_adv_report_t* report){
     uint64_t current_time = get_current_time_millis();
-    int8_t rssi_threshold = -65;
+    int8_t rssi_threshold = -67;
     if(current_time - last_adv_evt_timestamp > 5000 || report->rssi < rssi_threshold)
         adv_evt_received = 0;
     else if(report->rssi >= rssi_threshold){
         adv_evt_received++;
         if(adv_evt_received > 5){
-            // TODO slideshow
+            application_set(resistance_slideshow_app);
             adv_evt_received = 0;
         }
     }
