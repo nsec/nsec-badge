@@ -56,6 +56,7 @@ void gfx_draw_bitmap_ext_flash(int16_t x, int16_t y,
 void gfx_write(uint8_t c);
 void gfx_putc(char c);
 void gfx_puts(const char *s);
+void gfx_puts_lag(const char *s, uint32_t delay_ms);
 void gfx_draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
                    uint16_t bg, uint8_t size);
 

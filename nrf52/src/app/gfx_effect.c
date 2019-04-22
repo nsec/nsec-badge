@@ -10,6 +10,7 @@
 #include "external_flash.h"
 #include "images/font_bitmap.h"
 #include "random.h"
+#include "nrf_delay.h"
 #include <string.h>
 
 int16_t gfx_width = DISPLAY_WIDTH;
@@ -501,6 +502,13 @@ void gfx_putc(char c) { gfx_write((uint8_t)c); }
 void gfx_puts(const char *s) {
     while (*s) {
         gfx_write((uint8_t)*s++);
+    }
+}
+
+void gfx_puts_lag(const char *s, uint32_t delay_ms) {
+    while (*s) {
+        gfx_write((uint8_t)*s++);
+        nrf_delay_ms(delay_ms);
     }
 }
 
