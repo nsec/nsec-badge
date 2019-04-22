@@ -7,7 +7,6 @@
 #include "ble/service_characteristic.h"
 #include "ble/ble_device.h"
 #include "drivers/led_effects.h"
-#include "drivers/uart.h"
 
 #include <string.h>
 #include <app_error.h>

@@ -32,7 +32,6 @@
 #include "uuid.h"
 #include "abstract_ble_observer.h"
 #include "ble_scan.h"
-#include "drivers/uart.h"
 
 
 #define APP_BLE_OBSERVER_PRIO 3
@@ -213,7 +212,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             buffer = NULL;
             break;
         default:
-            uart_printf("ble event received: %d\n", p_ble_evt->header.evt_id);
             ble_device->advertiser->on_ble_advertising_event(p_ble_evt);
     }
 }
