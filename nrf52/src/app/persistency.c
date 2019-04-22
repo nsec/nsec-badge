@@ -183,7 +183,13 @@ void load_led_settings(void) {
 
     resetSegments_WS2812FX();
     setNumSegments_WS2812FX(persistency->led_settings.num_segment);
-    setBrightness_WS2812FX(persistency->led_settings.brightness);
+
+    // Avoid booting with a closed display...
+    if (persistency->led_settings.brightness == 0) {
+        setBrightness_WS2812FX(1);
+    } else {
+        setBrightness_WS2812FX(persistency->led_settings.brightness);
+    }
 
     for (int i = 0; i < persistency->led_settings.num_segment; i++) {
         setSegmentStart_WS2812FX(i, persistency->led_settings.segment[i].start);
