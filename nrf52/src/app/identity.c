@@ -173,7 +173,7 @@ static void configure_service(){
     create_vendor_service(&identity_ble_service, service_uuid);
     add_vendor_service(&identity_ble_service);
 
-    create_characteristic(&name_characteristic, NAME_MAX_LEN, AUTO_READ, REQUEST_WRITE, name_char_uuid);
+    create_characteristic(&name_characteristic, NAME_MAX_LEN, AUTO_READ, WRITE_REQUEST, name_char_uuid);
     add_characteristic_to_vendor_service(&identity_ble_service, &name_characteristic);
     add_write_request_handler(&name_characteristic, on_name_write);
     set_characteristic_value(&name_characteristic, (uint8_t*)identity.name);
@@ -184,7 +184,7 @@ static void configure_service(){
     set_characteristic_value(&avatar_characteristic, identity.avatar);
     */
 
-    create_characteristic(&unlock_password_characteristic, UNLOCK_PASSWORD_SIZE, DENY_READ, REQUEST_WRITE, unlocked_password_char_uuid);
+    create_characteristic(&unlock_password_characteristic, UNLOCK_PASSWORD_SIZE, DENY_READ, WRITE_REQUEST, unlocked_password_char_uuid);
     add_characteristic_to_vendor_service(&identity_ble_service, &unlock_password_characteristic);
     add_write_request_handler(&unlock_password_characteristic, on_unlock_password_write);
 

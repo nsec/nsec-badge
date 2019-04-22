@@ -51,7 +51,7 @@
 #include "ble/vendor_service.h"
 
 #include "images/nsec_logo_bitmap.h"
-
+#include "demo_vendor_service.h"
 #include "resistance_propaganda_observer.h"
 
 static char g_device_id[10];
@@ -107,10 +107,11 @@ static void init_ble() {
     enable_fast_advertising_mode(60);
     enable_slow_advertising_mode(200);
     set_device_name(g_device_id);
-    nsec_led_ble_init();
-    init_identity_service();
-    set_vendor_service_in_advertising_packet(get_led_service(), true);
-    set_vendor_service_in_scan_response(nsec_identity_get_service(), true);
+    /*nsec_led_ble_init();
+    init_identity_service();*/
+    nsec_init_demo_vendor_service();
+    set_vendor_service_in_advertising_packet(nsec_get_demo_service(), false);
+    //set_vendor_service_in_scan_response(nsec_identity_get_service(), true);
     set_advertiser(get_service_advertiser());
     ble_start_advertising();
 

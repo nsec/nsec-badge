@@ -36,9 +36,9 @@ typedef enum {
 } ReadMode;
 
 typedef enum {
-    AUTO_WRITE,    // Writing into a characteristic by a BLE client is done automatically by the soft device and the on_write_command of the characteristic is called.
-    REQUEST_WRITE, // WRiting into a characteristic by a BLE client calls on_write_request of the characteristic, which can allow or deny the write request, and choose the written value.
-    DENY_WRITE     // All write requests will be denied by the soft device.
+    WRITE_REQUEST,      // Only write requests are allowed (i.e. write with acknowledgment). All write requests are processed and approved by the softdevice. The on_done_write_request callback is called after the characteristic value is updated.
+    AUTH_WRITE_REQUEST, // Only write requests are allowed (i.e. write with acknowledgment). The on_write_request callback is invoked before any operation is performed, and the application must authorize the write operation. The application may change the characteristic value if desired.
+    DENY_WRITE          // All write requests will be denied by the soft device. No callback is invoked.
 } WriteMode;
 
 typedef struct {
@@ -47,7 +47,7 @@ typedef struct {
     ble_uuid_t uuid;
     ReadMode read_mode;
     WriteMode write_mode;
-    on_characteristic_write_command on_write_command;
+    on_characteristic_write_command on_write_operation_done;
     on_characteristic_write_request on_write_request;
     on_characteristic_read_request on_read_request;
 } ServiceCharacteristic;
@@ -62,7 +62,7 @@ uint16_t set_characteristic_value(ServiceCharacteristic*, uint8_t* value_buffer)
 
 uint16_t get_characteristic_value(ServiceCharacteristic*, uint8_t* value_buffer);
 
-void add_write_command_handler(ServiceCharacteristic*, on_characteristic_write_command);
+void add_write_operation_done_handler(ServiceCharacteristic*, on_characteristic_write_command);
 
 void add_write_request_handler(ServiceCharacteristic*, on_characteristic_write_request);
 

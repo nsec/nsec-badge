@@ -25,7 +25,7 @@ void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value
     characteristic->read_mode = read;
     characteristic->write_mode = write;
     characteristic->value_length = value_length;
-    characteristic->on_write_command = NULL;
+    characteristic->on_write_operation_done = NULL;
     characteristic->on_write_request = NULL;
     characteristic->on_read_request = NULL;
     characteristic->uuid = (ble_uuid_t){uuid, TYPE_NSEC_UUID};
@@ -55,14 +55,15 @@ uint16_t get_characteristic_value(ServiceCharacteristic* characteristic, uint8_t
     return characteristic_value.len;
 }
 
-void add_write_command_handler(ServiceCharacteristic* characteristic, on_characteristic_write_command event_handler){
-    characteristic->on_write_command = event_handler;
+void add_write_operation_done_handler(ServiceCharacteristic* characteristic, on_characteristic_write_command event_handler){
+    characteristic->on_write_operation_done = event_handler;
 }
 
 static void set_metadata_for_characteristic(ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata){
     bzero(metadata, sizeof(*metadata));
     metadata->char_props.read = characteristic->read_mode != DENY_READ;
     metadata->char_props.write = characteristic->write_mode != DENY_WRITE;
+    metadata->char_props.write_wo_resp = 0; // deactivate for now.
     metadata->p_char_user_desc = NULL;
     metadata->p_char_pf = NULL;
     metadata->p_user_desc_md = NULL;
@@ -105,5 +106,5 @@ static void configure_permission(ServiceCharacteristic* characteristic, ble_gatt
         BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attribute_metadata->write_perm);
     else
         BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->write_perm);
-    attribute_metadata->wr_auth = characteristic->write_mode == REQUEST_WRITE;
+    attribute_metadata->wr_auth = characteristic->write_mode == AUTH_WRITE_REQUEST;
 }

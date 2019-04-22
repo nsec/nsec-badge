@@ -213,7 +213,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             buffer = NULL;
             break;
         default:
-            uart_printf("ble event received: %d", p_ble_evt->header.evt_id);
+            uart_printf("ble event received: %d\n", p_ble_evt->header.evt_id);
             ble_device->advertiser->on_ble_advertising_event(p_ble_evt);
     }
 }
@@ -248,13 +248,13 @@ static void gatt_init(){
 
 static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * write_event){
     ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
-    if(characteristic != NULL && characteristic->on_write_command != NULL){
+    if(characteristic != NULL && characteristic->on_write_operation_done != NULL){
         CharacteristicWriteEvent event = {
             .write_offset = write_event->offset,
             .data_length = write_event->len,
             .data_buffer = write_event->data
         };
-        characteristic->on_write_command(&event);
+        characteristic->on_write_operation_done(&event);
     }
 }
 
@@ -264,8 +264,8 @@ static void on_execute_queued_write_commands(){
     uint16_t characteristic_handle = parse_queued_write_events(&event);
     if(characteristic_handle != BLE_GATT_HANDLE_INVALID){
         ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
-        if(characteristic != NULL && characteristic->on_write_command != NULL){
-            characteristic->on_write_command(&event);
+        if(characteristic != NULL && characteristic->on_write_operation_done != NULL){
+            characteristic->on_write_operation_done(&event);
         }
     }
 }
