@@ -1,2 +1,2 @@
-external_flash.flashbin
-external_flash.h
+external_flash_*.flashbin
+external_flash_*.h

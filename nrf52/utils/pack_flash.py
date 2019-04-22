@@ -66,12 +66,21 @@ def clean_filename(filename, keep_dir):
     return re.sub('[^a-zA-Z0-9]', '_', filename)
 
 
-def generate_h(h_file, metadata):
+def generate_h(h_file, metadata, flava):
+    # Little exception for soldering...
+    if flava == 'soldering':
+        flava = 'ctf'
+
     with open(h_file, 'w') as h:
         h.write('/* This file is generated.  */\n')
         h.write('\n')
         h.write('#ifndef {}\n'.format(clean_filename(h_file, True)))
         h.write('#define {}\n'.format(clean_filename(h_file, True)))
+        h.write('\n')
+        h.write('#ifndef NSEC_FLAVOR_{}\n'.format(flava.upper()))
+        h.write('#error "Flavor mismatch: this external flash header is generated for {}"\n'.format(flava))
+        h.write('#endif\n')
+        h.write('\n')
         h.write('\n')
         h.write('struct external_flash_data {\n')
         h.write('    unsigned int offset, size;\n')
@@ -94,18 +103,21 @@ def generate_h(h_file, metadata):
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('output-base')
+    argparser.add_argument('flavor', choices=['ctf', 'speaker', 'admin', 'conf', 'trainer', 'bar_beacon', 'soldering'])
     argparser.add_argument('input-files', nargs='*')
 
     args = vars(argparser.parse_args())
 
+    flava = args['flavor']
     output_base = args['output-base']
+    output_base += '_' + flava
     h_file = output_base + '.h'
     bin_file = output_base + '.flashbin'
 
     input_files = args['input-files']
 
     metadata = concat(bin_file, input_files)
-    generate_h(h_file, metadata)
+    generate_h(h_file, metadata, flava)
 
 
 if __name__ == '__main__':

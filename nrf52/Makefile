@@ -284,7 +284,10 @@ clean-bitmaps:
 
 # external-flash: Pack files in a single file and generate a "table of contents" as a .h.
 
-external-flash: src/app/external_flash.h src/app/external_flash.flashbin
+EXTERNAL_FLASH_BIN = src/app/external_flash_$(FLAVOR).flashbin
+EXTERNAL_FLASH_H = src/app/external_flash_$(FLAVOR).h
+
+external-flash: $(EXTERNAL_FLASH_H) $(EXTERNAL_FLASH_BIN)
 
 EXTERNAL_FLASH_PACK_SCRIPT = utils/pack_flash.py
 EXTERNAL_FLASH_FILES = $(BITMAPS_EXT_BINS)
@@ -293,22 +296,21 @@ ifeq ($(FLAVOR), ctf)
 EXTERNAL_FLASH_FILES += src/app/flag-external-flash.txt
 endif
 
-src/app/external_flash.h src/app/external_flash.flashbin: $(EXTERNAL_FLASH_FILES)
-	echo $(EXTERNAL_FLASH_FILES)
-	python3 $(EXTERNAL_FLASH_PACK_SCRIPT) src/app/external_flash $(filter-out $(EXTERNAL_FLASH_PACK_SCRIPT), $^)
+$(EXTERNAL_FLASH_H) $(EXTERNAL_FLASH_BIN): $(EXTERNAL_FLASH_FILES)
+	python3 $(EXTERNAL_FLASH_PACK_SCRIPT) src/app/external_flash $(FLAVOR) $(filter-out $(EXTERNAL_FLASH_PACK_SCRIPT), $^)
 
-src/app/external_flash.h src/app/external_flash.flashbin: $(EXTERNAL_FLASH_PACK_SCRIPT)
+$(EXTERNAL_FLASH_H) $(EXTERNAL_FLASH_BIN): $(EXTERNAL_FLASH_PACK_SCRIPT)
 
 clean: clean-external-flash
 clean-external-flash:
-	rm -f src/app/external_flash.h
-	rm -f src/app/external_flash.flashbin
+	rm -f $(EXTERNAL_FLASH_H)
+	rm -f $(EXTERNAL_FLASH_BIN)
 
 # Write the contents of the external flash.  The badge must be ready to accept
 # external flash commands.
 
-flash-external-flash: src/app/external_flash.flashbin
-	python3 utils/flash_client.py src/app/external_flash.flashbin
+flash-external-flash: $(EXTERNAL_FLASH_BIN)
+	python3 utils/flash_client.py $<
 
 $(SDK_PATH):
 	./utils/install-sdk.sh $@ $(SDK_VERSION)
