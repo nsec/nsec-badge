@@ -15,13 +15,13 @@
 
 
 
-static void set_metadata_for_characteristic(ServiceCharacteristic*, ble_gatts_char_md_t*);
-static void set_default_metadata_for_attribute(ServiceCharacteristic*, ble_gatts_attr_md_t*);
-static void set_attribute(ServiceCharacteristic*, ble_gatts_attr_t*, ble_gatts_attr_md_t*);
-static void configure_permission(ServiceCharacteristic*, ble_gatts_attr_md_t*);
+static void set_metadata_for_characteristic(struct ServiceCharacteristic*, ble_gatts_char_md_t*);
+static void set_default_metadata_for_attribute(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
+static void set_attribute(struct ServiceCharacteristic*, ble_gatts_attr_t*, ble_gatts_attr_md_t*);
+static void configure_permission(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
 
 
-void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid){
+void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid){
     characteristic->read_mode = read;
     characteristic->write_mode = write;
     characteristic->value_length = value_length;
@@ -31,13 +31,13 @@ void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value
     characteristic->uuid = (ble_uuid_t){uuid, TYPE_NSEC_UUID};
 }
 
-void configure_characteristic(ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
+void configure_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
         ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute){
     set_metadata_for_characteristic(characteristic, metadata);
     set_attribute(characteristic, attribute, attribute_metadata);
 }
 
-uint16_t set_characteristic_value(ServiceCharacteristic* characteristic, uint8_t* value_buffer){
+uint16_t set_characteristic_value(struct ServiceCharacteristic* characteristic, uint8_t* value_buffer){
     ble_gatts_value_t characteristic_value;
     characteristic_value.len = characteristic->value_length;
     characteristic_value.p_value = value_buffer;
@@ -46,7 +46,7 @@ uint16_t set_characteristic_value(ServiceCharacteristic* characteristic, uint8_t
     return characteristic_value.len;
 }
 
-uint16_t get_characteristic_value(ServiceCharacteristic* characteristic, uint8_t* value_buffer){
+uint16_t get_characteristic_value(struct ServiceCharacteristic* characteristic, uint8_t* value_buffer){
     ble_gatts_value_t characteristic_value;
     characteristic_value.len = characteristic->value_length;
     characteristic_value.p_value = value_buffer;
@@ -55,11 +55,11 @@ uint16_t get_characteristic_value(ServiceCharacteristic* characteristic, uint8_t
     return characteristic_value.len;
 }
 
-void add_write_operation_done_handler(ServiceCharacteristic* characteristic, on_characteristic_write_command event_handler){
+void add_write_operation_done_handler(struct ServiceCharacteristic* characteristic, on_characteristic_write_command event_handler){
     characteristic->on_write_operation_done = event_handler;
 }
 
-static void set_metadata_for_characteristic(ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata){
+static void set_metadata_for_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata){
     bzero(metadata, sizeof(*metadata));
     metadata->char_props.read = characteristic->read_mode != DENY_READ;
     metadata->char_props.write = characteristic->write_mode != DENY_WRITE;
@@ -71,15 +71,15 @@ static void set_metadata_for_characteristic(ServiceCharacteristic* characteristi
     metadata->p_sccd_md = NULL;
 }
 
-void add_write_request_handler(ServiceCharacteristic* characteristic, on_characteristic_write_request event_handler){
+void add_write_request_handler(struct ServiceCharacteristic* characteristic, on_characteristic_write_request event_handler){
     characteristic->on_write_request = event_handler;
 }
 
-void add_read_request_handler(ServiceCharacteristic* characteristic, on_characteristic_read_request event_handler){
+void add_read_request_handler(struct ServiceCharacteristic* characteristic, on_characteristic_read_request event_handler){
     characteristic->on_read_request = event_handler;
 }
 
-static void set_attribute(ServiceCharacteristic* characteristic, ble_gatts_attr_t* attribute,
+static void set_attribute(struct ServiceCharacteristic* characteristic, ble_gatts_attr_t* attribute,
         ble_gatts_attr_md_t* attribute_metadata){
     attribute->init_len = characteristic->value_length;
     attribute->max_len = characteristic->value_length;
@@ -88,14 +88,14 @@ static void set_attribute(ServiceCharacteristic* characteristic, ble_gatts_attr_
     attribute->p_attr_md = attribute_metadata;
 }
 
-static void set_default_metadata_for_attribute(ServiceCharacteristic* characteristic, ble_gatts_attr_md_t* attribute_metadata){
+static void set_default_metadata_for_attribute(struct ServiceCharacteristic* characteristic, ble_gatts_attr_md_t* attribute_metadata){
     bzero(attribute_metadata, sizeof(*attribute_metadata));
     attribute_metadata->vloc = BLE_GATTS_VLOC_STACK;
     attribute_metadata->vlen = 0;
     configure_permission(characteristic, attribute_metadata);
 }
 
-static void configure_permission(ServiceCharacteristic* characteristic, ble_gatts_attr_md_t* attribute_metadata){
+static void configure_permission(struct ServiceCharacteristic* characteristic, ble_gatts_attr_md_t* attribute_metadata){
     if(characteristic->read_mode == DENY_READ)
         BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attribute_metadata->read_perm);
     else

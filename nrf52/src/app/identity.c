@@ -50,9 +50,9 @@ typedef struct {
 
 static BadgeIdentity identity;
 static struct VendorService identity_ble_service;
-static ServiceCharacteristic name_characteristic;
-static ServiceCharacteristic unlock_password_characteristic;
-static ServiceCharacteristic unlocked_characteristic;
+static struct ServiceCharacteristic name_characteristic;
+static struct ServiceCharacteristic unlock_password_characteristic;
+static struct ServiceCharacteristic unlocked_characteristic;
 //static ServiceCharacteristic avatar_characteristic;
 
 static uint16_t service_uuid = 0x0100;

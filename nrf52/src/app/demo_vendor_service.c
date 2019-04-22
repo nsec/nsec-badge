@@ -13,9 +13,9 @@
 #include <app_error.h>
 
 static struct VendorService demo_service;
-static ServiceCharacteristic led_write_request_no_auth_char;
-static ServiceCharacteristic led_write_request_auth_char;
-static ServiceCharacteristic led_read_request_auth_char;
+static struct ServiceCharacteristic led_write_request_no_auth_char;
+static struct ServiceCharacteristic led_write_request_auth_char;
+static struct ServiceCharacteristic led_read_request_auth_char;
 static uint16_t demo_service_uuid = 0xDE30;
 static uint16_t led_write_request_no_auth_char_uuid = 0xDE31;
 static uint16_t led_write_request_auth_char_uuid = 0xDE32;

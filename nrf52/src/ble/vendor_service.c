@@ -16,7 +16,7 @@ void create_vendor_service(struct VendorService* service, uint16_t uuid){
     service->uuid = (ble_uuid_t){uuid, TYPE_NSEC_UUID};
 }
 
-void add_characteristic_to_vendor_service(struct VendorService* service, ServiceCharacteristic* characteristic){
+void add_characteristic_to_vendor_service(struct VendorService* service, struct ServiceCharacteristic* characteristic){
     if(service->characteristic_count >= MAX_CHARACTERISTICS_PER_SERVICE)
         return;
     ble_gatts_char_handles_t characteristic_handles;
@@ -31,7 +31,7 @@ void add_characteristic_to_vendor_service(struct VendorService* service, Service
     characteristic->handle = characteristic_handles.value_handle;
 }
 
-ServiceCharacteristic* get_characteristic(struct VendorService* service, uint16_t characteristic_uuid){
+struct ServiceCharacteristic* get_characteristic(struct VendorService* service, uint16_t characteristic_uuid){
     for(int i = 0; i < service->characteristic_count; i++){
         if(service->characteristics[i]->uuid.uuid == characteristic_uuid)
             return service->characteristics[i];

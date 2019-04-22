@@ -41,7 +41,7 @@ typedef enum {
     DENY_WRITE          // All write requests will be denied by the soft device. No callback is invoked.
 } WriteMode;
 
-typedef struct {
+struct ServiceCharacteristic {
     uint16_t handle;
     uint16_t value_length;
     ble_uuid_t uuid;
@@ -50,23 +50,23 @@ typedef struct {
     on_characteristic_write_command on_write_operation_done;
     on_characteristic_write_request on_write_request;
     on_characteristic_read_request on_read_request;
-} ServiceCharacteristic;
+};
 
 
-void create_characteristic(ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid);
+void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid);
 
-void configure_characteristic(ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
+void configure_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
         ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute);
 
-uint16_t set_characteristic_value(ServiceCharacteristic*, uint8_t* value_buffer);
+uint16_t set_characteristic_value(struct ServiceCharacteristic*, uint8_t* value_buffer);
 
-uint16_t get_characteristic_value(ServiceCharacteristic*, uint8_t* value_buffer);
+uint16_t get_characteristic_value(struct ServiceCharacteristic*, uint8_t* value_buffer);
 
-void add_write_operation_done_handler(ServiceCharacteristic*, on_characteristic_write_command);
+void add_write_operation_done_handler(struct ServiceCharacteristic*, on_characteristic_write_command);
 
-void add_write_request_handler(ServiceCharacteristic*, on_characteristic_write_request);
+void add_write_request_handler(struct ServiceCharacteristic*, on_characteristic_write_request);
 
-void add_read_request_handler(ServiceCharacteristic*, on_characteristic_read_request);
+void add_read_request_handler(struct ServiceCharacteristic*, on_characteristic_read_request);
 
 
 #endif //service_characteristic_h

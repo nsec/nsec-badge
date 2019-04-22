@@ -79,13 +79,13 @@ static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * 
 static void on_execute_queued_write_commands();
 static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle);
 static void on_characteristic_read_request_event(const ble_gatts_evt_read_t * read_event, uint16_t connection_handle);
-static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid);
+static struct ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid);
 static void reply_to_client_request(uint8_t operation, uint16_t status_code, uint16_t connection_handle,
         const uint8_t* data_buffer, uint16_t data_length);
 static void on_prepare_write_request(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle);
 static void on_execute_queued_write_requests(uint16_t connection_handle);
 static uint16_t get_characteristic_handle_for_queued_writes();
-static ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle);
+static struct ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle);
 static uint16_t parse_queued_write_events(CharacteristicWriteEvent* event);
 
 
@@ -247,7 +247,7 @@ static void gatt_init(){
 }*/
 
 static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * write_event){
-    ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
+    struct ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
     if(characteristic != NULL && characteristic->on_write_operation_done != NULL){
         CharacteristicWriteEvent event = {
             .write_offset = write_event->offset,
@@ -263,7 +263,7 @@ static void on_execute_queued_write_commands(){
     CharacteristicWriteEvent event;
     uint16_t characteristic_handle = parse_queued_write_events(&event);
     if(characteristic_handle != BLE_GATT_HANDLE_INVALID){
-        ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
+        struct ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
         if(characteristic != NULL && characteristic->on_write_operation_done != NULL){
             characteristic->on_write_operation_done(&event);
         }
@@ -271,7 +271,7 @@ static void on_execute_queued_write_commands(){
 }
 
 static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * write_event, uint16_t connection_handle){
-    ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
+    struct ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
     if(characteristic != NULL && characteristic->on_write_request != NULL){
         CharacteristicWriteEvent event = {
             .write_offset = write_event->offset,
@@ -290,7 +290,7 @@ static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * 
 }
 
 static void on_characteristic_read_request_event(const ble_gatts_evt_read_t * read_event, uint16_t connection_handle){
-    ServiceCharacteristic* characteristic = get_characteristic_from_uuid(read_event->uuid.uuid);
+    struct ServiceCharacteristic* characteristic = get_characteristic_from_uuid(read_event->uuid.uuid);
     if(characteristic != NULL && characteristic->on_read_request != NULL){
         CharacteristicReadEvent event = {
             .read_offset = read_event->offset,
@@ -319,7 +319,7 @@ static void on_execute_queued_write_requests(uint16_t connection_handle){
     CharacteristicWriteEvent event;
     uint16_t characteristic_handle = parse_queued_write_events(&event);
     if(characteristic_handle != BLE_GATT_HANDLE_INVALID){
-        ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
+        struct ServiceCharacteristic* characteristic = get_characteristic_from_handle(characteristic_handle);
         if(characteristic != NULL && characteristic->on_write_request != NULL){
             status_code = characteristic->on_write_request(&event);
         }
@@ -384,21 +384,21 @@ static void reply_to_client_request(uint8_t operation, uint16_t status_code, uin
     APP_ERROR_CHECK(sd_ble_gatts_rw_authorize_reply(connection_handle, &reply));
 }
 
-static ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid){
+static struct ServiceCharacteristic* get_characteristic_from_uuid(uint16_t uuid){
     for(int i = 0; i < ble_device->vendor_service_count; i++){
         struct VendorService* service = ble_device->vendor_services[i];
-        ServiceCharacteristic* characteristic = get_characteristic(service, uuid);
+        struct ServiceCharacteristic* characteristic = get_characteristic(service, uuid);
         if(characteristic != NULL)
             return characteristic;
     }
     return NULL;
 }
 
-static ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle){
+static struct ServiceCharacteristic* get_characteristic_from_handle(uint16_t handle){
     for(int i = 0; i < ble_device->vendor_service_count; i++){
         struct VendorService* service = ble_device->vendor_services[i];
         for(int j = 0; j < service->characteristic_count; j++){
-            ServiceCharacteristic* characteristic = service->characteristics[j];
+            struct ServiceCharacteristic* characteristic = service->characteristics[j];
             if(characteristic->handle == handle){
                 return characteristic;
             }
