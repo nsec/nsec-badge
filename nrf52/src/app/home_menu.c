@@ -17,6 +17,21 @@
 #include <string.h>
 
 #include "images/neurosoft_logo_bitmap.h"
+#include "images/neurosoft_logo_a_1_bitmap.h"
+#include "images/neurosoft_logo_a_2_bitmap.h"
+#include "images/neurosoft_logo_a_3_bitmap.h"
+#include "images/neurosoft_logo_a_4_bitmap.h"
+#include "images/neurosoft_logo_a_5_bitmap.h"
+#include "images/neurosoft_logo_a_6_bitmap.h"
+#include "images/neurosoft_logo_a_7_bitmap.h"
+#include "images/neurosoft_logo_a_8_bitmap.h"
+#include "images/neurosoft_logo_a_9_bitmap.h"
+#include "images/neurosoft_logo_a_10_bitmap.h"
+#include "images/neurosoft_logo_a_11_bitmap.h"
+#include "images/neurosoft_logo_a_12_bitmap.h"
+#include "images/neurosoft_logo_a_13_bitmap.h"
+#include "images/neurosoft_logo_a_14_bitmap.h"
+#include "images/neurosoft_logo_a_15_bitmap.h"
 #include "images/external/nsec_logo_color_bitmap.h"
 #include "images/settings_off_bitmap.h"
 #include "images/settings_on_bitmap.h"
@@ -106,6 +121,79 @@ void draw_home_menu_bar(void)
 
     gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_off_bitmap,
                           HOME_MENU_BG_COLOR);
+}
+
+void draw_home_menu_logo_animation()
+{
+    static uint8_t frame = 0;
+
+    if (is_at_home_menu) {
+        switch (frame) {
+        case 0:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_1_bitmap, 0);
+            break;
+
+        case 3:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_2_bitmap, 0);
+            break;
+
+        case 6:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_3_bitmap, 0);
+            break;
+
+        case 9:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_4_bitmap, 0);
+            break;
+
+        case 12:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_5_bitmap, 0);
+            break;
+
+        case 15:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_6_bitmap, 0);
+            break;
+
+        case 18:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_7_bitmap, 0);
+            break;
+
+        case 21:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_8_bitmap, 0);
+            break;
+
+        case 24:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_9_bitmap, 0);
+            break;
+
+        case 27:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_10_bitmap, 0);
+            break;
+
+        case 30:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_11_bitmap, 0);
+            break;
+
+        case 33:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_12_bitmap, 0);
+            break;
+
+        case 36:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_13_bitmap, 0);
+            break;
+
+        case 39:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_14_bitmap, 0);
+            break;
+
+        case 42:
+            gfx_draw_16bit_bitmap(30, 21, &neurosoft_logo_a_15_bitmap, 0);
+            break;
+        }
+
+        frame = frame >= 45 ? 0 : frame + 1;
+    } else {
+        frame = 0;
+    }
 }
 
 void redraw_home_menu_burger_selected(void)
@@ -249,6 +337,10 @@ void home_menu_application(void (*service_callback)()) {
     while (application_get() == home_menu_application) {
         battery_manager_process();
         service_callback();
+
+#ifdef NSEC_FLAVOR_CTF
+        draw_home_menu_logo_animation();
+#endif
     }
 
     nsec_controls_suspend_handler(home_menu_handle_buttons);
