@@ -6,7 +6,6 @@
 #include "resistance_propaganda_observer.h"
 #include "ble/abstract_ble_observer.h"
 #include "app/gfx_effect.h"
-#include "drivers/uart.h"
 #include "timer.h"
 
 #include <string.h>
@@ -76,7 +75,7 @@ static void on_valid_packet_received(const ble_gap_evt_adv_report_t* report){
     else if(report->rssi >= rssi_threshold){
         adv_evt_received++;
         if(adv_evt_received > 5){
-            uart_printf("received\n");
+            // TODO slideshow
             adv_evt_received = 0;
         }
     }
