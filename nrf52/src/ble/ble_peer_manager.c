@@ -8,12 +8,9 @@
 #include <app_error.h>
 #include <peer_manager.h>
 #include <ble/peer_manager/peer_manager_types.h>
-#include "drivers/uart.h"
-#include "drivers/led_effects.h"
 #include "app/pairing_menu.h"
 
 
-static uint32_t reply_to_pairing_request(uint16_t connection_handle, void const* request_context);
 static void set_security_params(ble_gap_sec_params_t*);
 
 static void peer_event_handler(pm_evt_t const* peer_event){
@@ -35,15 +32,8 @@ static void peer_event_handler(pm_evt_t const* peer_event){
             pm_conn_sec_config_reply(peer_event->conn_handle, &config);
         }
         default:
-        {
-            /*uint16_t event = peer_event->evt_id;
-            char base_message[] = "Event 0x%x received";
-            char full_message[sizeof(base_message) + 3];
-            snprintf(full_message, sizeof(full_message), base_message, event);
-            display_message(full_message);*/
-        }
+            break;
     }
-    nsec_neoPixel_show();
 }
 
 void init_peer_manager(){
