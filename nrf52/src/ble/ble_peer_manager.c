@@ -21,7 +21,7 @@ static void peer_event_handler(pm_evt_t const* peer_event){
         case PM_EVT_CONN_SEC_START: //pairing process started
             break;
         case PM_EVT_CONN_SEC_SUCCEEDED: //link encrypted
-            break;
+            nsec_ble_hide_pairing_menu();
         case PM_EVT_BONDED_PEER_CONNECTED: // connected with a bonded peer
             break;
         case PM_EVT_CONN_SEC_FAILED:

@@ -244,6 +244,7 @@ static void draw_home_menu(void) {
                                    DISPLAY_BLACK);
     gfx_set_cursor(CONF_STR_POS);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_set_text_size(1);
     gfx_puts("Conference");
 #endif
 }

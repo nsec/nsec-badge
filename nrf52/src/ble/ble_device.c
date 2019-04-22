@@ -220,7 +220,7 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             char passkey[7];
             memcpy(passkey, p_ble_evt->evt.gap_evt.params.passkey_display.passkey, sizeof(passkey) - 1);
             passkey[6] = '\0';
-            show_pairing_menu(passkey);
+            nsec_ble_show_pairing_menu(passkey);
             break;
         }
         default:
