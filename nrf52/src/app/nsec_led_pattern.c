@@ -388,7 +388,7 @@ static void save_pattern(uint8_t item)
         index = extra_patterns_match_index[item];
     }
     setMode_WS2812FX(index);
-    update_stored_mode(0, index);
+    update_stored_mode(0, index, true);
     show_actual_pattern();
 }
 

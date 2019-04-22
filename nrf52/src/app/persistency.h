@@ -23,11 +23,12 @@
 #ifndef PERSISTENCY_H
 #define PERSISTENCY_H
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 void load_persistency(void);
+void update_persistency(void);
 void set_default_persistency(void);
 
 uint32_t get_persist_zombie_odds_modifier(void);
@@ -37,12 +38,21 @@ uint8_t get_stored_display_brightness(void);
 void update_stored_display_brightness(uint8_t brightness);
 
 void load_led_settings(void);
-void update_stored_brightness(uint8_t brightness);
-void update_stored_mode(uint8_t segment_index, uint8_t mode);
-void update_stored_speed(uint8_t segment_index, uint16_t speed);
-void update_stored_color(uint8_t segment_index, uint32_t color, uint8_t index);
-void update_stored_reverse(uint8_t segment_index, bool reverse);
-void update_stored_control(bool control);
+void update_stored_num_segment(uint8_t num_segment, bool update);
+void update_stored_segment(uint8_t segment_index, uint16_t start, uint16_t stop,
+                           uint8_t mode, uint32_t color_1, uint32_t color_2,
+                           uint32_t color_3, uint16_t speed, bool reverse,
+                           bool update);
+void update_stored_brightness(uint8_t brightness, bool update);
+void update_stored_start(uint8_t segment_index, uint16_t start, bool update);
+void update_stored_stop(uint8_t segment_index, uint16_t stop, bool update);
+void update_stored_mode(uint8_t segment_index, uint8_t mode, bool update);
+void update_stored_speed(uint8_t segment_index, uint16_t speed, bool update);
+void update_stored_color(uint8_t segment_index, uint32_t color, uint8_t index,
+                         bool update);
+void update_stored_reverse(uint8_t segment_index, bool reverse, bool update);
+void update_stored_control(bool control, bool update);
+void move_stored_segment(uint8_t src, uint8_t dest, bool update);
 void load_stored_led_default_settings(void);
 
 void update_identity(char *new_identity);

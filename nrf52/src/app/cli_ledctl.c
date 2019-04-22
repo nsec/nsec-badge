@@ -84,7 +84,9 @@ static void do_led_create(const nrf_cli_t *p_cli, size_t argc, char **argv)
     setSegment_WS2812FX(segment_index, start_index, stop_index, FX_MODE_BLINK,
                          BLUE, DEFAULT_SPEED, false);
 
-    //TODO Persist
+    update_stored_num_segment(segment_index + 1, false);
+    update_stored_segment(segment_index, start_index, stop_index, FX_MODE_BLINK,
+                          BLUE, 0, 0, DEFAULT_SPEED, false, true);
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                     "New segment created! You can now configure your segment "
@@ -124,10 +126,13 @@ static void do_led_delete(const nrf_cli_t *p_cli, size_t argc, char **argv)
         segment_index = val;
     }
 
-    setSegmentStop_WS2812FX(segment_index - 1,
-                            getSegmentStop_WS2812FX(segment_index));
+    uint16_t segment_stop = getSegmentStop_WS2812FX(segment_index);
+    setSegmentStop_WS2812FX(segment_index - 1, segment_stop);
+    update_stored_stop(segment_index - 1, segment_stop, false);
 
     setNumSegments_WS2812FX(segment_count - 1);
+    update_stored_num_segment(segment_count - 1, false);
+
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Segment %d was deleted.\r\n",
                     segment_index);
@@ -138,9 +143,10 @@ static void do_led_delete(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
     for (int i = segment_count - 1; i != segment_index; i--) {
         moveSegment_WS2812FX(i, i-1);
+        move_stored_segment(i, i-1, false);
     }
 
-    //TODO persist
+    update_persistency();
 }
 
 static void do_led_show(const nrf_cli_t *p_cli, size_t argc, char **argv)
@@ -164,11 +170,11 @@ static void do_led_show(const nrf_cli_t *p_cli, size_t argc, char **argv)
                         getSegmentSpeed_WS2812FX(i));
         nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Reverse?: %s\r\n",
                         getSegmentReverse_WS2812FX(i) ? "true" : "false");
-        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "First color: %02X\r\n",
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "First color: %06X\r\n",
                         getSegmentColor_WS2812FX(i, 0));
-        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Second color: %02X\r\n",
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Second color: %06X\r\n",
                         getSegmentColor_WS2812FX(i, 1));
-        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Third color: %02X\r\n",
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Third color: %06X\r\n",
                         getSegmentColor_WS2812FX(i, 2));
     }
 }
@@ -204,7 +210,7 @@ static void do_led_reset(const nrf_cli_t *p_cli, size_t argc, char **argv)
         called = false;
     }
 
-    // Todo persist
+    load_stored_led_default_settings();
 }
 
 static void do_led_segment(const nrf_cli_t *p_cli, size_t argc, char **argv)
@@ -278,7 +284,10 @@ static void do_index_select(const nrf_cli_t *p_cli, size_t argc, char **argv)
         stop_index = val;
 
         setSegmentStart_WS2812FX(segment_index, start_index);
+        update_stored_start(segment_index, start_index, false);
+
         setSegmentStop_WS2812FX(segment_index, stop_index);
+        update_stored_stop(segment_index, stop_index, true);
 
         nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
             "Segment %d, now start at %d and finish at %d\r\n", segment_index,
@@ -361,6 +370,7 @@ static void do_led_mode(const nrf_cli_t *p_cli, size_t argc, char **argv)
             return;
         } else {
             setSegmentMode_WS2812FX(segment_index, val);
+            update_stored_mode(segment_index, val, true);
             nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                             "Segment %d, now use %s pattern\r\n", segment_index,
                             getSegmentModeString_WS2812FX(segment_index));
@@ -434,6 +444,7 @@ static void do_led_color(const nrf_cli_t *p_cli, size_t argc, char **argv)
         color = val;
 
         setSegmentArrayColor_packed_WS2812FX(segment_index, color_index, color);
+        update_stored_color(segment_index, color_index, color, true);
         nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
             "Segment %d, color %d is now: %d(%02X)\r\n", segment_index,
             color_index, color, color);
@@ -458,6 +469,10 @@ static void do_led_color(const nrf_cli_t *p_cli, size_t argc, char **argv)
         setSegmentArrayColor_packed_WS2812FX(segment_index, 0, color[0]);
         setSegmentArrayColor_packed_WS2812FX(segment_index, 1, color[1]);
         setSegmentArrayColor_packed_WS2812FX(segment_index, 2, color[2]);
+        update_stored_color(segment_index, 0, color[0], false);
+        update_stored_color(segment_index, 1, color[1], false);
+        update_stored_color(segment_index, 2, color[2], true);
+
         nrf_cli_fprintf(
             p_cli, NRF_CLI_DEFAULT,
             "Segment %d color are now: \n\r1: %d(%02X)\r\n2: %d(%02X)\r\n3: "
@@ -516,6 +531,7 @@ static void do_led_speed(const nrf_cli_t *p_cli, size_t argc, char **argv)
         }
 
         setSegmentSpeed_WS2812FX(segment_index, val);
+        update_stored_speed(segment_index, val, true);
         nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Segment %d speed is now %d\r\n",
                     segment_index, getSegmentSpeed_WS2812FX(segment_index));
     } else {
@@ -553,7 +569,7 @@ static void do_led_brightness(const nrf_cli_t *p_cli, size_t argc, char **argv)
         nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                         "Set leds brightness to: %d\r\n", val);
         setBrightness_WS2812FX(val);
-        update_stored_brightness(val);
+        update_stored_brightness(val, true);
     } else {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Value out of range\r\n",
                         argv[2]);
@@ -595,14 +611,14 @@ static void do_led_reverse(const nrf_cli_t *p_cli, size_t argc, char **argv)
                             "Set led execution direction to: %s\r\n",
                             argv[2]);
             setSegmentReverse_WS2812FX(segment_index, false);
-            update_stored_reverse(segment_index, false);
+            update_stored_reverse(segment_index, false, true);
             return;
         } else if (!strcmp(argv[2], "reverse")) {
             nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                             "Set led execution direction to: %s\r\n",
                             argv[2]);
             setSegmentReverse_WS2812FX(segment_index, true);
-            update_stored_reverse(segment_index, true);
+            update_stored_reverse(segment_index, true, true);
             return;
         } else {
             nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",

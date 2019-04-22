@@ -68,7 +68,7 @@ static uint8_t persistency_bin[4096];
 static struct persistency *persistency = (struct persistency*)persistency_bin;
 static bool is_loaded = false;
 
-static void update_persistency(void)
+void update_persistency(void)
 {
     persistency->crc = crc32_compute(persistency_bin, 4092, NULL);
 
@@ -142,36 +142,99 @@ void update_stored_display_brightness(uint8_t brightness) {
 }
 
 /* LED SETTINGS */
-void update_stored_brightness(uint8_t brightness) {
-    persistency->led_settings.brightness = brightness;
-    update_persistency();
-}
-
-void update_stored_mode(uint8_t segment_index, uint8_t mode) {
-    persistency->led_settings.segment[segment_index].mode = mode;
-    update_persistency();
-}
-
-void update_stored_speed(uint8_t segment_index, uint16_t speed) {
-    persistency->led_settings.segment[segment_index].speed = speed;
-    update_persistency();
-}
-
-void update_stored_color(uint8_t segment_index, uint32_t color, uint8_t index) {
-    if (index < NUM_COLORS) {
-        persistency->led_settings.segment[segment_index].colors[index] = color;
+void update_stored_num_segment(uint8_t num_segment, bool update)
+{
+    persistency->led_settings.num_segment = num_segment;
+    if (update) {
         update_persistency();
     }
 }
 
-void update_stored_reverse(uint8_t segment_index, bool reverse) {
+void update_stored_segment(uint8_t segment_index, uint16_t start, uint16_t stop,
+                           uint8_t mode, uint32_t color_1, uint32_t color_2,
+                           uint32_t color_3, uint16_t speed, bool reverse,
+                           bool update)
+{
+    persistency->led_settings.segment[segment_index].start = start;
+    persistency->led_settings.segment[segment_index].stop = stop;
+    persistency->led_settings.segment[segment_index].mode = mode;
+    persistency->led_settings.segment[segment_index].colors[0] = color_1;
+    persistency->led_settings.segment[segment_index].colors[1] = color_2;
+    persistency->led_settings.segment[segment_index].colors[2] = color_3;
+    persistency->led_settings.segment[segment_index].speed = speed;
     persistency->led_settings.segment[segment_index].reverse = reverse;
-    update_persistency();
+    if (update) {
+        update_persistency();
+    }
 }
 
-void update_stored_control(bool control) {
+void move_stored_segment(uint8_t src, uint8_t dest, bool update)
+{
+    persistency->led_settings.segment[src] =
+        persistency->led_settings.segment[dest];
+    if (update) {
+        update_persistency();
+    }
+}
+
+void update_stored_start(uint8_t segment_index, uint16_t start, bool update)
+{
+    persistency->led_settings.segment[segment_index].start = start;
+    if (update) {
+        update_persistency();
+    }
+}
+
+void update_stored_stop(uint8_t segment_index, uint16_t stop, bool update)
+{
+    persistency->led_settings.segment[segment_index].stop = stop;
+    if (update) {
+        update_persistency();
+    }
+}
+
+void update_stored_brightness(uint8_t brightness, bool update) {
+    persistency->led_settings.brightness = brightness;
+    if (update) {
+        update_persistency();
+    }
+}
+
+void update_stored_mode(uint8_t segment_index, uint8_t mode, bool update) {
+    persistency->led_settings.segment[segment_index].mode = mode;
+    if (update) {
+        update_persistency();
+    }
+}
+
+void update_stored_speed(uint8_t segment_index, uint16_t speed, bool update) {
+    persistency->led_settings.segment[segment_index].speed = speed;
+    if (update) {
+        update_persistency();
+    }
+}
+
+void update_stored_color(uint8_t segment_index, uint32_t color, uint8_t index, bool update) {
+    if (index < NUM_COLORS) {
+        persistency->led_settings.segment[segment_index].colors[index] = color;
+        if (update) {
+            update_persistency();
+        }
+    }
+}
+
+void update_stored_reverse(uint8_t segment_index, bool reverse, bool update) {
+    persistency->led_settings.segment[segment_index].reverse = reverse;
+    if (update) {
+        update_persistency();
+    }
+}
+
+void update_stored_control(bool control, bool update) {
     persistency->led_settings.control = control;
-    update_persistency();
+    if (update) {
+        update_persistency();
+    }
 }
 
 void load_led_settings(void) {
