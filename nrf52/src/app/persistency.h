@@ -28,6 +28,7 @@
 #include <stdbool.h>
 
 void load_persistency(void);
+void set_default_persistency(void);
 
 uint32_t get_persist_zombie_odds_modifier(void);
 void set_persist_zombie_odds_modifier(uint32_t odds);

@@ -101,7 +101,7 @@ static void set_default_led_settings(void)
     }
 }
 
-static void set_default_persistency(void)
+void set_default_persistency(void)
 {
     memset(persistency_bin, 0, 4096);
 

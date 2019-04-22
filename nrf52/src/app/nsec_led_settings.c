@@ -117,9 +117,6 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Turn led on/off",
         .handler = show_control_menu,
-    }, {
-        .label = "Factory default",
-        .handler = set_led_default,
     }
 };
 
@@ -524,10 +521,6 @@ static void save_control(uint8_t item) {
     }
     update_stored_control((bool)item);
     show_control_menu(0);
-}
-
-static void set_led_default(uint8_t item) {
-    load_stored_led_default_settings();
 }
 
 static void setting_handle_buttons(button_t button) {

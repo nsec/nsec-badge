@@ -22,6 +22,7 @@
 #include "drivers/ws2812fx.h"
 #include "persistency.h"
 #include "timer.h"
+#include "nrf_delay.h"
 
 //static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
@@ -29,6 +30,8 @@ static void turn_off_screen(uint8_t item);
 static void show_led_settings(uint8_t item);
 static void show_display_brightness(uint8_t item);
 static void save_brightness(uint8_t item);
+static void confirm_factory_reset(uint8_t item);
+static void do_factory_reset(uint8_t item);
 static void toggle_flashlight(uint8_t item);
 static void show_member_details(uint8_t item);
 static void setting_handle_buttons(button_t button);
@@ -41,7 +44,8 @@ enum setting_state {
     SETTING_STATE_SCREEN_OFF,
     SETTING_STATE_FLASHLIGHT,
     SETTING_STATE_BATTERY,
-    SETTING_STATE_DISPLAY
+    SETTING_STATE_DISPLAY,
+    SETTING_CONFIRM_FACTORY
 };
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
@@ -57,7 +61,10 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Display brightness",
         .handler = show_display_brightness,
-    }, /*{
+    }, {
+        .label = "Factory Reset",
+        .handler = do_factory_reset,
+    },/*{
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
     }, */{
@@ -118,6 +125,52 @@ static menu_item_s brightness_items[] = {
         .handler = save_brightness,
     }
 };
+
+static menu_item_s confirm_items[] = {
+    {
+        .label = "Yes",
+        .handler = confirm_factory_reset,
+    }, {
+        .label = "No",
+        .handler = confirm_factory_reset,
+    }
+};
+
+static void confirm_factory_reset(uint8_t item)
+{
+    menu_close();
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    gfx_set_cursor(GEN_MENU_POS);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
+    if (!item) {
+        set_default_persistency();
+        gfx_puts("Settings restored to\ndefault rebooting...");
+
+        // Not neccessary but it make it more... serious ???
+        nrf_delay_ms(2000);
+        NVIC_SystemReset();
+    } else {
+        gfx_puts("Okay...");
+        nrf_delay_ms(1000);
+        nsec_setting_show();
+    }
+}
+
+static void do_factory_reset(uint8_t item)
+{
+    menu_close();
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    gfx_set_cursor(GEN_MENU_POS);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    gfx_puts("Are you sure ?");
+
+    menu_init(GEN_MENU_POS_X, GEN_MENU_POS_Y + 16, GEN_MENU_WIDTH,
+        GEN_MENU_HEIGHT, ARRAY_SIZE(confirm_items), confirm_items,
+        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
+    _state = SETTING_CONFIRM_FACTORY;
+}
 
 static void show_member_details(uint8_t item) {
     menu_close();
