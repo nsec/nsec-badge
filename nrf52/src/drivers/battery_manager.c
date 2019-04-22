@@ -114,7 +114,12 @@ end_refresh:
 }
 
 void nsec_battery_manager_init(void) {
-    // ret_code_t err_code;
+    static bool is_init = false;
+    if (is_init) {
+        return;
+    }
+
+    is_init = true;
 
     battery_init();
 
