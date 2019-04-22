@@ -19,9 +19,12 @@
 #include <nrf_ble_gatt.h>
 
 #include "ble_device.h"
+#include "ble_peer_manager.h"
 #include "boards.h"
 #include <nrf_gpio.h>
 #include <nrf_delay.h>
+#include <ble/common/ble_gatt_db.h>
+#include <iot/common/iot_common.h>
 #include "drivers/led_effects.h"
 #include "app/logs.h"
 #include "nrf_log.h"
@@ -32,7 +35,8 @@
 #include "uuid.h"
 #include "abstract_ble_observer.h"
 #include "ble_scan.h"
-
+#include "drivers/uart.h"
+#include "app/pairing_menu.h"
 
 #define APP_BLE_OBSERVER_PRIO 3
 #define PEER_ADDRESS_SIZE 6
@@ -91,7 +95,7 @@ static uint16_t parse_queued_write_events(CharacteristicWriteEvent* event);
 ret_code_t create_ble_device(char* device_name){
     if(ble_device == NULL){
         _nsec_ble_softdevice_init();
-        pm_init();
+        init_peer_manager();
         nsec_ble_init();
         ble_device = malloc(sizeof(BleDevice));
         ble_device->device_name = device_name;
@@ -211,6 +215,14 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             free(p_ble_evt->evt.common_evt.params.user_mem_release.mem_block.p_mem);
             buffer = NULL;
             break;
+        case BLE_GAP_EVT_PASSKEY_DISPLAY:
+        {
+            char passkey[7];
+            memcpy(passkey, p_ble_evt->evt.gap_evt.params.passkey_display.passkey, sizeof(passkey) - 1);
+            passkey[6] = '\0';
+            show_pairing_menu(passkey);
+            break;
+        }
         default:
             ble_device->advertiser->on_ble_advertising_event(p_ble_evt);
     }
