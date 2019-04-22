@@ -11,11 +11,13 @@
 #include <string.h>
 #include "nrf_delay.h"
 #include "app_intro.h"
+#include "persistency.h"
 
 #include "images/neurosoft_logo_bitmap.h"
 #include "images/neurosoft_circle_bitmap.h"
 #include "images/neurosoft_name_bitmap.h"
 #include "images/beyond_reality_bitmap.h"
+#include "images/avatar_neuro_bitmap.h"
 
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
@@ -105,6 +107,18 @@ static void animated_name(const struct bitmap *bitmap)
     }
 }
 
+static void greetings(void)
+{
+    gfx_draw_16bit_bitmap(30, 30, &avatar_neuro_bitmap, DISPLAY_BLACK);
+    nrf_delay_ms(500);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_set_cursor(70, 30);
+    gfx_puts_lag("Greetings,", 20);
+    nrf_delay_ms(500);
+    gfx_set_cursor(70, 42);
+    gfx_puts_lag(get_stored_identity(), 20);
+}
+
 #ifdef NSEC_FLAVOR_CTF
 //TODO improve with some neopixeling ?
 void app_intro(void (*service_callback)())
@@ -121,13 +135,19 @@ void app_intro(void (*service_callback)())
     animated_name(&beyond_reality_bitmap);
     nrf_delay_ms(100);
 
+    display_fill_screen_black();
+    greetings();
+    nrf_delay_ms(3000);
+
     /* Return to default app */
     application_clear();
 }
 #else
 void app_intro(void (*service_callback)())
 {
-    //todo
+    greetings();
+    nrf_delay_ms(1000);
+
     /* Return to default app */
     application_clear();
 }
