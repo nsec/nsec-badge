@@ -151,10 +151,6 @@ int main(void) {
     load_persistency();
     nsec_buttons_init();
 
-#ifdef NSEC_FLAVOR_CTF
-    mode_zombie_init();
-#endif
-
     // Enter flash mode if the "up" button is pressed.
     if (nsec_button_is_pushed(BUTTON_UP)) {
       flash_mode();
@@ -165,8 +161,10 @@ int main(void) {
     cli_init();
 
     init_ble();
-    //nsec_status_set_name(g_device_id);
-    //nsec_status_set_badge_class(NSEC_STRINGIFY(NSEC_HARDCODED_BADGE_CLASS));
+
+#ifdef NSEC_FLAVOR_CTF
+    mode_zombie_init();
+#endif
 
 #ifdef SOLDERING_TRACK
     application_set(app_soldering);
