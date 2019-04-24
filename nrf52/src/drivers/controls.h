@@ -9,7 +9,7 @@
 
 #include <stdbool.h>
 
-#define NSEC_CONTROLS_LIMIT_MAX_HANDLERS (8)
+#define NSEC_CONTROLS_LIMIT_MAX_HANDLERS (64)
 #define NSEC_CONTROLS_MAX_EVENT 8
 
 typedef enum {
