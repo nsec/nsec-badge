@@ -46,7 +46,7 @@ static void peer_event_handler(pm_evt_t const* peer_event){
 
 void init_peer_manager(){
     APP_ERROR_CHECK(pm_init());
-    APP_ERROR_CHECK(pm_peers_delete()); // TODO need to fix this.
+    //APP_ERROR_CHECK(pm_peers_delete()); // TODO need to fix this.
     APP_ERROR_CHECK(pm_register(peer_event_handler));
     ble_gap_sec_params_t sec_params;
     set_security_params(&sec_params);
