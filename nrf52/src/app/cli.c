@@ -95,7 +95,7 @@ static void do_nsec(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 NRF_CLI_CMD_REGISTER(nsec, NULL, "Welcome to NSEC!", do_nsec);
 
-static void do_display(const nrf_cli_t *p_cli, size_t argc, char **argv)
+static void do_displayctl(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
     ASSERT(p_cli);
     ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
@@ -117,7 +117,7 @@ static void do_display(const nrf_cli_t *p_cli, size_t argc, char **argv)
     }
 }
 
-static void do_display_brightness(const nrf_cli_t *p_cli, size_t argc,
+static void do_displayctl_brightness(const nrf_cli_t *p_cli, size_t argc,
                                   char **argv)
 {
     ASSERT(p_cli);
@@ -140,7 +140,7 @@ static void do_display_brightness(const nrf_cli_t *p_cli, size_t argc,
     }
 }
 
-static void do_display_brightness_get(const nrf_cli_t *p_cli, size_t argc,
+static void do_displayctl_brightness_get(const nrf_cli_t *p_cli, size_t argc,
                                       char **argv)
 {
     ASSERT(p_cli);
@@ -161,7 +161,7 @@ static void do_display_brightness_get(const nrf_cli_t *p_cli, size_t argc,
                     get_stored_display_brightness());
 }
 
-static void do_display_brightness_set(const nrf_cli_t *p_cli, size_t argc,
+static void do_displayctl_brightness_set(const nrf_cli_t *p_cli, size_t argc,
                                       char **argv)
 {
     if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
@@ -194,18 +194,18 @@ static void do_display_brightness_set(const nrf_cli_t *p_cli, size_t argc,
 }
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_brightness){
-    NRF_CLI_CMD(get, NULL, "Get brightness value", do_display_brightness_get),
+    NRF_CLI_CMD(get, NULL, "Get brightness value", do_displayctl_brightness_get),
     NRF_CLI_CMD(set, NULL, "Set brightness value [0-100]",
-                do_display_brightness_set),
+                do_displayctl_brightness_set),
     NRF_CLI_SUBCMD_SET_END};
 
-NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_display){
+NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_displayctl){
     NRF_CLI_CMD(brightness, &sub_brightness,
-                "Get or set the display brightness", do_display_brightness),
+                "Get or set the display brightness", do_displayctl_brightness),
     NRF_CLI_SUBCMD_SET_END};
 
-NRF_CLI_CMD_REGISTER(display, &sub_display, "Display configuration",
-                     do_display);
+NRF_CLI_CMD_REGISTER(displayctl, &sub_displayctl, "Display configuration",
+                     do_displayctl);
 
 static void do_identity(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
