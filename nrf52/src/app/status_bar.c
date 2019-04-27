@@ -19,32 +19,26 @@ static status_battery_state battery_state;
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
-void nsec_status_bar_init() {
+void nsec_status_bar_init()
+{
 
     gfx_fill_rect(STATUS_BAR_POS, STATUS_BAR_WIDTH, STATUS_BAR_HEIGHT,
                   STATUS_BAR_BG_COLOR);
     gfx_update();
 }
 
-void nsec_status_set_ble_status(status_bluetooth_status status) {
+void nsec_status_set_ble_status(status_bluetooth_status status)
+{
     ble_status = status;
-    gfx_draw_16bit_bitmap(BLE_LOGO_POS, &ble_logo_bitmap, STATUS_BAR_BG_COLOR);
-    if (ble_status != STATUS_BLUETOOTH_ON) {
-        // Draw a big red X on the logo
-        uint16_t x = BLE_LOGO_POS_X;
-        uint16_t y = BLE_LOGO_POS_Y;
-        gfx_draw_line(x, y, x + ble_logo_bitmap.width,
-                      y + ble_logo_bitmap.height, DISPLAY_RED);
-        gfx_draw_line(x, y + 1, x + ble_logo_bitmap.width,
-                      y + ble_logo_bitmap.height + 1, DISPLAY_RED);
-        gfx_draw_line(x + ble_logo_bitmap.width, y, x,
-                      y + ble_logo_bitmap.height, DISPLAY_RED);
-        gfx_draw_line(x + ble_logo_bitmap.width, y + 1, x,
-                      y + ble_logo_bitmap.height + 1, DISPLAY_RED);
+
+    if (ble_status == STATUS_BLUETOOTH_ON) {
+        gfx_draw_16bit_bitmap(BLE_LOGO_POS, &ble_logo_bitmap,
+                              STATUS_BAR_BG_COLOR);
     }
 }
 
-void nsec_status_set_battery_status(status_battery_state state) {
+void nsec_status_set_battery_status(status_battery_state state)
+{
     battery_state = state;
     if (battery_state == STATUS_BATTERY_CHARGING) {
         gfx_draw_16bit_bitmap(BATTERY_POS, &battery_charging_bitmap,
@@ -78,7 +72,8 @@ void nsec_status_set_battery_status(status_battery_state state) {
     gfx_update();
 }
 
-void nsec_status_bar_ui_redraw(void) {
+void nsec_status_bar_ui_redraw(void)
+{
     gfx_fill_rect(gfx_width - STATUS_BAR_WIDTH, 0, STATUS_BAR_WIDTH,
                   STATUS_BAR_HEIGHT, STATUS_BAR_BG_COLOR);
 
