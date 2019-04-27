@@ -40,13 +40,17 @@ typedef struct
 static bool start_scan = false;
 static bool scan_in_progress = false;
 
-static uint8_t device_list[250][6];
+/* List of seen devices in the current scan. */
+static struct {
+    uint8_t addr[BLE_GAP_ADDR_LEN];
+} device_list[250];
 static uint8_t device_count = 0;
 
 static bool is_in_device_list(const ble_gap_evt_adv_report_t* report)
 {
     for (int i = 0; i < device_count; i++) {
-        if (!memcmp(report->peer_addr.addr, device_list[i], 6)) {
+        if (!memcmp(report->peer_addr.addr, device_list[i].addr,
+                    BLE_GAP_ADDR_LEN)) {
             return true;
         }
     }
@@ -55,7 +59,8 @@ static bool is_in_device_list(const ble_gap_evt_adv_report_t* report)
 
 static void add_to_device_list(const ble_gap_evt_adv_report_t* report)
 {
-    memcpy(device_list[device_count], report->peer_addr.addr, 6);
+    memcpy(device_list[device_count].addr, report->peer_addr.addr,
+           BLE_GAP_ADDR_LEN);
     device_count++;
 }
 
