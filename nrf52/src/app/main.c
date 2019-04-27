@@ -116,7 +116,7 @@ static void init_ble() {
     ble_start_advertising();
 
     //add_observer(get_resistance_propaganda_observer());
-    //ble_device_start_scan();
+    ble_device_start_scan();
 #endif
 }
 

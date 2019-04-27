@@ -28,6 +28,7 @@
 
 void cli_init(void);
 void cli_process(void);
+
 bool standard_check(const nrf_cli_t *p_cli, size_t argc, size_t minimum_arg,
                     char **argv, nrf_cli_getopt_option_t const *p_opt,
                     size_t opt_len);
