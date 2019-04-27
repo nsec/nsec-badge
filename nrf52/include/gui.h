@@ -61,8 +61,8 @@
 #define SETTINGS_MENU_CUR_Y     58
 #define SETTINGS_MENU_TITLE_X   20
 
-#define NEUROSOFT_LOGO_POS      30, 10
-#define NEUROSOFT_ANIMATION_POS 30, 21
+#define NEUROSOFT_LOGO_POS      29, 9
+#define NEUROSOFT_ANIMATION_POS 29, 20
 #define NSEC_LOGO_POS           15, 15
 #define CONF_STR_POS            35, 60
 
