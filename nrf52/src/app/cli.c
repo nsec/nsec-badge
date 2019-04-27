@@ -25,6 +25,7 @@
 #include <drivers/cli_uart.h>
 #include "drivers/display.h"
 #include "persistency.h"
+#include "random.h"
 
 bool standard_check(const nrf_cli_t *p_cli, size_t argc, size_t minimum_arg,
                     char **argv, nrf_cli_getopt_option_t const *p_opt,
@@ -228,11 +229,71 @@ static void do_identity(const nrf_cli_t *p_cli, size_t argc, char **argv)
     }
 }
 
-    NRF_CLI_CMD_REGISTER(identity, NULL,
+NRF_CLI_CMD_REGISTER(identity, NULL,
                          "Get or set the badge identity\r\nUsage:\r\nGet: "
                          "identity\r\nSet: identity "
                          "{new_identity}\r\nMaximum of 16 char",
                          do_identity);
+
+#ifdef NSEC_FLAVOR_CTF
+static void do_dump(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
+        return;
+    }
+}
+
+static void do_external(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
+        return;
+    }
+}
+
+static void do_external_memory(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
+        return;
+    }
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT,
+        "Offset(h)\t00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\r\n");
+
+    for (int i = 0; i < 256; i++) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%08X\t", i * 16);
+        for (int j = 0; j < 16; j++) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%02X ", nsec_random_get_byte(255));
+        }
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "\r\n");
+    }
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT,
+        "%08X\t46 4C 41 47 2D 4E 30 74 54 68 33 4D 33 6D 30 72 \r\n%08X\t79 59 "
+        "30 75 41 72 33 4C 30 30 6B 31 6E 67 46 30 \r\n%08X\t72 00 FF 09 "
+        "A4 B7 E1 D1 F0 F5 22 43 1A 63 52 42 \r\n",
+        256 * 16, 257 * 16, 258 * 16);
+
+    for (int i = 259; i < 512; i++) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%08X\t", i * 16);
+        for (int j = 0; j < 16; j++) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%02X ", nsec_random_get_byte(255));
+        }
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "\r\n");
+    }
+}
+
+NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_external){
+    NRF_CLI_CMD(memory, NULL, "Dump external memory !", do_external_memory),
+    NRF_CLI_SUBCMD_SET_END};
+
+NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_dump){
+    NRF_CLI_CMD(external, &sub_external, "Dump external stuff...", do_external),
+    NRF_CLI_SUBCMD_SET_END};
+
+NRF_CLI_CMD_REGISTER(dump, &sub_dump, "Dump things...", do_dump);
+#endif
 
 /* Initialize the command-line interface module.  */
 
