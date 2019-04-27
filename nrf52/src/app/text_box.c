@@ -81,7 +81,7 @@ void text_box_init(const char *text, struct text_box_config *config)
 
     // Count the number of lines and assign offset into an array
     text_box.line_count++;
-    for (i = 0; i < len; i++) {
+    for (i = 0; i <= len; i++) {
         if (text_box.text[i] == '\n') {
             text_box.line_offset[text_box.line_count] = i + 1;
             text_box.line_count++;
