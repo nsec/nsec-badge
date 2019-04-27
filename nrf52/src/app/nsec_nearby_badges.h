@@ -9,10 +9,9 @@
 
 #include <stdint.h>
 
-#define NSEC_MAX_NEARBY_BADGES_COUNT (8)
+#define NSEC_MAX_NEARBY_BADGES_COUNT (55)
 
+void select_nearby_badges_pattern(void);
 void nsec_nearby_badges_init(void);
-void nsec_nearby_badges_callback(uint16_t badge_id, const uint8_t addr[], int8_t rssi);
-uint8_t nsec_nearby_badges_current_count(void);
 
 #endif /* nsec_nearby_badges_h */

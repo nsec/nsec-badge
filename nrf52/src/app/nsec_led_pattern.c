@@ -22,6 +22,8 @@
 #include "nsec_led_pattern.h"
 #include "persistency.h"
 
+#include "nsec_nearby_badges.h"
+
 enum setting_state {
     SETTING_STATE_CLOSED,
     SETTING_STATE_MENU,
@@ -140,6 +142,7 @@ static enum setting_state _state = SETTING_STATE_CLOSED;
 
 static void show_basic_pattern_menu(uint8_t item);
 static void show_extra_pattern_menu(uint8_t item);
+static void set_nearby_mode(uint8_t item);
 static void save_pattern(uint8_t item);
 static void unlock_led_pattern(uint8_t item);
 
@@ -162,6 +165,10 @@ static menu_item_s led_pattern_items[] = {
     {
         .label = "Extra patterns",
         .handler = show_extra_pattern_menu,
+    },
+    {
+        .label = "Nearby badges",
+        .handler = set_nearby_mode,
     }};
 
 static void unlock_all_pattern()
@@ -220,6 +227,10 @@ static void draw_led_title(void)
     title.bg_color = DISPLAY_WHITE;
     strcpy(title.text, "PATTERN");
     draw_title(&title);
+}
+
+static void set_nearby_mode(uint8_t item) {
+    select_nearby_badges_pattern();
 }
 
 void nsec_led_pattern_show(void)

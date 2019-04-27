@@ -186,4 +186,6 @@ uint32_t getArrayColor_WS2812FX(uint8_t index);
 
 const char *getModeName_WS2812FX(uint8_t m);
 
+void setCustomMode(uint16_t (*p)());
+
 #endif

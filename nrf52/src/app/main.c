@@ -50,6 +50,8 @@
 #include "ble/service_characteristic.h"
 #include "ble/vendor_service.h"
 
+#include "nsec_nearby_badges.h"
+
 #include "images/nsec_logo_bitmap.h"
 #include "demo_vendor_service.h"
 #include "resistance_propaganda_observer.h"
@@ -117,6 +119,7 @@ static void init_ble() {
 
     //add_observer(get_resistance_propaganda_observer());
     ble_device_start_scan();
+    nsec_nearby_badges_init();
 #endif
 }
 
