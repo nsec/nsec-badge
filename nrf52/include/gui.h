@@ -33,12 +33,12 @@
 #define STATUS_BAR_WIDTH        32
 #define STATUS_BAR_HEIGHT       22
 
-#define BATTERY_POS_X           143
+#define BATTERY_POS_X           141
 #define BATTERY_POS_Y           6
 #define BATTERY_POS             BATTERY_POS_X, BATTERY_POS_Y
 
-#define BLE_LOGO_POS_X          129
-#define BLE_LOGO_POS_Y          2
+#define BLE_LOGO_POS_X          131
+#define BLE_LOGO_POS_Y          5
 #define BLE_LOGO_POS            BLE_LOGO_POS_X, BLE_LOGO_POS_Y
 
 /* Home menu */
