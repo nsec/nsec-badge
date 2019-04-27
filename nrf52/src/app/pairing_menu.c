@@ -8,16 +8,18 @@
 #include "drivers/display.h"
 #include "drivers/buttons.h"
 
+#define PASSKEY_SIZE 6
+
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
 static const char message[] = "Your passkey is:";
 
-static char passkey[7];
+static char passkey[PASSKEY_SIZE + 1];
 
 void nsec_ble_show_pairing_menu(const char* key){
-    memcpy(passkey, key, 6);
-    passkey[6] = '\0';
+    memcpy(passkey, key, PASSKEY_SIZE);
+    passkey[PASSKEY_SIZE] = '\0';
     application_set(pairing_menu_application);
 }
 
