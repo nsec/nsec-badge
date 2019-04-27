@@ -5,6 +5,7 @@ TARGETS=$(PROJECT_NAME)
 OUTPUT_DIRECTORY := builds
 SDK_PATH = nordicsdk
 SDK_VERSION = nRF5_SDK_14.2.0_17b948a
+LOG_CLI ?= 0
 
 ifeq ($(FLAVOR), ctf)
 	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
@@ -37,8 +38,10 @@ all:
 $(error "Unknown flavor `$(FLAVOR)`")
 endif
 
-# Temporarly disable BLE identity service because it breaks right now.
-CFLAGS += -DNSEC_IDENTITY_BLE_SERVICE_DISABLE
+# Allow logging through the uart cli
+ifeq ($(LOG_CLI), 1)
+	CFLAGS += -DLOG_CLI
+endif
 
 ifeq ($(BOARD), sputnik)
 	# One of the oled screen pin is shared with the

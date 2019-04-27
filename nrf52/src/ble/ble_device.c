@@ -27,7 +27,6 @@
 #include <iot/common/iot_common.h>
 #include "drivers/led_effects.h"
 #include "app/logs.h"
-#include "nrf_log.h"
 #include "gap_configuration.h"
 #include "nsec_ble.h"
 #include "vendor_service.h"
