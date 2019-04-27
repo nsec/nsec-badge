@@ -27,6 +27,7 @@
 #include "gui.h"
 #include "drivers/display.h"
 #include "drivers/controls.h"
+#include "gfx_effect.h"
 
 static void warning_handle_buttons(button_t button);
 const char *warning_notice = "That device is equipped with a protected lithium-ion battery. However, it is still a lithium-ion battery and it should be manipulated with caution. Do not put the battery under excessive heat or direct sunlight. Do not reverse the battery polarity to avoid damaging your badge. Do not use an unprotected lithium-ion battery into the badge, the badge does not have an under voltage protection. The actual battery in the badge will automatically shutdown when reaching 2.5V. An unprotected battery will drain until 0V and it can be dangerous to recharge afterwards. Do not use the battery to power a device that required AA battery. Those batteries are the same size as the one in the badge but the voltage of an AA battery is 1.5V and the voltage of this battery is between 4.2V and 2.5V depending on the charge. You could fry your beautiful TV remote and we don't want that.";
@@ -53,6 +54,7 @@ static void draw_warning_title(void)
 
 void nsec_warning_show(void) {
     nsec_controls_add_handler(warning_handle_buttons);
+    gfx_fill_rect(0, 0, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_warning_title();
     text_box_init(warning_notice, &config);
 }
