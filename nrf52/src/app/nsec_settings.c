@@ -12,6 +12,7 @@
 #include "gui.h"
 #include "nsec_settings.h"
 #include "nsec_led_settings.h"
+#include "nsec_screen_settings.h"
 #include "menu.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"
@@ -28,8 +29,7 @@ static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
 static void show_led_settings(uint8_t item);
-static void show_display_brightness(uint8_t item);
-static void save_brightness(uint8_t item);
+static void show_screen_settings(uint8_t item);
 static void confirm_factory_reset(uint8_t item);
 static void do_factory_reset(uint8_t item);
 static void toggle_flashlight(uint8_t item);
@@ -45,7 +45,6 @@ enum setting_state {
     SETTING_STATE_SCREEN_OFF,
     SETTING_STATE_FLASHLIGHT,
     SETTING_STATE_BATTERY,
-    SETTING_STATE_DISPLAY,
     SETTING_CONFIRM_FACTORY,
     SETTING_STATE_BADGE_INFO
 };
@@ -62,8 +61,8 @@ static menu_item_s settings_items[] = {
         .label = "Led settings",
         .handler = show_led_settings,
     }, {
-        .label = "Display brightness",
-        .handler = show_display_brightness,
+        .label = "Screen settings",
+        .handler = show_screen_settings,
     }, {
         .label = "Factory Reset",
         .handler = do_factory_reset,
@@ -108,25 +107,6 @@ static menu_item_s members_items[] = {
         .label = "Yannick Lamarre",
         .handler = show_member_details,
     },
-};
-
-static menu_item_s brightness_items[] = {
-    {
-        .label = "Min",
-        .handler = save_brightness,
-    }, {
-        .label = "Low",
-        .handler = save_brightness,
-    }, {
-        .label = "Medium",
-        .handler = save_brightness,
-    }, {
-        .label = "High",
-        .handler = save_brightness,
-    }, {
-        .label = "Max",
-        .handler = save_brightness,
-    }
 };
 
 static menu_item_s confirm_items[] = {
@@ -251,11 +231,10 @@ static void show_led_settings(uint8_t item) {
     nsec_show_led_settings();
 }
 
-static void save_brightness(uint8_t item)
-{
-    uint8_t b = (item==0) ? 1 : item*25;
-    display_set_brightness(b);
-    update_stored_display_brightness(b);
+static void show_screen_settings(uint8_t item) {
+    menu_close();
+    _state = SETTING_STATE_CLOSED;
+    nsec_show_screen_settings();
 }
 
 static void draw_display_title(void)
@@ -267,17 +246,6 @@ static void draw_display_title(void)
     title.bg_color = DISPLAY_WHITE;
     strcpy(title.text, "DISPLAY");
     draw_title(&title);
-}
-
-static void show_display_brightness(uint8_t item)
-{
-    menu_close();
-    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    draw_display_title();
-    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
-        ARRAY_SIZE(brightness_items), brightness_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-    _state = SETTING_STATE_DISPLAY;
 }
 
 static void toggle_bluetooth(uint8_t item) {
@@ -402,7 +370,6 @@ static void setting_handle_buttons(button_t button)
             case SETTING_STATE_SCREEN_OFF:
                 display_set_brightness(get_stored_display_brightness());
                 // no break
-            case SETTING_STATE_DISPLAY:
             case SETTING_STATE_CREDIT:
             case SETTING_STATE_BADGE_INFO:
                 nsec_setting_show();
