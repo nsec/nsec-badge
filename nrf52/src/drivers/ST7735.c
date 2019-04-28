@@ -449,8 +449,16 @@ void st7735_init(void)
     nrf_gpio_pin_set(st7735_config.rst_pin);
 
     /* Initialise default values */
+#ifdef SOLDERING_TRACK
     colstart = 0;
     rowstart = 24;
+    uint8_t invert = ST7735_INVOFF;
+#else
+    colstart = 1;
+    rowstart = 26;
+    uint8_t invert = ST7735_INVON;
+#endif
+
     width = ST7735_WIDTH;
     height = ST7735_HEIGHT;
     wrap = 1;
@@ -472,6 +480,8 @@ void st7735_init(void)
 
     /* Initialize the framebuffer, content is random after reset */
     st7735_fill_screen(ST7735_BLACK);
+
+    st7735_invert_display(invert);
 
     /* And finally, start displaying */
     st7735_display_on();
