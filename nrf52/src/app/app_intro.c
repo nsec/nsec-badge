@@ -109,13 +109,13 @@ static void animated_name(const struct bitmap *bitmap)
 
 static void greetings(void)
 {
-    gfx_draw_16bit_bitmap(30, 30, &avatar_neuro_bitmap, DISPLAY_BLACK);
+    gfx_draw_16bit_bitmap(12, 25, &avatar_neuro_bitmap, DISPLAY_BLACK);
     nrf_delay_ms(500);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_set_cursor(70, 30);
+    gfx_set_cursor(63, 30);
     gfx_puts_lag("Greetings,", 20);
     nrf_delay_ms(500);
-    gfx_set_cursor(70, 42);
+    gfx_set_cursor(63, 42);
     gfx_puts_lag(get_stored_identity(), 20);
 }
 
