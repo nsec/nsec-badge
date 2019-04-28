@@ -63,6 +63,7 @@ struct ServiceCharacteristic {
     ReadPermission read_permission;
     WritePermission write_permission;
     const char* user_descriptor;
+    uint8_t data_type;
 };
 
 

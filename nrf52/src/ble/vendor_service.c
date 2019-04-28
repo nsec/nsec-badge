@@ -11,11 +11,12 @@
 #include "uuid.h"
 
 
-static void configure_characteristic(struct ServiceCharacteristic*, ble_gatts_char_md_t*, ble_gatts_attr_md_t*,
-                                     ble_gatts_attr_t*, ble_gatts_attr_md_t*);
+static void configure_characteristic_metadata(struct ServiceCharacteristic*, ble_gatts_char_md_t*, ble_gatts_attr_md_t*,
+                                              ble_gatts_char_pf_t*);
+static void configure_characteristic_attribute(struct ServiceCharacteristic*, ble_gatts_attr_t*, ble_gatts_attr_md_t*);
 static void set_default_metadata_for_attribute(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
 static void configure_permission(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
-
+static void set_characteristic_presentation_format(ble_gatts_char_pf_t*, uint8_t);
 
 void create_vendor_service(struct VendorService* service, uint16_t uuid){
     service->characteristic_count = 0;
@@ -31,7 +32,9 @@ void add_characteristic_to_vendor_service(struct VendorService* service, struct 
     ble_gatts_attr_md_t attribute_metadata;
     ble_gatts_attr_t attribute;
     ble_gatts_attr_md_t user_desc_metadata;
-    configure_characteristic(characteristic, &metadata, &attribute_metadata, &attribute, &user_desc_metadata);
+    ble_gatts_char_pf_t presentation_format;
+    configure_characteristic_metadata(characteristic, &metadata, &user_desc_metadata, &presentation_format);
+    configure_characteristic_attribute(characteristic, &attribute, &attribute_metadata);
     service->characteristic_count++;
     attribute.p_uuid = &(characteristic->uuid);
     APP_ERROR_CHECK(sd_ble_gatts_characteristic_add(service->handle, &metadata, &attribute, &characteristic_handles));
@@ -46,14 +49,20 @@ struct ServiceCharacteristic* get_characteristic(struct VendorService* service, 
     return NULL;
 }
 
-static void configure_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* char_metadata,
-                                     ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute,
-                                     ble_gatts_attr_md_t* user_desc_metadata){
+static void configure_characteristic_metadata(struct ServiceCharacteristic* characteristic,
+                                              ble_gatts_char_md_t* char_metadata,
+                                              ble_gatts_attr_md_t* user_desc_metadata, ble_gatts_char_pf_t* format){
     bzero(char_metadata, sizeof(ble_gatts_char_md_t));
     char_metadata->char_props.read = characteristic->read_mode != DENY_READ;
     char_metadata->char_props.write = characteristic->write_mode != DENY_WRITE;
     char_metadata->char_props.write_wo_resp = 0; // deactivate for now.
-    char_metadata->p_char_pf = NULL;
+    if(characteristic->data_type != 0){
+        set_characteristic_presentation_format(format, characteristic->data_type);
+        char_metadata->p_char_pf = format;
+    }
+    else{
+        char_metadata->p_char_pf = NULL;
+    }
     char_metadata->p_user_desc_md = NULL;
     char_metadata->p_cccd_md = NULL;
     char_metadata->p_sccd_md = NULL;
@@ -72,6 +81,10 @@ static void configure_characteristic(struct ServiceCharacteristic* characteristi
         else
             BLE_GAP_CONN_SEC_MODE_SET_ENC_WITH_MITM(&user_desc_metadata->read_perm);
     }
+}
+
+static void configure_characteristic_attribute(struct ServiceCharacteristic* characteristic,
+                                               ble_gatts_attr_t* attribute, ble_gatts_attr_md_t* attribute_metadata){
     attribute->init_len = characteristic->value_length;
     attribute->max_len = characteristic->value_length;
     attribute->init_offs = 0;
@@ -108,4 +121,12 @@ static void configure_permission(struct ServiceCharacteristic* characteristic, b
             BLE_GAP_CONN_SEC_MODE_SET_ENC_WITH_MITM(&attribute_metadata->write_perm);
     }
     attribute_metadata->wr_auth = characteristic->write_mode == AUTH_WRITE_REQUEST;
+}
+
+static void set_characteristic_presentation_format(ble_gatts_char_pf_t* format, uint8_t data_type){
+    format->desc = 0;
+    format->exponent = 0;
+    format->name_space = 0;
+    format->unit = 0;
+    format->format = data_type;
 }

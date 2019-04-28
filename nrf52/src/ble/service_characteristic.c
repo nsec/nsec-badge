@@ -25,6 +25,7 @@ void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_
     characteristic->read_permission = READ_OPEN;
     characteristic->write_permission = WRITE_OPEN;
     characteristic->user_descriptor = NULL;
+    characteristic->data_type = 0;
 }
 
 void set_characteristic_permission(struct ServiceCharacteristic* characteristic, ReadPermission read_perm,

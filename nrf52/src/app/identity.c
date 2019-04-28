@@ -50,6 +50,7 @@ void init_identity_service() {
     create_characteristic(&name_characteristic, NAME_MAX_LEN, AUTO_READ, AUTH_WRITE_REQUEST, name_char_uuid);
     set_characteristic_permission(&name_characteristic, READ_OPEN, WRITE_PAIRING_REQUIRED);
     name_characteristic.user_descriptor = name_description;
+    name_characteristic.data_type = BLE_GATT_CPF_FORMAT_UTF8S;
     add_characteristic_to_vendor_service(&identity_ble_service, &name_characteristic);
     add_write_request_handler(&name_characteristic, on_name_write);
     set_characteristic_value(&name_characteristic, (uint8_t*)badge_name);
