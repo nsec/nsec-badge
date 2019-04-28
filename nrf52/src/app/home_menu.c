@@ -33,9 +33,6 @@
 #include "images/neurosoft_logo_a_13_bitmap.h"
 #include "images/neurosoft_logo_a_14_bitmap.h"
 #include "images/neurosoft_logo_a_15_bitmap.h"
-#ifdef NSEC_FLAVOR_CONF
-#include "images/external/nsec_logo_color_bitmap.h"
-#endif
 #include "images/settings_off_bitmap.h"
 #include "images/settings_on_bitmap.h"
 
@@ -229,28 +226,36 @@ void redraw_home_menu_burger_selected(void)
 
 }
 
-static void draw_home_menu(void) {
-    draw_home_menu_bar();
+#ifdef NSEC_FLAVOR_CONF
+#include "images/external/conf/nsec_logo_color_bitmap.h"
 
+static void draw_home_menu(void)
+{
+    draw_home_menu_bar();
     draw_cursor();
 
     gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, gfx_height, DISPLAY_BLACK);
 
-    // TODO :
-    // -    Replace by logo without Red circle and animate the
-    //      red circle
-#ifdef NSEC_FLAVOR_CTF
-    gfx_draw_16bit_bitmap(NEUROSOFT_LOGO_POS, &neurosoft_logo_bitmap,
-                          DISPLAY_BLACK);
-#else
     display_draw_16bit_ext_bitmap(NSEC_LOGO_POS, &nsec_logo_color_bitmap,
                                    DISPLAY_BLACK);
+
     gfx_set_cursor(CONF_STR_POS);
     gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
     gfx_set_text_size(1);
     gfx_puts("Conference");
-#endif
 }
+#else
+static void draw_home_menu(void)
+{
+    draw_home_menu_bar();
+    draw_cursor();
+
+    gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, gfx_height, DISPLAY_BLACK);
+
+    gfx_draw_16bit_bitmap(NEUROSOFT_LOGO_POS, &neurosoft_logo_bitmap,
+                          DISPLAY_BLACK);
+}
+#endif
 
 void show_home_menu(enum home_state state) {
     _state = state;

@@ -5,11 +5,10 @@ name='badge'
 [build]
 command='make'
 
-files='builds/nsec18_nrf52_admin.elf \
+files='builds/nsec18_nrf52_bar_beacon.elf \
 builds/nsec18_nrf52_conf.elf \
 builds/nsec18_nrf52_ctf.elf \
-builds/nsec18_nrf52_speaker.elf \
-builds/nsec18_nrf52_trainer.elf \
+builds/nsec18_nrf52_soldering.elf \
 builds/nsec18_stm32_debugger.bin \
 builds/nsec18_stm32_debugger.elf \
 builds/s132_nrf52_5.0.0_softdevice.hex'
