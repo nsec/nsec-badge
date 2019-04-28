@@ -50,7 +50,7 @@ void set_device_name(const char* name){
     const uint8_t* device_name = (const uint8_t *)name;
     ble_gap_conn_sec_mode_t security_mode;
 
-    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&security_mode);
+    BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&security_mode);
     // Always use full name, as the encoding lib will use the appropriate name type in the end.
     advertising_params.advdata.name_type = BLE_ADVDATA_FULL_NAME;
     size_t name_length = strlen(name);
