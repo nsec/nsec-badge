@@ -123,48 +123,20 @@ static void do_displayctl_brightness(const nrf_cli_t *p_cli, size_t argc,
     ASSERT(p_cli);
     ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
 
-    if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-        nrf_cli_help_print(p_cli, NULL, 0);
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
+        return;
+    }
+
+    if (argc == 1) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT, "%d\r\n",
+                        get_stored_display_brightness());
         return;
     }
 
     if (argc != 2) {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
                         argv[0]);
-        return;
-    }
-
-    if (strcmp(argv[1], "get") || strcmp(argv[1], "set")) {
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n",
-                        argv[0], argv[1]);
-    }
-}
-
-static void do_displayctl_brightness_get(const nrf_cli_t *p_cli, size_t argc,
-                                      char **argv)
-{
-    ASSERT(p_cli);
-    ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
-
-    if (nrf_cli_help_requested(p_cli)) {
         nrf_cli_help_print(p_cli, NULL, 0);
-        return;
-    }
-
-    if (argc > 1) {
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
-                        argv[0]);
-        return;
-    }
-
-    nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT, "%d\r\n",
-                    get_stored_display_brightness());
-}
-
-static void do_displayctl_brightness_set(const nrf_cli_t *p_cli, size_t argc,
-                                      char **argv)
-{
-    if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
         return;
     }
 
@@ -193,15 +165,9 @@ static void do_displayctl_brightness_set(const nrf_cli_t *p_cli, size_t argc,
     update_stored_display_brightness(val);
 }
 
-NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_brightness){
-    NRF_CLI_CMD(get, NULL, "Get brightness value", do_displayctl_brightness_get),
-    NRF_CLI_CMD(set, NULL, "Set brightness value [0-100]",
-                do_displayctl_brightness_set),
-    NRF_CLI_SUBCMD_SET_END};
-
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_displayctl){
-    NRF_CLI_CMD(brightness, &sub_brightness,
-                "Get or set the display brightness", do_displayctl_brightness),
+    NRF_CLI_CMD(brightness, NULL, "Get or set the display brightness",
+                do_displayctl_brightness),
     NRF_CLI_SUBCMD_SET_END};
 
 NRF_CLI_CMD_REGISTER(displayctl, &sub_displayctl, "Display configuration",
