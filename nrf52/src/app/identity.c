@@ -37,7 +37,7 @@ static struct ServiceCharacteristic name_characteristic;
 
 static uint16_t service_uuid = 0x001D;   //ID
 static uint16_t name_char_uuid = 0x011D; //characteristic 1 of ID, bytes are reversed
-
+static const char name_description[] = "Citizen name, printable-ascii only";
 
 void init_identity_service() {
     memset(badge_name, 0, sizeof(badge_name));
@@ -49,6 +49,7 @@ void init_identity_service() {
 
     create_characteristic(&name_characteristic, NAME_MAX_LEN, AUTO_READ, AUTH_WRITE_REQUEST, name_char_uuid);
     set_characteristic_permission(&name_characteristic, READ_OPEN, WRITE_PAIRING_REQUIRED);
+    name_characteristic.user_descriptor = name_description;
     add_characteristic_to_vendor_service(&identity_ble_service, &name_characteristic);
     add_write_request_handler(&name_characteristic, on_name_write);
     set_characteristic_value(&name_characteristic, (uint8_t*)badge_name);
