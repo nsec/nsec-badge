@@ -1,6 +1,6 @@
 # Set the path of your the BlackMagic debugger device. Ex:
 # "/dev/stty0" or "/dev/ttyUSB0" (Linux), "/dev/cu.usbmodem012345678" (macOS)
-target extended-remote /dev/stty0
+target extended-remote /dev/ttyACM0
 
 # Erase all the data (App and SoftDevice) from the chip before flashing.
 set $FORCE_ERASE_ALL = 0
