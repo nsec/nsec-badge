@@ -32,8 +32,8 @@ enum setting_state {
     SETTING_STATE_UNLOCK_PATTERN,
 };
 
-#define MODE_BASIC_COUNT 42
-#define MODE_EXTRA_COUNT 14
+#define MODE_BASIC_COUNT 41
+#define MODE_EXTRA_COUNT 15
 
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
@@ -72,7 +72,7 @@ const char *basic_patterns[] = {
     "Chase Flash",
     "Chase Flash Random",
     "Chase Blackout",
-    "Chase Blackout Rainbow",
+    // here
     "Running Color",
     "Running Red Blue",
     "Larson Scanner",
@@ -91,7 +91,7 @@ const char *basic_patterns[] = {
 uint8_t basic_patterns_match_index[] = {
     0,  1,  2,  3,  4,  5,  6,  9,  13, 14, 15, 16, 18, 19,
     21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 37,
-    38, 40, 41, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 55,
+    40, 41, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 55,
 };
 
 const char *extra_patterns_lock[] = {
@@ -109,6 +109,7 @@ const char *extra_patterns_lock[] = {
     "<L> Chase Rainbow",
     "<L> Chase Rainbow White",
     "<L> Color Sweep Random",
+    "<L> Chase Blackout Rainbow",
 };
 
 const char *extra_patterns_unlock[] = {
@@ -126,10 +127,11 @@ const char *extra_patterns_unlock[] = {
     "<U> Chase Rainbow",
     "<U> Chase Rainbow White",
     "<U> Color Sweep Random",
+    "<U> Chase Blackout Rainbow",
 };
 
 uint8_t extra_patterns_match_index[] = {
-    7, 8, 50, 10, 11, 12, 17, 20, 22, 42, 54, 33, 36, 39,
+    7, 8, 50, 10, 11, 12, 17, 20, 22, 42, 54, 33, 36, 39, 38,
 };
 
 static struct text_box_config config = {
