@@ -108,7 +108,7 @@ static void init_ble() {
 #else
     init_adv_module();
     enable_fast_advertising_mode(60);
-    enable_slow_advertising_mode(200);
+    enable_slow_advertising_mode(0); // No timeout
     set_device_name(g_device_id);
     /*nsec_led_ble_init();*/
     init_identity_service();
