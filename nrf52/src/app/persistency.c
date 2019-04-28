@@ -85,7 +85,7 @@ void update_persistency(void)
 
 static void set_default_led_settings(void)
 {
-    persistency->led_settings.brightness = MEDIUM_BRIGHTNESS;
+    persistency->led_settings.brightness = LOW_BRIGHTNESS;
     persistency->led_settings.control = true;
     persistency->led_settings.num_segment = 1;
 
