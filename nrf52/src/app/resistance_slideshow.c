@@ -1,3 +1,4 @@
+#include "drivers/controls.h"
 #include "drivers/display.h"
 #include "random.h"
 
@@ -23,9 +24,16 @@ static void resistance_slideshow_add_static(uint8_t count)
     }
 }
 
+static void resistance_slideshow_buttons_handle(button_t button)
+{
+    application_clear();
+}
+
 void resistance_slideshow_app(void (*service_device)())
 {
     uint16_t step = 0;
+
+    nsec_controls_add_handler(resistance_slideshow_buttons_handle);
 
     while (application_get() == resistance_slideshow_app) {
         if (step == 0) {
@@ -69,7 +77,9 @@ void resistance_slideshow_app(void (*service_device)())
         }
     }
 
-    application_clear();
+    if (application_get() == resistance_slideshow_app) {
+        application_clear();
+    }
 }
 
 #else
