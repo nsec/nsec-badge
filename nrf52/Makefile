@@ -275,6 +275,7 @@ src/images/font_bitmap.h: src/images/font.png
 BITMAPS_INT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
 BITMAPS_EXT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/external/*.png))
 BITMAPS_EXT_BINS = $(patsubst %.png,%_bitmap.bitmapbin,$(wildcard src/images/external/*.png))
+BITMAPS_EXT_BINS += $(patsubst %.png,%_bitmap.bitmapbin,$(wildcard src/images/external/$(FLAVOR)/*.png))
 BITMAPS_HDRS = $(BITMAPS_INT_HDRS) $(BITMAPS_EXT_HDRS)
 
 bitmaps: $(BITMAPS_HDRS)

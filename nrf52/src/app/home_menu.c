@@ -32,7 +32,9 @@
 #include "images/neurosoft_logo_a_13_bitmap.h"
 #include "images/neurosoft_logo_a_14_bitmap.h"
 #include "images/neurosoft_logo_a_15_bitmap.h"
+#ifdef NSEC_FLAVOR_CONF
 #include "images/external/nsec_logo_color_bitmap.h"
+#endif
 #include "images/settings_off_bitmap.h"
 #include "images/settings_on_bitmap.h"
 
