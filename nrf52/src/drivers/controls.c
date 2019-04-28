@@ -35,6 +35,11 @@ static void nsec_controls_trigger(button_t button) {
     }
 }
 
+void nsec_controls_clear_handler(void)
+{
+    memset(handlers, 0 ,sizeof(handlers));
+}
+
 void nsec_controls_add_handler(button_handler handler) {
     if (handler_count >= NSEC_CONTROLS_LIMIT_MAX_HANDLERS) {
         return;
