@@ -389,7 +389,6 @@ static void setting_handle_buttons(button_t button)
                 // this is a hack to make it work with minimal
                 // code change
                 _state = SETTING_STATE_CLOSED;
-                menu_close();
                 show_main_menu();
                 break;
 
@@ -411,6 +410,10 @@ static void setting_handle_buttons(button_t button)
 
             default:
                 break;
+        }
+
+        if (_state == SETTING_STATE_CLOSED) {
+            nsec_controls_suspend_handler(setting_handle_buttons);
         }
     }
 }
