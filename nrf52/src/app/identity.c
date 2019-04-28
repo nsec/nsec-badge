@@ -35,8 +35,8 @@ static char badge_name[NAME_MAX_LEN + 1];
 static struct VendorService identity_ble_service;
 static struct ServiceCharacteristic name_characteristic;
 
-static uint16_t service_uuid = 0x1D00;
-static uint16_t name_char_uuid = 0x1D00;
+static uint16_t service_uuid = 0x001D;   //ID
+static uint16_t name_char_uuid = 0x011D; //characteristic 1 of ID, bytes are reversed
 
 
 void init_identity_service() {

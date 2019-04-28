@@ -32,7 +32,7 @@ static struct VendorService zombie_ble_service;
 static struct ServiceCharacteristic trigger_characteristic;
 
 static uint16_t service_uuid = 0x2D00;
-static uint16_t trigger_uuid = 0x2D00;
+static uint16_t trigger_uuid = 0x2D01;
 
 APP_TIMER_DEF(m_zombie_timer_id);
 static bool process_mode_zombie = false;
