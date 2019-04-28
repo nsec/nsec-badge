@@ -17,11 +17,9 @@ builds/s132_nrf52_5.0.0_softdevice.hex:
 	$(MAKE) -C nrf52 nordicsdk
 	cp nrf52/nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex $@
 
+FIRMWARE_NRF += builds/nsec19_nrf52_bar_beacon.elf
 FIRMWARE_NRF += builds/nsec19_nrf52_ctf.elf
-FIRMWARE_NRF += builds/nsec19_nrf52_admin.elf
-FIRMWARE_NRF += builds/nsec19_nrf52_speaker.elf
 FIRMWARE_NRF += builds/nsec19_nrf52_conf.elf
-FIRMWARE_NRF += builds/nsec19_nrf52_trainer.elf
 FIRMWARE_NRF += builds/nsec19_nrf52_soldering.elf
 FIRMWARE_NRF += builds/s132_nrf52_5.0.0_softdevice.hex
 

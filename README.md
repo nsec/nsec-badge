@@ -185,12 +185,9 @@ Same as the stm32 conference firmware, except the debugger uses the external
 pins to allow programming and debugging the stm32 micro-controller of another
 badge.
 
-### `nsec19_nrf52_{conf,admin,speaker,ctf}.elf`
+### `nsec19_nrf52_{bar_beacon,conf,ctf,soldering}.elf`
 
-The firmware of the nRF52 used during the NorthSec conference and CTF. It
-exposes a BLE service to change you avatar image and name. `admin`, `speaker`
-and `ctf` has a special label in the status bar at the top of the display, all
-the rest is the same.
+The firmware of the nRF52 used during the NorthSec conference or CTF.
 
 ## Cookbook
 
