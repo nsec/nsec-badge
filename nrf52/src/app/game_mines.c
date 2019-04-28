@@ -26,8 +26,6 @@
 #include "images/external/mines_level_3_bitmap.h"
 #include "images/external/mines_menu_bitmap.h"
 #include "images/external/mines_message_bitmap.h"
-#include "images/external/mines_message_boom_bitmap.h"
-#include "images/external/mines_message_cleared_bitmap.h"
 #include "images/external/mines_sidebar_bitmap.h"
 #include "images/external/mines_sidebar_warning_bitmap.h"
 #include "images/external/mines_splash_bitmap.h"
@@ -659,7 +657,22 @@ static void mines_game_state_cleared_handle(MinesGameState *p_state)
 static void mines_game_state_cleared_msg_handle(MinesGameState *p_state)
 {
     if (!p_state->cleared_rendered) {
-        display_draw_16bit_ext_bitmap(5, 12, &mines_message_cleared_bitmap, 0);
+        display_draw_16bit_ext_bitmap(5, 12, &mines_message_bitmap, 0);
+        gfx_set_text_background_color(DISPLAY_BLACK, DISPLAY_WHITE);
+
+        gfx_set_cursor(14, 20);
+        gfx_puts("You have won!");
+
+        gfx_set_cursor(14, 32);
+        gfx_puts("You are truly a");
+
+        gfx_set_cursor(14, 44);
+        gfx_puts("master of your");
+
+        gfx_set_cursor(14, 56);
+        gfx_puts("own mind!");
+        gfx_update();
+
         p_state->cleared_rendered = true;
     }
 
@@ -757,7 +770,12 @@ static void mines_game_state_explosion_handle(MinesGameState *p_state)
 static void mines_game_state_explosion_msg_handle(MinesGameState *p_state)
 {
     if (!p_state->explosion_rendered) {
-        display_draw_16bit_ext_bitmap(5, 12, &mines_message_boom_bitmap, 0);
+        display_draw_16bit_ext_bitmap(5, 12, &mines_message_bitmap, 0);
+        gfx_set_text_background_color(DISPLAY_BLACK, DISPLAY_WHITE);
+        gfx_set_cursor(46, 39);
+        gfx_puts("BOOM!");
+        gfx_update();
+
         p_state->explosion_rendered = true;
     }
 
