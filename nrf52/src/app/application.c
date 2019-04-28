@@ -22,16 +22,12 @@
 
 #include "application.h"
 #include "home_menu.h"
-#include "drivers/controls.h"
-#include "menu.h"
 
 #define DEFAULT_APP home_menu_application
 
 static application_t application = DEFAULT_APP;
 
 void application_clear() {
-	nsec_controls_clear_handler();
-	menu_close();
     application = DEFAULT_APP;
 }
 

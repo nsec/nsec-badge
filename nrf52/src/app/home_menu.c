@@ -372,5 +372,6 @@ void home_menu_application(void (*service_callback)()) {
 #endif
     }
 
-    nsec_controls_suspend_handler(home_menu_handle_buttons);
+    /* Clear all menu handlers */
+    nsec_controls_clear_handler();
 }
