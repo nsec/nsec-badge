@@ -26,5 +26,5 @@ void start_scan(){
 }
 
 void stop_scan(){
-    APP_ERROR_CHECK(sd_ble_gap_scan_stop());
+    sd_ble_gap_scan_stop();
 }

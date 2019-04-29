@@ -70,8 +70,6 @@ static uint8_t* buffer = NULL;
 static nrf_sdh_ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
 static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
 static bool nsec_ble_is_enabled = false;
-static bool nsec_ble_adv_enabled = false;
-static bool nsec_ble_scan_enabled = false;
 static bool nsec_ble_connected = false;
 static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 
@@ -122,12 +120,10 @@ void ble_start_advertising(){
     if(ble_device->advertiser == NULL)
         return;
     ble_device->advertiser->start_advertisement();
-    nsec_ble_adv_enabled = true;
 }
 
 void ble_stop_advertising(){
     ble_device->advertiser->stop_advertisement();
-    nsec_ble_scan_enabled = false;
 }
 
 void add_observer(struct BleObserver* observer){
@@ -140,12 +136,10 @@ void add_observer(struct BleObserver* observer){
 void ble_device_start_scan(){
     configure_scan(true, 0, 100, 50);
     start_scan();
-    nsec_ble_scan_enabled = true;
 }
 
 void ble_device_stop_scan(){
     stop_scan();
-    nsec_ble_scan_enabled = false;
 }
 
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
@@ -477,19 +471,15 @@ uint8_t nsec_ble_toggle(void) {
 
 bool ble_device_toggle_ble(){
     if(nsec_ble_is_enabled){
-        if(nsec_ble_scan_enabled)
-            ble_device_stop_scan();
-        if(nsec_ble_adv_enabled)
-            ble_stop_advertising();
+        ble_device_stop_scan();
+        ble_stop_advertising();
         if(nsec_ble_connected)
             sd_ble_gap_disconnect(ble_device->connection_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
         nsec_ble_is_enabled = false;
     }
     else{
-        if(nsec_ble_scan_enabled)
-            ble_device_start_scan();
-        if(nsec_ble_adv_enabled)
-            ble_start_advertising();
+        ble_device_start_scan();
+        ble_start_advertising();
         nsec_ble_is_enabled = true;
     }
     return nsec_ble_is_enabled;
