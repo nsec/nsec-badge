@@ -30,6 +30,7 @@ static struct Advertiser service_advertiser =
 void init_adv_module(){
     memset(&advertising_params, 0, sizeof(advertising_params));
 
+    advertising_params.config.ble_adv_on_disconnect_disabled = true; // Prevent advertising after disconnect when ble is turned off.
     advertising_params.advdata.include_appearance = false;
     advertising_params.advdata.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
 }
@@ -92,7 +93,8 @@ static void start_advertising(){
 }
 
 static void stop_advertising(){
-
+    advertising_module.adv_mode_current = BLE_ADV_MODE_IDLE;
+    sd_ble_gap_adv_stop();
 }
 
 static void error_handler(uint32_t nrf_error){
