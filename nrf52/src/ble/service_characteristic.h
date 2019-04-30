@@ -62,15 +62,14 @@ struct ServiceCharacteristic {
     on_characteristic_read_request on_read_request;
     ReadPermission read_permission;
     WritePermission write_permission;
+    const char* user_descriptor;
+    uint8_t data_type;
 };
 
 
 void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid);
 
 void set_characteristic_permission(struct ServiceCharacteristic*, ReadPermission, WritePermission);
-
-void configure_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
-        ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute);
 
 uint16_t set_characteristic_value(struct ServiceCharacteristic*, uint8_t* value_buffer);
 

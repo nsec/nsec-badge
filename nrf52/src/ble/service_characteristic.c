@@ -14,13 +14,6 @@
 #define NO_CONNECTION_HANDLE_REQUIRED BLE_CONN_HANDLE_INVALID
 
 
-
-static void set_metadata_for_characteristic(struct ServiceCharacteristic*, ble_gatts_char_md_t*);
-static void set_default_metadata_for_attribute(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
-static void set_attribute(struct ServiceCharacteristic*, ble_gatts_attr_t*, ble_gatts_attr_md_t*);
-static void configure_permission(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
-
-
 void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid){
     characteristic->read_mode = read;
     characteristic->write_mode = write;
@@ -31,18 +24,14 @@ void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_
     characteristic->uuid = (ble_uuid_t){uuid, TYPE_NSEC_UUID};
     characteristic->read_permission = READ_OPEN;
     characteristic->write_permission = WRITE_OPEN;
+    characteristic->user_descriptor = NULL;
+    characteristic->data_type = 0;
 }
 
 void set_characteristic_permission(struct ServiceCharacteristic* characteristic, ReadPermission read_perm,
                                   WritePermission write_perm){
     characteristic->read_permission = read_perm;
     characteristic->write_permission = write_perm;
-}
-
-void configure_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata,
-        ble_gatts_attr_md_t* attribute_metadata, ble_gatts_attr_t* attribute){
-    set_metadata_for_characteristic(characteristic, metadata);
-    set_attribute(characteristic, attribute, attribute_metadata);
 }
 
 uint16_t set_characteristic_value(struct ServiceCharacteristic* characteristic, uint8_t* value_buffer){
@@ -67,61 +56,10 @@ void add_write_operation_done_handler(struct ServiceCharacteristic* characterist
     characteristic->on_write_operation_done = event_handler;
 }
 
-static void set_metadata_for_characteristic(struct ServiceCharacteristic* characteristic, ble_gatts_char_md_t* metadata){
-    bzero(metadata, sizeof(*metadata));
-    metadata->char_props.read = characteristic->read_mode != DENY_READ;
-    metadata->char_props.write = characteristic->write_mode != DENY_WRITE;
-    metadata->char_props.write_wo_resp = 0; // deactivate for now.
-    metadata->p_char_user_desc = NULL;
-    metadata->p_char_pf = NULL;
-    metadata->p_user_desc_md = NULL;
-    metadata->p_cccd_md = NULL;
-    metadata->p_sccd_md = NULL;
-}
-
 void add_write_request_handler(struct ServiceCharacteristic* characteristic, on_characteristic_write_request event_handler){
     characteristic->on_write_request = event_handler;
 }
 
 void add_read_request_handler(struct ServiceCharacteristic* characteristic, on_characteristic_read_request event_handler){
     characteristic->on_read_request = event_handler;
-}
-
-static void set_attribute(struct ServiceCharacteristic* characteristic, ble_gatts_attr_t* attribute,
-        ble_gatts_attr_md_t* attribute_metadata){
-    attribute->init_len = characteristic->value_length;
-    attribute->max_len = characteristic->value_length;
-    attribute->init_offs = 0;
-    set_default_metadata_for_attribute(characteristic, attribute_metadata);
-    attribute->p_attr_md = attribute_metadata;
-}
-
-static void set_default_metadata_for_attribute(struct ServiceCharacteristic* characteristic, ble_gatts_attr_md_t* attribute_metadata){
-    bzero(attribute_metadata, sizeof(*attribute_metadata));
-    attribute_metadata->vloc = BLE_GATTS_VLOC_STACK;
-    attribute_metadata->vlen = 0;
-    configure_permission(characteristic, attribute_metadata);
-}
-
-static void configure_permission(struct ServiceCharacteristic* characteristic, ble_gatts_attr_md_t* attribute_metadata){
-    if(characteristic->read_mode == DENY_READ)
-        BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attribute_metadata->read_perm);
-    else {
-        if(characteristic->read_permission == READ_OPEN)
-            BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->read_perm);
-        else
-            BLE_GAP_CONN_SEC_MODE_SET_ENC_WITH_MITM(&attribute_metadata->read_perm);
-    }
-
-    attribute_metadata->rd_auth = characteristic->read_mode == REQUEST_READ;
-
-    if(characteristic->write_mode == DENY_WRITE)
-        BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attribute_metadata->write_perm);
-    else {
-        if(characteristic->write_permission == WRITE_OPEN)
-            BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attribute_metadata->write_perm);
-        else
-            BLE_GAP_CONN_SEC_MODE_SET_ENC_WITH_MITM(&attribute_metadata->write_perm);
-    }
-    attribute_metadata->wr_auth = characteristic->write_mode == AUTH_WRITE_REQUEST;
 }
