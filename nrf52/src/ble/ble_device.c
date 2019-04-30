@@ -8,9 +8,6 @@
 
 #include "nsec_ble_internal.h"
 #include <ble_conn_params.h>
-/*
-#include <ble_bas.h>
-#include <ble_hci.h>*/
 #include <ble_advdata.h>
 #include <ble_dis.h>
 #include <app_timer.h>
@@ -67,16 +64,11 @@ static BleDevice* ble_device = NULL;
 
 static uint8_t* buffer = NULL;
 
-static nrf_sdh_ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
-static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
 static bool nsec_ble_is_enabled = false;
 static bool nsec_ble_connected = false;
-static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 
-//static void nsec_ble_scan_start();
 static void _nsec_ble_softdevice_init();
 static void gatt_init();
-//static void init_connection_parameters();
 //static void add_device_information_service(char * manufacturer_name, char * model, char * serial_number,
 //        char * hw_revision, char * fw_revision, char * sw_revision);
 static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * write_event);
@@ -143,7 +135,6 @@ void ble_device_stop_scan(){
 }
 
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
-    //pm_on_ble_evt(p_ble_evt);
     switch (p_ble_evt->header.evt_id){
         case BLE_GAP_EVT_CONNECTED:
             nsec_ble_connected = true;
@@ -165,7 +156,6 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
                 break;
             }
             const ble_gap_evt_adv_report_t *rp = &p_ble_evt->evt.gap_evt.params.adv_report;
-            int8_t i = 0;
             for (int c = 0; c < ble_device->ble_observers_count; c++) {
                 ble_device->ble_observers[c]->on_advertising_report(rp);
             }
@@ -247,20 +237,6 @@ uint32_t add_vendor_service(struct VendorService* service){
 static void gatt_init(){
     APP_ERROR_CHECK(nrf_ble_gatt_init(&m_gatt, NULL));
 }
-
-/*static void _nsec_pm_evt_handler(pm_evt_t const * event) {
-
-}*/
-
-/*static void on_connection_params_event(ble_conn_params_evt_t * p_evt){
-    if (p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED){
-        NRF_LOG_ERROR("BLE connection params event failed.");
-    }
-}*/
-
-/*static void connection_params_error_handler(uint32_t nrf_error){
-    log_error_code("connection params error handler", nrf_error);
-}*/
 
 static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * write_event){
     struct ServiceCharacteristic* characteristic = get_characteristic_from_uuid(write_event->uuid.uuid);
@@ -445,29 +421,6 @@ static void _nsec_ble_softdevice_init() {
     // Register a handler for BLE events.
     NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_event_handler, NULL);
 }
-/*
-static void nsec_ble_disable_task(void * context, uint16_t size) {
-    sd_ble_gap_scan_stop();
-    sd_ble_gap_adv_stop();
-}
-
-static void nsec_ble_enable_task(void * context, uint16_t size) {
-    _nsec_ble_advertising_start();
-    nsec_ble_scan_start();
-}
-
-uint8_t nsec_ble_toggle(void) {
-    if(_nsec_ble_is_enabled) {
-        app_sched_event_put(NULL, 0, nsec_ble_disable_task);
-        _nsec_ble_is_enabled = 0;
-    }
-    else {
-        app_sched_event_put(NULL, 0, nsec_ble_enable_task);
-        _nsec_ble_is_enabled = 1;
-    }
-    return _nsec_ble_is_enabled;
-}
-*/
 
 bool ble_device_toggle_ble(){
     if(nsec_ble_is_enabled){
@@ -484,39 +437,3 @@ bool ble_device_toggle_ble(){
     }
     return nsec_ble_is_enabled;
 }
-
-void nsec_ble_register_evt_handler(nrf_sdh_ble_evt_handler_t handler) {
-    for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
-        if(_nsec_ble_event_handlers[i] == NULL) {
-            _nsec_ble_event_handlers[i] = handler;
-            break;
-        }
-    }
-}
-/*
-void nsec_ble_set_scan_callback(nsec_ble_found_nsec_badge_callback callback) {
-    _nsec_ble_scan_callback = callback;
-}
-*/
-void nsec_ble_register_adv_uuid_provider(nsec_ble_adv_uuid_provider provider) {
-    for(int i = 0; i < NSEC_BLE_LIMIT_MAX_UUID_PROVIDER; i++) {
-        if(_nsec_ble_adv_uuid_providers[i] == NULL) {
-            _nsec_ble_adv_uuid_providers[i] = provider;
-            break;
-        }
-    }
-    sd_ble_gap_adv_stop();
-}
-/*
-static void nsec_ble_scan_start(void) {
-    ble_gap_scan_params_t scan_params;
-    scan_params.active = 0;
-    scan_params.adv_dir_report = 0;
-    scan_params.use_whitelist = 0;
-    scan_params.timeout = 0;
-    scan_params.window = MSEC_TO_UNITS(40, UNIT_0_625_MS);
-    scan_params.interval = MSEC_TO_UNITS(240, UNIT_0_625_MS);
-
-    log_error_code("sd_ble_gap_scan_start", sd_ble_gap_scan_start(&scan_params));
-}
-*/
