@@ -53,6 +53,7 @@ typedef struct{
     struct Advertiser* advertiser;
     struct BleObserver* ble_observers[MAX_BLE_OBSERVERS];
     uint8_t ble_observers_count;
+    uint16_t connection_handle;
 } BleDevice;
 
 typedef struct{
@@ -68,7 +69,8 @@ static uint8_t* buffer = NULL;
 
 static nrf_sdh_ble_evt_handler_t _nsec_ble_event_handlers[NSEC_BLE_LIMIT_MAX_EVENT_HANDLER];
 static nsec_ble_adv_uuid_provider _nsec_ble_adv_uuid_providers[NSEC_BLE_LIMIT_MAX_UUID_PROVIDER];
-static uint8_t _nsec_ble_is_enabled = 0;
+static bool nsec_ble_is_enabled = false;
+static bool nsec_ble_connected = false;
 static nsec_ble_found_nsec_badge_callback _nsec_ble_scan_callback = NULL;
 
 //static void nsec_ble_scan_start();
@@ -95,7 +97,6 @@ ret_code_t create_ble_device(char* device_name){
     if(ble_device == NULL){
         _nsec_ble_softdevice_init();
         init_peer_manager();
-        nsec_ble_init();
         ble_device = malloc(sizeof(BleDevice));
         ble_device->device_name = device_name;
         ble_device->vendor_service_count = 0;
@@ -105,6 +106,7 @@ ret_code_t create_ble_device(char* device_name){
         register_nsec_vendor_specific_uuid();
         ble_device->ble_observers_count = 0;
         gatt_init();
+        nsec_ble_is_enabled = true;
         return NRF_SUCCESS;
     }
     return -1;
@@ -143,8 +145,14 @@ void ble_device_stop_scan(){
 static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
     //pm_on_ble_evt(p_ble_evt);
     switch (p_ble_evt->header.evt_id){
+        case BLE_GAP_EVT_CONNECTED:
+            nsec_ble_connected = true;
+            ble_device->connection_handle = p_ble_evt->evt.gap_evt.conn_handle;
+            break;
         case BLE_GAP_EVT_DISCONNECTED:
-            ble_start_advertising();
+            if(nsec_ble_is_enabled)
+                ble_start_advertising();
+            nsec_ble_connected = false;
             break;
         case BLE_GATTS_EVT_SYS_ATTR_MISSING: {
             const uint16_t conn = p_ble_evt->evt.gatts_evt.conn_handle;
@@ -222,9 +230,8 @@ static void ble_event_handler(ble_evt_t const * p_ble_evt, void * p_context){
             nsec_ble_show_pairing_menu(passkey);
             break;
         }
-        default:
-            ble_device->advertiser->on_ble_advertising_event(p_ble_evt);
     }
+    ble_device->advertiser->on_ble_advertising_event(p_ble_evt);
 }
 
 uint32_t add_vendor_service(struct VendorService* service){
@@ -461,7 +468,22 @@ uint8_t nsec_ble_toggle(void) {
     return _nsec_ble_is_enabled;
 }
 */
-uint8_t nsec_ble_toggle(void) { return 0; } // FIXME
+
+bool ble_device_toggle_ble(){
+    if(nsec_ble_is_enabled){
+        ble_device_stop_scan();
+        ble_stop_advertising();
+        if(nsec_ble_connected)
+            sd_ble_gap_disconnect(ble_device->connection_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
+        nsec_ble_is_enabled = false;
+    }
+    else{
+        ble_device_start_scan();
+        ble_start_advertising();
+        nsec_ble_is_enabled = true;
+    }
+    return nsec_ble_is_enabled;
+}
 
 void nsec_ble_register_evt_handler(nrf_sdh_ble_evt_handler_t handler) {
     for(int i = 0; i < NSEC_BLE_LIMIT_MAX_EVENT_HANDLER; i++) {
@@ -498,12 +520,3 @@ static void nsec_ble_scan_start(void) {
     log_error_code("sd_ble_gap_scan_start", sd_ble_gap_scan_start(&scan_params));
 }
 */
-int nsec_ble_init() {
-    bzero(_nsec_ble_event_handlers, sizeof(_nsec_ble_event_handlers));
-    bzero(_nsec_ble_adv_uuid_providers, sizeof(_nsec_ble_adv_uuid_providers));
-
-    //nsec_ble_scan_start();
-    _nsec_ble_is_enabled = 1;
-
-    return NRF_SUCCESS;
-}

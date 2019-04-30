@@ -28,3 +28,5 @@ void ble_device_start_scan();
 void ble_device_stop_scan();
 
 uint32_t add_vendor_service(struct VendorService*);
+
+bool ble_device_toggle_ble();

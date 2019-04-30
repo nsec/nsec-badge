@@ -15,7 +15,7 @@
 #include "menu.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"
-#include "ble/nsec_ble.h"
+#include "ble/ble_device.h"
 #include "status_bar.h"
 #include "drivers/controls.h"
 #include "identity.h"
@@ -24,7 +24,7 @@
 #include "timer.h"
 #include "nrf_delay.h"
 
-//static void toggle_bluetooth(uint8_t item);
+static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
 static void turn_off_screen(uint8_t item);
 static void show_led_settings(uint8_t item);
@@ -70,10 +70,10 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Badge info",
         .handler = show_badge_info,
-    },/*{
+    },{
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
-    }, */{
+    }, {
         .label = "Turn screen off",
         .handler = turn_off_screen,
     }, {
@@ -280,14 +280,14 @@ static void show_display_brightness(uint8_t item)
     _state = SETTING_STATE_DISPLAY;
 }
 
-/*static void toggle_bluetooth(uint8_t item) {
-    if(nsec_ble_toggle()) {
+static void toggle_bluetooth(uint8_t item) {
+    if(ble_device_toggle_ble()) {
         nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
     }
     else {
         nsec_status_set_ble_status(STATUS_BLUETOOTH_OFF);
     }
-}*/
+}
 
 static void draw_credit_title(void)
 {

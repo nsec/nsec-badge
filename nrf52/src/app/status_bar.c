@@ -32,8 +32,10 @@ void nsec_status_set_ble_status(status_bluetooth_status status)
     ble_status = status;
 
     if (ble_status == STATUS_BLUETOOTH_ON) {
-        gfx_draw_16bit_bitmap(BLE_LOGO_POS, &ble_logo_bitmap,
-                              STATUS_BAR_BG_COLOR);
+        gfx_draw_16bit_bitmap(BLE_LOGO_POS, &ble_logo_bitmap, STATUS_BAR_BG_COLOR);
+    }
+    else{
+        gfx_fill_rect(BLE_LOGO_POS, ble_logo_bitmap.width, ble_logo_bitmap.height, STATUS_BAR_BG_COLOR);
     }
 }
 
