@@ -45,6 +45,7 @@
 #include "app_soldering.h"
 #include "app_intro.h"
 #include "app_sleep.h"
+#include "resistance_slideshow.h"
 
 #include "ble/resistance_bar_beacon.h"
 #include "ble/service_advertiser.h"
@@ -118,7 +119,7 @@ static void init_ble() {
     set_advertiser(get_service_advertiser());
     ble_start_advertising();
 
-    //add_observer(get_resistance_propaganda_observer());
+    add_observer(get_resistance_propaganda_observer());
     ble_device_start_scan();
     nsec_nearby_badges_init();
 #endif
