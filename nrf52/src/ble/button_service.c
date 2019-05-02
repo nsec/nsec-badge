@@ -157,6 +157,8 @@ void init_button_service(void) {
 
     create_characteristic(
         &up_characteristic, 1, DENY_READ, AUTH_WRITE_REQUEST, up_char_uuid);
+    up_characteristic.user_descriptor = "Up";
+    up_characteristic.data_type = BLE_GATT_CPF_FORMAT_BOOLEAN;
     set_characteristic_permission(
         &up_characteristic, READ_PAIRING_REQUIRED, WRITE_PAIRING_REQUIRED);
     add_characteristic_to_vendor_service(
@@ -166,6 +168,8 @@ void init_button_service(void) {
 
     create_characteristic(
         &down_characteristic, 1, DENY_READ, AUTH_WRITE_REQUEST, down_char_uuid);
+    up_characteristic.user_descriptor = "Down";
+    up_characteristic.data_type = BLE_GATT_CPF_FORMAT_BOOLEAN;
     set_characteristic_permission(
         &down_characteristic, READ_PAIRING_REQUIRED, WRITE_PAIRING_REQUIRED);
     add_characteristic_to_vendor_service(
@@ -175,6 +179,8 @@ void init_button_service(void) {
 
     create_characteristic(
         &enter_characteristic, 1, DENY_READ, AUTH_WRITE_REQUEST, enter_char_uuid);
+    up_characteristic.user_descriptor = "Enter";
+    up_characteristic.data_type = BLE_GATT_CPF_FORMAT_BOOLEAN;
     set_characteristic_permission(
         &enter_characteristic, READ_PAIRING_REQUIRED, WRITE_PAIRING_REQUIRED);
     add_characteristic_to_vendor_service(
@@ -184,6 +190,8 @@ void init_button_service(void) {
 
     create_characteristic(
         &back_characteristic, 1, DENY_READ, AUTH_WRITE_REQUEST, back_char_uuid);
+    up_characteristic.user_descriptor = "Back";
+    up_characteristic.data_type = BLE_GATT_CPF_FORMAT_BOOLEAN;
     set_characteristic_permission(
         &back_characteristic, READ_PAIRING_REQUIRED, WRITE_PAIRING_REQUIRED);
     add_characteristic_to_vendor_service(
