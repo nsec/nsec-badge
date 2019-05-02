@@ -40,6 +40,7 @@ struct display_ops {
     void (*update)(void);
     void (*slow_down)(void);
     void (*speed_up)(void);
+    void (*set_model)(uint8_t model);
 };
 
 #ifdef BOARD_BRAIN
@@ -55,7 +56,8 @@ static struct display_ops st7735_ops = {&st7735_init,
                                         &st7735_set_brightness,
                                         NULL,
                                         &st7735_slow_down,
-                                        &st7735_speed_up};
+                                        &st7735_speed_up,
+                                        &st7735_set_model};
 static struct display_ops *ops = &st7735_ops;
 
 #else
@@ -71,6 +73,7 @@ static struct display_ops ssd1306_ops = {&ssd1306_init,
                                          NULL,
                                          NULL,
                                          &ssd1306_update,
+                                         NULL,
                                          NULL,
                                          NULL};
 static struct display_ops *ops = &ssd1306_ops;
@@ -132,5 +135,11 @@ void display_speed_up() {
 void display_update(void) {
     if (ops->update) {
         ops->update();
+    }
+}
+
+void display_set_model(uint8_t model) {
+    if (ops->set_model) {
+        ops->set_model(model);
     }
 }

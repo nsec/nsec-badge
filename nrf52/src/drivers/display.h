@@ -50,6 +50,10 @@ struct bitmap_ext;
 #define DISPLAY_ORANGE 0xFC00
 #define DISPLAY_WHITE 0xFFFF
 
+// Models
+#define DISPLAY_MODEL_GREEN 0
+#define DISPLAY_MODEL_RED 1
+
 #else
 // Size
 #define DISPLAY_HEIGHT 128
@@ -83,5 +87,6 @@ void display_update(void);
 void display_set_brightness(uint8_t brightness);
 void display_slow_down(void);
 void display_speed_up(void);
+void display_set_model(uint8_t model);
 
 #endif //_DISPLAY_H
