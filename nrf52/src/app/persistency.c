@@ -56,7 +56,8 @@ struct persistency {
     struct led_settings led_settings;   // 303 bytes
     char identity_name[17];             // 17 bytes
     uint32_t unlocked_pattern_bf;       // 4 bytes
-    uint8_t padding[4096 - 329 - 5];    // 4k - (used memory) - rev - CRC
+    uint8_t display_model;              // 1 bytes
+    uint8_t padding[4096 - 330 - 5];    // 4k - (used memory) - rev - CRC
     uint8_t revision;
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
@@ -108,6 +109,7 @@ void set_default_persistency(void)
     // Add here default config for your data
     persistency->zombie_odds_modifier = 0;
     persistency->display_brightness = 50;
+    persistency->display_model = 0;
     persistency->unlocked_pattern_bf = 0;
     persistency->revision = PERSISTENCY_REVISION;
 
@@ -138,6 +140,15 @@ uint8_t get_stored_display_brightness(void) {
 
 void update_stored_display_brightness(uint8_t brightness) {
     persistency->display_brightness = brightness;
+    update_persistency();
+}
+
+uint8_t get_stored_display_model(void) {
+    return persistency->display_model;
+}
+
+void update_stored_display_model(uint8_t model) {
+    persistency->display_model = model;
     update_persistency();
 }
 
@@ -341,6 +352,7 @@ void load_persistency(void) {
 
     load_led_settings();
     display_set_brightness(persistency->display_brightness);
+    display_set_model(persistency->display_model);
 
     is_loaded = true;
 

@@ -37,6 +37,9 @@ void set_persist_zombie_odds_modifier(uint32_t odds);
 uint8_t get_stored_display_brightness(void);
 void update_stored_display_brightness(uint8_t brightness);
 
+uint8_t get_stored_display_model(void);
+void update_stored_display_model(uint8_t model);
+
 void load_led_settings(void);
 void update_stored_num_segment(uint8_t num_segment, bool update);
 void update_stored_segment(uint8_t segment_index, uint16_t start, uint16_t stop,
