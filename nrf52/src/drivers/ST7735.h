@@ -159,5 +159,6 @@ void st7735_partial_off(void);
 void st7735_partial_on(void);
 void st7735_slow_down(void);
 void st7735_speed_up(void);
+void st7735_set_model(uint8_t model);
 
 #endif

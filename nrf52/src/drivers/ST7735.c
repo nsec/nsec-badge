@@ -45,6 +45,9 @@ as well as Adafruit raw 1.8" TFT display
 
 #define DELAY 0x80
 
+#define ST7735_MODEL_GREEN 0
+#define ST7735_MODEL_RED 1
+
 #define swap(a, b)                                                             \
     {                                                                          \
         int16_t t = a;                                                         \
@@ -67,6 +70,11 @@ int8_t colstart, rowstart, rotation, textsize;
 int16_t wrap, cursor_y, cursor_x;
 uint16_t textcolour, textbgcolour;
 uint32_t width, height;
+#ifdef SOLDERING_TRACK
+static uint8_t _model = ST7735_MODEL_RED;
+#else
+static uint8_t _model = ST7735_MODEL_GREEN;
+#endif
 static bool is_init = false;
 static st7735_config_t st7735_config;
 
@@ -121,6 +129,35 @@ void st7735_set_brightness(uint8_t brightness)
     }
 
     nrf_drv_pwm_simple_playback(&m_pwm2, &seq, 1, NRF_DRV_PWM_FLAG_LOOP);
+}
+
+static void st7735_apply_model(void)
+{
+    uint8_t invert;
+
+    switch (_model) {
+    case ST7735_MODEL_GREEN:
+        colstart = 1;
+        rowstart = 26;
+        invert = 1;
+        break;
+    case ST7735_MODEL_RED:
+    default:
+        colstart = 0;
+        rowstart = 24;
+        invert = 0;
+        break;
+    }
+    st7735_invert_display(invert);
+}
+
+void st7735_set_model(uint8_t model)
+{
+    _model = model;
+
+    if (is_init) {
+        st7735_apply_model();
+    }
 }
 
 //*****************************************************************************
@@ -449,16 +486,6 @@ void st7735_init(void)
     nrf_gpio_pin_set(st7735_config.rst_pin);
 
     /* Initialise default values */
-#ifdef SOLDERING_TRACK
-    colstart = 0;
-    rowstart = 24;
-    uint8_t invert = ST7735_INVOFF;
-#else
-    colstart = 1;
-    rowstart = 26;
-    uint8_t invert = ST7735_INVON;
-#endif
-
     width = ST7735_WIDTH;
     height = ST7735_HEIGHT;
     wrap = 1;
@@ -475,13 +502,13 @@ void st7735_init(void)
     /* Use 16-bits pixels */
     st7735_set_pixel_format(ST7735_PIXEL_16BITS);
 
+    st7735_apply_model();
+
     st7735_set_brightness(50);
     st7735_set_rotation(3);
 
     /* Initialize the framebuffer, content is random after reset */
     st7735_fill_screen(ST7735_BLACK);
-
-    st7735_invert_display(invert);
 
     /* And finally, start displaying */
     st7735_display_on();
