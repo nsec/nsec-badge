@@ -114,6 +114,8 @@ static void init_soldering_track(void) {
     const uint32_t colors[3] = {ORANGE, RED, GREEN};
 
     //test_flash();
+    start_WS2812FX();
+    resetSegments_WS2812FX();
 
     setSegment_color_array_WS2812FX(0, 0, 14, FX_MODE_FIRE_FLICKER_INTENSE,
                          colors, MEDIUM_SPEED, false);
