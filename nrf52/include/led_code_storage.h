@@ -38,7 +38,7 @@ static const char *sponsor_password[] = {
     "4B39", // Chase Rainbow
     "A207", // Chase Rainbow White
     "85CE", // Color Sweep Random
-    "5769",
+    "5769", // Chase Blackout Rainbow
     "1978",
 };
 
