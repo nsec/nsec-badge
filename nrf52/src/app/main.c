@@ -165,7 +165,7 @@ int main(void) {
     // (the CLI takes over the UART, which the flash mode uses).
     cli_init();
 
-    sleep_init();
+    //sleep_init(); Disabled temporarily
 
     init_ble();
 
