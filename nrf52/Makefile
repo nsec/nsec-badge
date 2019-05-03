@@ -241,11 +241,18 @@ LIB_FILES += -lc -lnosys -lm
 
 TERMINAL = dup
 
-default: bitmaps external-flash $(PROJECT_NAME)
+default: gosecure-sequences bitmaps external-flash $(PROJECT_NAME)
 
 $(PROJECT_NAME): $(SDK_PATH)
 
 clean: clean-bitmaps
+
+GEN_GOSECURE_SEQUENCES_SCRIPT = utils/gosecure/generate.py
+
+gosecure-sequences: src/app/gosecure_animation_sequences.c bitmaps
+
+src/app/gosecure_animation_sequences.c: $(GEN_GOSECURE_SEQUENCES_SCRIPT)
+	cd `dirname $(GEN_GOSECURE_SEQUENCES_SCRIPT)` && python3 `basename $(GEN_GOSECURE_SEQUENCES_SCRIPT)`
 
 GEN_IMAGE_SCRIPT = utils/gen_image.py
 
@@ -342,4 +349,4 @@ install-sdk-doc:
 		-O sdk-doc/nRF5_SDK_14.2.0_offline_doc.zip
 	cd sdk-doc && unzip -n nRF5_SDK_14.2.0_offline_doc.zip
 
-.PHONY: bitmaps external-flash clean clean-bitmaps clean-external-flash clean-$(SDK_PATH) flash-devboard merge sdk_config
+.PHONY: gosecure-sequences bitmaps external-flash clean clean-bitmaps clean-external-flash clean-$(SDK_PATH) flash-devboard merge sdk_config
