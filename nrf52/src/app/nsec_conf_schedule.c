@@ -7,6 +7,7 @@
 #include <nordic_common.h>
 #include <stdlib.h>
 #include <string.h>
+#include "application.h"
 #include "nsec_conf_schedule.h"
 #include "menu.h"
 #include "drivers/display.h"
@@ -16,6 +17,7 @@
 #include "gfx_effect.h"
 #include "text_box.h"
 #include "gui.h"
+#include "gosecure_animation.h"
 
 #ifdef BOARD_BRAIN
 #define ROW_COUNT                   9 // 10 - status bar
@@ -48,6 +50,8 @@ void nsec_schedule_show_tracks(uint8_t item);
 void nsec_schedule_show_party(uint8_t item);
 void nsec_schedule_show_presenters(uint8_t item);
 void nsec_schedule_show_presenters_details(uint8_t item);
+void nsec_schedule_show_events(uint8_t item);
+void nsec_schedule_show_gosecure_event(uint8_t item);
 
 static menu_item_s days_schedule_items[] = {
     {
@@ -59,6 +63,9 @@ static menu_item_s days_schedule_items[] = {
     }, {
         .label = "Presenters",
         .handler = nsec_schedule_show_presenters
+    }, {
+        .label = "Events",
+        .handler = nsec_schedule_show_events
     }
 };
 
@@ -303,6 +310,13 @@ static menu_item_s schedule_items_friday_workshops[] = {
     }, {
         .label = "13:15 IoT Firmware Exploitation",
         .handler = nsec_schedule_show_details
+    }
+};
+
+static menu_item_s events_schedule_items[] = {
+    {
+        .label = "GoSecure",
+        .handler = nsec_schedule_show_gosecure_event
     }
 };
 
@@ -616,6 +630,7 @@ enum schedule_state {
     SCHEDULE_STATE_TALK_DETAILS,
     SCHEDULE_STATE_PRESENTERS,
     SCHEDULE_STATE_PRESENTERS_DETAILS,
+    SCHEDULE_STATE_EVENTS,
 };
 
 static enum schedule_state schedule_state = SCHEDULE_STATE_CLOSED;
@@ -722,6 +737,21 @@ void nsec_schedule_show_presenters(uint8_t item) {
     schedule_state = SCHEDULE_STATE_PRESENTERS;
 }
 
+void nsec_schedule_show_events(uint8_t item) {
+    menu_init(CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+              ARRAY_SIZE(events_schedule_items), events_schedule_items,
+              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
+    schedule_state = SCHEDULE_STATE_EVENTS;
+}
+
+void nsec_schedule_show_gosecure_event(uint8_t item) {
+    menu_close();
+    schedule_state = SCHEDULE_STATE_CLOSED;
+
+    application_set(gosecure_animation_app);
+}
+
 static void nsec_schedule_button_handler(button_t button) {
     if(button == BUTTON_BACK) {
         switch (schedule_state) {
@@ -738,6 +768,7 @@ static void nsec_schedule_button_handler(button_t button) {
                 break;
             case SCHEDULE_STATE_TRACK:
             case SCHEDULE_STATE_PRESENTERS:
+            case SCHEDULE_STATE_EVENTS:
                 nsec_schedule_show_dates();
                 break;
             case SCHEDULE_STATE_DATES:
