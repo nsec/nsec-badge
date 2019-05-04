@@ -100,24 +100,33 @@ static const char *print_up_to_n_chars(nrf_cli_t const *p_cli, const char *text,
 
             text = word_end;
         } else {
-        	return text;
+            return text;
         }
     }
 
     return NULL;
 }
 
-static void print_day_help(nrf_cli_t const *p_cli)
+static void print_day_help(nrf_cli_t const *p_cli, const char *day)
 {
     static const nrf_cli_getopt_option_t opt[] = {
         NRF_CLI_OPT(NULL, "-v",
                     "Be more verbose. Use once to show abstracts, twice to "
                     "show detailed description.")};
     nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
+    nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
+                    "\r\n"
+                    "You can optionally specify a time, to only show talks or "
+                    "workshops happening at\r\n"
+                    "that time.  For example:\r\n"
+                    "\r\n"
+                    "    schedule %s 12:30\r\n",
+                    day);
 }
 
 static void do_schedule_day_common(nrf_cli_t const *p_cli, int argc,
-                                   char **argv, struct talk *talks, int ntalks)
+                                   char **argv, struct talk *talks, int ntalks,
+                                   const char *day)
 {
     int time_specified = 0;
     unsigned int h, m;
@@ -125,7 +134,7 @@ static void do_schedule_day_common(nrf_cli_t const *p_cli, int argc,
     const char *time_str = NULL;
 
     if (nrf_cli_help_requested(p_cli)) {
-        print_day_help(p_cli);
+        print_day_help(p_cli, day);
         return;
     }
 
@@ -208,13 +217,13 @@ static void do_schedule_thursday(nrf_cli_t const *p_cli, size_t argc,
                                  char **argv)
 {
     do_schedule_day_common(p_cli, argc, argv, talks_16,
-                           sizeof(talks_16) / sizeof(talks_16[0]));
+                           sizeof(talks_16) / sizeof(talks_16[0]), "thursday");
 }
 
 static void do_schedule_friday(nrf_cli_t const *p_cli, size_t argc, char **argv)
 {
     do_schedule_day_common(p_cli, argc, argv, talks_17,
-                           sizeof(talks_17) / sizeof(talks_17[0]));
+                           sizeof(talks_17) / sizeof(talks_17[0]), "friday");
 }
 
 static void do_schedule_speakers(nrf_cli_t const *p_cli, size_t argc,
@@ -229,6 +238,9 @@ static void do_schedule_speakers(nrf_cli_t const *p_cli, size_t argc,
         static const nrf_cli_getopt_option_t opt[] = {
             NRF_CLI_OPT(NULL, "-v", "Be more verbose, show speakers' bio.")};
         nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
+        nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
+                        "\r\nYou can optionally specify a string to filter "
+                        "down by speaker name.\r\n");
         return;
     }
 
@@ -294,6 +306,5 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(schedule_sub){
     NRF_CLI_SUBCMD_SET_END};
 
 #if defined(NSEC_FLAVOR_CONF)
-NRF_CLI_CMD_REGISTER(schedule, &schedule_sub,
-		CMD_SCHEDULE_HELP, do_schedule);
+NRF_CLI_CMD_REGISTER(schedule, &schedule_sub, CMD_SCHEDULE_HELP, do_schedule);
 #endif

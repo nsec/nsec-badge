@@ -22,11 +22,12 @@
 
 #include "cli.h"
 
-#include <drivers/cli_uart.h>
+#include "cli_sched.h"
 #include "drivers/display.h"
 #include "persistency.h"
 #include "random.h"
 #include "cli_sched.h"
+#include <drivers/cli_uart.h>
 
 bool standard_check(const nrf_cli_t *p_cli, size_t argc, size_t minimum_arg,
                     char **argv, nrf_cli_getopt_option_t const *p_opt,
@@ -293,8 +294,7 @@ static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
                     "schedule:   " CMD_SCHEDULE_HELP "\r\n");
 #endif
 
-    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                        "\r\n");
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "\r\n");
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                     "All commands have a specific help menu which you can "
