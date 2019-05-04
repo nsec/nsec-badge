@@ -24,7 +24,7 @@
 #define APP_SLEEP_H
 
 #define SLEEP_TIMER_TIMEOUT 1000 /* ms */
-#define SLEEP_DELAY 15000
+#define SLEEP_DELAY 120000 /* ms */
 
 void sleep_init(void);
 void sleep_reset(void);
