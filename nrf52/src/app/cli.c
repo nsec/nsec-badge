@@ -264,7 +264,7 @@ NRF_CLI_CMD_REGISTER(dump, &sub_dump, "Dump things...", do_dump);
 static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                    "Welcome to the Northsec 2019 CLI interface !\r\n\n");
+                    "Welcome to the NorthSec 2019 CLI interface !\r\n\n");
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                     "blectl:    Utility to do some operation over BLE\r\n");
@@ -285,11 +285,11 @@ static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
                     "flashing pattern\r\n");
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                    "nsec:      Print a pretty Northsec logo!\r\n\n");
+                    "nsec:      Print a pretty NorthSec logo!\r\n\n");
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                    "Every commands have a specific help menu that you can "
-                    "access with -h or --help\r\n");
+                    "All commands have a specific help menu which you can "
+                    "access with -h/--help\r\n");
 }
 
 
