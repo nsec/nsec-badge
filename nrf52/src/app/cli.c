@@ -261,6 +261,40 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_dump){
 NRF_CLI_CMD_REGISTER(dump, &sub_dump, "Dump things...", do_dump);
 #endif
 
+static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "Welcome to the Northsec 2019 CLI interface !\r\n\n");
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "blectl:    Utility to do some operation over BLE\r\n");
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "displayctl: Adjust the brightness of the screen\r\n");
+
+#ifdef NSEC_FLAVOR_CTF
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "dump:      Dump external flash memory\r\n");
+#endif
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "identity:  Change your badge name !\r\n");
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "ledctl:    Utility to control the leds and create custom "
+                    "flashing pattern\r\n");
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "nsec:      Print a pretty Northsec logo!\r\n\n");
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "Every commands have a specific help menu that you can "
+                    "access with -h or --help\r\n");
+}
+
+
+NRF_CLI_CMD_REGISTER(help, NULL, "Print CLI help", do_help);
+
 /* Initialize the command-line interface module.  */
 
 void cli_init(void)
