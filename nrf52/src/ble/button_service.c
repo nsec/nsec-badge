@@ -16,6 +16,7 @@
 #include "drivers/buttons.h"
 
 #include "app/cli.h"
+#include "uuid.h"
 
 static struct VendorService button_ble_service;
 static struct ServiceCharacteristic up_characteristic;
@@ -152,7 +153,8 @@ static uint16_t back_write_handler(CharacteristicWriteEvent* event)
 
 void init_button_service(void) {
     uint8_t init_value = 0;
-    create_vendor_service(&button_ble_service, service_uuid);
+    ble_uuid_t uuid = {.uuid = service_uuid, .type = TYPE_NSEC_UUID};
+    create_vendor_service(&button_ble_service, &uuid);
     add_vendor_service(&button_ble_service);
 
     create_characteristic(

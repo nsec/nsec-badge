@@ -11,6 +11,7 @@
 #include <string.h>
 #include <app_error.h>
 #include <app_timer.h>
+#include <ble/uuid.h>
 
 static struct VendorService demo_service;
 static struct ServiceCharacteristic led_write_request_no_auth_char;
@@ -83,7 +84,8 @@ static void on_timeout(void * context){
 }
 
 void nsec_init_demo_vendor_service(){
-    create_vendor_service(&demo_service, demo_service_uuid);
+    ble_uuid_t uuid = {.uuid = demo_service_uuid, .type = TYPE_NSEC_UUID};
+    create_vendor_service(&demo_service, &uuid);
     add_vendor_service(&demo_service);
 
     create_characteristic(&led_write_request_no_auth_char, sizeof(led_write_request_no_auth_color), AUTO_READ,

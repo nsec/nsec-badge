@@ -7,6 +7,7 @@
 #include <string.h>
 #include "cli.h"
 #include <nrf_delay.h>
+#include <ble/uuid.h>
 
 #include "drivers/display.h"
 #include "drivers/ws2812fx.h"
@@ -151,7 +152,8 @@ void mode_zombie_init(void) {
                                APP_TIMER_TICKS(ZOMBIE_TIMER_TIMEOUT), NULL);
     APP_ERROR_CHECK(err_code);
 
-    create_vendor_service(&zombie_ble_service, service_uuid);
+    ble_uuid_t uuid = {.uuid = service_uuid, .type = TYPE_NSEC_UUID};
+    create_vendor_service(&zombie_ble_service, &uuid);
     add_vendor_service(&zombie_ble_service);
 
     create_characteristic(&trigger_characteristic, MAGIC_ARRAY_SIZE, DENY_READ, AUTH_WRITE_REQUEST, trigger_uuid);

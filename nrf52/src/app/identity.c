@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <nrf52.h>
 #include <app_timer.h>
+#include <ble/uuid.h>
 #include "ble/nsec_ble.h"
 #include "nsec_nearby_badges.h"
 #include "drivers/display.h"
@@ -47,7 +48,8 @@ void init_identity_service() {
 
     load_stored_identity(badge_name);
 
-    create_vendor_service(&identity_ble_service, service_uuid);
+    ble_uuid_t uuid = {.uuid = service_uuid, .type = TYPE_NSEC_UUID};
+    create_vendor_service(&identity_ble_service, &uuid);
     add_vendor_service(&identity_ble_service);
 
     create_characteristic(&name_characteristic, NAME_MAX_LEN, REQUEST_READ, AUTH_WRITE_REQUEST, name_char_uuid);
