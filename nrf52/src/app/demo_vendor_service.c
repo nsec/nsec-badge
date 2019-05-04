@@ -14,14 +14,14 @@
 #include <ble/uuid.h>
 
 static struct VendorService demo_service;
-static struct ServiceCharacteristic led_write_request_no_auth_char;
-static struct ServiceCharacteristic led_write_request_auth_char;
-static struct ServiceCharacteristic led_read_request_auth_char;
+static struct ServiceCharacteristic led0;
+static struct ServiceCharacteristic led1;
+static struct ServiceCharacteristic led2;
 static struct ServiceCharacteristic notify_char;
 static uint16_t demo_service_uuid = 0xDE30;
-static uint16_t led_write_request_no_auth_char_uuid = 0xDE31;
-static uint16_t led_write_request_auth_char_uuid = 0xDE32;
-static uint16_t led_read_request_auth_char_uuid = 0xDE33;
+static uint16_t led0_uuid = 0xDE31;
+static uint16_t led1_uuid = 0xDE32;
+static uint16_t led2_uuid = 0xDE33;
 static uint16_t notify_char_uuid = 0xDE34;
 
 static uint8_t led_write_request_no_auth_color[3] = {0x0, 0x0, 0x0}; // [0]: R, [1]: G, [2]: B
@@ -51,14 +51,11 @@ static void on_led_write_command_color_written(CharacteristicWriteEvent* event){
 }
 
 static uint16_t on_led_write_request(CharacteristicWriteEvent* event){
-    if(event->data_length <= sizeof(led_write_request_auth_color)) {
-        if(event->data_buffer[0] == 0) {
-            memcpy(led_write_request_auth_color, event->data_buffer, event->data_length);
-            nsec_neoPixel_set_pixel_color(1, led_write_request_auth_color[0], led_write_request_auth_color[1],
-                                          led_write_request_auth_color[2]);
-            nsec_neoPixel_show();
-            return BLE_GATT_STATUS_SUCCESS;
-        }
+    if(event->data_length <= 3) {
+        uint16_t led_number = event->uuid - demo_service_uuid - 1;
+        nsec_neoPixel_set_pixel_color(led_number, event->data_buffer[0], event->data_buffer[1], event->data_buffer[2]);
+        nsec_neoPixel_show();
+        return BLE_GATT_STATUS_SUCCESS;
     }
     return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
 }
@@ -88,24 +85,21 @@ void nsec_init_demo_vendor_service(){
     create_vendor_service(&demo_service, &uuid);
     add_vendor_service(&demo_service);
 
-    create_characteristic(&led_write_request_no_auth_char, sizeof(led_write_request_no_auth_color), AUTO_READ,
-                          WRITE_REQUEST, led_write_request_no_auth_char_uuid);
-    add_characteristic_to_vendor_service(&demo_service, &led_write_request_no_auth_char);
-    add_write_operation_done_handler(&led_write_request_no_auth_char, on_led_write_command_color_written);
-    set_characteristic_value(&led_write_request_no_auth_char, led_write_request_no_auth_color);
+    create_characteristic(&led0, 3, AUTO_READ, AUTH_WRITE_REQUEST, led0_uuid);
+    add_characteristic_to_vendor_service(&demo_service, &led0);
+    add_write_request_handler(&led0, on_led_write_request);
+    set_characteristic_value(&led0, led_write_request_no_auth_color);
 
-    create_characteristic(&led_write_request_auth_char, sizeof(led_write_request_auth_color), AUTO_READ,
-                          AUTH_WRITE_REQUEST, led_write_request_auth_char_uuid);
-    add_characteristic_to_vendor_service(&demo_service, &led_write_request_auth_char);
-    add_write_request_handler(&led_write_request_auth_char, on_led_write_request);
-    set_characteristic_value(&led_write_request_auth_char, led_write_request_auth_color);
+    create_characteristic(&led1, 3, AUTO_READ, AUTH_WRITE_REQUEST, led1_uuid);
+    add_characteristic_to_vendor_service(&demo_service, &led1);
+    add_write_request_handler(&led1, on_led_write_request);
+    set_characteristic_value(&led1, led_write_request_auth_color);
 
-    create_characteristic(&led_read_request_auth_char, sizeof(led_read_request_auth_color), REQUEST_READ,
-                          WRITE_REQUEST, led_read_request_auth_char_uuid);
-    add_characteristic_to_vendor_service(&demo_service, &led_read_request_auth_char);
-    add_write_operation_done_handler(&led_read_request_auth_char, on_led_2_write_done);
-    add_read_request_handler(&led_read_request_auth_char, on_led_2_read_request);
-    set_characteristic_value(&led_read_request_auth_char, led_read_request_auth_color);
+    create_characteristic(&led2, 3, REQUEST_READ, AUTH_WRITE_REQUEST, led2_uuid);
+    add_characteristic_to_vendor_service(&demo_service, &led2);
+    add_write_request_handler(&led2, on_led_write_request);
+    add_read_request_handler(&led2, on_led_2_read_request);
+    set_characteristic_value(&led2, led_read_request_auth_color);
 
     create_characteristic(&notify_char, sizeof(notify_char_data), AUTO_READ, DENY_WRITE, notify_char_uuid);
     notify_char.allow_notify = true;

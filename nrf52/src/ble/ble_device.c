@@ -245,7 +245,8 @@ static void on_characteristic_write_command_event(const ble_gatts_evt_write_t * 
         CharacteristicWriteEvent event = {
             .write_offset = write_event->offset,
             .data_length = write_event->len,
-            .data_buffer = write_event->data
+            .data_buffer = write_event->data,
+            .uuid = write_event->uuid.uuid,
         };
         characteristic->on_write_operation_done(&event);
     }
@@ -269,7 +270,8 @@ static void on_characteristic_write_request_event(const ble_gatts_evt_write_t * 
         CharacteristicWriteEvent event = {
             .write_offset = write_event->offset,
             .data_length = write_event->len,
-            .data_buffer = write_event->data
+            .data_buffer = write_event->data,
+            .uuid = write_event->uuid.uuid,
         };
         uint16_t status_code = characteristic->on_write_request(&event);
         const uint8_t* data_buffer = status_code == BLE_GATT_STATUS_SUCCESS ? event.data_buffer: NULL;
@@ -287,6 +289,7 @@ static void on_characteristic_read_request_event(const ble_gatts_evt_read_t * re
     if(characteristic != NULL && characteristic->on_read_request != NULL){
         CharacteristicReadEvent event = {
             .read_offset = read_event->offset,
+            .uuid = read_event->uuid.uuid,
         };
         uint16_t status_code = characteristic->on_read_request(&event);
         reply_to_client_request(BLE_GATTS_AUTHORIZE_TYPE_READ, status_code, connection_handle, NULL, characteristic->value_length);

@@ -17,10 +17,12 @@ typedef struct {
     uint16_t write_offset;
     uint16_t data_length;
     const uint8_t* data_buffer;
+    uint16_t uuid;
 } CharacteristicWriteEvent;
 
 typedef struct {
     uint16_t read_offset;
+    uint16_t uuid;
 } CharacteristicReadEvent;
 
 typedef void (*on_characteristic_write_command)(CharacteristicWriteEvent*);
