@@ -6,6 +6,7 @@
 #include <app_timer.h>
 #include <string.h>
 #include "cli.h"
+#include <nrf_delay.h>
 
 #include "drivers/display.h"
 #include "drivers/ws2812fx.h"
@@ -131,6 +132,7 @@ static uint16_t on_trigger(CharacteristicWriteEvent* event)
         }
         return BLE_GATT_STATUS_SUCCESS;
     } else {
+        nrf_delay_ms(1000);
         return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
     }
 }
