@@ -36,7 +36,7 @@ void update_char(){
     if(_update_char){
         _update_char = false;
         notify_char_data++;
-        notify_characteristic_value(&notify_char, &notify_char_data);
+        set_characteristic_value(&notify_char, &notify_char_data);
     }
 }
 

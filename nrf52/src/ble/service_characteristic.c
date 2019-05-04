@@ -43,6 +43,8 @@ uint16_t set_characteristic_value(struct ServiceCharacteristic* characteristic, 
     characteristic_value.p_value = value_buffer;
     characteristic_value.offset = 0;
     APP_ERROR_CHECK(sd_ble_gatts_value_set(NO_CONNECTION_HANDLE_REQUIRED, characteristic->handle, &characteristic_value));
+    if(characteristic->allow_notify)
+        notify_characteristic_value(characteristic, value_buffer);
     return characteristic_value.len;
 }
 
