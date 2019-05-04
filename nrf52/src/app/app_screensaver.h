@@ -20,14 +20,14 @@
  * SOFTWARE.
  */
 
-#ifndef APP_SLEEP_H
-#define APP_SLEEP_H
+#ifndef APP_SCREENSAVER_H
+#define APP_SCREENSAVER_H
 
-#define SLEEP_TIMER_TIMEOUT 1000 /* ms */
-#define SLEEP_DELAY 120000 /* ms */
+#define SCREENSAVER_TIMER_TIMEOUT 1000 /* ms */
+#define SCREENSAVER_DELAY 120000 /* ms */
 
-void sleep_init(void);
-void sleep_reset(void);
-void app_sleep(void (*service_device)());
+void screensaver_init(void);
+void screensaver_reset(void);
+void app_screensaver_sleep(void (*service_device)());
 
-#endif /* APP_SLEEP_H */
+#endif /* APP_SCREENSAVER_H */

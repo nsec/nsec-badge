@@ -44,7 +44,7 @@
 #include "persistency.h"
 #include "app_soldering.h"
 #include "app_intro.h"
-#include "app_sleep.h"
+#include "app_screensaver.h"
 #include "resistance_slideshow.h"
 
 #include "ble/button_service.h"
@@ -167,7 +167,7 @@ int main(void) {
     // (the CLI takes over the UART, which the flash mode uses).
     cli_init();
 
-    sleep_init();
+    screensaver_init();
 
     init_ble();
 

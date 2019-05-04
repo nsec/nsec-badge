@@ -14,7 +14,7 @@
 #include "menu.h"
 #include "nsec_settings.h"
 #include "status_bar.h"
-#include "app_sleep.h"
+#include "app_screensaver.h"
 #include <string.h>
 
 #include "images/neurosoft_logo_bitmap.h"
@@ -298,8 +298,8 @@ static void open_settings_menu(void) {
 }
 
 static void home_menu_handle_buttons(button_t button) {
-    /* Reset the sleep timeout on each button event */
-    sleep_reset();
+    /* Reset the screensaver timeout on each button event */
+    screensaver_reset();
 
     /* Don't handle the buttons if we are in a submenu */
     if (!is_at_home_menu) {
@@ -356,8 +356,8 @@ static void home_menu_handle_buttons(button_t button) {
 }
 
 void home_menu_application(void (*service_callback)()) {
-    /* Reset the sleep timer when we start the home menu */
-    sleep_reset();
+    /* Reset the screensaver timer when we start the home menu */
+    screensaver_reset();
 
     menu_handler_init();
     nsec_status_bar_init();

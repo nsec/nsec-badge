@@ -22,81 +22,81 @@
 
 #include <app_timer.h>
 
-#include "app_sleep.h"
+#include "app_screensaver.h"
 #include "application.h"
 #include "drivers/ST7735.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
 #include "timer.h"
 
-APP_TIMER_DEF(m_sleep_timer_id);
-static bool is_sleeping = false;
-static uint32_t sleep_cnt = 0;
+APP_TIMER_DEF(m_screensaver_timer_id);
+static bool is_in_screensaver = false;
+static uint32_t screensaver_cnt = 0;
 
 /*
  * Callback function
  */
-static void sleep_timer_handler(void *p_context)
+static void screensaver_timer_handler(void *p_context)
 {
 
-    /* Only initiate sleep from the home menu */
-    if (application_is_default() && !is_sleeping) {
-        sleep_cnt += SLEEP_TIMER_TIMEOUT;
+    /* Only initiate screensaver from the home menu */
+    if (application_is_default() && !is_in_screensaver) {
+        screensaver_cnt += SCREENSAVER_TIMER_TIMEOUT;
 
         /* We reached the delay, switch to the sleep app */
-        if (sleep_cnt >= SLEEP_DELAY) {
-            sleep_reset();
-            application_set(app_sleep);
+        if (screensaver_cnt >= SCREENSAVER_DELAY) {
+            screensaver_reset();
+            application_set(app_screensaver_sleep);
         }
     } else {
-        sleep_reset();
+        screensaver_reset();
     }
 }
 
-static void sleep_button_handler(button_t button)
+static void screensaver_button_handler(button_t button)
 {
     /* Whatever the button, return to default app */
     application_clear();
 }
 
 /*
- * Initialize the sleep timer
+ * Initialize the screensaver timer.
  */
-void sleep_init(void)
+void screensaver_init(void)
 {
     ret_code_t err_code;
 
-    /* Create the sleep timer */
-    err_code = app_timer_create(&m_sleep_timer_id, APP_TIMER_MODE_REPEATED,
-                                sleep_timer_handler);
+    /* Create the screensaver timer */
+    err_code = app_timer_create(&m_screensaver_timer_id, APP_TIMER_MODE_REPEATED,
+                                screensaver_timer_handler);
     APP_ERROR_CHECK(err_code);
 
-    /* Start the sleep timer */
-    err_code = app_timer_start(m_sleep_timer_id,
-                               APP_TIMER_TICKS(SLEEP_TIMER_TIMEOUT), NULL);
+    /* Start the screensaver timer */
+    err_code = app_timer_start(m_screensaver_timer_id,
+                               APP_TIMER_TICKS(SCREENSAVER_TIMER_TIMEOUT), NULL);
     APP_ERROR_CHECK(err_code);
 }
 
-void sleep_reset(void)
+void screensaver_reset(void)
 {
-    sleep_cnt = 0;
+    screensaver_cnt = 0;
 }
 
-void app_sleep(void (*service_device)())
+void app_screensaver_sleep(void (*service_device)())
 {
-    nsec_controls_add_handler(sleep_button_handler);
+    nsec_controls_add_handler(screensaver_button_handler);
 
     st7735_display_off();
 
-    is_sleeping = true;
+    is_in_screensaver = true;
 
-    while (application_get() == app_sleep) {
+    while (application_get() == app_screensaver_sleep) {
         /* Service device and wait for next interrupt */
         service_device();
     }
 
     /* Exiting sleep mode */
     nsec_controls_clear_handlers();
-    is_sleeping = false;
+    is_in_screensaver = false;
     st7735_display_on();
 }
