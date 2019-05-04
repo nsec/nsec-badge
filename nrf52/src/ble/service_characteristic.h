@@ -64,6 +64,7 @@ struct ServiceCharacteristic {
     WritePermission write_permission;
     const char* user_descriptor;
     uint8_t data_type;
+    bool allow_notify;
 };
 
 
@@ -74,6 +75,8 @@ void set_characteristic_permission(struct ServiceCharacteristic*, ReadPermission
 uint16_t set_characteristic_value(struct ServiceCharacteristic*, uint8_t* value_buffer);
 
 uint16_t get_characteristic_value(struct ServiceCharacteristic*, uint8_t* value_buffer);
+
+void notify_characteristic_value(struct ServiceCharacteristic*, uint8_t* value_buffer);
 
 void add_write_operation_done_handler(struct ServiceCharacteristic*, on_characteristic_write_command);
 

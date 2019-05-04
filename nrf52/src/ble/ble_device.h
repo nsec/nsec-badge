@@ -30,3 +30,5 @@ void ble_device_stop_scan();
 uint32_t add_vendor_service(struct VendorService*);
 
 bool ble_device_toggle_ble();
+
+void ble_device_notify_characteristic(struct ServiceCharacteristic* characteristic, const uint8_t* value);

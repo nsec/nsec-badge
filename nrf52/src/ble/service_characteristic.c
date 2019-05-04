@@ -13,6 +13,8 @@
 
 #define NO_CONNECTION_HANDLE_REQUIRED BLE_CONN_HANDLE_INVALID
 
+void ble_device_notify_characteristic(struct ServiceCharacteristic* characteristic, const uint8_t* value);
+
 
 void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_t value_length, ReadMode read, WriteMode write, uint16_t uuid){
     characteristic->read_mode = read;
@@ -26,6 +28,7 @@ void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_
     characteristic->write_permission = WRITE_OPEN;
     characteristic->user_descriptor = NULL;
     characteristic->data_type = 0;
+    characteristic->allow_notify = false;
 }
 
 void set_characteristic_permission(struct ServiceCharacteristic* characteristic, ReadPermission read_perm,
@@ -41,6 +44,10 @@ uint16_t set_characteristic_value(struct ServiceCharacteristic* characteristic, 
     characteristic_value.offset = 0;
     APP_ERROR_CHECK(sd_ble_gatts_value_set(NO_CONNECTION_HANDLE_REQUIRED, characteristic->handle, &characteristic_value));
     return characteristic_value.len;
+}
+
+void notify_characteristic_value(struct ServiceCharacteristic* characteristic, uint8_t* value_buffer){
+    ble_device_notify_characteristic(characteristic, value_buffer);
 }
 
 uint16_t get_characteristic_value(struct ServiceCharacteristic* characteristic, uint8_t* value_buffer){

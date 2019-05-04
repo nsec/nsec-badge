@@ -10,3 +10,4 @@
 
 struct VendorService* nsec_get_demo_service();
 void nsec_init_demo_vendor_service();
+void update_char();

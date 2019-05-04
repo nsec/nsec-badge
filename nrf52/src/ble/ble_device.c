@@ -14,6 +14,7 @@
 #include <peer_manager.h>
 #include <app_scheduler.h>
 #include <nrf_ble_gatt.h>
+#include <nrf_error.h>
 
 #include "ble_device.h"
 #include "ble_peer_manager.h"
@@ -436,4 +437,25 @@ bool ble_device_toggle_ble(){
         nsec_ble_is_enabled = true;
     }
     return nsec_ble_is_enabled;
+}
+
+void ble_device_notify_characteristic(struct ServiceCharacteristic* characteristic, const uint8_t* value){
+    if(nsec_ble_connected){
+        ble_gatts_hvx_params_t hvx_params;
+        memset(&hvx_params, 0, sizeof(hvx_params));
+        uint16_t length = characteristic->value_length;
+
+        hvx_params.handle = characteristic->handle;
+        hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
+        hvx_params.offset = 0;
+        hvx_params.p_len  = &length;
+        hvx_params.p_data = value;
+        uint32_t error_code = sd_ble_gatts_hvx(ble_device->connection_handle, &hvx_params);
+        if(error_code == BLE_ERROR_GATTS_SYS_ATTR_MISSING){
+            APP_ERROR_CHECK(sd_ble_gatts_sys_attr_set(ble_device->connection_handle, NULL, 0, 0)); //init system attributes
+        }
+        else if(error_code != NRF_ERROR_RESOURCES && error_code != NRF_ERROR_INVALID_STATE) {
+            APP_ERROR_CHECK(error_code);
+        }
+    }
 }

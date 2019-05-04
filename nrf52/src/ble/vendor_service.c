@@ -12,11 +12,12 @@
 
 
 static void configure_characteristic_metadata(struct ServiceCharacteristic*, ble_gatts_char_md_t*, ble_gatts_attr_md_t*,
-                                              ble_gatts_char_pf_t*);
+                                              ble_gatts_char_pf_t*, ble_gatts_attr_md_t*);
 static void configure_characteristic_attribute(struct ServiceCharacteristic*, ble_gatts_attr_t*, ble_gatts_attr_md_t*);
 static void set_default_metadata_for_attribute(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
 static void configure_permission(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
 static void set_characteristic_presentation_format(ble_gatts_char_pf_t*, uint8_t);
+static void set_client_characteristic_configuration_declaration(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
 
 void create_vendor_service(struct VendorService* service, uint16_t uuid){
     service->characteristic_count = 0;
@@ -33,7 +34,8 @@ void add_characteristic_to_vendor_service(struct VendorService* service, struct 
     ble_gatts_attr_t attribute;
     ble_gatts_attr_md_t user_desc_metadata;
     ble_gatts_char_pf_t presentation_format;
-    configure_characteristic_metadata(characteristic, &metadata, &user_desc_metadata, &presentation_format);
+    ble_gatts_attr_md_t cccd;
+    configure_characteristic_metadata(characteristic, &metadata, &user_desc_metadata, &presentation_format, &cccd);
     configure_characteristic_attribute(characteristic, &attribute, &attribute_metadata);
     service->characteristic_count++;
     attribute.p_uuid = &(characteristic->uuid);
@@ -51,11 +53,13 @@ struct ServiceCharacteristic* get_characteristic(struct VendorService* service, 
 
 static void configure_characteristic_metadata(struct ServiceCharacteristic* characteristic,
                                               ble_gatts_char_md_t* char_metadata,
-                                              ble_gatts_attr_md_t* user_desc_metadata, ble_gatts_char_pf_t* format){
+                                              ble_gatts_attr_md_t* user_desc_metadata, ble_gatts_char_pf_t* format,
+                                              ble_gatts_attr_md_t* cccd){
     bzero(char_metadata, sizeof(ble_gatts_char_md_t));
     char_metadata->char_props.read = characteristic->read_mode != DENY_READ;
     char_metadata->char_props.write = characteristic->write_mode != DENY_WRITE;
     char_metadata->char_props.write_wo_resp = 0; // deactivate for now.
+    char_metadata->char_props.notify = characteristic->allow_notify;
     if(characteristic->data_type != 0){
         set_characteristic_presentation_format(format, characteristic->data_type);
         char_metadata->p_char_pf = format;
@@ -64,7 +68,13 @@ static void configure_characteristic_metadata(struct ServiceCharacteristic* char
         char_metadata->p_char_pf = NULL;
     }
     char_metadata->p_user_desc_md = NULL;
-    char_metadata->p_cccd_md = NULL;
+    if(characteristic->allow_notify) {
+        set_client_characteristic_configuration_declaration(characteristic, cccd);
+        char_metadata->p_cccd_md = cccd;
+    }
+    else {
+        char_metadata->p_cccd_md = NULL;
+    }
     char_metadata->p_sccd_md = NULL;
     if(characteristic->user_descriptor != NULL){
         char_metadata->p_char_user_desc = (uint8_t*)characteristic->user_descriptor;
@@ -129,4 +139,18 @@ static void set_characteristic_presentation_format(ble_gatts_char_pf_t* format, 
     format->name_space = 0;
     format->unit = 0;
     format->format = data_type;
+}
+
+static void set_client_characteristic_configuration_declaration(struct ServiceCharacteristic* characteristic,
+                                                                ble_gatts_attr_md_t* cccd){
+    memset(cccd, 0, sizeof(ble_gatts_attr_md_t));
+    if(characteristic->read_permission == READ_OPEN)
+            BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd->read_perm);
+    else
+        BLE_GAP_CONN_SEC_MODE_SET_ENC_WITH_MITM(&cccd->read_perm);
+    if(characteristic->write_permission == WRITE_OPEN)
+        BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd->write_perm);
+    else
+        BLE_GAP_CONN_SEC_MODE_SET_ENC_WITH_MITM(&cccd->write_perm);
+    cccd->vloc = BLE_GATTS_VLOC_STACK;
 }
