@@ -26,6 +26,7 @@
 #include "drivers/display.h"
 #include "persistency.h"
 #include "random.h"
+#include "cli_sched.h"
 
 bool standard_check(const nrf_cli_t *p_cli, size_t argc, size_t minimum_arg,
                     char **argv, nrf_cli_getopt_option_t const *p_opt,
@@ -251,7 +252,7 @@ static void do_external_memory(const nrf_cli_t *p_cli, size_t argc, char **argv)
 }
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_external){
-    NRF_CLI_CMD(memory, NULL, "Dump external memory !", do_external_memory),
+    NRF_CLI_CMD(memory, NULL, "Dump external memory!", do_external_memory),
     NRF_CLI_SUBCMD_SET_END};
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_dump){
@@ -264,7 +265,7 @@ NRF_CLI_CMD_REGISTER(dump, &sub_dump, "Dump things...", do_dump);
 static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                    "Welcome to the NorthSec 2019 CLI interface !\r\n\n");
+                    "Welcome to the NorthSec 2019 CLI interface!\r\n\n");
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                     "blectl:     Utility to do some operation over BLE\r\n");
@@ -278,14 +279,22 @@ static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
 #endif
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                    "identity:   Change your badge name !\r\n");
+                    "identity:   Change your badge name!\r\n");
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                     "ledctl:     Utility to control the leds and create custom "
                     "flashing pattern\r\n");
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                    "nsec:       Print a pretty NorthSec logo!\r\n\n");
+                    "nsec:       Print a pretty NorthSec logo!\r\n");
+
+#if defined(NSEC_FLAVOR_CONF)
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "schedule:   " CMD_SCHEDULE_HELP "\r\n");
+#endif
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                        "\r\n");
 
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                     "All commands have a specific help menu which you can "
