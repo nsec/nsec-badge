@@ -31,11 +31,84 @@
 
 APP_TIMER_DEF(m_scan_timer);
 
+struct char_doc {
+    const char* name;
+    const char* UUID;
+    const char* description;
+    const char* read_security;
+    const char* write_security;
+};
+
+struct service_doc
+{
+    const char* name;
+    const char* UUID;
+    const char* description;
+};
+
 typedef struct
 {
     uint8_t * p_data;
     uint16_t  data_len;
 } data_t;
+
+static struct service_doc identity =
+{
+    .name = "Identity",
+    .UUID = "010d",
+    .description = "Customize your identity",
+};
+
+static struct char_doc identity_name = {
+    .name = "Citizen name",
+    .UUID = "011d",
+    .description =
+        "Set or get the badge's name\r\nPrintable ASCII only, 17 char maximum",
+    .read_security = "None",
+    .write_security = "Need bonding",
+};
+
+static struct service_doc buttons = {
+    .name = "Buttons",
+    .UUID = "0020",
+    .description = "Control the 4 directional buttons",
+};
+
+static struct char_doc buttons_up = {
+    .name = "Up",
+    .UUID = "0120",
+    .description =
+        "Press or release the button\r\n0x01 = Press, 0x00 = Release",
+    .read_security = "No read",
+    .write_security = "Need bonding",
+};
+
+static struct char_doc buttons_down = {
+    .name = "Down",
+    .UUID = "0220",
+    .description =
+        "Press or release the button\r\n0x01 = Press, 0x00 = Release",
+    .read_security = "No read",
+    .write_security = "Need bonding",
+};
+
+static struct char_doc buttons_enter = {
+    .name = "Enter",
+    .UUID = "0320",
+    .description =
+        "Press or release the button\r\n0x01 = Press, 0x00 = Release",
+    .read_security = "No read",
+    .write_security = "Need bonding",
+};
+
+static struct char_doc buttons_back = {
+    .name = "Back",
+    .UUID = "0420",
+    .description =
+        "Press or release the button\r\n0x01 = Press, 0x00 = Release",
+    .read_security = "No read",
+    .write_security = "Need bonding",
+};
 
 static bool start_scan = false;
 static bool scan_in_progress = false;
@@ -134,6 +207,85 @@ static void scan_timeout_handler(void *p_context) {
     scan_in_progress = false;
 }
 
+static void print_service_doc(const nrf_cli_t *p_cli, struct service_doc *doc)
+{
+    nrf_cli_fprintf( p_cli, NRF_CLI_NORMAL,
+        "****************************************************************\r\n");
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_NORMAL, "Service name: ");
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT, "%s\r\n", doc->name);
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_NORMAL, "Service UUID: ");
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT, "%s\r\n", doc->UUID);
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_NORMAL, "Service description: \r\n");
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT, "%s\r\n\n", doc->description);
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "Characteristics :\r\n");
+
+}
+
+static void print_char_doc(const nrf_cli_t *p_cli, struct char_doc *doc)
+{
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_NORMAL, "Characteristic name: ");
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT, "%s\r\n", doc->name);
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_NORMAL, "Characteristic UUID: ");
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT, "%s\r\n", doc->UUID);
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_NORMAL, "Characteristic read security: ");
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT, "%s\r\n", doc->read_security);
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_NORMAL, "Characteristic write security: ");
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT, "%s\r\n", doc->write_security);
+
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_NORMAL, "Characteristic description: \r\n");
+    nrf_cli_fprintf(
+        p_cli, NRF_CLI_DEFAULT, "%s\r\n\n", doc->description);
+}
+
+static void do_ble_docs(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
+        return;
+    }
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+        "NorthSec 2019 badge BLE service documentation\r\n\n");
+
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+        "All services and characteristics are using this base "
+        "UUID:\r\na10d{SERVICE/CHAR_UUID}-9d8e-728e-3a49-2a72267b584d\r\nThe "
+        "{SERVICE/CHAR_UUID} will be replaced by a 16bit UUID depending on the "
+        "service or characteristics.\r\n\n");
+
+    // Insert documentation here
+    print_service_doc(p_cli, &identity);
+    print_char_doc(p_cli, &identity_name);
+
+    print_service_doc(p_cli, &buttons);
+    print_char_doc(p_cli, &buttons_up);
+    print_char_doc(p_cli, &buttons_down);
+    print_char_doc(p_cli, &buttons_enter);
+    print_char_doc(p_cli, &buttons_back);
+
+}
+
 static void do_scan(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
     static bool is_observer_added = false;
@@ -176,6 +328,10 @@ static void do_ble(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_ble){
     NRF_CLI_CMD(scan, NULL, "Scan BLE devices (Maximum 250 devices)", do_scan),
-    NRF_CLI_SUBCMD_SET_END};
+    NRF_CLI_CMD(service_guide, NULL,
+                "NorthSec 2019 badge BLE service documentation",
+                do_ble_docs),
+    NRF_CLI_SUBCMD_SET_END
+};
 
 NRF_CLI_CMD_REGISTER(blectl, &sub_ble, "BLE Tools collection", do_ble);
