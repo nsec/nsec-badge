@@ -372,6 +372,6 @@ void home_menu_application(void (*service_callback)()) {
 #endif
     }
 
-    /* Clear all menu handlers */
-    nsec_controls_clear_handler();
+    /* Clear all control handlers */
+    nsec_controls_clear_handlers();
 }

@@ -25,13 +25,13 @@ typedef enum {
 
 typedef void (*button_handler)(button_t button);
 
-void nsec_controls_add_handler(button_handler handler);
+bool nsec_controls_add_handler(button_handler handler);
 void nsec_controls_suspend_handler(button_handler handler);
-void nsec_controls_clear_handler(void);
+void nsec_controls_clear_handlers(void);
 void nsec_controls_add_event(button_t button);
 void nsec_controls_process(void);
-void nsec_controls_enable(bool state);
+void nsec_controls_enable(void);
+void nsec_controls_disable(void);
 bool is_press_action(button_t button);
-
 
 #endif /* controls_h */

@@ -74,7 +74,7 @@ void app_mode_zombie(void (*service_device)()) {
     load_led_settings();
 
     /* Re-enable buttons */
-    nsec_controls_enable(true);
+    nsec_controls_enable();
 
     /* Return to default app */
     application_clear();
@@ -111,7 +111,7 @@ void mode_zombie_process(void) {
     uint16_t rand = nsec_random_get_u16((5760 - odds_modifier) + 1);
 
     if (rand == 1) {
-        nsec_controls_enable(false);
+        nsec_controls_disable();
 
 	/* Set zombie as the next app to run if it's not already */
 	if (application_get() != app_mode_zombie) {
