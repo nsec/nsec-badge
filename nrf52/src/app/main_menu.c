@@ -18,6 +18,7 @@
 #include "identity.h"
 #include "persistency.h"
 #include "menu.h"
+#include "text_box.h"
 #include "nsec_conf_schedule.h"
 #include "nsec_games_menu.h"
 #include "nsec_led_pattern.h"
@@ -30,7 +31,8 @@
 enum main_menu_state {
     MAIN_MENU_STATE_CLOSED,
     MAIN_MENU_STATE_MENU,
-    MAIN_MENU_STATE_BADGE_INFO
+    MAIN_MENU_STATE_BADGE_INFO,
+    MAIN_MENU_CLI_INFO
 };
 
 static enum main_menu_state _state = MAIN_MENU_STATE_CLOSED;
@@ -39,6 +41,29 @@ static void main_handle_buttons(button_t button);
 
 static char identity_string[] = "Id: Citizen #XXXXXXX";
 static char ble_id_string[] = "BLE id: NSECXXXX";
+
+const char *cli_info =
+    "The badge provides a command line interface that is accessible via the "
+    "USB port.\n"
+    "Connect the badge to a PC and explore it. To access the CLI you can "
+    "use the serial tool of your choice and then connect to the second tty or "
+    "COM spawned on your PC.\n"
+    "The serial parameter are: "
+    "baudrate = 115200\n"
+    "databits = 8\n"
+    "stopbit = 1\n"
+    "no parity\n\n"
+    "Example with picocom: \n"
+    "picocom /dev/ttyACM1 -b 115200 --omap delbs\n";
+
+static struct text_box_config config = {
+    GEN_MENU_POS_X,
+    22,
+    160,
+    GEN_MENU_HEIGHT,
+    HOME_MENU_BG_COLOR,
+    DISPLAY_WHITE
+};
 
 #ifdef NSEC_FLAVOR_CONF
 void open_conference_schedule(uint8_t item) {
@@ -79,8 +104,19 @@ void open_games_menu(uint8_t item)
     nsec_games_menu_show();
 }
 
+void show_badge_cli_info(uint8_t item)
+{
+    menu_close();
+    _state = MAIN_MENU_CLI_INFO;
+    gfx_fill_rect(0, 0, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    text_box_init(cli_info, &config);
+}
+
 static menu_item_s badge_info_items[] = {
     {
+        .label = "Badge CLI",
+        .handler = show_badge_cli_info,
+    }, {
         .label = identity_string,
         .handler = NULL,
     }, {
@@ -157,6 +193,10 @@ static void main_handle_buttons(button_t button) {
         case MAIN_MENU_STATE_BADGE_INFO:
             _state = MAIN_MENU_STATE_MENU;
             show_main_menu();
+            break;
+        case MAIN_MENU_CLI_INFO:
+            _state = MAIN_MENU_STATE_BADGE_INFO;
+            show_badge_info(2);
             break;
         default:
             break;
