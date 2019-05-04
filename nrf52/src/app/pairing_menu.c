@@ -28,9 +28,6 @@
 
 #define PASSKEY_SIZE 6
 
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
 static const char message[] = "Your passkey is:";
 
 static char passkey[PASSKEY_SIZE + 1];
@@ -48,6 +45,8 @@ void nsec_ble_hide_pairing_menu(){
 }
 
 static void draw_pairing_menu(){
+    uint16_t gfx_width = gfx_get_screen_width();
+    uint16_t gfx_height = gfx_get_screen_height();
     gfx_fill_rect(0, 0, gfx_width, gfx_height, DISPLAY_BLACK);
     gfx_set_cursor(0, 0);
     gfx_set_text_size(1);

@@ -38,8 +38,8 @@
 
 bool is_at_home_menu = false;
 
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
+static uint16_t gfx_width;
+static uint16_t gfx_height;
 
 static void home_menu_handle_buttons(button_t button);
 
@@ -261,6 +261,8 @@ void show_home_menu(enum home_state state) {
     _state = state;
 
     is_at_home_menu = true;
+    gfx_width = gfx_get_screen_width();
+    gfx_height = gfx_get_screen_height();
     draw_home_menu();
 }
 

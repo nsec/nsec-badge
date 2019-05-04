@@ -16,8 +16,6 @@
 
 static status_bluetooth_status ble_status;
 static status_battery_state battery_state;
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
 
 void nsec_status_bar_init()
 {
@@ -76,7 +74,7 @@ void nsec_status_set_battery_status(status_battery_state state)
 
 void nsec_status_bar_ui_redraw(void)
 {
-    gfx_fill_rect(gfx_width - STATUS_BAR_WIDTH, 0, STATUS_BAR_WIDTH,
+    gfx_fill_rect(gfx_get_screen_width() - STATUS_BAR_WIDTH, 0, STATUS_BAR_WIDTH,
                   STATUS_BAR_HEIGHT, STATUS_BAR_BG_COLOR);
 
     nsec_status_set_ble_status(ble_status);

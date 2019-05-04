@@ -13,6 +13,9 @@
 
 struct bitmap_ext;
 
+uint16_t gfx_get_screen_width(void);
+uint16_t gfx_get_screen_height(void);
+
 void gfx_set_rotation(uint8_t r);
 
 void nsec_gfx_effect_addNoise(uint8_t noise_amount);

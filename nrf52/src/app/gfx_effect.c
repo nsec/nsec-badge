@@ -13,8 +13,8 @@
 #include "nrf_delay.h"
 #include <string.h>
 
-int16_t gfx_width = DISPLAY_WIDTH;
-int16_t gfx_height = DISPLAY_HEIGHT;
+static uint16_t gfx_width = DISPLAY_WIDTH;
+static uint16_t gfx_height = DISPLAY_HEIGHT;
 static int16_t gfx_cursor_y = 0;
 static int16_t gfx_cursor_x = 0;
 static uint8_t gfx_textsize = 1;
@@ -23,6 +23,16 @@ static uint16_t gfx_textbgcolor = 0xFFFF;
 static bool gfx_wrap = true;
 
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
+
+uint16_t gfx_get_screen_width(void)
+{
+    return gfx_width;
+}
+
+uint16_t gfx_get_screen_height(void)
+{
+    return gfx_height;
+}
 
 void gfx_set_rotation(uint8_t r) {
     switch (r) {

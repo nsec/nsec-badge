@@ -19,10 +19,6 @@
 #include "images/beyond_reality_bitmap.h"
 #include "images/avatar_neuro_bitmap.h"
 
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
-
 // The "line" represent slice of 3 pixel. it was manually extracted...
 // Not the best but the logic to this more automaticaly was not even readable
 struct line {
@@ -51,6 +47,8 @@ static struct line brain[15] = {
 
 static void animated_brain(void)
 {
+    uint16_t gfx_width = gfx_get_screen_width();
+    uint16_t gfx_height = gfx_get_screen_height();
     uint8_t bytes_per_line = neurosoft_logo_bitmap.width * 2;
     uint8_t offset_x = (gfx_width - neurosoft_logo_bitmap.width)/2;
     uint8_t offset_y = (gfx_height - neurosoft_logo_bitmap.height)/2;
@@ -84,6 +82,7 @@ static void animated_brain(void)
 
 static void animated_name(const struct bitmap *bitmap)
 {
+    uint16_t gfx_width = gfx_get_screen_width();
     uint8_t bytes_per_line = bitmap->width * 2;
     uint8_t offset_x = (gfx_width - bitmap->width)/2;
     uint8_t offset_y = 60;
