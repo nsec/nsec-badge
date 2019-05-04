@@ -43,6 +43,7 @@ static void sleep_timer_handler(void *p_context)
     if (application_is_default() && !is_sleeping) {
         sleep_cnt += SLEEP_TIMER_TIMEOUT;
 
+        /* We reached the delay, switch to the sleep app */
         if (sleep_cnt >= SLEEP_DELAY) {
             sleep_reset();
             application_set(app_sleep);
@@ -83,7 +84,6 @@ void sleep_reset(void)
 
 void app_sleep(void (*service_device)())
 {
-
     nsec_controls_add_handler(sleep_button_handler);
 
     st7735_display_off();
@@ -96,10 +96,7 @@ void app_sleep(void (*service_device)())
     }
 
     /* Exiting sleep mode */
-
-    nsec_controls_suspend_handler(sleep_button_handler);
-
+    nsec_controls_clear_handlers();
     is_sleeping = false;
-
     st7735_display_on();
 }
