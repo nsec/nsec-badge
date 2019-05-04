@@ -29,8 +29,11 @@
 #endif
 
 static uint16_t on_name_write(CharacteristicWriteEvent* event);
+static uint16_t on_name_read(CharacteristicReadEvent* event);
 
 static char badge_name[NAME_MAX_LEN + 1];
+static bool flag_in_name = false;
+static bool erase_flag_on_next_read = false;
 
 static struct VendorService identity_ble_service;
 static struct ServiceCharacteristic name_characteristic;
@@ -47,12 +50,13 @@ void init_identity_service() {
     create_vendor_service(&identity_ble_service, service_uuid);
     add_vendor_service(&identity_ble_service);
 
-    create_characteristic(&name_characteristic, NAME_MAX_LEN, AUTO_READ, AUTH_WRITE_REQUEST, name_char_uuid);
+    create_characteristic(&name_characteristic, NAME_MAX_LEN, REQUEST_READ, AUTH_WRITE_REQUEST, name_char_uuid);
     set_characteristic_permission(&name_characteristic, READ_OPEN, WRITE_PAIRING_REQUIRED);
     name_characteristic.user_descriptor = name_description;
     name_characteristic.data_type = BLE_GATT_CPF_FORMAT_UTF8S;
     add_characteristic_to_vendor_service(&identity_ble_service, &name_characteristic);
     add_write_request_handler(&name_characteristic, on_name_write);
+    add_read_request_handler(&name_characteristic, on_name_read);
     set_characteristic_value(&name_characteristic, (uint8_t*)badge_name);
 }
 
@@ -82,7 +86,7 @@ static bool is_name_valid(const char* name){
 /**
  * show the flag if the name verification was successfully exploited
  */
-static void show_flag() {
+static bool show_flag() {
     bool exploited = false;
     for(int i = 0; i < NAME_MAX_LEN; i++) {
         char c = badge_name[i];
@@ -91,9 +95,7 @@ static void show_flag() {
             break;
         }
     }
-    if(exploited){
-        memcpy(badge_name, NAME_CHECK_FLAG, NAME_MAX_LEN);
-    }
+    return exploited;
 }
 #endif
 
@@ -103,7 +105,12 @@ static uint16_t on_name_write(CharacteristicWriteEvent* event){
         memcpy(badge_name, event->data_buffer, event->data_length);
         update_identity(badge_name);
 #ifdef NSEC_FLAVOR_CTF
-        show_flag();
+        if(show_flag()){
+            event->data_buffer = (uint8_t*)NAME_CHECK_FLAG;
+            event->data_length = NAME_MAX_LEN;
+            flag_in_name = true;
+            return BLE_GATT_STATUS_SUCCESS;
+        }
 #endif
         // erase the end of the old name in the characteristic (e.g. writing "1" over "ABC" would become "1BC" without this).
         event->data_buffer = (uint8_t*)badge_name;
@@ -113,4 +120,18 @@ static uint16_t on_name_write(CharacteristicWriteEvent* event){
     else {
         return BLE_GATT_STATUS_ATTERR_WRITE_NOT_PERMITTED;
     }
+}
+
+static uint16_t on_name_read(CharacteristicReadEvent* event){
+    if(flag_in_name){
+        if(!erase_flag_on_next_read) {
+            erase_flag_on_next_read = true;
+        }
+        else{
+            set_characteristic_value(&name_characteristic, (uint8_t*)badge_name);
+            flag_in_name = false;
+            erase_flag_on_next_read = false;
+        }
+    }
+    return BLE_GATT_STATUS_SUCCESS;
 }
