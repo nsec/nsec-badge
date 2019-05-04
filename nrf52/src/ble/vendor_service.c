@@ -19,9 +19,9 @@ static void configure_permission(struct ServiceCharacteristic*, ble_gatts_attr_m
 static void set_characteristic_presentation_format(ble_gatts_char_pf_t*, uint8_t);
 static void set_client_characteristic_configuration_declaration(struct ServiceCharacteristic*, ble_gatts_attr_md_t*);
 
-void create_vendor_service(struct VendorService* service, uint16_t uuid){
+void create_vendor_service(struct VendorService* service, const ble_uuid_t* uuid){
     service->characteristic_count = 0;
-    service->uuid = (ble_uuid_t){uuid, TYPE_NSEC_UUID};
+    service->uuid = (ble_uuid_t){uuid->uuid, uuid->type};
 }
 
 void add_characteristic_to_vendor_service(struct VendorService* service, struct ServiceCharacteristic* characteristic){
@@ -38,6 +38,7 @@ void add_characteristic_to_vendor_service(struct VendorService* service, struct 
     configure_characteristic_metadata(characteristic, &metadata, &user_desc_metadata, &presentation_format, &cccd);
     configure_characteristic_attribute(characteristic, &attribute, &attribute_metadata);
     service->characteristic_count++;
+    characteristic->uuid.type = service->uuid.type;
     attribute.p_uuid = &(characteristic->uuid);
     APP_ERROR_CHECK(sd_ble_gatts_characteristic_add(service->handle, &metadata, &attribute, &characteristic_handles));
     characteristic->handle = characteristic_handles.value_handle;

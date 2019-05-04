@@ -23,7 +23,7 @@ void create_characteristic(struct ServiceCharacteristic* characteristic, uint16_
     characteristic->on_write_operation_done = NULL;
     characteristic->on_write_request = NULL;
     characteristic->on_read_request = NULL;
-    characteristic->uuid = (ble_uuid_t){uuid, TYPE_NSEC_UUID};
+    characteristic->uuid = (ble_uuid_t){uuid, 0};
     characteristic->read_permission = READ_OPEN;
     characteristic->write_permission = WRITE_OPEN;
     characteristic->user_descriptor = NULL;

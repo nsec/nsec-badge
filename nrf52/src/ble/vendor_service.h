@@ -21,7 +21,7 @@ struct VendorService {
 };
 
 
-void create_vendor_service(struct VendorService* service, uint16_t uuid);
+void create_vendor_service(struct VendorService* service, const ble_uuid_t* uuid);
 
 void add_characteristic_to_vendor_service(struct VendorService* service, struct ServiceCharacteristic* characteristic);
 
