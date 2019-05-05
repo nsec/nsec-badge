@@ -95,4 +95,7 @@
 #define INPUT_BOX_POS_Y         32
 #define INPUT_BOX_BRA_WIDTH     5
 
+/* Base slideshow */
+#define SLIDESHOW_TITLE_BG      0x67a0
+
 #endif // GUI_H

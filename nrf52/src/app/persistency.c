@@ -57,7 +57,8 @@ struct persistency {
     char identity_name[17];             // 17 bytes
     uint32_t unlocked_pattern_bf;       // 4 bytes
     uint8_t display_model;              // 1 bytes
-    uint8_t padding[4096 - 330 - 5];    // 4k - (used memory) - rev - CRC
+    uint8_t screensaver;                // 1 bytes
+    uint8_t padding[4096 - 331 - 5];    // 4k - (used memory) - rev - CRC
     uint8_t revision;
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
@@ -149,6 +150,15 @@ uint8_t get_stored_display_model(void) {
 
 void update_stored_display_model(uint8_t model) {
     persistency->display_model = model;
+    update_persistency();
+}
+
+uint8_t get_stored_screensaver(void) {
+    return persistency->screensaver;
+}
+
+void update_stored_screensaver(uint8_t mode) {
+    persistency->screensaver = mode;
     update_persistency();
 }
 

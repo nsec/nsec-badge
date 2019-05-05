@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "app_screensaver.h"
 #include "ble/nsec_ble.h"
 #include "drivers/controls.h"
 #include "app/application.h"
@@ -45,6 +46,7 @@ enum screen_setting_state {
     SCREEN_SETTING_STATE_MENU,
     SCREEN_SETTING_STATE_BRIGHTNESS,
     SCREEN_SETTING_STATE_FIX,
+    SCREEN_SETTING_STATE_SCREENSAVER,
 };
 
 enum screen_brightness_levels {
@@ -59,14 +61,20 @@ static enum screen_setting_state _state = SCREEN_SETTING_STATE_CLOSED;
 
 static void show_screen_brightness_menu(uint8_t item);
 static void show_screen_fix_menu(uint8_t item);
+static void show_screen_screensaver_menu(uint8_t item);
 static void save_screen_brightness(uint8_t item);
 static void save_screen_fix(uint8_t item);
+static void save_screen_screensaver(uint8_t item);
 static void screen_setting_handle_buttons(button_t button);
 
 static menu_item_s screen_settings_items[] = {
     {
         .label = "Screen brightness",
         .handler = show_screen_brightness_menu,
+    },
+    {
+        .label = "Screen saver",
+        .handler = show_screen_screensaver_menu,
     },
     {
         .label = "Screen fix",
@@ -103,6 +111,16 @@ static menu_item_s screen_fix_items[] = {
     {
         .label = "Red pill",
         .handler = save_screen_fix,
+    }};
+
+static menu_item_s screen_screensaver_items[] = {
+    {
+        .label = "Slideshow",
+        .handler = save_screen_screensaver,
+    },
+    {
+        .label = "Turn off",
+        .handler = save_screen_screensaver,
     }};
 
 static void draw_screen_title(void)
@@ -230,6 +248,44 @@ static void save_screen_fix(uint8_t item)
     application_set(dummy_app);
 }
 
+static void show_actual_screensaver(void)
+{
+    uint8_t model = get_stored_screensaver();
+    char actual[50] = {0};
+
+    switch (model) {
+    case SCREENSAVER_MODE_SLEEP:
+        snprintf(actual, 50, "Now: %s", "Turn off");
+        break;
+    case SCREENSAVER_MODE_SLIDESHOW:
+        snprintf(actual, 50, "Now: %s", "Slideshow");
+        break;
+    }
+
+    gfx_set_cursor(LED_SET_VAL_POS);
+    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    gfx_puts(actual);
+}
+
+static void show_screen_screensaver_menu(uint8_t item)
+{
+    menu_close();
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    show_actual_screensaver();
+
+    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+              ARRAY_SIZE(screen_screensaver_items), screen_screensaver_items,
+              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
+    _state = SCREEN_SETTING_STATE_SCREENSAVER;
+}
+
+static void save_screen_screensaver(uint8_t item)
+{
+    update_stored_screensaver(item);
+    show_actual_screensaver();
+}
+
 static void screen_setting_handle_buttons(button_t button)
 {
     if (button == BUTTON_BACK) {
@@ -242,6 +298,7 @@ static void screen_setting_handle_buttons(button_t button)
 
         case SCREEN_SETTING_STATE_BRIGHTNESS:
         case SCREEN_SETTING_STATE_FIX:
+        case SCREEN_SETTING_STATE_SCREENSAVER:
             _state = SCREEN_SETTING_STATE_MENU;
             menu_close();
             nsec_show_screen_settings();
