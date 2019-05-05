@@ -26,6 +26,9 @@
 #define SCREENSAVER_TIMER_TIMEOUT 1000 /* ms */
 #define SCREENSAVER_DELAY 120000 /* ms */
 
+#define SCREENSAVER_MODE_SLEEP 1
+#define SCREENSAVER_MODE_SLIDESHOW 0
+
 void screensaver_init(void);
 void screensaver_reset(void);
 void app_screensaver_sleep(void (*service_device)());
