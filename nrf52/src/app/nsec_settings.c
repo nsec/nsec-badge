@@ -173,8 +173,12 @@ static void show_member_details(uint8_t item) {
         break;
 
         case 3: //Simon Marchi
-        show_credit(4);
-        break;
+            gfx_puts("C monkey nsec 2019\n");
+            gfx_puts("Simon Marchi\n");
+            gfx_puts("simon.marchi@polymtl.ca\n");
+            gfx_puts("@simark\n");
+            gfx_puts("Software\n");
+            break;
 
         case 4: //Thomas Dupuy
         show_credit(4);
