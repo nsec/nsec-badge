@@ -46,6 +46,7 @@ patch -p0 --binary < "$SCRIPTPATH/../patches/fix_fstorage_init.patch"
 patch -p0 --binary < "$SCRIPTPATH/../patches/fix-ringbuf.patch"
 patch -p0 --binary < "$SCRIPTPATH/../patches/fix-uart-error-handling.patch"
 patch -p0 --binary < "$SCRIPTPATH/../patches/fix-uart-cli-overrun-handling.patch"
+patch -p0 --binary < "$SCRIPTPATH/../patches/cli-make-backspace-and-delete-work.patch"
 
 # Cleanup
 rmdir "${SDK_VER}/documentation"
