@@ -9,6 +9,7 @@
 #include "drivers/display.h"
 #include "gfx_effect.h"
 #include "string.h"
+#include "utils.h"
 
 #define FONT_SIZE_WIDTH (6)
 #define FONT_SIZE_HEIGHT (8)
@@ -17,9 +18,14 @@ typedef struct {
     uint16_t pos_x;
     uint16_t pos_y;
     uint8_t col_width;
-    uint8_t line_height;
+
+    // How many items fit fully in the menu height.
+    uint8_t item_count_per_page;
     uint8_t item_count;
+
+    // Selected item, 0-based.
     uint8_t selected_item;
+
     uint8_t item_on_top;
     uint8_t is_handling_buttons;
     uint16_t text_color;
@@ -59,7 +65,7 @@ void menu_set_position(uint16_t pos_x, uint16_t pos_y, uint16_t width,
     menu.pos_x = pos_x;
     menu.pos_y = pos_y;
     menu.col_width = width / FONT_SIZE_WIDTH;
-    menu.line_height = height / FONT_SIZE_HEIGHT;
+    menu.item_count_per_page = height / FONT_SIZE_HEIGHT;
 }
 
 void menu_add_item(menu_item_s *new_item) {
@@ -74,11 +80,11 @@ void menu_add_item(menu_item_s *new_item) {
 static void menu_ui_redraw_items(uint8_t start, uint8_t end) {
     if (start < menu.item_on_top) {
         start = menu.item_on_top;
-    } else if (start > menu.item_on_top + menu.line_height) {
+    } else if (start > menu.item_on_top + menu.item_count_per_page) {
         return;
     }
-    if (end > menu.item_on_top + menu.line_height) {
-        end = menu.item_on_top + menu.line_height;
+    if (end > menu.item_on_top + menu.item_count_per_page) {
+        end = menu.item_on_top + menu.item_count_per_page;
     } else if (end < start) {
         return;
     }
@@ -112,36 +118,61 @@ static void menu_ui_redraw_items(uint8_t start, uint8_t end) {
 }
 
 void menu_ui_redraw_all(void) {
-    menu_ui_redraw_items(menu.item_on_top, menu.item_on_top + menu.line_height);
+    menu_ui_redraw_items(menu.item_on_top,
+                         menu.item_on_top + menu.item_count_per_page);
 }
 
 void menu_change_selected_item(MENU_DIRECTION direction) {
     switch (direction) {
     case MENU_DIRECTION_DOWN: {
-        if (menu.selected_item < menu.item_count) {
+        if (menu.selected_item < (menu.item_count - 1)) {
+            // Pressed down while not on the last item.
             menu.selected_item++;
             if (menu.selected_item >=
-                menu.item_on_top + (menu.line_height - 1)) {
+                (menu.item_on_top + menu.item_count_per_page)) {
                 menu.item_on_top++;
                 menu_ui_redraw_all();
             } else {
                 menu_ui_redraw_items(menu.selected_item - 1,
                                      menu.selected_item);
             }
-        }
-        if (menu.selected_item == menu.item_count) {
+        } else {
+            // Pressed down while on the last item.
             menu.selected_item = 0;
             menu.item_on_top = 0;
-            menu_ui_redraw_all();
+            if (menu.item_count > menu.item_count_per_page) {
+                // If the whole menu doesn't fit vertically, we need to redraw
+                // everything.
+                menu_ui_redraw_all();
+            } else {
+                // If the whole menu fits vertically, we just need to redraw the
+                // first and last item.
+                menu_ui_redraw_items(0, 0);
+                menu_ui_redraw_items(menu.item_count - 1, menu.item_count - 1);
+            }
         }
     } break;
     case MENU_DIRECTION_UP: {
         if (menu.selected_item == 0) {
-            menu.item_on_top = menu.item_count - 1;
-            menu.selected_item = menu.item_count;
-            menu_ui_redraw_all();
-        }
-        if (menu.selected_item > 0) {
+            // Pressed up while at the first item.
+
+            // We want to end up with the last item of the menu at the bottom.
+            menu.item_on_top = menu.item_count -
+                               min(menu.item_count_per_page, menu.item_count);
+            menu.selected_item = menu.item_count - 1;
+
+            if (menu.item_count > menu.item_count_per_page) {
+                // If the whole menu doesn't fit vertically, we need to redraw
+                // everything.
+                menu_ui_redraw_all();
+            } else {
+                // If the whole menu fits vertically, we just need to redraw the
+                // first and last item.
+                menu_ui_redraw_items(0, 0);
+                menu_ui_redraw_items(menu.item_count - 1, menu.item_count - 1);
+            }
+        } else {
+            // Pressed up while not at the first item.
             menu.selected_item--;
             if (menu.item_on_top > menu.selected_item) {
                 menu.item_on_top--;
