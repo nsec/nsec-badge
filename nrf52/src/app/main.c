@@ -168,6 +168,8 @@ int main(void) {
     // (the CLI takes over the UART, which the flash mode uses).
     cli_init();
 
+    nsec_conf_length_check();
+
     screensaver_init();
 
     init_ble();

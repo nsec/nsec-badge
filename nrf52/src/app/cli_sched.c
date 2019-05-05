@@ -22,6 +22,7 @@
 
 #include "cli_sched.h"
 #include "cli.h"
+#include "conf_sched.h"
 #include "conf_sched.inc"
 
 static int is_between(int h, int m, int start_h, int start_m, int end_h,
@@ -125,8 +126,8 @@ static void print_day_help(nrf_cli_t const *p_cli, const char *day)
 }
 
 static void do_schedule_day_common(nrf_cli_t const *p_cli, int argc,
-                                   char **argv, struct talk *talks, int ntalks,
-                                   const char *day)
+                                   char **argv, const struct talk *talks,
+                                   int ntalks, const char *day)
 {
     int time_specified = 0;
     unsigned int h, m;
@@ -160,7 +161,7 @@ static void do_schedule_day_common(nrf_cli_t const *p_cli, int argc,
 
     int n_displayed = 0;
     for (int i = 0; i < ntalks; i++) {
-        struct talk *t = &talks[i];
+        const struct talk *t = &talks[i];
 
         if (!time_specified ||
             is_between(h, m, t->start_h, t->start_m, t->end_h, t->end_m)) {
@@ -259,7 +260,7 @@ static void do_schedule_speakers(nrf_cli_t const *p_cli, size_t argc,
     }
 
     for (int i = 0; i < nspeakers; i++) {
-        struct speaker *s = &speakers[i];
+        const struct speaker *s = &speakers[i];
 
         if (!filter || strstr(s->name, filter)) {
             nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT, "- ");

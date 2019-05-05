@@ -1,14 +1,9 @@
 
 // THIS FILE HAS BEEN GENERATED USING gen-conf-structs.py !!!"1🤖!
 
-struct talk {
-    const char *title, *names, *abstract, *detailed;
-    unsigned char start_h, start_m;
-    unsigned char end_h, end_m;
-    unsigned char track;
-};
+#include "conf_sched.h"
 
-static const char *tracks[] = {
+const char * const tracks[] = {
     "Conf 1",
     "Conf 2",
     "Workshop 1 (Big)",
@@ -17,11 +12,8 @@ static const char *tracks[] = {
     "Workshop 4 (classroom)",
 };
 
-struct speaker {
-    const char *name, *bio;
-};
 
-static struct talk talks_16[] = {
+const struct talk talks_16[] = {
   {
     .title = "Intro (Day 1)",
     .names = "Admin",
@@ -199,7 +191,8 @@ static struct talk talks_16[] = {
     .track = 1,
   },
 };
-static struct talk talks_17[] = {
+const int num_talks_16 = 22;
+const struct talk talks_17[] = {
   {
     .title = "Intro (Day 2)",
     .names = "Admin",
@@ -369,7 +362,8 @@ static struct talk talks_17[] = {
     .track = 1,
   },
 };
-static struct speaker speakers[] = {
+const int num_talks_17 = 21;
+const struct speaker speakers[] = {
 {
     .name = "Admin",
     .bio = "NorthSec Team",
@@ -559,3 +553,6 @@ static struct speaker speakers[] = {
     .bio = "Yolan is a security researcher delving into (and dwelling on) cryptography, crypto coding, blockchains technologies and other fun things. He has spoken at Black Hat USA, BSidesLV, Cryptovillage and DEF CON, on topics including automation in cryptography, public keys vulnerabilities, or vulnerability research, and presented at FDTC the first known practical fault attack against the EdDSA signature scheme. Yolan tweets as @anomalroil.",
 },
 };
+const int num_speakers = 47;
+const int longest_text = 1032;
+const int longest_title = 121;

@@ -64,6 +64,9 @@ def sanitize(s):
 
     return s
 
+longest_text = 0
+longest_title = 0
+
 for name in files:
     with open(name) as f:
         yo = f.read()
@@ -106,6 +109,8 @@ for name in files:
         'detailed': sanitize(detailed),
         'track': track,
     }
+    longest_title = max(longest_title, len(talk['title']))
+    longest_text = max(longest_text, len(talk['abstract']));
     if date == '16':
         list_of_talks_16.append(talk)
     else:
@@ -127,20 +132,16 @@ for name in speaker_files:
         'name': sanitize(speaker_name),
         'bio': sanitize(bio),
     })
+    longest_text = max(longest_text, len(list_of_speakers[-1]['bio']));
 
 list_of_speakers.sort(key=sort_by_name)
 
 print('''
 // THIS FILE HAS BEEN GENERATED USING gen-conf-structs.py !!!"1🤖!
 
-struct talk {
-    const char *title, *names, *abstract, *detailed;
-    unsigned char start_h, start_m;
-    unsigned char end_h, end_m;
-    unsigned char track;
-};
+#include "conf_sched.h"
 
-static const char *tracks[] = {
+const char * const tracks[] = {
     "Conf 1",
     "Conf 2",
     "Workshop 1 (Big)",
@@ -149,9 +150,6 @@ static const char *tracks[] = {
     "Workshop 4 (classroom)",
 };
 
-struct speaker {
-    const char *name, *bio;
-};
 ''')
 
 
@@ -174,20 +172,27 @@ def gen_talk(talk):
     print('  },')
 
 
-print('static struct talk talks_16[] = {')
+print('const struct talk talks_16[] = {')
 for talk in list_of_talks_16:
     gen_talk(talk)
 print('};')
 
-print('static struct talk talks_17[] = {')
+print('const int num_talks_16 = {};'.format(len(list_of_talks_16)))
+
+print('const struct talk talks_17[] = {')
 for talk in list_of_talks_17:
     gen_talk(talk)
 print('};')
+print('const int num_talks_17 = {};'.format(len(list_of_talks_17)))
 
-print('static struct speaker speakers[] = {')
+print('const struct speaker speakers[] = {')
 for sp in list_of_speakers:
     print('{')
     print('    .name = "{}",'.format(sp['name']))
     print('    .bio = "{}",'.format(sp['bio']))
     print('},')
 print('};')
+print('const int num_speakers = {};'.format(len(list_of_speakers)))
+
+print('const int longest_text = {};'.format(longest_text))
+print('const int longest_title = {};'.format(longest_title))

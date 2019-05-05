@@ -8,5 +8,6 @@
 #define nsec_conf_schedule_h
 
 void nsec_schedule_show_dates(void);
+void nsec_conf_length_check();
 
 #endif /* nsec_conf_schedule_h */
