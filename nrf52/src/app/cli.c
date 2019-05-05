@@ -261,6 +261,60 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_dump){
     NRF_CLI_SUBCMD_SET_END};
 
 NRF_CLI_CMD_REGISTER(dump, &sub_dump, "Dump things...", do_dump);
+
+static void do_ask_buddha(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+	const char *buddha_flag = "FLAG-A_THOUSAND_CHAR_JOURNEY_BEGINS";
+	size_t idx = 0;
+    if (nrf_cli_help_requested(p_cli)) {
+
+        nrf_cli_fprintf(
+            p_cli, NRF_CLI_VT100_COLOR_RED,
+            "TIME");
+        nrf_cli_fprintf(
+            p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
+            " IS LIKE A RIVER.\r\n");
+        return;
+    }
+
+	int cy = 1<<31;
+	while (buddha_flag[idx] == argv[1][idx] && buddha_flag[idx] != 0) {
+		for (uint32_t jdx = 0; jdx < 0x003FFFFF; jdx++) {
+			__asm__ __volatile__ ("nop");
+		}
+		idx += 1;
+	}
+	if (buddha_flag[idx] == argv[1][idx] && buddha_flag[idx] == 0) {
+		nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Now go ask god.\r\n");
+	}
+	return;
+
+}
+
+NRF_CLI_CMD_REGISTER(askbuddha, NULL, "Buddha only knows one flag.", do_ask_buddha);
+
+static void do_ask_jeez(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    if (nrf_cli_help_requested(p_cli)) {
+
+        nrf_cli_fprintf(
+            p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
+            "AND SURELY I AM WITH YOU ALWAYS TO THE VERY END OF THE AGE.\r\n");
+        nrf_cli_fprintf(
+            p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
+            "\tMATTHEW 28:20\r\n");
+        return;
+    }
+
+	if (strcmp("FLAG-TIMING_ATTTACKS_ARE_FUN", argv[1]) == 0) {
+		nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "Now go ask god.\r\n");
+	}
+	return;
+
+}
+
+NRF_CLI_CMD_REGISTER(askjeez, NULL, "Jesus only knows one flag.", do_ask_jeez);
+
 #endif
 
 static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
@@ -275,6 +329,10 @@ static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
                     "displayctl: Adjust the brightness of the screen\r\n");
 
 #ifdef NSEC_FLAVOR_CTF
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "askjeez:    In the christian lore, jesus is th son of god.\r\n");
+    nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                    "askbuddha:  Try asking for help.\r\n");
     nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
                     "dump:       Dump external flash memory\r\n");
 #endif
@@ -303,7 +361,6 @@ static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 
 NRF_CLI_CMD_REGISTER(help, NULL, "Print CLI help", do_help);
-
 /* Initialize the command-line interface module.  */
 
 void cli_init(void)
