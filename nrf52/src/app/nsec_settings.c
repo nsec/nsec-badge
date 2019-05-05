@@ -32,7 +32,6 @@ static void show_led_settings(uint8_t item);
 static void show_screen_settings(uint8_t item);
 static void confirm_factory_reset(uint8_t item);
 static void do_factory_reset(uint8_t item);
-static void toggle_flashlight(uint8_t item);
 static void show_member_details(uint8_t item);
 static void show_badge_info(uint8_t item);
 static void setting_handle_buttons(button_t button);
@@ -43,7 +42,6 @@ enum setting_state {
     SETTING_STATE_CREDIT,
     SETTING_STATE_CREDIT_DETAILS,
     SETTING_STATE_SCREEN_OFF,
-    SETTING_STATE_FLASHLIGHT,
     SETTING_STATE_BATTERY,
     SETTING_CONFIRM_FACTORY
 };
@@ -68,9 +66,6 @@ static menu_item_s settings_items[] = {
     }, {
         .label = "Turn screen off",
         .handler = turn_off_screen,
-    }, {
-        .label = "Flashlight",
-        .handler = toggle_flashlight,
     }, {
         .label = "Credit",
         .handler = show_credit,
@@ -272,16 +267,6 @@ void show_battery_status(void) {
     nsec_controls_add_handler(setting_handle_buttons);
 }
 
-static void toggle_flashlight(uint8_t item) {
-    _state = SETTING_STATE_FLASHLIGHT;
-    menu_close();
-    gfx_fill_screen(DISPLAY_WHITE);
-    gfx_update();
-    setMode_WS2812FX(FX_MODE_STATIC);
-    setBrightness_WS2812FX(255);
-    setColor_packed_WS2812FX(WHITE);
-}
-
 static void turn_off_screen(uint8_t item) {
     menu_close();
     display_set_brightness(0);
@@ -323,13 +308,6 @@ static void setting_handle_buttons(button_t button)
                 show_main_menu();
                 break;
 
-            case SETTING_STATE_FLASHLIGHT:
-                load_led_settings();
-                nsec_status_bar_ui_redraw();
-                draw_home_menu_bar();
-                draw_settings_title();
-
-                // no break
             case SETTING_STATE_SCREEN_OFF:
                 display_set_brightness(get_stored_display_brightness());
                 // no break

@@ -44,6 +44,12 @@ static void nsec_controls_trigger(button_t button)
  */
 void nsec_controls_clear_handlers(void)
 {
+    /* Purge all queued events */
+    CRITICAL_REGION_ENTER();
+    nrf_queue_reset(&event_queue);
+    CRITICAL_REGION_EXIT();
+
+    /* Clear the handler array */
     handler_count = 0;
     memset(handlers, 0, sizeof(handlers));
 }

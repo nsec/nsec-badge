@@ -27,6 +27,7 @@
 #include "status_bar.h"
 #include "timer.h"
 #include "utils.h"
+#include "app_flashlight.h"
 
 enum main_menu_state {
     MAIN_MENU_STATE_CLOSED,
@@ -104,6 +105,12 @@ void open_games_menu(uint8_t item)
     nsec_games_menu_show();
 }
 
+static void open_flashlight(uint8_t item) {
+    menu_close();
+    _state = MAIN_MENU_STATE_CLOSED;
+    application_set(app_flashlight);
+}
+
 void show_badge_cli_info(uint8_t item)
 {
     menu_close();
@@ -155,6 +162,10 @@ static menu_item_s main_menu_items[] = {
     {
         .label = "Badge info",
         .handler = show_badge_info,
+    },
+    {
+        .label = "Flashlight",
+        .handler = open_flashlight,
     },
     {
         .label = "Battery status",
