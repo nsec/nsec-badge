@@ -9,6 +9,7 @@
 
 #include <nrf.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 enum home_state {
     HOME_STATE_CLOSED,
@@ -33,5 +34,6 @@ void draw_title(struct title *title);
 void draw_settings_title(void);
 void draw_main_menu_title(void);
 void home_menu_application(void (*)());
+bool is_at_home_menu(void);
 
 #endif /* home_menu_h */

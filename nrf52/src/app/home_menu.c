@@ -36,7 +36,7 @@
 #include "images/settings_off_bitmap.h"
 #include "images/settings_on_bitmap.h"
 
-bool is_at_home_menu = false;
+static bool _is_at_home_menu = false;
 
 static uint16_t gfx_width;
 static uint16_t gfx_height;
@@ -127,7 +127,7 @@ void draw_home_menu_logo_animation()
 {
     static uint8_t frame = 0;
 
-    if (is_at_home_menu) {
+    if (_is_at_home_menu) {
         switch (frame) {
         case 0:
             gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
@@ -260,7 +260,7 @@ static void draw_home_menu(void)
 void show_home_menu(enum home_state state) {
     _state = state;
 
-    is_at_home_menu = true;
+    _is_at_home_menu = true;
     gfx_width = gfx_get_screen_width();
     gfx_height = gfx_get_screen_height();
     draw_home_menu();
@@ -277,7 +277,7 @@ static void open_burger_menu(void) {
     draw_main_menu_title();
 
     _state = HOME_STATE_CLOSED;
-    is_at_home_menu = false;
+    _is_at_home_menu = false;
     show_main_menu();
 }
 
@@ -293,7 +293,7 @@ static void open_settings_menu(void) {
     draw_settings_title();
 
     _state = HOME_STATE_CLOSED;
-    is_at_home_menu = false;
+    _is_at_home_menu = false;
     nsec_setting_show();
 }
 
@@ -302,7 +302,7 @@ static void home_menu_handle_buttons(button_t button) {
     screensaver_reset();
 
     /* Don't handle the buttons if we are in a submenu */
-    if (!is_at_home_menu) {
+    if (!_is_at_home_menu) {
         return;
     }
 
@@ -378,4 +378,9 @@ void home_menu_application(void (*service_callback)()) {
 
     /* Clear all control handlers */
     nsec_controls_clear_handlers();
+}
+
+bool is_at_home_menu(void)
+{
+    return _is_at_home_menu;
 }
