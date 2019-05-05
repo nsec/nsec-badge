@@ -54,7 +54,7 @@ static const char *cli_info =
     "stopbit = 1\n"
     "no parity\n\n"
     "Example with picocom: \n"
-    "picocom /dev/ttyACM1 -b 115200 --omap delbs\n";
+    "picocom /dev/ttyACM1 -b 115200\n";
 
 static struct text_box_config config = {
     GEN_MENU_POS_X,
