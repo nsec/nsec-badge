@@ -48,6 +48,7 @@
 #include "resistance_slideshow.h"
 
 #include "ble/button_service.h"
+#include "ble/ble_device_info.h"
 #include "ble/resistance_bar_beacon.h"
 #include "ble/service_advertiser.h"
 #include "ble/service_characteristic.h"
@@ -115,7 +116,7 @@ static void init_ble() {
     /*nsec_led_ble_init();*/
     init_identity_service();
     init_button_service();
-    //nsec_init_demo_vendor_service();
+    nsec_ble_init_device_information_service();
     set_vendor_service_in_advertising_packet(nsec_identity_get_service(), false);
     //set_vendor_service_in_scan_response(nsec_identity_get_service(), true);
     set_advertiser(get_service_advertiser());
