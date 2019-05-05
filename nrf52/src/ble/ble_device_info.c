@@ -9,44 +9,30 @@
 #include "nsec_ble_internal.h"
 #include <ble_dis.h>
 
+
+#define MANUFACTURER "NeuroSoft"
+#define MODEL "Beyond Reality Apex"
+#define HARDWARE_REV "28C"
+#define FIRMWARE_REV "2019.05.17"
+#ifdef NSEC_FLAVOR_CTF
+#define SOFTWARE_REV "FLAG-43f7087911c28422397dd50b8517d351"
+#else
+#define SOFTWARE_REV "2.3.4"
+#endif
+
 static void _nsec_ble_add_device_information_service_raw(ble_dis_init_t * raw_dis);
 
-void nsec_ble_add_device_information_service(char * manufacturer_name,
-                                             char * model,
-                                             char * serial_number,
-                                             char * hw_revision,
-                                             char * fw_revision,
-                                             char * sw_revision) {
+void nsec_ble_init_device_information_service() {
     ble_dis_init_t device_information;
     bzero(&device_information, sizeof(device_information));
 
-    if(manufacturer_name) {
-        ble_srv_ascii_to_utf8(&device_information.manufact_name_str,
-                              manufacturer_name);
-    }
-    if(model) {
-        ble_srv_ascii_to_utf8(&device_information.model_num_str,
-                              model);
-    }
-    if(serial_number) {
-        ble_srv_ascii_to_utf8(&device_information.serial_num_str,
-                              serial_number);
-    }
-    if(hw_revision) {
-        ble_srv_ascii_to_utf8(&device_information.hw_rev_str,
-                              hw_revision);
-    }
-    if(fw_revision) {
-        ble_srv_ascii_to_utf8(&device_information.fw_rev_str,
-                              fw_revision);
-    }
-    if(sw_revision) {
-        ble_srv_ascii_to_utf8(&device_information.sw_rev_str,
-                              sw_revision);
-    }
+    ble_srv_ascii_to_utf8(&device_information.manufact_name_str, MANUFACTURER);
+    ble_srv_ascii_to_utf8(&device_information.model_num_str, MODEL);
+    ble_srv_ascii_to_utf8(&device_information.hw_rev_str, HARDWARE_REV);
+    ble_srv_ascii_to_utf8(&device_information.fw_rev_str, FIRMWARE_REV);
+    ble_srv_ascii_to_utf8(&device_information.sw_rev_str, SOFTWARE_REV);
 
     _nsec_ble_add_device_information_service_raw(&device_information);
-    //nsec_ble_register_adv_uuid_provider(_nsec_ble_device_info_uuid_provider);
 }
 
 static void _nsec_ble_add_device_information_service_raw(ble_dis_init_t * raw_dis) {

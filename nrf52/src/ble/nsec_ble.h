@@ -49,13 +49,6 @@ int nsec_ble_set_charateristic_value(nsec_ble_service_handle service, uint16_t c
 
 uint8_t nsec_ble_toggle(void);
 
-void nsec_ble_add_device_information_service(char * manufacturer_name,
-                                             char * model,
-                                             char * serial_number,
-                                             char * hw_revision,
-                                             char * fw_revision,
-                                             char * sw_revision);
-
 // returns handle
 int nsec_ble_register_vendor_service(nsec_ble_service_t * srv, nsec_ble_service_handle * handle);
 
