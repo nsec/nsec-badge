@@ -28,8 +28,6 @@
 
 #define PASSKEY_SIZE 6
 
-static const char message[] = "Your passkey is:";
-
 static char passkey[PASSKEY_SIZE + 1];
 
 void nsec_ble_show_pairing_menu(const char* key){
@@ -44,18 +42,29 @@ void nsec_ble_hide_pairing_menu(){
     }
 }
 
-static void draw_pairing_menu(){
-    uint16_t gfx_width = gfx_get_screen_width();
-    uint16_t gfx_height = gfx_get_screen_height();
+static void draw_pairing_menu() {
+    uint8_t gfx_width = gfx_get_screen_width();
+    uint8_t gfx_height = gfx_get_screen_height();
+
     gfx_fill_rect(0, 0, gfx_width, gfx_height, DISPLAY_BLACK);
-    gfx_set_cursor(0, 0);
-    gfx_set_text_size(1);
-    gfx_set_text_color(DISPLAY_WHITE);
-    gfx_puts(message);
-    gfx_set_cursor(gfx_width/2 - 20, 20);
+    gfx_fill_rect(0, 0, gfx_width, 20, DISPLAY_WHITE);
+
+    gfx_set_text_background_color(DISPLAY_BLACK, DISPLAY_WHITE);
+
+    gfx_set_cursor(28, 6);
+    gfx_puts("Bluetooth pairing");
+
+    gfx_set_cursor(32, 30);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_puts("Your passkey is");
+
+    gfx_set_cursor(42, 50);
     gfx_set_text_size(2);
+
     gfx_puts(passkey);
     gfx_update();
+
+    gfx_set_text_size(1);
 }
 
 /**
