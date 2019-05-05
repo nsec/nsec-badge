@@ -83,10 +83,6 @@ static menu_item_s main_menu_items[] = {
         .handler = open_games_menu,
     },
     {
-        .label = "Challenges",
-        .handler = open_challenges,
-    },
-    {
         .label = "LED pattern",
         .handler = open_led_pattern,
     },
