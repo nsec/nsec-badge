@@ -33,6 +33,7 @@
 #ifdef NSEC_FLAVOR_CONF
 #include "nsec_conf_slideshow.h"
 #else
+#include "slideshow.h"
 #endif
 
 APP_TIMER_DEF(m_screensaver_timer_id);
@@ -62,6 +63,7 @@ static void screensaver_timer_handler(void *p_context)
 #ifdef NSEC_FLAVOR_CONF
                 application_set(nsec_conf_slideshow_app);
 #else
+                application_set(slideshow_app);
 #endif
             }
         }
