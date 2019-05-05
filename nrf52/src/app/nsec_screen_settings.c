@@ -255,7 +255,7 @@ static void show_actual_screensaver(void)
 
     switch (model) {
     case SCREENSAVER_MODE_SLEEP:
-        snprintf(actual, 50, "Now: %s", "Turn off");
+        snprintf(actual, 50, "Now: %s", "Turn off ");
         break;
     case SCREENSAVER_MODE_SLIDESHOW:
         snprintf(actual, 50, "Now: %s", "Slideshow");
