@@ -29,6 +29,7 @@
 #include "drivers/display.h"
 #include "persistency.h"
 #include "timer.h"
+#include "home_menu.h"
 
 #ifdef NSEC_FLAVOR_CONF
 #include "nsec_conf_slideshow.h"
@@ -46,8 +47,8 @@ static uint32_t screensaver_cnt = 0;
 static void screensaver_timer_handler(void *p_context)
 {
 
-    /* Only initiate screensaver from the home menu */
-    if (application_is_default() && !is_in_screensaver) {
+    /* Only initiate screensaver from the home menu, not in submenus */
+    if (application_is_default() && !is_in_screensaver && is_at_home_menu()) {
         screensaver_cnt += SCREENSAVER_TIMER_TIMEOUT;
 
         /* We reached the delay, switch to the sleep app */
