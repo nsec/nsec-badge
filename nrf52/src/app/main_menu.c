@@ -42,7 +42,7 @@ static void main_handle_buttons(button_t button);
 static char identity_string[] = "Id: Citizen #XXXXXXX";
 static char ble_id_string[] = "BLE id: NSECXXXX";
 
-const char *cli_info =
+static const char *cli_info =
     "The badge provides a command line interface that is accessible via the "
     "USB port.\n"
     "Connect the badge to a PC and explore it. To access the CLI you can "
