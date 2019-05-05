@@ -25,7 +25,7 @@ void nsec_conf_slideshow_app(void (*service_device)())
     nsec_controls_add_handler(nsec_conf_slideshow_button_handler);
 
     uint16_t i = 0;
-    uint8_t repeat = 1;
+    uint8_t repeat = 3;
 
     while (application_get() == nsec_conf_slideshow_app) {
         if (i == 0) {
@@ -86,7 +86,7 @@ void nsec_conf_slideshow_app(void (*service_device)())
                 i = 0;
                 repeat--;
             } else {
-                application_clear();
+                application_set(app_screensaver_sleep);
             }
         }
 

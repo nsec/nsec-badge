@@ -108,7 +108,7 @@ void slideshow_app(void (*service_device)())
         jobs[2] = (Job){"elevated", SLIDESHOW_TEXT_RESULT_FAIL, 0};
         jobs[3] = (Job){"Consult a technician", SLIDESHOW_TEXT_RESOLUTION, 0};
         jobs[4] =
-            (Job){"at Department of Health", SLIDESHOW_TEXT_RESOLUTION, 1};
+            (Job){"at Ministry of Health", SLIDESHOW_TEXT_RESOLUTION, 1};
         break;
 
     case 5:
@@ -141,7 +141,7 @@ void slideshow_app(void (*service_device)())
     for (uint8_t i = 0; i < jobs_count; i++) {
         enum slideshow_text_type type = jobs[i].type;
 
-        timeout = 40;
+        timeout = 70;
         while (timeout-- > 0) {
             service_device();
             slideshow_render_title_indicator();
@@ -196,10 +196,10 @@ void slideshow_app(void (*service_device)())
         service_device();
     }
 
-    timeout = 300;
+    timeout = 600;
     while (application_get() == slideshow_app) {
         if (timeout == 0) {
-            application_clear();
+            application_set(app_screensaver_sleep);
         }
 
         service_device();
