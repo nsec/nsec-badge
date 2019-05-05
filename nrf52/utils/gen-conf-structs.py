@@ -55,6 +55,15 @@ def sort_by_start_then_track(talk):
 def sort_by_name(speaker):
     return speaker['name']
 
+def sanitize(s):
+    s = s.replace('\\', '\\\\').replace('"', '\\"').replace('\n', ' ').replace('\u2028', ' ').replace('“', '\\"').replace('”', '\\"').replace('’', "'").replace('‘', "'").replace('—', '-').replace('–', '-').replace('†', '').replace('\xe4', 'a').replace('\xe9', 'e').replace('\xc9', 'E').replace('\u0151', 'o').replace('\xa9', '').replace('\xab', '\\"').replace('\xbb', '\\"').replace('\u2009', ' ').replace('\xa0', ' ').replace('\xe8', 'e')
+
+    # Make sure that we didn't miss any non ascii character.
+    # This will raise an exception if there is still one.
+    s.encode('ascii')
+
+    return s
+
 for name in files:
     with open(name) as f:
         yo = f.read()
@@ -66,7 +75,7 @@ for name in files:
     title = m.group(1)
     assert title
 
-    names = [x.text.strip() for x in soup.select('div.name')]
+    names = [sanitize(x.text.strip()) for x in soup.select('div.name')]
     assert names
 
     abstract = soup.select_one('section.abstract').text.strip()
@@ -87,14 +96,14 @@ for name in files:
     track = loc2track[loc]
 
     talk = {
-        'title': title,
+        'title': sanitize(title),
         'names': names,
         'start_h': start_h,
         'start_m': start_m,
         'end_h': end_h,
         'end_m': end_m,
-        'abstract': abstract,
-        'detailed': detailed,
+        'abstract': sanitize(abstract),
+        'detailed': sanitize(detailed),
         'track': track,
     }
     if date == '16':
@@ -115,8 +124,8 @@ for name in speaker_files:
     bio = soup.select_one('div.speaker-bio').text.strip()
 
     list_of_speakers.append({
-        'name': speaker_name,
-        'bio': bio,
+        'name': sanitize(speaker_name),
+        'bio': sanitize(bio),
     })
 
 list_of_speakers.sort(key=sort_by_name)
@@ -157,8 +166,8 @@ def gen_talk(talk):
     print('  {')
     print('    .title = "{}",'.format(talk['title']))
     print('    .names = "{}",'.format(', '.join(talk['names'])))
-    print('    .abstract = "{}",'.format(talk['abstract'].replace('\\', '\\\\').replace('"', r'\"').replace('\n', ' ')))
-    print('    .detailed = "{}",'.format(talk['detailed'].replace('\\', '\\\\').replace('"', r'\"').replace('\n', ' ')))
+    print('    .abstract = "{}",'.format(talk['abstract']))
+    print('    .detailed = "{}",'.format(talk['detailed']))
     print('    .start_h = {}, .start_m = {}, .end_h = {}, .end_m = {},'.format(
         t(talk['start_h']), t(talk['start_m']), t(talk['end_h']), t(talk['end_m'])))
     print('    .track = {},'.format(talk['track']))
@@ -178,7 +187,7 @@ print('};')
 print('static struct speaker speakers[] = {')
 for sp in list_of_speakers:
     print('{')
-    print('    .name = "{}",'.format(sp['name'].replace('\\', '\\\\').replace('"', r'\"').replace('\n', ' ')))
-    print('    .bio = "{}",'.format(sp['bio'].replace('\\', '\\\\').replace('"', r'\"').replace('\n', ' ')))
+    print('    .name = "{}",'.format(sp['name']))
+    print('    .bio = "{}",'.format(sp['bio']))
     print('},')
 print('};')
