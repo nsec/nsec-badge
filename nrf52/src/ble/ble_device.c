@@ -34,6 +34,7 @@
 #include "ble_scan.h"
 #include "drivers/uart.h"
 #include "app/pairing_menu.h"
+#include "app/persistency.h"
 
 #define APP_BLE_OBSERVER_PRIO 3
 #define PEER_ADDRESS_SIZE 6
@@ -99,7 +100,7 @@ ret_code_t create_ble_device(char* device_name){
         register_nsec_vendor_specific_uuid();
         ble_device->ble_observers_count = 0;
         gatt_init();
-        nsec_ble_is_enabled = true;
+        nsec_ble_is_enabled = get_stored_ble_is_enabled();
         return NRF_SUCCESS;
     }
     return -1;
@@ -440,6 +441,7 @@ bool ble_device_toggle_ble()
         ble_start_advertising();
         nsec_ble_is_enabled = true;
     }
+    update_stored_ble_is_enabled(nsec_ble_is_enabled);
     return nsec_ble_is_enabled;
 }
 

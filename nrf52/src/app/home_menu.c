@@ -15,6 +15,7 @@
 #include "nsec_settings.h"
 #include "status_bar.h"
 #include "app_screensaver.h"
+#include "persistency.h"
 #include <string.h>
 
 #include "images/neurosoft_logo_bitmap.h"
@@ -361,7 +362,7 @@ void home_menu_application(void (*service_callback)()) {
 
     menu_handler_init();
     nsec_status_bar_init();
-    nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
+    nsec_status_set_ble_status(get_stored_ble_is_enabled());
     nsec_battery_manager_init();
     show_home_menu(HOME_STATE_MENU);
 
