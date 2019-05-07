@@ -74,6 +74,17 @@ void open_conference_schedule(uint8_t item) {
 }
 #endif
 
+static void draw_cli_title(void)
+{
+    struct title title;
+    title.pos_y = 5;
+    title.pos_x = 45;
+    title.text_color = DISPLAY_BLUE;
+    title.bg_color = DISPLAY_WHITE;
+    strcpy(title.text, "CLI");
+    draw_title(&title);
+}
+
 void open_challenges(uint8_t item) {
     menu_close();
     _state = MAIN_MENU_STATE_CLOSED;
@@ -116,6 +127,7 @@ void show_badge_cli_info(uint8_t item)
     menu_close();
     _state = MAIN_MENU_CLI_INFO;
     gfx_fill_rect(0, 0, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    draw_cli_title();
     text_box_init(cli_info, &config);
 }
 
@@ -207,6 +219,8 @@ static void main_handle_buttons(button_t button) {
             break;
         case MAIN_MENU_CLI_INFO:
             _state = MAIN_MENU_STATE_BADGE_INFO;
+            draw_main_menu_title();
+            redraw_home_menu_burger_selected();
             show_badge_info(2);
             break;
         default:
