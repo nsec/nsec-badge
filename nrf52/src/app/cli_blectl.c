@@ -295,6 +295,12 @@ static void do_scan(const nrf_cli_t *p_cli, size_t argc, char **argv)
         return;
     }
 
+    if (!is_ble_enabled()) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                        "BLE is disable, please enable it before scanning\r\n");
+        return;
+    }
+
     if (!is_observer_added) {
         add_observer(&ble_scanner);
         is_observer_added = true;
