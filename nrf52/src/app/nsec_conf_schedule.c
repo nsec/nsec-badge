@@ -41,6 +41,35 @@
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
+const char *abstract_party =
+    "Conference party  supported by Hackerone\n"
+    "Where: Arcade Montreal 2031 Saint-Denis\n"
+    "When: Thursday 16 May, 20h30-3h00";
+
+const char *abstract_hack_mtl =
+    "HACK MTL premiere screening\n"
+    "Where: Cinema IMAX\n"
+    "When: Thursday 16 May, 18h15-20h30\n"
+    "We are in 2019 and privacy no longer exists. In less than one generation, "
+    "the internet has become a mass surveillance machine. The business model "
+    "that drives this machine can be summed up by a simple saying: If it’s "
+    "free, you’re the product. Google, Facebook, Twitter, Skype and all these "
+    "other services have become masters in the art of monetizing our "
+    "interactions with their platforms. In this brave new world, we have "
+    "become the primary resource of the surveillance economy; we have all "
+    "become generators of personal data. All the traces we leave of ourselves "
+    "on the internet are thus captured, stored and accessible to both States "
+    "and web giants ... and this trend is rapidly intensifying. Whatever hope "
+    "is left will come from the hacker movement. After all, the internet is "
+    "their playground. Hackers know better than anyone the real extent of "
+    "surveillance. According to these circuit subversives, Big Brother exists "
+    "and only a technological struggle will be able to defeat him. Thus, they "
+    "dismantle computers in search of backdoors. They climb rooftops to build "
+    "a new alternative and community network. They develop encryption tools. "
+    "They come together at major international meetings and actively promote "
+    "online anonymity. By giving a voice to our local hacker scene, HAK_MTL "
+    "explores Montreal’s contribution to the global fight for privacy.";
+
 static struct text_box_config config = {
     CONF_POS_X,
     CONF_POS_Y,
@@ -55,10 +84,18 @@ static void nsec_schedule_show_talks(uint8_t item);
 static void nsec_schedule_show_speakers(uint8_t item);
 static void nsec_schedule_show_events(uint8_t item);
 static void nsec_schedule_show_gosecure_event(uint8_t item);
+static void nsec_schedule_show_conference_party(uint8_t item);
+static void nsec_schedule_show_hack_mtl(uint8_t item);
 
 static menu_item_s days_schedule_items[] = {
-    {.label = "Thursday, May 16th", .handler = nsec_schedule_show_talks},
-    {.label = "Friday, May 17th", .handler = nsec_schedule_show_talks},
+    {
+        .label = "Thursday, May 16th",
+        .handler = nsec_schedule_show_talks
+    },
+    {
+        .label = "Friday, May 17th",
+        .handler = nsec_schedule_show_talks
+    },
     {
         .label = "Speakers",
         .handler = nsec_schedule_show_speakers,
@@ -71,8 +108,16 @@ static menu_item_s days_schedule_items[] = {
 
 static menu_item_s events_schedule_items[] = {
     {
-        .label = "GoSecure",
+        .label = "GoSecure whisky tasting",
         .handler = nsec_schedule_show_gosecure_event
+    },
+    {
+        .label = "Conference party",
+        .handler = nsec_schedule_show_conference_party
+    },
+    {
+        .label = "HACK MTL",
+        .handler = nsec_schedule_show_hack_mtl
     }
 };
 
@@ -84,6 +129,7 @@ enum schedule_state {
     SCHEDULE_STATE_SPEAKERS,
     SCHEDULE_STATE_SPEAKER_DETAILS,
     SCHEDULE_STATE_EVENTS,
+    SCHEDULE_STATE_EVENT_DESC,
 };
 
 static enum schedule_state schedule_state = SCHEDULE_STATE_CLOSED;
@@ -228,6 +274,22 @@ void nsec_schedule_show_gosecure_event(uint8_t item) {
     application_set(gosecure_animation_app);
 }
 
+void nsec_schedule_show_conference_party(uint8_t item)
+{
+    menu_close();
+    schedule_state = SCHEDULE_STATE_EVENT_DESC;
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    text_box_init(abstract_party, &config);
+}
+
+void nsec_schedule_show_hack_mtl(uint8_t item)
+{
+    menu_close();
+    schedule_state = SCHEDULE_STATE_EVENT_DESC;
+    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    text_box_init(abstract_hack_mtl, &config);
+}
+
 static void nsec_schedule_button_handler(button_t button) {
     if(button == BUTTON_BACK) {
         switch (schedule_state) {
@@ -240,9 +302,13 @@ static void nsec_schedule_button_handler(button_t button) {
             break;
         case SCHEDULE_STATE_TALKS:
         case SCHEDULE_STATE_SPEAKERS:
-	case SCHEDULE_STATE_EVENTS:
+        case SCHEDULE_STATE_EVENTS:
             redraw_home_menu_burger_selected();
             nsec_schedule_show_dates();
+            break;
+        case SCHEDULE_STATE_EVENT_DESC:
+            redraw_home_menu_burger_selected();
+            nsec_schedule_show_events(3);
             break;
         case SCHEDULE_STATE_DATES:
             menu_close();
