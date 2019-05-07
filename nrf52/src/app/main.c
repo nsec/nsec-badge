@@ -120,10 +120,12 @@ static void init_ble() {
     set_vendor_service_in_advertising_packet(nsec_identity_get_service(), false);
     //set_vendor_service_in_scan_response(nsec_identity_get_service(), true);
     set_advertiser(get_service_advertiser());
-    ble_start_advertising();
 
     add_observer(get_resistance_propaganda_observer());
-    ble_device_start_scan();
+    if (get_stored_ble_is_enabled()) {
+        ble_start_advertising();
+        ble_device_start_scan();
+    }
     nsec_nearby_badges_init();
 #endif
 }

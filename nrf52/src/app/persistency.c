@@ -40,7 +40,6 @@
 #define PERSISTENCY_BASE_ADDRESS 0x07F000
 #define PERSISTENCY_SIZE 4096
 #define PERSISTENCY_REVISION 1
-/* TODO migrate nsec_storage here */
 
 /* Led settings  303 bytes*/
 struct led_settings {
@@ -52,13 +51,14 @@ struct led_settings {
 
 struct persistency {
     uint32_t zombie_odds_modifier;      // 4 bytes
-    uint8_t display_brightness;         // 1 bytes
+    uint8_t display_brightness;         // 1 byte
     struct led_settings led_settings;   // 303 bytes
     char identity_name[17];             // 17 bytes
-    uint32_t unlocked_pattern_bf;       // 4 bytes
-    uint8_t display_model;              // 1 bytes
-    uint8_t screensaver;                // 1 bytes
-    uint8_t padding[4096 - 331 - 5];    // 4k - (used memory) - rev - CRC
+    uint32_t unlocked_pattern_bf;       // 4 byte
+    uint8_t display_model;              // 1 byte
+    uint8_t screensaver;                // 1 byte
+    uint8_t ble_enable;                 // 1 byte
+    uint8_t padding[4096 - 332 - 5];    // 4k - (used memory) - rev - CRC
     uint8_t revision;
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
@@ -112,6 +112,7 @@ void set_default_persistency(void)
     persistency->display_brightness = 50;
     persistency->display_model = 0;
     persistency->unlocked_pattern_bf = 0;
+    persistency->ble_enable = true;
     persistency->revision = PERSISTENCY_REVISION;
 
     snprintf(persistency->identity_name, 16, "Citizen #%02ld",
@@ -322,6 +323,18 @@ uint32_t get_stored_pattern_bf(void) {
 void update_stored_pattern_bf(uint32_t bf) {
     persistency->unlocked_pattern_bf = bf;
     update_persistency();
+}
+
+/* BLE */
+void update_stored_ble_is_enabled(bool nsec_ble_is_enabled)
+{
+    persistency->ble_enable = nsec_ble_is_enabled;
+    update_persistency();
+}
+
+bool get_stored_ble_is_enabled(void)
+{
+    return persistency->ble_enable;
 }
 
 #ifndef SOLDERING_TRACK

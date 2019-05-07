@@ -68,4 +68,7 @@ char* get_stored_identity(void);
 uint32_t get_stored_pattern_bf(void);
 void update_stored_pattern_bf(uint32_t bf);
 
+void update_stored_ble_is_enabled(bool nsec_ble_is_enabled);
+bool get_stored_ble_is_enabled(void);
+
 #endif

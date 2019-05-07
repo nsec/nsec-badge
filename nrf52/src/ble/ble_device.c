@@ -34,6 +34,7 @@
 #include "ble_scan.h"
 #include "drivers/uart.h"
 #include "app/pairing_menu.h"
+#include "app/persistency.h"
 
 #define APP_BLE_OBSERVER_PRIO 3
 #define PEER_ADDRESS_SIZE 6
@@ -99,7 +100,7 @@ ret_code_t create_ble_device(char* device_name){
         register_nsec_vendor_specific_uuid();
         ble_device->ble_observers_count = 0;
         gatt_init();
-        nsec_ble_is_enabled = true;
+        nsec_ble_is_enabled = get_stored_ble_is_enabled();
         return NRF_SUCCESS;
     }
     return -1;
@@ -426,19 +427,26 @@ static void _nsec_ble_softdevice_init() {
     NRF_SDH_BLE_OBSERVER(m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_event_handler, NULL);
 }
 
-bool ble_device_toggle_ble(){
-    if(nsec_ble_is_enabled){
+bool ble_device_toggle_ble()
+{
+    if (nsec_ble_is_enabled) {
         ble_device_stop_scan();
         ble_stop_advertising();
-        if(nsec_ble_connected)
-            sd_ble_gap_disconnect(ble_device->connection_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
+        if (nsec_ble_connected)
+            sd_ble_gap_disconnect(ble_device->connection_handle,
+                                  BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
         nsec_ble_is_enabled = false;
-    }
-    else{
+    } else {
         ble_device_start_scan();
         ble_start_advertising();
         nsec_ble_is_enabled = true;
     }
+    update_stored_ble_is_enabled(nsec_ble_is_enabled);
+    return nsec_ble_is_enabled;
+}
+
+bool is_ble_enabled(void)
+{
     return nsec_ble_is_enabled;
 }
 

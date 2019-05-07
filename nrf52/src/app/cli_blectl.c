@@ -29,6 +29,8 @@
 #include "ble/abstract_ble_observer.h"
 #include "ble/ble_device.h"
 
+#include "status_bar.h"
+
 APP_TIMER_DEF(m_scan_timer);
 
 struct char_doc {
@@ -293,6 +295,12 @@ static void do_scan(const nrf_cli_t *p_cli, size_t argc, char **argv)
         return;
     }
 
+    if (!is_ble_enabled()) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                        "BLE is disable, please enable it before scanning\r\n");
+        return;
+    }
+
     if (!is_observer_added) {
         add_observer(&ble_scanner);
         is_observer_added = true;
@@ -316,6 +324,52 @@ static void do_scan(const nrf_cli_t *p_cli, size_t argc, char **argv)
     }
 }
 
+static void do_ble_enable(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    if (!standard_check(p_cli, argc, 1, argv, NULL, 0)) {
+        return;
+    }
+
+    bool ble_enable = is_ble_enabled();
+
+    if (argc == 1) {
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
+                        "BLE is %s\r\n", (ble_enable) ? "enable" : "disable");
+        return;
+    } else if (argc == 2) {
+        long int val = strtol(argv[1], NULL, 10);
+        if (val == 0 && strcmp(argv[1], "0")) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Invalid parameter\r\n",
+                        argv[1]);
+            return;
+        } else if (val != 0 && val != 1) {
+            nrf_cli_fprintf(
+                p_cli, NRF_CLI_ERROR,
+                "%s: Invalid parameter, value should be 1 or 0\r\n", argv[1]);
+            return;
+        }
+
+        if (val == ble_enable) {
+            nrf_cli_fprintf(
+                p_cli, NRF_CLI_DEFAULT,
+                "BLE is already %s\r\n", (ble_enable) ? "enable" : "disable");
+            return;
+        } else {
+            ble_enable = ble_device_toggle_ble();
+            nsec_status_set_ble_status(ble_enable);
+             nrf_cli_fprintf(
+                p_cli, NRF_CLI_DEFAULT,
+                "BLE is now %s\r\n", (ble_enable) ? "enable" : "disable");
+            return;
+        }
+    } else {
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n",
+                        argv[0]);
+        nrf_cli_help_print(p_cli, NULL, 0);
+        return;
+    }
+}
+
 static void do_ble(const nrf_cli_t *p_cli, size_t argc, char **argv)
 {
     if (!standard_check(p_cli, argc, 2, argv, NULL, 0)) {
@@ -328,10 +382,11 @@ static void do_ble(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_ble){
     NRF_CLI_CMD(scan, NULL, "Scan BLE devices (Maximum 250 devices)", do_scan),
+    NRF_CLI_CMD(ble_enable, NULL,
+                "Turn on/off BLE\r\n Usage: blectl ble_enable {0/1}",
+                do_ble_enable),
     NRF_CLI_CMD(service_guide, NULL,
-                "NorthSec 2019 badge BLE service documentation",
-                do_ble_docs),
-    NRF_CLI_SUBCMD_SET_END
-};
+                "NorthSec 2019 badge BLE service documentation", do_ble_docs),
+    NRF_CLI_SUBCMD_SET_END};
 
 NRF_CLI_CMD_REGISTER(blectl, &sub_ble, "BLE Tools collection", do_ble);
