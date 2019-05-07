@@ -29,12 +29,12 @@
 const char *abstract_party =
     "Conference party  supported by Hackerone\n"
     "Where: Arcade Montreal 2031 Saint-Denis\n"
-    "When: Thursday 16 May, 20h30-3h00";
+    "When: Thursday 16 May, 20:30-03:00";
 
 const char *abstract_hack_mtl =
     "HACK MTL premiere screening\n"
     "Where: Cinema IMAX\n"
-    "When: Thursday 16 May, 18h15-20h30\n"
+    "When: Thursday 16 May, 18:15-20:30\n"
     "We are in 2019 and privacy no longer exists. In less than one generation, "
     "the internet has become a mass surveillance machine. The business model "
     "that drives this machine can be summed up by a simple saying: If it’s "
