@@ -26,21 +26,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef BOARD_BRAIN
-#define ROW_COUNT                   9 // 10 - status bar
-#define COLUMN_COUNT                26
-#define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
-#else
-#define ROW_COUNT                   7 // 8 - status bar
-#define COLUMN_COUNT                21
-#define MAX_CHAR_UNDER_STATUS_BAR   COLUMN_COUNT * ROW_COUNT
-#endif
-
-#define PRESENTER_COUNT             40
-
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
 const char *abstract_party =
     "Conference party  supported by Hackerone\n"
     "Where: Arcade Montreal 2031 Saint-Denis\n"
@@ -213,8 +198,6 @@ static void prep_menu_talks(const struct talk *talks, int num_talks)
         p += n + 1;
         APP_ERROR_CHECK_BOOL((p - big_buf) < sizeof(big_buf));
     }
-
-    cli_printf("yo %d\r\n", p - big_buf);
 }
 
 static void nsec_schedule_show_talks(uint8_t item)
