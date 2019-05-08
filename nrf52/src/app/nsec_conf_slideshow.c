@@ -31,6 +31,7 @@ void nsec_conf_slideshow_app(void (*service_device)())
         if (i == 1) {
             clear_slideshow_area();
 
+            gfx_set_text_size(1);
             gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
             gfx_set_cursor(38, 17);
             gfx_puts("NorthSec 2019");

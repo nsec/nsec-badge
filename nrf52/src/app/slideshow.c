@@ -56,6 +56,7 @@ void slideshow_app(void (*service_device)())
     gfx_fill_rect(0, 0, DISPLAY_HEIGHT, DISPLAY_WIDTH, 0);
     gfx_fill_rect(0, 0, DISPLAY_HEIGHT, 20, SLIDESHOW_TITLE_BG);
 
+    gfx_set_text_size(1);
     gfx_set_text_background_color(DISPLAY_WHITE, SLIDESHOW_TITLE_BG);
     gfx_set_cursor(32, 6);
     gfx_puts("System health check");
