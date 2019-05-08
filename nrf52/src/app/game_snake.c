@@ -78,6 +78,7 @@ typedef struct SnakeGameState {
 
     bool collided;
     bool delay;
+    uint8_t exit_delay;
     uint8_t growth;
     uint8_t food_delay;
     int16_t grid[SNAKE_GRID_WIDTH * SNAKE_GRID_HEIGHT];
@@ -576,7 +577,11 @@ static void snake_game_loop(SnakeGameState *p_state)
 {
     if (p_state->collided) {
         if (snake_buttons_read() != SNAKE_BUTTON_NONE) {
-            application_clear();
+            p_state->exit_delay--;
+
+            if (p_state->exit_delay == 0) {
+                application_clear();
+            }
         }
 
         return;
@@ -626,6 +631,7 @@ void snake_application(void (*service_device)())
 {
     SnakeGameState state = {.collided = false,
                             .delay = true,
+                            .exit_delay = 2,
                             .food_delay = 0,
                             .z1 = 5,
                             .z2 = 14,
