@@ -94,7 +94,7 @@ static void set_default_led_settings(void)
     for (int i = 0 ; i < 15; i++) {
         persistency->led_settings.segment[i].start = 0;
         persistency->led_settings.segment[i].stop = 14;
-        persistency->led_settings.segment[i].mode = FX_MODE_STATIC;
+        persistency->led_settings.segment[i].mode = FX_MODE_SINGLE_DYNAMIC;
         persistency->led_settings.segment[i].speed = MEDIUM_SPEED;
         persistency->led_settings.segment[i].colors[0] = BLUE;
         persistency->led_settings.segment[i].colors[1] = RED;
