@@ -134,6 +134,44 @@ void slideshow_app(void (*service_device)())
         jobs[8] = (Job){"effects on your body.", SLIDESHOW_TEXT_RESOLUTION, 5};
         break;
 
+    case 7:
+        jobs_count = 5;
+        jobs[0] = (Job){"Language intepretation", SLIDESHOW_TEXT_DESC, 0};
+        jobs[1] = (Job){"unit", SLIDESHOW_TEXT_DESC_FINAL, 1};
+        jobs[2] = (Job){" testing", SLIDESHOW_TEXT_RESULT_PASS, 0};
+        jobs[3] = (Job){"- Omae wa mou shindeiru", SLIDESHOW_TEXT_RESOLUTION, 0};
+        jobs[4] = (Job){"- Nani!!", SLIDESHOW_TEXT_RESOLUTION, 1};
+        break;
+
+    case 8:
+        jobs_count = 6;
+        jobs[0] = (Job){"Language intepretation", SLIDESHOW_TEXT_DESC, 0};
+        jobs[1] = (Job){"unit", SLIDESHOW_TEXT_DESC_FINAL, 1};
+        jobs[2] = (Job){" testing", SLIDESHOW_TEXT_RESULT_PASS, 0};
+        jobs[3] = (Job){"Slava soyuzu sovetskih", SLIDESHOW_TEXT_RESOLUTION, 0};
+        jobs[4] = (Job){"socialisticheskih", SLIDESHOW_TEXT_RESOLUTION, 1};
+        jobs[5] = (Job){"respublic!", SLIDESHOW_TEXT_RESOLUTION, 1};
+        break;
+
+    case 9:
+        jobs_count = 4;
+        jobs[0] = (Job){"Checking for firmware", SLIDESHOW_TEXT_DESC, 0};
+        jobs[1] = (Job){"updates", SLIDESHOW_TEXT_DESC_FINAL, 1};
+        jobs[2] = (Job){"", SLIDESHOW_TEXT_RESOLUTION, 0};
+        jobs[3] = (Job){"Up to date.", SLIDESHOW_TEXT_RESOLUTION, 0};
+        break;
+
+    case 10:
+        jobs_count = 7;
+        jobs[0] = (Job){"Entering sleep mode:", SLIDESHOW_TEXT_DESC, 0};
+        jobs[1] = (Job){"5...", SLIDESHOW_TEXT_RESOLUTION, 0};
+        jobs[2] = (Job){"4...", SLIDESHOW_TEXT_RESOLUTION, 0};
+        jobs[3] = (Job){"3...", SLIDESHOW_TEXT_RESOLUTION, 0};
+        jobs[4] = (Job){"2...", SLIDESHOW_TEXT_RESOLUTION, 0};
+        jobs[5] = (Job){"1...", SLIDESHOW_TEXT_RESOLUTION, 0};
+        jobs[6] = (Job){"Initiating...", SLIDESHOW_TEXT_RESOLUTION, 0};
+        break;
+
     default:
         return;
     }
