@@ -114,6 +114,7 @@ void set_default_persistency(void)
     persistency->unlocked_pattern_bf = 0;
     persistency->ble_enable = true;
     persistency->revision = PERSISTENCY_REVISION;
+    persistency->screensaver = 2;
 
     snprintf(persistency->identity_name, 16, "Citizen #%02ld",
                  (NRF_FICR->DEVICEID[0] & 0xFFFF));

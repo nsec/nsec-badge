@@ -115,11 +115,19 @@ static menu_item_s screen_fix_items[] = {
 
 static menu_item_s screen_screensaver_items[] = {
     {
-        .label = "Slideshow",
+        .label = "30 seconds",
         .handler = save_screen_screensaver,
     },
     {
-        .label = "Turn off",
+        .label = "1 minute",
+        .handler = save_screen_screensaver,
+    },
+    {
+        .label = "2 minutes",
+        .handler = save_screen_screensaver,
+    },
+    {
+        .label = "5 minutes",
         .handler = save_screen_screensaver,
     }};
 
@@ -250,15 +258,24 @@ static void save_screen_fix(uint8_t item)
 
 static void show_actual_screensaver(void)
 {
-    uint8_t model = get_stored_screensaver();
+    uint8_t value = get_stored_screensaver();
     char actual[50] = {0};
 
-    switch (model) {
-    case SCREENSAVER_MODE_SLEEP:
-        snprintf(actual, 50, "Now: %s", "Turn off ");
+    switch (value) {
+    case 0:
+        snprintf(actual, 50, "Activate after: 30s");
         break;
-    case SCREENSAVER_MODE_SLIDESHOW:
-        snprintf(actual, 50, "Now: %s", "Slideshow");
+
+    case 1:
+        snprintf(actual, 50, "Activate after: 1m");
+        break;
+
+    case 2:
+        snprintf(actual, 50, "Activate after: 2m");
+        break;
+
+    case 3:
+        snprintf(actual, 50, "Activate after: 5m");
         break;
     }
 

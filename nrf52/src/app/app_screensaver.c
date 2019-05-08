@@ -51,22 +51,34 @@ static void screensaver_timer_handler(void *p_context)
     if (application_is_default() && !is_in_screensaver && is_at_home_menu()) {
         screensaver_cnt += SCREENSAVER_TIMER_TIMEOUT;
 
+        uint32_t delay = 100000;
+        switch (get_stored_screensaver()) {
+        case 0:
+            delay = 30 * 1000;
+            break;
+
+        case 1:
+            delay = 1 * 60 * 1000;
+            break;
+
+        case 2:
+            delay = 2 * 60 * 1000;
+            break;
+
+        case 3:
+            delay = 5 * 60 * 1000;
+            break;
+        }
+
         /* We reached the delay, switch to the sleep app */
-        if (screensaver_cnt >= SCREENSAVER_DELAY) {
+        if (screensaver_cnt >= delay) {
             screensaver_reset();
 
-            switch (get_stored_screensaver()) {
-            case SCREENSAVER_MODE_SLEEP:
-                application_set(app_screensaver_sleep);
-                break;
-
-            default:
 #ifdef NSEC_FLAVOR_CONF
-                application_set(nsec_conf_slideshow_app);
+            application_set(nsec_conf_slideshow_app);
 #else
-                application_set(slideshow_app);
+            application_set(slideshow_app);
 #endif
-            }
         }
     } else {
         screensaver_reset();
