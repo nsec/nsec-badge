@@ -141,7 +141,7 @@ void slideshow_app(void (*service_device)())
     for (uint8_t i = 0; i < jobs_count; i++) {
         enum slideshow_text_type type = jobs[i].type;
 
-        timeout = 70;
+        timeout = 50;
         while (timeout-- > 0) {
             service_device();
             slideshow_render_title_indicator();
@@ -196,7 +196,7 @@ void slideshow_app(void (*service_device)())
         service_device();
     }
 
-    timeout = 600;
+    timeout = 400;
     while (application_get() == slideshow_app) {
         if (timeout == 0) {
             application_set(app_screensaver_sleep);
