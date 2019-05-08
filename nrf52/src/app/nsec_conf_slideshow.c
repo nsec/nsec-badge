@@ -28,7 +28,7 @@ void nsec_conf_slideshow_app(void (*service_device)())
     uint8_t repeat = 3;
 
     while (application_get() == nsec_conf_slideshow_app) {
-        if (i == 0) {
+        if (i == 1) {
             clear_slideshow_area();
 
             gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
