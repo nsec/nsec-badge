@@ -94,6 +94,8 @@ void nsec_conf_slideshow_app(void (*service_device)())
         service_device();
     }
 
+    clear_slideshow_area();
+
     nsec_controls_clear_handlers();
     screensaver_reset();
 }

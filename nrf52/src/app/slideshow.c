@@ -208,6 +208,8 @@ void slideshow_app(void (*service_device)())
         timeout--;
     };
 
+    gfx_fill_rect(0, 0, DISPLAY_HEIGHT, DISPLAY_WIDTH, 0);
+
     nsec_controls_clear_handlers();
     screensaver_reset();
 }
