@@ -32,7 +32,7 @@ const char *abstract_party =
     "When: Thursday 16 May, 20:30-03:00";
 
 const char *abstract_hack_mtl =
-    "HACK MTL premiere screening\n"
+    "HAK MTL premiere screening\n"
     "Where: Cinema IMAX\n"
     "When: Thursday 16 May, 18:15-20:30\n"
     "We are in 2019 and privacy no longer exists. In less than one generation, "
@@ -101,7 +101,7 @@ static menu_item_s events_schedule_items[] = {
         .handler = nsec_schedule_show_conference_party
     },
     {
-        .label = "HACK MTL",
+        .label = "HAK MTL",
         .handler = nsec_schedule_show_hack_mtl
     }
 };
