@@ -78,21 +78,26 @@ void menu_add_item(menu_item_s *new_item) {
 }
 
 static void menu_ui_redraw_items(uint8_t start, uint8_t end) {
-    if (start < menu.item_on_top) {
-        start = menu.item_on_top;
-    } else if (start > menu.item_on_top + menu.item_count_per_page) {
+    APP_ERROR_CHECK_BOOL(start <= end);
+
+    /* Last item displayed. */
+    uint8_t item_at_bottom = menu.item_on_top + menu.item_count_per_page - 1;
+
+    /* Is the region of the menu to redraw completely outside what is currently displayed? */
+    if (start > item_at_bottom || end < menu.item_on_top) {
         return;
     }
-    if (end > menu.item_on_top + menu.item_count_per_page) {
-        end = menu.item_on_top + menu.item_count_per_page;
-    } else if (end < start) {
-        return;
-    }
+
+    /* Don't redraw items outside what is displayed. */
+    start = max(start, menu.item_on_top);
+    end = min(end, item_at_bottom);
+
     gfx_set_text_size(1);
     gfx_fill_rect(menu.pos_x,
                   menu.pos_y + FONT_SIZE_HEIGHT * (start - menu.item_on_top),
                   menu.col_width * FONT_SIZE_WIDTH,
                   (end - start + 1) * FONT_SIZE_HEIGHT, menu.bg_color);
+
     for (int item_index = start;
          item_index < menu.item_count && item_index <= end; item_index++) {
         gfx_set_cursor(menu.pos_x,

@@ -265,7 +265,7 @@ static void save_letter0(void)
     }
     menu_close();
     menu_init(INPUT_BOX_BRA_WIDTH + TEXT_BASE_WIDTH, INPUT_BOX_POS_Y,
-              TEXT_BASE_HEIGHT, TEXT_BASE_WIDTH, ARRAY_SIZE(letters_items),
+              TEXT_BASE_WIDTH, TEXT_BASE_HEIGHT, ARRAY_SIZE(letters_items),
               letters_items, HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 }
 
@@ -278,7 +278,7 @@ static void save_letter1(uint8_t item)
     }
     menu_close();
     menu_init(INPUT_BOX_BRA_WIDTH * 2 + TEXT_BASE_WIDTH * 4 + 1,
-              INPUT_BOX_POS_Y, TEXT_BASE_HEIGHT, TEXT_BASE_WIDTH,
+              INPUT_BOX_POS_Y, TEXT_BASE_WIDTH, TEXT_BASE_HEIGHT,
               ARRAY_SIZE(letters_items), letters_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
 }
@@ -292,7 +292,7 @@ static void save_letter2(uint8_t item)
     }
     menu_close();
     menu_init(INPUT_BOX_BRA_WIDTH * 4 + TEXT_BASE_WIDTH * 6 + 3,
-              INPUT_BOX_POS_Y, TEXT_BASE_HEIGHT, TEXT_BASE_WIDTH,
+              INPUT_BOX_POS_Y, TEXT_BASE_WIDTH, TEXT_BASE_HEIGHT,
               ARRAY_SIZE(letters_items), letters_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
 }
@@ -306,7 +306,7 @@ static void save_letter3(uint8_t item)
     }
     menu_close();
     menu_init(INPUT_BOX_BRA_WIDTH * 6 + TEXT_BASE_WIDTH * 8 + 5,
-              INPUT_BOX_POS_Y, TEXT_BASE_HEIGHT, TEXT_BASE_WIDTH,
+              INPUT_BOX_POS_Y, TEXT_BASE_WIDTH, TEXT_BASE_HEIGHT,
               ARRAY_SIZE(letters_items), letters_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
 }
