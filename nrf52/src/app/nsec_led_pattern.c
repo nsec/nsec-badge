@@ -314,6 +314,7 @@ static void save_letter3(uint8_t item)
 static uint8_t index_to_unlock;
 static void try_unlock(uint8_t item)
 {
+    nsec_controls_disable();
     strcat(pass, letters[item]);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     gfx_set_cursor(GEN_MENU_POS);
@@ -324,6 +325,7 @@ static void try_unlock(uint8_t item)
         gfx_puts("Try again !");
     }
     nrf_delay_ms(1000);
+    nsec_controls_enable();
     menu_close();
     nsec_led_pattern_show();
 }
