@@ -67,7 +67,7 @@ void gfx_set_cursor(int16_t x, int16_t y);
 void gfx_set_text_size(uint8_t s);
 void gfx_set_text_color(uint16_t c);
 void gfx_set_text_background_color(uint16_t c, uint16_t b);
-void gfx_set_text_wrap(bool w);
+bool gfx_set_text_wrap(bool w);
 
 void gfx_update(void);
 

@@ -104,10 +104,11 @@ static void text_box_show_page(void) {
                   config->bg_color);
     gfx_set_cursor(config->x + 1, config->y);
     gfx_set_text_background_color(config->text_color, config->bg_color);
+    bool old_wrap_value = gfx_set_text_wrap(false);
 
     for (i = 0; i < text_box.rows; i++) {
         if (text_box.line_index + i + 1 > text_box.line_count) {
-            return;
+            goto end;
         }
 
         int16_t line_end = text_box.line_offset[text_box.line_index + i + 1];
@@ -115,7 +116,7 @@ static void text_box_show_page(void) {
         int16_t line_size = line_end - line_start;
         if (line_size < 0) {
             text_box.is_at_bottom = true;
-            return;
+            goto end;
         }
 
         memset(buffer, '\0', text_box.columns + 1);
@@ -124,6 +125,9 @@ static void text_box_show_page(void) {
                 line_size);
         gfx_puts(buffer);
     }
+
+end:
+	gfx_set_text_wrap(old_wrap_value);
 }
 
 static void scroll_up(void) {

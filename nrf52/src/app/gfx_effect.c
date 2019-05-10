@@ -540,4 +540,8 @@ void gfx_set_text_background_color(uint16_t c, uint16_t b) {
     gfx_textbgcolor = b;
 }
 
-void gfx_set_text_wrap(bool w) { gfx_wrap = w; }
+bool gfx_set_text_wrap(bool w) {
+	bool old = gfx_wrap;
+	gfx_wrap = w;
+	return old;
+}
