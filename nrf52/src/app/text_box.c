@@ -64,7 +64,6 @@ void text_box_init(const char *text, struct text_box_config *config)
 
     text_box.is_handling_buttons = true;
     text_box.is_at_top = true;
-    text_box.is_at_bottom = false;
     text_box.columns = config->width / TEXT_BASE_WIDTH;
     text_box.rows = (config->height / TEXT_BASE_HEIGHT);
     text_box.config = config;
@@ -88,6 +87,9 @@ void text_box_init(const char *text, struct text_box_config *config)
         }
     }
 
+    text_box.is_at_bottom =
+        (text_box.line_count <= text_box.rows) ? true : false;
+
     nsec_controls_add_handler(text_box_button_handler);
 
     text_box_show_page();
@@ -104,10 +106,15 @@ static void text_box_show_page(void) {
     gfx_set_text_background_color(config->text_color, config->bg_color);
 
     for (i = 0; i < text_box.rows; i++) {
+        if (text_box.line_index + i + 1 > text_box.line_count) {
+            return;
+        }
+
         int16_t line_end = text_box.line_offset[text_box.line_index + i + 1];
         int16_t line_start = text_box.line_offset[text_box.line_index + i];
         int16_t line_size = line_end - line_start;
         if (line_size < 0) {
+            text_box.is_at_bottom = true;
             return;
         }
 
@@ -131,6 +138,7 @@ static void scroll_up(void) {
     if (text_box.line_index - text_box.rows < 0) {
         text_box.line_index = 0;
         text_box.is_at_top = true;
+        text_box.is_at_bottom = false;
     } else {
         text_box.line_index -= text_box.rows;
         text_box.is_at_bottom = false;
