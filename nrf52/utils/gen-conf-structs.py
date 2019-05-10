@@ -36,10 +36,10 @@ import glob
 loc2track = {
     'Conf 1': 0,
     'Conf 2': 1,
-    'Workshop 1 (Big)': 2,
-    'Workshop 2 (Salon du president)': 3,
-    'Workshop 3 (classroom)': 4,
-    'Workshop 4 (classroom)': 5,
+    'Workshop 1': 2,
+    'Workshop 2': 3,
+    'Workshop 3': 4,
+    'Workshop 4 (Salon du president)': 5,
 }
 
 files = glob.glob('talk_*.html')
@@ -78,6 +78,9 @@ for name in files:
     title = m.group(1)
     assert title
 
+    if title in ('Registration', 'Thursday Lunch', 'Friday Lunch', 'Sponsor event'):
+        continue
+
     names = [sanitize(x.text.strip()) for x in soup.select('div.name')]
     assert names
 
@@ -94,7 +97,7 @@ for name in files:
     end_h = m.group(4)
     end_m = m.group(5)
     loc = m.group(6)
-    if loc == 'IMAX Theatre':
+    if loc == 'Other':
         continue
     track = loc2track[loc]
 
@@ -144,10 +147,10 @@ print('''
 const char * const tracks[] = {
     "Conf 1",
     "Conf 2",
-    "Workshop 1 (Big)",
-    "Workshop 2 (Salon du president)",
-    "Workshop 3 (classroom)",
-    "Workshop 4 (classroom)",
+    "Workshop 1",
+    "Workshop 2",
+    "Workshop 3",
+    "Workshop 4 (Salon du president)",
 };
 
 ''')
