@@ -169,7 +169,8 @@ static void show_member_details(uint8_t item) {
         break;
 
         case 2: // Nicolas Aubry
-        show_credit(4);
+        gfx_puts("Nicolas Aubry\n");
+        gfx_puts("Software\n");
         break;
 
         case 3: //Simon Marchi
