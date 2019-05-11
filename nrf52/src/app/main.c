@@ -141,6 +141,16 @@ static void main_service_device() {
     power_manage();
 }
 
+static void enable_app_protect(void)
+{
+    NRF_NVMC->CONFIG = (NVMC_CONFIG_WEN_Wen << NVMC_CONFIG_WEN_Pos);
+    while (NRF_NVMC->READY == NVMC_READY_READY_Busy);
+    NRF_UICR->APPROTECT = 0xFFFFFF00;
+    while (NRF_NVMC->READY == NVMC_READY_READY_Busy);
+    NRF_NVMC->CONFIG = (NVMC_CONFIG_WEN_Ren << NVMC_CONFIG_WEN_Pos);
+    while (NRF_NVMC->READY == NVMC_READY_READY_Busy);
+}
+
 int main(void) {
 #if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
     sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
@@ -152,6 +162,11 @@ int main(void) {
     /*
      * Initialize base hardware
      */
+
+#ifdef SOLDERING_TRACK
+    enable_app_protect();
+#endif
+
     power_init();
     softdevice_init();
     timer_init();
