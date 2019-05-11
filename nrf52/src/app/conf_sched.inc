@@ -6,10 +6,10 @@
 const char * const tracks[] = {
     "Conf 1",
     "Conf 2",
-    "Workshop 1 (Big)",
-    "Workshop 2 (Salon du president)",
-    "Workshop 3 (classroom)",
-    "Workshop 4 (classroom)",
+    "Workshop 1",
+    "Workshop 2",
+    "Workshop 3",
+    "Workshop 4 (Salon du president)",
 };
 
 
