@@ -37,8 +37,8 @@ const char *abstract_hack_mtl =
     "When: Thursday 16 May, 18:15-20:30\n"
     "We are in 2019 and privacy no longer exists. In less than one generation, "
     "the internet has become a mass surveillance machine. The business model "
-    "that drives this machine can be summed up by a simple saying: If it’s "
-    "free, you’re the product. Google, Facebook, Twitter, Skype and all these "
+    "that drives this machine can be summed up by a simple saying: If it's "
+    "free, you're the product. Google, Facebook, Twitter, Skype and all these "
     "other services have become masters in the art of monetizing our "
     "interactions with their platforms. In this brave new world, we have "
     "become the primary resource of the surveillance economy; we have all "
@@ -53,7 +53,7 @@ const char *abstract_hack_mtl =
     "a new alternative and community network. They develop encryption tools. "
     "They come together at major international meetings and actively promote "
     "online anonymity. By giving a voice to our local hacker scene, HAK_MTL "
-    "explores Montreal’s contribution to the global fight for privacy.";
+    "explores Montreal's contribution to the global fight for privacy.";
 
 static struct text_box_config config = {
     CONF_POS_X,
