@@ -451,8 +451,6 @@ static void save_color(uint8_t item) {
         default:
             break;
     }
-
-    show_color_menu(0);
 }
 
 void show_actual_reverse(void) {
