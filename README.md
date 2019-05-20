@@ -4,48 +4,55 @@ Northsec 2019 Badge
 Brought to you by the Team badge for NorthSec.
 ----------------------------------------------
 
-[Badge website](http://sputnak.ga/)
-
 ## Hardware overview
 
 The NorthSec 2019 badge has two programmable micro-controllers:
 
- - The [Nordic Semiconductor](https://www.nordicsemi.com) [`nRF52832`](https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy2/nRF52832) (nRF52) and
- - The [STMicroelectronics](http://www.st.com/) [`STM32F070F6P6`](http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32-mainstream-mcus/stm32f0-series/stm32f0x0-value-line/stm32f070f6.html) (stm32).
+ - The [Nordic Semiconductor](https://www.nordicsemi.com)
+[`nRF52832`](https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy2/nRF52832)
+(nRF52)
+ - The [STMicroelectronics](http://www.st.com/)
+[`STM32F070F6P6`](http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32-mainstream-mcus/stm32f0-series/stm32f0x0-value-line/stm32f070f6.html)
+(stm32).
 
-The nRF52 is based on the ARM Cortex-M4F core and runs the `armv7-m` instruction set, it takes care of:
+The nRF52 is based on the ARM Cortex-M4F core and runs the `armv7-m` instruction
+set, it takes care of:
 
  - The OLED display
- - The Bluetooth Low Energy
+ - The Bluetooth Low Energy (BLE)
  - The battery management
- - The [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel) RGB LEDs
+ - The [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel)
+RGB LEDs
  - The buttons
 
-The stm32 is based on the ARM Cortex-M0 core and runs the `armv6-m` instruction set, it takes care of:
+The stm32 is based on the ARM Cortex-M0 core and runs the `armv6-m` instruction
+set, it takes care of:
 
  - The USB port
 
-The badge can be supplied by 1 ICR14500 3.7v Li-ion rechargeable battery and/or the USB port. The
-battery can be charged from the USB port but the power switch must be turned ON for the duration
-of the charge.
+The badge can be supplied by 1 ICR14500 3.7v Li-ion rechargeable battery and/or
+the USB port. The battery can be charged from the USB port but the power switch
+must be turned ON for the duration of the charge.
 
-The [schematic](http://xn--rr8b.ga/northsec_2019_schematics.pdf) are available.
+The [schematic](./hw/northsec_2019_schematics.pdf) are available.
 
 If you wish to build your own badge:
 
+<!-- TODO -->
 * [pcb]()
 * [bill of material]()
 
 ## Compiling
-You can either compile the code using CQFD and Docker or you can install the toolchain and build the project
-by yourself. Using CQFD and Docker will make sure you are using the right compiler version and toolchain.
+You can either compile the code using CQFD and Docker or you can install the
+toolchain and build the project by yourself. Using CQFD and Docker will make
+sure you are using the right compiler version and toolchain.
 
 ### CQFD ( Preferred method )
 
 Follow the steps to install CQFD and Docker, then simply run:
 
 ```
-cqfd init && cqfd
+$ cqfd init && cqfd
 ```
 
 [CQFD](https://github.com/savoirfairelinux/cqfd)
@@ -55,15 +62,15 @@ cqfd init && cqfd
 There is a `Makefile` for each micro-controller, but here are some stuff you'll
 need to make it work.
 
-To compile the badge firmware from source, your gcc need to be able
-generating `armv6-m` code and link with the nano variant of
+To compile the badge firmware from source, your gcc need to be able generating
+`armv6-m` code and link with the nano variant of
 [newlib](https://sourceware.org/newlib/).
 
 On OS X or macOS, you can use my formula for Homebrew:
 
 ```
-brew tap marc-etienne/stm32
-brew install arm-none-eabi-gcc
+$ brew tap marc-etienne/stm32
+$ brew install arm-none-eabi-gcc
 ```
 
 On Arch Linux, you will need the package
@@ -81,19 +88,25 @@ https://launchpad.net/gcc-arm-embedded.
 You will also need some python libraries, on Ubuntu / Debian:
 
 ```
-sudo apt install python3-pil python3-pycparser
+$ sudo apt install python3-pil python3-bs4 python3-usb PyYAML
+```
+
+or via [pip](https://pypi.org/project/pip/)
+
+```
+$ pip install -r requirements
 ```
 
 ### Dependencies
 
-The nF52 firmware depends on the Nordic SDK v14.2.0. You can download and extract
-the SDK by typing `make nordicsdk` in the `nrf52` directory. I will also be done
-automatically when building the first time.
+The nF52 firmware depends on the Nordic SDK v14.2.0. You can download and
+extract the SDK by typing `make nordicsdk` in the `nrf52` directory. I will also
+be done automatically when building the first time.
 
 The nRF52 also uses the s132 "SoftDevice" v5.0.0 to painlessly enable Bluetooth
 Low Energy (BLE), which comes with the SDK. Use
-`make builds/s132_nrf52_5.0.0_softdevice.elf` to create the ELF file
-from Nordic's binary distribution.
+`make builds/s132_nrf52_5.0.0_softdevice.elf` to create the ELF file from
+Nordic's binary distribution.
 
 NOTE: The Nordic SDK and the SoftDevice isn't free software. The licence
 agreements (`nordicsdk_licence_agreement.txt` and
@@ -142,29 +155,37 @@ to test instructions for it.
 
 ### Via USB
 
-The stm32 can also be flashed by holding the `PROGRAM` button behind the badge
-while pressing the `RESET` button. The stm32 will boot a specific on-chip bootloader
-that implements the [DFU](https://en.wikipedia.org/wiki/USB#Device_Firmware_Upgrade)
-interface.
+The stm32 can also be flashed by holding the `DFU` button behind the badge
+while pressing the `RESET` button. The stm32 will boot a specific on-chip
+bootloader that implements the
+[DFU](https://en.wikipedia.org/wiki/USB#Device_Firmware_Upgrade) interface.
 
-Reset the board with the `PROGRAM` button pressed, then release the button.
+Reset the board with the `DFU` button pressed, then release the button.
 
 You should now see a DFU device appearing on your computer:
-    % lsusb
-    ...
-    Bus 001 Device 057: ID 0483:df11 STMicroelectronics STM Device in DFU Mode
-    ...
+
+```
+$ lsusb
+[...]
+Bus 001 Device 057: ID 0483:df11 STMicroelectronics STM Device in DFU Mode
+[...]
+```
 
 Use a DFU compliant software to flash the STM32:
-- [dfu-util](https://www.archlinux.org/packages/community/x86_64/dfu-util/) on ArchLinux
+- [dfu-util](https://www.archlinux.org/packages/community/x86_64/dfu-util/) on
+ArchLinux
 
 To make a `bin` file from an ELF, run the following:
 
-    % arm-none-eabi-objcopy -O binary builds/nsec19_stm32_debugger.elf builds/nsec19_stm32_debugger.bin
+```
+$ arm-none-eabi-objcopy -O binary builds/nsec19_stm32_debugger.elf builds/nsec19_stm32_debugger.bin
+```
 
 Run the following command:
 
-    % dfu-util --device 0483:df11 --alt 0 --dfuse-address 0x08000000:leave --download builds/nsec19_stm32_debugger.bin
+```
+$ dfu-util --device 0483:df11 --alt 0 --dfuse-address 0x08000000:leave --download builds/nsec19_stm32_debugger.bin
+```
 
 The STM32 should reset automagically, running the newly downloaded firmware. The
 address of 0x08000000 is important, this is where the stm32 flash is mapped into
@@ -176,23 +197,33 @@ There were 6 firmware images built for the NorthSec 2019 event.
 
 ### `nsec19_stm32_debugger.elf`
 
-The firmware of the stm32 used during the NorthSec conference. It has the
-BlackMagic gdb stub exposed via the USB to reprogram and debug the nRF52 chip.
+The firmware of the stm32 used during the NorthSec Conference & CTF.
 
-### `nsec19_stm32_crossdebug.elf`
+### `nsec19_nrf52_conf.elf`
 
-Same as the stm32 conference firmware, except the debugger uses the external
-pins to allow programming and debugging the stm32 micro-controller of another
-badge.
+The firmware of the nRF52 used during the NorthSec Conference.
 
-### `nsec19_nrf52_{bar_beacon,conf,ctf,soldering}.elf`
+### `nsec19_nrf52_soldering`
 
-The firmware of the nRF52 used during the NorthSec conference or CTF.
+The firmware of the nRF52 used during the NorthSec CTF (soldering track).
+
+### `nsec19_stm32_soldering.elf`
+
+The firmware of the stm32 used during the NorthSec CTF (soldering track).
+
+### `nsec19_nrf52_bar_beacon.elf`
+
+The firmware of the nRF52 used during the NorthSec CTF. It broadcast messages
+and a flag via BLE.
+
+### `nsec19_nrf52_ctf.elf`
+
+The firmware of the nRF52 used during the NorthSec CTF.
 
 ## Cookbook
 
-Here are the steps to get you started. Lets say you've downloaded the source into the
-`nsec-badge` folder.
+Here are the steps to get you started. Lets say you've downloaded the source
+into the `nsec-badge` folder.
 
 ### stm32
 
@@ -203,31 +234,41 @@ on the nRF52.
 
 To compile the blackmagic firmware for the stm32:
 
-    % git submodule init
-    % git submodule update
-    % make builds/nsec19_stm32_debugger.bin
+```
+$ git submodule init
+$ git submodule update
+$ make builds/nsec19_stm32_debugger.bin
+```
 
 #### Flashing the firmware
 
 To flash the firmware on the stm32, boot the uController into DFU mode by
-pressing and holding the `PROGRAM` button, press `RESET`, then releasing the
-`PROGRAM` button.
+pressing and holding the `DFU` button, press `RESET`, then releasing the
+`DFU` button.
 
 Make sure you see a DFU device:
 
-    % lsusb
-    Bus 001 Device 057: ID 0483:df11 STMicroelectronics STM Device in DFU Mode
+```
+$ lsusb
+[...]
+Bus 001 Device 057: ID 0483:df11 STMicroelectronics STM Device in DFU Mode
+[...]
+```
 
 Use [dfu-util](http://dfu-util.sourceforge.net/) to flash the firmware:
 
-    % dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec19_stm32_debugger.bin
+```
+$ dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec19_stm32_debugger.bin
+```
 
 ### nRF52
 
 To compile the binary for the nRF52:
 
-    % cd nrf52
-    % make
+```
+$ cd nrf52
+$ make
+```
 
 To flash the binary on the nRF52, you'll need to either:
 
