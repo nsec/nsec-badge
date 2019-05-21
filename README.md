@@ -18,7 +18,7 @@ The NorthSec 2019 badge has two programmable micro-controllers:
 The nRF52 is based on the ARM Cortex-M4F core and runs the `armv7-m` instruction
 set, it takes care of:
 
- - The OLED display
+ - The LCD display
  - The Bluetooth Low Energy (BLE)
  - The battery management
  - The [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel)
@@ -31,8 +31,7 @@ set, it takes care of:
  - The USB port
 
 The badge can be supplied by 1 ICR14500 3.7v Li-ion rechargeable battery and/or
-the USB port. The battery can be charged from the USB port but the power switch
-must be turned ON for the duration of the charge.
+the USB port. The battery will be charged when the USB port is connected.
 
 The [schematic](./hw/northsec_2019_schematics.pdf) are available.
 
