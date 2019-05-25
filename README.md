@@ -24,6 +24,7 @@ set, it takes care of:
  - The [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel)
 RGB LEDs
  - The buttons
+ - The external 4 Mb (512 kB) flash storage ([Adesto AT25SF041](https://www.adestotech.com/wp-content/uploads/DS-AT25SF041_044.pdf))
 
 The stm32 is based on the ARM Cortex-M0 core and runs the `armv6-m` instruction
 set, it takes care of:
@@ -99,17 +100,17 @@ $ pip install -r requirements
 ### Dependencies
 
 The nF52 firmware depends on the Nordic SDK v14.2.0. You can download and
-extract the SDK by typing `make nordicsdk` in the `nrf52` directory. I will also
-be done automatically when building the first time.
+extract the SDK by typing `make nordicsdk` in the `nrf52` directory. It will
+also be done automatically when building the first time.
 
 The nRF52 also uses the s132 "SoftDevice" v5.0.0 to painlessly enable Bluetooth
-Low Energy (BLE), which comes with the SDK. Use
-`make builds/s132_nrf52_5.0.0_softdevice.elf` to create the ELF file from
-Nordic's binary distribution.
+Low Energy (BLE).  The SoftDevice is distributed as a blob with the SDK, and is
+found at `nrf52/nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex`.
 
-NOTE: The Nordic SDK and the SoftDevice isn't free software. The licence
-agreements (`nordicsdk_licence_agreement.txt` and
-`s132_nrf52_5.0.0_licence_agreement.txt`) will be downloaded as well.
+NOTE: The Nordic SDK and the SoftDevice aren't free software. The licence
+agreement is available at
+
+    nrf52/nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_licence-agreement.txt
 
 The stm32 requires the [opencm3](http://libopencm3.org/) library. The library
 is setup as a git submodule. Typing `git submodule init` and `git submodule
