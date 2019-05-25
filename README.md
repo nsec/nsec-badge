@@ -195,30 +195,18 @@ memory.
 
 There were 6 firmware images built for the NorthSec 2019 event.
 
-### `nsec19_stm32_debugger.elf`
-
-The firmware of the stm32 used during the NorthSec Conference & CTF.
-
-### `nsec19_nrf52_conf.elf`
-
-The firmware of the nRF52 used during the NorthSec Conference.
-
-### `nsec19_nrf52_soldering`
-
-The firmware of the nRF52 used during the NorthSec CTF (soldering track).
-
-### `nsec19_stm32_soldering.elf`
-
-The firmware of the stm32 used during the NorthSec CTF (soldering track).
-
-### `nsec19_nrf52_bar_beacon.elf`
-
-The firmware of the nRF52 used during the NorthSec CTF. It broadcast messages
-and a flag via BLE.
-
-### `nsec19_nrf52_ctf.elf`
-
-The firmware of the nRF52 used during the NorthSec CTF.
+* `nsec19_stm32_debugger.elf`: The firmware of the stm32 used during the
+  NorthSec Conference & CTF.
+* `nsec19_nrf52_conf.elf`: The firmware of the nRF52 used during the NorthSec
+  Conference.
+* `nsec19_nrf52_ctf.elf`: The firmware of the nRF52 used during the NorthSec
+  CTF.
+* `nsec19_stm32_soldering.elf`: The firmware of the stm32 used during the
+  NorthSec CTF (soldering track).
+* `nsec19_nrf52_soldering`: The firmware of the nRF52 used during the NorthSec
+  CTF (soldering track).
+* `nsec19_nrf52_bar_beacon.elf`: The firmware of the nRF52 used during the
+  NorthSec CTF. It broadcast messages and a flag via BLE.
 
 ## Cookbook
 
