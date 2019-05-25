@@ -222,31 +222,31 @@ The firmware of the nRF52 used during the NorthSec CTF.
 
 ## Cookbook
 
-Here are the steps to get you started. Lets say you've downloaded the source
-into the `nsec-badge` folder.
+Here are the steps to get your badge up and running from scratch (with the CTF
+firmware, adjust the instructions to use other firmwares).
 
 ### stm32
 
-#### BlackMagic
+The blackmagic firmware that runs on the stm32 lets you debug and flash the
+firmware on the nRF52.  It also provides a bridge to communicate with the UART
+of the nRF52
 
-The blackmagic firmware that runs on the stm32 let you debug and flash firmware
-on the nRF52.
-
-To compile the blackmagic firmware for the stm32:
+Make sure you have cloned the blackmagic submodule:
 
 ```
 $ git submodule init
 $ git submodule update
+```
+
+Compile it with:
+
+```
 $ make builds/nsec19_stm32_debugger.bin
 ```
 
-#### Flashing the firmware
-
-To flash the firmware on the stm32, boot the uController into DFU mode by
-pressing and holding the `DFU` button, press `RESET`, then releasing the
-`DFU` button.
-
-Make sure you see a DFU device:
+Boot the stm32 in `DFU` mode by pressing the `RESET` button while holding the
+`DFU` button.  Both buttons are at the back of the badge.  Make sure you see a
+DFU device:
 
 ```
 $ lsusb
@@ -255,11 +255,32 @@ Bus 001 Device 057: ID 0483:df11 STMicroelectronics STM Device in DFU Mode
 [...]
 ```
 
-Use [dfu-util](http://dfu-util.sourceforge.net/) to flash the firmware:
+Use [dfu-util](http://dfu-util.sourceforge.net/) to write the firmware on the
+stm32:
 
 ```
-$ dfu-util --reset --device 0483:df11 --alt 0 --dfuse-address 0x08000000 --download builds/nsec19_stm32_debugger.bin
+$ dfu-util --device 0483:df11 --alt 0 --dfuse-address 0x08000000:leave --download builds/nsec19_stm32_debugger.bin
 ```
+
+If everything went right, you should now see a USB device that looks like:
+
+```
+$ lsusb
+[...]
+Bus 004 Device 024: ID 1d50:6018 OpenMoko, Inc. Black Magic Debug Probe (Application)
+[...]
+```
+And two ttyACM devices should have been created:
+
+```
+$ dmesg
+[...]
+[1785692.689392] cdc_acm 4-1:1.0: ttyACM0: USB ACM device
+[1785692.692334] cdc_acm 4-1:1.2: ttyACM1: USB ACM device
+[...]
+```
+
+You are now ready to flash the nRF52 chip.
 
 ### nRF52
 
@@ -267,12 +288,42 @@ To compile the binary for the nRF52:
 
 ```
 $ cd nrf52
-$ make
+$ make FLAVOR=ctf
 ```
 
-To flash the binary on the nRF52, you'll need to either:
+We will use `arm-none-eabi-gdb` to flash the firmware on the nRF52.  But first,
+we need to do a bit of configuration.  Copy `nrf52/flash_config.gdb.template`
+over to `nrf52/flash_config.gdb`.  Adjust the following:
 
-* have the blackmagic debugger firmware flashed onto the stm32
-* use a BlackMagic device
+* `target extended-remote <device>`: Use the name of the first ttyACM device
+  created by blackmagic (typically /dev/ttyACM0 on Linux).
+* `LOAD_SOFTDEVICE`: The SoftDevice needs to be written once on the nrf52, so
+  set this to 1 at least the first time you flash your badge.  It won't be
+  necessary to write the SoftDevice the subsequent times.  It won't hurt to do
+  it multiple times, but it will just take more time unnecessarily.
 
-Use the blackmagic exposed ACM device to flash the firmware using GDB.
+Write the firmware on the nRF52 with:
+
+```
+$ cd nrf52
+$ arm-none-eabi-gdb -nx -x flash.gdb
+```
+
+If you want to flash another firmware than the CTF firmware, update the paths
+in `nrf52/flash.gdb` accordingly.
+
+The badge contains an external flash chip to hold larger assets, such as images
+for the games. To populate this flash, an extra step is required.  First, boot
+in "flash mode" by pressing the "up" button while powering up the badge.  You
+should see `Flash mode` appear on the screen.  Then write the flash with:
+
+```
+$ cd nrf52
+$ make flash-external-flash FLAVOR=ctf
+```
+
+Note that the step above assumes that the second ttyACM device created by
+blackmagic (the UART bridge to the nRF52) is `/dev/ttyACM1`.  Adjust the path
+in `nrf52/utils/flash_client.py` if this assumption is wrong.
+
+Reboot your badge, you should now have a complete CTF firmware!
