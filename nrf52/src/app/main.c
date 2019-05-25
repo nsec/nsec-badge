@@ -177,9 +177,9 @@ int main(void) {
     nsec_buttons_init();
 
     // Enter flash mode if the "up" button is pressed.
-    //if (nsec_button_is_pushed(BUTTON_UP)) {
-    //  flash_mode();
-    //}
+    if (nsec_button_is_pushed(BUTTON_UP)) {
+      flash_mode();
+    }
 
     // cli_init depends on timer_init, and also needs to be after flash_mode
     // (the CLI takes over the UART, which the flash mode uses).
