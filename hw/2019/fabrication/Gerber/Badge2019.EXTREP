@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------------------
+Gerber File Extension Report For: Badge2019.GBR   2019-03-04  20:27:31
+------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------
+Layer Extension     Layer Description                      
+------------------------------------------------------------------------------------------
+.GTL                Top Layer                               
+.GBL                Bottom Layer                            
+.GTP                Top Paste                               
+.GTO                Top Overlay                             
+.GTS                Top Solder                              
+.GBS                Bottom Solder                           
+.GBO                Bottom Overlay                          
+.GBP                Bottom Paste                            
+.GKO                Keep-Out Layer                          
+.Outline            Mechanical 1                            
+.Dimensions         Mechanical 2                            
+.GM3                Mechanical 3                            
+.GM4                Mechanical 4                            
+.Assembly Text Top  Mechanical 6                            
+.Assembly Text BottomMechanical 7                            
+.Assembly Top       Mechanical 8                            
+.Assembly Bottom    Mechanical 9                            
+.3D Top             Mechanical 13                           
+.3D Bottom          Mechanical 14                           
+.Courtyard Top      Mechanical 15                           
+.Courtyard Bottom   Mechanical 16                           
+.GML                Multi-Layer                             
+.1                  Dielectric 1                            
+------------------------------------------------------------------------------------------

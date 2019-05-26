@@ -1,0 +1,324 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html">
+<style type="text/css">
+		h1, h2, h3, h4, h5, h6 { 
+			font-family : segoe ui;
+			color : black;
+			background-color : #FAEFE7;
+			padding: 0.3em;
+		}
+
+		h1 {
+			font-size: 1.2em;
+		}		
+
+		h2 {
+			font-size: 1.2em;
+		}
+
+		body { 
+			font-family : segoe ui;
+		}
+
+		td, th {  
+			padding: 0.5em;
+			text-align : left;
+		}
+		th { 
+			background-color : #EEEEEE;
+		
+		}
+		th.column1, td.column1 { 
+			width : 50%; 
+		}
+
+        th.column2, td.column2 {
+            width : 25%;
+        }
+
+		table { 
+			width : 100%; 
+            font-size: 0.9em;
+		}
+			.front_matter, .front_matter_column1, .front_matter_column2, .front_matter_column3
+		{
+			left : 0;
+			top : 0;
+			padding: 0em;
+			padding-top : 0.1em;
+			border : 0px solid black;
+			width : 100%;
+			vertical-align: top;
+			text-align: left;
+		}
+
+		.front_matter_column1 {
+			width : 5em;
+			font-weight: bold;
+		}
+
+		.front_matter_column2 {
+			width: 0.1em;
+		}
+
+		.front_matter_column3 {
+			width : auto;
+		}
+
+		.total_column1, .total_column {
+			font-weight : bold;
+		}
+		.total_column1 {
+			text-align : left;
+		}
+		.warning, .error { 
+			color : red;
+			font-weight : bold;
+		}	
+		tr.onmouseout_odd { 
+			background-color : #white;
+		}
+		tr.onmouseout_even { 
+			background-color : #FAFAFA;
+		}
+		tr.onmouseover_odd, tr.onmouseover_even { 
+			background-color : #EEEEEE;
+		} 
+		a:link, a:visited, .q a:link,.q a:active,.q {
+			color: #21489e; 
+		}
+		a:link.callback, a:visited.callback { 
+			color: #21489e;
+		}
+		a:link.customize, a:visited.customize {
+			color: #C0C0C0;
+			position: absolute; 
+			right: 10px;
+		}	
+		p.contents_level1 {
+			font-weight : bold;
+			font-size : 110%;
+			margin : 0.5em;
+		}
+		p.contents_level2 {
+			position : relative;
+			left : 20px;
+			margin : 0.5em;
+		}
+	</style><script type="text/javascript">
+		function trunc(coord, prec) {
+			var number = coord;
+			if (number != number.toFixed(prec))
+				number = number.toFixed(prec);
+			return number;
+		}
+
+		function coordToMils(coord, prec) {
+			var number = coord / 10000;
+			if (prec != 0)
+				number = trunc(number, prec)
+
+			return number;
+		}
+
+		function coordToMM(coord, prec) {
+			var number = 0.0254 * coord / 10000;
+			if (prec != 0)
+				number = trunc(number, prec)
+
+			return number;
+		}
+
+		function coordToMilsTxt(coord) {
+			var number = coordToMils(coord, 3);
+
+			return number + 'mil'
+		}
+
+		function coordToMMTxt(coord) {
+			var number = coordToMM(coord, 4);
+
+			return number + 'mm'
+		}
+
+		function areaToSQMils(area) {
+			var number = Math.sqrt(area);
+			number = coordToMils(number, 0);
+			number = number * number;
+
+			return trunc(number, 3) + 'sq.mil'
+		}
+
+		function areaToSQMM(area) {
+			var number = Math.sqrt(area);
+			number = coordToMM(number, 0);
+			number = number * number;
+
+			return trunc(number, 4) + 'sq.mm';
+		}
+
+		function convertCoord(coordNode, units) {
+			for (var i = 0; i < coordNode.childNodes.length; i++) {
+				coordNode.removeChild(coordNode.childNodes[i]);
+			}
+
+			var coord = coordNode.getAttribute('value');
+			if (coord != null) {
+				if (units == 'mm') {
+					textNode = document.createTextNode(coordToMMTxt(coord));
+					coordNode.appendChild(textNode);
+				} else if (units == 'mil') {
+					textNode = document.createTextNode(coordToMilsTxt(coord));
+					coordNode.appendChild(textNode);
+				}
+			}
+		}
+		
+		function convertArea(coordNode, units) {
+			for (var i = 0; i < coordNode.childNodes.length; i++) {
+				coordNode.removeChild(coordNode.childNodes[i]);		
+			}
+
+			var area = coordNode.getAttribute('value');
+			if (area != null) {
+				if (units == 'mm') {	
+					textNode = document.createTextNode(areaToSQMM(area));
+					coordNode.appendChild(textNode);
+				} else if (units == 'mil') {
+					textNode = document.createTextNode(areaToSQMils(area));		
+					coordNode.appendChild(textNode);	
+				}
+			}
+		}		
+
+		function convertUnits(unitNode, units) {
+			for (var i = 0; i < unitNode.childNodes.length; i++) {
+				unitNode.removeChild(unitNode.childNodes[i]);		
+			}
+
+			textNode = document.createTextNode(units); 
+			unitNode.appendChild(textNode);
+		}
+
+		function changeUnits(radio_input, units) {
+			if (radio_input.checked) {
+
+				var elements = document.getElementsByName('coordinate');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertCoord(elements[i], units);
+					}
+				}
+
+				var elements = document.getElementsByName('area');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertArea(elements[i], units);
+					}
+				}				
+
+				var elements = document.getElementsByName('units');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertUnits(elements[i], units);
+					}
+				}
+			}
+		}	
+	</script><title>Board Information</title>
+</head>
+<body onload="document.getElementById('radio_mil').click()"><img ALT="Altium" src="
+            file://C:\Users\Public\Documents\Altium\CM\Templates\CircuitMaker_logo.png
+		"><h1>Board Information</h1>
+<table class="front_matter">
+<tr class="front_matter">
+<td class="front_matter_column1">Date:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">2019-05-26</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Time:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">13:48:11</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Elapsed Time:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">00:00:00</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Filename:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3"><a href="file:///C:\ProgramData\Altium\CircuitMaker {0FD0DDBD-0B10-4416-BB31-8E21F5A982D1}\Projects\E354855B-069B-46F7-B6D4-D697ECAB0375\57f9becf-3adb-4430-a13b-904383084111\Badge2019.CMPcbDoc" class="file"><acronym title="C:\ProgramData\Altium\CircuitMaker {0FD0DDBD-0B10-4416-BB31-8E21F5A982D1}\Projects\E354855B-069B-46F7-B6D4-D697ECAB0375\57f9becf-3adb-4430-a13b-904383084111\Badge2019.CMPcbDoc">Badge2019.CMPcbDoc</acronym></a></td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Units:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">
+<form><input type="radio" name="radio_units" id="radio_mm" onclick="changeUnits(this, 'mm')">mm<input type="radio" name="radio_units" id="radio_mil" onclick="changeUnits(this, 'mil')">mils</form>
+</td>
+</tr>
+</table><a name="IDEOUM5BU0DZDQPVZ5ACYOJUV3ZIXP3OBKRJIKJ4NOJ5QSS1C422GI"><table>
+<tr>
+<th style="text-align : left" colspan="2" class="">General</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1">Horizontal Dimension, max</td>
+<td class="column2"><a name="coordinate" value="40296900">4029.69mils
+			</a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1">Vertical Dimension, max</td>
+<td class="column2"><a name="coordinate" value="35432350">3543.235mils
+			</a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1">Total surface area</td>
+<td class="column2"><a name="area" value="839510623899600"></a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1">Copper layer count</td>
+<td class="column2">2</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1">Smallest electrical gap/space</td>
+<td class="column2">-</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1">Smallest track width</td>
+<td class="column2"><a name="coordinate" value="10000">1mils
+			</a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1">Smallest hole size</td>
+<td class="column2"><a name="coordinate" value="78740">7.874mils
+			</a></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1">Biggest hole size </td>
+<td class="column2"><a name="coordinate" value="1600000">160mils
+			</a></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1">Number of plated through holes</td>
+<td class="column2">393</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1">Number of plated slots</td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1">Number of unplated holes</td>
+<td class="column2">6</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1">Number of unplated slots</td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1">Number of cutouts</td>
+<td class="column2">1</td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br></body>
+</html>
