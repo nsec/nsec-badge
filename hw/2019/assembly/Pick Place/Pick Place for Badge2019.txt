@@ -1,0 +1,101 @@
+Designator Footprint               Mid X         Mid Y         Ref X         Ref Y         Pad X         Pad Y TB      Rotation Comment        
+
+U114       PCB-2ttavi1bqi6b1gr71otv-1       4700mil       1485mil       4700mil       1485mil   4684.633mil   1556.906mil  T        355.00 Adafruit Industries 2659
+U113       PCB-2ttavi1bqi6b1gr71otv-1       5085mil        835mil       5085mil        835mil   5020.039mil    869.449mil  T          0.00 Adafruit Industries 2659
+U112       PCB-2ttavi1bqi6b1gr71otv-1       5775mil       1610mil       5775mil       1610mil   5701.567mil   1613.768mil  T         25.00 Adafruit Industries 2659
+U111       PCB-2ttavi1bqi6b1gr71otv-1       6330mil       2065mil       6330mil       2065mil   6264.521mil   2031.546mil  T         55.00 Adafruit Industries 2659
+U110       PCB-2ttavi1bqi6b1gr71otv-1       6505mil       2655mil       6505mil       2655mil   6470.551mil   2590.039mil  T         90.00 Adafruit Industries 2659
+U109       PCB-2ttavi1bqi6b1gr71otv-1       6300mil       3225mil       6300mil       3225mil   6321.575mil   3154.707mil  T        135.00 Adafruit Industries 2659
+U108       PCB-2ttavi1bqi6b1gr71otv-1       5755mil       3605mil       5755mil       3605mil   5808.831mil   3554.912mil  T        165.00 Adafruit Industries 2659
+C114       PCB-giw6f3qrr2r7ft6l12zh-1       4790mil       1570mil       4790mil       1570mil       4790mil   1550.709mil  B         90.00 0.1uF          
+C113       PCB-giw6f3qrr2r7ft6l12zh-1       5020mil        865mil       5020mil        865mil   5039.291mil        865mil  B        180.00 0.1uF          
+C112       PCB-giw6f3qrr2r7ft6l12zh-1       5650mil       1645mil       5650mil       1645mil   5669.291mil       1645mil  B        180.00 0.1uF          
+C111       PCB-giw6f3qrr2r7ft6l12zh-1       6191mil       2082mil       6191mil       2082mil   6210.291mil       2082mil  B        180.00 0.1uF          
+C110       PCB-giw6f3qrr2r7ft6l12zh-1       6370mil       2540mil       6370mil       2540mil   6389.291mil       2540mil  B        180.00 0.1uF          
+C109       PCB-giw6f3qrr2r7ft6l12zh-1       6155mil       3215mil       6155mil       3215mil   6174.291mil       3215mil  B        180.00 0.1uF          
+C108       PCB-giw6f3qrr2r7ft6l12zh-1       5810mil       3550mil       5810mil       3550mil       5810mil   3569.291mil  B        270.00 0.1uF          
+R407       PCB-633nt21uztbz6ngqfj5i-1       4805mil       2605mil       4805mil       2605mil       4805mil   2623.701mil  B        270.00 1M             
+R201       PCB-8dkewosiaa12j9qz9qah-1       3445mil       2845mil       3445mil       2845mil   3426.299mil       2845mil  B        360.00 1.5K           
+R200       PCB-8dkewosiaa12j9qz9qah-1       3445mil       2765mil       3445mil       2765mil   3426.299mil       2765mil  B        360.00 1.5K           
+L400       LQH3NPN1R5MJRL        5598mil       2460mil       5598mil       2460mil   5554.693mil       2460mil  B        360.00 Murata LQH3NPN1R5MJRL 1.5uH
+D201       PCB-eapfwhp0rnksgujf96h3-1       3545mil       2845mil       3545mil       2845mil   3515.472mil       2845mil  B        360.00 LED2           
+D200       PCB-eapfwhp0rnksgujf96h3-1       3540mil       2765mil       3540mil       2765mil   3510.472mil       2765mil  B        360.00 LED1           
+C407       CL21A106KPFNNNG       5734mil       2710mil       5734mil       2710mil    5773.37mil       2710mil  B        180.00 10uF           
+C210       PCB-giw6f3qrr2r7ft6l12zh-1       3105mil       3280mil       3105mil       3280mil       3105mil   3299.291mil  B        270.00 0.1uF          
+BACK       PCB-4yaure092daawlilij7b-1       3270mil       2555mil       3270mil       2555mil   3113.504mil   2643.583mil  T        360.00 Pushbutton     
+BT400      PCB-7jkfdtl9yaz8bfrcmc4f-1   4592.953mil    3337.48mil       5715mil       3005mil   3569.528mil    3337.48mil  B         90.00 14500          
+C100       PCB-giw6f3qrr2r7ft6l12zh-1       3451mil       2118mil       3451mil       2118mil   3470.291mil       2118mil  B        180.00 0.1uF          
+C101       PCB-giw6f3qrr2r7ft6l12zh-1       2878mil       2445mil       2878mil       2445mil       2878mil   2464.291mil  B        270.00 0.1uF          
+C102       PCB-giw6f3qrr2r7ft6l12zh-1       2886mil       2727mil       2886mil       2727mil       2886mil   2707.709mil  B         90.00 0.1uF          
+C103       PCB-giw6f3qrr2r7ft6l12zh-1       3050mil       3182mil       3050mil       3182mil   3030.709mil       3182mil  B        360.00 0.1uF          
+C104       PCB-giw6f3qrr2r7ft6l12zh-1       3365mil       3455mil       3365mil       3455mil   3384.291mil       3455mil  B        180.00 0.1uF          
+C105       PCB-giw6f3qrr2r7ft6l12zh-1       3880mil       3725mil       3880mil       3725mil   3860.709mil       3725mil  B        360.00 0.1uF          
+C106       PCB-giw6f3qrr2r7ft6l12zh-1       4230mil       3800mil       4230mil       3800mil   4249.291mil       3800mil  B        180.00 0.1uF          
+C107       PCB-giw6f3qrr2r7ft6l12zh-1       4825mil       3765mil       4825mil       3765mil   4844.291mil       3765mil  B        180.00 0.1uF          
+C200       PCB-dlt2ovkz90tokw781o57-1       3630mil       2630mil       3630mil       2630mil   3610.709mil       2630mil  B        360.00 1uF            
+C201       C0201                 3820mil       2300mil       3820mil       2300mil       3820mil    2308.25mil  B        270.00 10pF           
+C202       PCB-vacqisieyscyt9e4k3s1-1       3780mil       2740mil       3780mil       2740mil       3780mil   2768.543mil  B        270.00 4.7uF          
+C203       PCB-giw6f3qrr2r7ft6l12zh-1       3860mil       2405mil       3860mil       2405mil   3879.291mil       2405mil  B        180.00 0.1uF          
+C204       C0201                 3950mil       2345mil       3950mil       2345mil       3950mil    2353.25mil  B        270.00 10pF           
+C205       CAPC0603X33X15NL03T05       3980mil   2327.008mil       3980mil   2327.008mil       3980mil       2340mil  B        270.00 100pF          
+C206       PCB-giw6f3qrr2r7ft6l12zh-1       3860mil       2745mil       3860mil       2745mil   3879.291mil       2745mil  B        180.00 0.1uF          
+C207       CAPC1005X55X25ML05T10       4035mil       2345mil       4035mil       2345mil       4035mil   2325.709mil  B         90.00 0.8pF          
+C208       CAPC1005X55X25ML05T10       4130mil       2335mil       4130mil       2335mil   4149.291mil       2335mil  B        180.00 1.2pF          
+C209       PCB-giw6f3qrr2r7ft6l12zh-1       4245mil       2690mil       4245mil       2690mil   4225.709mil       2690mil  B        360.00 0.1uF          
+C400       PCB-dlt2ovkz90tokw781o57-1   5238.945mil    2386.84mil   5238.945mil    2386.84mil   5219.654mil    2386.84mil  B        360.00 1uF            
+C401       PCB-vacqisieyscyt9e4k3s1-1       5385mil       2540mil       5385mil       2540mil       5385mil   2568.543mil  B        270.00 4.7uF          
+C402       PCB-giw6f3qrr2r7ft6l12zh-1       3980mil       2860mil       3980mil       2860mil   3960.709mil       2860mil  B        360.00 0.1uF          
+C403       PCB-qlfaf8m001ay0qq7qtsx-1       5090mil       2505mil       5090mil       2505mil   5060.472mil       2505mil  B        360.00 4.7uF          
+C404       PCB-qlfaf8m001ay0qq7qtsx-1   5466.758mil   2643.423mil   5466.758mil   2643.423mil   5466.758mil   2672.951mil  B        270.00 4.7uF          
+C405       PCB-giw6f3qrr2r7ft6l12zh-1   5599.498mil   2807.427mil   5599.498mil   2807.427mil    5618.79mil   2807.427mil  B        180.00 0.1uF          
+C500       PCB-giw6f3qrr2r7ft6l12zh-1       5115mil       1680mil       5115mil       1680mil       5115mil   1699.291mil  B        270.00 0.1uF          
+C501       PCB-qlfaf8m001ay0qq7qtsx-1       5060mil       1690mil       5060mil       1690mil       5060mil   1719.528mil  B        270.00 4.7uF          
+C502       PCB-giw6f3qrr2r7ft6l12zh-1       5685mil       1750mil       5685mil       1750mil       5685mil   1769.291mil  B        270.00 0.1uF          
+C503       PCB-qlfaf8m001ay0qq7qtsx-1       5625mil       1745mil       5625mil       1745mil       5625mil   1774.528mil  B        270.00 4.7uF          
+C504       CAPC0603X33X15NL03T05       4870mil       1495mil       4870mil       1495mil       4870mil   1482.008mil  B         90.00 22pF           
+C505       CAPC0603X33X15NL03T05       4871mil       1148mil       4871mil       1148mil       4871mil   1135.008mil  B         90.00 22pF           
+D400       PCB-eapfwhp0rnksgujf96h3-1       5935mil       2400mil       5935mil       2400mil   5964.528mil       2400mil  B        180.00 PGOOD          
+D401       PCB-eapfwhp0rnksgujf96h3-1       5935mil       2275mil       5935mil       2275mil   5964.528mil       2275mil  B        180.00 Charging       
+D500       PCB-eapfwhp0rnksgujf96h3-1       5390mil   1868.701mil       5390mil   1868.701mil       5390mil   1898.228mil  B        270.00 Status         
+DFU        PCB-4yaure092daawlilij7b-1       5175mil       2175mil       5175mil       2175mil   5018.504mil   2086.417mil  B        360.00 Pushbutton     
+Display    PCB-kli722jsp60rssxefdvt-1   5506.025mil    2913.94mil       5215mil       2850mil   5156.025mil    2913.94mil  T        360.00 0.96 st7735S   
+DOWN       PCB-4yaure092daawlilij7b-1    3514.33mil       2300mil    3514.33mil       2300mil   3670.826mil   2211.417mil  T        180.00 Pushbutton     
+ENTER      PCB-4yaure092daawlilij7b-1       3760mil       2555mil       3760mil       2555mil   3603.504mil   2643.583mil  T        360.00 Pushbutton     
+L200       PCB-kp07we0tf4yu546vvuh1-1   3714.291mil       2630mil   3714.291mil       2630mil   3733.583mil       2630mil  B        180.00 15nH           
+L201       PCB-avavbkljlazxo2rmfz9f-1   3802.177mil   2630.365mil   3802.177mil   2630.365mil   3828.751mil   2630.365mil  B        180.00 10uH           
+L202       PCB-tm5d4zd0r03th3e1reun-1       4075mil       2355mil       4075mil       2355mil       4075mil   2376.653mil  B        270.00 3.9nH          
+R100       RESC1005X40X25NL05T05       3615mil       2015mil       3615mil       2015mil   3597.284mil       2015mil  B        360.00 300            
+R400       PCB-8dkewosiaa12j9qz9qah-1       5837mil       2652mil       5837mil       2652mil       5837mil   2670.701mil  B        270.00 1.5K           
+R401       RESC1005X40X25LL05T10       5310mil       2415mil       5310mil       2415mil   5324.764mil       2415mil  B        180.00 3K             
+R402       PCB-yhj8c9ll71eo4n261220-1   4835.643mil   2695.643mil   4835.643mil   2695.643mil   4816.942mil   2695.643mil  B        360.00 10M            
+R403       PCB-8dkewosiaa12j9qz9qah-1       5912mil       2652mil       5912mil       2652mil       5912mil   2670.701mil  B        270.00 1.5K           
+R404       RESC1005X40X25LL05T10   4750.643mil   2695.643mil   4750.643mil   2695.643mil   4735.879mil   2695.643mil  B        360.00 4.7M           
+R405       RESC1005X40X25LL05T10    5163.19mil   2387.405mil    5163.19mil   2387.405mil   5177.954mil   2387.405mil  B        180.00 1.8K           
+R406       RESC1005X40X25ML05T05    5080.74mil   2439.665mil    5080.74mil   2439.665mil   5061.055mil   2439.665mil  B        360.00 10K            
+R408       PCB-633nt21uztbz6ngqfj5i-1       4990mil       2625mil       4990mil       2625mil       4990mil   2643.701mil  B        270.00 1M             
+R500       RESC1005X03L          5130mil       1620mil       5130mil       1620mil   5114.252mil       1620mil  B        360.00 100K           
+R501       RESC1005X03L          5165mil       1560mil       5165mil       1560mil   5149.252mil       1560mil  B        360.00 100K           
+R502       PCB-8dkewosiaa12j9qz9qah-1       5340mil       1875mil       5340mil       1875mil       5340mil   1856.299mil  B         90.00 1.5K           
+RESET      PCB-4yaure092daawlilij7b-1       5595mil       2175mil       5595mil       2175mil   5438.504mil   2086.417mil  B        360.00 Pushbutton     
+SW400      PCB-magbxwz3kn5v7khtm4jp-1       6215mil    2757.52mil       6215mil       2915mil       6215mil    2836.26mil  B        270.00 ON/OFF         
+Test Point PCB-rw2f2nv7cmarrpnbctld-1       4385mil       2880mil       4385mil       2880mil       4685mil       2830mil  T        180.00 not mounted    
+U101       PCB-2ttavi1bqi6b1gr71otv-1       2905mil       2255mil       2905mil       2255mil   2902.353mil   2328.482mil  T        300.00 Adafruit Industries 2659
+U100       PCB-2ttavi1bqi6b1gr71otv-1       3385mil       2020mil       3385mil       2020mil   3335.739mil   2074.589mil  T        340.00 Adafruit Industries 2659
+U102       PCB-2ttavi1bqi6b1gr71otv-1       2755mil       2775mil       2755mil       2775mil   2789.449mil   2839.961mil  T        270.00 Adafruit Industries 2659
+U103       PCB-2ttavi1bqi6b1gr71otv-1       3005mil       3330mil       3005mil       3330mil   3073.145mil   3357.619mil  T        230.00 Adafruit Industries 2659
+U104       PCB-2ttavi1bqi6b1gr71otv-1       3435mil       3630mil       3435mil       3630mil   3508.482mil   3632.647mil  T        210.00 Adafruit Industries 2659
+U105       PCB-2ttavi1bqi6b1gr71otv-1       3855mil       3825mil       3855mil       3825mil   3926.663mil   3808.538mil  T        195.00 Adafruit Industries 2659
+U106       PCB-2ttavi1bqi6b1gr71otv-1       4355mil       3910mil       4355mil       3910mil   4422.716mil   3881.344mil  T        185.00 Adafruit Industries 2659
+U107       PCB-2ttavi1bqi6b1gr71otv-1       4935mil       3860mil       4935mil       3860mil   4988.831mil   3809.912mil  T        165.00 Adafruit Industries 2659
+U200       PCB-4fiqwekv961j0um5del2-1       4060mil       2560mil       4060mil       2560mil   3973.386mil   2676.142mil  B        270.00 NRF52832-QFAA-R
+U400       RGT16-1700X1700TP   5230.315mil   2504.685mil   5230.315mil   2504.685mil   5172.244mil   2475.157mil  B        360.00 BQ24074RGTT    
+U401       R-PWSON-R10       5591.218mil   2692.482mil   5591.218mil   2692.482mil   5630.589mil   2639.333mil  B         90.00 Texas Instruments TPS63031DSKR
+U402       SOTFL50P162X60-6N       4890mil       2625mil       4890mil       2625mil   4856.535mil   2605.315mil  B        360.00 Diodes Inc. DMG1016V-7
+U500       TSSOP20           5347.502mil   1678.614mil   5234.313mil   1563.457mil   5234.313mil   1563.457mil  B        360.00 STMicroelectronics STM32F070F6P6
+UP         PCB-4yaure092daawlilij7b-1    3514.33mil    2808.28mil    3514.33mil    2808.28mil   3670.826mil   2719.697mil  T        180.00 Pushbutton     
+USB        USB_2.0_Micro_B    5090.58mil    653.891mil    5090.58mil    543.655mil   5141.761mil    707.041mil  B        180.00 FCI 10118194-0001LF
+X500       PCB-779429-1      5003.345mil    1322.33mil   5003.345mil    1322.33mil   5003.345mil   1135.322mil  B         90.00 8Mhz           
+U201       SOIC127P600X175-8N       3280mil       3220mil       3280mil       3220mil   3387.284mil       3295mil  B        180.00 Adesto Technologies AT25SF041-SSHD-T
+SAO        PCB-5flziv01ycw1pfdz9twb-1       5940mil       3170mil       5890mil       3220mil       5890mil       3220mil  T        360.00 Würth Elektronik 61300421121
+X200       PCB-at22tsvr3ogvg29d69d2-1       3880mil       2315mil       3880mil       2315mil   3901.653mil   2341.772mil  B        270.00 32MHz          
+
