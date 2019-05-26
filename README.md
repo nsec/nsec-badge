@@ -34,13 +34,9 @@ set, it takes care of:
 The badge can be supplied by 1 ICR14500 3.7v Li-ion rechargeable battery and/or
 the USB port. The battery will be charged when the USB port is connected.
 
-The [schematic](./hw/northsec_2019_schematics.pdf) are available.
+If you wish to hack your badge or create a new one based on the hardware. All the information is available here: [hardware_2019](./hw/2019/)
 
-If you wish to build your own badge:
-
-<!-- TODO -->
-* [pcb]()
-* [bill of material]()
+You can also access directly the [CircuitMaker project](https://circuitmaker.com/Projects/Details/Eric-Tremblay-2/Northsec2019Badge)
 
 ## Compiling
 You can either compile the code using CQFD and Docker or you can install the
