@@ -35,7 +35,7 @@
 #include "utils.h"
 
 #define MAX_LINE 250
-#define MAX_TEXT_LENGHT 2048
+#define MAX_TEXT_LENGTH 2048
 
 struct text_box {
     struct text_box_config *config;
@@ -47,7 +47,7 @@ struct text_box {
     uint16_t line_offset[MAX_LINE];
     uint16_t line_count;
     uint16_t line_index;
-    char text[MAX_TEXT_LENGHT];
+    char text[MAX_TEXT_LENGTH];
 };
 
 static struct text_box text_box;
@@ -68,7 +68,7 @@ void text_box_init(const char *text, struct text_box_config *config)
     text_box.rows = (config->height / TEXT_BASE_HEIGHT);
     text_box.config = config;
 
-    strncpy(text_box.text, text, MAX_TEXT_LENGHT);
+    strncpy(text_box.text, text, MAX_TEXT_LENGTH);
 
     // If last charactere is not a \n add it
     if (text_box.text[len - 1] != '\n') {
