@@ -71,13 +71,13 @@ static inline int wordlen(const char * str){
 
 char* word_wrap(char *s, const int wrapline)
 {
-    volatile int index = 0;
+    int index = 0;
     int current_line_len = 0;
 
     while (s[index] != '\0') {
         if (s[index] == '\n') {
             current_line_len = 0;
-        } else if (isspace(s[index])) {
+        } else if (isspace((unsigned char) s[index])) {
             if (current_line_len + wordlen(&s[index+1]) >= wrapline) {
                 s[index] = '\n';
                 current_line_len = 0;
