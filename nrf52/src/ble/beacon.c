@@ -9,7 +9,7 @@
 #include <app_error.h>
 #include <ble_gap.h>
 
-
+#if 0
 static void start_broadcasting();
 static void stop_broadcasting();
 static void on_ble_advertising_event(ble_evt_t const * ble_event);
@@ -93,3 +93,4 @@ static void configure_advertising_parameters(ble_gap_adv_params_t* adv_params){
 static void on_ble_advertising_event(ble_evt_t const * ble_event){
 
 }
+#endif

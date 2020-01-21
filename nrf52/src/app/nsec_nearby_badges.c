@@ -3,7 +3,7 @@
 //  Marc-Etienne M. Leveille <marc.etienne.ml@gmail.com>
 //
 //  License: MIT (see LICENSE for details)
-
+#if 0
 
 #include "nsec_nearby_badges.h"
 #include "drivers/led_effects.h"
@@ -86,7 +86,7 @@ static void on_advertising_report(const ble_gap_evt_adv_report_t* report) {
         char dev_str[32];
 
         memcpy(addr, report->peer_addr.addr, BLE_GAP_ADDR_LEN);
-        memcpy(data, report->data, BLE_GAP_ADV_MAX_SIZE);
+        memcpy(data, report->data, BLE_GAP_ADV_SET_DATA_SIZE_MAX);
         adv_data.p_data = data;
         adv_data.data_len = report->dlen;
 
@@ -200,3 +200,4 @@ void nsec_nearby_badges_init(void)
         APP_ERROR_CHECK(err_code);
     }
 }
+#endif

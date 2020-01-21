@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#if 0
 #include "cli.h"
 
 #include <app_timer.h>
@@ -170,7 +170,7 @@ static void on_advertising_report(const ble_gap_evt_adv_report_t* report) {
             uint8_t data[32];
             char dev_str[32];
 
-            memcpy(data, report->data, BLE_GAP_ADV_MAX_SIZE);
+            memcpy(data, report->data, BLE_GAP_ADV_SET_DATA_SIZE_MAX);
             adv_data.p_data = data;
             adv_data.data_len = report->dlen;
 
@@ -390,3 +390,5 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(sub_ble){
     NRF_CLI_SUBCMD_SET_END};
 
 NRF_CLI_CMD_REGISTER(blectl, &sub_ble, "BLE Tools collection", do_ble);
+
+#endif

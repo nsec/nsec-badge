@@ -220,12 +220,12 @@ static void draw_display_title(void)
 }
 
 static void toggle_bluetooth(uint8_t item) {
-    if(ble_device_toggle_ble()) {
-        nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
-    }
-    else {
-        nsec_status_set_ble_status(STATUS_BLUETOOTH_OFF);
-    }
+//    if(ble_device_toggle_ble()) {
+//        nsec_status_set_ble_status(STATUS_BLUETOOTH_ON);
+//    }
+//    else {
+//        nsec_status_set_ble_status(STATUS_BLUETOOTH_OFF);
+//    }
 }
 
 static void draw_credit_title(void)

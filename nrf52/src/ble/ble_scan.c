@@ -9,7 +9,7 @@
 #include <app_util.h>
 #include <ble_gap.h>
 
-
+#if 0
 static ble_gap_scan_params_t params;
 
 void configure_scan(bool active_scan, uint16_t timeout_s, uint16_t interval_ms, uint16_t window_ms){
@@ -28,3 +28,4 @@ void start_scan(){
 void stop_scan(){
     sd_ble_gap_scan_stop();
 }
+#endif

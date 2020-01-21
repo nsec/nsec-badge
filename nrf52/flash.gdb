@@ -14,7 +14,7 @@ if $FORCE_ERASE_ALL
   monitor erase_mass
 end
 if $LOAD_SOFTDEVICE
-  load nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex
+  load nordicsdk/components/softdevice/s132/hex/s132_nrf52_7.0.1_softdevice.hex
 end
 load builds/brain-ctf/nsec_nrf52_brain_ctf.elf
 file builds/brain-ctf/nsec_nrf52_brain_ctf.elf

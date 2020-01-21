@@ -4,6 +4,8 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#if 0
+
 #include "identity.h"
 #include <stdint.h>
 #include <stdio.h>
@@ -137,3 +139,5 @@ static uint16_t on_name_read(CharacteristicReadEvent* event){
     }
     return BLE_GATT_STATUS_SUCCESS;
 }
+
+#endif

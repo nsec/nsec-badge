@@ -4,6 +4,8 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#include "app_error.h"
+
 #include "menu.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"

@@ -21,29 +21,29 @@
  */
 
 #include <app_error.h>
-#include <nrf_drv_twi.h>
+#include <nrfx_twim.h>
 
 #include <boards.h>
 #include <drivers/sao.h>
 
-static const nrf_drv_twi_t sao_twi_master =
-    NRF_DRV_TWI_INSTANCE(CONF_SAO_TWI_INST);
+static const nrfx_twim_t sao_twi_master =
+    NRFX_TWIM_INSTANCE(CONF_SAO_TWI_INST);
 
 #ifdef PIN_SAO_SCL
 void sao_init(void) {
     ret_code_t err_code;
 
-    const nrf_drv_twi_config_t sao_twi_config = {
+    const nrfx_twim_config_t sao_twi_config = {
         .scl = PIN_SAO_SCL,
         .sda = PIN_SAO_SDA,
-        .frequency = NRF_TWI_FREQ_400K,
-        .interrupt_priority = TWI_DEFAULT_CONFIG_IRQ_PRIORITY,
-        .clear_bus_init = false};
+        .frequency = NRF_TWIM_FREQ_400K,
+        .interrupt_priority = NRFX_TWI_DEFAULT_CONFIG_IRQ_PRIORITY,
+        .hold_bus_uninit = false};
 
-    err_code = nrf_drv_twi_init(&sao_twi_master, &sao_twi_config, NULL, NULL);
+    err_code = nrfx_twim_init(&sao_twi_master, &sao_twi_config, NULL, NULL);
     APP_ERROR_CHECK(err_code);
 
-    nrf_drv_twi_enable(&sao_twi_master);
+    nrfx_twim_enable(&sao_twi_master);
 }
 #else
 void sao_init(void) {}

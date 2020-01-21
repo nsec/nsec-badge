@@ -5,7 +5,6 @@
 
 
 #include <app_timer.h>
-#include <nrf_drv_clock.h>
 #include <nrf_gpio.h>
 
 #include "timer.h"

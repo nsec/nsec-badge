@@ -23,7 +23,7 @@ as well as Adafruit raw 1.8" TFT display
 #ifndef _ADAFRUIT_ST7735H_
 #define _ADAFRUIT_ST7735H_
 
-#include <nrf_drv_spi.h>
+#include <nrfx_spim.h>
 
 struct bitmap_ext;
 
@@ -116,7 +116,7 @@ struct bitmap_ext;
 //*****************************************************************************
 
 typedef struct {
-    nrf_drv_spi_t spi; // SPI instance to use
+    nrfx_spim_t spi; // SPI instance to use
     uint8_t sck_pin;
     uint8_t miso_pin;
     uint8_t mosi_pin;

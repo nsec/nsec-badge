@@ -3,6 +3,8 @@
 //
 //  License: MIT (see LICENSE for details)
 
+#if 0
+
 #include <app_timer.h>
 #include <string.h>
 #include "cli.h"
@@ -160,3 +162,5 @@ void mode_zombie_init(void) {
     add_characteristic_to_vendor_service(&zombie_ble_service, &trigger_characteristic);
     add_write_request_handler(&trigger_characteristic, on_trigger);
 }
+
+#endif

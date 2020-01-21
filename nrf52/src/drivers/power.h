@@ -23,8 +23,6 @@
 #ifndef power_h
 #define power_h
 
-#include <nrf_drv_power.h>
-
 void power_init(void);
 void power_manage(void);
 

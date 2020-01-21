@@ -2,7 +2,7 @@
 //  Nicolas Aubry <nicolas.aubry@hotmail.com>
 //
 //  License: MIT (see LICENSE for details)
-
+#if 0
 #include "resistance_propaganda_observer.h"
 #include "ble/abstract_ble_observer.h"
 #include "app/gfx_effect.h"
@@ -10,6 +10,7 @@
 #include "resistance_slideshow.h"
 #include "timer.h"
 
+#include <nrf_ble_scan.h>
 #include <string.h>
 
 
@@ -118,3 +119,5 @@ static void parse_field(const uint8_t* raw_data, struct ParsedField* parsed_fiel
     parsed_field->data = raw_data + 2;
     parsed_field->full_field_length = raw_data[0] + sizeof(raw_data[0]);
 }
+
+#endif

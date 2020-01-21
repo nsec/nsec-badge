@@ -29,7 +29,7 @@ as well as Adafruit raw 1.8" TFT display
 #include <app_util_platform.h>
 #include <nrf.h>
 #include <nrf_delay.h>
-#include <nrf_drv_pwm.h>
+#include <nrfx_pwm.h>
 #include <nrf_gpio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,7 +89,7 @@ static uint8_t buffer[BUFFER_SIZE] = {0};
 // PWM stuff
 //
 //*****************************************************************************
-static nrf_drv_pwm_t m_pwm2 = NRF_DRV_PWM_INSTANCE(CONF_OLED_PWM_INST);
+static nrfx_pwm_t m_pwm2 = NRFX_PWM_INSTANCE(CONF_OLED_PWM_INST);
 
 nrf_pwm_values_individual_t seq_values[1] = {{0, 0, 0, 0}};
 nrf_pwm_sequence_t const seq = {.values.p_individual = seq_values,
@@ -100,13 +100,13 @@ nrf_pwm_sequence_t const seq = {.values.p_individual = seq_values,
 static void pwm_init(void)
 {
 
-    nrf_drv_pwm_config_t const config0 = {
+    nrfx_pwm_config_t const config0 = {
         .output_pins =
             {
                 st7735_config.blk_pin,    // channel 0
-                NRF_DRV_PWM_PIN_NOT_USED, // channel 1
-                NRF_DRV_PWM_PIN_NOT_USED, // channel 2
-                NRF_DRV_PWM_PIN_NOT_USED, // channel 3
+                NRFX_PWM_PIN_NOT_USED, // channel 1
+                NRFX_PWM_PIN_NOT_USED, // channel 2
+                NRFX_PWM_PIN_NOT_USED, // channel 3
             },
         .irq_priority = APP_IRQ_PRIORITY_LOWEST,
         .base_clock = NRF_PWM_CLK_16MHz,
@@ -115,7 +115,7 @@ static void pwm_init(void)
         .load_mode = NRF_PWM_LOAD_INDIVIDUAL,
         .step_mode = NRF_PWM_STEP_AUTO};
     // Init PWM without error handler
-    APP_ERROR_CHECK(nrf_drv_pwm_init(&m_pwm2, &config0, NULL));
+    APP_ERROR_CHECK(nrfx_pwm_init(&m_pwm2, &config0, NULL));
 }
 
 void st7735_set_brightness(uint8_t brightness)
@@ -128,7 +128,7 @@ void st7735_set_brightness(uint8_t brightness)
         seq_values->channel_0 = 100 - brightness;
     }
 
-    nrf_drv_pwm_simple_playback(&m_pwm2, &seq, 1, NRF_DRV_PWM_FLAG_LOOP);
+    nrfx_pwm_simple_playback(&m_pwm2, &seq, 1, NRFX_PWM_FLAG_LOOP);
 }
 
 static void st7735_apply_model(void)
@@ -165,29 +165,29 @@ void st7735_set_model(uint8_t model)
 // SPI stuff
 //
 //*****************************************************************************
-static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(CONF_OLED_SPI_INST);
+static nrfx_spim_t spi = NRFX_SPIM_INSTANCE(CONF_OLED_SPI_INST);
 
-static void spi_init(nrf_drv_spi_frequency_t spi_config_frequency)
+static void spi_init(nrf_spim_frequency_t spi_config_frequency)
 {
-    nrf_drv_spi_config_t spi_config;
+    nrfx_spim_config_t spi_config;
 
     spi_config.frequency = spi_config_frequency;
     spi_config.sck_pin = st7735_config.sck_pin;
     spi_config.miso_pin = st7735_config.miso_pin;
     spi_config.mosi_pin = st7735_config.mosi_pin;
     spi_config.ss_pin = st7735_config.cs_pin;
-    spi_config.bit_order = NRF_DRV_SPI_BIT_ORDER_MSB_FIRST;
-    spi_config.mode = NRF_DRV_SPI_MODE_0;
+    spi_config.bit_order = NRF_SPIM_BIT_ORDER_MSB_FIRST;
+    spi_config.mode = NRF_SPIM_MODE_0;
     spi_config.irq_priority = APP_IRQ_PRIORITY_LOW;
     spi_config.orc = 0xFF;
 
     APP_ERROR_CHECK(
-        nrf_drv_spi_init(&st7735_config.spi, &spi_config, NULL, NULL));
+        nrfx_spim_init(&st7735_config.spi, &spi_config, NULL, NULL));
 }
 
 static void spi_uninit(void)
 {
-    nrf_drv_spi_uninit(&st7735_config.spi);
+    nrfx_spim_uninit(&st7735_config.spi);
 }
 
 /*
@@ -195,12 +195,15 @@ static void spi_uninit(void)
  */
 static void st7735_data_len(const uint8_t *p_tx_data, uint16_t len)
 {
+    nrfx_spim_xfer_desc_t xfer_desc = {p_tx_data, 0, NULL, 0};
+
     while (len > 0) {
-        const uint8_t packet_len = MIN(len, UINT8_MAX);
-        APP_ERROR_CHECK(nrf_drv_spi_transfer(&st7735_config.spi, p_tx_data,
-                                             packet_len, NULL, 0));
-        len -= packet_len;
-        p_tx_data += packet_len;
+        xfer_desc.tx_length = MIN(len, UINT8_MAX);
+
+        APP_ERROR_CHECK(nrfx_spim_xfer(&st7735_config.spi, &xfer_desc, 0));
+
+        len -= xfer_desc.tx_length;
+        p_tx_data += xfer_desc.tx_length;
     }
 }
 
@@ -463,14 +466,14 @@ void st7735_init(void)
 
     st7735_config.spi = spi;
     st7735_config.sck_pin = PIN_OLED_CLK;
-    st7735_config.miso_pin = NRF_DRV_SPI_PIN_NOT_USED;
+    st7735_config.miso_pin = NRFX_SPIM_PIN_NOT_USED;
     st7735_config.mosi_pin = PIN_OLED_DATA;
     st7735_config.cs_pin = PIN_OLED_CS;
     st7735_config.dc_pin = PIN_OLED_DC_MODE;
     st7735_config.rst_pin = PIN_OLED_RESET;
     st7735_config.blk_pin = PIN_OLED_BLK;
 
-    spi_init(NRF_DRV_SPI_FREQ_8M);
+    spi_init(NRF_SPIM_FREQ_8M);
     pwm_init();
 
     /* Set st7735_config.dc_pin and RST Pins as outputs for manual toggling */
@@ -832,7 +835,7 @@ void st7735_partial_on(void)
 void st7735_slow_down(void)
 {
     spi_uninit();
-    spi_init(NRF_DRV_SPI_FREQ_125K);
+    spi_init(NRF_SPIM_FREQ_125K);
 }
 
 /*
@@ -841,5 +844,5 @@ void st7735_slow_down(void)
 void st7735_speed_up(void)
 {
     spi_uninit();
-    spi_init(NRF_DRV_SPI_FREQ_8M);
+    spi_init(NRF_SPIM_FREQ_8M);
 }

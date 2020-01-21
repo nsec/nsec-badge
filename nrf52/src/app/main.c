@@ -102,39 +102,39 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
     NVIC_SystemReset();
 }
 
-static void init_ble() {
-    create_ble_device(g_device_id);
-#ifdef NSEC_FLAVOR_BAR_BEACON
-    init_resistance_bar_beacon();
-    set_advertiser(get_resistance_bar_beacon());
-    ble_start_advertising();
-#else
-    init_adv_module();
-    enable_fast_advertising_mode(60);
-    enable_slow_advertising_mode(0); // No timeout
-    set_device_name(g_device_id);
-    /*nsec_led_ble_init();*/
-    init_identity_service();
-    init_button_service();
-    nsec_ble_init_device_information_service();
-    set_vendor_service_in_advertising_packet(nsec_identity_get_service(), false);
-    //set_vendor_service_in_scan_response(nsec_identity_get_service(), true);
-    set_advertiser(get_service_advertiser());
-
-    add_observer(get_resistance_propaganda_observer());
-    if (get_stored_ble_is_enabled()) {
-        ble_start_advertising();
-        ble_device_start_scan();
-    }
-    nsec_nearby_badges_init();
-#endif
-}
+//static void init_ble() {
+//    create_ble_device(g_device_id);
+//#ifdef NSEC_FLAVOR_BAR_BEACON
+//    init_resistance_bar_beacon();
+//    set_advertiser(get_resistance_bar_beacon());
+//    ble_start_advertising();
+//#else
+//    init_adv_module();
+//    enable_fast_advertising_mode(60);
+//    enable_slow_advertising_mode(0); // No timeout
+//    set_device_name(g_device_id);
+//    /*nsec_led_ble_init();*/
+//    init_identity_service();
+//    init_button_service();
+//    nsec_ble_init_device_information_service();
+//    set_vendor_service_in_advertising_packet(nsec_identity_get_service(), false);
+//    //set_vendor_service_in_scan_response(nsec_identity_get_service(), true);
+//    set_advertiser(get_service_advertiser());
+//
+//    add_observer(get_resistance_propaganda_observer());
+//    if (get_stored_ble_is_enabled()) {
+//        ble_start_advertising();
+//        ble_device_start_scan();
+//    }
+//    nsec_nearby_badges_init();
+//#endif
+//}
 
 static void main_service_device() {
     cli_process();
     nsec_controls_process();
     battery_status_process();
-    mode_zombie_process();
+    //mode_zombie_process();
     service_WS2812FX();
 
     /* Wait until next event */
@@ -151,24 +151,24 @@ static void enable_app_protect(void)
     while (NRF_NVMC->READY == NVMC_READY_READY_Busy);
 }
 
-int main(void) {
-#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
-    sprintf(g_device_id, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
-#else
-    sprintf(g_device_id, "NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
-#endif
-    g_device_id[9] = '\0';
+volatile int avant;
+volatile int apres;
 
+int main(void) {
     /*
      * Initialize base hardware
      */
+    avant = NVIC->ISER[0];
 
 #ifdef SOLDERING_TRACK
     enable_app_protect();
 #endif
 
-    power_init();
+
     softdevice_init();
+    //power_init();
+
+    //apres = NVIC->ISER[0];
     timer_init();
     flash_init();
     init_WS2812FX();
@@ -189,10 +189,10 @@ int main(void) {
 
     screensaver_init();
 
-    init_ble();
+    //init_ble();
 
 #ifdef NSEC_FLAVOR_CTF
-    mode_zombie_init();
+    //mode_zombie_init();
 #endif
 
 #ifdef SOLDERING_TRACK

@@ -17,6 +17,8 @@ SDK_PATCH_VERSION = 0
 SDK_COMMIT_VERSION = 98a08e2
 SDK_VERSION = nRF5_SDK_$(SDK_MAJOR_VERSION).$(SDK_MINOR_VERSION).$(SDK_PATCH_VERSION)_$(SDK_COMMIT_VERSION)
 
+USE_SOFTDEVICE = s132
+
 # Base name for a few files.
 PROJECT = nsec_nrf52_$(BOARD)_$(FLAVOR)
 
@@ -67,63 +69,46 @@ all: $(ELF)
 
 # Our source files to include in the build, adjust if needed.
 USER_SRCS += $(wildcard src/app/*.c)
-USER_SRCS += $(wildcard src/ble/*.c)
+#USER_SRCS += $(wildcard src/ble/*.c)
 USER_SRCS += $(wildcard src/drivers/*.c)
 
 # The source files from the SDK to include in the build, adjust if needed.
-SDK_C_SRCS += nordicsdk/ble/ble_advertising/ble_advertising.c
-SDK_C_SRCS += nordicsdk/ble/ble_services/ble_dis/ble_dis.c
-SDK_C_SRCS += nordicsdk/ble/common/ble_advdata.c
-SDK_C_SRCS += nordicsdk/ble/common/ble_conn_state.c
-SDK_C_SRCS += nordicsdk/ble/common/ble_srv_common.c
-SDK_C_SRCS += nordicsdk/ble/nrf_ble_gatt/nrf_ble_gatt.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/gatt_cache_manager.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/gatts_cache_manager.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/id_manager.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/peer_data_storage.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/peer_database.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/peer_id.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/peer_manager.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/pm_buffer.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/pm_mutex.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/security_dispatcher.c
-SDK_C_SRCS += nordicsdk/ble/peer_manager/security_manager.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/clock/nrf_drv_clock.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/common/nrf_drv_common.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/gpiote/nrf_drv_gpiote.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/hal/nrf_saadc.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/power/nrf_drv_power.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/pwm/nrf_drv_pwm.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/saadc/nrf_drv_saadc.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/spi_master/nrf_drv_spi.c
-SDK_C_SRCS += nordicsdk/drivers_nrf/uart/nrf_drv_uart.c
-SDK_C_SRCS += nordicsdk/external/fprintf/nrf_fprintf.c
-SDK_C_SRCS += nordicsdk/external/fprintf/nrf_fprintf_format.c
-SDK_C_SRCS += nordicsdk/libraries/atomic_fifo/nrf_atfifo.c
-SDK_C_SRCS += nordicsdk/libraries/balloc/nrf_balloc.c
-SDK_C_SRCS += nordicsdk/libraries/button/app_button.c
-SDK_C_SRCS += nordicsdk/libraries/cli/nrf_cli.c
-SDK_C_SRCS += nordicsdk/libraries/cli/uart/nrf_cli_uart.c
-SDK_C_SRCS += nordicsdk/libraries/crc32/crc32.c
-SDK_C_SRCS += nordicsdk/libraries/experimental_memobj/nrf_memobj.c
-SDK_C_SRCS += nordicsdk/libraries/experimental_ringbuf/nrf_ringbuf.c
-SDK_C_SRCS += nordicsdk/libraries/experimental_section_vars/nrf_section_iter.c
-SDK_C_SRCS += nordicsdk/libraries/fds/fds.c
-SDK_C_SRCS += nordicsdk/libraries/fstorage/nrf_fstorage.c
-SDK_C_SRCS += nordicsdk/libraries/fstorage/nrf_fstorage_sd.c
-SDK_C_SRCS += nordicsdk/libraries/queue/nrf_queue.c
-SDK_C_SRCS += nordicsdk/libraries/timer/app_timer.c
-SDK_C_SRCS += nordicsdk/libraries/util/app_error.c
-SDK_C_SRCS += nordicsdk/libraries/util/app_util_platform.c
-SDK_C_SRCS += nordicsdk/libraries/util/sdk_mapped_flags.c
-SDK_C_SRCS += nordicsdk/softdevice/common/nrf_sdh.c
-SDK_C_SRCS += nordicsdk/softdevice/common/nrf_sdh_ble.c
-SDK_C_SRCS += nordicsdk/toolchain/system_nrf52.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/atomic/nrf_atomic.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/atomic_fifo/nrf_atfifo.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/balloc/nrf_balloc.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/button/app_button.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/cli/nrf_cli.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/cli/uart/nrf_cli_uart.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/crc32/crc32.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/ringbuf/nrf_ringbuf.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/experimental_section_vars/nrf_section_iter.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/log/src/nrf_log_frontend.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/log/src/nrf_log_str_formatter.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/memobj/nrf_memobj.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/pwr_mgmt/nrf_pwr_mgmt.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/queue/nrf_queue.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/sortlist/nrf_sortlist.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/timer/app_timer2.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/timer/drv_rtc.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/util/app_error_handler_gcc.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/util/app_util_platform.c
+SDK_C_SRCS += $(SDK_PATH)/components/softdevice/common/nrf_sdh.c
+SDK_C_SRCS += $(SDK_PATH)/external/fprintf/nrf_fprintf.c
+SDK_C_SRCS += $(SDK_PATH)/external/fprintf/nrf_fprintf_format.c
+SDK_C_SRCS += $(SDK_PATH)/integration/nrfx/legacy/nrf_drv_uart.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_gpiote.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_pwm.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_saadc.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_spim.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_uart.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_uarte.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/prs/nrfx_prs.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/mdk/system_nrf52.c
 
-SDK_ASM_SRCS += nordicsdk/toolchain/gcc/gcc_startup_nrf52.S
+SDK_ASM_SRCS += $(SDK_PATH)/modules/nrfx/mdk/gcc_startup_nrf52.S
 
 # Those files come from extracting the sdk.
-$(SDK_C_SRCS) $(SDK_ASM_SRCS): nordicsdk
+$(SDK_C_SRCS) $(SDK_ASM_SRCS): $(SDK_PATH)
 
 # The objects derived from our source files.
 USER_OBJS = $(USER_SRCS:%.c=$(BUILD)/%.o)
@@ -163,7 +148,7 @@ DEPFILES = $(ALL_OBJS:$(BUILD)/%.o=$(DEPDIR)/%.d)
 DEPFLAGS = -MF $(DEPDIR)/$*.d -MP -MD
 
 # Libraries to include in the link.
-LIBS = nordicsdk/toolchain/cmsis/dsp/GCC/libarm_cortexM4lf_math.a
+LIBS = $(SDK_PATH)/components/toolchain/cmsis/dsp/GCC/libarm_cortexM4lf_math.a
 
 # Silent rules stuff.
 # If V is undefined or V=0 is specified, use the silent/verbose/compact mode.
@@ -246,61 +231,54 @@ CFLAGS += -DS132 -DSOFTDEVICE_PRESENT
 CFLAGS += -DDEBUG
 
 # Warnings.
-CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable
+CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable -fmax-errors=1
 
 # Include paths for our code.
+CFLAGS += -Iconfig
 CFLAGS += -Iinclude
 CFLAGS += -Isrc
 
 # SDK include paths.
-CFLAGS += -Inordicsdk
-CFLAGS += -Inordicsdk/ble/common
-CFLAGS += -Inordicsdk/ble/ble_advertising
-CFLAGS += -Inordicsdk/ble/ble_services/ble_bas
-CFLAGS += -Inordicsdk/ble/ble_services/ble_dis
-CFLAGS += -Inordicsdk/ble/nrf_ble_gatt
-CFLAGS += -Inordicsdk/ble/peer_manager
-CFLAGS += -Inordicsdk/device
-CFLAGS += -Inordicsdk/drivers_nrf/clock
-CFLAGS += -Inordicsdk/drivers_nrf/common
-CFLAGS += -Inordicsdk/drivers_nrf/delay
-CFLAGS += -Inordicsdk/drivers_nrf/gpiote
-CFLAGS += -Inordicsdk/drivers_nrf/hal
-CFLAGS += -Inordicsdk/drivers_nrf/power
-CFLAGS += -Inordicsdk/drivers_nrf/pwm
-CFLAGS += -Inordicsdk/drivers_nrf/saadc
-CFLAGS += -Inordicsdk/drivers_nrf/spi_master
-CFLAGS += -Inordicsdk/drivers_nrf/twi_master
-CFLAGS += -Inordicsdk/drivers_nrf/uart
-CFLAGS += -Inordicsdk/external/fprintf
-CFLAGS += -Inordicsdk/libraries/atomic
-CFLAGS += -Inordicsdk/libraries/atomic_fifo
-CFLAGS += -Inordicsdk/libraries/balloc
-CFLAGS += -Inordicsdk/libraries/button
-CFLAGS += -Inordicsdk/libraries/cli
-CFLAGS += -Inordicsdk/libraries/cli/uart
-CFLAGS += -Inordicsdk/libraries/crc32
-CFLAGS += -Inordicsdk/libraries/experimental_log
-CFLAGS += -Inordicsdk/libraries/experimental_log/src
-CFLAGS += -Inordicsdk/libraries/experimental_memobj
-CFLAGS += -Inordicsdk/libraries/experimental_ringbuf
-CFLAGS += -Inordicsdk/libraries/experimental_section_vars
-CFLAGS += -Inordicsdk/libraries/fds
-CFLAGS += -Inordicsdk/libraries/fstorage
-CFLAGS += -Inordicsdk/libraries/pwr_mgmt
-CFLAGS += -Inordicsdk/libraries/queue
-CFLAGS += -Inordicsdk/libraries/scheduler
-CFLAGS += -Inordicsdk/libraries/strerror
-CFLAGS += -Inordicsdk/libraries/timer
-CFLAGS += -Inordicsdk/libraries/util
-CFLAGS += -Inordicsdk/softdevice/common
-CFLAGS += -Inordicsdk/softdevice/s132/headers
-CFLAGS += -Inordicsdk/toolchain
-CFLAGS += -Inordicsdk/toolchain/cmsis/include
+CFLAGS += -I$(SDK_PATH)/components
+CFLAGS += -I$(SDK_PATH)/components/libraries/atomic_fifo
+CFLAGS += -I$(SDK_PATH)/components/libraries/cli
+CFLAGS += -I$(SDK_PATH)/components/libraries/experimental_section_vars
+CFLAGS += -I$(SDK_PATH)/components/libraries/pwr_mgmt
+CFLAGS += -I$(SDK_PATH)/components/ble/ble_services/ble_dis
+CFLAGS += -I$(SDK_PATH)/components/ble/common
+CFLAGS += -I$(SDK_PATH)/components/ble/nrf_ble_gatt
+CFLAGS += -I$(SDK_PATH)/components/ble/peer_manager
+CFLAGS += -I$(SDK_PATH)/components/libraries/atomic
+CFLAGS += -I$(SDK_PATH)/components/libraries/balloc
+CFLAGS += -I$(SDK_PATH)/components/libraries/button
+CFLAGS += -I$(SDK_PATH)/components/libraries/cli/uart
+CFLAGS += -I$(SDK_PATH)/components/libraries/crc32
+CFLAGS += -I$(SDK_PATH)/components/libraries/delay
+CFLAGS += -I$(SDK_PATH)/components/libraries/log
+CFLAGS += -I$(SDK_PATH)/components/libraries/log/src
+CFLAGS += -I$(SDK_PATH)/components/libraries/memobj
+CFLAGS += -I$(SDK_PATH)/components/libraries/mutex
+CFLAGS += -I$(SDK_PATH)/components/libraries/queue
+CFLAGS += -I$(SDK_PATH)/components/libraries/ringbuf
+CFLAGS += -I$(SDK_PATH)/components/libraries/scheduler
+CFLAGS += -I$(SDK_PATH)/components/libraries/sortlist
+CFLAGS += -I$(SDK_PATH)/components/libraries/strerror
+CFLAGS += -I$(SDK_PATH)/components/libraries/timer
+CFLAGS += -I$(SDK_PATH)/components/libraries/util
+CFLAGS += -I$(SDK_PATH)/components/softdevice/common
+CFLAGS += -I$(SDK_PATH)/components/softdevice/$(USE_SOFTDEVICE)/headers
+CFLAGS += -I$(SDK_PATH)/components/softdevice/$(USE_SOFTDEVICE)/headers/nrf52
+CFLAGS += -I$(SDK_PATH)/components/toolchain/cmsis/include
+CFLAGS += -I$(SDK_PATH)/integration/nrfx/legacy
+CFLAGS += -I$(SDK_PATH)/external/fprintf
+CFLAGS += -I$(SDK_PATH)/modules/nrfx/drivers/include
+CFLAGS += -I$(SDK_PATH)/modules/nrfx/hal
+CFLAGS += -I$(SDK_PATH)/modules/nrfx/mdk
+CFLAGS += -I$(SDK_PATH)/modules/nrfx
 
 # Flags used when linking.
 LDFLAGS = $(MACHINE_FLAGS)
-LDFLAGS += -Lnordicsdk/toolchain/gcc
+LDFLAGS += -L $(SDK_PATH)/modules/nrfx/mdk
 LDFLAGS += -T src/nsec_badge.ld
 LDFLAGS += -Wl,--gc-sections
 LDFLAGS += --specs=nano.specs
@@ -331,19 +309,19 @@ $(ELF): $(ALL_OBJS)
 	$(SILENCE)$(SIZE) $@
 
 # Build our source files.
-$(USER_OBJS): | nordicsdk $(BITMAPS_HDRS) $(EXTERNAL_FLASH_HDR)
+$(USER_OBJS): | $(SDK_PATH) $(BITMAPS_HDRS) $(EXTERNAL_FLASH_HDR)
 $(USER_OBJS): $(BUILD)/%.o: %.c
 	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
 	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
 # Build SDK source files.
-$(SDK_C_OBJS): | nordicsdk
+$(SDK_C_OBJS): | $(SDK_PATH)
 $(SDK_C_OBJS): $(BUILD)/%.o: %.c
 	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
 	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
 # Build SDK assembly files.
-$(SDK_ASM_OBJS): | nordicsdk
+$(SDK_ASM_OBJS): | $(SDK_PATH)
 $(SDK_ASM_OBJS): $(BUILD)/%.o: %.S
 	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
 	$(ECHO_AS)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)

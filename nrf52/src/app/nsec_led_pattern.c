@@ -232,7 +232,7 @@ static void draw_led_title(void)
 }
 
 static void set_nearby_mode(uint8_t item) {
-    select_nearby_badges_pattern();
+    //select_nearby_badges_pattern();
 }
 
 void nsec_led_pattern_show(void)

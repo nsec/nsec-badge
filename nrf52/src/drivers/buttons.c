@@ -85,10 +85,10 @@ void nsec_buttons_init(void) {
      * button handler module.
      */
     static app_button_cfg_t buttons[] = {
-        {PIN_INPUT_UP, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_DOWN, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_BACK, false, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_ENTER, false, NRF_GPIO_PIN_PULLUP,
+        {PIN_INPUT_UP, APP_BUTTON_ACTIVE_LOW, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_DOWN, APP_BUTTON_ACTIVE_LOW, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_BACK, APP_BUTTON_ACTIVE_LOW, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
+        {PIN_INPUT_ENTER, APP_BUTTON_ACTIVE_LOW, NRF_GPIO_PIN_PULLUP,
          nsec_button_event_handler}};
 
     /*

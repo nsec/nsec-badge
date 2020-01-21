@@ -31,12 +31,14 @@ wget -c "http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v${SDK_MAJOR_VER}.x.x
 
 unzip -n "${SDK_VER}.zip" -d "${SDK_VER}" \
 	"components/*" \
+	"integration/*" \
 	"modules/*" \
 	"external/*" \
 	"external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar" \
 	"documentation/nRF5_Nordic_license.txt"
 
 mv "${SDK_VER}/components" "${SDK_DIR}/"
+mv "${SDK_VER}/integration" "${SDK_DIR}/"
 mv "${SDK_VER}/modules" "${SDK_DIR}/"
 mv "${SDK_VER}/external" "${SDK_DIR}/"
 mv "${SDK_VER}/external_tools" "${SDK_DIR}/"

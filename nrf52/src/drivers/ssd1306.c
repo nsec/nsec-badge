@@ -25,7 +25,7 @@ redistribution
 #include <app_util_platform.h>
 #include <nrf52.h>
 #include <nrf_delay.h>
-#include <nrf_drv_spi.h>
+#include <nrfx_spim.h>
 #include <nrf_error.h>
 #include <nrf_gpio.h>
 
@@ -47,31 +47,35 @@ typedef enum {
 /*
  * SPI stuff
  */
-static nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(CONF_OLED_SPI_INST);
+static nrfx_spim_t spi = NRFX_SPIM_INSTANCE(CONF_OLED_SPI_INST);
 
 static void spi_init() {
-    nrf_drv_spi_config_t spi_config;
+    nrfx_spim_config_t spi_config;
 
-    spi_config.frequency = NRF_DRV_SPI_FREQ_1M;
+    spi_config.frequency = NRF_SPIM_FREQ_1M;
     spi_config.sck_pin = PIN_OLED_CLK;
-    spi_config.miso_pin = NRF_DRV_SPI_PIN_NOT_USED;
+    spi_config.miso_pin = NRFX_SPIM_PIN_NOT_USED;
     spi_config.mosi_pin = PIN_OLED_DATA;
     spi_config.ss_pin = PIN_OLED_CS;
-    spi_config.bit_order = NRF_DRV_SPI_BIT_ORDER_MSB_FIRST;
-    spi_config.mode = NRF_DRV_SPI_MODE_0;
+    spi_config.bit_order = NRF_SPIM_BIT_ORDER_MSB_FIRST;
+    spi_config.mode = NRF_SPIM_MODE_0;
     spi_config.irq_priority = APP_IRQ_PRIORITY_LOW;
     spi_config.orc = 0xFF;
 
-    APP_ERROR_CHECK(nrf_drv_spi_init(&spi, &spi_config, NULL, NULL));
+    APP_ERROR_CHECK(nrfx_spim_init(&spi, &spi_config, NULL, NULL));
 }
 
 static void spi_master_tx(const uint8_t *p_tx_data, uint16_t len) {
+    nrfx_spim_xfer_desc_t xfer_desc = {p_tx_data, 0, NULL, 0};
+
     while (len > 0) {
-        const uint8_t packet_len = MIN(len, UINT8_MAX);
+        xfer_desc.tx_length = MIN(len, UINT8_MAX);
+
         APP_ERROR_CHECK(
-            nrf_drv_spi_transfer(&spi, p_tx_data, packet_len, NULL, 0));
-        len -= packet_len;
-        p_tx_data += packet_len;
+            nrfx_spim_xfer(&spi, &xfer_desc, 0));
+
+        len -= xfer_desc.tx_length;
+        p_tx_data += xfer_desc.tx_length;
     }
 }
 

@@ -32,7 +32,7 @@
 #include <nordic_common.h>
 #include <nrf.h>
 #include <nrf_delay.h>
-#include <nrf_drv_saadc.h>
+#include <nrfx_saadc.h>
 #include <nrf_gpio.h>
 #include <nrf_nvic.h>
 
@@ -67,7 +67,7 @@ static nrf_saadc_value_t m_buffer_pool[2][SAMPLES_IN_BUFFER];
 void battery_refresh(void) {
     ret_code_t err_code;
 
-    err_code = nrf_drv_saadc_sample();
+    err_code = nrfx_saadc_sample();
     APP_ERROR_CHECK(err_code);
 }
 
@@ -99,7 +99,7 @@ static void calibrate_saadc() {
     /*
      * Trigger the ADC offset calibration.
      */
-    err_code = nrf_drv_saadc_calibrate_offset();
+    err_code = nrfx_saadc_calibrate_offset();
     APP_ERROR_CHECK(err_code);
 
     /*
@@ -116,19 +116,19 @@ static void calibrate_saadc() {
 /*
  * Callback function to process SAADC events.
  */
-void saadc_callback(nrf_drv_saadc_evt_t const *p_event) {
+void saadc_callback(nrfx_saadc_evt_t const *p_event) {
     switch (p_event->type) {
     /*
      * SAADC calibration is completed.
      */
-    case NRF_DRV_SAADC_EVT_CALIBRATEDONE:
+    case NRFX_SAADC_EVT_CALIBRATEDONE:
         saadc_calibration_done = true;
         break;
 
     /*
      * A new sample is available in the buffer, convert it to millivolts.
      */
-    case NRF_DRV_SAADC_EVT_DONE: {
+    case NRFX_SAADC_EVT_DONE: {
         uint16_t average = 0;
         ret_code_t err_code;
 
@@ -146,13 +146,13 @@ void saadc_callback(nrf_drv_saadc_evt_t const *p_event) {
         /*
          * Switch buffer for next sampling.
          */
-        err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer,
+        err_code = nrfx_saadc_buffer_convert(p_event->data.done.p_buffer,
                                                 SAMPLES_IN_BUFFER);
         APP_ERROR_CHECK(err_code);
         break;
     }
 
-    case NRF_DRV_SAADC_EVT_LIMIT:
+    case NRFX_SAADC_EVT_LIMIT:
         break;
     }
 }
@@ -173,7 +173,7 @@ void battery_init() {
      *  SAADC_CONFIG_LP_MODE
      *  SAADC_CONFIG_IRQ_PRIORITY
      */
-    err_code = nrf_drv_saadc_init(NULL, saadc_callback);
+    err_code = nrfx_saadc_init(NULL, saadc_callback);
     APP_ERROR_CHECK(err_code);
 
     /*
@@ -181,7 +181,7 @@ void battery_init() {
      * for the battery voltage pin.
      */
     static nrf_saadc_channel_config_t battery_channel_config =
-        NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN0);
+        NRFX_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN0);
 
     /*
      * The adc channel resistor is pulled down to ground.
@@ -191,7 +191,7 @@ void battery_init() {
     /*
      * Configure and enable channel 0 with the battery channel config.
      */
-    err_code = nrf_drv_saadc_channel_init(0, &battery_channel_config);
+    err_code = nrfx_saadc_channel_init(0, &battery_channel_config);
     APP_ERROR_CHECK(err_code);
 
     /*
@@ -203,9 +203,9 @@ void battery_init() {
      * Setup double buffering.
      */
     err_code =
-        nrf_drv_saadc_buffer_convert(m_buffer_pool[0], SAMPLES_IN_BUFFER);
+        nrfx_saadc_buffer_convert(m_buffer_pool[0], SAMPLES_IN_BUFFER);
     err_code =
-        nrf_drv_saadc_buffer_convert(m_buffer_pool[1], SAMPLES_IN_BUFFER);
+        nrfx_saadc_buffer_convert(m_buffer_pool[1], SAMPLES_IN_BUFFER);
 
     /*
      * Collect first battery voltage value.

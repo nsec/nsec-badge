@@ -21,6 +21,7 @@
  */
 
 #include <app_error.h>
+#include <nrfx_power.h>
 #include <nrf_soc.h>
 
 #include "power.h"
@@ -37,7 +38,7 @@ void power_init(void) {
      * Passing NULL as config will use the value of
      * POWER_CONFIG_DEFAULT_DCDCEN from sdk_config.h
      */
-    err_code = nrf_drv_power_init(NULL);
+    err_code = nrfx_power_init(NULL);
     APP_ERROR_CHECK(err_code);
 }
 
