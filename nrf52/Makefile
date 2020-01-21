@@ -10,7 +10,12 @@ endif
 SIZE ?= arm-none-eabi-size
 
 # SDK version we use.
-SDK_VERSION = nRF5_SDK_14.2.0_17b948a
+SDK_PATH = nordicsdk
+SDK_MAJOR_VERSION = 16
+SDK_MINOR_VERSION = 0
+SDK_PATCH_VERSION = 0
+SDK_COMMIT_VERSION = 98a08e2
+SDK_VERSION = nRF5_SDK_$(SDK_MAJOR_VERSION).$(SDK_MINOR_VERSION).$(SDK_PATCH_VERSION)_$(SDK_COMMIT_VERSION)
 
 # Base name for a few files.
 PROJECT = nsec_nrf52_$(BOARD)_$(FLAVOR)
@@ -302,8 +307,23 @@ LDFLAGS += --specs=nano.specs
 LDFLAGS += -Wl,-Map=$(BUILD)/$(PROJECT).map
 
 # Download and extract the SDK.
-nordicsdk:
-	./utils/install-sdk.sh nordicsdk $(SDK_VERSION)
+$(SDK_PATH):
+	./utils/install-sdk.sh $@ $(SDK_MAJOR_VERSION) $(SDK_MINOR_VERSION) $(SDK_PATCH_VERSION) $(SDK_COMMIT_VERSION)
+	# Restart make so that the include of Makefile.common below works and
+	# update targets.
+	$(MAKE) $(MAKECMDGOALS)
+
+clean-$(SDK_PATH):
+	rm -rf ./$(SDK_PATH)
+	rm -rf ./$(SDK_VERSION)
+	rm -f ./$(SDK_VERSION).zip
+
+install-sdk-doc:
+	mkdir -p sdk-doc
+	wget -c https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v$(SDK_MAJOR_VERSION).x.x/nRF5_SDK_$(SDK_MAJOR_VERSION).$(SDK_MINOR_VERSION).$(SDK_PATCH_VERSION)_offline_doc.zip \
+		-P sdk-doc/
+	cd sdk-doc && unzip -n nRF5_SDK_$(SDK_MAJOR_VERSION).$(SDK_MINOR_VERSION).$(SDK_PATCH_VERSION)_offline_doc.zip
+	rm sdk-doc/nRF5_SDK_$(SDK_MAJOR_VERSION).$(SDK_MINOR_VERSION).$(SDK_PATCH_VERSION)_offline_doc.zip
 
 # Link the final executable
 $(ELF): $(ALL_OBJS)
