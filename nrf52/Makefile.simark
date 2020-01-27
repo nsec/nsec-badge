@@ -129,6 +129,34 @@ SDK_ASM_OBJS = $(SDK_ASM_SRCS:%.S=$(BUILD)/%.o)
 
 ALL_OBJS = $(USER_OBJS) $(SDK_C_OBJS) $(SDK_ASM_OBJS)
 
+# Tracking of include file dependencies.  This is so that if you build
+# some file `foo.c` which includes `bar.h`, `foo.c` is re-built whenever
+# `bar.h` changes.
+#
+# This is based on this method:
+#
+#   http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/#tldr
+#
+# In short, the $(DEPFLAGS) ask gcc to output a file that lists all the files
+# that were included in the compilation, in the form of Makefile dependencies.
+# These files are included later in this Makefile.
+#
+# The compilation of source file
+#
+#   src/app/yo.c
+#
+# into
+#
+#   builds/$(BOARD)-$(FLAVOR)/src/app/yo.o
+#
+# will produce the dependency file
+#
+#   builds/$(BOARD)-$(FLAVOR)/.deps/src/app/yo.d
+
+DEPDIR = $(BUILD)/.deps
+DEPFILES = $(ALL_OBJS:$(BUILD)/%.o=$(DEPDIR)/%.d)
+DEPFLAGS = -MF $(DEPDIR)/$*.d -MP -MD
+
 # Libraries to include in the link.
 LIBS = nordicsdk/toolchain/cmsis/dsp/GCC/libarm_cortexM4lf_math.a
 
@@ -280,20 +308,24 @@ $(ELF): $(ALL_OBJS)
 # Build our source files.
 $(USER_OBJS): | nordicsdk $(BITMAPS_HDRS) $(EXTERNAL_FLASH_HDR)
 $(USER_OBJS): $(BUILD)/%.o: %.c
-	@mkdir -p $(@D)
-	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS)
+	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
+	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
 # Build SDK source files.
 $(SDK_C_OBJS): | nordicsdk
 $(SDK_C_OBJS): $(BUILD)/%.o: %.c
-	@mkdir -p $(@D)
-	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS)
+	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
+	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
 # Build SDK assembly files.
 $(SDK_ASM_OBJS): | nordicsdk
 $(SDK_ASM_OBJS): $(BUILD)/%.o: %.S
-	@mkdir -p $(@D)
-	$(ECHO_AS)$(CC) -c -o $@ $< $(CFLAGS)
+	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
+	$(ECHO_AS)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
 clean:
 	rm -f $(ALL_OBJS) $(BUILD)/$(PROJECT).map
+	rm -f $(DEPFILES)
+
+# Include generated .d files.
+-include $(DEPFILES)
