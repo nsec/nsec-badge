@@ -6225,9 +6225,6 @@
 #define APP_TIMER_ENABLED 1
 #endif
 
-#define APP_TIMER_V2 1
-#define APP_TIMER_V2_RTC1_ENABLED 1
-
 // <o> APP_TIMER_CONFIG_RTC_FREQUENCY  - Configure RTC prescaler.
 
 // <0=> 32768 Hz
