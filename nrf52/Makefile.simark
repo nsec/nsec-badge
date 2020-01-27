@@ -61,9 +61,9 @@ endif
 all: $(ELF)
 
 # Our source files to include in the build, adjust if needed.
-SRCS += $(wildcard src/app/*.c)
-SRCS += $(wildcard src/ble/*.c)
-SRCS += $(wildcard src/drivers/*.c)
+USER_SRCS += $(wildcard src/app/*.c)
+USER_SRCS += $(wildcard src/ble/*.c)
+USER_SRCS += $(wildcard src/drivers/*.c)
 
 # The source files from the SDK to include in the build, adjust if needed.
 SDK_C_SRCS += nordicsdk/ble/ble_advertising/ble_advertising.c
@@ -121,11 +121,13 @@ SDK_ASM_SRCS += nordicsdk/toolchain/gcc/gcc_startup_nrf52.S
 $(SDK_C_SRCS) $(SDK_ASM_SRCS): nordicsdk
 
 # The objects derived from our source files.
-OBJS = $(SRCS:%.c=$(BUILD)/%.o)
+USER_OBJS = $(USER_SRCS:%.c=$(BUILD)/%.o)
 
 # The objects derived from the SDK source files.
 SDK_C_OBJS = $(SDK_C_SRCS:%.c=$(BUILD)/%.o)
 SDK_ASM_OBJS = $(SDK_ASM_SRCS:%.S=$(BUILD)/%.o)
+
+ALL_OBJS = $(USER_OBJS) $(SDK_C_OBJS) $(SDK_ASM_OBJS)
 
 # Libraries to include in the link.
 LIBS = nordicsdk/toolchain/cmsis/dsp/GCC/libarm_cortexM4lf_math.a
@@ -271,13 +273,13 @@ nordicsdk:
 	./utils/install-sdk.sh nordicsdk $(SDK_VERSION)
 
 # Link the final executable
-$(ELF): $(OBJS) $(SDK_C_OBJS) $(SDK_ASM_OBJS)
+$(ELF): $(ALL_OBJS)
 	$(ECHO_LD)$(CC) -o $@ $^ $(LIBS) $(LDFLAGS)
 	$(SILENCE)$(SIZE) $@
 
 # Build our source files.
-$(OBJS): | nordicsdk $(BITMAPS_HDRS) $(EXTERNAL_FLASH_HDR)
-$(OBJS): $(BUILD)/%.o: %.c
+$(USER_OBJS): | nordicsdk $(BITMAPS_HDRS) $(EXTERNAL_FLASH_HDR)
+$(USER_OBJS): $(BUILD)/%.o: %.c
 	@mkdir -p $(@D)
 	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS)
 
@@ -294,4 +296,4 @@ $(SDK_ASM_OBJS): $(BUILD)/%.o: %.S
 	$(ECHO_AS)$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
-	rm -f $(OBJS) $(SDK_C_OBJS) $(SDK_ASM_OBJS) $(BUILD)/$(PROJECT).map
+	rm -f $(ALL_OBJS) $(BUILD)/$(PROJECT).map
