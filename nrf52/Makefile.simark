@@ -324,8 +324,7 @@ $(SDK_ASM_OBJS): $(BUILD)/%.o: %.S
 	$(ECHO_AS)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
 clean:
-	rm -f $(ALL_OBJS) $(BUILD)/$(PROJECT).map
-	rm -f $(DEPFILES)
+	rm -f $(ALL_OBJS) $(BUILD)/$(PROJECT).map $(DEPFILES) $(ELF)
 
 # Include generated .d files.
 -include $(DEPFILES)
