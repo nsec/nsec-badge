@@ -235,6 +235,11 @@ CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin 
 CFLAGS += -DNRF52 -DNRF52832_XXAA
 CFLAGS += -DS132 -DSOFTDEVICE_PRESENT
 
+# This tells the Error module of the SDK, in the event of an error, to call our
+# app_error_fault_handler with information about the location of the error and
+# enter an infinite loop (rather than resetting the MCU).
+CFLAGS += -DDEBUG
+
 # Warnings.
 CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable
 
