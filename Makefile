@@ -9,18 +9,18 @@ builds/nsec19_stm32_%: builds
 	$(MAKE) -C stm32 $@
 	cp stm32/$@ $@
 
-builds/nsec19_nrf52_%.elf: builds
+builds/nsec_nrf52_brain_%.elf: builds
 	$(MAKE) -C nrf52 FLAVOR=$*
-	cp nrf52/$(@:%.elf=%.out) $@
+	cp nrf52/builds/brain-$*/nsec_nrf52_brain_$*.elf $@
 
 builds/s132_nrf52_5.0.0_softdevice.hex:
 	$(MAKE) -C nrf52 nordicsdk
 	cp nrf52/nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex $@
 
-FIRMWARE_NRF += builds/nsec19_nrf52_bar_beacon.elf
-FIRMWARE_NRF += builds/nsec19_nrf52_ctf.elf
-FIRMWARE_NRF += builds/nsec19_nrf52_conf.elf
-FIRMWARE_NRF += builds/nsec19_nrf52_soldering.elf
+FIRMWARE_NRF += builds/nsec_nrf52_brain_bar_beacon.elf
+FIRMWARE_NRF += builds/nsec_nrf52_brain_ctf.elf
+FIRMWARE_NRF += builds/nsec_nrf52_brain_conf.elf
+FIRMWARE_NRF += builds/nsec_nrf52_brain_soldering.elf
 FIRMWARE_NRF += builds/s132_nrf52_5.0.0_softdevice.hex
 
 FIRMWARE_STM += builds/nsec19_stm32_debugger.elf

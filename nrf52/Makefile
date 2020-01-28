@@ -1,294 +1,216 @@
+# Override these on the command line, if needed.  For example:
+#
+#   $ make FLAVOR=conf
+
 FLAVOR ?= ctf
 BOARD ?= brain
-PROJECT_NAME = nsec19_nrf52_$(FLAVOR)
-TARGETS=$(PROJECT_NAME)
-OUTPUT_DIRECTORY := builds
-SDK_PATH = nordicsdk
-SDK_VERSION = nRF5_SDK_14.2.0_17b948a
-LOG_CLI ?= 0
+ifeq ($(origin CC),default)
+CC = arm-none-eabi-gcc
+endif
+SIZE ?= arm-none-eabi-size
 
+# SDK version we use.
+SDK_VERSION = nRF5_SDK_14.2.0_17b948a
+
+# Base name for a few files.
+PROJECT = nsec_nrf52_$(BOARD)_$(FLAVOR)
+
+# Build output location.
+BUILD = builds/$(BOARD)-$(FLAVOR)
+
+# Final ELF executable.
+ELF = $(BUILD)/$(PROJECT).elf
+
+# Flavor-dependent definitions.
 ifeq ($(FLAVOR), ctf)
-	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
-	CFLAGS += -DNSEC_FLAVOR_CTF
+	FLAVOR_CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
+	FLAVOR_CFLAGS += -DNSEC_FLAVOR_CTF
 else ifeq ($(FLAVOR), conf)
-	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CONF
-	CFLAGS += -DNSEC_FLAVOR_CONF
+	FLAVOR_CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CONF
+	FLAVOR_CFLAGS += -DNSEC_FLAVOR_CONF
 else ifeq ($(FLAVOR), bar_beacon)
-	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=BAR
-	CFLAGS += -DNSEC_FLAVOR_BAR_BEACON
+	FLAVOR_CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=BAR
+	FLAVOR_CFLAGS += -DNSEC_FLAVOR_BAR_BEACON
 else ifeq ($(FLAVOR), soldering)
-	CFLAGS += -DSOLDERING_TRACK
-	CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
-	CFLAGS += -DNSEC_FLAVOR_CTF
-	
+	FLAVOR_CFLAGS += -DSOLDERING_TRACK
+	FLAVOR_CFLAGS += -DNSEC_HARDCODED_BADGE_CLASS=CTF
+	FLAVOR_CFLAGS += -DNSEC_FLAVOR_CTF
 else
-all:
 $(error "Unknown flavor `$(FLAVOR)`")
 endif
 
-# Allow logging through the uart cli
-ifeq ($(LOG_CLI), 1)
-	CFLAGS += -DLOG_CLI
-endif
-
+# Board-dependent definitions
 ifeq ($(BOARD), sputnik)
 	# One of the oled screen pin is shared with the
 	# NFC antenna, make sure it's configured as GPIO
-	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-	CFLAGS += -DBOARD_SPUTNIK
+	BOARD_CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+	BOARD_CFLAGS += -DBOARD_SPUTNIK
 else ifeq ($(BOARD), brain)
-	CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
-	CFLAGS += -DBOARD_BRAIN
+	BOARD_CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+	BOARD_CFLAGS += -DBOARD_BRAIN
 else ifeq ($(BOARD), pca10040)
 	#special flags for the devboard
-	ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
-	ASMFLAGS += -DBOARD_PCA10040
-	ASMFLAGS += -DBSP_DEFINES_ONLY
-	CFLAGS += -DCONFIG_GPIO_AS_PINRESET
-	CFLAGS += -DBOARD_PCA10040
-	CFLAGS += -DBSP_DEFINES_ONLY
+	BOARD_CFLAGS += -DCONFIG_GPIO_AS_PINRESET
+	BOARD_CFLAGS += -DBOARD_PCA10040
+	BOARD_CFLAGS += -DBSP_DEFINES_ONLY
 else
-all:
 $(error "Unknown board `$(BOARD)`")
 endif
 
-SRC_FILES = $(wildcard src/app/*.c)
-SRC_FILES += $(wildcard src/ble/*.c)
-SRC_FILES += $(wildcard src/drivers/*.c)
-#SRC_FILES += $(wildcard src/meshes/*.c)
-SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
-SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
-SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_dis/ble_dis.c
-SRC_FILES += $(SDK_PATH)/ble/ble_services/ble_lbs/ble_lbs.c
-SRC_FILES += $(SDK_PATH)/ble/common/ble_advdata.c
-SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_params.c
-SRC_FILES += $(SDK_PATH)/ble/common/ble_conn_state.c
-SRC_FILES += $(SDK_PATH)/ble/common/ble_srv_common.c
-SRC_FILES += $(SDK_PATH)/ble/ble_advertising/ble_advertising.c
-SRC_FILES += $(SDK_PATH)/ble/nrf_ble_gatt/nrf_ble_gatt.c
-SRC_FILES += $(wildcard $(SDK_PATH)/ble/peer_manager/*.c)
-SRC_FILES += $(SDK_PATH)/drivers_nrf/clock/nrf_drv_clock.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/common/nrf_drv_common.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/gpiote/nrf_drv_gpiote.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/hal/nrf_saadc.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/power/nrf_drv_power.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/pwm/nrf_drv_pwm.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/saadc/nrf_drv_saadc.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_master/nrf_drv_spi.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/spi_slave/nrf_drv_spis.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/twi_master/nrf_drv_twi.c
-SRC_FILES += $(SDK_PATH)/drivers_nrf/uart/nrf_drv_uart.c
-SRC_FILES += $(SDK_PATH)/external/fprintf/nrf_fprintf.c
-SRC_FILES += $(SDK_PATH)/external/fprintf/nrf_fprintf_format.c
-SRC_FILES += $(SDK_PATH)/external/segger_rtt/SEGGER_RTT.c
-SRC_FILES += $(SDK_PATH)/external/segger_rtt/SEGGER_RTT_printf.c
-SRC_FILES += $(SDK_PATH)/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c
-SRC_FILES += $(SDK_PATH)/libraries/atomic_fifo/nrf_atfifo.c
-SRC_FILES += $(SDK_PATH)/libraries/balloc/nrf_balloc.c
-SRC_FILES += $(SDK_PATH)/libraries/button/app_button.c
-SRC_FILES += $(SDK_PATH)/libraries/crc32/crc32.c
-SRC_FILES += $(SDK_PATH)/libraries/cli/nrf_cli.c
-SRC_FILES += $(SDK_PATH)/libraries/cli/uart/nrf_cli_uart.c
-SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_backend_rtt.c
-SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_backend_serial.c
-SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_default_backends.c
-SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_frontend.c
-SRC_FILES += $(SDK_PATH)/libraries/experimental_log/src/nrf_log_str_formatter.c
-SRC_FILES += $(SDK_PATH)/libraries/experimental_memobj/nrf_memobj.c
-SRC_FILES += $(SDK_PATH)/libraries/experimental_section_vars/nrf_section_iter.c
-SRC_FILES += $(SDK_PATH)/libraries/fds/fds.c
-SRC_FILES += $(SDK_PATH)/libraries/fifo/app_fifo.c
-SRC_FILES += $(SDK_PATH)/libraries/fstorage/nrf_fstorage.c
-SRC_FILES += $(SDK_PATH)/libraries/fstorage/nrf_fstorage_sd.c
-SRC_FILES += $(SDK_PATH)/libraries/gpiote/app_gpiote.c
-SRC_FILES += $(SDK_PATH)/libraries/queue/nrf_queue.c
-SRC_FILES += $(SDK_PATH)/libraries/experimental_ringbuf/nrf_ringbuf.c
-SRC_FILES += $(SDK_PATH)/libraries/scheduler/app_scheduler.c
-SRC_FILES += $(SDK_PATH)/libraries/strerror/nrf_strerror.c
-SRC_FILES += $(SDK_PATH)/libraries/timer/app_timer.c
-SRC_FILES += $(SDK_PATH)/libraries/uart/app_uart_fifo.c
-SRC_FILES += $(SDK_PATH)/libraries/util/app_error.c
-SRC_FILES += $(SDK_PATH)/libraries/util/app_error_weak.c
-SRC_FILES += $(SDK_PATH)/libraries/util/app_util_platform.c
-SRC_FILES += $(SDK_PATH)/libraries/util/sdk_mapped_flags.c
-# include theses files before the softdevice source code, or strange bugs will occur.
-SRC_FILES += $(SDK_PATH)/toolchain/gcc/gcc_startup_nrf52.S
-SRC_FILES += $(SDK_PATH)/toolchain/system_nrf52.c
-SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_ble.c
-SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh.c
-SRC_FILES += $(SDK_PATH)/softdevice/common/nrf_sdh_soc.c
+# Main target.
+all: $(ELF)
 
+# Our source files to include in the build, adjust if needed.
+USER_SRCS += $(wildcard src/app/*.c)
+USER_SRCS += $(wildcard src/ble/*.c)
+USER_SRCS += $(wildcard src/drivers/*.c)
 
-INC_FOLDERS  = include
-INC_FOLDERS += src
-INC_FOLDERS += $(SDK_PATH)
-INC_FOLDERS += $(SDK_PATH)/toolchain
-INC_FOLDERS += $(SDK_PATH)/toolchain/gcc
-INC_FOLDERS += $(SDK_PATH)/toolchain/cmsis/include
-INC_FOLDERS += $(SDK_PATH)/device
-INC_FOLDERS += $(SDK_PATH)/softdevice/common
-INC_FOLDERS += $(SDK_PATH)/softdevice/s132/headers
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/clock
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/common
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/delay
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/gpiote
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/hal
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/power
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/pwm/
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/saadc
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/spi_master
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/spi_slave
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/twi_master
-INC_FOLDERS += $(SDK_PATH)/drivers_nrf/uart
-INC_FOLDERS += $(SDK_PATH)/libraries/atomic
-INC_FOLDERS += $(SDK_PATH)/libraries/atomic_fifo
-INC_FOLDERS += $(SDK_PATH)/libraries/balloc/
-INC_FOLDERS += $(SDK_PATH)/libraries/button
-INC_FOLDERS += $(SDK_PATH)/libraries/cli
-INC_FOLDERS += $(SDK_PATH)/libraries/cli/uart
-INC_FOLDERS += $(SDK_PATH)/libraries/crc32
-INC_FOLDERS += $(SDK_PATH)/libraries/experimental_log
-INC_FOLDERS += $(SDK_PATH)/libraries/experimental_log/src
-INC_FOLDERS += $(SDK_PATH)/libraries/experimental_memobj
-INC_FOLDERS += $(SDK_PATH)/libraries/experimental_ringbuf
-INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
-INC_FOLDERS += $(SDK_PATH)/libraries/experimental_section_vars
-INC_FOLDERS += $(SDK_PATH)/libraries/fds
-INC_FOLDERS += $(SDK_PATH)/libraries/fifo
-INC_FOLDERS += $(SDK_PATH)/libraries/fstorage
-INC_FOLDERS += $(SDK_PATH)/libraries/gpiote
-INC_FOLDERS += $(SDK_PATH)/libraries/pwr_mgmt
-INC_FOLDERS += $(SDK_PATH)/libraries/queue
-INC_FOLDERS += $(SDK_PATH)/libraries/scheduler
-INC_FOLDERS += $(SDK_PATH)/libraries/strerror
-INC_FOLDERS += $(SDK_PATH)/libraries/timer
-INC_FOLDERS += $(SDK_PATH)/libraries/uart
-INC_FOLDERS += $(SDK_PATH)/libraries/util
-INC_FOLDERS += $(SDK_PATH)/ble/common
-INC_FOLDERS += $(SDK_PATH)/ble/ble_advertising
-INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_bas
-INC_FOLDERS += $(SDK_PATH)/ble/ble_services/ble_dis
-INC_FOLDERS += $(SDK_PATH)/ble/nrf_ble_gatt
-INC_FOLDERS += $(SDK_PATH)/ble/nrf_ble_gatt/
-INC_FOLDERS += $(SDK_PATH)/ble/peer_manager
-INC_FOLDERS += $(SDK_PATH)/serialization/common/transport/ser_phy/config
-INC_FOLDERS += $(SDK_PATH)/external/fprintf
-INC_FOLDERS += $(SDK_PATH)/external/segger_rtt
+# The source files from the SDK to include in the build, adjust if needed.
+SDK_C_SRCS += nordicsdk/ble/ble_advertising/ble_advertising.c
+SDK_C_SRCS += nordicsdk/ble/ble_services/ble_dis/ble_dis.c
+SDK_C_SRCS += nordicsdk/ble/common/ble_advdata.c
+SDK_C_SRCS += nordicsdk/ble/common/ble_conn_state.c
+SDK_C_SRCS += nordicsdk/ble/common/ble_srv_common.c
+SDK_C_SRCS += nordicsdk/ble/nrf_ble_gatt/nrf_ble_gatt.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/gatt_cache_manager.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/gatts_cache_manager.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/id_manager.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/peer_data_storage.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/peer_database.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/peer_id.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/peer_manager.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/pm_buffer.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/pm_mutex.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/security_dispatcher.c
+SDK_C_SRCS += nordicsdk/ble/peer_manager/security_manager.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/clock/nrf_drv_clock.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/common/nrf_drv_common.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/gpiote/nrf_drv_gpiote.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/hal/nrf_saadc.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/power/nrf_drv_power.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/pwm/nrf_drv_pwm.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/saadc/nrf_drv_saadc.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/spi_master/nrf_drv_spi.c
+SDK_C_SRCS += nordicsdk/drivers_nrf/uart/nrf_drv_uart.c
+SDK_C_SRCS += nordicsdk/external/fprintf/nrf_fprintf.c
+SDK_C_SRCS += nordicsdk/external/fprintf/nrf_fprintf_format.c
+SDK_C_SRCS += nordicsdk/libraries/atomic_fifo/nrf_atfifo.c
+SDK_C_SRCS += nordicsdk/libraries/balloc/nrf_balloc.c
+SDK_C_SRCS += nordicsdk/libraries/button/app_button.c
+SDK_C_SRCS += nordicsdk/libraries/cli/nrf_cli.c
+SDK_C_SRCS += nordicsdk/libraries/cli/uart/nrf_cli_uart.c
+SDK_C_SRCS += nordicsdk/libraries/crc32/crc32.c
+SDK_C_SRCS += nordicsdk/libraries/experimental_memobj/nrf_memobj.c
+SDK_C_SRCS += nordicsdk/libraries/experimental_ringbuf/nrf_ringbuf.c
+SDK_C_SRCS += nordicsdk/libraries/experimental_section_vars/nrf_section_iter.c
+SDK_C_SRCS += nordicsdk/libraries/fds/fds.c
+SDK_C_SRCS += nordicsdk/libraries/fstorage/nrf_fstorage.c
+SDK_C_SRCS += nordicsdk/libraries/fstorage/nrf_fstorage_sd.c
+SDK_C_SRCS += nordicsdk/libraries/queue/nrf_queue.c
+SDK_C_SRCS += nordicsdk/libraries/timer/app_timer.c
+SDK_C_SRCS += nordicsdk/libraries/util/app_error.c
+SDK_C_SRCS += nordicsdk/libraries/util/app_util_platform.c
+SDK_C_SRCS += nordicsdk/libraries/util/sdk_mapped_flags.c
+SDK_C_SRCS += nordicsdk/softdevice/common/nrf_sdh.c
+SDK_C_SRCS += nordicsdk/softdevice/common/nrf_sdh_ble.c
+SDK_C_SRCS += nordicsdk/toolchain/system_nrf52.c
 
-# Libraries common to all targets
-LIB_FILES += \
-	$(SDK_PATH)/toolchain/cmsis/dsp/GCC/libarm_cortexM4lf_math.a \
+SDK_ASM_SRCS += nordicsdk/toolchain/gcc/gcc_startup_nrf52.S
 
-DEVICE = NRF52
-CFLAGS   += -DNRF52 -DNRF52832_XXAA
-ASMFLAGS += -DNRF52 -DNRF52832_XXAA
+# Those files come from extracting the sdk.
+$(SDK_C_SRCS) $(SDK_ASM_SRCS): nordicsdk
 
-USE_SOFTDEVICE = s132
-SOFTDEVICE = $(SDK_PATH)/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex
-CFLAGS   += -DS132 -DSOFTDEVICE_PRESENT
-ASMFLAGS += -DS132 -DSOFTDEVICE_PRESENT
+# The objects derived from our source files.
+USER_OBJS = $(USER_SRCS:%.c=$(BUILD)/%.o)
 
-TEMPLATE_PATH = $(SDK_PATH)/toolchain/gcc/
+# The objects derived from the SDK source files.
+SDK_C_OBJS = $(SDK_C_SRCS:%.c=$(BUILD)/%.o)
+SDK_ASM_OBJS = $(SDK_ASM_SRCS:%.S=$(BUILD)/%.o)
 
+ALL_OBJS = $(USER_OBJS) $(SDK_C_OBJS) $(SDK_ASM_OBJS)
 
-# Optimization flags
-OPTIMIZATIONS = -DDEBUG -g3 -Os
+# Tracking of include file dependencies.  This is so that if you build
+# some file `foo.c` which includes `bar.h`, `foo.c` is re-built whenever
+# `bar.h` changes.
+#
+# This is based on this method:
+#
+#   http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/#tldr
+#
+# In short, the $(DEPFLAGS) ask gcc to output a file that lists all the files
+# that were included in the compilation, in the form of Makefile dependencies.
+# These files are included later in this Makefile.
+#
+# The compilation of source file
+#
+#   src/app/yo.c
+#
+# into
+#
+#   builds/$(BOARD)-$(FLAVOR)/src/app/yo.o
+#
+# will produce the dependency file
+#
+#   builds/$(BOARD)-$(FLAVOR)/.deps/src/app/yo.d
 
-# Enable link time optimization
-#OPTIMIZATIONS += -flto (mjeanson: Breaks the app timer for me)
+DEPDIR = $(BUILD)/.deps
+DEPFILES = $(ALL_OBJS:$(BUILD)/%.o=$(DEPDIR)/%.d)
+DEPFLAGS = -MF $(DEPDIR)/$*.d -MP -MD
 
+# Libraries to include in the link.
+LIBS = nordicsdk/toolchain/cmsis/dsp/GCC/libarm_cortexM4lf_math.a
 
-# Architecture and ABI flags
-ARCH = -mthumb -mabi=aapcs -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
+# Silent rules stuff.
+# If V is undefined or V=0 is specified, use the silent/verbose/compact mode.
+V ?= 0
+ifeq ($(V),0)
+ECHO_AS     = @echo "  AS      $@";
+ECHO_CC     = @echo "  CC      $@";
+ECHO_LD     = @echo "  LD      $@";
+ECHO_BMPINT = @echo "  BMPINT  $<";
+ECHO_BMPEXT = @echo "  BMPEXT  $<";
+ECHO_PACK   = @echo "  PACK    $@";
+SILENCE = @
+endif
 
-
-# C flags common to all targets
-CFLAGS += $(OPTIMIZATIONS)
-CFLAGS += $(ARCH)
-CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable
-# keep every function in a separate section, this allows linker to discard unused ones
-CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
-CFLAGS += -fno-builtin -fshort-enums
-# Store the stack frame pointer in a register (why?)
-CFLAGS += -fno-omit-frame-pointer
-CFLAGS += -DFLOAT_ABI_HARD
-CFLAGS += -D__HEAP_SIZE=0
-# Needed to use arm_math
-CFLAGS += -DARM_MATH_CM4
-
-
-# Assembler flags common to all targets
-ASMFLAGS += $(OPTIMIZATIONS)
-ASMFLAGS += $(ARCH)
-ASMFLAGS += -DFLOAT_ABI_HARD
-ASMFLAGS += -D__HEAP_SIZE=0
-
-
-# Linker flags
-LDFLAGS += $(OPTIMIZATIONS)
-LDFLAGS += $(ARCH)
-LDFLAGS += -L $(TEMPLATE_PATH) -T src/nsec_badge.ld
-# Store the stack frame pointer in a register (why?)
-LDFLAGS += -fno-omit-frame-pointer
-# let linker dump unused sections
-LDFLAGS += -Wl,--gc-sections
-# use newlib in nano version
-LDFLAGS += --specs=nano.specs
-
-# Add standard libraries at the very end of the linker input, after all objects
-# that may need symbols provided by these libraries.
-LIB_FILES += -lc -lnosys -lm
-
-TERMINAL = dup
-
-default: gosecure-sequences bitmaps external-flash $(PROJECT_NAME)
-
-$(PROJECT_NAME): $(SDK_PATH)
-
-clean: clean-bitmaps
-
-GEN_GOSECURE_SEQUENCES_SCRIPT = utils/gosecure/generate.py
-
-gosecure-sequences: src/app/gosecure_animation_sequences.c bitmaps
-
-src/app/gosecure_animation_sequences.c: $(GEN_GOSECURE_SEQUENCES_SCRIPT)
-	cd `dirname $(GEN_GOSECURE_SEQUENCES_SCRIPT)` && python3 `basename $(GEN_GOSECURE_SEQUENCES_SCRIPT)`
-
-GEN_IMAGE_SCRIPT = utils/gen_image.py
-
-%_bitmap.h: %.png
-	python3 $(GEN_IMAGE_SCRIPT) $< $(basename $@)
-
-# Bitmaps written to the external flash.
-src/images/external/%_bitmap.h src/images/external/%_bitmap.bitmapbin: src/images/external/%.png
-	python3 $(GEN_IMAGE_SCRIPT) --external-flash $< $(basename $@)
-
-# Bitmaps written to the internal flash.
-src/images/font_bitmap.h: src/images/font.png
-	python3 $(GEN_IMAGE_SCRIPT) -r $< $(basename $@)
-
+# The images to convert to .h/.c.
+#
+# Data of internal (INT) bitmaps is going to end up in the application, so is
+# compiled as an array in a .c file, with an accompanying .h file that can be
+# included to use said data.
+#
+# Data of external (EXT) bitmaps is going to end up in the flash, so is placed
+# in a raw binary file (.bitmapbin).  All these binary files are later
+# concatenated to make up the flash content, and a .h file is produced to
+# describe the location of each file's content in the flash.
 BITMAPS_INT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
 BITMAPS_EXT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/external/*.png))
 BITMAPS_EXT_BINS = $(patsubst %.png,%_bitmap.bitmapbin,$(wildcard src/images/external/*.png))
 BITMAPS_EXT_BINS += $(patsubst %.png,%_bitmap.bitmapbin,$(wildcard src/images/external/$(FLAVOR)/*.png))
 BITMAPS_HDRS = $(BITMAPS_INT_HDRS) $(BITMAPS_EXT_HDRS)
 
-bitmaps: $(BITMAPS_HDRS)
+GEN_IMAGE_SCRIPT = utils/gen_image.py
+
+# Bitmaps written to the internal flash.
+%_bitmap.h: %.png
+	$(ECHO_BMPINT)python3 $(GEN_IMAGE_SCRIPT) $< $(basename $@)
+
+# Bitmaps written to the external flash.
+src/images/external/%_bitmap.h src/images/external/%_bitmap.bitmapbin: src/images/external/%.png
+	$(ECHO_BMPEXT)python3 $(GEN_IMAGE_SCRIPT) --external-flash $< $(basename $@)
+
+# This one has its own rule because it's rotated.
+src/images/font_bitmap.h: src/images/font.png
+	python3 $(GEN_IMAGE_SCRIPT) -r $< $(basename $@)
 
 # If the gen_image script changes, we want to re-generate the images.
 $(BITMAPS_HDRS) $(BITMAPS_EXT_BINS): $(GEN_IMAGE_SCRIPT)
 
-clean-bitmaps:
-	rm -f src/images/*.h
-	rm -f src/images/external/*.h
-	rm -f src/images/external/*.bitmapbin
-
-# external-flash: Pack files in a single file and generate a "table of contents" as a .h.
-
+# Rules to generate the external flash content.
+#
+# Pack files in a single file and generate a "table of contents" as a .h.
 EXTERNAL_FLASH_BIN = src/app/external_flash_$(FLAVOR).flashbin
-EXTERNAL_FLASH_H = src/app/external_flash_$(FLAVOR).h
-
-external-flash: $(EXTERNAL_FLASH_H) $(EXTERNAL_FLASH_BIN)
+EXTERNAL_FLASH_HDR = src/app/external_flash_$(FLAVOR).h
 
 EXTERNAL_FLASH_PACK_SCRIPT = utils/pack_flash.py
 EXTERNAL_FLASH_FILES = $(BITMAPS_EXT_BINS)
@@ -297,56 +219,112 @@ ifeq ($(FLAVOR), ctf)
 EXTERNAL_FLASH_FILES += src/app/flag-external-flash.txt
 endif
 
-$(EXTERNAL_FLASH_H) $(EXTERNAL_FLASH_BIN): $(EXTERNAL_FLASH_FILES)
-	python3 $(EXTERNAL_FLASH_PACK_SCRIPT) src/app/external_flash $(FLAVOR) $(filter-out $(EXTERNAL_FLASH_PACK_SCRIPT), $^)
+$(EXTERNAL_FLASH_HDR) $(EXTERNAL_FLASH_BIN): $(EXTERNAL_FLASH_FILES)
+	$(ECHO_PACK)python3 $(EXTERNAL_FLASH_PACK_SCRIPT) src/app/external_flash $(FLAVOR) $(filter-out $(EXTERNAL_FLASH_PACK_SCRIPT), $^)
 
-$(EXTERNAL_FLASH_H) $(EXTERNAL_FLASH_BIN): $(EXTERNAL_FLASH_PACK_SCRIPT)
+$(EXTERNAL_FLASH_HDR) $(EXTERNAL_FLASH_BIN): $(EXTERNAL_FLASH_PACK_SCRIPT)
 
-clean: clean-external-flash
-clean-external-flash:
-	rm -f $(EXTERNAL_FLASH_H)
-	rm -f $(EXTERNAL_FLASH_BIN)
+# Flag that describe the supported CPU features.
+MACHINE_FLAGS = -mthumb -mabi=aapcs -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
-# Write the contents of the external flash.  The badge must be ready to accept
-# external flash commands.
+CFLAGS += $(FLAVOR_CFLAGS) $(BOARD_CFLAGS)
+CFLAGS += -g3 -Os
+CFLAGS += -std=c99
+CFLAGS += $(MACHINE_FLAGS)
+CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin -fshort-enums -fno-omit-frame-pointer -DFLOAT_ABI_HARD -D__HEAP_SIZE=0 -DARM_MATH_CM4
+CFLAGS += -DNRF52 -DNRF52832_XXAA
+CFLAGS += -DS132 -DSOFTDEVICE_PRESENT
 
-flash-external-flash: $(EXTERNAL_FLASH_BIN)
-	python3 utils/flash_client.py $<
+# Warnings.
+CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable
 
-$(SDK_PATH):
-	./utils/install-sdk.sh $@ $(SDK_VERSION)
-	# Restart make so that the include of Makefile.common below works and
-	# update targets.
-	$(MAKE) $(MAKECMDGOALS)
+# Include paths for our code.
+CFLAGS += -Iinclude
+CFLAGS += -Isrc
 
-clean-$(SDK_PATH):
-	rm -rf ./$(SDK_PATH)
-	rm -rf ./$(SDK_VERSION)
-	rm -f ./$(SDK_VERSION).zip
+# SDK include paths.
+CFLAGS += -Inordicsdk
+CFLAGS += -Inordicsdk/ble/common
+CFLAGS += -Inordicsdk/ble/ble_advertising
+CFLAGS += -Inordicsdk/ble/ble_services/ble_bas
+CFLAGS += -Inordicsdk/ble/ble_services/ble_dis
+CFLAGS += -Inordicsdk/ble/nrf_ble_gatt
+CFLAGS += -Inordicsdk/ble/peer_manager
+CFLAGS += -Inordicsdk/device
+CFLAGS += -Inordicsdk/drivers_nrf/clock
+CFLAGS += -Inordicsdk/drivers_nrf/common
+CFLAGS += -Inordicsdk/drivers_nrf/delay
+CFLAGS += -Inordicsdk/drivers_nrf/gpiote
+CFLAGS += -Inordicsdk/drivers_nrf/hal
+CFLAGS += -Inordicsdk/drivers_nrf/power
+CFLAGS += -Inordicsdk/drivers_nrf/pwm
+CFLAGS += -Inordicsdk/drivers_nrf/saadc
+CFLAGS += -Inordicsdk/drivers_nrf/spi_master
+CFLAGS += -Inordicsdk/drivers_nrf/twi_master
+CFLAGS += -Inordicsdk/drivers_nrf/uart
+CFLAGS += -Inordicsdk/external/fprintf
+CFLAGS += -Inordicsdk/libraries/atomic
+CFLAGS += -Inordicsdk/libraries/atomic_fifo
+CFLAGS += -Inordicsdk/libraries/balloc
+CFLAGS += -Inordicsdk/libraries/button
+CFLAGS += -Inordicsdk/libraries/cli
+CFLAGS += -Inordicsdk/libraries/cli/uart
+CFLAGS += -Inordicsdk/libraries/crc32
+CFLAGS += -Inordicsdk/libraries/experimental_log
+CFLAGS += -Inordicsdk/libraries/experimental_log/src
+CFLAGS += -Inordicsdk/libraries/experimental_memobj
+CFLAGS += -Inordicsdk/libraries/experimental_ringbuf
+CFLAGS += -Inordicsdk/libraries/experimental_section_vars
+CFLAGS += -Inordicsdk/libraries/fds
+CFLAGS += -Inordicsdk/libraries/fstorage
+CFLAGS += -Inordicsdk/libraries/pwr_mgmt
+CFLAGS += -Inordicsdk/libraries/queue
+CFLAGS += -Inordicsdk/libraries/scheduler
+CFLAGS += -Inordicsdk/libraries/strerror
+CFLAGS += -Inordicsdk/libraries/timer
+CFLAGS += -Inordicsdk/libraries/util
+CFLAGS += -Inordicsdk/softdevice/common
+CFLAGS += -Inordicsdk/softdevice/s132/headers
+CFLAGS += -Inordicsdk/toolchain
+CFLAGS += -Inordicsdk/toolchain/cmsis/include
 
--include $(TEMPLATE_PATH)/Makefile.common
-$(foreach target, $(TARGETS), $(call define_target, $(target)))
+# Flags used when linking.
+LDFLAGS = $(MACHINE_FLAGS)
+LDFLAGS += -Lnordicsdk/toolchain/gcc
+LDFLAGS += -T src/nsec_badge.ld
+LDFLAGS += -Wl,--gc-sections
+LDFLAGS += --specs=nano.specs
+LDFLAGS += -Wl,-Map=$(BUILD)/$(PROJECT).map
 
+# Download and extract the SDK.
+nordicsdk:
+	./utils/install-sdk.sh nordicsdk $(SDK_VERSION)
 
-$(OUTPUT_DIRECTORY)/program.hex: $(PROJECT_NAME)
-	mergehex/mergehex -m $(SOFTDEVICE) $(OUTPUT_DIRECTORY)/$<.hex -o $@
+# Link the final executable
+$(ELF): $(ALL_OBJS)
+	$(ECHO_LD)$(CC) -o $@ $^ $(LIBS) $(LDFLAGS)
+	$(SILENCE)$(SIZE) $@
 
-# TODO add target to install nrfjprog and mergehex
-flash-devboard: $(OUTPUT_DIRECTORY)/program.hex
-	@echo Flashing: $<
-	nrfjprog/nrfjprog -f nrf52 --eraseall
-	nrfjprog/nrfjprog -f nrf52 --program $(OUTPUT_DIRECTORY)/program.hex --sectorerase --verify
-	nrfjprog/nrfjprog -f nrf52 --reset
+# Build our source files.
+$(USER_OBJS): | nordicsdk $(BITMAPS_HDRS) $(EXTERNAL_FLASH_HDR)
+$(USER_OBJS): $(BUILD)/%.o: %.c
+	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
+	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
-merge: $(OUTPUT_DIRECTORY)/program.hex
+# Build SDK source files.
+$(SDK_C_OBJS): | nordicsdk
+$(SDK_C_OBJS): $(BUILD)/%.o: %.c
+	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
+	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
-sdk_config: $(SDK_PATH)
-	java -jar $(SDK_PATH)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar sdk_config.h
+# Build SDK assembly files.
+$(SDK_ASM_OBJS): | nordicsdk
+$(SDK_ASM_OBJS): $(BUILD)/%.o: %.S
+	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
+	$(ECHO_AS)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
 
-install-sdk-doc:
-	mkdir -p sdk-doc
-	wget -c https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.2.0_offline_doc.zip \
-		-O sdk-doc/nRF5_SDK_14.2.0_offline_doc.zip
-	cd sdk-doc && unzip -n nRF5_SDK_14.2.0_offline_doc.zip
+clean:
+	rm -f $(ALL_OBJS) $(BUILD)/$(PROJECT).map $(DEPFILES) $(ELF)
 
-.PHONY: gosecure-sequences bitmaps external-flash clean clean-bitmaps clean-external-flash clean-$(SDK_PATH) flash-devboard merge sdk_config
+# Include generated .d files.
+-include $(DEPFILES)
