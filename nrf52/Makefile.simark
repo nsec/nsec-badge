@@ -13,13 +13,13 @@ SIZE ?= arm-none-eabi-size
 SDK_VERSION = nRF5_SDK_14.2.0_17b948a
 
 # Base name for a few files.
-PROJECT = nsec_nrf_$(BOARD)_$(FLAVOR)
+PROJECT = nsec_nrf52_$(BOARD)_$(FLAVOR)
 
 # Build output location.
 BUILD = builds/$(BOARD)-$(FLAVOR)
 
 # Final ELF executable.
-ELF = $(BUILD)/$(PROJECT).out
+ELF = $(BUILD)/$(PROJECT).elf
 
 # Flavor-dependent definitions.
 ifeq ($(FLAVOR), ctf)
