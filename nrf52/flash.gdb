@@ -16,8 +16,8 @@ end
 if $LOAD_SOFTDEVICE
   load nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex
 end
-load builds/nsec19_nrf52_ctf.out
-file builds/nsec19_nrf52_ctf.out
+load builds/brain-ctf/nsec_nrf52_brain_ctf.elf
+file builds/brain-ctf/nsec_nrf52_brain_ctf.elf
 
 define hook-quit
   set confirm off
