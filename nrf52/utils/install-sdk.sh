@@ -55,6 +55,7 @@ GNU_VERSION ?= \$(shell \"\$(GNU_INSTALL_ROOT)\$(GNU_PREFIX)-gcc\" -dumpversion)
 #patch -p0 --binary < "$SCRIPTPATH/../patches/fix-uart-error-handling.patch"
 #patch -p0 --binary < "$SCRIPTPATH/../patches/fix-uart-cli-overrun-handling.patch"
 #patch -p0 --binary < "$SCRIPTPATH/../patches/cli-make-backspace-and-delete-work.patch"
+patch -p0 --binary < "$SCRIPTPATH/../patches/sdk16-add-cfi-directives.patch"
 
 # Cleanup
 rmdir "${SDK_VER}/documentation"

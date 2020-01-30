@@ -1,0 +1,21 @@
+--- ./nordicsdk/components/libraries/util/app_error_handler_gcc.c	2019-10-18 22:22:38.000000000 -0400
++++ ./nordicsdk/components/libraries/util/app_error_handler_gcc.c	2020-01-30 09:57:44.408782917 -0500
+@@ -50,9 +50,18 @@
+ 
+     "push {lr}                      \n"
+ 
++    /* The Canonical Frame Address (CFA) is now (sp + 4). */
++    ".cfi_def_cfa_offset 4          \n"
++
++    /* The LR register is found at the CFA - 4. */
++    ".cfi_offset 14, -4             \n"
++
+     /* reserve space on stack for error_info_t struct - preserve 8byte stack aligment */
+     "sub sp, sp, %0                 \n"
+ 
++    /* The Canonical Frame Address (CFA) is now (sp + 16). */
++    ".cfi_def_cfa_offset 16         \n"
++
+     /* prepare error_info_t struct */
+     "str r0, [sp, %1]               \n"
+     "str r1, [sp, %3]               \n"
