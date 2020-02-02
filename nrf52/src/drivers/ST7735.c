@@ -195,9 +195,10 @@ static void spi_uninit(void)
  */
 static void st7735_data_len(const uint8_t *p_tx_data, uint16_t len)
 {
-    nrfx_spim_xfer_desc_t xfer_desc = {p_tx_data, 0, NULL, 0};
+    nrfx_spim_xfer_desc_t xfer_desc = {NULL, 0, NULL, 0};
 
     while (len > 0) {
+    	xfer_desc.p_tx_buffer = p_tx_data;
         xfer_desc.tx_length = MIN(len, UINT8_MAX);
 
         APP_ERROR_CHECK(nrfx_spim_xfer(&st7735_config.spi, &xfer_desc, 0));
