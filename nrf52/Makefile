@@ -173,25 +173,31 @@ endif
 # in a raw binary file (.bitmapbin).  All these binary files are later
 # concatenated to make up the flash content, and a .h file is produced to
 # describe the location of each file's content in the flash.
-BITMAPS_INT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/*.png))
-BITMAPS_EXT_HDRS = $(patsubst %.png,%_bitmap.h,$(wildcard src/images/external/*.png))
-BITMAPS_EXT_BINS = $(patsubst %.png,%_bitmap.bitmapbin,$(wildcard src/images/external/*.png))
-BITMAPS_EXT_BINS += $(patsubst %.png,%_bitmap.bitmapbin,$(wildcard src/images/external/$(FLAVOR)/*.png))
+BITMAPS_INT = $(wildcard src/images/*.png)
+BITMAPS_INT_HDRS = $(patsubst src/images/%.png,$(BUILD)/images/%_bitmap.h,$(BITMAPS_INT))
+
+BITMAPS_EXT = $(wildcard src/images/external/*.png) $(wildcard src/images/external/$(FLAVOR)/*.png)
+BITMAPS_EXT_HDRS = $(patsubst src/images/external/%.png,$(BUILD)/images/external/%_bitmap.h,$(BITMAPS_EXT))
+BITMAPS_EXT_BINS = $(patsubst src/images/external/%.png,$(BUILD)/images/external/%_bitmap.bitmapbin,$(BITMAPS_EXT))
+
 BITMAPS_HDRS = $(BITMAPS_INT_HDRS) $(BITMAPS_EXT_HDRS)
 
 GEN_IMAGE_SCRIPT = utils/gen_image.py
 
 # Bitmaps written to the internal flash.
-%_bitmap.h: %.png
+$(BUILD)/images/%_bitmap.h: src/images/%.png
+	@mkdir -p $(dir $@)
 	$(ECHO_BMPINT)python3 $(GEN_IMAGE_SCRIPT) $< $(basename $@)
 
 # Bitmaps written to the external flash.
-src/images/external/%_bitmap.h src/images/external/%_bitmap.bitmapbin: src/images/external/%.png
+$(BUILD)/images/external/%_bitmap.h $(BUILD)/images/external/%_bitmap.bitmapbin: src/images/external/%.png
+	@mkdir -p $(dir $@)
 	$(ECHO_BMPEXT)python3 $(GEN_IMAGE_SCRIPT) --external-flash $< $(basename $@)
 
 # This one has its own rule because it's rotated.
-src/images/font_bitmap.h: src/images/font.png
-	python3 $(GEN_IMAGE_SCRIPT) -r $< $(basename $@)
+$(BUILD)/images/font_bitmap.h: src/images/font.png
+	@mkdir -p $(dir $@)
+	$(ECHO_BMPINT)python3 $(GEN_IMAGE_SCRIPT) -r $< $(basename $@)
 
 # If the gen_image script changes, we want to re-generate the images.
 $(BITMAPS_HDRS) $(BITMAPS_EXT_BINS): $(GEN_IMAGE_SCRIPT)
@@ -199,8 +205,8 @@ $(BITMAPS_HDRS) $(BITMAPS_EXT_BINS): $(GEN_IMAGE_SCRIPT)
 # Rules to generate the external flash content.
 #
 # Pack files in a single file and generate a "table of contents" as a .h.
-EXTERNAL_FLASH_BIN = src/app/external_flash_$(FLAVOR).flashbin
-EXTERNAL_FLASH_HDR = src/app/external_flash_$(FLAVOR).h
+EXTERNAL_FLASH_BIN = $(BUILD)/external_flash_$(FLAVOR).flashbin
+EXTERNAL_FLASH_HDR = $(BUILD)/external_flash_$(FLAVOR).h
 
 EXTERNAL_FLASH_PACK_SCRIPT = utils/pack_flash.py
 EXTERNAL_FLASH_FILES = $(BITMAPS_EXT_BINS)
@@ -210,7 +216,7 @@ EXTERNAL_FLASH_FILES += src/app/flag-external-flash.txt
 endif
 
 $(EXTERNAL_FLASH_HDR) $(EXTERNAL_FLASH_BIN): $(EXTERNAL_FLASH_FILES)
-	$(ECHO_PACK)python3 $(EXTERNAL_FLASH_PACK_SCRIPT) src/app/external_flash $(FLAVOR) $(filter-out $(EXTERNAL_FLASH_PACK_SCRIPT), $^)
+	$(ECHO_PACK)python3 $(EXTERNAL_FLASH_PACK_SCRIPT) $(BUILD)/external_flash $(FLAVOR) $(filter-out $(EXTERNAL_FLASH_PACK_SCRIPT), $^)
 
 $(EXTERNAL_FLASH_HDR) $(EXTERNAL_FLASH_BIN): $(EXTERNAL_FLASH_PACK_SCRIPT)
 
@@ -237,6 +243,9 @@ CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable -fmax-errors=1
 CFLAGS += -Iconfig
 CFLAGS += -Iinclude
 CFLAGS += -Isrc
+
+# For generated header files (e.g. images).
+CFLAGS += -I$(BUILD)
 
 # SDK include paths.
 CFLAGS += -I$(SDK_PATH)/components
