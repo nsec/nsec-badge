@@ -7,6 +7,8 @@
 
 #include <nordic_common.h>
 
+#include "nsec_games_menu.h"
+
 #include "drivers/controls.h"
 #include "drivers/display.h"
 
@@ -21,7 +23,7 @@
 
 static void nsec_games_menu_button_handler(button_t button);
 
-void nsec_games_start_cortexviper_application(uint8_t item)
+static void nsec_games_start_cortexviper_application(uint8_t item)
 {
     menu_close();
     nsec_controls_suspend_handler(nsec_games_menu_button_handler);
@@ -29,7 +31,7 @@ void nsec_games_start_cortexviper_application(uint8_t item)
     application_set(&snake_application);
 }
 
-void nsec_games_start_mindsweeper_application(uint8_t item)
+static void nsec_games_start_mindsweeper_application(uint8_t item)
 {
     menu_close();
     nsec_controls_suspend_handler(nsec_games_menu_button_handler);

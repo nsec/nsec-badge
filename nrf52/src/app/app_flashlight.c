@@ -39,7 +39,7 @@ static void flashlight_button_handler(button_t button)
     application_clear();
 }
 
-void app_flashlight(void (*service_device)())
+void app_flashlight(void (*service_device)(void))
 {
     gfx_fill_screen(DISPLAY_WHITE);
     setMode_WS2812FX(FX_MODE_STATIC);

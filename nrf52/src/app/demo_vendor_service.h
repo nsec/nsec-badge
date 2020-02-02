@@ -7,7 +7,6 @@
 
 #endif //NRF52_DEMO_VENDOR_SERVICE_H
 
-
-struct VendorService* nsec_get_demo_service();
-void nsec_init_demo_vendor_service();
-void update_char();
+struct VendorService *nsec_get_demo_service(void);
+void nsec_init_demo_vendor_service(void);
+void update_char(void);

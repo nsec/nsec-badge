@@ -39,11 +39,11 @@ enum input_box_style {
 
 static enum chall_state chall_state = CHALL_STATE_PAUSE;
 static menu_item_s letters_items[16];
-static void draw_input_box_title();
-static void input_box_show_brackets();
-static void input_box_show_cursor();
+static void draw_input_box_title(void);
+static void input_box_show_brackets(void);
+static void input_box_show_cursor(void);
 static void is_success(uint8_t item);
-static bool input_box_check();
+static bool input_box_check(void);
 static void nsec_chall_button_handler(button_t button);
 
 void input_box_init(const char *text, const char *password) {
@@ -70,7 +70,8 @@ static void draw_input_box_title(void) {
     draw_title(&title);
 }
 
-static void input_box_show_brackets() {
+static void input_box_show_brackets(void)
+{
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     char brackets[INPUT_BOX_BRA_WIDTH] = {0};
     for (uint16_t i = 0; i < input_box.input_count; ++i) {
@@ -82,7 +83,8 @@ static void input_box_show_brackets() {
     }
 }
 
-static void input_box_show_cursor() {
+static void input_box_show_cursor(void)
+{
     for (int i = 0; i < 16; i++) {
         letters_items[i].label = ib_letters[i];
         letters_items[i].handler = is_success;

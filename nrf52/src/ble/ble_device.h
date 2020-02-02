@@ -11,25 +11,25 @@
 
 ret_code_t create_ble_device(char* device_name);
 
-void destroy_ble_device();
+void destroy_ble_device(void);
 
-void configure_advertising();
+void configure_advertising(void);
 
 void set_advertiser(struct Advertiser*);
 
-void ble_start_advertising();
+void ble_start_advertising(void);
 
-void ble_stop_advertising();
+void ble_stop_advertising(void);
 
 void add_observer(struct BleObserver*);
 
-void ble_device_start_scan();
+void ble_device_start_scan(void);
 
-void ble_device_stop_scan();
+void ble_device_stop_scan(void);
 
 uint32_t add_vendor_service(struct VendorService*);
 
-bool ble_device_toggle_ble();
+bool ble_device_toggle_ble(void);
 
 bool is_ble_enabled(void);
 

@@ -223,7 +223,7 @@ static void nsec_schedule_show_speaker_details(uint8_t item)
     schedule_state = SCHEDULE_STATE_SPEAKER_DETAILS;
 }
 
-static void prep_menu_speakers()
+static void prep_menu_speakers(void)
 {
     APP_ERROR_CHECK_BOOL(num_speakers <= ARRAY_SIZE(generated_menu));
     for (int i = 0; i < num_speakers; i++) {
@@ -307,7 +307,7 @@ static void nsec_schedule_button_handler(button_t button) {
 
 // Make sure that all the talk details we can eventually generate fits into the
 // static buffer.
-void nsec_conf_length_check()
+void nsec_conf_length_check(void)
 {
     for (int i = 0; i < num_talks_16; i++) {
         int n = format_talk_detailed(big_buf, &talks_16[i]);

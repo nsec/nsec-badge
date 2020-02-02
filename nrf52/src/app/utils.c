@@ -9,6 +9,8 @@
 #include "nrf_sdh.h"
 #include "drivers/ws2812fx.h"
 
+#include "utils.h"
+
 // https://www.arduino.cc/reference/en/language/functions/math/constrain/
 uint32_t constrain(uint32_t x, uint32_t a, uint32_t b)
 {
@@ -69,7 +71,7 @@ static inline int wordlen(const char * str){
    return(tempindex);
 }
 
-char* word_wrap(char *s, const int wrapline)
+void word_wrap(char *s, const int wrapline)
 {
     int index = 0;
     int current_line_len = 0;
@@ -86,6 +88,4 @@ char* word_wrap(char *s, const int wrapline)
         current_line_len++;
         index++;
    }
-
-   return s;
 }

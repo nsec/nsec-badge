@@ -6,9 +6,8 @@
 #ifndef NRF52_RESISTANCE_PROPAGANDA_OBSERVER_H
 #define NRF52_RESISTANCE_PROPAGANDA_OBSERVER_H
 
+void init_resistance_propaganda_observer(void);
 
-void init_resistance_propaganda_observer();
-
-struct BleObserver* get_resistance_propaganda_observer();
+struct BleObserver *get_resistance_propaganda_observer(void);
 
 #endif //NRF52_RESISTANCE_PROPAGANDA_OBSERVER_H

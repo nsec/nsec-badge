@@ -23,6 +23,6 @@
 #ifndef FLASH_MODE_H
 #define FLASH_MODE_H
 
-void flash_mode();
+void flash_mode(void);
 
 #endif

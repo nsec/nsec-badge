@@ -115,7 +115,7 @@ void screensaver_reset(void)
     screensaver_cnt = 0;
 }
 
-void app_screensaver_sleep(void (*service_device)())
+void app_screensaver_sleep(void (*service_device)(void))
 {
     nsec_controls_add_handler(screensaver_button_handler);
 

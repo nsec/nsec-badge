@@ -526,7 +526,7 @@ void st7735_init(void)
 //
 //*****************************************************************************
 
-uint16_t swap_colour(uint16_t x)
+static uint16_t swap_colour(uint16_t x)
 {
     return (x << 11) | (x & 0x07E0) | (x >> 11);
 }
@@ -551,7 +551,7 @@ void st7735_set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
     st7735_command(ST7735_RAMWR);
 }
 
-void st7735_push_colour(uint16_t colour)
+static void st7735_push_colour(uint16_t colour)
 {
     buffer[0] = colour >> 8;
     buffer[1] = colour;
@@ -676,7 +676,7 @@ void st7735_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h,
 }
 
 // Pass 8-bit (each) R,G,B, get back 16-bit packed colour
-uint16_t st7735_colour_565(uint8_t r, uint8_t g, uint8_t b)
+static uint16_t st7735_colour_565(uint8_t r, uint8_t g, uint8_t b)
 {
     return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }

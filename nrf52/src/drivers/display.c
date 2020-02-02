@@ -23,6 +23,8 @@
 #include "ssd1306.h"
 #include <nrf.h>
 
+#include "display.h"
+
 struct display_ops {
     void (*init)(void);
     void (*draw_pixel)(int16_t x, int16_t y, uint16_t colour);
@@ -120,13 +122,15 @@ void display_set_brightness(uint8_t brightness) {
     }
 }
 
-void display_slow_down() {
+void display_slow_down(void)
+{
     if (ops->slow_down) {
         ops->slow_down();
     }
 }
 
-void display_speed_up() {
+void display_speed_up(void)
+{
     if (ops->speed_up) {
         ops->speed_up();
     }

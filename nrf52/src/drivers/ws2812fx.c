@@ -286,7 +286,8 @@ typedef struct WS2812FX {
 
 ws2812fx *fx;
 
-void init_WS2812FX() {
+void init_WS2812FX(void)
+{
     static bool init = false;
     if (init) {
         return;
@@ -317,7 +318,8 @@ void init_WS2812FX() {
     nsec_neoPixel_show();
 }
 
-void service_WS2812FX() {
+void service_WS2812FX(void)
+{
     if (fx->running || fx->triggered) {
         uint64_t now = get_current_time_millis();
         bool doShow = false;
@@ -338,17 +340,22 @@ void service_WS2812FX() {
     }
 }
 
-void start_WS2812FX() {
+void start_WS2812FX(void)
+{
     RESET_RUNTIME;
     fx->running = true;
 }
 
-void stop_WS2812FX() {
+void stop_WS2812FX(void)
+{
     fx->running = false;
     strip_off_WS2812FX();
 }
 
-void trigger_WS2812FX() { fx->triggered = true; }
+void trigger_WS2812FX(void)
+{
+    fx->triggered = true;
+}
 
 void setMode_WS2812FX(uint8_t m) {
     RESET_RUNTIME;
@@ -502,7 +509,10 @@ void decreaseBrightness_WS2812FX(uint8_t s) {
     setBrightness_WS2812FX(s);
 }
 
-bool isRunning_WS2812FX() { return fx->running; }
+bool isRunning_WS2812FX(void)
+{
+    return fx->running;
+}
 
 uint8_t getMode_WS2812FX(void) { return fx->segments[0].mode; }
 
@@ -575,7 +585,8 @@ void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop,
     }
 }
 
-void resetSegments_WS2812FX() {
+void resetSegments_WS2812FX(void)
+{
     memset(fx->segments, 0, sizeof(fx->segments));
     memset(fx->segment_runtimes, 0, sizeof(fx->segment_runtimes));
     fx->segment_index = 0;
@@ -597,7 +608,8 @@ void moveSegment_WS2812FX(uint8_t src, uint8_t dest) {
 /*
  * Turns everything off. Doh.
  */
-void strip_off_WS2812FX() {
+void strip_off_WS2812FX(void)
+{
     nsec_neoPixel_clear();
     nsec_neoPixel_show();
 }
@@ -607,7 +619,8 @@ void strip_off_WS2812FX() {
  * The colours are a transition r -> g -> b -> back to r
  * Inspired by the Adafruit examples.
  */
-uint32_t color_wheel(uint8_t pos) {
+static uint32_t color_wheel(uint8_t pos)
+{
     pos = 255 - pos;
     if (pos < 85) {
         return ((uint32_t)(255 - pos * 3) << 16) | ((uint32_t)(0) << 8) |
@@ -1097,7 +1110,8 @@ uint16_t mode_twinkle_random(void) {
  * fade out function
  * fades out the current segment by dividing each pixel's intensity by 2
  */
-void fade_out() {
+void fade_out(void)
+{
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         uint32_t color = nsec_neoPixel_get_pixel_color(i);
         color = (color >> 1) & 0x7F7F7F7F;
@@ -1321,7 +1335,7 @@ uint16_t mode_chase_blackout_rainbow(void) {
  * White flashes running on _color.
  */
 uint16_t mode_chase_flash(void) {
-    const static uint8_t flash_count = 4;
+    static const uint8_t flash_count = 4;
     uint8_t flash_step =
         SEGMENT_RUNTIME.counter_mode_call % ((flash_count * 2) + 1);
 
@@ -1357,7 +1371,7 @@ uint16_t mode_chase_flash(void) {
  * White flashes running, followed by random color.
  */
 uint16_t mode_chase_flash_random(void) {
-    const static uint8_t flash_count = 4;
+    static const uint8_t flash_count = 4;
     uint8_t flash_step =
         SEGMENT_RUNTIME.counter_mode_call % ((flash_count * 2) + 1);
 
@@ -1705,7 +1719,8 @@ uint16_t mode_icu(void) {
  * Custom mode
  */
 uint16_t (*customMode)(void) = NULL;
-uint16_t mode_custom() {
+uint16_t mode_custom(void)
+{
     if (customMode == NULL) {
         return 1000; // if custom mode not set, do nothing
     } else {
@@ -1716,4 +1731,7 @@ uint16_t mode_custom() {
 /*
  * Custom mode helper
  */
-void setCustomMode(uint16_t (*p)()) { customMode = p; }
+void setCustomMode(uint16_t (*p)(void))
+{
+    customMode = p;
+}

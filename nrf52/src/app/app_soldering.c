@@ -155,7 +155,8 @@ static void init_soldering_track(void) {
     nsec_controls_add_handler(soldering_button_handler);
 }
 
-void app_soldering(void (*service_callback)()) {
+void app_soldering(void (*service_callback)(void))
+{
     init_soldering_track();
 
     while (application_get() == app_soldering) {

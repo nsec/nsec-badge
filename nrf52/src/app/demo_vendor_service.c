@@ -33,7 +33,8 @@ APP_TIMER_DEF(m_notify_timer);
 
 static bool _update_char;
 
-void update_char(){
+void update_char(void)
+{
     if(_update_char){
         _update_char = false;
         notify_char_data++;
@@ -80,7 +81,8 @@ static void on_timeout(void * context){
     _update_char = true;
 }
 
-void nsec_init_demo_vendor_service(){
+void nsec_init_demo_vendor_service(void)
+{
     ble_uuid_t uuid = {.uuid = demo_service_uuid, .type = TYPE_NSEC_UUID};
     create_vendor_service(&demo_service, &uuid);
     add_vendor_service(&demo_service);
@@ -112,6 +114,7 @@ void nsec_init_demo_vendor_service(){
     APP_ERROR_CHECK(err_code);
 }
 
-struct VendorService* nsec_get_demo_service(){
+struct VendorService *nsec_get_demo_service(void)
+{
     return &demo_service;
 }

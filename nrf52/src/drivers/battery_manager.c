@@ -25,6 +25,8 @@
 #include <app_timer.h>
 #include <nrf_gpio.h>
 
+#include "battery_manager.h"
+
 #include "app/status_bar.h"
 #include "app/timer.h"
 #include "battery.h"

@@ -15,7 +15,9 @@
 #include "meshes/sphere.c"
 #include "meshes/torus.c"
 
-int nsec_multiply_matrix(nsec_matrix_t * result, nsec_matrix_t * m1, nsec_matrix_t * m2) {
+static int nsec_multiply_matrix(nsec_matrix_t *result, nsec_matrix_t *m1,
+                                nsec_matrix_t *m2)
+{
     if(m1 == result || m2 == result) {
         return -1;
     }
@@ -42,7 +44,9 @@ int nsec_multiply_matrix(nsec_matrix_t * result, nsec_matrix_t * m1, nsec_matrix
     return 0;
 }
 
-void nsec_vertex_rotate(nsec_vertex_t * result, nsec_vertex_t * src, float angles[3]) {
+static void nsec_vertex_rotate(nsec_vertex_t *result, nsec_vertex_t *src,
+                               float angles[3])
+{
     NSEC_DECLARE_MATRIX(point, 3, 1);
     memcpy(point->values, src->position, sizeof(src->position));
     NSEC_DECLARE_MATRIX(result_matrix, 3, 1);

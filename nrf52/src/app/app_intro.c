@@ -145,7 +145,7 @@ static void greetings(void)
 
 #ifdef NSEC_FLAVOR_CTF
 //TODO improve with some neopixeling ?
-void app_intro(void (*service_callback)())
+void app_intro(void (*service_callback)(void))
 {
     gfx_draw_16bit_bitmap(47, 22, &neurosoft_circle_bitmap, DISPLAY_BLACK);
     service_delay_ms(500);
@@ -167,7 +167,7 @@ void app_intro(void (*service_callback)())
     application_clear();
 }
 #else
-void app_intro(void (*service_callback)())
+void app_intro(void (*service_callback)(void))
 {
     greetings();
     service_delay_ms(1000);

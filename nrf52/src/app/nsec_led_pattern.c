@@ -173,7 +173,7 @@ static menu_item_s led_pattern_items[] = {
         .handler = set_nearby_mode,
     }};
 
-static void unlock_all_pattern()
+static void unlock_all_pattern(void)
 {
     uint32_t stored_password = get_stored_pattern_bf();
     if (stored_password != 0x00FFFFFF) {
@@ -191,7 +191,7 @@ static void unlock_pattern(uint32_t sponsor_index)
     }
 }
 
-const char *nsec_get_pattern_pw(uint32_t sponsor_index)
+static const char *nsec_get_pattern_pw(uint32_t sponsor_index)
 {
     if (sponsor_index < SPONSOR_PW_SIZE) {
         return sponsor_password[sponsor_index];
@@ -205,7 +205,7 @@ bool pattern_is_unlock(uint32_t sponsor_index)
 }
 
 // true valid, false invalid
-bool nsec_unlock_led_pattern(char *password, uint8_t index)
+static bool nsec_unlock_led_pattern(char *password, uint8_t index)
 {
     if (strcmp(password, MASTER_PW) == 0) {
         unlock_all_pattern();
@@ -343,7 +343,7 @@ static void unlock_led_pattern(uint8_t item)
     save_letter0();
 }
 
-void show_actual_pattern(void)
+static void show_actual_pattern(void)
 {
     uint8_t mode = getMode_WS2812FX();
     char actual[50] = {0};

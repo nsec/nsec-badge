@@ -49,7 +49,8 @@ typedef enum {
  */
 static nrfx_spim_t spi = NRFX_SPIM_INSTANCE(CONF_OLED_SPI_INST);
 
-static void spi_init() {
+static void spi_init(void)
+{
     nrfx_spim_config_t spi_config;
 
     spi_config.frequency = NRF_SPIM_FREQ_1M;

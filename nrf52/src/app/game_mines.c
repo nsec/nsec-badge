@@ -232,7 +232,7 @@ static void mines_buttons_handle(button_t button)
     mines_button_read_value = button;
 }
 
-static uint8_t mines_buttons_read()
+static uint8_t mines_buttons_read(void)
 {
     if (mines_button_read_value != MINES_BUTTON_NONE) {
         uint8_t value = mines_button_read_value;
@@ -244,7 +244,7 @@ static uint8_t mines_buttons_read()
     return MINES_BUTTON_NONE;
 }
 
-static uint8_t mines_buttons_is_any_pushed()
+static uint8_t mines_buttons_is_any_pushed(void)
 {
     switch (mines_buttons_read()) {
     case BUTTON_BACK:
@@ -1082,7 +1082,7 @@ static void mines_timer_handle(void *p_context)
         MINES_TIMER_TICK(sidebar);
 }
 
-void mines_application(void (*service_device)())
+void mines_application(void (*service_device)(void))
 {
     MinesGameState state = {.cleared_rendered = false,
                             .controls_rendered = false,

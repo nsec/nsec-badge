@@ -12,7 +12,7 @@
 #include "images/external/conf/gosecure_1_back_bitmap.h"
 #include "images/external/conf/gosecure_4_bitmap.h"
 
-void gosecure_animation_app(void (*service_device)())
+void gosecure_animation_app(void (*service_device)(void))
 {
     uint16_t label_multiplier = 2;
     uint16_t label_offset = 75;
@@ -137,7 +137,7 @@ void gosecure_animation_app(void (*service_device)())
 
 #else
 
-void gosecure_animation_app(void (*service_device)())
+void gosecure_animation_app(void (*service_device)(void))
 {
     application_clear();
 }

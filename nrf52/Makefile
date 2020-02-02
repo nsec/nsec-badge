@@ -239,6 +239,9 @@ CFLAGS += -DDEBUG
 # Warnings.
 CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable -fmax-errors=1
 
+# Warning flags only enabled for the user code (i.e. our code).
+USER_CFLAGS = -Wimplicit -Wold-style-declaration -Wold-style-definition -Wmissing-parameter-type -Wmissing-prototypes -Wstrict-prototypes
+
 # Include paths for our code.
 CFLAGS += -Iconfig
 CFLAGS += -Iinclude
@@ -321,7 +324,7 @@ $(ELF): $(ALL_OBJS)
 $(USER_OBJS): | $(SDK_PATH) $(BITMAPS_HDRS) $(EXTERNAL_FLASH_HDR)
 $(USER_OBJS): $(BUILD)/%.o: %.c
 	@mkdir -p $(@D) $(DEPDIR)/$(dir $*)
-	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS) $(DEPFLAGS)
+	$(ECHO_CC)$(CC) -c -o $@ $< $(CFLAGS) $(USER_CFLAGS) $(DEPFLAGS)
 
 # Build SDK source files.
 $(SDK_C_OBJS): | $(SDK_PATH)

@@ -30,11 +30,12 @@ struct Nsec_pixels *nsec_pixels;
 uint32_t mapConnect[] = {PIN_NEOPIXEL, NRF_PWM_PIN_NOT_CONNECTED,
                          NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
 
-uint32_t mapDisconnect[] = {
+static uint32_t mapDisconnect[] = {
     NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED,
     NRF_PWM_PIN_NOT_CONNECTED, NRF_PWM_PIN_NOT_CONNECTED};
 
-void nsec_neoPixel_init() {
+void nsec_neoPixel_init(void)
+{
     nsec_pixels = malloc(sizeof(struct Nsec_pixels));
 
     nsec_pixels->brightness = 0;

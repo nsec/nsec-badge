@@ -7,6 +7,8 @@
 #include <nrf.h>
 #include <stdio.h>
 
+#include "main_menu.h"
+
 #include "drivers/controls.h"
 #include "drivers/display.h"
 
@@ -85,31 +87,35 @@ static void draw_cli_title(void)
     draw_title(&title);
 }
 
-void open_challenges(uint8_t item) {
+static void open_challenges(uint8_t item)
+{
     menu_close();
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_challenges_show();
 }
 
-void open_led_pattern(uint8_t item) {
+static void open_led_pattern(uint8_t item)
+{
     menu_close();
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_led_pattern_show();
 }
 
-void open_warning(uint8_t item) {
+static void open_warning(uint8_t item)
+{
     menu_close();
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_warning_show();
 }
 
-void open_battery_status(uint8_t item) {
+static void open_battery_status(uint8_t item)
+{
     menu_close();
     _state = MAIN_MENU_STATE_CLOSED;
     show_battery_status();
 }
 
-void open_games_menu(uint8_t item)
+static void open_games_menu(uint8_t item)
 {
     menu_close();
     _state = MAIN_MENU_STATE_CLOSED;
@@ -122,7 +128,7 @@ static void open_flashlight(uint8_t item) {
     application_set(app_flashlight);
 }
 
-void show_badge_cli_info(uint8_t item)
+static void show_badge_cli_info(uint8_t item)
 {
     menu_close();
     _state = MAIN_MENU_CLI_INFO;

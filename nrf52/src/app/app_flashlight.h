@@ -23,6 +23,6 @@
 #ifndef APP_SCREENSAVER_H
 #define APP_SCREENSAVER_H
 
-void app_flashlight(void (*service_device)());
+void app_flashlight(void (*service_device)(void));
 
 #endif /* APP_SCREENSAVER_H */

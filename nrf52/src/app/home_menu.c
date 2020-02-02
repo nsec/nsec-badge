@@ -124,7 +124,7 @@ void draw_home_menu_bar(void)
                           HOME_MENU_BG_COLOR);
 }
 
-void draw_home_menu_logo_animation()
+static void draw_home_menu_logo_animation(void)
 {
     static uint8_t frame = 0;
 
@@ -356,7 +356,8 @@ static void home_menu_handle_buttons(button_t button) {
     }
 }
 
-void home_menu_application(void (*service_callback)()) {
+void home_menu_application(void (*service_callback)(void))
+{
     /* Reset the screensaver timer when we start the home menu */
     screensaver_reset();
 

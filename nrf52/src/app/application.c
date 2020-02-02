@@ -27,7 +27,8 @@
 
 static application_t application = DEFAULT_APP;
 
-void application_clear() {
+void application_clear(void)
+{
     application = DEFAULT_APP;
 }
 

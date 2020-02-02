@@ -33,7 +33,7 @@ void redraw_home_menu_burger_selected(void);
 void draw_title(struct title *title);
 void draw_settings_title(void);
 void draw_main_menu_title(void);
-void home_menu_application(void (*)());
+void home_menu_application(void (*)(void));
 bool is_at_home_menu(void);
 
 #endif /* home_menu_h */

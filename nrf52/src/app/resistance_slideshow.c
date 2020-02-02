@@ -1,3 +1,5 @@
+#include "resistance_slideshow.h"
+
 #include "drivers/controls.h"
 #include "drivers/display.h"
 #include "random.h"
@@ -29,7 +31,7 @@ static void resistance_slideshow_buttons_handle(button_t button)
     application_clear();
 }
 
-void resistance_slideshow_app(void (*service_device)())
+void resistance_slideshow_app(void (*service_device)(void))
 {
     uint16_t step = 0;
 
@@ -83,7 +85,7 @@ void resistance_slideshow_app(void (*service_device)())
 }
 
 #else
-void resistance_slideshow_app(void (*service_device)())
+void resistance_slideshow_app(void (*service_device)(void))
 {
     application_clear();
 }

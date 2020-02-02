@@ -29,7 +29,7 @@ typedef struct SlideshowTextJob {
 
 static uint8_t slideshow_title_indicator = 0;
 
-static void slideshow_render_title_indicator()
+static void slideshow_render_title_indicator(void)
 {
     if (slideshow_title_indicator == 1) {
         gfx_fill_circle(15, 9, 4, DISPLAY_RED);
@@ -47,7 +47,7 @@ static void slideshow_button_handler(button_t button)
     application_clear();
 }
 
-void slideshow_app(void (*service_device)())
+void slideshow_app(void (*service_device)(void))
 {
     uint16_t timeout = 0;
 

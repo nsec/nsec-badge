@@ -12,6 +12,6 @@
 #define MINES_FLAG_PART3 "####-#####-R8S861"
 #endif
 
-void mines_application();
+void mines_application(void (*service_device)(void));
 
 #endif

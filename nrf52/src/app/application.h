@@ -25,7 +25,7 @@
 
 #include <stdbool.h>
 
-typedef void (*application_t)(void (*service_callback)());
+typedef void (*application_t)(void (*service_callback)(void));
 
 void application_clear(void);
 application_t application_get(void);

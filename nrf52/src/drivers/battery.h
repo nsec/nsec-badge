@@ -32,7 +32,7 @@ void battery_init(void);
 
 // Get the current battery voltage (mV)
 // Require a battery_refresh();
-uint16_t battery_get_voltage();
+uint16_t battery_get_voltage(void);
 
 void battery_refresh(void);
 

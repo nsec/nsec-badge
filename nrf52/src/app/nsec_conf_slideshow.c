@@ -10,7 +10,7 @@
 #include "images/globe_bitmap.h"
 #include "images/talos_logo_bitmap.h"
 
-static inline void clear_slideshow_area()
+static inline void clear_slideshow_area(void)
 {
     gfx_fill_rect(0, 0, DISPLAY_HEIGHT, DISPLAY_WIDTH, DISPLAY_BLACK);
 }
@@ -20,7 +20,7 @@ static void nsec_conf_slideshow_button_handler(button_t button)
     application_clear();
 }
 
-void nsec_conf_slideshow_app(void (*service_device)())
+void nsec_conf_slideshow_app(void (*service_device)(void))
 {
     nsec_controls_add_handler(nsec_conf_slideshow_button_handler);
 

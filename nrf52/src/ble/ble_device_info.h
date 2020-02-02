@@ -23,6 +23,6 @@
 #ifndef NRF52_BLE_DEVICE_INFO_H
 #define NRF52_BLE_DEVICE_INFO_H
 
-void nsec_ble_init_device_information_service();
+void nsec_ble_init_device_information_service(void);
 
 #endif //NRF52_BLE_DEVICE_INFO_H

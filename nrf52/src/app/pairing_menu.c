@@ -36,13 +36,15 @@ void nsec_ble_show_pairing_menu(const char* key){
     application_set(pairing_menu_application);
 }
 
-void nsec_ble_hide_pairing_menu(){
+void nsec_ble_hide_pairing_menu(void)
+{
     if(application_get() == pairing_menu_application){
         application_clear();
     }
 }
 
-static void draw_pairing_menu() {
+static void draw_pairing_menu(void)
+{
     uint8_t gfx_width = gfx_get_screen_width();
     uint8_t gfx_height = gfx_get_screen_height();
 
@@ -74,7 +76,8 @@ static void pairing_menu_handle_buttons(button_t button){
     nsec_ble_hide_pairing_menu();
 }
 
-void pairing_menu_application(void (*service_callback)()) {
+void pairing_menu_application(void (*service_callback)(void))
+{
     draw_pairing_menu();
 
     nsec_controls_add_handler(pairing_menu_handle_buttons);

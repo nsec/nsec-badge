@@ -258,7 +258,8 @@ static void handle_command(const char *command) {
 // read the flash.
 //
 // The only way to get out of this mode is to reset the chip.
-void flash_mode() {
+void flash_mode(void)
+{
     uart_init();
 
     uart_puts("Entering flash mode!\n");

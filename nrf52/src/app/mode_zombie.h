@@ -11,6 +11,6 @@
 
 void mode_zombie_init(void);
 void mode_zombie_process(void);
-void app_mode_zombie(void (*service_device)());
+void app_mode_zombie(void (*service_device)(void));
 
 #endif /* mode_zombie_h */

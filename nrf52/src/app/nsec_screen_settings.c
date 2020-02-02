@@ -26,6 +26,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "nsec_screen_settings.h"
+
 #include "app_screensaver.h"
 #include "ble/nsec_ble.h"
 #include "drivers/controls.h"
@@ -159,7 +161,7 @@ void nsec_show_screen_settings(void)
     _state = SCREEN_SETTING_STATE_MENU;
 }
 
-void show_actual_screen_brightness(void)
+static void show_actual_screen_brightness(void)
 {
     uint16_t brightness = get_stored_display_brightness();
     char actual[50] = {0};
@@ -210,7 +212,7 @@ static void save_screen_brightness(uint8_t item)
     update_stored_display_brightness(b);
 }
 
-void show_actual_screen_fix(void)
+static void show_actual_screen_fix(void)
 {
     uint8_t model = get_stored_display_model();
     char actual[50] = {0};
@@ -243,7 +245,8 @@ static void show_screen_fix_menu(uint8_t item)
     _state = SCREEN_SETTING_STATE_FIX;
 }
 
-static void dummy_app(void (*service_callback)()) {
+static void dummy_app(void (*service_callback)(void))
+{
     application_clear();
 }
 

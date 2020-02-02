@@ -10,8 +10,8 @@
 
 
 struct Advertiser {
-    void (*start_advertisement)();
-    void (*stop_advertisement)();
+    void (*start_advertisement)(void);
+    void (*stop_advertisement)(void);
     void (*on_ble_advertising_event)(ble_evt_t const * ble_event);
 };
 

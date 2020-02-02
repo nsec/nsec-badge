@@ -17,7 +17,7 @@
 static status_bluetooth_status ble_status;
 static status_battery_state battery_state;
 
-void nsec_status_bar_init()
+void nsec_status_bar_init(void)
 {
 
     gfx_fill_rect(STATUS_BAR_POS, STATUS_BAR_WIDTH, STATUS_BAR_HEIGHT,

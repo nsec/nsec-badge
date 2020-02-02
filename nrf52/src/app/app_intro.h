@@ -8,6 +8,6 @@
 
 #include "application.h"
 
-void app_intro(void (*service_callback)());
+void app_intro(void (*service_callback)(void));
 
 #endif /* APP_INTRO_H */

@@ -27,6 +27,6 @@
 
 void screensaver_init(void);
 void screensaver_reset(void);
-void app_screensaver_sleep(void (*service_device)());
+void app_screensaver_sleep(void (*service_device)(void));
 
 #endif /* APP_SCREENSAVER_H */

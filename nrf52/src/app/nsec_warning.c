@@ -21,6 +21,8 @@
  */
 #include <string.h>
 
+#include "nsec_warning.h"
+
 #include "text_box.h"
 #include "main_menu.h"
 #include "home_menu.h"

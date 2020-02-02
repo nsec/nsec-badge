@@ -25,6 +25,8 @@
 #include <app_util_platform.h>
 #include <nrfx_spim.h>
 
+#include "flash.h"
+
 #include "boards.h"
 
 #define FLASH_WRITE_COMMAND 0x2
@@ -40,7 +42,8 @@ static const nrfx_spim_t m_spi_master_0 = NRFX_SPIM_INSTANCE(CONF_FLASH_SPI_INST
 
 /* Initialize the external flash module.  */
 
-void flash_init() {
+void flash_init(void)
+{
     nrfx_spim_config_t config = NRFX_SPIM_DEFAULT_CONFIG;
 
     config.frequency = NRF_SPIM_FREQ_8M;
@@ -69,7 +72,8 @@ static ret_code_t flash_read_status_register_1(uint8_t *value) {
 
 /* Wait until the "busy" bit is cleared.  */
 
-static ret_code_t flash_wait_for_completion() {
+static ret_code_t flash_wait_for_completion(void)
+{
     while (1) {
         uint8_t status;
         ret_code_t ret = flash_read_status_register_1(&status);
@@ -105,7 +109,8 @@ ret_code_t flash_read_128(int address, uint8_t *data) {
     return NRF_SUCCESS;
 }
 
-static ret_code_t write_enable() {
+static ret_code_t write_enable(void)
+{
     uint8_t tx_data = WRITE_ENABLE_COMMAND;
     nrfx_spim_xfer_desc_t xfer_desc = {&tx_data, sizeof(tx_data), NULL, 0};
 

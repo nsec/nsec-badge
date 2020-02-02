@@ -23,7 +23,7 @@ void log_error_code(const char* function_name, uint32_t error_code){
     APP_ERROR_CHECK(error_code);
 }
 
-void log_init() {
-
+void log_init(void)
+{
 }
 #endif

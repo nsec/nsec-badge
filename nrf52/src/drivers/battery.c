@@ -71,9 +71,13 @@ void battery_refresh(void) {
     APP_ERROR_CHECK(err_code);
 }
 
-uint16_t battery_get_voltage() { return m_batt_lvl_in_millivolts; }
+uint16_t battery_get_voltage(void)
+{
+    return m_batt_lvl_in_millivolts;
+}
 
-bool battery_is_present() {
+bool battery_is_present(void)
+{
     return (m_batt_lvl_in_millivolts > NO_BATTERY_THRESHOLD_MV);
 }
 
@@ -93,7 +97,8 @@ bool battery_is_usb_plugged() {
 }
 #endif
 
-static void calibrate_saadc() {
+static void calibrate_saadc(void)
+{
     ret_code_t err_code;
 
     /*
@@ -116,7 +121,8 @@ static void calibrate_saadc() {
 /*
  * Callback function to process SAADC events.
  */
-void saadc_callback(nrfx_saadc_evt_t const *p_event) {
+static void saadc_callback(nrfx_saadc_evt_t const *p_event)
+{
     switch (p_event->type) {
     /*
      * SAADC calibration is completed.
@@ -157,7 +163,8 @@ void saadc_callback(nrfx_saadc_evt_t const *p_event) {
     }
 }
 
-void battery_init() {
+void battery_init(void)
+{
     ret_code_t err_code;
 
 #ifdef BOARD_SPUTNIK

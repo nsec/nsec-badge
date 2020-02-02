@@ -2,6 +2,8 @@
 
 #include <app_timer.h>
 
+#include "game_snake.h"
+
 #include "drivers/controls.h"
 #include "drivers/display.h"
 
@@ -106,7 +108,7 @@ static void snake_buttons_handle(button_t button)
     }
 }
 
-static uint8_t snake_buttons_read()
+static uint8_t snake_buttons_read(void)
 {
     if (snake_button_read_value != SNAKE_BUTTON_NONE) {
         uint8_t value = snake_button_read_value;
@@ -119,7 +121,7 @@ static uint8_t snake_buttons_read()
 }
 
 #ifndef NSEC_FLAVOR_CONF
-static void snake_init_sidebar_blob()
+static void snake_init_sidebar_blob(void)
 {
     memcpy(&snake_sidebar_blob,
            "\x4f\x45\x32\x6a\x72\xb2\xcb\x28\x3c\x7b\x21\x53\x58\x5c\x21\x53"
@@ -206,7 +208,7 @@ static void snake_init_sidebar_blob()
            1292);
 }
 #else
-static void snake_init_sidebar_blob()
+static void snake_init_sidebar_blob(void)
 {
     for (uint16_t i = 0; i < 1292; i++) {
         if (i % 2) {
@@ -513,7 +515,7 @@ static void snake_update_sidebar(SnakeGameState *p_state)
     gfx_update();
 }
 
-static void snake_boot_sequence(void (*service_device)())
+static void snake_boot_sequence(void (*service_device)(void))
 {
     service_device();
     display_draw_16bit_ext_bitmap(0, 0, &snake_splash_bitmap, 0);
@@ -627,7 +629,7 @@ static void snake_game_timer_callback(void *p_context)
     p_state->delay = false;
 }
 
-void snake_application(void (*service_device)())
+void snake_application(void (*service_device)(void))
 {
     SnakeGameState state = {.collided = false,
                             .delay = true,

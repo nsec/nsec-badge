@@ -10,6 +10,6 @@
 #include <string.h>
 
 void init_identity_service(void);
-struct VendorService* nsec_identity_get_service();
+struct VendorService *nsec_identity_get_service(void);
 
 #endif /* identity_h */

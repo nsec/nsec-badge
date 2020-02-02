@@ -6,6 +6,8 @@
 #include <nordic_common.h>
 #include <string.h>
 
+#include "challenges.h"
+
 #include "drivers/controls.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"

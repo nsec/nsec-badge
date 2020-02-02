@@ -236,7 +236,8 @@ void nsec_show_led_settings(void) {
     _state = SETTING_STATE_MENU;
 }
 
-void show_actual_brightness(void) {
+static void show_actual_brightness(void)
+{
     uint8_t brightness = getBrightness_WS2812FX();
     char actual[50] = {0};
     if (brightness <= SUPER_LOW_BRIGHTNESS) {
@@ -293,7 +294,8 @@ static void save_brightness(uint8_t item) {
     show_brightness_menu(0);
 }
 
-void show_actual_speed(void) {
+static void show_actual_speed(void)
+{
     uint16_t speed = getSpeed_WS2812FX();
     char actual[50] = {0};
     if (speed >= SUPER_SLOW_SPEED) {
@@ -350,7 +352,8 @@ static void save_speed(uint8_t item) {
     show_speed_menu(0);
 }
 
-void show_actual_color(void) {
+static void show_actual_color(void)
+{
     uint32_t color;
     if (_state == SETTING_STATE_FIRST_COLOR) {
         color = getArrayColor_WS2812FX(0);
@@ -403,7 +406,8 @@ static void show_color_menu(uint8_t item) {
         HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 }
 
-void set_color(uint32_t color) {
+static void set_color(uint32_t color)
+{
     if (_state == SETTING_STATE_FIRST_COLOR) {
         setArrayColor_packed_WS2812FX(color, 0);
         update_stored_color(0, color, 0, true);
@@ -453,7 +457,8 @@ static void save_color(uint8_t item) {
     }
 }
 
-void show_actual_reverse(void) {
+static void show_actual_reverse(void)
+{
     bool reverse = getReverse_WS2812FX();
     char actual[10] = {0};
     if (reverse) {
@@ -485,7 +490,8 @@ static void save_reverse(uint8_t item) {
     show_reverse_menu(0);
 }
 
-void show_actual_control(void) {
+static void show_actual_control(void)
+{
     bool control = isRunning_WS2812FX();
     char actual[10] = {0};
     if (control) {
