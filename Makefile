@@ -14,8 +14,8 @@ builds/nsec_nrf52_brain_%.elf: builds
 	cp nrf52/builds/brain-$*/nsec_nrf52_brain_$*.elf $@
 
 builds/%_softdevice.hex:
-	$(MAKE) -C nrf52 nordicsdk
-	cp nrf52/nordicsdk/components/softdevice/s132/hex/$(notdir $@) $@
+	$(MAKE) -C nrf52 nordicsdk-16.0.0
+	cp nrf52/nordicsdk-16.0.0/components/softdevice/s132/hex/$(notdir $@) $@
 
 FIRMWARE_NRF += builds/nsec_nrf52_brain_bar_beacon.elf
 FIRMWARE_NRF += builds/nsec_nrf52_brain_ctf.elf
