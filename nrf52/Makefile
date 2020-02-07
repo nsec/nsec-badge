@@ -88,8 +88,10 @@ SDK_C_SRCS += $(SDK_PATH)/components/libraries/memobj/nrf_memobj.c
 SDK_C_SRCS += $(SDK_PATH)/components/libraries/pwr_mgmt/nrf_pwr_mgmt.c
 SDK_C_SRCS += $(SDK_PATH)/components/libraries/queue/nrf_queue.c
 SDK_C_SRCS += $(SDK_PATH)/components/libraries/sortlist/nrf_sortlist.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/timer/app_timer_freertos.c
 SDK_C_SRCS += $(SDK_PATH)/components/libraries/util/app_error_handler_gcc.c
 SDK_C_SRCS += $(SDK_PATH)/components/libraries/util/app_util_platform.c
+SDK_C_SRCS += $(SDK_PATH)/components/libraries/util/nrf_assert.c
 SDK_C_SRCS += $(SDK_PATH)/components/softdevice/common/nrf_sdh.c
 SDK_C_SRCS += $(SDK_PATH)/external/fprintf/nrf_fprintf.c
 SDK_C_SRCS += $(SDK_PATH)/external/fprintf/nrf_fprintf_format.c
@@ -101,8 +103,11 @@ SDK_C_SRCS += $(SDK_PATH)/external/freertos/source/portable/MemMang/heap_1.c
 SDK_C_SRCS += $(SDK_PATH)/external/freertos/source/queue.c
 SDK_C_SRCS += $(SDK_PATH)/external/freertos/source/tasks.c
 SDK_C_SRCS += $(SDK_PATH)/external/freertos/source/timers.c
+SDK_C_SRCS += $(SDK_PATH)/integration/nrfx/legacy/nrf_drv_clock.c
 SDK_C_SRCS += $(SDK_PATH)/integration/nrfx/legacy/nrf_drv_uart.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_clock.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_gpiote.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_power.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_pwm.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_saadc.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_spim.c
@@ -281,6 +286,9 @@ CFLAGS += -DS132 -DSOFTDEVICE_PRESENT
 # app_error_fault_handler with information about the location of the error and
 # enter an infinite loop (rather than resetting the MCU).
 CFLAGS += -DDEBUG
+
+# Enable assertions in the SDK.
+CFLAGS += -DDEBUG_NRF -DDEBUG_NRF_USER
 
 # Warnings.
 CFLAGS += \

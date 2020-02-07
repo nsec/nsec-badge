@@ -1,6 +1,7 @@
 #include <nrf_delay.h>
 #include <nrf_drv_clock.h>
 #include <nrf_gpio.h>
+#include <nrfx_power.h>
 #include <sdk_errors.h>
 #include <stdint.h>
 
@@ -9,6 +10,7 @@
 #include <timers.h>
 
 #include "boards.h"
+#include "cli.h"
 
 //static void init_ble() {
 //    create_ble_device(g_device_id);
@@ -40,11 +42,22 @@
 
 static void led_toggle_task(void *params)
 {
+
     while (1) {
         nrf_gpio_pin_set(PIN_LED_STATUS_2);
         vTaskDelay(1000);
         nrf_gpio_pin_clear(PIN_LED_STATUS_2);
         vTaskDelay(1000);
+    }
+}
+
+/* Task to call cli_process regularly. */
+
+static void cli_task(void *params)
+{
+    while (1) {
+        cli_process();
+        vTaskDelay(100);
     }
 }
 
@@ -65,17 +78,26 @@ static void led_toggle_timer_callback(void *params)
     nrf_gpio_pin_toggle(PIN_LED_STATUS_1);
 }
 
+static TaskHandle_t cli_task_handle;
 static TaskHandle_t led_toggle_task_handle;
 static TimerHandle_t led_toggle_timer_handle;
 
 int main(void)
 {
-    // ret_code_t ret_code;
+    ret_code_t ret_code;
     BaseType_t ret;
+    nrfx_err_t nrfx_err;
+    const nrfx_power_config_t power_config = {
+        .dcdcen = true,
+    };
+
+    nrfx_err = nrfx_power_init(&power_config);
+    APP_ERROR_CHECK_BOOL(nrfx_err == NRFX_SUCCESS);
 
     // Use this if we want to use the rtc as a tick source for FreeRTOS
-    // ret_code = nrf_drv_clock_init();
-    // APP_ERROR_CHECK(ret_code);
+    ret_code = nrf_drv_clock_init();
+    APP_ERROR_CHECK(ret_code);
+    cli_init();
 
     nrf_gpio_cfg_output(PIN_LED_STATUS_1);
     nrf_gpio_cfg_output(PIN_LED_STATUS_2);
@@ -87,11 +109,15 @@ int main(void)
                       NULL, 2, &led_toggle_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
+    ret = xTaskCreate(cli_task, "CLI", configMINIMAL_STACK_SIZE + 200, NULL, 2,
+                      &cli_task_handle);
+    APP_ERROR_CHECK_BOOL(ret == pdPASS);
+
     led_toggle_timer_handle =
         xTimerCreate("LED1", 2000, pdTRUE, NULL, led_toggle_timer_callback);
     APP_ERROR_CHECK_BOOL(led_toggle_timer_handle != NULL);
     ret = xTimerStart(led_toggle_timer_handle, 0);
-    APP_ERROR_CHECK_BOOL(pdPASS == pdPASS);
+    APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
     vTaskStartScheduler();
 
