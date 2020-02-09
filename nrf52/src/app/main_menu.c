@@ -69,7 +69,7 @@ static struct text_box_config config = {
 };
 
 #ifdef NSEC_FLAVOR_CONF
-void open_conference_schedule(uint8_t item) {
+static void open_conference_schedule(uint8_t item) {
     menu_close();
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_schedule_show_dates();
