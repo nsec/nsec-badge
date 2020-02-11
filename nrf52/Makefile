@@ -282,6 +282,10 @@ CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin 
 CFLAGS += -DNRF52 -DNRF52832_XXAA
 CFLAGS += -DS132 -DSOFTDEVICE_PRESENT
 
+# This define only (as far as I know) has an effect on app_timer.h, to select
+# the appropriate implementation of APP_TIMER_TICKS.
+CFLAGS += -DFREERTOS
+
 # This tells the Error module of the SDK, in the event of an error, to call our
 # app_error_fault_handler with information about the location of the error and
 # enter an infinite loop (rather than resetting the MCU).
