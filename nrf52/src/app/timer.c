@@ -15,6 +15,9 @@
 #include "gfx_effect.h"
 #include "gui.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 uint64_t heartbeat_timeout_count = 0;
 
 APP_TIMER_DEF(m_heartbeat_timer_id);
@@ -128,9 +131,10 @@ void timer_init(void) {
 /*
  * Get the elapsed time since startup in milliseconds
  */
-uint64_t get_current_time_millis(void) {
-    return (app_timer_cnt_get() / APP_TIMER_CLOCK_FREQ) +
-           (HEARTBEAT_TIMER_TIMEOUT * heartbeat_timeout_count);
+
+uint32_t get_current_time_millis(void)
+{
+    return xTaskGetTickCount() * 1000 / configTICK_RATE_HZ;
 }
 
 void start_battery_status_timer(void) {

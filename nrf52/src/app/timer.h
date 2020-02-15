@@ -12,7 +12,7 @@
 #define BATTERY_MANAGER_TIMER_TIMEOUT_MS 	1000 /* ms */
 
 void timer_init(void);
-uint64_t get_current_time_millis(void);
+uint32_t get_current_time_millis(void);
 void start_battery_status_timer(void);
 void stop_battery_status_timer(void);
 void start_battery_manage_timer(void);

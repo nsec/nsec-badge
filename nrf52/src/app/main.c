@@ -10,6 +10,7 @@
 
 #include "boards.h"
 #include "cli.h"
+#include "drivers/ws2812fx.h"
 
 //static void init_ble() {
 //    create_ble_device(g_device_id);
@@ -60,6 +61,14 @@ static void cli_task(void *params)
     }
 }
 
+static void neopixels_task(void *params)
+{
+    while (1) {
+        service_WS2812FX();
+        vTaskDelay(1);
+    }
+}
+
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info)
 {
     while (1) {
@@ -78,6 +87,7 @@ static void led_toggle_timer_callback(void *params)
 }
 
 static TaskHandle_t cli_task_handle;
+static TaskHandle_t neopixels_task_handle;
 static TaskHandle_t led_toggle_task_handle;
 static TimerHandle_t led_toggle_timer_handle;
 
@@ -101,14 +111,29 @@ int main(void)
     ret_code = sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE);
     APP_ERROR_CHECK(ret_code);
 
+    // Initialize the CLI.
     cli_init();
 
-    ret = xTaskCreate(led_toggle_task, "LED", configMINIMAL_STACK_SIZE + 200,
-                      NULL, 2, &led_toggle_task_handle);
+    // Initialize the NeoPixel led controller.
+    init_WS2812FX();
+
+    setBrightness_WS2812FX(64);
+    setSpeed_WS2812FX(40);
+    setColor_WS2812FX(255, 0, 0);
+    setMode_WS2812FX(FX_MODE_CHASE_COLOR);
+    start_WS2812FX();
+
+    ret = xTaskCreate(led_toggle_task, "LED", configMINIMAL_STACK_SIZE, NULL, 2,
+                      &led_toggle_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
     ret = xTaskCreate(cli_task, "CLI", configMINIMAL_STACK_SIZE + 200, NULL, 2,
                       &cli_task_handle);
+    APP_ERROR_CHECK_BOOL(ret == pdPASS);
+
+    ret =
+        xTaskCreate(neopixels_task, "NeoPixel", configMINIMAL_STACK_SIZE + 200,
+                    NULL, 2, &neopixels_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
     led_toggle_timer_handle =
