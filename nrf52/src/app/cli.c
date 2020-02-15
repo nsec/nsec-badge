@@ -152,10 +152,10 @@ static void do_displayctl_brightness(const nrf_cli_t *p_cli, size_t argc,
     if (val == 0) {
         nrf_cli_fprintf(
             p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
-            "Set display brightness to: %d, display will be turn off\r\n", val);
+            "Set display brightness to: %ld, display will be turn off\r\n", val);
     } else if (val > 0 && val <= 100) {
         nrf_cli_fprintf(p_cli, NRF_CLI_VT100_COLOR_DEFAULT,
-                        "Set display brightness to: %d\r\n", val);
+                        "Set display brightness to: %ld\r\n", val);
     } else {
         nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: Value out of range\r\n",
                         argv[1]);

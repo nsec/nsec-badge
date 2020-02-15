@@ -251,7 +251,8 @@ USER_CFLAGS = \
 	-Wold-style-definition \
 	-Wmissing-parameter-type \
 	-Wmissing-prototypes \
-	-Wstrict-prototypes
+	-Wstrict-prototypes \
+	-Wformat
 
 # Include paths for our code.
 CFLAGS += -Iconfig

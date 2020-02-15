@@ -514,7 +514,7 @@ static void do_led_speed(const nrf_cli_t *p_cli, size_t argc, char **argv)
     }
 
     if (argc == 2) {
-        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%s\r\n",
+        nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT, "%d\r\n",
                     getSegmentSpeed_WS2812FX(segment_index));
         return;
     } else if (argc == 3) {
@@ -567,7 +567,7 @@ static void do_led_brightness(const nrf_cli_t *p_cli, size_t argc, char **argv)
         return;
     } else if (val >= 0 && val <= 100) {
         nrf_cli_fprintf(p_cli, NRF_CLI_DEFAULT,
-                        "Set leds brightness to: %d\r\n", val);
+                        "Set leds brightness to: %ld\r\n", val);
         setBrightness_WS2812FX(val);
         update_stored_brightness(val, true);
     } else {
