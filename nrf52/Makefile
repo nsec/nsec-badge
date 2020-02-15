@@ -237,10 +237,21 @@ CFLAGS += -DS132 -DSOFTDEVICE_PRESENT
 CFLAGS += -DDEBUG
 
 # Warnings.
-CFLAGS += -Wall -Werror -Wno-unused-function -Wno-unused-variable -fmax-errors=1
+CFLAGS += \
+	-Wall \
+	-Werror \
+	-Wno-unused-function \
+	-Wno-unused-variable \
+	-fmax-errors=1
 
 # Warning flags only enabled for the user code (i.e. our code).
-USER_CFLAGS = -Wimplicit -Wold-style-declaration -Wold-style-definition -Wmissing-parameter-type -Wmissing-prototypes -Wstrict-prototypes
+USER_CFLAGS = \
+	-Wimplicit \
+	-Wold-style-declaration \
+	-Wold-style-definition \
+	-Wmissing-parameter-type \
+	-Wmissing-prototypes \
+	-Wstrict-prototypes
 
 # Include paths for our code.
 CFLAGS += -Iconfig
