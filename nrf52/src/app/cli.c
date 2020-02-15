@@ -29,6 +29,9 @@
 #include "cli_sched.h"
 #include <drivers/cli_uart.h>
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 bool standard_check(const nrf_cli_t *p_cli, size_t argc, size_t minimum_arg,
                     char **argv, nrf_cli_getopt_option_t const *p_opt,
                     size_t opt_len)
@@ -358,8 +361,55 @@ static void do_help(const nrf_cli_t *p_cli, size_t argc, char **argv)
                     "access with -h/--help.\r\n");
 }
 
-
 NRF_CLI_CMD_REGISTER(help, NULL, "Print CLI help", do_help);
+
+static void do_freertos(const nrf_cli_t *p_cli, size_t argc, char **argv)
+{
+    TaskStatus_t tasks[10];
+    uint32_t total_run_time;
+    UBaseType_t ntasks;
+
+    ntasks = uxTaskGetSystemState(tasks, ARRAY_SIZE(tasks), &total_run_time);
+
+    ASSERT(ntasks > 0);
+
+    nrf_cli_print(p_cli, "# Name State Prio Ticks StackMin");
+
+    for (UBaseType_t i = 0; i < ntasks; i++) {
+        TaskStatus_t *task = &tasks[i];
+        char state;
+
+        switch (task->eCurrentState) {
+        case eRunning:
+            state = '*';
+            break;
+        case eReady:
+            state = 'R';
+            break;
+        case eBlocked:
+            state = 'B';
+            break;
+        case eSuspended:
+            state = 'S';
+            break;
+        case eDeleted:
+            state = 'D';
+            break;
+        default:
+            state = '?';
+            break;
+        }
+
+        nrf_cli_print(p_cli, "%ld %s  %c     %ld    %" PRId32 "     %d",
+                      task->xTaskNumber, task->pcTaskName, state,
+                      task->uxBasePriority, task->ulRunTimeCounter,
+                      task->usStackHighWaterMark);
+    }
+}
+
+NRF_CLI_CMD_REGISTER(freertos, NULL, "Print information about FreeRTOS tasks",
+                     do_freertos);
+
 /* Initialize the command-line interface module.  */
 
 void cli_init(void)
