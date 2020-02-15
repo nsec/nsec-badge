@@ -1,7 +1,6 @@
 #include <nrf_delay.h>
-#include <nrf_drv_clock.h>
 #include <nrf_gpio.h>
-#include <nrfx_power.h>
+#include <nrf_sdh.h>
 #include <sdk_errors.h>
 #include <stdint.h>
 
@@ -87,23 +86,22 @@ int main(void)
     ret_code_t ret_code;
     BaseType_t ret;
     nrfx_err_t nrfx_err;
-    const nrfx_power_config_t power_config = {
-        .dcdcen = true,
-    };
-
-    nrfx_err = nrfx_power_init(&power_config);
-    APP_ERROR_CHECK_BOOL(nrfx_err == NRFX_SUCCESS);
-
-    // Use this if we want to use the rtc as a tick source for FreeRTOS
-    ret_code = nrf_drv_clock_init();
-    APP_ERROR_CHECK(ret_code);
-    cli_init();
 
     nrf_gpio_cfg_output(PIN_LED_STATUS_1);
     nrf_gpio_cfg_output(PIN_LED_STATUS_2);
 
     nrf_gpio_pin_set(PIN_LED_STATUS_1);
     nrf_gpio_pin_clear(PIN_LED_STATUS_2);
+
+    // Initializing the SoftDevice also initializes the low-frequency clock,
+    // which is used as a tick source for FreeRTOS.
+    ret_code = nrf_sdh_enable_request();
+    APP_ERROR_CHECK(ret_code);
+
+    ret_code = sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE);
+    APP_ERROR_CHECK(ret_code);
+
+    cli_init();
 
     ret = xTaskCreate(led_toggle_task, "LED", configMINIMAL_STACK_SIZE + 200,
                       NULL, 2, &led_toggle_task_handle);
