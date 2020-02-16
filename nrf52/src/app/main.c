@@ -123,17 +123,16 @@ int main(void)
     setMode_WS2812FX(FX_MODE_CHASE_COLOR);
     start_WS2812FX();
 
-    ret = xTaskCreate(led_toggle_task, "LED", configMINIMAL_STACK_SIZE, NULL, 2,
-                      &led_toggle_task_handle);
+    ret = xTaskCreate(led_toggle_task, "LED", configMINIMAL_STACK_SIZE + 200,
+                      NULL, 2, &led_toggle_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
-    ret = xTaskCreate(cli_task, "CLI", configMINIMAL_STACK_SIZE + 200, NULL, 2,
+    ret = xTaskCreate(cli_task, "CLI", configMINIMAL_STACK_SIZE + 500, NULL, 2,
                       &cli_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
-    ret =
-        xTaskCreate(neopixels_task, "NeoPixel", configMINIMAL_STACK_SIZE + 200,
-                    NULL, 2, &neopixels_task_handle);
+    ret = xTaskCreate(neopixels_task, "Neo", configMINIMAL_STACK_SIZE + 200,
+                      NULL, 2, &neopixels_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
     led_toggle_timer_handle =

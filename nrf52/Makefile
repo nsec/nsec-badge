@@ -109,6 +109,7 @@ SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_clock.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_gpiote.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_power.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_pwm.c
+SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_rtc.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_saadc.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_spim.c
 SDK_C_SRCS += $(SDK_PATH)/modules/nrfx/drivers/src/nrfx_uart.c

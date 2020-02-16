@@ -373,11 +373,15 @@ static void do_freertos(const nrf_cli_t *p_cli, size_t argc, char **argv)
 
     ASSERT(ntasks > 0);
 
-    nrf_cli_print(p_cli, "# Name State Prio Ticks StackMin");
+    nrf_cli_print(p_cli, "# Name State Prio  Runtime Runtime%% StackMin");
 
     for (UBaseType_t i = 0; i < ntasks; i++) {
         TaskStatus_t *task = &tasks[i];
         char state;
+        uint32_t run_time_per_thousand =
+            (task->ulRunTimeCounter * 1000) / total_run_time;
+        unsigned int run_time_percent_whole = run_time_per_thousand / 10;
+        unsigned int run_time_percent_fract = run_time_per_thousand % 10;
 
         switch (task->eCurrentState) {
         case eRunning:
@@ -400,10 +404,11 @@ static void do_freertos(const nrf_cli_t *p_cli, size_t argc, char **argv)
             break;
         }
 
-        nrf_cli_print(p_cli, "%ld %s  %c     %ld    %" PRId32 "     %d",
-                      task->xTaskNumber, task->pcTaskName, state,
-                      task->uxBasePriority, task->ulRunTimeCounter,
-                      task->usStackHighWaterMark);
+        nrf_cli_print(
+            p_cli, "%ld %s  %c        %ld %8" PRIu32 "     %2d.%01d      %d",
+            task->xTaskNumber, task->pcTaskName, state, task->uxBasePriority,
+            task->ulRunTimeCounter, run_time_percent_whole,
+            run_time_percent_fract, task->usStackHighWaterMark);
     }
 }
 
