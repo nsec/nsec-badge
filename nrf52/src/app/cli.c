@@ -405,7 +405,7 @@ static void do_freertos(const nrf_cli_t *p_cli, size_t argc, char **argv)
         }
 
         nrf_cli_print(
-            p_cli, "%ld %s  %c        %ld %8" PRIu32 "     %2d.%01d      %d",
+            p_cli, "%ld %-3s  %c        %ld %8" PRIu32 "     %2d.%01d      %d",
             task->xTaskNumber, task->pcTaskName, state, task->uxBasePriority,
             task->ulRunTimeCounter, run_time_percent_whole,
             run_time_percent_fract, task->usStackHighWaterMark);
