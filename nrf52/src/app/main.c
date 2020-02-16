@@ -98,6 +98,13 @@ void vApplicationMallocFailedHook(void)
     app_error_fault_handler(0, 0, 0);
 }
 
+/* This is called by FreeRTOS if it detects that a task overflows its stack. */
+extern void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName);
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+    app_error_fault_handler(0, 0, 0);
+}
+
 int main(void)
 {
     ret_code_t ret_code;
