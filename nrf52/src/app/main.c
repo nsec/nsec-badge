@@ -91,6 +91,13 @@ static TaskHandle_t neopixels_task_handle;
 static TaskHandle_t led_toggle_task_handle;
 static TimerHandle_t led_toggle_timer_handle;
 
+/* This is called by FreeRTOS if a pvPortMalloc call fails. */
+extern void vApplicationMallocFailedHook(void);
+void vApplicationMallocFailedHook(void)
+{
+    app_error_fault_handler(0, 0, 0);
+}
+
 int main(void)
 {
     ret_code_t ret_code;
