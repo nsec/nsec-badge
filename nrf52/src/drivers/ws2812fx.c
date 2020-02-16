@@ -289,9 +289,9 @@ ws2812fx *fx;
 void init_WS2812FX(void)
 {
     static bool init = false;
-    if (init) {
-        return;
-    }
+    ASSERT(!init);
+    init = true;
+
     RESET_RUNTIME;
     fx = malloc(sizeof(ws2812fx));
     if (fx == NULL) {
