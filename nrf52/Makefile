@@ -281,7 +281,6 @@ CFLAGS += \
 	-Wall \
 	-Werror \
 	-Wno-unused-function \
-	-Wno-unused-variable \
 	-fmax-errors=1
 
 # Warning flags only enabled for the user code (i.e. our code).

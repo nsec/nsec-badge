@@ -37,7 +37,6 @@ enum input_box_style {
     STYLE_WORD,
 };
 
-static enum chall_state chall_state = CHALL_STATE_PAUSE;
 static menu_item_s letters_items[16];
 static void draw_input_box_title(void);
 static void input_box_show_brackets(void);

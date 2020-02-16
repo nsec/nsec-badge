@@ -270,7 +270,7 @@ static void st7735_hardware_reset(void)
  */
 static void st7735_set_framerate(void)
 {
-    uint8_t rtna = 0x01;
+    //uint8_t rtna = 0x01;
     uint8_t fpa = 0x2C;
     uint8_t bpa = 0x2D;
 

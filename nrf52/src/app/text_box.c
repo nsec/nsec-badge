@@ -96,7 +96,7 @@ void text_box_init(const char *text, struct text_box_config *config)
 }
 
 static void text_box_show_page(void) {
-    uint8_t i, k;
+    uint8_t i;
     struct text_box_config *config = text_box.config;
     char buffer[text_box.columns + 1];
 

@@ -60,7 +60,7 @@
 #include "demo_vendor_service.h"
 #include "resistance_propaganda_observer.h"
 
-static char g_device_id[10];
+//static char g_device_id[10];
 
 /*
  * Callback function when APP_ERROR_CHECK() fails

@@ -277,7 +277,6 @@ static void do_ask_buddha(const nrf_cli_t *p_cli, size_t argc, char **argv)
         return;
     }
 
-	int cy = 1<<31;
 	while (buddha_flag[idx] == argv[1][idx] && buddha_flag[idx] != 0) {
 		for (uint32_t jdx = 0; jdx < 0x003FFFFF; jdx++) {
 			__asm__ __volatile__ ("nop");

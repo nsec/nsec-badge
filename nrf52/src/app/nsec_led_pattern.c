@@ -35,15 +35,12 @@ enum setting_state {
 #define MODE_BASIC_COUNT 41
 #define MODE_EXTRA_COUNT 15
 
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
-char *letters[] = {
+static const char *letters[] = {
     "0", "1", "2", "3", "4", "5", "6", "7",
     "8", "9", "A", "B", "C", "D", "E", "F",
 };
 
-const char *basic_patterns[] = {
+static const char *basic_patterns[] = {
     "Static",
     "Blink",
     "Breath",
@@ -88,13 +85,13 @@ const char *basic_patterns[] = {
     "ICU",
 };
 
-uint8_t basic_patterns_match_index[] = {
+static uint8_t basic_patterns_match_index[] = {
     0,  1,  2,  3,  4,  5,  6,  9,  13, 14, 15, 16, 18, 19,
     21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 34, 35, 37,
     40, 41, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 55,
 };
 
-const char *extra_patterns_lock[] = {
+static const char *extra_patterns_lock[] = {
     "<L> Color Wipe Random",
     "<L> Random Color",
     "<L> Fire Flicker (Intense)",
@@ -112,7 +109,7 @@ const char *extra_patterns_lock[] = {
     "<L> Chase Blackout Rainbow",
 };
 
-const char *extra_patterns_unlock[] = {
+static const char *extra_patterns_unlock[] = {
     "<U> Color Wipe Random",
     "<U> Random Color",
     "<U> Fire Flicker (Intense)",
@@ -130,15 +127,11 @@ const char *extra_patterns_unlock[] = {
     "<U> Chase Blackout Rainbow",
 };
 
-uint8_t extra_patterns_match_index[] = {
+static uint8_t extra_patterns_match_index[] = {
     7, 8, 50, 10, 11, 12, 17, 20, 22, 42, 54, 33, 36, 39, 38,
 };
 
-static struct text_box_config config = {
-    GEN_MENU_POS_X,     22,           160, GEN_MENU_HEIGHT,
-    HOME_MENU_BG_COLOR, DISPLAY_WHITE};
-
-char pass[5];
+static char pass[5];
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
 

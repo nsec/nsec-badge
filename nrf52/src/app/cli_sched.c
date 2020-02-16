@@ -298,6 +298,7 @@ static void do_schedule(nrf_cli_t const *p_cli, size_t argc, char **argv)
     nrf_cli_help_print(p_cli, NULL, 0);
 }
 
+#if defined(NSEC_FLAVOR_CONF)
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(schedule_sub){
     NRF_CLI_CMD(thursday, NULL, "Display Thursday schedule",
                 do_schedule_thursday),
@@ -306,6 +307,5 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET(schedule_sub){
                 do_schedule_speakers),
     NRF_CLI_SUBCMD_SET_END};
 
-#if defined(NSEC_FLAVOR_CONF)
 NRF_CLI_CMD_REGISTER(schedule, &schedule_sub, CMD_SCHEDULE_HELP, do_schedule);
 #endif
