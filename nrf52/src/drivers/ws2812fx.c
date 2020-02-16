@@ -259,11 +259,11 @@ const char *name[] = {
 uint32_t SPEED_MAX = 65535;
 
 // Macro to increase readability
-#define SEGMENT fx->segments[fx->segment_index]
-#define SEGMENT_RUNTIME fx->segment_runtimes[fx->segment_index]
+#define SEGMENT g_fx.segments[g_fx.segment_index]
+#define SEGMENT_RUNTIME g_fx.segment_runtimes[g_fx.segment_index]
 #define SEGMENT_LENGTH (SEGMENT.stop - SEGMENT.start + 1)
 #define RESET_RUNTIME                                                          \
-    memset(fx->segment_runtimes, 0, sizeof(fx->segment_runtimes))
+    memset(g_fx.segment_runtimes, 0, sizeof(g_fx.segment_runtimes))
 
 // segment runtime parameters
 typedef struct Segment_runtime { // 16 bytes
@@ -284,7 +284,7 @@ typedef struct WS2812FX {
     segment_runtime segment_runtimes[MAX_NUM_SEGMENTS];
 } ws2812fx;
 
-ws2812fx *fx;
+static ws2812fx g_fx;
 
 void init_WS2812FX(void)
 {
@@ -292,39 +292,41 @@ void init_WS2812FX(void)
     ASSERT(!init);
     init = true;
 
-    fx = malloc(sizeof(ws2812fx));
-    if (fx == NULL) {
-        return;
-    }
-    fx->brightness = DEFAULT_BRIGHTNESS;
-    fx->running = false;
-    fx->triggered = false;
-    fx->num_segments = 1;
+    ws2812fx *fx = &g_fx;
+
+    memset(fx, 0, sizeof(*fx));
+
+    g_fx.brightness = DEFAULT_BRIGHTNESS;
+    g_fx.running = false;
+    g_fx.triggered = false;
+    g_fx.num_segments = 1;
 
     for (int i = 0; i < MAX_NUM_SEGMENTS; i++) {
-        fx->segments[i].mode = DEFAULT_MODE;
-        fx->segments[i].start = 0;
-        fx->segments[i].stop = NEOPIXEL_COUNT - 1;
-        fx->segments[i].speed = DEFAULT_SPEED;
+        g_fx.segments[i].mode = DEFAULT_MODE;
+        g_fx.segments[i].start = 0;
+        g_fx.segments[i].stop = NEOPIXEL_COUNT - 1;
+        g_fx.segments[i].speed = DEFAULT_SPEED;
         for (int k = 0; k < NUM_COLORS; k++) {
-            fx->segments[i].colors[k] = DEFAULT_COLOR;
+            g_fx.segments[i].colors[k] = DEFAULT_COLOR;
         }
     }
 
     RESET_RUNTIME;
     nsec_neoPixel_init();
-    setBrightness_WS2812FX(fx->brightness);
+    setBrightness_WS2812FX(g_fx.brightness);
     nsec_neoPixel_show();
 }
 
 void service_WS2812FX(void)
 {
-    if (fx->running || fx->triggered) {
+    ws2812fx *fx = &g_fx;
+
+    if (g_fx.running || g_fx.triggered) {
         uint64_t now = get_current_time_millis();
         bool doShow = false;
-        for (uint8_t i = 0; i < fx->num_segments; i++) {
-            fx->segment_index = i;
-            if (now > SEGMENT_RUNTIME.next_time || fx->triggered) {
+        for (uint8_t i = 0; i < g_fx.num_segments; i++) {
+            g_fx.segment_index = i;
+            if (now > SEGMENT_RUNTIME.next_time || g_fx.triggered) {
                 doShow = true;
                 uint16_t delay = mode[SEGMENT.mode]();
                 SEGMENT_RUNTIME.next_time = now + max((int)delay, SPEED_MIN);
@@ -335,113 +337,113 @@ void service_WS2812FX(void)
             nrf_delay_ms(1);
             nsec_neoPixel_show();
         }
-        fx->triggered = false;
+        g_fx.triggered = false;
     }
 }
 
 void start_WS2812FX(void)
 {
     RESET_RUNTIME;
-    fx->running = true;
+    g_fx.running = true;
 }
 
 void stop_WS2812FX(void)
 {
-    fx->running = false;
+    g_fx.running = false;
     strip_off_WS2812FX();
 }
 
 void trigger_WS2812FX(void)
 {
-    fx->triggered = true;
+    g_fx.triggered = true;
 }
 
 void setMode_WS2812FX(uint8_t m) {
     RESET_RUNTIME;
-    fx->segments[0].mode = constrain(m, 0, MODE_COUNT - 1);
-    setBrightness_WS2812FX(fx->brightness);
+    g_fx.segments[0].mode = constrain(m, 0, MODE_COUNT - 1);
+    setBrightness_WS2812FX(g_fx.brightness);
 }
 
 void setSegmentMode_WS2812FX(uint8_t segment_index, uint8_t m) {
-    if (segment_index < fx->num_segments) {
+    if (segment_index < g_fx.num_segments) {
         RESET_RUNTIME;
-        fx->segments[segment_index].mode = constrain(m, 0, MODE_COUNT - 1);
-        setBrightness_WS2812FX(fx->brightness);
+        g_fx.segments[segment_index].mode = constrain(m, 0, MODE_COUNT - 1);
+        setBrightness_WS2812FX(g_fx.brightness);
     }
 }
 
 void setSpeed_WS2812FX(uint16_t s) {
     RESET_RUNTIME;
-    fx->segments[0].speed = constrain(s, SPEED_MIN, SPEED_MAX);
+    g_fx.segments[0].speed = constrain(s, SPEED_MIN, SPEED_MAX);
 }
 
 void setReverse_WS2812FX(bool reverse) {
     RESET_RUNTIME;
-    fx->segments[0].reverse = reverse;
+    g_fx.segments[0].reverse = reverse;
 }
 
 void setSegmentReverse_WS2812FX(uint8_t segment_index, bool reverse) {
-    if (segment_index < fx->num_segments) {
+    if (segment_index < g_fx.num_segments) {
         RESET_RUNTIME;
-        fx->segments[segment_index].reverse = reverse;
+        g_fx.segments[segment_index].reverse = reverse;
     }
 }
 
 bool getSegmentReverse_WS2812FX(uint8_t segment_index) {
-    if (segment_index < fx->num_segments) {
-        return fx->segments[segment_index].reverse;
+    if (segment_index < g_fx.num_segments) {
+        return g_fx.segments[segment_index].reverse;
     }
     return 0;
 }
 
 uint8_t getSegmentStart_WS2812FX(uint8_t segment_index) {
-    if (segment_index < fx->num_segments) {
-        return fx->segments[segment_index].start;
+    if (segment_index < g_fx.num_segments) {
+        return g_fx.segments[segment_index].start;
     }
     return 0;
 }
 
 void setSegmentStart_WS2812FX(uint8_t segment_index, uint8_t start) {
-    if (segment_index < fx->num_segments) {
-        fx->segments[segment_index].start = start;
+    if (segment_index < g_fx.num_segments) {
+        g_fx.segments[segment_index].start = start;
     }
 }
 uint8_t getSegmentStop_WS2812FX(uint8_t segment_index) {
-    if (segment_index < fx->num_segments) {
-        return fx->segments[segment_index].stop;
+    if (segment_index < g_fx.num_segments) {
+        return g_fx.segments[segment_index].stop;
     }
     return 0;
 }
 
 void setSegmentStop_WS2812FX(uint8_t segment_index, uint8_t stop) {
-    if (segment_index < fx->num_segments) {
-        fx->segments[segment_index].stop = stop;
+    if (segment_index < g_fx.num_segments) {
+        g_fx.segments[segment_index].stop = stop;
     }
 }
 
 const char* getSegmentModeString_WS2812FX(uint8_t segment_index) {
-    if (segment_index < fx->num_segments) {
-        return name[fx->segments[segment_index].mode];
+    if (segment_index < g_fx.num_segments) {
+        return name[g_fx.segments[segment_index].mode];
     }
     return "Unknown";
 }
 
 uint16_t getSegmentSpeed_WS2812FX(uint8_t segment_index) {
-    if (segment_index < fx->num_segments) {
-        return fx->segments[segment_index].speed;
+    if (segment_index < g_fx.num_segments) {
+        return g_fx.segments[segment_index].speed;
     }
     return 0;
 }
 
 void setSegmentSpeed_WS2812FX(uint8_t segment_index, uint16_t segment_speed) {
-    if (segment_index < fx->num_segments) {
-        fx->segments[segment_index].speed = segment_speed;
+    if (segment_index < g_fx.num_segments) {
+        g_fx.segments[segment_index].speed = segment_speed;
     }
 }
 
 uint16_t getSegmentColor_WS2812FX(uint8_t segment_index, uint8_t color_index) {
-    if (segment_index < fx->num_segments) {
-        return fx->segments[segment_index].colors[color_index];
+    if (segment_index < g_fx.num_segments) {
+        return g_fx.segments[segment_index].colors[color_index];
     }
     return 0;
 }
@@ -470,75 +472,93 @@ void setColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b) {
 void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index) {
     if (index < NUM_COLORS) {
         RESET_RUNTIME;
-        fx->segments[0].colors[index] = c;
-        setBrightness_WS2812FX(fx->brightness);
+        g_fx.segments[0].colors[index] = c;
+        setBrightness_WS2812FX(g_fx.brightness);
     }
 }
 
 void setSegmentArrayColor_packed_WS2812FX(uint8_t segment_index,
                                           uint8_t color_index, uint32_t c)
 {
-    if (color_index < NUM_COLORS && segment_index < fx->num_segments) {
+    if (color_index < NUM_COLORS && segment_index < g_fx.num_segments) {
         RESET_RUNTIME;
-        fx->segments[segment_index].colors[color_index] = c;
-        setBrightness_WS2812FX(fx->brightness);
+        g_fx.segments[segment_index].colors[color_index] = c;
+        setBrightness_WS2812FX(g_fx.brightness);
     }
 }
 
 void setColor_packed_WS2812FX(uint32_t c) {
     RESET_RUNTIME;
-    fx->segments[0].colors[0] = c;
-    setBrightness_WS2812FX(fx->brightness);
+    g_fx.segments[0].colors[0] = c;
+    setBrightness_WS2812FX(g_fx.brightness);
 }
 
 void setBrightness_WS2812FX(uint8_t b) {
-    fx->brightness = constrain(b, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
-    nsec_neoPixel_set_brightness(fx->brightness);
+    g_fx.brightness = constrain(b, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
+    nsec_neoPixel_set_brightness(g_fx.brightness);
     nsec_neoPixel_show();
     nrf_delay_ms(1);
 }
 
 void increaseBrightness_WS2812FX(uint8_t s) {
-    s = constrain(fx->brightness + s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
+    s = constrain(g_fx.brightness + s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
     setBrightness_WS2812FX(s);
 }
 
 void decreaseBrightness_WS2812FX(uint8_t s) {
-    s = constrain(fx->brightness - s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
+    s = constrain(g_fx.brightness - s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
     setBrightness_WS2812FX(s);
 }
 
 bool isRunning_WS2812FX(void)
 {
-    return fx->running;
+    return g_fx.running;
 }
 
-uint8_t getMode_WS2812FX(void) { return fx->segments[0].mode; }
+uint8_t getMode_WS2812FX(void)
+{
+    return g_fx.segments[0].mode;
+}
 
-uint16_t getSpeed_WS2812FX(void) { return fx->segments[0].speed; }
+uint16_t getSpeed_WS2812FX(void)
+{
+    return g_fx.segments[0].speed;
+}
 
-bool getReverse_WS2812FX(void) { return fx->segments[0].reverse; }
+bool getReverse_WS2812FX(void)
+{
+    return g_fx.segments[0].reverse;
+}
 
-uint8_t getBrightness_WS2812FX(void) { return fx->brightness; }
+uint8_t getBrightness_WS2812FX(void)
+{
+    return g_fx.brightness;
+}
 
 uint16_t getLength_WS2812FX(void) {
-    return fx->segments[0].stop - fx->segments[0].start + 1;
+    return g_fx.segments[0].stop - g_fx.segments[0].start + 1;
 }
 
 uint8_t getModeCount_WS2812FX(void) { return MODE_COUNT; }
 
-uint8_t getNumSegments_WS2812FX(void) { return fx->num_segments; }
+uint8_t getNumSegments_WS2812FX(void)
+{
+    return g_fx.num_segments;
+}
 
 void setNumSegments_WS2812FX(uint8_t n) {
     RESET_RUNTIME;
-    fx->num_segments = n;
+    g_fx.num_segments = n;
 }
 
-uint32_t getColor_WS2812FX(void) { return fx->segments[0].colors[0]; }
+uint32_t getColor_WS2812FX(void)
+{
+    return g_fx.segments[0].colors[0];
+}
 
 uint32_t getArrayColor_WS2812FX(uint8_t index) {
     if (index < NUM_COLORS) {
-        return fx->segments[0].colors[index];
+        return g_fx.segments[0].colors[index];
     } else {
         return getColor_WS2812FX();
     }
@@ -554,48 +574,48 @@ const char *getModeName_WS2812FX(uint8_t m) {
 
 void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode,
                          uint32_t color, uint16_t speed, bool reverse) {
-    if (n < (sizeof(fx->segments) / sizeof(fx->segments[0]))) {
-        if (n + 1 > fx->num_segments)
-            fx->num_segments = n + 1;
-        fx->segments[n].start = start;
-        fx->segments[n].stop = stop;
-        fx->segments[n].mode = mode;
-        fx->segments[n].speed = speed;
-        fx->segments[n].reverse = reverse;
-        fx->segments[n].colors[0] = color;
+    if (n < (sizeof(g_fx.segments) / sizeof(g_fx.segments[0]))) {
+        if (n + 1 > g_fx.num_segments)
+            g_fx.num_segments = n + 1;
+        g_fx.segments[n].start = start;
+        g_fx.segments[n].stop = stop;
+        g_fx.segments[n].mode = mode;
+        g_fx.segments[n].speed = speed;
+        g_fx.segments[n].reverse = reverse;
+        g_fx.segments[n].colors[0] = color;
     }
 }
 
 void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop,
                                      uint8_t mode, const uint32_t colors[],
                                      uint16_t speed, bool reverse) {
-    if (n < (sizeof(fx->segments) / sizeof(fx->segments[0]))) {
-        if (n + 1 > fx->num_segments)
-            fx->num_segments = n + 1;
-        fx->segments[n].start = start;
-        fx->segments[n].stop = stop;
-        fx->segments[n].mode = mode;
-        fx->segments[n].speed = speed;
-        fx->segments[n].reverse = reverse;
+    if (n < (sizeof(g_fx.segments) / sizeof(g_fx.segments[0]))) {
+        if (n + 1 > g_fx.num_segments)
+            g_fx.num_segments = n + 1;
+        g_fx.segments[n].start = start;
+        g_fx.segments[n].stop = stop;
+        g_fx.segments[n].mode = mode;
+        g_fx.segments[n].speed = speed;
+        g_fx.segments[n].reverse = reverse;
 
         for (uint8_t i = 0; i < NUM_COLORS; i++) {
-            fx->segments[n].colors[i] = colors[i];
+            g_fx.segments[n].colors[i] = colors[i];
         }
     }
 }
 
 void resetSegments_WS2812FX(void)
 {
-    memset(fx->segments, 0, sizeof(fx->segments));
-    memset(fx->segment_runtimes, 0, sizeof(fx->segment_runtimes));
-    fx->segment_index = 0;
-    fx->num_segments = 1;
+    memset(g_fx.segments, 0, sizeof(g_fx.segments));
+    memset(g_fx.segment_runtimes, 0, sizeof(g_fx.segment_runtimes));
+    g_fx.segment_index = 0;
+    g_fx.num_segments = 1;
     setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT, FX_MODE_STATIC, DEFAULT_COLOR,
                         DEFAULT_SPEED, false);
 }
 
 void moveSegment_WS2812FX(uint8_t src, uint8_t dest) {
-    fx->segments[dest] = fx->segments[src];
+    g_fx.segments[dest] = g_fx.segments[src];
 }
 
 /* #####################################################
@@ -880,12 +900,12 @@ uint16_t mode_breath(void) {
 
     int lum =
         map(breath_brightness, 0, 255, 0,
-            fx->brightness); // keep luminosity below brightness set by user
+            g_fx.brightness); // keep luminosity below brightness set by user
     // uint8_t w = (SEGMENT.colors[0] >> 24 & 0xFF) * lum / _brightness; //
     // modify RGBW colors with brightness info
-    uint8_t r = (SEGMENT.colors[0] >> 16 & 0xFF) * lum / fx->brightness;
-    uint8_t g = (SEGMENT.colors[0] >> 8 & 0xFF) * lum / fx->brightness;
-    uint8_t b = (SEGMENT.colors[0] & 0xFF) * lum / fx->brightness;
+    uint8_t r = (SEGMENT.colors[0] >> 16 & 0xFF) * lum / g_fx.brightness;
+    uint8_t g = (SEGMENT.colors[0] >> 8 & 0xFF) * lum / g_fx.brightness;
+    uint8_t b = (SEGMENT.colors[0] & 0xFF) * lum / g_fx.brightness;
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         nsec_neoPixel_set_pixel_color(i, r, g, b);
     }
@@ -900,13 +920,13 @@ uint16_t mode_breath(void) {
 uint16_t mode_fade(void) {
     int lum = SEGMENT_RUNTIME.counter_mode_step - 31;
     lum = 63 - (abs(lum) * 2);
-    lum = map(lum, 0, 64, min(25, (int)fx->brightness), fx->brightness);
+    lum = map(lum, 0, 64, min(25, (int)g_fx.brightness), g_fx.brightness);
 
     // uint8_t w = (SEGMENT.colors[0] >> 24 & 0xFF) * lum / _brightness; //
     // modify RGBW colors with brightness info
-    uint8_t r = (SEGMENT.colors[0] >> 16 & 0xFF) * lum / fx->brightness;
-    uint8_t g = (SEGMENT.colors[0] >> 8 & 0xFF) * lum / fx->brightness;
-    uint8_t b = (SEGMENT.colors[0] & 0xFF) * lum / fx->brightness;
+    uint8_t r = (SEGMENT.colors[0] >> 16 & 0xFF) * lum / g_fx.brightness;
+    uint8_t g = (SEGMENT.colors[0] >> 8 & 0xFF) * lum / g_fx.brightness;
+    uint8_t b = (SEGMENT.colors[0] & 0xFF) * lum / g_fx.brightness;
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         nsec_neoPixel_set_pixel_color(i, r, g, b);
     }
@@ -1559,7 +1579,7 @@ uint16_t fireworks(uint32_t color) {
         nsec_neoPixel_set_pixel_color_packed(i, prevLed + thisLed + nextLed);
     }
 
-    if (!fx->triggered) {
+    if (!g_fx.triggered) {
         for (uint16_t i = 0; i < max(1, SEGMENT_LENGTH / 20); i++) {
             if (nsec_random_get_byte(9) == 0) {
                 nsec_neoPixel_set_pixel_color_packed(
