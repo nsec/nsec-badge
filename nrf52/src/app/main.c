@@ -10,7 +10,10 @@
 
 #include "boards.h"
 #include "cli.h"
+#include "drivers/display.h"
 #include "drivers/ws2812fx.h"
+#include "gfx_effect.h"
+#include "timer.h"
 
 //static void init_ble() {
 //    create_ble_device(g_device_id);
@@ -69,6 +72,23 @@ static void neopixels_task(void *params)
     }
 }
 
+static void ui_task(void *params)
+{
+    uint32_t sec = UINT32_MAX;
+
+    while (1) {
+        uint32_t this_sec = get_current_time_millis() / 1000;
+        if (this_sec != sec) {
+            sec = this_sec;
+            char buf[10];
+
+            sprintf(buf, "%lu", sec);
+            gfx_puts(buf);
+        }
+        vTaskDelay(100);
+    }
+}
+
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info)
 {
     while (1) {
@@ -89,6 +109,7 @@ static void led_toggle_timer_callback(void *params)
 static TaskHandle_t cli_task_handle;
 static TaskHandle_t neopixels_task_handle;
 static TaskHandle_t led_toggle_task_handle;
+static TaskHandle_t ui_task_handle;
 static TimerHandle_t led_toggle_timer_handle;
 
 /* This is called by FreeRTOS if a pvPortMalloc call fails. */
@@ -137,6 +158,9 @@ int main(void)
     setMode_WS2812FX(FX_MODE_CHASE_COLOR);
     start_WS2812FX();
 
+    // Initialize the LCD.
+    display_init();
+
     ret = xTaskCreate(led_toggle_task, "LED", configMINIMAL_STACK_SIZE + 200,
                       NULL, 2, &led_toggle_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
@@ -147,6 +171,10 @@ int main(void)
 
     ret = xTaskCreate(neopixels_task, "Neo", configMINIMAL_STACK_SIZE + 200,
                       NULL, 2, &neopixels_task_handle);
+    APP_ERROR_CHECK_BOOL(ret == pdPASS);
+
+    ret = xTaskCreate(ui_task, "UI", configMINIMAL_STACK_SIZE + 200, NULL, 2,
+                      &ui_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
     led_toggle_timer_handle =
