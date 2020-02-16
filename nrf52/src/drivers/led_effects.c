@@ -146,11 +146,8 @@ void nsec_neoPixel_show(void) {
 
 void show_with_PWM(void) {
     // todo Implement the canshow
-    uint32_t pattern_size =
-        NSEC_NEOPIXEL_NUM_BYTES * 8 * sizeof(uint16_t) + 2 * sizeof(uint16_t);
-    uint16_t *pixels_pattern = NULL;
+    uint16_t pixels_pattern[NSEC_NEOPIXEL_NUM_BYTES * 8 + 2];
 
-    pixels_pattern = (uint16_t *)malloc(pattern_size);
     if (pixels_pattern != NULL && nsec_pixels.pixels != NULL) {
         uint16_t pos = 0;
 
@@ -175,7 +172,7 @@ void show_with_PWM(void) {
 
     // Configure the sequence
     nrf_pwm_seq_ptr_set(NRF_PWM0, 0, pixels_pattern);
-    nrf_pwm_seq_cnt_set(NRF_PWM0, 0, pattern_size / sizeof(uint16_t));
+    nrf_pwm_seq_cnt_set(NRF_PWM0, 0, ARRAY_SIZE(pixels_pattern));
     nrf_pwm_seq_refresh_set(NRF_PWM0, 0, 0);
     nrf_pwm_seq_end_delay_set(NRF_PWM0, 0, 0);
     nrf_pwm_pins_set(NRF_PWM0, mapConnect);
@@ -196,8 +193,6 @@ void show_with_PWM(void) {
     nrf_pwm_disable(NRF_PWM0);
 
     nrf_pwm_pins_set(NRF_PWM0, mapDisconnect);
-
-    free(pixels_pattern);
 }
 
 void show_with_DWT(void) {
