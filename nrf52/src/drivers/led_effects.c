@@ -16,13 +16,15 @@
 void show_with_PWM(void);
 void show_with_DWT(void);
 
+// 3 leds/bytes by pixel
+#define NSEC_NEOPIXEL_NUM_BYTES (NEOPIXEL_COUNT * 3)
+
 struct Nsec_pixels {
-    uint16_t numBytes;
     uint8_t brightness;
     uint8_t rOffset;
     uint8_t gOffset;
     uint8_t bOffset;
-    uint8_t *pixels;
+    uint8_t pixels[NSEC_NEOPIXEL_NUM_BYTES];
 };
 
 static struct Nsec_pixels nsec_pixels;
@@ -42,18 +44,10 @@ void nsec_neoPixel_init(void)
 
     memset(&nsec_pixels, 0, sizeof(nsec_pixels));
 
-    nsec_pixels.brightness = 0;
-
-    // Magic number comming from Adafruit library
+    // Magic number coming from Adafruit library
     nsec_pixels.rOffset = (NEO_GRB >> 4) & 0b11;
     nsec_pixels.gOffset = (NEO_GRB >> 2) & 0b11;
     nsec_pixels.bOffset = NEO_GRB & 0b11;
-
-    // Allocate three bytes for each pixels (3 led by pixel)
-    nsec_pixels.numBytes = NEOPIXEL_COUNT * 3;
-    nsec_pixels.pixels = (uint8_t *)malloc(nsec_pixels.numBytes);
-
-    memset(nsec_pixels.pixels, 0, nsec_pixels.numBytes);
 
     // Configure pin
     nrf_gpio_cfg_output(PIN_NEOPIXEL);
@@ -61,7 +55,7 @@ void nsec_neoPixel_init(void)
 }
 
 void nsec_neoPixel_clear(void) {
-    memset(nsec_pixels.pixels, 0, nsec_pixels.numBytes);
+    memset(nsec_pixels.pixels, 0, sizeof(nsec_pixels.pixels));
 }
 
 // Set the n pixel color
@@ -117,7 +111,6 @@ uint32_t nsec_neoPixel_get_pixel_color(uint16_t n) {
 void nsec_neoPixel_set_brightness(uint8_t b) {
     uint8_t newBrightness = b + 1;
     if (newBrightness != nsec_pixels.brightness) {
-        uint8_t pixel;
         uint8_t *ptr = nsec_pixels.pixels;
         uint8_t oldBrighness = nsec_pixels.brightness - 1;
         uint16_t scale;
@@ -130,9 +123,9 @@ void nsec_neoPixel_set_brightness(uint8_t b) {
             scale = (((uint16_t)newBrightness << 8) - 1) / oldBrighness;
         }
 
-        for (uint16_t i = 0; i < nsec_pixels.numBytes; i++) {
-            pixel = *ptr;
-            *ptr++ = (pixel * scale) >> 8;
+        for (size_t i = 0; i < ARRAY_SIZE(nsec_pixels.pixels); i++) {
+            uint8_t pixel = nsec_pixels.pixels[i];
+            nsec_pixels.pixels[i] = (pixel * scale) >> 8;
         }
         nsec_pixels.brightness = newBrightness;
     }
@@ -154,14 +147,14 @@ void nsec_neoPixel_show(void) {
 void show_with_PWM(void) {
     // todo Implement the canshow
     uint32_t pattern_size =
-        nsec_pixels.numBytes * 8 * sizeof(uint16_t) + 2 * sizeof(uint16_t);
+        NSEC_NEOPIXEL_NUM_BYTES * 8 * sizeof(uint16_t) + 2 * sizeof(uint16_t);
     uint16_t *pixels_pattern = NULL;
 
     pixels_pattern = (uint16_t *)malloc(pattern_size);
     if (pixels_pattern != NULL && nsec_pixels.pixels != NULL) {
         uint16_t pos = 0;
 
-        for (uint16_t n = 0; n < nsec_pixels.numBytes; n++) {
+        for (size_t n = 0; n < ARRAY_SIZE(nsec_pixels.pixels); n++) {
             uint8_t pix = nsec_pixels.pixels[n];
 
             for (uint8_t mask = 0x80, i = 0; mask > 0; mask >>= 1, i++) {
@@ -212,12 +205,11 @@ void show_with_DWT(void) {
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 
     while (1) {
-        uint8_t *p = nsec_pixels.pixels;
         uint32_t cycStart = DWT->CYCCNT;
         uint32_t cycle = 0;
 
-        for (uint16_t n = 0; n < nsec_pixels.numBytes; n++) {
-            uint8_t pix = *p++;
+        for (size_t n = 0; n < ARRAY_SIZE(nsec_pixels.pixels); n++) {
+            uint8_t pix = nsec_pixels.pixels[n];
 
             for (uint8_t mask = 0x80; mask; mask >>= 1) {
                 while (DWT->CYCCNT - cycle < CYCLES_800)
@@ -245,7 +237,7 @@ void show_with_DWT(void) {
         // If total time is longer than 25%, resend the whole data.
         // Since we are likely to be interrupted by SoftDevice
         if ((DWT->CYCCNT - cycStart) <
-            (8 * nsec_pixels.numBytes * ((CYCLES_800 * 5) / 4))) {
+            (8 * NSEC_NEOPIXEL_NUM_BYTES * ((CYCLES_800 * 5) / 4))) {
             break;
         }
         nrf_delay_us(300);
