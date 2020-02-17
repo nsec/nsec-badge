@@ -42,8 +42,6 @@
 #include "images/settings_off_bitmap.h"
 #include "images/settings_on_bitmap.h"
 
-static bool _is_at_home_menu = false;
-
 static uint16_t gfx_width;
 static uint16_t gfx_height;
 
@@ -133,88 +131,84 @@ static void draw_home_menu_logo_animation(void)
 {
     static uint8_t frame = 0;
 
-    if (_is_at_home_menu) {
-        switch (frame) {
-        case 0:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_1_bitmap, 0);
-            break;
+    switch (frame) {
+    case 0:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_1_bitmap, 0);
+        break;
 
-        case 3:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_2_bitmap, 0);
-            break;
+    case 3:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_2_bitmap, 0);
+        break;
 
-        case 6:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_3_bitmap, 0);
-            break;
+    case 6:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_3_bitmap, 0);
+        break;
 
-        case 9:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_4_bitmap, 0);
-            break;
+    case 9:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_4_bitmap, 0);
+        break;
 
-        case 12:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_5_bitmap, 0);
-            break;
+    case 12:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_5_bitmap, 0);
+        break;
 
-        case 15:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_6_bitmap, 0);
-            break;
+    case 15:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_6_bitmap, 0);
+        break;
 
-        case 18:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_7_bitmap, 0);
-            break;
+    case 18:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_7_bitmap, 0);
+        break;
 
-        case 21:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_8_bitmap, 0);
-            break;
+    case 21:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_8_bitmap, 0);
+        break;
 
-        case 24:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_9_bitmap, 0);
-            break;
+    case 24:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_9_bitmap, 0);
+        break;
 
-        case 27:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_10_bitmap, 0);
-            break;
+    case 27:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_10_bitmap, 0);
+        break;
 
-        case 30:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_11_bitmap, 0);
-            break;
+    case 30:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_11_bitmap, 0);
+        break;
 
-        case 33:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_12_bitmap, 0);
-            break;
+    case 33:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_12_bitmap, 0);
+        break;
 
-        case 36:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_13_bitmap, 0);
-            break;
+    case 36:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_13_bitmap, 0);
+        break;
 
-        case 39:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_14_bitmap, 0);
-            break;
+    case 39:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_14_bitmap, 0);
+        break;
 
-        case 42:
-            gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
-                                  &neurosoft_logo_a_15_bitmap, 0);
-            break;
-        }
-
-        frame = frame >= 45 ? 0 : frame + 1;
-    } else {
-        frame = 0;
+    case 42:
+        gfx_draw_16bit_bitmap(NEUROSOFT_ANIMATION_POS,
+                              &neurosoft_logo_a_15_bitmap, 0);
+        break;
     }
+
+    frame = frame >= 45 ? 0 : frame + 1;
 }
 
 void redraw_home_menu_burger_selected(void)
@@ -265,8 +259,6 @@ static void draw_home_menu(void)
 
 void show_home_menu(enum home_state state) {
     _state = state;
-
-    _is_at_home_menu = true;
     gfx_width = gfx_get_screen_width();
     gfx_height = gfx_get_screen_height();
     draw_home_menu();
@@ -298,7 +290,7 @@ static void open_settings_menu(void) {
     draw_settings_title();
 
     _state = HOME_STATE_CLOSED;
-    _is_at_home_menu = false;
+
     nsec_setting_show();
 }
 
@@ -391,7 +383,8 @@ void home_menu_application(void)
     }
 }
 
+// To be removed.
 bool is_at_home_menu(void)
 {
-    return _is_at_home_menu;
+    return false;
 }
