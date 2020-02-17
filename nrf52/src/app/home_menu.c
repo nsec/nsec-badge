@@ -19,6 +19,8 @@
 #include "persistency.h"
 #include "queue.h"
 #include "status_bar.h"
+#include "timer.h"
+
 #include <string.h>
 
 #include "images/neurosoft_logo_bitmap.h"
@@ -367,27 +369,26 @@ void home_menu_application(void)
     // nsec_battery_manager_init();
     show_home_menu(HOME_STATE_MENU);
 
+    uint32_t last_ms = get_current_time_millis();
+
     while (true) {
         button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
-
-        home_menu_handle_buttons(btn);
-    }
-
-    // nsec_controls_add_handler(home_menu_handle_buttons);
-
-    // while (application_get() == home_menu_application) {
-    //    battery_manager_process();
-    //    service_callback();
+        BaseType_t ret = xQueueReceive(button_event_queue, &btn, 25);
+        if (ret == pdTRUE) {
+            home_menu_handle_buttons(btn);
+        } else {
+            /* The receive timed out. */
+        }
 
 #ifdef NSEC_FLAVOR_CTF
-    //    draw_home_menu_logo_animation();
+        /* Animate the logo. */
+        uint32_t this_ms = get_current_time_millis();
+        if (this_ms - last_ms > 20) {
+            draw_home_menu_logo_animation();
+            last_ms = this_ms;
+        }
 #endif
-    //}
-
-    /* Clear all control handlers */
-    // nsec_controls_clear_handlers();
+    }
 }
 
 bool is_at_home_menu(void)
