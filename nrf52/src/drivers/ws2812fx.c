@@ -319,8 +319,6 @@ void init_WS2812FX(void)
 
 void service_WS2812FX(void)
 {
-    ws2812fx *fx = &g_fx;
-
     if (g_fx.running || g_fx.triggered) {
         uint64_t now = get_current_time_millis();
         bool doShow = false;

@@ -110,7 +110,6 @@ uint32_t nsec_neoPixel_get_pixel_color(uint16_t n) {
 void nsec_neoPixel_set_brightness(uint8_t b) {
     uint8_t newBrightness = b + 1;
     if (newBrightness != nsec_pixels.brightness) {
-        uint8_t *ptr = nsec_pixels.pixels;
         uint8_t oldBrighness = nsec_pixels.brightness - 1;
         uint16_t scale;
 
