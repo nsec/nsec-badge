@@ -130,7 +130,6 @@ int main(void)
 {
     ret_code_t ret_code;
     BaseType_t ret;
-    nrfx_err_t nrfx_err;
 
     nrf_gpio_cfg_output(PIN_LED_STATUS_1);
     nrf_gpio_cfg_output(PIN_LED_STATUS_2);
