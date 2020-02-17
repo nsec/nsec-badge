@@ -10,6 +10,7 @@
 
 #include "boards.h"
 #include "cli.h"
+#include "drivers/buttons.h"
 #include "drivers/display.h"
 #include "drivers/ws2812fx.h"
 #include "gfx_effect.h"
@@ -74,23 +75,40 @@ static void neopixels_task(void *params)
 
 static void ui_task(void *params)
 {
-    uint32_t sec = UINT32_MAX;
-
     while (1) {
-        uint32_t this_sec = get_current_time_millis() / 1000;
-        if (this_sec != sec) {
-            sec = this_sec;
-            char buf[10];
+        button_t btn;
+        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
+        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
 
-            sprintf(buf, "%lu", sec);
-            gfx_puts(buf);
+        switch (btn) {
+        case BUTTON_UP:
+            gfx_puts("^");
+            break;
+
+        case BUTTON_DOWN:
+            gfx_puts("v");
+            break;
+
+        case BUTTON_BACK:
+            gfx_puts("<");
+            break;
+
+        case BUTTON_ENTER:
+            gfx_puts(">");
+            break;
+
+        default:
+            continue;
         }
-        vTaskDelay(100);
     }
 }
 
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info)
 {
+    /* Prevent FreeRTOS from changing the current task. */
+    taskDISABLE_INTERRUPTS();
+    vTaskSuspendAll();
+
     while (1) {
         nrf_gpio_pin_set(PIN_LED_STATUS_1);
         nrf_delay_ms(100);
@@ -159,6 +177,9 @@ int main(void)
 
     // Initialize the LCD.
     display_init();
+
+    // Initialize buttons.
+    nsec_buttons_init();
 
     ret = xTaskCreate(led_toggle_task, "LED", configMINIMAL_STACK_SIZE + 200,
                       NULL, 2, &led_toggle_task_handle);

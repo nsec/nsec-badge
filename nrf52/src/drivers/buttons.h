@@ -23,11 +23,13 @@
 #ifndef buttons_h
 #define buttons_h
 
+#include <FreeRTOS.h>
 #include <app_button.h>
-#include <app_error.h>
-#include <app_timer.h>
+#include <queue.h>
 
 #include "controls.h"
+
+extern QueueHandle_t button_event_queue;
 
 void nsec_buttons_init(void);
 bool nsec_button_is_pushed(button_t button);

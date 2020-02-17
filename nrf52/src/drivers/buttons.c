@@ -24,7 +24,19 @@
 #include "buttons.h"
 #include "boards.h"
 #include "controls.h"
-#include <drivers/cli_uart.h>
+
+#include <app_timer.h>
+
+#include <FreeRTOS.h>
+#include <queue.h>
+
+/*
+ * Queue of button events.
+ *
+ * The event handler (interrupt context) pushes elements of type `button_t`
+ * in the queue.  A task (presumably the UI task) can consume from this queue.
+ */
+QueueHandle_t button_event_queue = NULL;
 
 /*
  * Delay from a GPIOTE event until a button is reported as pushed (in number of
@@ -38,47 +50,66 @@
  * @param[in] button_action The button action (press/release).
  */
 static void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action) {
+    button_t btn;
+
     if (button_action == APP_BUTTON_PUSH) {
         switch (pin_no) {
         case PIN_INPUT_UP:
-            nsec_controls_add_event(BUTTON_UP);
+            btn = BUTTON_UP;
             break;
 
         case PIN_INPUT_DOWN:
-            nsec_controls_add_event(BUTTON_DOWN);
+            btn = BUTTON_DOWN;
             break;
 
         case PIN_INPUT_BACK:
-            nsec_controls_add_event(BUTTON_BACK);
+            btn = BUTTON_BACK;
             break;
 
         case PIN_INPUT_ENTER:
-            nsec_controls_add_event(BUTTON_ENTER);
+            btn = BUTTON_ENTER;
             break;
+
+        default:
+            /* Should not happen, but just in case. */
+            return;
         }
     } else if (button_action == APP_BUTTON_RELEASE) {
         switch (pin_no) {
         case PIN_INPUT_UP:
-            nsec_controls_add_event(BUTTON_UP_RELEASE);
+            btn = BUTTON_UP_RELEASE;
             break;
 
         case PIN_INPUT_DOWN:
-            nsec_controls_add_event(BUTTON_DOWN_RELEASE);
+            btn = BUTTON_DOWN_RELEASE;
             break;
 
         case PIN_INPUT_BACK:
-            nsec_controls_add_event(BUTTON_BACK_RELEASE);
+            btn = BUTTON_BACK_RELEASE;
             break;
 
         case PIN_INPUT_ENTER:
-            nsec_controls_add_event(BUTTON_ENTER_RELEASE);
+            btn = BUTTON_ENTER_RELEASE;
             break;
+
+        default:
+            /* Should not happen, but just in case. */
+            return;
         }
+    } else {
+        /* Should not happen, but just in case. */
+        return;
     }
+
+    BaseType_t ret = xQueueSendToBackFromISR(button_event_queue, &btn, NULL);
+    APP_ERROR_CHECK_BOOL(ret == pdPASS);
 }
 
 void nsec_buttons_init(void) {
     ret_code_t err_code;
+
+    button_event_queue = xQueueCreate(10, sizeof(button_t));
+    APP_ERROR_CHECK_BOOL(button_event_queue != NULL);
 
     /*
      * The array must be static because a pointer to it will be saved in the
