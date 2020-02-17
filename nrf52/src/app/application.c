@@ -23,13 +23,11 @@
 #include "application.h"
 #include "home_menu.h"
 
-#define DEFAULT_APP home_menu_application
-
-static application_t application = DEFAULT_APP;
+static application_t application = NULL;
 
 void application_clear(void)
 {
-    application = DEFAULT_APP;
+    application = NULL;
 }
 
 /*
@@ -45,7 +43,7 @@ application_t application_get(void)
  */
 application_t application_get_default(void)
 {
-    return DEFAULT_APP;
+    return NULL;
 }
 
 /*
@@ -53,7 +51,7 @@ application_t application_get_default(void)
  */
 bool application_is_default(void)
 {
-	return application == DEFAULT_APP;
+    return false;
 }
 
 /*

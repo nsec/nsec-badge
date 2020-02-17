@@ -3,9 +3,12 @@
 //
 //  License: MIT (see LICENSE for details)
 
-#include "application.h"
 #include "home_menu.h"
+#include "FreeRTOS.h"
+#include "app_screensaver.h"
+#include "application.h"
 #include "drivers/battery_manager.h"
+#include "drivers/buttons.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
 #include "gfx_effect.h"
@@ -13,9 +16,9 @@
 #include "main_menu.h"
 #include "menu.h"
 #include "nsec_settings.h"
-#include "status_bar.h"
-#include "app_screensaver.h"
 #include "persistency.h"
+#include "queue.h"
+#include "status_bar.h"
 #include <string.h>
 
 #include "images/neurosoft_logo_bitmap.h"
@@ -277,9 +280,8 @@ static void open_burger_menu(void) {
 
     draw_main_menu_title();
 
-    _state = HOME_STATE_CLOSED;
-    _is_at_home_menu = false;
     show_main_menu();
+    draw_home_menu();
 }
 
 static void open_settings_menu(void) {
@@ -300,12 +302,12 @@ static void open_settings_menu(void) {
 
 static void home_menu_handle_buttons(button_t button) {
     /* Reset the screensaver timeout on each button event */
-    screensaver_reset();
+    // screensaver_reset();
 
     /* Don't handle the buttons if we are in a submenu */
-    if (!_is_at_home_menu) {
-        return;
-    }
+    // if (!_is_at_home_menu) {
+    //    return;
+    //}
 
     switch (button) {
     case BUTTON_BACK:
@@ -343,10 +345,8 @@ static void home_menu_handle_buttons(button_t button) {
 
     case BUTTON_ENTER:
         if (_state == HOME_STATE_MENU) {
-            _state = HOME_STATE_MENU_SELECTED;
             open_burger_menu();
         } else {
-            _state = HOME_STATE_SETTINGS_SELECTED;
             open_settings_menu();
         }
         break;
@@ -356,30 +356,38 @@ static void home_menu_handle_buttons(button_t button) {
     }
 }
 
-void home_menu_application(void (*service_callback)(void))
+void home_menu_application(void)
 {
     /* Reset the screensaver timer when we start the home menu */
-    screensaver_reset();
+    // screensaver_reset();
 
-    menu_handler_init();
-    nsec_status_bar_init();
-    nsec_status_set_ble_status(get_stored_ble_is_enabled());
-    nsec_battery_manager_init();
+    // menu_handler_init();
+    // nsec_status_bar_init();
+    // nsec_status_set_ble_status(get_stored_ble_is_enabled());
+    // nsec_battery_manager_init();
     show_home_menu(HOME_STATE_MENU);
 
-    nsec_controls_add_handler(home_menu_handle_buttons);
+    while (true) {
+        button_t btn;
+        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
+        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
 
-    while (application_get() == home_menu_application) {
-        battery_manager_process();
-        service_callback();
-
-#ifdef NSEC_FLAVOR_CTF
-        draw_home_menu_logo_animation();
-#endif
+        home_menu_handle_buttons(btn);
     }
 
+    // nsec_controls_add_handler(home_menu_handle_buttons);
+
+    // while (application_get() == home_menu_application) {
+    //    battery_manager_process();
+    //    service_callback();
+
+#ifdef NSEC_FLAVOR_CTF
+    //    draw_home_menu_logo_animation();
+#endif
+    //}
+
     /* Clear all control handlers */
-    nsec_controls_clear_handlers();
+    // nsec_controls_clear_handlers();
 }
 
 bool is_at_home_menu(void)

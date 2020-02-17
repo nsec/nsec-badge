@@ -9,6 +9,10 @@
 
 #include "main_menu.h"
 
+#include "FreeRTOS.h"
+#include "queue.h"
+
+#include "drivers/buttons.h"
 #include "drivers/controls.h"
 #include "drivers/display.h"
 
@@ -40,7 +44,7 @@ enum main_menu_state {
 
 static enum main_menu_state _state = MAIN_MENU_STATE_CLOSED;
 
-static void main_handle_buttons(button_t button);
+static bool main_handle_buttons(button_t button);
 
 static char identity_string[] = "Id: Citizen #XXXXXXX";
 static char ble_id_string[] = "BLE id: NSECXXXX";
@@ -200,17 +204,30 @@ void show_main_menu(void) {
     menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(main_menu_items), main_menu_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
-    nsec_controls_add_handler(main_handle_buttons);
     _state = MAIN_MENU_STATE_MENU;
+
+    while (true) {
+        button_t btn;
+        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
+        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
+
+        bool quit = main_handle_buttons(btn);
+
+        if (quit) {
+            break;
+        }
+    }
 }
 
-static void main_handle_buttons(button_t button) {
+static bool main_handle_buttons(button_t button)
+{
+    bool quit = false;
+
     if (button == BUTTON_BACK) {
         switch (_state) {
         case MAIN_MENU_STATE_MENU:
             _state = MAIN_MENU_STATE_CLOSED;
-            menu_close();
-            show_home_menu(HOME_STATE_MENU);
+            quit = true;
             break;
         case MAIN_MENU_STATE_BADGE_INFO:
             _state = MAIN_MENU_STATE_MENU;
@@ -225,5 +242,9 @@ static void main_handle_buttons(button_t button) {
         default:
             break;
         }
+    } else if (button == BUTTON_UP || button == BUTTON_DOWN) {
+        menu_button_handler(button);
     }
+
+    return quit;
 }

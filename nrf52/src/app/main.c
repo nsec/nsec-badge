@@ -14,6 +14,7 @@
 #include "drivers/display.h"
 #include "drivers/ws2812fx.h"
 #include "gfx_effect.h"
+#include "home_menu.h"
 #include "timer.h"
 
 //static void init_ble() {
@@ -75,32 +76,10 @@ static void neopixels_task(void *params)
 
 static void ui_task(void *params)
 {
-    while (1) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
+    home_menu_application();
 
-        switch (btn) {
-        case BUTTON_UP:
-            gfx_puts("^");
-            break;
-
-        case BUTTON_DOWN:
-            gfx_puts("v");
-            break;
-
-        case BUTTON_BACK:
-            gfx_puts("<");
-            break;
-
-        case BUTTON_ENTER:
-            gfx_puts(">");
-            break;
-
-        default:
-            continue;
-        }
-    }
+    /* The home menu is never supposed to return. */
+    APP_ERROR_CHECK_BOOL(false);
 }
 
 void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info)

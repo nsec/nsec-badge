@@ -7,6 +7,7 @@
 #ifndef menu_h
 #define menu_h
 
+#include "drivers/controls.h"
 #include <stdint.h>
 
 #define MENU_LIMIT_MAX_ITEM_COUNT (60)
@@ -33,5 +34,6 @@ void menu_change_selected_item(MENU_DIRECTION direction);
 void menu_trigger_action(void);
 void menu_close(void);
 void menu_open(void);
+void menu_button_handler(button_t button);
 
 #endif

@@ -38,7 +38,6 @@ typedef struct {
 static menu_state_t menu;
 
 static void menu_ui_redraw_items(uint8_t start, uint8_t end);
-void menu_button_handler(button_t button);
 
 void menu_handler_init(void) { nsec_controls_add_handler(menu_button_handler); }
 

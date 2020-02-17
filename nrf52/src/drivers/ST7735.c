@@ -468,6 +468,9 @@ void st7735_init(void)
         return;
     }
 
+    // This helps get the display turn on more reliably...
+    nrf_delay_ms(100);
+
     st7735_config.spi = spi;
     st7735_config.sck_pin = PIN_OLED_CLK;
     st7735_config.miso_pin = NRFX_SPIM_PIN_NOT_USED;
