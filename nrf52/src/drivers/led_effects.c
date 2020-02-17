@@ -14,7 +14,6 @@
 #include <string.h>
 
 void show_with_PWM(void);
-void show_with_DWT(void);
 
 // 3 leds/bytes by pixel
 #define NSEC_NEOPIXEL_NUM_BYTES (NEOPIXEL_COUNT * 3)
@@ -193,48 +192,4 @@ void show_with_PWM(void) {
     nrf_pwm_disable(NRF_PWM0);
 
     nrf_pwm_pins_set(NRF_PWM0, mapDisconnect);
-}
-
-void show_with_DWT(void) {
-    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-
-    while (1) {
-        uint32_t cycStart = DWT->CYCCNT;
-        uint32_t cycle = 0;
-
-        for (size_t n = 0; n < ARRAY_SIZE(nsec_pixels.pixels); n++) {
-            uint8_t pix = nsec_pixels.pixels[n];
-
-            for (uint8_t mask = 0x80; mask; mask >>= 1) {
-                while (DWT->CYCCNT - cycle < CYCLES_800)
-                    ;
-
-                cycle = DWT->CYCCNT;
-
-                nrf_gpio_pin_set(PIN_NEOPIXEL);
-
-                if (pix & mask) {
-                    while (DWT->CYCCNT - cycle < CYCLES_800_T1H)
-                        ;
-                } else {
-                    while (DWT->CYCCNT - cycle < CYCLES_800_T0H)
-                        ;
-                }
-
-                nrf_gpio_pin_clear(PIN_NEOPIXEL);
-            }
-        }
-
-        while (DWT->CYCCNT - cycle < CYCLES_800)
-            ;
-
-        // If total time is longer than 25%, resend the whole data.
-        // Since we are likely to be interrupted by SoftDevice
-        if ((DWT->CYCCNT - cycStart) <
-            (8 * NSEC_NEOPIXEL_NUM_BYTES * ((CYCLES_800 * 5) / 4))) {
-            break;
-        }
-        nrf_delay_us(300);
-    }
 }
