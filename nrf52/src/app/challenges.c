@@ -64,11 +64,9 @@ static void challenges_handle_buttons(button_t button) {
         switch (state) {
         case SETTING_STATE_MENU:
             state = SETTING_STATE_CLOSED;
-            menu_close(&menu);
             show_main_menu();
             break;
         case SETTING_STATE_CHALLENGES:
-            menu_close(&menu);
             nsec_challenges_show();
             break;
         default:

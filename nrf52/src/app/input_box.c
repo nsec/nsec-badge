@@ -88,7 +88,6 @@ static void input_box_show_cursor(void)
         letters_items[i].label = ib_letters[i];
         letters_items[i].handler = is_success;
     }
-    menu_close(&menu);
     menu_init(&menu,
               INPUT_BOX_POS_X +
                   INPUT_BOX_BRA_WIDTH * TEXT_BASE_WIDTH * input_box.state,
@@ -105,7 +104,6 @@ static void is_success(uint8_t item) {
         input_box.state += 1;
         input_box_show_cursor();
     } else {
-        menu_close(&menu);
         gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
                       DISPLAY_WHITE);
         gfx_set_cursor(GEN_MENU_POS);

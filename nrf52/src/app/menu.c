@@ -32,17 +32,6 @@ void menu_init(menu_t *menu, uint16_t pos_x, uint16_t pos_y, uint16_t width,
     for (uint8_t i = 0; i < item_count; i++) {
         menu_add_item(menu, items + i);
     }
-    menu->is_handling_buttons = 1;
-}
-
-void menu_close(menu_t *menu)
-{
-    menu->is_handling_buttons = 0;
-}
-
-void menu_open(menu_t *menu)
-{
-    menu->is_handling_buttons = 1;
 }
 
 void menu_set_position(menu_t *menu, uint16_t pos_x, uint16_t pos_y,
@@ -194,19 +183,17 @@ void menu_trigger_action(menu_t *menu)
 
 void menu_button_handler(menu_t *menu, button_t button)
 {
-    if (menu->is_handling_buttons) {
-        switch (button) {
-        case BUTTON_UP:
-            menu_change_selected_item(menu, MENU_DIRECTION_UP);
-            break;
-        case BUTTON_DOWN:
-            menu_change_selected_item(menu, MENU_DIRECTION_DOWN);
-            break;
-        case BUTTON_ENTER:
-            menu_trigger_action(menu);
-            break;
-        default:
-            break;
-        }
+    switch (button) {
+    case BUTTON_UP:
+        menu_change_selected_item(menu, MENU_DIRECTION_UP);
+        break;
+    case BUTTON_DOWN:
+        menu_change_selected_item(menu, MENU_DIRECTION_DOWN);
+        break;
+    case BUTTON_ENTER:
+        menu_trigger_action(menu);
+        break;
+    default:
+        break;
     }
 }

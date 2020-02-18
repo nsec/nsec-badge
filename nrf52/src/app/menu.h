@@ -35,7 +35,6 @@ typedef struct {
     uint8_t selected_item;
 
     uint8_t item_on_top;
-    uint8_t is_handling_buttons;
     uint16_t text_color;
     uint16_t bg_color;
     menu_item_s items[MENU_LIMIT_MAX_ITEM_COUNT];
@@ -50,8 +49,6 @@ void menu_add_item(menu_t *menu, menu_item_s *new_item);
 void menu_ui_redraw_all(menu_t *menu);
 void menu_change_selected_item(menu_t *menu, MENU_DIRECTION direction);
 void menu_trigger_action(menu_t *menu);
-void menu_close(menu_t *menu);
-void menu_open(menu_t *menu);
 void menu_button_handler(menu_t *menu, button_t button);
 
 #endif

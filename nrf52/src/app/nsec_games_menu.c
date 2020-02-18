@@ -27,7 +27,6 @@ static menu_t menu;
 
 static void nsec_games_start_cortexviper_application(uint8_t item)
 {
-    menu_close(&menu);
     nsec_controls_suspend_handler(nsec_games_menu_button_handler);
 
     application_set(&snake_application);
@@ -35,7 +34,6 @@ static void nsec_games_start_cortexviper_application(uint8_t item)
 
 static void nsec_games_start_mindsweeper_application(uint8_t item)
 {
-    menu_close(&menu);
     nsec_controls_suspend_handler(nsec_games_menu_button_handler);
 
     application_set(&mines_application);
@@ -76,7 +74,6 @@ static void nsec_games_menu_button_handler(button_t button)
 {
     switch (button) {
     case BUTTON_BACK:
-        menu_close(&menu);
         nsec_controls_suspend_handler(nsec_games_menu_button_handler);
         show_main_menu();
         break;

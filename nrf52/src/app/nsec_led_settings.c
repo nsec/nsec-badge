@@ -259,7 +259,6 @@ static void show_actual_brightness(void)
 }
 
 static void show_brightness_menu(uint8_t item) {
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_brightness();
 
@@ -317,7 +316,6 @@ static void show_actual_speed(void)
 }
 
 static void show_speed_menu(uint8_t item) {
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_speed();
 
@@ -398,7 +396,6 @@ static void show_color_menu(uint8_t item) {
     } else {
         _state = SETTING_STATE_THIRD_COLOR;
     }
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_color();
 
@@ -474,7 +471,6 @@ static void show_actual_reverse(void)
 }
 
 static void show_reverse_menu(uint8_t item) {
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_reverse();
 
@@ -507,7 +503,6 @@ static void show_actual_control(void)
 }
 
 static void show_control_menu(uint8_t item) {
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_control();
 
@@ -533,7 +528,6 @@ static void setting_handle_buttons(button_t button) {
         switch (_state) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;
-                menu_close(&menu);
                 nsec_setting_show();
                 break;
 
@@ -545,7 +539,6 @@ static void setting_handle_buttons(button_t button) {
             case SETTING_STATE_REVERSE:
             case SETTING_STATE_CONTROL:
                 _state = SETTING_STATE_MENU;
-                menu_close(&menu);
                 nsec_show_led_settings();
                 break;
 

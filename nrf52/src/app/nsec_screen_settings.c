@@ -195,7 +195,6 @@ static void show_actual_screen_brightness(void)
 /* Screen brightness sub-menu */
 static void show_screen_brightness_menu(uint8_t item)
 {
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_screen_brightness();
 
@@ -236,7 +235,6 @@ static void show_actual_screen_fix(void)
 /* Screen fix sub-menu */
 static void show_screen_fix_menu(uint8_t item)
 {
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_screen_fix();
 
@@ -257,7 +255,6 @@ static void save_screen_fix(uint8_t item)
 {
     display_set_model(item);
     update_stored_display_model(item);
-    menu_close(&menu);
     application_set(dummy_app);
 }
 
@@ -291,7 +288,6 @@ static void show_actual_screensaver(void)
 
 static void show_screen_screensaver_menu(uint8_t item)
 {
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_screensaver();
 
@@ -314,7 +310,6 @@ static void screen_setting_handle_buttons(button_t button)
         switch (_state) {
         case SCREEN_SETTING_STATE_MENU:
             _state = SCREEN_SETTING_STATE_CLOSED;
-            menu_close(&menu);
             nsec_setting_show();
             break;
 
@@ -322,7 +317,6 @@ static void screen_setting_handle_buttons(button_t button)
         case SCREEN_SETTING_STATE_FIX:
         case SCREEN_SETTING_STATE_SCREENSAVER:
             _state = SCREEN_SETTING_STATE_MENU;
-            menu_close(&menu);
             nsec_show_screen_settings();
             break;
 

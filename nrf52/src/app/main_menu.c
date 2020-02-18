@@ -72,11 +72,8 @@ static struct text_box_config config = {
     DISPLAY_WHITE
 };
 
-static menu_t menu;
-
 #ifdef NSEC_FLAVOR_CONF
 static void open_conference_schedule(uint8_t item) {
-    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_schedule_show_dates();
 }
@@ -95,41 +92,35 @@ static void draw_cli_title(void)
 
 static void open_led_pattern(uint8_t item)
 {
-    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_led_pattern_show();
 }
 
 static void open_warning(uint8_t item)
 {
-    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_warning_show();
 }
 
 static void open_battery_status(uint8_t item)
 {
-    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     show_battery_status();
 }
 
 static void open_games_menu(uint8_t item)
 {
-    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_games_menu_show();
 }
 
 static void open_flashlight(uint8_t item) {
-    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     application_set(app_flashlight);
 }
 
 static void show_badge_cli_info(uint8_t item)
 {
-    menu_close(&menu);
     _state = MAIN_MENU_CLI_INFO;
     gfx_fill_rect(0, 0, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_cli_title();
@@ -151,7 +142,6 @@ static menu_item_s badge_info_items[] = {
 
 static void show_badge_info(uint8_t item)
 {
-    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
     menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
