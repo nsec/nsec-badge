@@ -33,13 +33,7 @@ static menu_item_s chall_menu_items[] = {{
 }};
 
 static void draw_challenges_title(void) {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 5;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "CHALLENGES");
-    draw_title(&title);
+    draw_title("CHALLENGES", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static menu_t menu;

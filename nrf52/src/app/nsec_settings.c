@@ -227,13 +227,7 @@ static void toggle_bluetooth(uint8_t item) {
 
 static void draw_credit_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 25;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "CREDIT");
-    draw_title(&title);
+    draw_title("CREDIT", 25, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static void show_credit(uint8_t item) {
@@ -251,13 +245,7 @@ static void show_credit(uint8_t item) {
 
 static void draw_battery_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 25;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "BATTERY");
-    draw_title(&title);
+    draw_title("BATTERY", 25, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 void show_battery_status(void) {

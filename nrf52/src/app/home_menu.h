@@ -19,18 +19,11 @@ enum home_state {
     HOME_STATE_SETTINGS_SELECTED
 };
 
-struct title {
-    char text[32];
-    uint8_t pos_x;
-    uint8_t pos_y;
-    uint16_t text_color;
-    uint16_t bg_color;
-};
-
 void show_home_menu(enum home_state state);
 void draw_home_menu_bar(void);
 void redraw_home_menu_burger_selected(void);
-void draw_title(struct title *title);
+void draw_title(const char *text, uint8_t pos_x, uint8_t pos_y,
+                uint16_t text_color, uint16_t bg_color);
 void draw_settings_title(void);
 void draw_main_menu_title(void);
 void home_menu_application(void);

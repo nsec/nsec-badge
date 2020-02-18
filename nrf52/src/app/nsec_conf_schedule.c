@@ -121,13 +121,7 @@ static enum schedule_state schedule_state = SCHEDULE_STATE_CLOSED;
 
 static void draw_conf_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 5;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "CONFERENCE");
-    draw_title(&title);
+    draw_title("CONFERENCE", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static menu_t menu;

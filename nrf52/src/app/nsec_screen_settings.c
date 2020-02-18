@@ -139,15 +139,7 @@ static const menu_item_s screen_screensaver_items[] = {
 
 static void draw_screen_title(void)
 {
-    struct title title;
-
-    title.pos_y = 5;
-    title.pos_x = 5;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-
-    strcpy(title.text, "SCREEN");
-    draw_title(&title);
+    draw_title("SCREEN", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static menu_t menu;

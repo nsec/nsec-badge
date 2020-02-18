@@ -216,13 +216,7 @@ static bool nsec_unlock_led_pattern(char *password, uint8_t index)
 
 static void draw_led_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 25;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "PATTERN");
-    draw_title(&title);
+    draw_title("PATTERN", 25, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static void set_nearby_mode(uint8_t item) {

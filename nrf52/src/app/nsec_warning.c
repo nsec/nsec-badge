@@ -45,13 +45,7 @@ static struct text_box_config config = {
 
 static void draw_warning_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 25;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "WARNING");
-    draw_title(&title);
+    draw_title("WARNING", 25, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 void nsec_warning_show(void) {

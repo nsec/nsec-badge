@@ -234,13 +234,7 @@ static const menu_item_s control_items[] = {
 
 static void draw_led_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 5;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "LED CONFIG");
-    draw_title(&title);
+    draw_title("LED CONFIG", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static menu_t menu;

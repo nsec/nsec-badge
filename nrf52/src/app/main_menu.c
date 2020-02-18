@@ -80,13 +80,7 @@ static void open_conference_schedule(uint8_t item) {
 
 static void draw_cli_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 45;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "CLI");
-    draw_title(&title);
+    draw_title("CLI", 45, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static void redraw_main_menu(menu_t *menu)

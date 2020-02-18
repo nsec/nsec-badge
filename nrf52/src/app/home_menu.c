@@ -83,37 +83,27 @@ static void draw_cursor(void) {
     }
 }
 
-void draw_title(struct title *title) {
-    gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, GEN_MENU_POS_Y,
-                  title->bg_color);
+void draw_title(const char *text, uint8_t pos_x, uint8_t pos_y,
+                uint16_t text_color, uint16_t bg_color)
+{
+    gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, GEN_MENU_POS_Y, bg_color);
 
-    gfx_set_cursor(title->pos_x, title->pos_y);
+    gfx_set_cursor(pos_x, pos_y);
     gfx_set_text_size(2);
-    gfx_set_text_background_color(title->text_color, title->bg_color);
-    gfx_puts(title->text);
+    gfx_set_text_background_color(text_color, bg_color);
+    gfx_puts(text);
     gfx_set_text_size(1);
 }
 
 void draw_settings_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = SETTINGS_MENU_TITLE_X;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "SETTINGS");
-    draw_title(&title);
+    draw_title("SETTINGS", SETTINGS_MENU_TITLE_X, 5, DISPLAY_BLUE,
+               DISPLAY_WHITE);
 }
 
 void draw_main_menu_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = BURGER_MENU_TITLE_X;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "MENU");
-    draw_title(&title);
+    draw_title("MENU", SETTINGS_MENU_TITLE_X, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 void draw_home_menu_bar(void)

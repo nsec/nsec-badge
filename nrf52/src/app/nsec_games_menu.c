@@ -46,13 +46,7 @@ static menu_item_s nsec_games_menu_items[] = {
 
 static void draw_games_title(void)
 {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 37;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "GAMES");
-    draw_title(&title);
+    draw_title("GAMES", 37, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static bool nsec_games_menu_button_handler(button_t button, menu_t *menu)

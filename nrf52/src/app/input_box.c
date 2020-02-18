@@ -58,13 +58,7 @@ void input_box_init(const char *text, const char *password) {
 }
 
 static void draw_input_box_title(void) {
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 5;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, input_box.input_text);
-    draw_title(&title);
+    draw_title(input_box.input_text, 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
 static void input_box_show_brackets(void)
