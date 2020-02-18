@@ -23,6 +23,9 @@ static void menu_set_position(menu_t *menu, uint16_t pos_x, uint16_t pos_y,
 {
     menu->pos_x = pos_x;
     menu->pos_y = pos_y;
+    menu->width = width;
+    menu->height = height;
+
     menu->col_width = width / FONT_SIZE_WIDTH;
     menu->item_count_per_page = height / FONT_SIZE_HEIGHT;
 }
@@ -37,12 +40,9 @@ void menu_init(menu_t *menu, uint16_t pos_x, uint16_t pos_y, uint16_t width,
     menu->text_color = text_color;
     menu->bg_color = bg_color;
     menu_set_position(menu, pos_x, pos_y, width, height);
-    gfx_fill_rect(pos_x, pos_y, width, height, bg_color);
 
     menu->item_count = item_count;
     menu->items = items;
-
-    menu_ui_redraw_all(menu);
 }
 
 static void menu_ui_redraw_items(menu_t *menu, uint8_t start, uint8_t end)
@@ -93,6 +93,9 @@ static void menu_ui_redraw_items(menu_t *menu, uint8_t start, uint8_t end)
 
 void menu_ui_redraw_all(menu_t *menu)
 {
+    gfx_fill_rect(menu->pos_x, menu->pos_y, menu->width, menu->height,
+                  menu->bg_color);
+
     menu_ui_redraw_items(menu, menu->item_on_top,
                          menu->item_on_top + menu->item_count_per_page);
 }

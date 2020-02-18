@@ -43,8 +43,7 @@ enum main_menu_state {
 };
 
 static enum main_menu_state _state = MAIN_MENU_STATE_CLOSED;
-
-static bool main_handle_buttons(button_t button);
+static menu_t g_menu;
 
 static char identity_string[] = "Id: Citizen #XXXXXXX";
 static char ble_id_string[] = "BLE id: NSECXXXX";
@@ -90,6 +89,12 @@ static void draw_cli_title(void)
     draw_title(&title);
 }
 
+static void redraw_main_menu(menu_t *menu)
+{
+    draw_main_menu_title();
+    menu_ui_redraw_all(menu);
+}
+
 static void open_led_pattern(uint8_t item)
 {
     _state = MAIN_MENU_STATE_CLOSED;
@@ -113,7 +118,7 @@ static void open_games_menu(uint8_t item)
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_games_menu_show();
     _state = MAIN_MENU_STATE_MENU;
-
+    redraw_main_menu(&g_menu);
 }
 
 static void open_flashlight(uint8_t item) {
@@ -146,7 +151,7 @@ static void show_badge_info(uint8_t item)
 {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
-    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    menu_init(&g_menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(badge_info_items), badge_info_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -185,35 +190,7 @@ static menu_item_s main_menu_items[] = {
         .handler = open_warning,
     }};
 
-void show_main_menu(void) {
-#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
-    sprintf(ble_id_string, "%.8s", NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
-#else
-    sprintf(ble_id_string, "BLE id: NSEC%04X", (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
-#endif
-
-    sprintf(identity_string, "Id: %s", get_stored_identity());
-
-    draw_main_menu_title();
-    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
-              ARRAY_SIZE(main_menu_items), main_menu_items, HOME_MENU_BG_COLOR,
-              DISPLAY_WHITE);
-    _state = MAIN_MENU_STATE_MENU;
-
-    while (true) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
-
-        bool quit = main_handle_buttons(btn);
-
-        if (quit) {
-            break;
-        }
-    }
-}
-
-static bool main_handle_buttons(button_t button)
+static bool main_handle_buttons(button_t button, menu_t *menu)
 {
     bool quit = false;
 
@@ -237,8 +214,41 @@ static bool main_handle_buttons(button_t button)
             break;
         }
     } else {
-        menu_button_handler(&menu, button);
+        menu_button_handler(menu, button);
     }
 
     return quit;
+}
+
+void show_main_menu(void)
+{
+#if defined(NSEC_HARDCODED_BLE_DEVICE_ID)
+    sprintf(ble_id_string, "%.8s",
+            NSEC_STRINGIFY(NSEC_HARDCODED_BLE_DEVICE_ID));
+#else
+    sprintf(ble_id_string, "BLE id: NSEC%04X",
+            (uint16_t)(NRF_FICR->DEVICEID[1] % 0xFFFF));
+#endif
+
+    sprintf(identity_string, "Id: %s", get_stored_identity());
+
+    menu_init(&g_menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+              ARRAY_SIZE(main_menu_items), main_menu_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
+
+    redraw_main_menu(&g_menu);
+
+    _state = MAIN_MENU_STATE_MENU;
+
+    while (true) {
+        button_t btn;
+        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
+        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
+
+        bool quit = main_handle_buttons(btn, &g_menu);
+
+        if (quit) {
+            break;
+        }
+    }
 }

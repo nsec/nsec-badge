@@ -25,6 +25,9 @@ typedef enum {
 typedef struct {
     uint16_t pos_x;
     uint16_t pos_y;
+    uint16_t width;
+    uint16_t height;
+
     uint8_t col_width;
 
     // How many items fit fully in the menu height.
