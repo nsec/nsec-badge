@@ -23,9 +23,11 @@
 
 static void nsec_games_menu_button_handler(button_t button);
 
+static menu_t menu;
+
 static void nsec_games_start_cortexviper_application(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     nsec_controls_suspend_handler(nsec_games_menu_button_handler);
 
     application_set(&snake_application);
@@ -33,7 +35,7 @@ static void nsec_games_start_cortexviper_application(uint8_t item)
 
 static void nsec_games_start_mindsweeper_application(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     nsec_controls_suspend_handler(nsec_games_menu_button_handler);
 
     application_set(&mines_application);
@@ -63,7 +65,7 @@ void nsec_games_menu_show(void)
 
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
-    menu_init(CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    menu_init(&menu, CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(nsec_games_menu_items), nsec_games_menu_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -74,7 +76,7 @@ static void nsec_games_menu_button_handler(button_t button)
 {
     switch (button) {
     case BUTTON_BACK:
-        menu_close();
+        menu_close(&menu);
         nsec_controls_suspend_handler(nsec_games_menu_button_handler);
         show_main_menu();
         break;

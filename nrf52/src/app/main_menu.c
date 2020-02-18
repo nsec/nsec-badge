@@ -72,9 +72,11 @@ static struct text_box_config config = {
     DISPLAY_WHITE
 };
 
+static menu_t menu;
+
 #ifdef NSEC_FLAVOR_CONF
 static void open_conference_schedule(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_schedule_show_dates();
 }
@@ -93,41 +95,41 @@ static void draw_cli_title(void)
 
 static void open_led_pattern(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_led_pattern_show();
 }
 
 static void open_warning(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_warning_show();
 }
 
 static void open_battery_status(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     show_battery_status();
 }
 
 static void open_games_menu(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_games_menu_show();
 }
 
 static void open_flashlight(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     _state = MAIN_MENU_STATE_CLOSED;
     application_set(app_flashlight);
 }
 
 static void show_badge_cli_info(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     _state = MAIN_MENU_CLI_INFO;
     gfx_fill_rect(0, 0, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_cli_title();
@@ -149,10 +151,10 @@ static menu_item_s badge_info_items[] = {
 
 static void show_badge_info(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
-    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(badge_info_items), badge_info_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -201,7 +203,7 @@ void show_main_menu(void) {
     sprintf(identity_string, "Id: %s", get_stored_identity());
 
     draw_main_menu_title();
-    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(main_menu_items), main_menu_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
     _state = MAIN_MENU_STATE_MENU;
@@ -243,7 +245,7 @@ static bool main_handle_buttons(button_t button)
             break;
         }
     } else if (button == BUTTON_UP || button == BUTTON_DOWN) {
-        menu_button_handler(button);
+        menu_button_handler(&menu, button);
     }
 
     return quit;

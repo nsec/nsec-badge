@@ -228,11 +228,13 @@ static void set_nearby_mode(uint8_t item) {
     //select_nearby_badges_pattern();
 }
 
+static menu_t menu;
+
 void nsec_led_pattern_show(void)
 {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_led_title();
-    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(led_pattern_items), led_pattern_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -256,8 +258,8 @@ static void save_letter0(void)
         letters_items[i].label = letters[i];
         letters_items[i].handler = save_letter1;
     }
-    menu_close();
-    menu_init(INPUT_BOX_BRA_WIDTH + TEXT_BASE_WIDTH, INPUT_BOX_POS_Y,
+    menu_close(&menu);
+    menu_init(&menu, INPUT_BOX_BRA_WIDTH + TEXT_BASE_WIDTH, INPUT_BOX_POS_Y,
               TEXT_BASE_WIDTH, TEXT_BASE_HEIGHT, ARRAY_SIZE(letters_items),
               letters_items, HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 }
@@ -269,8 +271,8 @@ static void save_letter1(uint8_t item)
         letters_items[i].label = letters[i];
         letters_items[i].handler = save_letter2;
     }
-    menu_close();
-    menu_init(INPUT_BOX_BRA_WIDTH * 2 + TEXT_BASE_WIDTH * 4 + 1,
+    menu_close(&menu);
+    menu_init(&menu, INPUT_BOX_BRA_WIDTH * 2 + TEXT_BASE_WIDTH * 4 + 1,
               INPUT_BOX_POS_Y, TEXT_BASE_WIDTH, TEXT_BASE_HEIGHT,
               ARRAY_SIZE(letters_items), letters_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
@@ -283,8 +285,8 @@ static void save_letter2(uint8_t item)
         letters_items[i].label = letters[i];
         letters_items[i].handler = save_letter3;
     }
-    menu_close();
-    menu_init(INPUT_BOX_BRA_WIDTH * 4 + TEXT_BASE_WIDTH * 6 + 3,
+    menu_close(&menu);
+    menu_init(&menu, INPUT_BOX_BRA_WIDTH * 4 + TEXT_BASE_WIDTH * 6 + 3,
               INPUT_BOX_POS_Y, TEXT_BASE_WIDTH, TEXT_BASE_HEIGHT,
               ARRAY_SIZE(letters_items), letters_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
@@ -297,8 +299,8 @@ static void save_letter3(uint8_t item)
         letters_items[i].label = letters[i];
         letters_items[i].handler = try_unlock;
     }
-    menu_close();
-    menu_init(INPUT_BOX_BRA_WIDTH * 6 + TEXT_BASE_WIDTH * 8 + 5,
+    menu_close(&menu);
+    menu_init(&menu, INPUT_BOX_BRA_WIDTH * 6 + TEXT_BASE_WIDTH * 8 + 5,
               INPUT_BOX_POS_Y, TEXT_BASE_WIDTH, TEXT_BASE_HEIGHT,
               ARRAY_SIZE(letters_items), letters_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
@@ -319,7 +321,7 @@ static void try_unlock(uint8_t item)
     }
     nrf_delay_ms(1000);
     nsec_controls_enable();
-    menu_close();
+    menu_close(&menu);
     nsec_led_pattern_show();
 }
 
@@ -332,7 +334,7 @@ static void unlock_led_pattern(uint8_t item)
     gfx_puts(brackets);
     index_to_unlock = item;
     _state = SETTING_STATE_UNLOCK_PATTERN;
-    menu_close();
+    menu_close(&menu);
     save_letter0();
 }
 
@@ -358,7 +360,7 @@ static void show_basic_pattern_menu(uint8_t item)
         basic_pattern_items[i].handler = save_pattern;
     }
     show_actual_pattern();
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(basic_pattern_items), basic_pattern_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -378,10 +380,10 @@ static void show_extra_pattern_menu(uint8_t item)
             extra_pattern_items[i].handler = unlock_led_pattern;
         }
     }
-    menu_close();
+    menu_close(&menu);
     show_actual_pattern();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(extra_pattern_items), extra_pattern_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     _state = SETTING_STATE_EXTRA_PATTERN;
@@ -406,16 +408,16 @@ static void led_pattern_handle_buttons(button_t button)
         switch (_state) {
         case SETTING_STATE_MENU:
             _state = SETTING_STATE_CLOSED;
-            menu_close();
+            menu_close(&menu);
             show_main_menu();
             break;
         case SETTING_STATE_EXTRA_PATTERN:
         case SETTING_STATE_BASIC_PATTERN:
-            menu_close();
+            menu_close(&menu);
             nsec_led_pattern_show();
             break;
         case SETTING_STATE_UNLOCK_PATTERN:
-            menu_close();
+            menu_close(&menu);
             show_extra_pattern_menu(0);
             break;
         default:

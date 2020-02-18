@@ -106,9 +106,11 @@ static menu_item_s confirm_items[] = {
     }
 };
 
+static menu_t menu;
+
 static void confirm_factory_reset(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     gfx_set_cursor(GEN_MENU_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
@@ -129,21 +131,21 @@ static void confirm_factory_reset(uint8_t item)
 
 static void do_factory_reset(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     gfx_set_cursor(GEN_MENU_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts("Are you sure ?");
 
-    menu_init(GEN_MENU_POS_X, GEN_MENU_POS_Y + 16, GEN_MENU_WIDTH,
-        GEN_MENU_HEIGHT, ARRAY_SIZE(confirm_items), confirm_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, GEN_MENU_POS_X, GEN_MENU_POS_Y + 16, GEN_MENU_WIDTH,
+              GEN_MENU_HEIGHT, ARRAY_SIZE(confirm_items), confirm_items,
+              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
     _state = SETTING_CONFIRM_FACTORY;
 }
 
 static void show_member_details(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     gfx_set_cursor(GEN_MENU_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
@@ -196,13 +198,13 @@ static void show_member_details(uint8_t item) {
 }
 
 static void show_led_settings(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     _state = SETTING_STATE_CLOSED;
     nsec_show_led_settings();
 }
 
 static void show_screen_settings(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     _state = SETTING_STATE_CLOSED;
     nsec_show_screen_settings();
 }
@@ -229,15 +231,15 @@ static void draw_credit_title(void)
 
 static void show_credit(uint8_t item) {
     _state = SETTING_STATE_CREDIT;
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_credit_title();
     gfx_set_cursor(GEN_MENU_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts("nsec 2019 badge team:");
-    menu_init(GEN_MENU_POS_X, GEN_MENU_POS_Y + 8, GEN_MENU_WIDTH,
-        GEN_MENU_HEIGHT - 8, ARRAY_SIZE(members_items), members_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, GEN_MENU_POS_X, GEN_MENU_POS_Y + 8, GEN_MENU_WIDTH,
+              GEN_MENU_HEIGHT - 8, ARRAY_SIZE(members_items), members_items,
+              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_update();
 }
 
@@ -255,13 +257,13 @@ static void draw_battery_title(void)
 void show_battery_status(void) {
     _state = SETTING_STATE_BATTERY;
     draw_battery_title();
-    menu_close();
+    menu_close(&menu);
     start_battery_status_timer();
     nsec_controls_add_handler(setting_handle_buttons);
 }
 
 static void turn_off_screen(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     display_set_brightness(0);
     _state = SETTING_STATE_SCREEN_OFF;
 }
@@ -270,9 +272,9 @@ void nsec_setting_show(void) {
 
     draw_settings_title();
 
-    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
-        ARRAY_SIZE(settings_items), settings_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+              ARRAY_SIZE(settings_items), settings_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
 
     nsec_controls_add_handler(setting_handle_buttons);
     _state = SETTING_STATE_MENU;
@@ -284,7 +286,7 @@ static void setting_handle_buttons(button_t button)
         switch (_state) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;
-                menu_close();
+                menu_close(&menu);
                 show_home_menu(HOME_STATE_SETTINGS);
                 break;
 

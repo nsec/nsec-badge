@@ -146,6 +146,8 @@ static void draw_screen_title(void)
     draw_title(&title);
 }
 
+static menu_t menu;
+
 /* Menu entry point */
 void nsec_show_screen_settings(void)
 {
@@ -153,7 +155,7 @@ void nsec_show_screen_settings(void)
 
     draw_screen_title();
 
-    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(screen_settings_items), screen_settings_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -193,11 +195,11 @@ static void show_actual_screen_brightness(void)
 /* Screen brightness sub-menu */
 static void show_screen_brightness_menu(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_screen_brightness();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(screen_brightness_items), screen_brightness_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -234,11 +236,11 @@ static void show_actual_screen_fix(void)
 /* Screen fix sub-menu */
 static void show_screen_fix_menu(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_screen_fix();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(screen_fix_items), screen_fix_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -255,7 +257,7 @@ static void save_screen_fix(uint8_t item)
 {
     display_set_model(item);
     update_stored_display_model(item);
-    menu_close();
+    menu_close(&menu);
     application_set(dummy_app);
 }
 
@@ -289,11 +291,11 @@ static void show_actual_screensaver(void)
 
 static void show_screen_screensaver_menu(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_screensaver();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(screen_screensaver_items), screen_screensaver_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -312,7 +314,7 @@ static void screen_setting_handle_buttons(button_t button)
         switch (_state) {
         case SCREEN_SETTING_STATE_MENU:
             _state = SCREEN_SETTING_STATE_CLOSED;
-            menu_close();
+            menu_close(&menu);
             nsec_setting_show();
             break;
 
@@ -320,7 +322,7 @@ static void screen_setting_handle_buttons(button_t button)
         case SCREEN_SETTING_STATE_FIX:
         case SCREEN_SETTING_STATE_SCREENSAVER:
             _state = SCREEN_SETTING_STATE_MENU;
-            menu_close();
+            menu_close(&menu);
             nsec_show_screen_settings();
             break;
 

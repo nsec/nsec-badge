@@ -42,10 +42,12 @@ static void draw_challenges_title(void) {
     draw_title(&title);
 }
 
+static menu_t menu;
+
 void nsec_challenges_show(void) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_challenges_title();
-    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(chall_menu_items), chall_menu_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     nsec_controls_add_handler(challenges_handle_buttons);
@@ -62,11 +64,11 @@ static void challenges_handle_buttons(button_t button) {
         switch (state) {
         case SETTING_STATE_MENU:
             state = SETTING_STATE_CLOSED;
-            menu_close();
+            menu_close(&menu);
             show_main_menu();
             break;
         case SETTING_STATE_CHALLENGES:
-            menu_close();
+            menu_close(&menu);
             nsec_challenges_show();
             break;
         default:

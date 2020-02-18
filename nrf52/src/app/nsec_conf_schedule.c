@@ -130,14 +130,16 @@ static void draw_conf_title(void)
     draw_title(&title);
 }
 
+static menu_t menu;
+
 void nsec_schedule_show_dates(void) {
     draw_conf_title();
 
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
-    menu_init(CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
-        ARRAY_SIZE(days_schedule_items), days_schedule_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+              ARRAY_SIZE(days_schedule_items), days_schedule_items,
+              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
     schedule_state = SCHEDULE_STATE_DATES;
     nsec_controls_add_handler(nsec_schedule_button_handler);
@@ -146,15 +148,15 @@ void nsec_schedule_show_dates(void) {
 static void nsec_schedule_return_to_talks(void)
 {
     schedule_state = SCHEDULE_STATE_TALKS;
-    menu_open();
-    menu_ui_redraw_all();
+    menu_open(&menu);
+    menu_ui_redraw_all(&menu);
 }
 
 static void nsec_schedule_return_to_speakers(void)
 {
     schedule_state = SCHEDULE_STATE_SPEAKERS;
-    menu_open();
-    menu_ui_redraw_all();
+    menu_open(&menu);
+    menu_ui_redraw_all(&menu);
 }
 
 static const struct talk *cur_talks = NULL;
@@ -172,7 +174,7 @@ static int format_talk_detailed(char *buf, const struct talk *t)
 static void nsec_schedule_show_talk_details(uint8_t item)
 {
     APP_ERROR_CHECK_BOOL(item < cur_num_talks);
-    menu_close();
+    menu_close(&menu);
 
     const struct talk *t = &cur_talks[item];
 
@@ -207,8 +209,8 @@ static void nsec_schedule_show_talks(uint8_t item)
 
     prep_menu_talks(cur_talks, cur_num_talks);
 
-    menu_init(CONF_POS, CONF_WIDTH, CONF_HEIGHT, cur_num_talks, generated_menu,
-              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, CONF_POS, CONF_WIDTH, CONF_HEIGHT, cur_num_talks,
+              generated_menu, HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
     schedule_state = SCHEDULE_STATE_TALKS;
 }
@@ -216,7 +218,7 @@ static void nsec_schedule_show_talks(uint8_t item)
 static void nsec_schedule_show_speaker_details(uint8_t item)
 {
     APP_ERROR_CHECK_BOOL(item < num_speakers);
-    menu_close();
+    menu_close(&menu);
 
     text_box_init(speakers[item].bio, &config);
 
@@ -236,14 +238,14 @@ void nsec_schedule_show_speakers(uint8_t item)
 {
     prep_menu_speakers();
 
-    menu_init(CONF_POS, CONF_WIDTH, CONF_HEIGHT, num_speakers, generated_menu,
-              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, CONF_POS, CONF_WIDTH, CONF_HEIGHT, num_speakers,
+              generated_menu, HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
     schedule_state = SCHEDULE_STATE_TALKS;
 }
 
 void nsec_schedule_show_events(uint8_t item) {
-    menu_init(CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    menu_init(&menu, CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(events_schedule_items), events_schedule_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -251,7 +253,7 @@ void nsec_schedule_show_events(uint8_t item) {
 }
 
 void nsec_schedule_show_gosecure_event(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     schedule_state = SCHEDULE_STATE_CLOSED;
 
     application_set(gosecure_animation_app);
@@ -259,7 +261,7 @@ void nsec_schedule_show_gosecure_event(uint8_t item) {
 
 void nsec_schedule_show_conference_party(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     schedule_state = SCHEDULE_STATE_EVENT_DESC;
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     text_box_init(abstract_party, &config);
@@ -267,7 +269,7 @@ void nsec_schedule_show_conference_party(uint8_t item)
 
 void nsec_schedule_show_hack_mtl(uint8_t item)
 {
-    menu_close();
+    menu_close(&menu);
     schedule_state = SCHEDULE_STATE_EVENT_DESC;
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     text_box_init(abstract_hack_mtl, &config);
@@ -294,7 +296,7 @@ static void nsec_schedule_button_handler(button_t button) {
             nsec_schedule_show_events(3);
             break;
         case SCHEDULE_STATE_DATES:
-            menu_close();
+            menu_close(&menu);
             schedule_state = SCHEDULE_STATE_CLOSED;
             show_main_menu();
             break;

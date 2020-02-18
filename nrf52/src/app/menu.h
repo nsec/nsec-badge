@@ -22,18 +22,36 @@ typedef enum {
     MENU_DIRECTION_DOWN,
 } MENU_DIRECTION;
 
-void menu_handler_init(void);
-void menu_init(uint16_t pos_x, uint16_t pos_y, uint16_t width, uint16_t height,
-               uint8_t item_count, menu_item_s *items, uint16_t text_color,
-               uint16_t bg_color);
-void menu_set_position(uint16_t pos_x, uint16_t pos_y, uint16_t width,
-                       uint16_t height);
-void menu_add_item(menu_item_s *new_item);
-void menu_ui_redraw_all(void);
-void menu_change_selected_item(MENU_DIRECTION direction);
-void menu_trigger_action(void);
-void menu_close(void);
-void menu_open(void);
-void menu_button_handler(button_t button);
+typedef struct {
+    uint16_t pos_x;
+    uint16_t pos_y;
+    uint8_t col_width;
+
+    // How many items fit fully in the menu height.
+    uint8_t item_count_per_page;
+    uint8_t item_count;
+
+    // Selected item, 0-based.
+    uint8_t selected_item;
+
+    uint8_t item_on_top;
+    uint8_t is_handling_buttons;
+    uint16_t text_color;
+    uint16_t bg_color;
+    menu_item_s items[MENU_LIMIT_MAX_ITEM_COUNT];
+} menu_t;
+
+void menu_init(menu_t *menu, uint16_t pos_x, uint16_t pos_y, uint16_t width,
+               uint16_t height, uint8_t item_count, menu_item_s *items,
+               uint16_t text_color, uint16_t bg_color);
+void menu_set_position(menu_t *menu, uint16_t pos_x, uint16_t pos_y,
+                       uint16_t width, uint16_t height);
+void menu_add_item(menu_t *menu, menu_item_s *new_item);
+void menu_ui_redraw_all(menu_t *menu);
+void menu_change_selected_item(menu_t *menu, MENU_DIRECTION direction);
+void menu_trigger_action(menu_t *menu);
+void menu_close(menu_t *menu);
+void menu_open(menu_t *menu);
+void menu_button_handler(menu_t *menu, button_t button);
 
 #endif

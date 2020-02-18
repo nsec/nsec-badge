@@ -222,14 +222,16 @@ static void draw_led_title(void)
     draw_title(&title);
 }
 
+static menu_t menu;
+
 void nsec_show_led_settings(void) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
 
     draw_led_title();
 
-    menu_init(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
-        ARRAY_SIZE(settings_items), settings_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+              ARRAY_SIZE(settings_items), settings_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
 
     nsec_controls_add_handler(setting_handle_buttons);
     _state = SETTING_STATE_MENU;
@@ -257,13 +259,13 @@ static void show_actual_brightness(void)
 }
 
 static void show_brightness_menu(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_brightness();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-        ARRAY_SIZE(brightness_items), brightness_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+              ARRAY_SIZE(brightness_items), brightness_items,
+              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
     _state = SETTING_STATE_BRIGHTNESS;
 }
@@ -315,13 +317,13 @@ static void show_actual_speed(void)
 }
 
 static void show_speed_menu(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_speed();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-        ARRAY_SIZE(speed_items), speed_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+              ARRAY_SIZE(speed_items), speed_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
 
     _state = SETTING_STATE_SPEED;
 }
@@ -396,13 +398,13 @@ static void show_color_menu(uint8_t item) {
     } else {
         _state = SETTING_STATE_THIRD_COLOR;
     }
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_color();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-        ARRAY_SIZE(color_items), color_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+              ARRAY_SIZE(color_items), color_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
 }
 
 static void set_color(uint32_t color)
@@ -472,13 +474,13 @@ static void show_actual_reverse(void)
 }
 
 static void show_reverse_menu(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_reverse();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-        ARRAY_SIZE(reverse_items), reverse_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+              ARRAY_SIZE(reverse_items), reverse_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
 
     _state = SETTING_STATE_REVERSE;
 }
@@ -505,13 +507,13 @@ static void show_actual_control(void)
 }
 
 static void show_control_menu(uint8_t item) {
-    menu_close();
+    menu_close(&menu);
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_control();
 
-    menu_init(LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-        ARRAY_SIZE(control_items), control_items,
-        HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+              ARRAY_SIZE(control_items), control_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
 
     _state = SETTING_STATE_CONTROL;
 }
@@ -531,7 +533,7 @@ static void setting_handle_buttons(button_t button) {
         switch (_state) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;
-                menu_close();
+                menu_close(&menu);
                 nsec_setting_show();
                 break;
 
@@ -543,7 +545,7 @@ static void setting_handle_buttons(button_t button) {
             case SETTING_STATE_REVERSE:
             case SETTING_STATE_CONTROL:
                 _state = SETTING_STATE_MENU;
-                menu_close();
+                menu_close(&menu);
                 nsec_show_led_settings();
                 break;
 
