@@ -361,7 +361,9 @@ void home_menu_application(void)
     // nsec_battery_manager_init();
     show_home_menu(HOME_STATE_MENU);
 
+#ifdef NSEC_FLAVOR_CTF
     uint32_t last_ms = get_current_time_millis();
+#endif
 
     while (true) {
         button_t btn;
