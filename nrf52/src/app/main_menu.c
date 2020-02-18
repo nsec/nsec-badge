@@ -112,6 +112,8 @@ static void open_games_menu(uint8_t item)
 {
     _state = MAIN_MENU_STATE_CLOSED;
     nsec_games_menu_show();
+    _state = MAIN_MENU_STATE_MENU;
+
 }
 
 static void open_flashlight(uint8_t item) {
@@ -234,7 +236,7 @@ static bool main_handle_buttons(button_t button)
         default:
             break;
         }
-    } else if (button == BUTTON_UP || button == BUTTON_DOWN) {
+    } else {
         menu_button_handler(&menu, button);
     }
 
