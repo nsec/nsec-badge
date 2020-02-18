@@ -68,7 +68,10 @@ static int persistency_size_static[(sizeof(struct persistency) == 4096) ? 1 : -1
 
 static uint8_t persistency_bin[4096];
 static struct persistency *persistency = (struct persistency*)persistency_bin;
+
+#ifndef SOLDERING_TRACK
 static bool is_loaded = false;
+#endif
 
 void update_persistency(void)
 {
