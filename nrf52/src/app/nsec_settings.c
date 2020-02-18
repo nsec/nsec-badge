@@ -49,61 +49,73 @@ static enum setting_state _state = SETTING_STATE_CLOSED;
 
 static void setting_handle_buttons(button_t button);
 
-static menu_item_s settings_items[] = {
+static const menu_item_s settings_items[] = {
     {
         .label = "Led settings",
         .handler = show_led_settings,
-    }, {
+    },
+    {
         .label = "Screen settings",
         .handler = show_screen_settings,
-    }, {
+    },
+    {
         .label = "Factory Reset",
         .handler = do_factory_reset,
-    }, {
+    },
+    {
         .label = "Toggle Bluetooth",
         .handler = toggle_bluetooth,
-    }, {
+    },
+    {
         .label = "Turn screen off",
         .handler = turn_off_screen,
-    }, {
+    },
+    {
         .label = "Credit",
         .handler = show_credit,
-    }
+    },
 };
 
-static menu_item_s members_items[] = {
+static const menu_item_s members_items[] = {
     {
         .label = "Eric Tremblay",
         .handler = show_member_details,
-    }, {
+    },
+    {
         .label = "Michael Jeanson",
         .handler = show_member_details,
-    }, {
+    },
+    {
         .label = "Nicolas Aubry",
         .handler = show_member_details,
-    }, {
+    },
+    {
         .label = "Simon Marchi",
         .handler = show_member_details,
-    }, {
+    },
+    {
         .label = "Thomas Dupuy",
         .handler = show_member_details,
-    }, {
+    },
+    {
         .label = "Victor Nikulshin",
         .handler = show_member_details,
-    }, {
+    },
+    {
         .label = "Yannick Lamarre",
         .handler = show_member_details,
     },
 };
 
-static menu_item_s confirm_items[] = {
+static const menu_item_s confirm_items[] = {
     {
         .label = "Yes",
         .handler = confirm_factory_reset,
-    }, {
+    },
+    {
         .label = "No",
         .handler = confirm_factory_reset,
-    }
+    },
 };
 
 static menu_t menu;

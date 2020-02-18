@@ -94,48 +94,58 @@ static void show_control_menu(uint8_t item);
 
 static void setting_handle_buttons(button_t button);
 
-static menu_item_s settings_items[] = {
+static const menu_item_s settings_items[] = {
     {
         .label = "Led brightness",
         .handler = show_brightness_menu,
-    }, {
+    },
+    {
         .label = "Led speed",
         .handler = show_speed_menu,
-    }, {
+    },
+    {
         .label = "Led first color",
         .handler = show_color_menu,
-    },  {
+    },
+    {
         .label = "Led second color",
         .handler = show_color_menu,
-    }, {
+    },
+    {
         .label = "Led third color",
         .handler = show_color_menu,
-    }, {
+    },
+    {
         .label = "Reverse pattern",
         .handler = show_reverse_menu,
-    }, {
+    },
+    {
         .label = "Turn led on/off",
         .handler = show_control_menu,
-    }
+    },
 };
 
-static menu_item_s brightness_items[] = {
+static const menu_item_s brightness_items[] = {
     {
         .label = "Super low",
         .handler = save_brightness,
-    }, {
+    },
+    {
         .label = "Low",
         .handler = save_brightness,
-    }, {
+    },
+    {
         .label = "Medium",
         .handler = save_brightness,
-    }, {
+    },
+    {
         .label = "High",
         .handler = save_brightness,
-    }, {
+    },
+    {
         .label = "Max",
         .handler = save_brightness,
-    }
+    },
 };
 
 static menu_item_s speed_items[] = {
@@ -157,58 +167,69 @@ static menu_item_s speed_items[] = {
     }
 };
 
-static menu_item_s color_items[] = {
+static const menu_item_s color_items[] = {
     {
         .label = "Red",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "Green",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "Blue",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "White",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "Black",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "Yellow",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "Cyan",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "Magenta",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "Purple",
         .handler = save_color,
-    }, {
+    },
+    {
         .label = "Orange",
         .handler = save_color,
-    }
+    },
 };
 
-static menu_item_s reverse_items[] = {
+static const menu_item_s reverse_items[] = {
     {
         .label = "False",
         .handler = save_reverse,
-    }, {
+    },
+    {
         .label = "True",
         .handler = save_reverse,
-    }
+    },
 };
 
-static menu_item_s control_items[] = {
+static const menu_item_s control_items[] = {
     {
         .label = "OFF",
         .handler = save_control,
-    }, {
+    },
+    {
         .label = "ON",
         .handler = save_control,
-    }
+    },
 };
 
 static void draw_led_title(void)

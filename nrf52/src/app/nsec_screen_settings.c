@@ -69,7 +69,7 @@ static void save_screen_fix(uint8_t item);
 static void save_screen_screensaver(uint8_t item);
 static void screen_setting_handle_buttons(button_t button);
 
-static menu_item_s screen_settings_items[] = {
+static const menu_item_s screen_settings_items[] = {
     {
         .label = "Screen brightness",
         .handler = show_screen_brightness_menu,
@@ -81,9 +81,10 @@ static menu_item_s screen_settings_items[] = {
     {
         .label = "Screen fix",
         .handler = show_screen_fix_menu,
-    }};
+    },
+};
 
-static menu_item_s screen_brightness_items[] = {
+static const menu_item_s screen_brightness_items[] = {
     {
         .label = "Min",
         .handler = save_screen_brightness,
@@ -103,9 +104,10 @@ static menu_item_s screen_brightness_items[] = {
     {
         .label = "Max",
         .handler = save_screen_brightness,
-    }};
+    },
+};
 
-static menu_item_s screen_fix_items[] = {
+static const menu_item_s screen_fix_items[] = {
     {
         .label = "Green pill",
         .handler = save_screen_fix,
@@ -113,9 +115,10 @@ static menu_item_s screen_fix_items[] = {
     {
         .label = "Red pill",
         .handler = save_screen_fix,
-    }};
+    },
+};
 
-static menu_item_s screen_screensaver_items[] = {
+static const menu_item_s screen_screensaver_items[] = {
     {
         .label = "30 seconds",
         .handler = save_screen_screensaver,
@@ -131,7 +134,8 @@ static menu_item_s screen_screensaver_items[] = {
     {
         .label = "5 minutes",
         .handler = save_screen_screensaver,
-    }};
+    },
+};
 
 static void draw_screen_title(void)
 {

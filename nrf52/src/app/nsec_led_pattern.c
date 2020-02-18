@@ -152,7 +152,7 @@ static void led_pattern_handle_buttons(button_t button);
 static menu_item_s basic_pattern_items[MODE_BASIC_COUNT];
 static menu_item_s extra_pattern_items[MODE_EXTRA_COUNT];
 static menu_item_s letters_items[16];
-static menu_item_s led_pattern_items[] = {
+static const menu_item_s led_pattern_items[] = {
     {
         .label = "Basic patterns",
         .handler = show_basic_pattern_menu,
@@ -164,7 +164,8 @@ static menu_item_s led_pattern_items[] = {
     {
         .label = "Nearby badges",
         .handler = set_nearby_mode,
-    }};
+    },
+};
 
 static void unlock_all_pattern(void)
 {

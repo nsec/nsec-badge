@@ -27,19 +27,8 @@ static void menu_set_position(menu_t *menu, uint16_t pos_x, uint16_t pos_y,
     menu->item_count_per_page = height / FONT_SIZE_HEIGHT;
 }
 
-static void menu_add_item(menu_t *menu, menu_item_s *new_item)
-{
-    if (menu->item_count >= MENU_LIMIT_MAX_ITEM_COUNT) {
-        return;
-    } else {
-        memcpy(menu->items + menu->item_count++, new_item,
-               sizeof(menu->items[0]));
-    }
-    menu_ui_redraw_items(menu, menu->item_count - 1, menu->item_count - 1);
-}
-
 void menu_init(menu_t *menu, uint16_t pos_x, uint16_t pos_y, uint16_t width,
-               uint16_t height, uint8_t item_count, menu_item_s *items,
+               uint16_t height, uint8_t item_count, const menu_item_s *items,
                uint16_t text_color, uint16_t bg_color)
 {
     menu->item_count = 0;
@@ -49,9 +38,11 @@ void menu_init(menu_t *menu, uint16_t pos_x, uint16_t pos_y, uint16_t width,
     menu->bg_color = bg_color;
     menu_set_position(menu, pos_x, pos_y, width, height);
     gfx_fill_rect(pos_x, pos_y, width, height, bg_color);
-    for (uint8_t i = 0; i < item_count; i++) {
-        menu_add_item(menu, items + i);
-    }
+
+    menu->item_count = item_count;
+    menu->items = items;
+
+    menu_ui_redraw_all(menu);
 }
 
 static void menu_ui_redraw_items(menu_t *menu, uint8_t start, uint8_t end)
