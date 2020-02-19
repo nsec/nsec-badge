@@ -278,10 +278,8 @@ static void open_settings_menu(void) {
                           DISPLAY_WHITE);
 
     draw_settings_title();
-
-    _state = HOME_STATE_CLOSED;
-
     nsec_setting_show();
+    draw_home_menu();
 }
 
 static void home_menu_handle_buttons(button_t button) {

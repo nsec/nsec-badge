@@ -4,26 +4,29 @@
 //
 //  License: MIT (see LICENSE for details)
 
-#include <nrf.h>
-#include <nordic_common.h>
-#include <stdio.h>
-#include <string.h>
+#include "nsec_settings.h"
+#include "FreeRTOS.h"
+#include "ble/ble_device.h"
+#include "drivers/buttons.h"
+#include "drivers/controls.h"
+#include "drivers/display.h"
+#include "drivers/ws2812fx.h"
+#include "gfx_effect.h"
+#include "gui.h"
 #include "home_menu.h"
 #include "main_menu.h"
-#include "gui.h"
-#include "nsec_settings.h"
+#include "menu.h"
+#include "nrf_delay.h"
 #include "nsec_led_settings.h"
 #include "nsec_screen_settings.h"
-#include "menu.h"
-#include "drivers/display.h"
-#include "gfx_effect.h"
-#include "ble/ble_device.h"
-#include "status_bar.h"
-#include "drivers/controls.h"
-#include "drivers/ws2812fx.h"
 #include "persistency.h"
+#include "queue.h"
+#include "status_bar.h"
 #include "timer.h"
-#include "nrf_delay.h"
+#include <nordic_common.h>
+#include <nrf.h>
+#include <stdio.h>
+#include <string.h>
 
 static void toggle_bluetooth(uint8_t item);
 static void show_credit(uint8_t item);
@@ -33,7 +36,6 @@ static void show_screen_settings(uint8_t item);
 static void confirm_factory_reset(uint8_t item);
 static void do_factory_reset(uint8_t item);
 static void show_member_details(uint8_t item);
-static void setting_handle_buttons(button_t button);
 
 enum setting_state {
     SETTING_STATE_CLOSED,
@@ -46,8 +48,6 @@ enum setting_state {
 };
 
 static enum setting_state _state = SETTING_STATE_CLOSED;
-
-static void setting_handle_buttons(button_t button);
 
 static const menu_item_s settings_items[] = {
     {
@@ -118,7 +118,7 @@ static const menu_item_s confirm_items[] = {
     },
 };
 
-static menu_t menu;
+static menu_t g_menu;
 
 static void confirm_factory_reset(uint8_t item)
 {
@@ -147,7 +147,7 @@ static void do_factory_reset(uint8_t item)
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts("Are you sure ?");
 
-    menu_init(&menu, GEN_MENU_POS_X, GEN_MENU_POS_Y + 16, GEN_MENU_WIDTH,
+    menu_init(&g_menu, GEN_MENU_POS_X, GEN_MENU_POS_Y + 16, GEN_MENU_WIDTH,
               GEN_MENU_HEIGHT, ARRAY_SIZE(confirm_items), confirm_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -237,7 +237,7 @@ static void show_credit(uint8_t item) {
     gfx_set_cursor(GEN_MENU_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts("nsec 2019 badge team:");
-    menu_init(&menu, GEN_MENU_POS_X, GEN_MENU_POS_Y + 8, GEN_MENU_WIDTH,
+    menu_init(&g_menu, GEN_MENU_POS_X, GEN_MENU_POS_Y + 8, GEN_MENU_WIDTH,
               GEN_MENU_HEIGHT - 8, ARRAY_SIZE(members_items), members_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_update();
@@ -252,7 +252,6 @@ void show_battery_status(void) {
     _state = SETTING_STATE_BATTERY;
     draw_battery_title();
     start_battery_status_timer();
-    nsec_controls_add_handler(setting_handle_buttons);
 }
 
 static void turn_off_screen(uint8_t item) {
@@ -260,25 +259,21 @@ static void turn_off_screen(uint8_t item) {
     _state = SETTING_STATE_SCREEN_OFF;
 }
 
-void nsec_setting_show(void) {
-
+static void redraw_settings_menu(menu_t *menu)
+{
     draw_settings_title();
-
-    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
-              ARRAY_SIZE(settings_items), settings_items, HOME_MENU_BG_COLOR,
-              DISPLAY_WHITE);
-
-    nsec_controls_add_handler(setting_handle_buttons);
-    _state = SETTING_STATE_MENU;
+    menu_ui_redraw_all(menu);
 }
 
-static void setting_handle_buttons(button_t button)
+static bool setting_handle_buttons(button_t button, menu_t *menu)
 {
+    bool quit = false;
+
     if (button == BUTTON_BACK) {
         switch (_state) {
             case SETTING_STATE_MENU:
                 _state = SETTING_STATE_CLOSED;
-                show_home_menu(HOME_STATE_SETTINGS);
+                quit = true;
                 break;
 
             case SETTING_STATE_CREDIT_DETAILS:
@@ -304,9 +299,32 @@ static void setting_handle_buttons(button_t button)
             default:
                 break;
         }
+    } else {
+        menu_button_handler(menu, button);
+    }
 
-        if (_state == SETTING_STATE_CLOSED) {
-            nsec_controls_suspend_handler(setting_handle_buttons);
+    return quit;
+}
+
+void nsec_setting_show(void)
+{
+    menu_init(&g_menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+              ARRAY_SIZE(settings_items), settings_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
+
+    redraw_settings_menu(&g_menu);
+
+    _state = SETTING_STATE_MENU;
+
+    while (true) {
+        button_t btn;
+        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
+        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
+
+        bool quit = setting_handle_buttons(btn, &g_menu);
+
+        if (quit) {
+            break;
         }
     }
 }
