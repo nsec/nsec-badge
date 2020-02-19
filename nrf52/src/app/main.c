@@ -142,6 +142,7 @@ static void main_service_device(void)
     power_manage();
 }
 
+#ifdef SOLDERING_TRACK
 static void enable_app_protect(void)
 {
     NRF_NVMC->CONFIG = (NVMC_CONFIG_WEN_Wen << NVMC_CONFIG_WEN_Pos);
@@ -151,6 +152,7 @@ static void enable_app_protect(void)
     NRF_NVMC->CONFIG = (NVMC_CONFIG_WEN_Ren << NVMC_CONFIG_WEN_Pos);
     while (NRF_NVMC->READY == NVMC_READY_READY_Busy);
 }
+#endif /* SOLDERING_TRACK */
 
 volatile int avant;
 volatile int apres;

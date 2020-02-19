@@ -25,6 +25,8 @@
 #include "conf_sched.h"
 #include "conf_sched.inc"
 
+#if defined(NSEC_FLAVOR_CONF)
+
 static int is_between(int h, int m, int start_h, int start_m, int end_h,
                       int end_m)
 {
@@ -298,7 +300,6 @@ static void do_schedule(nrf_cli_t const *p_cli, size_t argc, char **argv)
     nrf_cli_help_print(p_cli, NULL, 0);
 }
 
-#if defined(NSEC_FLAVOR_CONF)
 NRF_CLI_CREATE_STATIC_SUBCMD_SET(schedule_sub){
     NRF_CLI_CMD(thursday, NULL, "Display Thursday schedule",
                 do_schedule_thursday),

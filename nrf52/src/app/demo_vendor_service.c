@@ -42,14 +42,14 @@ void update_char(void)
     }
 }
 
-static void on_led_write_command_color_written(CharacteristicWriteEvent* event){
-    if(event->data_length <= sizeof(led_write_request_no_auth_color)) {
-        memcpy(led_write_request_no_auth_color, event->data_buffer, event->data_length);
-        nsec_neoPixel_set_pixel_color(0, led_write_request_no_auth_color[0], led_write_request_no_auth_color[1],
-                                      led_write_request_no_auth_color[2]);
-        nsec_neoPixel_show();
-    }
-}
+//static void on_led_write_command_color_written(CharacteristicWriteEvent* event){
+//    if(event->data_length <= sizeof(led_write_request_no_auth_color)) {
+//        memcpy(led_write_request_no_auth_color, event->data_buffer, event->data_length);
+//        nsec_neoPixel_set_pixel_color(0, led_write_request_no_auth_color[0], led_write_request_no_auth_color[1],
+//                                      led_write_request_no_auth_color[2]);
+//        nsec_neoPixel_show();
+//    }
+//}
 
 static uint16_t on_led_write_request(CharacteristicWriteEvent* event){
     if(event->data_length <= 3) {
@@ -68,14 +68,14 @@ static uint16_t on_led_2_read_request(CharacteristicReadEvent* event) {
     return BLE_GATT_STATUS_ATTERR_READ_NOT_PERMITTED;
 }
 
-static void on_led_2_write_done(CharacteristicWriteEvent* event){
-    if(event->data_length <= sizeof(led_read_request_auth_color)) {
-        memcpy(led_read_request_auth_color, event->data_buffer, event->data_length);
-        nsec_neoPixel_set_pixel_color(2, led_read_request_auth_color[0], led_read_request_auth_color[1],
-                                      led_read_request_auth_color[2]);
-        nsec_neoPixel_show();
-    }
-}
+//static void on_led_2_write_done(CharacteristicWriteEvent* event){
+//    if(event->data_length <= sizeof(led_read_request_auth_color)) {
+//        memcpy(led_read_request_auth_color, event->data_buffer, event->data_length);
+//        nsec_neoPixel_set_pixel_color(2, led_read_request_auth_color[0], led_read_request_auth_color[1],
+//                                      led_read_request_auth_color[2]);
+//        nsec_neoPixel_show();
+//    }
+//}
 
 static void on_timeout(void * context){
     _update_char = true;

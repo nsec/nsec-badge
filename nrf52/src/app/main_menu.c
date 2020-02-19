@@ -87,13 +87,6 @@ static void draw_cli_title(void)
     draw_title(&title);
 }
 
-static void open_challenges(uint8_t item)
-{
-    menu_close();
-    _state = MAIN_MENU_STATE_CLOSED;
-    nsec_challenges_show();
-}
-
 static void open_led_pattern(uint8_t item)
 {
     menu_close();

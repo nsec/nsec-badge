@@ -184,13 +184,13 @@ static void unlock_pattern(uint32_t sponsor_index)
     }
 }
 
-static const char *nsec_get_pattern_pw(uint32_t sponsor_index)
-{
-    if (sponsor_index < SPONSOR_PW_SIZE) {
-        return sponsor_password[sponsor_index];
-    }
-    return 0;
-}
+//static const char *nsec_get_pattern_pw(uint32_t sponsor_index)
+//{
+//    if (sponsor_index < SPONSOR_PW_SIZE) {
+//        return sponsor_password[sponsor_index];
+//    }
+//    return 0;
+//}
 
 bool pattern_is_unlock(uint32_t sponsor_index)
 {

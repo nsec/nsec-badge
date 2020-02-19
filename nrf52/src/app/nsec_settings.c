@@ -33,7 +33,6 @@ static void show_screen_settings(uint8_t item);
 static void confirm_factory_reset(uint8_t item);
 static void do_factory_reset(uint8_t item);
 static void show_member_details(uint8_t item);
-static void show_badge_info(uint8_t item);
 static void setting_handle_buttons(button_t button);
 
 enum setting_state {
@@ -206,17 +205,6 @@ static void show_screen_settings(uint8_t item) {
     menu_close();
     _state = SETTING_STATE_CLOSED;
     nsec_show_screen_settings();
-}
-
-static void draw_display_title(void)
-{
-    struct title title;
-    title.pos_y = 5;
-    title.pos_x = 25;
-    title.text_color = DISPLAY_BLUE;
-    title.bg_color = DISPLAY_WHITE;
-    strcpy(title.text, "DISPLAY");
-    draw_title(&title);
 }
 
 static void toggle_bluetooth(uint8_t item) {

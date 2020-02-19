@@ -42,8 +42,6 @@ static void draw_input_box_title(void);
 static void input_box_show_brackets(void);
 static void input_box_show_cursor(void);
 static void is_success(uint8_t item);
-static bool input_box_check(void);
-static void nsec_chall_button_handler(button_t button);
 
 void input_box_init(const char *text, const char *password) {
     input_box.input_count = strlen(password);

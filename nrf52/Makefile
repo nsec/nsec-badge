@@ -280,7 +280,6 @@ CFLAGS += -DDEBUG
 CFLAGS += \
 	-Wall \
 	-Werror \
-	-Wno-unused-function \
 	-fmax-errors=1
 
 # Warning flags only enabled for the user code (i.e. our code).

@@ -34,6 +34,9 @@ as well as Adafruit raw 1.8" TFT display
 #include <stdlib.h>
 #include <string.h>
 
+// There are plenty of functions here we don't use... we should probably clean up.
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 // This increase the bss section by 25k !!!!
 //#define USE_DOUBLE_BUFFERING
 

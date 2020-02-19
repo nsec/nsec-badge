@@ -91,7 +91,6 @@ static void save_reverse(uint8_t item);
 static void save_control(uint8_t item);
 static void show_reverse_menu(uint8_t item);
 static void show_control_menu(uint8_t item);
-static void set_led_default(uint8_t item);
 
 static void setting_handle_buttons(button_t button);
 
