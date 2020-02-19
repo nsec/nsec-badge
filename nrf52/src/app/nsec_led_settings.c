@@ -75,7 +75,6 @@ extern uint16_t gfx_height;
 static void show_brightness_menu(uint8_t item);
 static void show_speed_menu(uint8_t item);
 static void show_color_menu(uint8_t item);
-static void save_brightness(uint8_t item);
 static void save_speed(uint8_t item);
 static void save_color(uint8_t item);
 static void save_reverse(uint8_t item);
@@ -212,55 +211,9 @@ static void redraw_led_settings(menu_t *menu)
     menu_ui_redraw_all(menu);
 }
 
-static void show_actual_brightness(void)
-{
-    uint8_t brightness = getBrightness_WS2812FX();
-    char actual[50] = {0};
-    if (brightness <= SUPER_LOW_BRIGHTNESS) {
-        snprintf(actual, 50, "Now: %s", "Super Low");
-    } else  if (brightness <= LOW_BRIGHTNESS) {
-        snprintf(actual, 50, "Now: %s", "Low");
-    } else if (brightness <= MEDIUM_BRIGHTNESS) {
-        snprintf(actual, 50, "Now: %s", "Medium");
-    } else if (brightness <= HIGH_BRIGHTNESS) {
-        snprintf(actual, 50, "Now: %s", "High");
-    } else {
-        snprintf(actual, 50, "Now: %s", "Max");
-    }
-
-    gfx_set_cursor(LED_SET_VAL_POS);
-    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-    gfx_puts(actual);
-}
-
 static void show_brightness_menu(uint8_t item) {
     nsec_show_led_settings_brightness();
     redraw_led_settings(&g_menu);
-}
-
-static void save_brightness(uint8_t item) {
-    switch(item) {
-        case SUPER_LOW_BRIGHTNESS_INDEX:
-            setBrightness_WS2812FX(SUPER_LOW_BRIGHTNESS);
-            break;
-        case LOW_BRIGHTNESS_INDEX:
-            setBrightness_WS2812FX(LOW_BRIGHTNESS);
-            break;
-        case MEDIUM_BRIGHTNESS_INDEX:
-            setBrightness_WS2812FX(MEDIUM_BRIGHTNESS);
-            break;
-        case HIGH_BRIGHTNESS_INDEX:
-            setBrightness_WS2812FX(HIGH_BRIGHTNESS);
-            break;
-        case MAX_BRIGHTNESS_INDEX:
-            setBrightness_WS2812FX(MAX_BRIGHTNESS);
-            break;
-        default:
-            break;
-    }
-
-    update_stored_brightness(getBrightness_WS2812FX(), true);
-    show_brightness_menu(0);
 }
 
 static void show_actual_speed(void)

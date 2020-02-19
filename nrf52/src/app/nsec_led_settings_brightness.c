@@ -56,16 +56,7 @@ extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
 static void show_brightness_menu(uint8_t item);
-static void show_speed_menu(uint8_t item);
-static void show_color_menu(uint8_t item);
 static void save_brightness(uint8_t item);
-static void save_speed(uint8_t item);
-static void save_color(uint8_t item);
-static void save_reverse(uint8_t item);
-static void save_control(uint8_t item);
-static void show_reverse_menu(uint8_t item);
-static void show_control_menu(uint8_t item);
-static void set_led_default(uint8_t item);
 
 static const menu_item_s brightness_items[] = {
     {
