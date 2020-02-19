@@ -37,18 +37,6 @@ static void confirm_factory_reset(uint8_t item);
 static void do_factory_reset(uint8_t item);
 static void show_member_details(uint8_t item);
 
-enum setting_state {
-    SETTING_STATE_CLOSED,
-    SETTING_STATE_MENU,
-    SETTING_STATE_CREDIT,
-    SETTING_STATE_CREDIT_DETAILS,
-    SETTING_STATE_SCREEN_OFF,
-    SETTING_STATE_BATTERY,
-    SETTING_CONFIRM_FACTORY
-};
-
-static enum setting_state _state = SETTING_STATE_CLOSED;
-
 static const menu_item_s settings_items[] = {
     {
         .label = "Led settings",
@@ -156,15 +144,12 @@ static void do_factory_reset(uint8_t item)
     menu_init(&g_menu, GEN_MENU_POS_X, GEN_MENU_POS_Y + 16, GEN_MENU_WIDTH,
               GEN_MENU_HEIGHT, ARRAY_SIZE(confirm_items), confirm_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-
-    _state = SETTING_CONFIRM_FACTORY;
 }
 
 static void show_member_details(uint8_t item) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     gfx_set_cursor(GEN_MENU_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-    _state = SETTING_STATE_CREDIT_DETAILS;
 
     switch (item) {
         //Line   |                     | 21 character
@@ -213,13 +198,11 @@ static void show_member_details(uint8_t item) {
 }
 
 static void show_led_settings(uint8_t item) {
-    _state = SETTING_STATE_CLOSED;
     nsec_show_led_settings();
     redraw_settings_menu(&g_menu);
 }
 
 static void show_screen_settings(uint8_t item) {
-    _state = SETTING_STATE_CLOSED;
     nsec_show_screen_settings();
 }
 
@@ -238,7 +221,6 @@ static void draw_credit_title(void)
 }
 
 static void show_credit(uint8_t item) {
-    _state = SETTING_STATE_CREDIT;
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_credit_title();
     gfx_set_cursor(GEN_MENU_POS);
@@ -256,14 +238,12 @@ static void draw_battery_title(void)
 }
 
 void show_battery_status(void) {
-    _state = SETTING_STATE_BATTERY;
     draw_battery_title();
     start_battery_status_timer();
 }
 
 static void turn_off_screen(uint8_t item) {
     display_set_brightness(0);
-    _state = SETTING_STATE_SCREEN_OFF;
 }
 
 static bool setting_handle_buttons(button_t button, menu_t *menu)
@@ -271,35 +251,7 @@ static bool setting_handle_buttons(button_t button, menu_t *menu)
     bool quit = false;
 
     if (button == BUTTON_BACK) {
-        switch (_state) {
-            case SETTING_STATE_MENU:
-                _state = SETTING_STATE_CLOSED;
-                quit = true;
-                break;
-
-            case SETTING_STATE_CREDIT_DETAILS:
-                show_credit(4);
-                break;
-
-            case SETTING_STATE_BATTERY:
-                stop_battery_status_timer();
-                // Battery status was moved to the main menu
-                // this is a hack to make it work with minimal
-                // code change
-                _state = SETTING_STATE_CLOSED;
-                show_main_menu();
-                break;
-
-            case SETTING_STATE_SCREEN_OFF:
-                display_set_brightness(get_stored_display_brightness());
-                // no break
-            case SETTING_STATE_CREDIT:
-                nsec_setting_show();
-                break;
-
-            default:
-                break;
-        }
+        quit = true;
     } else {
         menu_button_handler(menu, button);
     }
@@ -314,8 +266,6 @@ void nsec_setting_show(void)
               DISPLAY_WHITE);
 
     redraw_settings_menu(&g_menu);
-
-    _state = SETTING_STATE_MENU;
 
     while (true) {
         button_t btn;

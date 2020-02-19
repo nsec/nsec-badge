@@ -36,6 +36,7 @@
 #include "home_menu.h"
 #include "menu.h"
 #include "nsec_led_settings.h"
+#include "nsec_led_settings_brightness.h"
 #include "nsec_settings.h"
 #include "persistency.h"
 #include "status_bar.h"
@@ -70,20 +71,6 @@
 
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
-
-enum setting_state {
-    SETTING_STATE_CLOSED,
-    SETTING_STATE_MENU,
-    SETTING_STATE_BRIGHTNESS,
-    SETTING_STATE_SPEED,
-    SETTING_STATE_FIRST_COLOR,
-    SETTING_STATE_SECOND_COLOR,
-    SETTING_STATE_THIRD_COLOR,
-    SETTING_STATE_REVERSE,
-    SETTING_STATE_CONTROL,
-};
-
-static enum setting_state _state = SETTING_STATE_CLOSED;
 
 static void show_brightness_menu(uint8_t item);
 static void show_speed_menu(uint8_t item);
@@ -124,29 +111,6 @@ static const menu_item_s settings_items[] = {
     {
         .label = "Turn led on/off",
         .handler = show_control_menu,
-    },
-};
-
-static const menu_item_s brightness_items[] = {
-    {
-        .label = "Super low",
-        .handler = save_brightness,
-    },
-    {
-        .label = "Low",
-        .handler = save_brightness,
-    },
-    {
-        .label = "Medium",
-        .handler = save_brightness,
-    },
-    {
-        .label = "High",
-        .handler = save_brightness,
-    },
-    {
-        .label = "Max",
-        .handler = save_brightness,
     },
 };
 
@@ -270,14 +234,8 @@ static void show_actual_brightness(void)
 }
 
 static void show_brightness_menu(uint8_t item) {
-    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    show_actual_brightness();
-
-    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-              ARRAY_SIZE(brightness_items), brightness_items,
-              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-
-    _state = SETTING_STATE_BRIGHTNESS;
+    nsec_show_led_settings_brightness();
+    redraw_led_settings(&g_menu);
 }
 
 static void save_brightness(uint8_t item) {
@@ -333,8 +291,6 @@ static void show_speed_menu(uint8_t item) {
     menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(speed_items), speed_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
-
-    _state = SETTING_STATE_SPEED;
 }
 
 static void save_speed(uint8_t item) {
@@ -364,14 +320,14 @@ static void save_speed(uint8_t item) {
 
 static void show_actual_color(void)
 {
-    uint32_t color;
-    if (_state == SETTING_STATE_FIRST_COLOR) {
+    uint32_t color = 0;
+    /*if (_state == SETTING_STATE_FIRST_COLOR) {
         color = getArrayColor_WS2812FX(0);
     } else if (_state == SETTING_STATE_SECOND_COLOR) {
         color = getArrayColor_WS2812FX(1);
     } else {
         color = getArrayColor_WS2812FX(2);
-    }
+    }*/
 
     char actual[50] = {0};
     if (color == RED) {
@@ -400,13 +356,13 @@ static void show_actual_color(void)
 }
 
 static void show_color_menu(uint8_t item) {
-    if (item == 2) {
+    /*if (item == 2) {
         _state = SETTING_STATE_FIRST_COLOR;
     } else if (item == 3) {
         _state = SETTING_STATE_SECOND_COLOR;
     } else {
         _state = SETTING_STATE_THIRD_COLOR;
-    }
+    }*/
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_color();
 
@@ -417,7 +373,7 @@ static void show_color_menu(uint8_t item) {
 
 static void set_color(uint32_t color)
 {
-    if (_state == SETTING_STATE_FIRST_COLOR) {
+    /*if (_state == SETTING_STATE_FIRST_COLOR) {
         setArrayColor_packed_WS2812FX(color, 0);
         update_stored_color(0, color, 0, true);
     } else if (_state == SETTING_STATE_SECOND_COLOR) {
@@ -426,7 +382,7 @@ static void set_color(uint32_t color)
     } else {
         setArrayColor_packed_WS2812FX(color, 2);
         update_stored_color(0, color, 2, true);
-    }
+    }*/
 }
 
 static void save_color(uint8_t item) {
@@ -488,8 +444,6 @@ static void show_reverse_menu(uint8_t item) {
     menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(reverse_items), reverse_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
-
-    _state = SETTING_STATE_REVERSE;
 }
 
 static void save_reverse(uint8_t item) {
@@ -520,8 +474,6 @@ static void show_control_menu(uint8_t item) {
     menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(control_items), control_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
-
-    _state = SETTING_STATE_CONTROL;
 }
 
 static void save_control(uint8_t item) {
@@ -554,8 +506,6 @@ void nsec_show_led_settings(void)
               DISPLAY_WHITE);
 
     redraw_led_settings(&g_menu);
-
-    _state = SETTING_STATE_MENU;
 
     while (true) {
         button_t btn;
