@@ -27,17 +27,21 @@
 #include <string.h>
 
 #include "ble/nsec_ble.h"
-#include "gui.h"
-#include "status_bar.h"
+#include "drivers/buttons.h"
 #include "drivers/controls.h"
-#include "nsec_led_settings.h"
-#include "nsec_settings.h"
-#include "menu.h"
-#include "home_menu.h"
-#include "gfx_effect.h"
 #include "drivers/display.h"
 #include "drivers/ws2812fx.h"
+#include "gfx_effect.h"
+#include "gui.h"
+#include "home_menu.h"
+#include "menu.h"
+#include "nsec_led_settings.h"
+#include "nsec_settings.h"
 #include "persistency.h"
+#include "status_bar.h"
+
+#include "FreeRTOS.h"
+#include "queue.h"
 
 #define BRIGHNESS_MENU_INDEX        0
 
@@ -91,8 +95,6 @@ static void save_reverse(uint8_t item);
 static void save_control(uint8_t item);
 static void show_reverse_menu(uint8_t item);
 static void show_control_menu(uint8_t item);
-
-static void setting_handle_buttons(button_t button);
 
 static const menu_item_s settings_items[] = {
     {
@@ -237,19 +239,13 @@ static void draw_led_title(void)
     draw_title("LED CONFIG", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
-static menu_t menu;
+static menu_t g_menu;
 
-void nsec_show_led_settings(void) {
+static void redraw_led_settings(menu_t *menu)
+{
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-
     draw_led_title();
-
-    menu_init(&menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
-              ARRAY_SIZE(settings_items), settings_items, HOME_MENU_BG_COLOR,
-              DISPLAY_WHITE);
-
-    nsec_controls_add_handler(setting_handle_buttons);
-    _state = SETTING_STATE_MENU;
+    menu_ui_redraw_all(menu);
 }
 
 static void show_actual_brightness(void)
@@ -277,7 +273,7 @@ static void show_brightness_menu(uint8_t item) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_brightness();
 
-    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(brightness_items), brightness_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
 
@@ -334,7 +330,7 @@ static void show_speed_menu(uint8_t item) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_speed();
 
-    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(speed_items), speed_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
 
@@ -414,7 +410,7 @@ static void show_color_menu(uint8_t item) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_color();
 
-    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(color_items), color_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
 }
@@ -489,7 +485,7 @@ static void show_reverse_menu(uint8_t item) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_reverse();
 
-    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(reverse_items), reverse_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
 
@@ -521,7 +517,7 @@ static void show_control_menu(uint8_t item) {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     show_actual_control();
 
-    menu_init(&menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
+    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(control_items), control_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
 
@@ -538,27 +534,38 @@ static void save_control(uint8_t item) {
     show_control_menu(0);
 }
 
-static void setting_handle_buttons(button_t button) {
+static bool led_setting_handle_buttons(button_t button, menu_t *menu)
+{
+    bool quit = false;
+
     if (button == BUTTON_BACK) {
-        switch (_state) {
-            case SETTING_STATE_MENU:
-                _state = SETTING_STATE_CLOSED;
-                nsec_setting_show();
-                break;
+        quit = true;
+    } else {
+        menu_button_handler(menu, button);
+    }
 
-            case SETTING_STATE_BRIGHTNESS:
-            case SETTING_STATE_SPEED:
-            case SETTING_STATE_FIRST_COLOR:
-            case SETTING_STATE_SECOND_COLOR:
-            case SETTING_STATE_THIRD_COLOR:
-            case SETTING_STATE_REVERSE:
-            case SETTING_STATE_CONTROL:
-                _state = SETTING_STATE_MENU;
-                nsec_show_led_settings();
-                break;
+    return quit;
+}
 
-            default:
-                break;
+void nsec_show_led_settings(void)
+{
+    menu_init(&g_menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+              ARRAY_SIZE(settings_items), settings_items, HOME_MENU_BG_COLOR,
+              DISPLAY_WHITE);
+
+    redraw_led_settings(&g_menu);
+
+    _state = SETTING_STATE_MENU;
+
+    while (true) {
+        button_t btn;
+        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
+        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
+
+        bool quit = led_setting_handle_buttons(btn, &g_menu);
+
+        if (quit) {
+            break;
         }
     }
 }

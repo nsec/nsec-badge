@@ -120,6 +120,12 @@ static const menu_item_s confirm_items[] = {
 
 static menu_t g_menu;
 
+static void redraw_settings_menu(menu_t *menu)
+{
+    draw_settings_title();
+    menu_ui_redraw_all(menu);
+}
+
 static void confirm_factory_reset(uint8_t item)
 {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
@@ -209,6 +215,7 @@ static void show_member_details(uint8_t item) {
 static void show_led_settings(uint8_t item) {
     _state = SETTING_STATE_CLOSED;
     nsec_show_led_settings();
+    redraw_settings_menu(&g_menu);
 }
 
 static void show_screen_settings(uint8_t item) {
@@ -257,12 +264,6 @@ void show_battery_status(void) {
 static void turn_off_screen(uint8_t item) {
     display_set_brightness(0);
     _state = SETTING_STATE_SCREEN_OFF;
-}
-
-static void redraw_settings_menu(menu_t *menu)
-{
-    draw_settings_title();
-    menu_ui_redraw_all(menu);
 }
 
 static bool setting_handle_buttons(button_t button, menu_t *menu)
