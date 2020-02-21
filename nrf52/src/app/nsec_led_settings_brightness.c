@@ -55,7 +55,8 @@
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
-static void show_brightness_menu(uint8_t item);
+static menu_t g_menu;
+
 static void save_brightness(uint8_t item);
 
 static const menu_item_s brightness_items[] = {
@@ -86,15 +87,6 @@ static void draw_led_title(void)
     draw_title("LED CONFIG", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
-static menu_t g_menu;
-
-static void redraw_led_settings_brightness(menu_t *menu)
-{
-    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    draw_led_title();
-    menu_ui_redraw_all(menu);
-}
-
 static void show_actual_brightness(void)
 {
     uint8_t brightness = getBrightness_WS2812FX();
@@ -111,19 +103,18 @@ static void show_actual_brightness(void)
         snprintf(actual, 50, "Now: %s", "Max");
     }
 
+    gfx_fill_rect(LED_SET_VAL_POS, 6 * 14, 8, DISPLAY_WIDTH);
     gfx_set_cursor(LED_SET_VAL_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts(actual);
 }
 
-static void show_brightness_menu(uint8_t item)
+static void redraw_led_settings_brightness(menu_t *menu)
 {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
+    draw_led_title();
     show_actual_brightness();
-
-    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-              ARRAY_SIZE(brightness_items), brightness_items,
-              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    menu_ui_redraw_all(menu);
 }
 
 static void save_brightness(uint8_t item)
@@ -149,7 +140,8 @@ static void save_brightness(uint8_t item)
     }
 
     update_stored_brightness(getBrightness_WS2812FX(), true);
-    show_brightness_menu(0);
+
+    show_actual_brightness();
 }
 
 static bool led_setting_brightness_handle_buttons(button_t button, menu_t *menu)

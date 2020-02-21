@@ -12,9 +12,11 @@
 #include "cli.h"
 #include "drivers/buttons.h"
 #include "drivers/display.h"
+#include "drivers/flash.h"
 #include "drivers/ws2812fx.h"
 #include "gfx_effect.h"
 #include "home_menu.h"
+#include "persistency.h"
 #include "timer.h"
 
 //static void init_ble() {
@@ -142,23 +144,23 @@ int main(void)
     ret_code = sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE);
     APP_ERROR_CHECK(ret_code);
 
-    // Initialize the CLI.
-    cli_init();
+    // Initialize external flash.
+    flash_init();
 
     // Initialize the NeoPixel led controller.
     init_WS2812FX();
 
-    setBrightness_WS2812FX(64);
-    setSpeed_WS2812FX(40);
-    setColor_WS2812FX(255, 0, 0);
-    setMode_WS2812FX(FX_MODE_CHASE_COLOR);
-    start_WS2812FX();
-
     // Initialize the LCD.
     display_init();
 
+    // Read and restore settings from external flash.
+    load_persistency();
+
     // Initialize buttons.
     nsec_buttons_init();
+
+    // Initialize the CLI.
+    cli_init();
 
     ret = xTaskCreate(led_toggle_task, "LED", configMINIMAL_STACK_SIZE + 200,
                       NULL, 2, &led_toggle_task_handle);
