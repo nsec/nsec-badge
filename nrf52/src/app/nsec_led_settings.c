@@ -37,26 +37,13 @@
 #include "menu.h"
 #include "nsec_led_settings.h"
 #include "nsec_led_settings_brightness.h"
+#include "nsec_led_settings_speed.h"
 #include "nsec_settings.h"
 #include "persistency.h"
 #include "status_bar.h"
 
 #include "FreeRTOS.h"
 #include "queue.h"
-
-#define BRIGHNESS_MENU_INDEX        0
-
-#define SUPER_LOW_BRIGHTNESS_INDEX  0
-#define LOW_BRIGHTNESS_INDEX        1
-#define MEDIUM_BRIGHTNESS_INDEX     2
-#define HIGH_BRIGHTNESS_INDEX       3
-#define MAX_BRIGHTNESS_INDEX        4
-
-#define SUPER_SLOW_SPEED_INDEX      0
-#define SLOW_SPEED_INDEX            1
-#define MEDIUM_SPEED_INDEX          2
-#define FAST_SPEED_INDEX            3
-#define SUPER_FAST_SPEED_INDEX      4
 
 #define RED_INDEX                   0
 #define GREEN_INDEX                 1
@@ -75,7 +62,6 @@ extern uint16_t gfx_height;
 static void show_brightness_menu(uint8_t item);
 static void show_speed_menu(uint8_t item);
 static void show_color_menu(uint8_t item);
-static void save_speed(uint8_t item);
 static void save_color(uint8_t item);
 static void save_reverse(uint8_t item);
 static void save_control(uint8_t item);
@@ -111,25 +97,6 @@ static const menu_item_s settings_items[] = {
         .label = "Turn led on/off",
         .handler = show_control_menu,
     },
-};
-
-static menu_item_s speed_items[] = {
-    {
-        .label = "Super slow",
-        .handler = save_speed,
-    }, {
-        .label = "Slow",
-        .handler = save_speed,
-    }, {
-        .label = "Medium",
-        .handler = save_speed,
-    }, {
-        .label = "Fast",
-        .handler = save_speed,
-    }, {
-        .label = "Super fast",
-        .handler = save_speed,
-    }
 };
 
 static const menu_item_s color_items[] = {
@@ -216,59 +183,9 @@ static void show_brightness_menu(uint8_t item) {
     redraw_led_settings(&g_menu);
 }
 
-static void show_actual_speed(void)
-{
-    uint16_t speed = getSpeed_WS2812FX();
-    char actual[50] = {0};
-    if (speed >= SUPER_SLOW_SPEED) {
-        snprintf(actual, 50, "Now: %s", "Super slow");
-    } else  if (speed >= SLOW_SPEED) {
-        snprintf(actual, 50, "Now: %s", "Slow");
-    } else if (speed >= MEDIUM_SPEED) {
-        snprintf(actual, 50, "Now: %s", "Medium");
-    } else if (speed >= FAST_SPEED) {
-        snprintf(actual, 50, "Now: %s", "Fast");
-    } else {
-        snprintf(actual, 50, "Now: %s", "Super fast");
-    }
-
-    gfx_set_cursor(LED_SET_VAL_POS);
-    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-    gfx_puts(actual);
-}
-
 static void show_speed_menu(uint8_t item) {
-    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    show_actual_speed();
-
-    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-              ARRAY_SIZE(speed_items), speed_items, HOME_MENU_BG_COLOR,
-              DISPLAY_WHITE);
-}
-
-static void save_speed(uint8_t item) {
-    switch(item) {
-        case SUPER_SLOW_SPEED_INDEX:
-            setSpeed_WS2812FX(SUPER_SLOW_SPEED);
-            break;
-        case SLOW_SPEED_INDEX:
-            setSpeed_WS2812FX(SLOW_SPEED);
-            break;
-        case MEDIUM_SPEED_INDEX:
-            setSpeed_WS2812FX(MEDIUM_SPEED);
-            break;
-        case FAST_SPEED_INDEX:
-            setSpeed_WS2812FX(FAST_SPEED);
-            break;
-        case SUPER_FAST_SPEED_INDEX:
-            setSpeed_WS2812FX(SUPER_FAST_SPEED);
-            break;
-        default:
-            break;
-    }
-
-    update_stored_speed(0, getSpeed_WS2812FX(), true);
-    show_speed_menu(0);
+    nsec_show_led_settings_speed();
+    redraw_led_settings(&g_menu);
 }
 
 static void show_actual_color(void)

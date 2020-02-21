@@ -20,15 +20,15 @@
  * SOFTWARE.
  */
 
-#ifndef NSEC_LED_SETTINGS_BRIGHTNESS_H
-#define NSEC_LED_SETTINGS_BRIGHTNESS_H
+#ifndef NSEC_LED_SETTINGS_SPEED_H
+#define NSEC_LED_SETTINGS_SPEED_H
 
-#define SUPER_LOW_BRIGHTNESS 10
-#define LOW_BRIGHTNESS 30
-#define MEDIUM_BRIGHTNESS 60
-#define HIGH_BRIGHTNESS 80
-#define MAX_BRIGHTNESS 100
+#define SUPER_SLOW_SPEED 5000
+#define SLOW_SPEED 1000
+#define MEDIUM_SPEED 500
+#define FAST_SPEED 100
+#define SUPER_FAST_SPEED 10
 
-void nsec_show_led_settings_brightness(void);
+void nsec_show_led_settings_speed(void);
 
-#endif /* NSEC_LED_SETTINGS_BRIGHTNESS_H */
+#endif /* NSEC_LED_SETTINGS_SPEED_H */
