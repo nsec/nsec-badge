@@ -172,7 +172,7 @@ int main(void)
                       NULL, 2, &neopixels_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
-    ret = xTaskCreate(ui_task, "UI", configMINIMAL_STACK_SIZE + 200, NULL, 2,
+    ret = xTaskCreate(ui_task, "UI", configMINIMAL_STACK_SIZE + 1000, NULL, 2,
                       &ui_task_handle);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 
