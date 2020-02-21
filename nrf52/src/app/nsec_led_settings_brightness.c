@@ -103,7 +103,7 @@ static void show_actual_brightness(void)
         snprintf(actual, 50, "Now: %s", "Max");
     }
 
-    gfx_fill_rect(LED_SET_VAL_POS, 6 * 14, 8, DISPLAY_WIDTH);
+    gfx_fill_rect(LED_SET_VAL_POS, 6 * 14, 8, DISPLAY_WHITE);
     gfx_set_cursor(LED_SET_VAL_POS);
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts(actual);
@@ -159,9 +159,31 @@ static bool led_setting_brightness_handle_buttons(button_t button, menu_t *menu)
 
 void nsec_show_led_settings_brightness(void)
 {
+    int initial_index = 0;
+
     menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
               ARRAY_SIZE(brightness_items), brightness_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+
+    switch (getBrightness_WS2812FX()) {
+    case SUPER_LOW_BRIGHTNESS:
+        initial_index = SUPER_LOW_BRIGHTNESS_INDEX;
+        break;
+    case LOW_BRIGHTNESS:
+        initial_index = LOW_BRIGHTNESS_INDEX;
+        break;
+    case MEDIUM_BRIGHTNESS:
+        initial_index = MEDIUM_BRIGHTNESS_INDEX;
+        break;
+    case HIGH_BRIGHTNESS:
+        initial_index = HIGH_BRIGHTNESS_INDEX;
+        break;
+    case MAX_BRIGHTNESS:
+        initial_index = MAX_BRIGHTNESS_INDEX;
+        break;
+    }
+
+    menu_set_selected(&g_menu, initial_index);
 
     redraw_led_settings_brightness(&g_menu);
 

@@ -106,6 +106,12 @@ static uint8_t compute_item_on_top(menu_t *m)
     return m->selected_item - (m->selected_item % m->item_count_per_page);
 }
 
+void menu_set_selected(menu_t *menu, uint8_t index)
+{
+    menu->selected_item = index;
+    menu->item_on_top = compute_item_on_top(menu);
+}
+
 static void menu_change_selected_item(menu_t *menu, MENU_DIRECTION direction)
 {
     switch (direction) {

@@ -48,5 +48,6 @@ void menu_init(menu_t *menu, uint16_t pos_x, uint16_t pos_y, uint16_t width,
                uint16_t text_color, uint16_t bg_color);
 void menu_ui_redraw_all(menu_t *menu);
 void menu_button_handler(menu_t *menu, button_t button);
+void menu_set_selected(menu_t *menu, uint8_t index);
 
 #endif
