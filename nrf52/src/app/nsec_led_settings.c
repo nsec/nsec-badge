@@ -37,6 +37,7 @@
 #include "menu.h"
 #include "nsec_led_settings.h"
 #include "nsec_led_settings_brightness.h"
+#include "nsec_led_settings_color.h"
 #include "nsec_led_settings_speed.h"
 #include "nsec_settings.h"
 #include "persistency.h"
@@ -45,24 +46,14 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 
-#define RED_INDEX                   0
-#define GREEN_INDEX                 1
-#define BLUE_INDEX                  2
-#define WHITE_INDEX                 3
-#define BLACK_INDEX                 4
-#define YELLOW_INDEX                5
-#define CYAN_INDEX                  6
-#define MAGENTA_INDEX               7
-#define PURPLE_INDEX                8
-#define ORANGE_INDEX                9
-
 extern uint16_t gfx_width;
 extern uint16_t gfx_height;
 
 static void show_brightness_menu(uint8_t item);
 static void show_speed_menu(uint8_t item);
-static void show_color_menu(uint8_t item);
-static void save_color(uint8_t item);
+static void show_color1_menu(uint8_t item);
+static void show_color2_menu(uint8_t item);
+static void show_color3_menu(uint8_t item);
 static void save_reverse(uint8_t item);
 static void save_control(uint8_t item);
 static void show_reverse_menu(uint8_t item);
@@ -79,15 +70,15 @@ static const menu_item_s settings_items[] = {
     },
     {
         .label = "Led first color",
-        .handler = show_color_menu,
+        .handler = show_color1_menu,
     },
     {
         .label = "Led second color",
-        .handler = show_color_menu,
+        .handler = show_color2_menu,
     },
     {
         .label = "Led third color",
-        .handler = show_color_menu,
+        .handler = show_color3_menu,
     },
     {
         .label = "Reverse pattern",
@@ -96,49 +87,6 @@ static const menu_item_s settings_items[] = {
     {
         .label = "Turn led on/off",
         .handler = show_control_menu,
-    },
-};
-
-static const menu_item_s color_items[] = {
-    {
-        .label = "Red",
-        .handler = save_color,
-    },
-    {
-        .label = "Green",
-        .handler = save_color,
-    },
-    {
-        .label = "Blue",
-        .handler = save_color,
-    },
-    {
-        .label = "White",
-        .handler = save_color,
-    },
-    {
-        .label = "Black",
-        .handler = save_color,
-    },
-    {
-        .label = "Yellow",
-        .handler = save_color,
-    },
-    {
-        .label = "Cyan",
-        .handler = save_color,
-    },
-    {
-        .label = "Magenta",
-        .handler = save_color,
-    },
-    {
-        .label = "Purple",
-        .handler = save_color,
-    },
-    {
-        .label = "Orange",
-        .handler = save_color,
     },
 };
 
@@ -188,108 +136,25 @@ static void show_speed_menu(uint8_t item) {
     redraw_led_settings(&g_menu);
 }
 
-static void show_actual_color(void)
+static void show_color_menu(uint8_t color_idx)
 {
-    uint32_t color = 0;
-    /*if (_state == SETTING_STATE_FIRST_COLOR) {
-        color = getArrayColor_WS2812FX(0);
-    } else if (_state == SETTING_STATE_SECOND_COLOR) {
-        color = getArrayColor_WS2812FX(1);
-    } else {
-        color = getArrayColor_WS2812FX(2);
-    }*/
-
-    char actual[50] = {0};
-    if (color == RED) {
-        snprintf(actual, 50, "Now: %s", "Red");
-    } else  if (color == GREEN) {
-        snprintf(actual, 50, "Now: %s", "Green");
-    } else if (color == BLUE) {
-        snprintf(actual, 50, "Now: %s", "Blue");
-    } else if (color == WHITE) {
-        snprintf(actual, 50, "Now: %s", "White");
-    } else if (color == BLACK) {
-        snprintf(actual, 50, "Now: %s", "Black");
-    } else if (color == YELLOW) {
-        snprintf(actual, 50, "Now: %s", "Yellow");
-    } else if (color == CYAN) {
-        snprintf(actual, 50, "Now: %s", "Cyan");
-    } else if (color == PURPLE) {
-        snprintf(actual, 50, "Now: %s", "Purple");
-    } else {
-        snprintf(actual, 50, "Now: %s", "Orange");
-    }
-
-    gfx_set_cursor(LED_SET_VAL_POS);
-    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-    gfx_puts(actual);
+    nsec_show_led_settings_color(color_idx);
+    redraw_led_settings(&g_menu);
 }
 
-static void show_color_menu(uint8_t item) {
-    /*if (item == 2) {
-        _state = SETTING_STATE_FIRST_COLOR;
-    } else if (item == 3) {
-        _state = SETTING_STATE_SECOND_COLOR;
-    } else {
-        _state = SETTING_STATE_THIRD_COLOR;
-    }*/
-    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    show_actual_color();
-
-    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-              ARRAY_SIZE(color_items), color_items, HOME_MENU_BG_COLOR,
-              DISPLAY_WHITE);
-}
-
-static void set_color(uint32_t color)
+static void show_color1_menu(uint8_t item)
 {
-    /*if (_state == SETTING_STATE_FIRST_COLOR) {
-        setArrayColor_packed_WS2812FX(color, 0);
-        update_stored_color(0, color, 0, true);
-    } else if (_state == SETTING_STATE_SECOND_COLOR) {
-        setArrayColor_packed_WS2812FX(color, 1);
-        update_stored_color(0, color, 1, true);
-    } else {
-        setArrayColor_packed_WS2812FX(color, 2);
-        update_stored_color(0, color, 2, true);
-    }*/
+    return show_color_menu(0);
 }
 
-static void save_color(uint8_t item) {
-    switch(item) {
-        case RED_INDEX:
-            set_color(RED);
-            break;
-        case GREEN_INDEX:
-            set_color(GREEN);
-            break;
-        case BLUE_INDEX:
-            set_color(BLUE);
-            break;
-        case WHITE_INDEX:
-            set_color(WHITE);
-            break;
-        case BLACK_INDEX:
-            set_color(BLACK);
-            break;
-        case YELLOW_INDEX:
-            set_color(YELLOW);
-            break;
-        case CYAN_INDEX:
-            set_color(CYAN);
-            break;
-        case MAGENTA_INDEX:
-            set_color(MAGENTA);
-            break;
-        case PURPLE_INDEX:
-            set_color(PURPLE);
-            break;
-        case ORANGE_INDEX:
-            set_color(ORANGE);
-            break;
-        default:
-            break;
-    }
+static void show_color2_menu(uint8_t item)
+{
+    return show_color_menu(1);
+}
+
+static void show_color3_menu(uint8_t item)
+{
+    return show_color_menu(2);
 }
 
 static void show_actual_reverse(void)
