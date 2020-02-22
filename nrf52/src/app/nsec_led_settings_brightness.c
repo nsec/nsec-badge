@@ -36,6 +36,7 @@
 #include "home_menu.h"
 #include "menu.h"
 #include "nsec_led_settings.h"
+#include "nsec_led_settings_base.h"
 #include "nsec_led_settings_brightness.h"
 #include "nsec_settings.h"
 #include "persistency.h"
@@ -44,158 +45,38 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 
-#define BRIGHNESS_MENU_INDEX 0
+static void set_value(int value)
+{
+    setBrightness_WS2812FX(value);
+    update_stored_brightness(getBrightness_WS2812FX(), true);
+}
 
-#define SUPER_LOW_BRIGHTNESS_INDEX 0
-#define LOW_BRIGHTNESS_INDEX 1
-#define MEDIUM_BRIGHTNESS_INDEX 2
-#define HIGH_BRIGHTNESS_INDEX 3
-#define MAX_BRIGHTNESS_INDEX 4
-
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
-static menu_t g_menu;
-
-static void save_brightness(uint8_t item);
-
-static const menu_item_s brightness_items[] = {
+static const nsec_led_settings_base_element elements[] = {
     {
         .label = "Super low",
-        .handler = save_brightness,
+        .value = SUPER_LOW_BRIGHTNESS,
     },
     {
         .label = "Low",
-        .handler = save_brightness,
+        .value = LOW_BRIGHTNESS,
     },
     {
         .label = "Medium",
-        .handler = save_brightness,
+        .value = MEDIUM_BRIGHTNESS,
     },
     {
         .label = "High",
-        .handler = save_brightness,
+        .value = HIGH_BRIGHTNESS,
     },
     {
         .label = "Max",
-        .handler = save_brightness,
+        .value = MAX_BRIGHTNESS,
     },
 };
 
-static void draw_led_title(void)
-{
-    draw_title("LED CONFIG", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
-}
-
-static void show_actual_brightness(void)
-{
-    uint8_t brightness = getBrightness_WS2812FX();
-    char actual[50] = {0};
-    if (brightness <= SUPER_LOW_BRIGHTNESS) {
-        snprintf(actual, 50, "Now: %s", "Super Low");
-    } else if (brightness <= LOW_BRIGHTNESS) {
-        snprintf(actual, 50, "Now: %s", "Low");
-    } else if (brightness <= MEDIUM_BRIGHTNESS) {
-        snprintf(actual, 50, "Now: %s", "Medium");
-    } else if (brightness <= HIGH_BRIGHTNESS) {
-        snprintf(actual, 50, "Now: %s", "High");
-    } else {
-        snprintf(actual, 50, "Now: %s", "Max");
-    }
-
-    gfx_fill_rect(LED_SET_VAL_POS, 6 * 14, 8, DISPLAY_WHITE);
-    gfx_set_cursor(LED_SET_VAL_POS);
-    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-    gfx_puts(actual);
-}
-
-static void redraw_led_settings_brightness(menu_t *menu)
-{
-    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    draw_led_title();
-    show_actual_brightness();
-    menu_ui_redraw_all(menu);
-}
-
-static void save_brightness(uint8_t item)
-{
-    switch (item) {
-    case SUPER_LOW_BRIGHTNESS_INDEX:
-        setBrightness_WS2812FX(SUPER_LOW_BRIGHTNESS);
-        break;
-    case LOW_BRIGHTNESS_INDEX:
-        setBrightness_WS2812FX(LOW_BRIGHTNESS);
-        break;
-    case MEDIUM_BRIGHTNESS_INDEX:
-        setBrightness_WS2812FX(MEDIUM_BRIGHTNESS);
-        break;
-    case HIGH_BRIGHTNESS_INDEX:
-        setBrightness_WS2812FX(HIGH_BRIGHTNESS);
-        break;
-    case MAX_BRIGHTNESS_INDEX:
-        setBrightness_WS2812FX(MAX_BRIGHTNESS);
-        break;
-    default:
-        break;
-    }
-
-    update_stored_brightness(getBrightness_WS2812FX(), true);
-
-    show_actual_brightness();
-}
-
-static bool led_setting_brightness_handle_buttons(button_t button, menu_t *menu)
-{
-    bool quit = false;
-
-    if (button == BUTTON_BACK) {
-        quit = true;
-    } else {
-        menu_button_handler(menu, button);
-    }
-
-    return quit;
-}
-
 void nsec_show_led_settings_brightness(void)
 {
-    int initial_index = 0;
-
-    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-              ARRAY_SIZE(brightness_items), brightness_items,
-              HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-
-    switch (getBrightness_WS2812FX()) {
-    case SUPER_LOW_BRIGHTNESS:
-        initial_index = SUPER_LOW_BRIGHTNESS_INDEX;
-        break;
-    case LOW_BRIGHTNESS:
-        initial_index = LOW_BRIGHTNESS_INDEX;
-        break;
-    case MEDIUM_BRIGHTNESS:
-        initial_index = MEDIUM_BRIGHTNESS_INDEX;
-        break;
-    case HIGH_BRIGHTNESS:
-        initial_index = HIGH_BRIGHTNESS_INDEX;
-        break;
-    case MAX_BRIGHTNESS:
-        initial_index = MAX_BRIGHTNESS_INDEX;
-        break;
-    }
-
-    menu_set_selected(&g_menu, initial_index);
-
-    redraw_led_settings_brightness(&g_menu);
-
-    while (true) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
-
-        bool quit = led_setting_brightness_handle_buttons(btn, &g_menu);
-
-        if (quit) {
-            break;
-        }
-    }
+    int initial_value = getBrightness_WS2812FX();
+    nsec_show_led_settings_base(elements, ARRAY_SIZE(elements), initial_value,
+                                set_value);
 }

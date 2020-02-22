@@ -34,231 +34,69 @@
 #include "home_menu.h"
 #include "menu.h"
 #include "nsec_led_settings.h"
+#include "nsec_led_settings_base.h"
 #include "nsec_led_settings_color.h"
 #include "persistency.h"
 
 #include "FreeRTOS.h"
 #include "queue.h"
 
-#define RED_INDEX 0
-#define GREEN_INDEX 1
-#define BLUE_INDEX 2
-#define WHITE_INDEX 3
-#define BLACK_INDEX 4
-#define YELLOW_INDEX 5
-#define CYAN_INDEX 6
-#define MAGENTA_INDEX 7
-#define PURPLE_INDEX 8
-#define ORANGE_INDEX 9
-
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
-static menu_t g_menu;
 static uint8_t g_color_idx;
 
-static void show_actual_color(uint8_t color_idx)
+static void set_value(int value)
 {
-    int color = getArrayColor_WS2812FX(color_idx);
-
-    char actual[50] = {0};
-    if (color == RED) {
-        snprintf(actual, 50, "Now: %s", "Red");
-    } else if (color == GREEN) {
-        snprintf(actual, 50, "Now: %s", "Green");
-    } else if (color == BLUE) {
-        snprintf(actual, 50, "Now: %s", "Blue");
-    } else if (color == WHITE) {
-        snprintf(actual, 50, "Now: %s", "White");
-    } else if (color == BLACK) {
-        snprintf(actual, 50, "Now: %s", "Black");
-    } else if (color == YELLOW) {
-        snprintf(actual, 50, "Now: %s", "Yellow");
-    } else if (color == CYAN) {
-        snprintf(actual, 50, "Now: %s", "Cyan");
-    } else if (color == PURPLE) {
-        snprintf(actual, 50, "Now: %s", "Purple");
-    } else {
-        snprintf(actual, 50, "Now: %s", "Orange");
-    }
-
-    gfx_set_cursor(LED_SET_VAL_POS);
-    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-    gfx_puts(actual);
+    setArrayColor_packed_WS2812FX(value, g_color_idx);
+    update_stored_color(0, value, g_color_idx, true);
 }
 
-static void set_color(uint8_t color_idx, int color)
-{
-    setArrayColor_packed_WS2812FX(color, color_idx);
-    update_stored_color(0, color, color_idx, true);
-    show_actual_color(color_idx);
-}
-
-static void save_color(uint8_t item)
-{
-    switch (item) {
-    case RED_INDEX:
-        set_color(g_color_idx, RED);
-        break;
-    case GREEN_INDEX:
-        set_color(g_color_idx, GREEN);
-        break;
-    case BLUE_INDEX:
-        set_color(g_color_idx, BLUE);
-        break;
-    case WHITE_INDEX:
-        set_color(g_color_idx, WHITE);
-        break;
-    case BLACK_INDEX:
-        set_color(g_color_idx, BLACK);
-        break;
-    case YELLOW_INDEX:
-        set_color(g_color_idx, YELLOW);
-        break;
-    case CYAN_INDEX:
-        set_color(g_color_idx, CYAN);
-        break;
-    case MAGENTA_INDEX:
-        set_color(g_color_idx, MAGENTA);
-        break;
-    case PURPLE_INDEX:
-        set_color(g_color_idx, PURPLE);
-        break;
-    case ORANGE_INDEX:
-        set_color(g_color_idx, ORANGE);
-        break;
-    default:
-        break;
-    }
-}
-
-static const menu_item_s color_items[] = {
+static const nsec_led_settings_base_element elements[] = {
     {
         .label = "Red",
-        .handler = save_color,
+        .value = RED,
     },
     {
         .label = "Green",
-        .handler = save_color,
+        .value = GREEN,
     },
     {
         .label = "Blue",
-        .handler = save_color,
+        .value = BLUE,
     },
     {
         .label = "White",
-        .handler = save_color,
+        .value = WHITE,
     },
     {
         .label = "Black",
-        .handler = save_color,
+        .value = BLACK,
     },
     {
         .label = "Yellow",
-        .handler = save_color,
+        .value = YELLOW,
     },
     {
         .label = "Cyan",
-        .handler = save_color,
+        .value = CYAN,
     },
     {
         .label = "Magenta",
-        .handler = save_color,
+        .value = MAGENTA,
     },
     {
         .label = "Purple",
-        .handler = save_color,
+        .value = PURPLE,
     },
     {
         .label = "Orange",
-        .handler = save_color,
+        .value = ORANGE,
     },
 };
 
-static void draw_led_title(void)
-{
-    draw_title("LED CONFIG", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
-}
-
-static void redraw_led_settings_color(uint8_t color_idx, menu_t *menu)
-{
-    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    draw_led_title();
-    show_actual_color(color_idx);
-    menu_ui_redraw_all(menu);
-}
-
-static bool led_setting_color_handle_buttons(button_t button, menu_t *menu)
-{
-    bool quit = false;
-
-    if (button == BUTTON_BACK) {
-        quit = true;
-    } else {
-        menu_button_handler(menu, button);
-    }
-
-    return quit;
-}
-
 void nsec_show_led_settings_color(uint8_t color_idx)
 {
-    int initial_index = 0;
-
     g_color_idx = color_idx;
 
-    menu_init(&g_menu, LED_SET_POS, LED_SET_WIDTH, LED_SET_HEIGHT,
-              ARRAY_SIZE(color_items), color_items, HOME_MENU_BG_COLOR,
-              DISPLAY_WHITE);
-
-    switch (getArrayColor_WS2812FX(color_idx)) {
-    case RED:
-        initial_index = RED_INDEX;
-        break;
-    case GREEN:
-        initial_index = GREEN_INDEX;
-        break;
-    case BLUE:
-        initial_index = BLUE_INDEX;
-        break;
-    case WHITE:
-        initial_index = WHITE_INDEX;
-        break;
-    case BLACK:
-        initial_index = BLACK_INDEX;
-        break;
-    case YELLOW:
-        initial_index = YELLOW_INDEX;
-        break;
-    case CYAN:
-        initial_index = CYAN_INDEX;
-        break;
-    case MAGENTA:
-        initial_index = MAGENTA_INDEX;
-        break;
-    case PURPLE:
-        initial_index = PURPLE_INDEX;
-        break;
-    case ORANGE:
-        initial_index = ORANGE_INDEX;
-        break;
-    default:
-        break;
-    }
-
-    menu_set_selected(&g_menu, initial_index);
-
-    redraw_led_settings_color(color_idx, &g_menu);
-
-    while (true) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
-
-        bool quit = led_setting_color_handle_buttons(btn, &g_menu);
-
-        if (quit) {
-            break;
-        }
-    }
+    int initial_value = getArrayColor_WS2812FX(color_idx);
+    nsec_show_led_settings_base(elements, ARRAY_SIZE(elements), initial_value,
+                                set_value);
 }
