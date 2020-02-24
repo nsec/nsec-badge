@@ -40,10 +40,14 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 
-extern uint16_t gfx_width;
-extern uint16_t gfx_height;
-
 static menu_t g_menu;
+
+static struct {
+    const nsec_led_settings_base_element *elements;
+    int num_elements;
+    int current_value_index;
+    led_settings_base_set_value_func set_value;
+} g_cur_cfg;
 
 static void show_actual(const char *label)
 {
@@ -56,12 +60,6 @@ static void show_actual(const char *label)
     gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
     gfx_puts(actual);
 }
-
-static struct {
-    const nsec_led_settings_base_element *elements;
-    int num_elements;
-    led_settings_base_set_value_func set_value;
-} g_cur_cfg;
 
 static void on_menu_select(uint8_t item)
 {
@@ -78,30 +76,35 @@ static void draw_led_title(void)
     draw_title("LED CONFIG", 5, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
-static void redraw_led_settings_base(menu_t *menu, const char *actual)
+void led_settings_base_base_redraw(void)
 {
+    ASSERT(g_cur_cfg.current_value_index < g_cur_cfg.num_elements);
+
+    const char *actual_value_label =
+        g_cur_cfg.elements[g_cur_cfg.current_value_index].label;
+
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_led_title();
-    show_actual(actual);
-    menu_ui_redraw_all(menu);
+    show_actual(actual_value_label);
+    menu_ui_redraw_all(&g_menu);
 }
 
-static bool led_setting_base_handle_buttons(button_t button, menu_t *menu)
+bool led_settings_base_base_handle_button(button_t button)
 {
     bool quit = false;
 
     if (button == BUTTON_BACK) {
         quit = true;
     } else {
-        menu_button_handler(menu, button);
+        menu_button_handler(&g_menu, button);
     }
 
     return quit;
 }
 
-void nsec_show_led_settings_base(const nsec_led_settings_base_element *elements,
-                                 int num_elements, int initial_value,
-                                 led_settings_base_set_value_func set_value)
+void nsec_led_settings_base_page_init(
+    const nsec_led_settings_base_element *elements, int num_elements,
+    int initial_value, led_settings_base_set_value_func set_value)
 {
     static menu_item_s menu_items[15];
 
@@ -128,18 +131,5 @@ void nsec_show_led_settings_base(const nsec_led_settings_base_element *elements,
     g_cur_cfg.elements = elements;
     g_cur_cfg.num_elements = num_elements;
     g_cur_cfg.set_value = set_value;
-
-    redraw_led_settings_base(&g_menu, elements[initial_index].label);
-
-    while (true) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
-
-        bool quit = led_setting_base_handle_buttons(btn, &g_menu);
-
-        if (quit) {
-            break;
-        }
-    }
+    g_cur_cfg.current_value_index = initial_index;
 }

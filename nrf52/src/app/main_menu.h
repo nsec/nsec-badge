@@ -6,6 +6,8 @@
 #ifndef main_menu_h
 #define main_menu_h
 
-void show_main_menu(void);
+#include "ui_page.h"
+
+extern const ui_page main_menu_page;
 
 #endif /* main_menu_h */

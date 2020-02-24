@@ -23,6 +23,8 @@
 #ifndef nsec_led_settings_h
 #define nsec_led_settings_h
 
+#include "ui_page.h"
+
 #define SUPER_LOW_BRIGHTNESS        10
 #define LOW_BRIGHTNESS              30
 #define MEDIUM_BRIGHTNESS           60
@@ -35,6 +37,6 @@
 #define FAST_SPEED                  100
 #define SUPER_FAST_SPEED            10
 
-void nsec_show_led_settings(void);
+extern const ui_page led_settings_menu_page;
 
 #endif

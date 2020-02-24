@@ -92,11 +92,18 @@ static const nsec_led_settings_base_element elements[] = {
     },
 };
 
-void nsec_show_led_settings_color(uint8_t color_idx)
+static void led_color_settings_page_init(void *data)
 {
-    g_color_idx = color_idx;
+    led_color_settings_page_cfg *cfg = data;
+    g_color_idx = cfg->index;
 
-    int initial_value = getArrayColor_WS2812FX(color_idx);
-    nsec_show_led_settings_base(elements, ARRAY_SIZE(elements), initial_value,
-                                set_value);
+    int initial_value = getArrayColor_WS2812FX(g_color_idx);
+    nsec_led_settings_base_page_init(elements, ARRAY_SIZE(elements),
+                                     initial_value, set_value);
 }
+
+const ui_page led_color_settings_page = {
+    .init = led_color_settings_page_init,
+    .redraw = led_settings_base_base_redraw,
+    .handle_button = led_settings_base_base_handle_button,
+};

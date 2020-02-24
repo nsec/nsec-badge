@@ -119,27 +119,27 @@ static void draw_led_title(void)
 
 static menu_t g_menu;
 
-static void redraw_led_settings(menu_t *menu)
+static void led_settings_page_redraw(void)
 {
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
     draw_led_title();
-    menu_ui_redraw_all(menu);
+    menu_ui_redraw_all(&g_menu);
 }
 
 static void show_brightness_menu(uint8_t item) {
-    nsec_show_led_settings_brightness();
-    redraw_led_settings(&g_menu);
+    show_ui_page(&led_brightness_settings_page, NULL);
 }
 
 static void show_speed_menu(uint8_t item) {
-    nsec_show_led_settings_speed();
-    redraw_led_settings(&g_menu);
+    show_ui_page(&led_speed_settings_page, NULL);
 }
 
 static void show_color_menu(uint8_t color_idx)
 {
-    nsec_show_led_settings_color(color_idx);
-    redraw_led_settings(&g_menu);
+    led_color_settings_page_cfg cfg = {
+        .index = color_idx,
+    };
+    show_ui_page(&led_color_settings_page, &cfg);
 }
 
 static void show_color1_menu(uint8_t item)
@@ -221,36 +221,26 @@ static void save_control(uint8_t item) {
     show_control_menu(0);
 }
 
-static bool led_setting_handle_buttons(button_t button, menu_t *menu)
+static bool led_settings_page_handle_button(button_t button)
 {
-    bool quit = false;
-
     if (button == BUTTON_BACK) {
-        quit = true;
-    } else {
-        menu_button_handler(menu, button);
+        return true;
     }
 
-    return quit;
+    menu_button_handler(&g_menu, button);
+
+    return false;
 }
 
-void nsec_show_led_settings(void)
+static void led_settings_page_init(void *data)
 {
     menu_init(&g_menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(settings_items), settings_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
-
-    redraw_led_settings(&g_menu);
-
-    while (true) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
-
-        bool quit = led_setting_handle_buttons(btn, &g_menu);
-
-        if (quit) {
-            break;
-        }
-    }
 }
+
+const ui_page led_settings_menu_page = {
+    .init = led_settings_page_init,
+    .redraw = led_settings_page_redraw,
+    .handle_button = led_settings_page_handle_button,
+};

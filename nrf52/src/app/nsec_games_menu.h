@@ -6,6 +6,8 @@
 #ifndef nsec_games_menu_h
 #define nsec_games_menu_h
 
-void nsec_games_menu_show(void);
+#include "ui_page.h"
+
+extern const ui_page games_menu_page;
 
 #endif

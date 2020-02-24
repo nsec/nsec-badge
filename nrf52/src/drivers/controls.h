@@ -13,6 +13,7 @@
 #define NSEC_CONTROLS_MAX_EVENT 8
 
 typedef enum {
+    BUTTON_NONE,
     BUTTON_UP,
     BUTTON_UP_RELEASE,
     BUTTON_DOWN,

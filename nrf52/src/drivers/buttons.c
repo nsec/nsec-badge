@@ -102,6 +102,7 @@ static void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action) {
     }
 
     BaseType_t ret = xQueueSendToBackFromISR(button_event_queue, &btn, NULL);
+    APP_ERROR_CHECK_BOOL(ret != errQUEUE_FULL);
     APP_ERROR_CHECK_BOOL(ret == pdPASS);
 }
 

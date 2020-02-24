@@ -7,7 +7,8 @@
 #ifndef nsec_settings_h
 #define nsec_settings_h
 
-void nsec_setting_show(void);
-void show_battery_status(void);
+#include "ui_page.h"
+
+extern const ui_page settings_menu_page;
 
 #endif /* nsec_settings_h */

@@ -23,6 +23,12 @@
 #ifndef NSEC_LED_SETTINGS_COLOR_H
 #define NSEC_LED_SETTINGS_COLOR_H
 
-void nsec_show_led_settings_color(uint8_t color_idx);
+typedef struct {
+    /* Which of the three colors of the patterns to set.  This value is 1-based.
+     */
+    uint8_t index;
+} led_color_settings_page_cfg;
+
+extern const ui_page led_color_settings_page;
 
 #endif /* NSEC_LED_SETTINGS_COLOR_H */

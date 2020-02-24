@@ -20,6 +20,7 @@
 #include "queue.h"
 #include "status_bar.h"
 #include "timer.h"
+#include "ui_page.h"
 
 #include <string.h>
 
@@ -45,7 +46,18 @@
 static uint16_t gfx_width;
 static uint16_t gfx_height;
 
-static void home_menu_handle_buttons(button_t button);
+#ifdef NSEC_FLAVOR_CTF
+static uint32_t g_last_ms;
+#endif
+
+static void home_page_redraw(void);
+static bool home_page_handle_button(button_t button);
+
+static const ui_page home_page = {
+    .redraw = home_page_redraw,
+    .handle_button = home_page_handle_button,
+    .ticks_timeout = 25,
+};
 
 static enum {
     HOME_STATE_MAIN_MENU_SELECTED,
@@ -222,7 +234,7 @@ void redraw_home_menu_burger_selected(void)
 #ifdef NSEC_FLAVOR_CONF
 #include "images/external/conf/nsec_logo_color_bitmap.h"
 
-static void draw_home_menu(void)
+static void home_page_redraw(void)
 {
     draw_home_menu_bar();
     draw_cursor();
@@ -238,7 +250,7 @@ static void draw_home_menu(void)
     gfx_puts("Conference");
 }
 #else
-static void draw_home_menu(void)
+static void home_page_redraw(void)
 {
     draw_home_menu_bar();
     draw_cursor();
@@ -260,8 +272,7 @@ static void open_burger_menu(void) {
 
     draw_main_menu_title();
 
-    show_main_menu();
-    draw_home_menu();
+    show_ui_page(&main_menu_page, NULL);
 }
 
 static void open_settings_menu(void) {
@@ -273,12 +284,11 @@ static void open_settings_menu(void) {
     gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_on_bitmap,
                           DISPLAY_WHITE);
 
-    draw_settings_title();
-    nsec_setting_show();
-    draw_home_menu();
+    show_ui_page(&settings_menu_page, NULL);
 }
 
-static void home_menu_handle_buttons(button_t button) {
+static bool home_page_handle_button(button_t button)
+{
     /* Reset the screensaver timeout on each button event */
     // screensaver_reset();
 
@@ -308,6 +318,18 @@ static void home_menu_handle_buttons(button_t button) {
     default:
         break;
     }
+
+#ifdef NSEC_FLAVOR_CTF
+    /* Animate the logo. */
+    uint32_t this_ms = get_current_time_millis();
+    if (this_ms - g_last_ms > 20) {
+        draw_home_menu_logo_animation();
+        g_last_ms = this_ms;
+    }
+#endif
+
+    /* Never quit. */
+    return false;
 }
 
 void home_menu_application(void)
@@ -320,33 +342,14 @@ void home_menu_application(void)
     // nsec_status_set_ble_status(get_stored_ble_is_enabled());
     // nsec_battery_manager_init();
 
-    draw_home_menu();
-
     gfx_width = gfx_get_screen_width();
     gfx_height = gfx_get_screen_height();
 
-#ifdef NSEC_FLAVOR_CTF
-    uint32_t last_ms = get_current_time_millis();
-#endif
+    g_last_ms = get_current_time_millis();
+    show_ui_page(&home_page, NULL);
 
-    while (true) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, 25);
-        if (ret == pdTRUE) {
-            home_menu_handle_buttons(btn);
-        } else {
-            /* The receive timed out. */
-        }
-
-#ifdef NSEC_FLAVOR_CTF
-        /* Animate the logo. */
-        uint32_t this_ms = get_current_time_millis();
-        if (this_ms - last_ms > 20) {
-            draw_home_menu_logo_animation();
-            last_ms = this_ms;
-        }
-#endif
-    }
+    /* Not supposed to return. */
+    ASSERT(false);
 }
 
 // To be removed.

@@ -108,30 +108,30 @@ static const menu_item_s confirm_items[] = {
 
 static menu_t g_menu;
 
-static void redraw_settings_menu(menu_t *menu)
+static void settings_page_redraw(void)
 {
     draw_settings_title();
-    menu_ui_redraw_all(menu);
+    menu_ui_redraw_all(&g_menu);
 }
 
 static void confirm_factory_reset(uint8_t item)
 {
-    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    gfx_set_cursor(GEN_MENU_POS);
-    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-
-    if (!item) {
-        set_default_persistency();
-        gfx_puts("Settings restored to\ndefault rebooting...");
-
-        // Not neccessary but it make it more... serious ???
-        nrf_delay_ms(2000);
-        NVIC_SystemReset();
-    } else {
-        gfx_puts("Okay...");
-        nrf_delay_ms(1000);
-        nsec_setting_show();
-    }
+    //    gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
+    //    DISPLAY_WHITE); gfx_set_cursor(GEN_MENU_POS);
+    //    gfx_set_text_background_color(HOME_MENU_BG_COLOR, DISPLAY_WHITE);
+    //
+    //    if (!item) {
+    //        set_default_persistency();
+    //        gfx_puts("Settings restored to\ndefault rebooting...");
+    //
+    //        // Not neccessary but it make it more... serious ???
+    //        nrf_delay_ms(2000);
+    //        NVIC_SystemReset();
+    //    } else {
+    //        gfx_puts("Okay...");
+    //        nrf_delay_ms(1000);
+    //        nsec_setting_show();
+    //    }
 }
 
 static void do_factory_reset(uint8_t item)
@@ -198,8 +198,7 @@ static void show_member_details(uint8_t item) {
 }
 
 static void show_led_settings(uint8_t item) {
-    nsec_show_led_settings();
-    redraw_settings_menu(&g_menu);
+    show_ui_page(&led_settings_menu_page, NULL);
 }
 
 static void show_screen_settings(uint8_t item) {
@@ -232,50 +231,40 @@ static void show_credit(uint8_t item) {
     gfx_update();
 }
 
-static void draw_battery_title(void)
-{
-    draw_title("BATTERY", 25, 5, DISPLAY_BLUE, DISPLAY_WHITE);
-}
+// static void draw_battery_title(void)
+//{
+//    draw_title("BATTERY", 25, 5, DISPLAY_BLUE, DISPLAY_WHITE);
+//}
 
-void show_battery_status(void) {
-    draw_battery_title();
-    start_battery_status_timer();
-}
+// void show_battery_status(void) {
+//    draw_battery_title();
+//    start_battery_status_timer();
+//}
 
 static void turn_off_screen(uint8_t item) {
     display_set_brightness(0);
 }
 
-static bool setting_handle_buttons(button_t button, menu_t *menu)
+static bool settings_page_handle_button(button_t button)
 {
-    bool quit = false;
-
     if (button == BUTTON_BACK) {
-        quit = true;
-    } else {
-        menu_button_handler(menu, button);
+        return true;
     }
 
-    return quit;
+    menu_button_handler(&g_menu, button);
+
+    return false;
 }
 
-void nsec_setting_show(void)
+static void settings_page_init(void *data)
 {
     menu_init(&g_menu, GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(settings_items), settings_items, HOME_MENU_BG_COLOR,
               DISPLAY_WHITE);
-
-    redraw_settings_menu(&g_menu);
-
-    while (true) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
-
-        bool quit = setting_handle_buttons(btn, &g_menu);
-
-        if (quit) {
-            break;
-        }
-    }
 }
+
+const ui_page settings_menu_page = {
+    .init = settings_page_init,
+    .redraw = settings_page_redraw,
+    .handle_button = settings_page_handle_button,
+};

@@ -70,9 +70,15 @@ static const nsec_led_settings_base_element elements[] = {
     },
 };
 
-void nsec_show_led_settings_speed(void)
+static void led_speed_settings_page_init(void *data)
 {
     int initial_value = getSpeed_WS2812FX();
-    nsec_show_led_settings_base(elements, ARRAY_SIZE(elements), initial_value,
-                                set_value);
+    nsec_led_settings_base_page_init(elements, ARRAY_SIZE(elements),
+                                     initial_value, set_value);
 }
+
+const ui_page led_speed_settings_page = {
+    .init = led_speed_settings_page_init,
+    .redraw = led_settings_base_base_redraw,
+    .handle_button = led_settings_base_base_handle_button,
+};

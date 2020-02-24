@@ -29,6 +29,6 @@
 #define HIGH_BRIGHTNESS 80
 #define MAX_BRIGHTNESS 100
 
-void nsec_show_led_settings_brightness(void);
+extern const ui_page led_brightness_settings_page;
 
 #endif /* NSEC_LED_SETTINGS_BRIGHTNESS_H */

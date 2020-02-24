@@ -29,6 +29,6 @@
 #define FAST_SPEED 100
 #define SUPER_FAST_SPEED 10
 
-void nsec_show_led_settings_speed(void);
+extern const ui_page led_speed_settings_page;
 
 #endif /* NSEC_LED_SETTINGS_SPEED_H */

@@ -58,7 +58,7 @@ static void challenges_handle_buttons(button_t button) {
         switch (state) {
         case SETTING_STATE_MENU:
             state = SETTING_STATE_CLOSED;
-            show_main_menu();
+            // show_main_menu();
             break;
         case SETTING_STATE_CHALLENGES:
             nsec_challenges_show();

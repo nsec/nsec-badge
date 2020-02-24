@@ -59,6 +59,5 @@ static void warning_handle_buttons(button_t button) {
     if (button == BUTTON_BACK) {
         redraw_home_menu_burger_selected();
         nsec_controls_suspend_handler(warning_handle_buttons);
-        show_main_menu();
     }
 }

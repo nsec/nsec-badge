@@ -396,7 +396,6 @@ static void led_pattern_handle_buttons(button_t button)
         switch (_state) {
         case SETTING_STATE_MENU:
             _state = SETTING_STATE_CLOSED;
-            show_main_menu();
             break;
         case SETTING_STATE_EXTRA_PATTERN:
         case SETTING_STATE_BASIC_PATTERN:

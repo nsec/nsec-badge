@@ -29,12 +29,12 @@ static menu_t g_menu;
 
 static void nsec_games_start_cortexviper_application(uint8_t item)
 {
-    application_set(&snake_application);
+    // application_set(&snake_application);
 }
 
 static void nsec_games_start_mindsweeper_application(uint8_t item)
 {
-    application_set(&mines_application);
+    // application_set(&mines_application);
 }
 
 static menu_item_s nsec_games_menu_items[] = {
@@ -49,43 +49,33 @@ static void draw_games_title(void)
     draw_title("GAMES", 37, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
-static bool nsec_games_menu_button_handler(button_t button, menu_t *menu)
+static bool games_menu_page_handle_button(button_t button)
 {
-    bool quit = false;
-
     if (button == BUTTON_BACK) {
-        quit = true;
-    } else {
-        menu_button_handler(menu, button);
+        return true;
     }
 
-    return quit;
+    menu_button_handler(&g_menu, button);
+
+    return false;
 }
 
-static void redraw_games_menu(menu_t *menu)
+static void games_menu_page_redraw(void)
 {
     draw_games_title();
     gfx_fill_rect(GEN_MENU_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT, DISPLAY_WHITE);
-    menu_ui_redraw_all(menu);
+    menu_ui_redraw_all(&g_menu);
 }
 
-void nsec_games_menu_show(void)
+static void games_menu_page_init(void *data)
 {
     menu_init(&g_menu, CONF_POS, GEN_MENU_WIDTH, GEN_MENU_HEIGHT,
               ARRAY_SIZE(nsec_games_menu_items), nsec_games_menu_items,
               HOME_MENU_BG_COLOR, DISPLAY_WHITE);
-
-    redraw_games_menu(&g_menu);
-
-    while (true) {
-        button_t btn;
-        BaseType_t ret = xQueueReceive(button_event_queue, &btn, portMAX_DELAY);
-        APP_ERROR_CHECK_BOOL(ret == pdTRUE);
-
-        bool quit = nsec_games_menu_button_handler(btn, &g_menu);
-
-        if (quit) {
-            break;
-        }
-    }
 }
+
+const ui_page games_menu_page = {
+    .init = games_menu_page_init,
+    .redraw = games_menu_page_redraw,
+    .handle_button = games_menu_page_handle_button,
+};

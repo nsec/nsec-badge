@@ -284,7 +284,6 @@ static void nsec_schedule_button_handler(button_t button) {
             break;
         case SCHEDULE_STATE_DATES:
             schedule_state = SCHEDULE_STATE_CLOSED;
-            show_main_menu();
             break;
 
         default:

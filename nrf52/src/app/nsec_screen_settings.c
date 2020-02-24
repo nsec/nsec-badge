@@ -306,7 +306,6 @@ static void screen_setting_handle_buttons(button_t button)
         switch (_state) {
         case SCREEN_SETTING_STATE_MENU:
             _state = SCREEN_SETTING_STATE_CLOSED;
-            nsec_setting_show();
             break;
 
         case SCREEN_SETTING_STATE_BRIGHTNESS:

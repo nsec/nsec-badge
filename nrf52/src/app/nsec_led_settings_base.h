@@ -30,8 +30,10 @@ typedef struct {
     int value;
 } nsec_led_settings_base_element;
 
-void nsec_show_led_settings_base(const nsec_led_settings_base_element *elements,
-                                 int num_elements, int initial_index,
-                                 led_settings_base_set_value_func set_value);
+void nsec_led_settings_base_page_init(
+    const nsec_led_settings_base_element *elements, int num_elements,
+    int initial_index, led_settings_base_set_value_func set_value);
+void led_settings_base_base_redraw(void);
+bool led_settings_base_base_handle_button(button_t button);
 
 #endif /* NSEC_LED_SETTINGS_BASE_H */
