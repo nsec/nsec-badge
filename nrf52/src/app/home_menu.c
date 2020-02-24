@@ -47,7 +47,10 @@ static uint16_t gfx_height;
 
 static void home_menu_handle_buttons(button_t button);
 
-static enum home_state _state = HOME_STATE_CLOSED;
+static enum {
+    HOME_STATE_MAIN_MENU_SELECTED,
+    HOME_STATE_SETTINGS_SELECTED
+} _state = HOME_STATE_MAIN_MENU_SELECTED;
 
 static void draw_burger_menu_icon(int16_t x, int16_t y, uint16_t color) {
     gfx_fill_rect(x, y, 3, 3, color);
@@ -60,7 +63,7 @@ static void draw_burger_menu_icon(int16_t x, int16_t y, uint16_t color) {
 }
 
 static void draw_cursor(void) {
-    if (_state == HOME_STATE_MENU) {
+    if (_state == HOME_STATE_MAIN_MENU_SELECTED) {
         gfx_fill_triangle(HOME_MENU_POS_X + 1, SETTINGS_MENU_CUR_Y,
                           HOME_MENU_POS_X + 7, SETTINGS_MENU_CUR_Y + 5,
                           HOME_MENU_POS_X + 1, SETTINGS_MENU_CUR_Y + 10,
@@ -247,13 +250,6 @@ static void draw_home_menu(void)
 }
 #endif
 
-void show_home_menu(enum home_state state) {
-    _state = state;
-    gfx_width = gfx_get_screen_width();
-    gfx_height = gfx_get_screen_height();
-    draw_home_menu();
-}
-
 static void open_burger_menu(void) {
     gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, gfx_height, DISPLAY_WHITE);
 
@@ -286,47 +282,23 @@ static void home_menu_handle_buttons(button_t button) {
     /* Reset the screensaver timeout on each button event */
     // screensaver_reset();
 
-    /* Don't handle the buttons if we are in a submenu */
-    // if (!_is_at_home_menu) {
-    //    return;
-    //}
-
     switch (button) {
     case BUTTON_BACK:
-        if (_state == HOME_STATE_MENU || _state == HOME_STATE_SETTINGS) {
-            // Close menu (show intro ???); or maybe nothing
-        } else if (_state == HOME_STATE_MENU_SELECTED) {
-            _state = HOME_STATE_MENU;
-            draw_home_menu();
-        } else {
-            _state = HOME_STATE_SETTINGS;
-            draw_home_menu();
-        }
-        break;
-
-    case BUTTON_DOWN:
-        if (_state == HOME_STATE_MENU) {
-            _state = HOME_STATE_SETTINGS;
-            draw_cursor();
-        } else if (_state == HOME_STATE_SETTINGS) {
-            _state = HOME_STATE_MENU;
-            draw_cursor();
-        }
         break;
 
     case BUTTON_UP:
-        if (_state == HOME_STATE_MENU) {
-            _state = HOME_STATE_SETTINGS;
+    case BUTTON_DOWN:
+        if (_state == HOME_STATE_MAIN_MENU_SELECTED) {
+            _state = HOME_STATE_SETTINGS_SELECTED;
             draw_cursor();
-        } else if (_state == HOME_STATE_SETTINGS) {
-            _state = HOME_STATE_MENU;
+        } else if (_state == HOME_STATE_SETTINGS_SELECTED) {
+            _state = HOME_STATE_MAIN_MENU_SELECTED;
             draw_cursor();
         }
-
         break;
 
     case BUTTON_ENTER:
-        if (_state == HOME_STATE_MENU) {
+        if (_state == HOME_STATE_MAIN_MENU_SELECTED) {
             open_burger_menu();
         } else {
             open_settings_menu();
@@ -347,7 +319,11 @@ void home_menu_application(void)
     // nsec_status_bar_init();
     // nsec_status_set_ble_status(get_stored_ble_is_enabled());
     // nsec_battery_manager_init();
-    show_home_menu(HOME_STATE_MENU);
+
+    draw_home_menu();
+
+    gfx_width = gfx_get_screen_width();
+    gfx_height = gfx_get_screen_height();
 
 #ifdef NSEC_FLAVOR_CTF
     uint32_t last_ms = get_current_time_millis();

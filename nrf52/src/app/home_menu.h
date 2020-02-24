@@ -11,15 +11,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-enum home_state {
-    HOME_STATE_CLOSED,
-    HOME_STATE_MENU,
-    HOME_STATE_MENU_SELECTED,
-    HOME_STATE_SETTINGS,
-    HOME_STATE_SETTINGS_SELECTED
-};
-
-void show_home_menu(enum home_state state);
 void draw_home_menu_bar(void);
 void redraw_home_menu_burger_selected(void);
 void draw_title(const char *text, uint8_t pos_x, uint8_t pos_y,
