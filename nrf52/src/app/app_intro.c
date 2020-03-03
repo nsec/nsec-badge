@@ -30,24 +30,6 @@ struct line {
     uint8_t len;
 };
 
-static struct line brain[15] = {
-    {25, 1, 24},
-    {20, 4, 36},
-    {15, 7, 45},
-    {15, 10, 48},
-    {18, 13, 45},
-    {19, 16, 45},
-    {21, 19, 45},
-    {20, 22, 45},
-    {19, 25, 45},
-    {17, 28, 48},
-    {13, 31, 51},
-    {14, 34, 48},
-    {26, 37, 36},
-    {44, 40, 18},
-    {47, 43, 6}
-};
-
 static void service_process(void)
 {
     cli_process();
@@ -69,6 +51,24 @@ static void service_delay_ms(uint32_t ms)
         } while (remaining > 0);
     }
 }
+
+static void greetings(void)
+{
+    gfx_draw_16bit_bitmap(12, 25, &avatar_neuro_bitmap, DISPLAY_BLACK);
+    service_delay_ms(500);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_set_cursor(63, 30);
+    gfx_puts_lag("Greetings,", 20);
+    service_delay_ms(500);
+    gfx_set_cursor(63, 42);
+    gfx_puts_lag(get_stored_identity(), 20);
+}
+
+#ifdef NSEC_FLAVOR_CTF
+static const struct line brain[15] = {
+    {25, 1, 24},  {20, 4, 36},  {15, 7, 45},  {15, 10, 48}, {18, 13, 45},
+    {19, 16, 45}, {21, 19, 45}, {20, 22, 45}, {19, 25, 45}, {17, 28, 48},
+    {13, 31, 51}, {14, 34, 48}, {26, 37, 36}, {44, 40, 18}, {47, 43, 6}};
 
 static void animated_brain(void)
 {
@@ -131,19 +131,6 @@ static void animated_name(const struct bitmap *bitmap)
     }
 }
 
-static void greetings(void)
-{
-    gfx_draw_16bit_bitmap(12, 25, &avatar_neuro_bitmap, DISPLAY_BLACK);
-    service_delay_ms(500);
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_set_cursor(63, 30);
-    gfx_puts_lag("Greetings,", 20);
-    service_delay_ms(500);
-    gfx_set_cursor(63, 42);
-    gfx_puts_lag(get_stored_identity(), 20);
-}
-
-#ifdef NSEC_FLAVOR_CTF
 //TODO improve with some neopixeling ?
 void app_intro(void (*service_callback)(void))
 {

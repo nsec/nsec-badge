@@ -78,7 +78,7 @@ static void neopixels_task(void *params)
 
 static void ui_task(void *params)
 {
-    home_menu_application();
+    show_ui_page(&home_page, NULL);
 
     /* The home menu is never supposed to return. */
     APP_ERROR_CHECK_BOOL(false);

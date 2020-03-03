@@ -50,15 +50,6 @@ static uint16_t gfx_height;
 static uint32_t g_last_ms;
 #endif
 
-static void home_page_redraw(void);
-static bool home_page_handle_button(button_t button);
-
-static const ui_page home_page = {
-    .redraw = home_page_redraw,
-    .handle_button = home_page_handle_button,
-    .ticks_timeout = 25,
-};
-
 static enum {
     HOME_STATE_MAIN_MENU_SELECTED,
     HOME_STATE_SETTINGS_SELECTED
@@ -121,7 +112,7 @@ void draw_main_menu_title(void)
     draw_title("MENU", SETTINGS_MENU_TITLE_X, 5, DISPLAY_BLUE, DISPLAY_WHITE);
 }
 
-void draw_home_menu_bar(void)
+static void draw_home_menu_bar(void)
 {
     gfx_fill_rect(HOME_MENU_POS, HOME_MENU_WIDTH, HOME_MENU_HEIGHT,
                   HOME_MENU_BG_COLOR);
@@ -132,6 +123,39 @@ void draw_home_menu_bar(void)
                           HOME_MENU_BG_COLOR);
 }
 
+void redraw_home_menu_burger_selected(void)
+{
+    gfx_fill_rect(HOME_MENU_POS, HOME_MENU_WIDTH, HOME_MENU_HEIGHT / 2,
+                  DISPLAY_WHITE);
+
+    gfx_fill_rect(HOME_MENU_POS_X, HOME_MENU_POS_Y + (HOME_MENU_HEIGHT / 2),
+                  HOME_MENU_WIDTH, HOME_MENU_HEIGHT / 2, HOME_MENU_BG_COLOR);
+
+    gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_off_bitmap,
+                          HOME_MENU_BG_COLOR);
+
+    draw_burger_menu_icon(BURGER_MENU_POS, HOME_MENU_BG_COLOR);
+}
+
+#ifdef NSEC_FLAVOR_CONF
+#include "images/external/conf/nsec_logo_color_bitmap.h"
+
+static void home_page_redraw(void)
+{
+    draw_home_menu_bar();
+    draw_cursor();
+
+    gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, gfx_height, DISPLAY_BLACK);
+
+    display_draw_16bit_ext_bitmap(NSEC_LOGO_POS, &nsec_logo_color_bitmap,
+                                  DISPLAY_BLACK);
+
+    gfx_set_cursor(CONF_STR_POS);
+    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
+    gfx_set_text_size(1);
+    gfx_puts("Conference");
+}
+#else
 static void draw_home_menu_logo_animation(void)
 {
     static uint8_t frame = 0;
@@ -216,40 +240,6 @@ static void draw_home_menu_logo_animation(void)
     frame = frame >= 45 ? 0 : frame + 1;
 }
 
-void redraw_home_menu_burger_selected(void)
-{
-    gfx_fill_rect(HOME_MENU_POS, HOME_MENU_WIDTH, HOME_MENU_HEIGHT / 2,
-                  DISPLAY_WHITE);
-
-    gfx_fill_rect(HOME_MENU_POS_X, HOME_MENU_POS_Y + (HOME_MENU_HEIGHT / 2),
-                  HOME_MENU_WIDTH, HOME_MENU_HEIGHT / 2, HOME_MENU_BG_COLOR);
-
-    gfx_draw_16bit_bitmap(SETTINGS_MENU_POS, &settings_off_bitmap,
-                          HOME_MENU_BG_COLOR);
-
-    draw_burger_menu_icon(BURGER_MENU_POS, HOME_MENU_BG_COLOR);
-
-}
-
-#ifdef NSEC_FLAVOR_CONF
-#include "images/external/conf/nsec_logo_color_bitmap.h"
-
-static void home_page_redraw(void)
-{
-    draw_home_menu_bar();
-    draw_cursor();
-
-    gfx_fill_rect(0, 0, gfx_width - HOME_MENU_WIDTH, gfx_height, DISPLAY_BLACK);
-
-    display_draw_16bit_ext_bitmap(NSEC_LOGO_POS, &nsec_logo_color_bitmap,
-                                   DISPLAY_BLACK);
-
-    gfx_set_cursor(CONF_STR_POS);
-    gfx_set_text_background_color(DISPLAY_WHITE, DISPLAY_BLACK);
-    gfx_set_text_size(1);
-    gfx_puts("Conference");
-}
-#else
 static void home_page_redraw(void)
 {
     draw_home_menu_bar();
@@ -332,24 +322,13 @@ static bool home_page_handle_button(button_t button)
     return false;
 }
 
-void home_menu_application(void)
+static void home_page_init(void *init_data)
 {
-    /* Reset the screensaver timer when we start the home menu */
-    // screensaver_reset();
-
-    // menu_handler_init();
-    // nsec_status_bar_init();
-    // nsec_status_set_ble_status(get_stored_ble_is_enabled());
-    // nsec_battery_manager_init();
-
     gfx_width = gfx_get_screen_width();
     gfx_height = gfx_get_screen_height();
-
+#ifdef NSEC_FLAVOR_CTF
     g_last_ms = get_current_time_millis();
-    show_ui_page(&home_page, NULL);
-
-    /* Not supposed to return. */
-    ASSERT(false);
+#endif
 }
 
 // To be removed.
@@ -357,3 +336,10 @@ bool is_at_home_menu(void)
 {
     return false;
 }
+
+const ui_page home_page = {
+    .init = home_page_init,
+    .redraw = home_page_redraw,
+    .handle_button = home_page_handle_button,
+    .ticks_timeout = 25,
+};

@@ -39,7 +39,6 @@ static menu_t g_menu;
 
 #ifdef NSEC_FLAVOR_CONF
 static void open_conference_schedule(uint8_t item) {
-    _state = MAIN_MENU_STATE_CLOSED;
     nsec_schedule_show_dates();
 }
 #endif
