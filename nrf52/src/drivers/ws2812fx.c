@@ -62,81 +62,77 @@
 #include <stdlib.h>
 #include <string.h>
 
-uint8_t get_random_wheel_index(uint8_t);
-void strip_off_WS2812FX(void);
+static uint16_t mode_static(void);
+static uint16_t blink(uint32_t, uint32_t, bool strobe);
+static uint16_t mode_blink(void);
+static uint16_t mode_blink_rainbow(void);
+static uint16_t mode_strobe(void);
+static uint16_t mode_strobe_rainbow(void);
+static uint16_t color_wipe(uint32_t, uint32_t, bool);
+static uint16_t mode_color_wipe(void);
+static uint16_t mode_color_wipe_inv(void);
+static uint16_t mode_color_wipe_rev(void);
+static uint16_t mode_color_wipe_rev_inv(void);
+static uint16_t mode_color_wipe_random(void);
+static uint16_t mode_color_sweep_random(void);
+static uint16_t mode_random_color(void);
+static uint16_t mode_single_dynamic(void);
+static uint16_t mode_multi_dynamic(void);
+static uint16_t mode_breath(void);
+static uint16_t mode_fade(void);
+static uint16_t mode_scan(void);
+static uint16_t mode_dual_scan(void);
+static uint16_t theater_chase(uint32_t, uint32_t);
+static uint16_t mode_theater_chase(void);
+static uint16_t mode_theater_chase_rainbow(void);
+static uint16_t mode_rainbow(void);
+static uint16_t mode_rainbow_cycle(void);
+static uint16_t mode_running_lights(void);
+static uint16_t twinkle(uint32_t);
+static uint16_t mode_twinkle(void);
+static uint16_t mode_twinkle_random(void);
+static uint16_t twinkle_fade(uint32_t);
+static uint16_t mode_twinkle_fade(void);
+static uint16_t mode_twinkle_fade_random(void);
+static uint16_t mode_sparkle(void);
+static uint16_t mode_flash_sparkle(void);
+static uint16_t mode_hyper_sparkle(void);
+static uint16_t mode_multi_strobe(void);
+static uint16_t chase(uint32_t, uint32_t, uint32_t);
+static uint16_t mode_chase_white(void);
+static uint16_t mode_chase_color(void);
+static uint16_t mode_chase_random(void);
+static uint16_t mode_chase_rainbow(void);
+static uint16_t mode_chase_flash(void);
+static uint16_t mode_chase_flash_random(void);
+static uint16_t mode_chase_rainbow_white(void);
+static uint16_t mode_chase_blackout(void);
+static uint16_t mode_chase_blackout_rainbow(void);
+static uint16_t running(uint32_t, uint32_t);
+static uint16_t mode_running_color(void);
+static uint16_t mode_running_red_blue(void);
+static uint16_t mode_running_random(void);
+static uint16_t mode_larson_scanner(void);
+static uint16_t mode_comet(void);
+static uint16_t fireworks(uint32_t);
+static uint16_t mode_fireworks(void);
+static uint16_t mode_fireworks_random(void);
+static uint16_t mode_merry_christmas(void);
+static uint16_t mode_halloween(void);
+static uint16_t mode_fire_flicker(void);
+static uint16_t mode_fire_flicker_soft(void);
+static uint16_t mode_fire_flicker_intense(void);
+static uint16_t fire_flicker(int);
+static uint16_t mode_circus_combustus(void);
+static uint16_t tricolor_chase(uint32_t, uint32_t, uint32_t);
+static uint16_t mode_bicolor_chase(void);
+static uint16_t mode_tricolor_chase(void);
+static uint16_t mode_icu(void);
+static uint16_t mode_custom(void);
 
-void strip_off(void);
-void fade_out(void);
+typedef uint16_t (*mode_func_t)(void);
 
-uint16_t mode_static(void);
-uint16_t blink(uint32_t, uint32_t, bool strobe);
-uint16_t mode_blink(void);
-uint16_t mode_blink_rainbow(void);
-uint16_t mode_strobe(void);
-uint16_t mode_strobe_rainbow(void);
-uint16_t color_wipe(uint32_t, uint32_t, bool);
-uint16_t mode_color_wipe(void);
-uint16_t mode_color_wipe_inv(void);
-uint16_t mode_color_wipe_rev(void);
-uint16_t mode_color_wipe_rev_inv(void);
-uint16_t mode_color_wipe_random(void);
-uint16_t mode_color_sweep_random(void);
-uint16_t mode_random_color(void);
-uint16_t mode_single_dynamic(void);
-uint16_t mode_multi_dynamic(void);
-uint16_t mode_breath(void);
-uint16_t mode_fade(void);
-uint16_t mode_scan(void);
-uint16_t mode_dual_scan(void);
-uint16_t theater_chase(uint32_t, uint32_t);
-uint16_t mode_theater_chase(void);
-uint16_t mode_theater_chase_rainbow(void);
-uint16_t mode_rainbow(void);
-uint16_t mode_rainbow_cycle(void);
-uint16_t mode_running_lights(void);
-uint16_t twinkle(uint32_t);
-uint16_t mode_twinkle(void);
-uint16_t mode_twinkle_random(void);
-uint16_t twinkle_fade(uint32_t);
-uint16_t mode_twinkle_fade(void);
-uint16_t mode_twinkle_fade_random(void);
-uint16_t mode_sparkle(void);
-uint16_t mode_flash_sparkle(void);
-uint16_t mode_hyper_sparkle(void);
-uint16_t mode_multi_strobe(void);
-uint16_t chase(uint32_t, uint32_t, uint32_t);
-uint16_t mode_chase_white(void);
-uint16_t mode_chase_color(void);
-uint16_t mode_chase_random(void);
-uint16_t mode_chase_rainbow(void);
-uint16_t mode_chase_flash(void);
-uint16_t mode_chase_flash_random(void);
-uint16_t mode_chase_rainbow_white(void);
-uint16_t mode_chase_blackout(void);
-uint16_t mode_chase_blackout_rainbow(void);
-uint16_t running(uint32_t, uint32_t);
-uint16_t mode_running_color(void);
-uint16_t mode_running_red_blue(void);
-uint16_t mode_running_random(void);
-uint16_t mode_larson_scanner(void);
-uint16_t mode_comet(void);
-uint16_t fireworks(uint32_t);
-uint16_t mode_fireworks(void);
-uint16_t mode_fireworks_random(void);
-uint16_t mode_merry_christmas(void);
-uint16_t mode_halloween(void);
-uint16_t mode_fire_flicker(void);
-uint16_t mode_fire_flicker_soft(void);
-uint16_t mode_fire_flicker_intense(void);
-uint16_t fire_flicker(int);
-uint16_t mode_circus_combustus(void);
-uint16_t tricolor_chase(uint32_t, uint32_t, uint32_t);
-uint16_t mode_bicolor_chase(void);
-uint16_t mode_tricolor_chase(void);
-uint16_t mode_icu(void);
-uint16_t mode_custom(void);
-
-uint16_t (*mode[])(void) = {
+static mode_func_t modes[] = {
     mode_static,
     mode_blink,
     mode_breath,
@@ -196,7 +192,7 @@ uint16_t (*mode[])(void) = {
     mode_custom,
 };
 
-const char *name[] = {
+static const char *name[] = {
     "Static",
     "Blink",
     "Breath",
@@ -256,7 +252,7 @@ const char *name[] = {
     "Custom",
 };
 
-uint32_t SPEED_MAX = 65535;
+static uint32_t SPEED_MAX = 65535;
 
 // Macro to increase readability
 #define SEGMENT g_fx.segments[g_fx.segment_index]
@@ -326,7 +322,7 @@ void service_WS2812FX(void)
             g_fx.segment_index = i;
             if (now > SEGMENT_RUNTIME.next_time || g_fx.triggered) {
                 doShow = true;
-                uint16_t delay = mode[SEGMENT.mode]();
+                uint16_t delay = modes[SEGMENT.mode]();
                 SEGMENT_RUNTIME.next_time = now + max((int)delay, SPEED_MIN);
                 SEGMENT_RUNTIME.counter_mode_call++;
             }
@@ -348,7 +344,8 @@ void start_WS2812FX(void)
 void stop_WS2812FX(void)
 {
     g_fx.running = false;
-    strip_off_WS2812FX();
+    nsec_neoPixel_clear();
+    nsec_neoPixel_show();
 }
 
 void trigger_WS2812FX(void)
@@ -623,15 +620,6 @@ void moveSegment_WS2812FX(uint8_t src, uint8_t dest) {
 ##################################################### */
 
 /*
- * Turns everything off. Doh.
- */
-void strip_off_WS2812FX(void)
-{
-    nsec_neoPixel_clear();
-    nsec_neoPixel_show();
-}
-
-/*
  * Put a value 0 to 255 in to get a color value.
  * The colours are a transition r -> g -> b -> back to r
  * Inspired by the Adafruit examples.
@@ -656,7 +644,8 @@ static uint32_t color_wheel(uint8_t pos)
 /*
  * Returns a new, random wheel index with a minimum distance of 42 from pos.
  */
-uint8_t get_random_wheel_index(uint8_t pos) {
+static uint8_t get_random_wheel_index(uint8_t pos)
+{
     uint8_t r = 0;
     uint8_t x = 0;
     uint8_t y = 0;
@@ -675,7 +664,8 @@ uint8_t get_random_wheel_index(uint8_t pos) {
 /*
  * No blinking. Just plain old static light.
  */
-uint16_t mode_static(void) {
+static uint16_t mode_static(void)
+{
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         nsec_neoPixel_set_pixel_color_packed(i, SEGMENT.colors[0]);
     }
@@ -688,7 +678,8 @@ uint16_t mode_static(void) {
  * if(strobe == true) then create a strobe effect
  */
 
-uint16_t blink(uint32_t color1, uint32_t color2, bool strobe) {
+static uint16_t blink(uint32_t color1, uint32_t color2, bool strobe)
+{
     uint32_t color =
         ((SEGMENT_RUNTIME.counter_mode_call & 1) == 0) ? color1 : color2;
     if (SEGMENT.reverse)
@@ -708,14 +699,16 @@ uint16_t blink(uint32_t color1, uint32_t color2, bool strobe) {
 /*
  * Normal blinking. 50% on/off time.
  */
-uint16_t mode_blink(void) {
+static uint16_t mode_blink(void)
+{
     return blink(SEGMENT.colors[0], SEGMENT.colors[1], false);
 }
 
 /*
  * Classic Blink effect. Cycling through the rainbow.
  */
-uint16_t mode_blink_rainbow(void) {
+static uint16_t mode_blink_rainbow(void)
+{
     return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF),
                  SEGMENT.colors[1], false);
 }
@@ -723,14 +716,16 @@ uint16_t mode_blink_rainbow(void) {
 /*
  * Classic Strobe effect.
  */
-uint16_t mode_strobe(void) {
+static uint16_t mode_strobe(void)
+{
     return blink(SEGMENT.colors[0], SEGMENT.colors[1], true);
 }
 
 /*
  * Classic Strobe effect. Cycling through the rainbow.
  */
-uint16_t mode_strobe_rainbow(void) {
+static uint16_t mode_strobe_rainbow(void)
+{
     return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF),
                  SEGMENT.colors[1], true);
 }
@@ -740,7 +735,8 @@ uint16_t mode_strobe_rainbow(void) {
  * LEDs are turned on (color1) in sequence, then turned off (color2) in
  * sequence. if (bool rev == true) then LEDs are turned off in reverse order
  */
-uint16_t color_wipe(uint32_t color1, uint32_t color2, bool rev) {
+static uint16_t color_wipe(uint32_t color1, uint32_t color2, bool rev)
+{
     if (SEGMENT_RUNTIME.counter_mode_step < SEGMENT_LENGTH) {
         uint32_t led_offset = SEGMENT_RUNTIME.counter_mode_step;
         if (SEGMENT.reverse) {
@@ -770,19 +766,23 @@ uint16_t color_wipe(uint32_t color1, uint32_t color2, bool rev) {
 /*
  * Lights all LEDs one after another.
  */
-uint16_t mode_color_wipe(void) {
+static uint16_t mode_color_wipe(void)
+{
     return color_wipe(SEGMENT.colors[0], SEGMENT.colors[1], false);
 }
 
-uint16_t mode_color_wipe_inv(void) {
+static uint16_t mode_color_wipe_inv(void)
+{
     return color_wipe(SEGMENT.colors[1], SEGMENT.colors[0], false);
 }
 
-uint16_t mode_color_wipe_rev(void) {
+static uint16_t mode_color_wipe_rev(void)
+{
     return color_wipe(SEGMENT.colors[0], SEGMENT.colors[1], true);
 }
 
-uint16_t mode_color_wipe_rev_inv(void) {
+static uint16_t mode_color_wipe_rev_inv(void)
+{
     return color_wipe(SEGMENT.colors[1], SEGMENT.colors[0], true);
 }
 
@@ -790,7 +790,8 @@ uint16_t mode_color_wipe_rev_inv(void) {
  * Turns all LEDs after each other to a random color.
  * Then starts over with another color.
  */
-uint16_t mode_color_wipe_random(void) {
+static uint16_t mode_color_wipe_random(void)
+{
     if (SEGMENT_RUNTIME.counter_mode_step % SEGMENT_LENGTH ==
         0) { // aux_param will store our random color wheel index
         SEGMENT_RUNTIME.aux_param =
@@ -803,7 +804,8 @@ uint16_t mode_color_wipe_random(void) {
 /*
  * Random color introduced alternating from start and end of strip.
  */
-uint16_t mode_color_sweep_random(void) {
+static uint16_t mode_color_sweep_random(void)
+{
     if (SEGMENT_RUNTIME.counter_mode_step % SEGMENT_LENGTH ==
         0) { // aux_param will store our random color wheel index
         SEGMENT_RUNTIME.aux_param =
@@ -817,7 +819,8 @@ uint16_t mode_color_sweep_random(void) {
  * Lights all LEDs in one random color up. Then switches them
  * to the next random color.
  */
-uint16_t mode_random_color(void) {
+static uint16_t mode_random_color(void)
+{
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(
         SEGMENT_RUNTIME
             .aux_param); // aux_param will store our random color wheel index
@@ -833,7 +836,8 @@ uint16_t mode_random_color(void) {
  * Lights every LED in a random color. Changes one random LED after the other
  * to another random color.
  */
-uint16_t mode_single_dynamic(void) {
+static uint16_t mode_single_dynamic(void)
+{
     if (SEGMENT_RUNTIME.counter_mode_call == 0) {
         for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
             nsec_neoPixel_set_pixel_color_packed(
@@ -850,7 +854,8 @@ uint16_t mode_single_dynamic(void) {
  * Lights every LED in a random color. Changes all LED at the same time
  * to new random colors.
  */
-uint16_t mode_multi_dynamic(void) {
+static uint16_t mode_multi_dynamic(void)
+{
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         nsec_neoPixel_set_pixel_color_packed(
             i, color_wheel(nsec_random_get_byte(255)));
@@ -862,7 +867,8 @@ uint16_t mode_multi_dynamic(void) {
  * Does the "standby-breathing" of well known i-Devices. Fixed Speed.
  * Use mode "fade" if you like to have something similar with a different speed.
  */
-uint16_t mode_breath(void) {
+static uint16_t mode_breath(void)
+{
     //                                      0    1    2   3   4   5   6    7   8
     //                                      9  10  11   12   13   14   15   16
     //                                      // step
@@ -915,7 +921,8 @@ uint16_t mode_breath(void) {
 /*
  * Fades the LEDs on and (almost) off again.
  */
-uint16_t mode_fade(void) {
+static uint16_t mode_fade(void)
+{
     int lum = SEGMENT_RUNTIME.counter_mode_step - 31;
     lum = 63 - (abs(lum) * 2);
     lum = map(lum, 0, 64, min(25, (int)g_fx.brightness), g_fx.brightness);
@@ -937,7 +944,8 @@ uint16_t mode_fade(void) {
 /*
  * Runs a single pixel back and forth.
  */
-uint16_t mode_scan(void) {
+static uint16_t mode_scan(void)
+{
     if (SEGMENT_RUNTIME.counter_mode_step > (SEGMENT_LENGTH * 2) - 3) {
         SEGMENT_RUNTIME.counter_mode_step = 0;
     }
@@ -964,7 +972,8 @@ uint16_t mode_scan(void) {
 /*
  * Runs two pixel back and forth in opposite directions.
  */
-uint16_t mode_dual_scan(void) {
+static uint16_t mode_dual_scan(void)
+{
     if (SEGMENT_RUNTIME.counter_mode_step > (SEGMENT_LENGTH * 2) - 3) {
         SEGMENT_RUNTIME.counter_mode_step = 0;
     }
@@ -988,7 +997,8 @@ uint16_t mode_dual_scan(void) {
 /*
  * Cycles all LEDs at once through a rainbow.
  */
-uint16_t mode_rainbow(void) {
+static uint16_t mode_rainbow(void)
+{
     uint32_t color = color_wheel(SEGMENT_RUNTIME.counter_mode_step);
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         nsec_neoPixel_set_pixel_color_packed(i, color);
@@ -1002,7 +1012,8 @@ uint16_t mode_rainbow(void) {
 /*
  * Cycles a rainbow over the entire string of LEDs.
  */
-uint16_t mode_rainbow_cycle(void) {
+static uint16_t mode_rainbow_cycle(void)
+{
     for (uint16_t i = 0; i < SEGMENT_LENGTH; i++) {
         uint32_t color = color_wheel(
             ((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) &
@@ -1043,7 +1054,8 @@ uint16_t theater_chase(uint32_t color1, uint32_t color2) {
  * Theatre-style crawling lights.
  * Inspired by the Adafruit examples.
  */
-uint16_t mode_theater_chase(void) {
+static uint16_t mode_theater_chase(void)
+{
     return theater_chase(SEGMENT.colors[0], BLACK);
 }
 
@@ -1051,7 +1063,8 @@ uint16_t mode_theater_chase(void) {
  * Theatre-style crawling lights with rainbow effect.
  * Inspired by the Adafruit examples.
  */
-uint16_t mode_theater_chase_rainbow(void) {
+static uint16_t mode_theater_chase_rainbow(void)
+{
     SEGMENT_RUNTIME.counter_mode_step =
         (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
     return theater_chase(color_wheel(SEGMENT_RUNTIME.counter_mode_step), BLACK);
@@ -1060,7 +1073,8 @@ uint16_t mode_theater_chase_rainbow(void) {
 /*
  * Running lights effect with smooth sine transition.
  */
-uint16_t mode_running_lights(void) {
+static uint16_t mode_running_lights(void)
+{
     // uint8_t w = ((SEGMENT.colors[0] >> 24) & 0xFF);
     uint8_t r = ((SEGMENT.colors[0] >> 16) & 0xFF);
     uint8_t g = ((SEGMENT.colors[0] >> 8) & 0xFF);
@@ -1113,13 +1127,17 @@ uint16_t twinkle(uint32_t color) {
  * Blink several LEDs on, reset, repeat.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t mode_twinkle(void) { return twinkle(SEGMENT.colors[0]); }
+static uint16_t mode_twinkle(void)
+{
+    return twinkle(SEGMENT.colors[0]);
+}
 
 /*
  * Blink several LEDs in random colors on, reset, repeat.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t mode_twinkle_random(void) {
+static uint16_t mode_twinkle_random(void)
+{
     return twinkle(color_wheel(nsec_random_get_byte(255)));
 }
 
@@ -1127,7 +1145,7 @@ uint16_t mode_twinkle_random(void) {
  * fade out function
  * fades out the current segment by dividing each pixel's intensity by 2
  */
-void fade_out(void)
+static void fade_out(void)
 {
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         uint32_t color = nsec_neoPixel_get_pixel_color(i);
@@ -1152,12 +1170,16 @@ uint16_t twinkle_fade(uint32_t color) {
 /*
  * Blink several LEDs on, fading out.
  */
-uint16_t mode_twinkle_fade(void) { return twinkle_fade(SEGMENT.colors[0]); }
+static uint16_t mode_twinkle_fade(void)
+{
+    return twinkle_fade(SEGMENT.colors[0]);
+}
 
 /*
  * Blink several LEDs in random colors on, fading out.
  */
-uint16_t mode_twinkle_fade_random(void) {
+static uint16_t mode_twinkle_fade_random(void)
+{
     return twinkle_fade(color_wheel(nsec_random_get_byte(255)));
 }
 
@@ -1165,7 +1187,8 @@ uint16_t mode_twinkle_fade_random(void) {
  * Blinks one LED at a time.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t mode_sparkle(void) {
+static uint16_t mode_sparkle(void)
+{
     nsec_neoPixel_set_pixel_color_packed(
         SEGMENT.start + SEGMENT_RUNTIME.aux_param, BLACK);
     SEGMENT_RUNTIME.aux_param = nsec_random_get_byte(
@@ -1179,7 +1202,8 @@ uint16_t mode_sparkle(void) {
  * Lights all LEDs in the color. Flashes single white pixels randomly.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t mode_flash_sparkle(void) {
+static uint16_t mode_flash_sparkle(void)
+{
     if (SEGMENT_RUNTIME.counter_mode_call == 0) {
         for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
             nsec_neoPixel_set_pixel_color_packed(i, SEGMENT.colors[0]);
@@ -1203,7 +1227,8 @@ uint16_t mode_flash_sparkle(void) {
  * Like flash sparkle. With more flash.
  * Inspired by www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
  */
-uint16_t mode_hyper_sparkle(void) {
+static uint16_t mode_hyper_sparkle(void)
+{
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         nsec_neoPixel_set_pixel_color_packed(i, SEGMENT.colors[0]);
     }
@@ -1222,7 +1247,8 @@ uint16_t mode_hyper_sparkle(void) {
 /*
  * Strobe effect with different strobe count and pause, controlled by speed.
  */
-uint16_t mode_multi_strobe(void) {
+static uint16_t mode_multi_strobe(void)
+{
     for (uint16_t i = SEGMENT.start; i <= SEGMENT.stop; i++) {
         nsec_neoPixel_set_pixel_color_packed(i, BLACK);
     }
@@ -1272,35 +1298,40 @@ uint16_t chase(uint32_t color1, uint32_t color2, uint32_t color3) {
 /*
  * Bicolor chase mode
  */
-uint16_t mode_bicolor_chase(void) {
+static uint16_t mode_bicolor_chase(void)
+{
     return chase(SEGMENT.colors[0], SEGMENT.colors[1], SEGMENT.colors[2]);
 }
 
 /*
  * White running on _color.
  */
-uint16_t mode_chase_color(void) {
+static uint16_t mode_chase_color(void)
+{
     return chase(SEGMENT.colors[0], WHITE, WHITE);
 }
 
 /*
  * Black running on _color.
  */
-uint16_t mode_chase_blackout(void) {
+static uint16_t mode_chase_blackout(void)
+{
     return chase(SEGMENT.colors[0], BLACK, BLACK);
 }
 
 /*
  * _color running on white.
  */
-uint16_t mode_chase_white(void) {
+static uint16_t mode_chase_white(void)
+{
     return chase(WHITE, SEGMENT.colors[0], SEGMENT.colors[0]);
 }
 
 /*
  * White running followed by random color.
  */
-uint16_t mode_chase_random(void) {
+static uint16_t mode_chase_random(void)
+{
     if (SEGMENT_RUNTIME.counter_mode_step == 0) {
         SEGMENT_RUNTIME.aux_param =
             get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
@@ -1311,7 +1342,8 @@ uint16_t mode_chase_random(void) {
 /*
  * Rainbow running on white.
  */
-uint16_t mode_chase_rainbow_white(void) {
+static uint16_t mode_chase_rainbow_white(void)
+{
     uint16_t n = SEGMENT_RUNTIME.counter_mode_step;
     uint16_t m = (SEGMENT_RUNTIME.counter_mode_step + 1) % SEGMENT_LENGTH;
     uint32_t color2 = color_wheel(((n * 256 / SEGMENT_LENGTH) +
@@ -1327,7 +1359,8 @@ uint16_t mode_chase_rainbow_white(void) {
 /*
  * White running on rainbow.
  */
-uint16_t mode_chase_rainbow(void) {
+static uint16_t mode_chase_rainbow(void)
+{
     uint8_t color_sep = 256 / SEGMENT_LENGTH;
     uint8_t color_index = SEGMENT_RUNTIME.counter_mode_call & 0xFF;
     uint32_t color = color_wheel(
@@ -1339,7 +1372,8 @@ uint16_t mode_chase_rainbow(void) {
 /*
  * Black running on rainbow.
  */
-uint16_t mode_chase_blackout_rainbow(void) {
+static uint16_t mode_chase_blackout_rainbow(void)
+{
     uint8_t color_sep = 256 / SEGMENT_LENGTH;
     uint8_t color_index = SEGMENT_RUNTIME.counter_mode_call & 0xFF;
     uint32_t color = color_wheel(
@@ -1351,7 +1385,8 @@ uint16_t mode_chase_blackout_rainbow(void) {
 /*
  * White flashes running on _color.
  */
-uint16_t mode_chase_flash(void) {
+static uint16_t mode_chase_flash(void)
+{
     static const uint8_t flash_count = 4;
     uint8_t flash_step =
         SEGMENT_RUNTIME.counter_mode_call % ((flash_count * 2) + 1);
@@ -1387,7 +1422,8 @@ uint16_t mode_chase_flash(void) {
 /*
  * White flashes running, followed by random color.
  */
-uint16_t mode_chase_flash_random(void) {
+static uint16_t mode_chase_flash_random(void)
+{
     static const uint8_t flash_count = 4;
     uint8_t flash_step =
         SEGMENT_RUNTIME.counter_mode_call % ((flash_count * 2) + 1);
@@ -1451,27 +1487,40 @@ uint16_t running(uint32_t color1, uint32_t color2) {
 /*
  * Alternating color/white pixels running.
  */
-uint16_t mode_running_color(void) { return running(SEGMENT.colors[0], WHITE); }
+static uint16_t mode_running_color(void)
+{
+    return running(SEGMENT.colors[0], WHITE);
+}
 
 /*
  * Alternating red/blue pixels running.
  */
-uint16_t mode_running_red_blue(void) { return running(RED, BLUE); }
+static uint16_t mode_running_red_blue(void)
+{
+    return running(RED, BLUE);
+}
 
 /*
  * Alternating red/green pixels running.
  */
-uint16_t mode_merry_christmas(void) { return running(RED, GREEN); }
+static uint16_t mode_merry_christmas(void)
+{
+    return running(RED, GREEN);
+}
 
 /*
  * Alternating orange/purple pixels running.
  */
-uint16_t mode_halloween(void) { return running(PURPLE, ORANGE); }
+static uint16_t mode_halloween(void)
+{
+    return running(PURPLE, ORANGE);
+}
 
 /*
  * Random colored pixels running.
  */
-uint16_t mode_running_random(void) {
+static uint16_t mode_running_random(void)
+{
     for (uint16_t i = SEGMENT_LENGTH - 1; i > 0; i--) {
         if (SEGMENT.reverse) {
             nsec_neoPixel_set_pixel_color_packed(
@@ -1504,7 +1553,8 @@ uint16_t mode_running_random(void) {
 /*
  * K.I.T.T.
  */
-uint16_t mode_larson_scanner(void) {
+static uint16_t mode_larson_scanner(void)
+{
     fade_out();
 
     if (SEGMENT_RUNTIME.counter_mode_step < SEGMENT_LENGTH) {
@@ -1541,7 +1591,8 @@ uint16_t mode_larson_scanner(void) {
 /*
  * Firing comets from one end.
  */
-uint16_t mode_comet(void) {
+static uint16_t mode_comet(void)
+{
     fade_out();
 
     if (SEGMENT.reverse) {
@@ -1598,7 +1649,8 @@ uint16_t fireworks(uint32_t color) {
 /*
  * Firework sparks.
  */
-uint16_t mode_fireworks(void) {
+static uint16_t mode_fireworks(void)
+{
     uint32_t color = SEGMENT.colors[0];
     return fireworks(color);
 }
@@ -1606,7 +1658,8 @@ uint16_t mode_fireworks(void) {
 /*
  * Random colored firework sparks.
  */
-uint16_t mode_fireworks_random(void) {
+static uint16_t mode_fireworks_random(void)
+{
     uint32_t color = color_wheel(nsec_random_get_byte(255));
     return fireworks(color);
 }
@@ -1631,17 +1684,26 @@ uint16_t fire_flicker(int rev_intensity) {
 /*
  * Random flickering.
  */
-uint16_t mode_fire_flicker(void) { return fire_flicker(3); }
+static uint16_t mode_fire_flicker(void)
+{
+    return fire_flicker(3);
+}
 
 /*
  * Random flickering, less intensity.
  */
-uint16_t mode_fire_flicker_soft(void) { return fire_flicker(6); }
+static uint16_t mode_fire_flicker_soft(void)
+{
+    return fire_flicker(6);
+}
 
 /*
  * Random flickering, more intensity.
  */
-uint16_t mode_fire_flicker_intense(void) { return fire_flicker(1.7); }
+static uint16_t mode_fire_flicker_intense(void)
+{
+    return fire_flicker(1.7);
+}
 
 /*
  * Tricolor chase function
@@ -1677,7 +1739,8 @@ uint16_t tricolor_chase(uint32_t color1, uint32_t color2, uint32_t color3) {
 /*
  * Tricolor chase mode
  */
-uint16_t mode_tricolor_chase(void) {
+static uint16_t mode_tricolor_chase(void)
+{
     return tricolor_chase(SEGMENT.colors[0], SEGMENT.colors[1],
                           SEGMENT.colors[2]);
 }
@@ -1685,14 +1748,16 @@ uint16_t mode_tricolor_chase(void) {
 /*
  * Alternating white/red/black pixels running.
  */
-uint16_t mode_circus_combustus(void) {
+static uint16_t mode_circus_combustus(void)
+{
     return tricolor_chase(RED, WHITE, BLACK);
 }
 
 /*
  * ICU mode
  */
-uint16_t mode_icu(void) {
+static uint16_t mode_icu(void)
+{
     uint16_t dest = SEGMENT_RUNTIME.counter_mode_step & 0xFFFF;
 
     nsec_neoPixel_set_pixel_color_packed(SEGMENT.start + dest,
@@ -1735,8 +1800,8 @@ uint16_t mode_icu(void) {
 /*
  * Custom mode
  */
-uint16_t (*customMode)(void) = NULL;
-uint16_t mode_custom(void)
+static mode_func_t customMode = NULL;
+static uint16_t mode_custom(void)
 {
     if (customMode == NULL) {
         return 1000; // if custom mode not set, do nothing
@@ -1748,7 +1813,7 @@ uint16_t mode_custom(void)
 /*
  * Custom mode helper
  */
-void setCustomMode(uint16_t (*p)(void))
+void setCustomMode(mode_func_t p)
 {
     customMode = p;
 }
