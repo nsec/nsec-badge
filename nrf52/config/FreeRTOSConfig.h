@@ -116,6 +116,7 @@
 #define configUSE_TIME_SLICING                                                    0
 #define configUSE_NEWLIB_REENTRANT                                                0
 #define configENABLE_BACKWARD_COMPATIBILITY                                       1
+#define configSUPPORT_STATIC_ALLOCATION                                           1
 
 /* Hook function related definitions. */
 #define configUSE_IDLE_HOOK                                                       0

@@ -125,6 +125,45 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
     app_error_fault_handler(0, 0, 0);
 }
 
+/*
+ * This is called by FreeRTOS to obtain the memory used to hold the IDLE task,
+ * when static allocation is used.
+ */
+extern void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
+                                          StackType_t **ppxIdleTaskStackBuffer,
+                                          uint32_t *pulIdleTaskStackSize);
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
+                                   StackType_t **ppxIdleTaskStackBuffer,
+                                   uint32_t *pulIdleTaskStackSize)
+{
+    static StaticTask_t xIdleTaskTCB;
+    static StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
+
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+}
+
+/*
+ * This is called by FreeRTOS to obtain the memory used to hold the TIMER task,
+ * when static allocation is used.
+ */
+extern void
+vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
+                               StackType_t **ppxTimerTaskStackBuffer,
+                               uint32_t *pulTimerTaskStackSize);
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
+                                    StackType_t **ppxTimerTaskStackBuffer,
+                                    uint32_t *pulTimerTaskStackSize)
+{
+    static StaticTask_t xTimerTaskTCB;
+    static StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
+
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+    *ppxTimerTaskStackBuffer = uxTimerTaskStack;
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}
+
 int main(void)
 {
     ret_code_t ret_code;
