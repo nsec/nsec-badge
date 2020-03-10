@@ -56,9 +56,11 @@
 #include "app/timer.h"
 #include "app/utils.h"
 #include "led_effects.h"
+#include <FreeRTOS.h>
 #include <arm_math.h>
 #include <nrf.h>
 #include <nrf_delay.h>
+#include <semphr.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -278,10 +280,26 @@ typedef struct WS2812FX {
     uint8_t segment_index;
     segment segments[MAX_NUM_SEGMENTS];
     segment_runtime segment_runtimes[MAX_NUM_SEGMENTS];
+
+    /*
+     * Lock to be taken when accessing this structure.
+     *
+     * The main task to access this is the Neopixels task, which calls
+     * service_WS2812FX regularly.  Other tasks that wish to modify led pattern
+     * parameters also call functions of this module.  It therefore needs some
+     * synchronization, in the form of this mutex.
+     */
+    SemaphoreHandle_t *lock;
+    StaticSemaphore_t lock_mem;
 } ws2812fx;
 
 static ws2812fx g_fx;
 
+/*
+ * This function is _NOT_ protected by the lock, unlike the other
+ * functions exposed by this module which touch g_fx.  It must not be called at
+ * the same time as another function of this module.
+ */
 void init_WS2812FX(void)
 {
     static bool init = false;
@@ -307,6 +325,9 @@ void init_WS2812FX(void)
         }
     }
 
+    g_fx.lock = xSemaphoreCreateMutexStatic(&g_fx.lock_mem);
+    ASSERT(g_fx.lock != NULL);
+
     RESET_RUNTIME;
     nsec_neoPixel_init();
     setBrightness_WS2812FX(g_fx.brightness);
@@ -315,6 +336,8 @@ void init_WS2812FX(void)
 
 void service_WS2812FX(void)
 {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (g_fx.running || g_fx.triggered) {
         uint64_t now = get_current_time_millis();
         bool doShow = false;
@@ -333,233 +356,468 @@ void service_WS2812FX(void)
         }
         g_fx.triggered = false;
     }
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void start_WS2812FX(void)
 {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     RESET_RUNTIME;
     g_fx.running = true;
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void stop_WS2812FX(void)
 {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     g_fx.running = false;
     nsec_neoPixel_clear();
     nsec_neoPixel_show();
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void trigger_WS2812FX(void)
 {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     g_fx.triggered = true;
+
+    xSemaphoreGive(g_fx.lock);
+}
+
+static void setBrightness_WS2812FX_unlocked(uint8_t b)
+{
+    g_fx.brightness = constrain(b, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
+    nsec_neoPixel_set_brightness(g_fx.brightness);
 }
 
 void setMode_WS2812FX(uint8_t m) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     RESET_RUNTIME;
     g_fx.segments[0].mode = constrain(m, 0, MODE_COUNT - 1);
-    setBrightness_WS2812FX(g_fx.brightness);
+    setBrightness_WS2812FX_unlocked(g_fx.brightness);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void setSegmentMode_WS2812FX(uint8_t segment_index, uint8_t m) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
         RESET_RUNTIME;
         g_fx.segments[segment_index].mode = constrain(m, 0, MODE_COUNT - 1);
-        setBrightness_WS2812FX(g_fx.brightness);
+        setBrightness_WS2812FX_unlocked(g_fx.brightness);
     }
+
+    xSemaphoreGive(g_fx.lock);
 }
 
-void setSpeed_WS2812FX(uint16_t s) {
+static void setSpeed_WS2812FX_unlocked(uint16_t s)
+{
     RESET_RUNTIME;
     g_fx.segments[0].speed = constrain(s, SPEED_MIN, SPEED_MAX);
 }
 
+void setSpeed_WS2812FX(uint16_t s)
+{
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    setSpeed_WS2812FX_unlocked(s);
+
+    xSemaphoreGive(g_fx.lock);
+}
+
 void setReverse_WS2812FX(bool reverse) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     RESET_RUNTIME;
     g_fx.segments[0].reverse = reverse;
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void setSegmentReverse_WS2812FX(uint8_t segment_index, bool reverse) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
         RESET_RUNTIME;
         g_fx.segments[segment_index].reverse = reverse;
     }
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 bool getSegmentReverse_WS2812FX(uint8_t segment_index) {
+    bool ret = false;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
-        return g_fx.segments[segment_index].reverse;
+        ret = g_fx.segments[segment_index].reverse;
     }
-    return 0;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 uint8_t getSegmentStart_WS2812FX(uint8_t segment_index) {
+    uint8_t ret = 0;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
-        return g_fx.segments[segment_index].start;
+        ret = g_fx.segments[segment_index].start;
     }
-    return 0;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 void setSegmentStart_WS2812FX(uint8_t segment_index, uint8_t start) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
         g_fx.segments[segment_index].start = start;
     }
+
+    xSemaphoreGive(g_fx.lock);
 }
 uint8_t getSegmentStop_WS2812FX(uint8_t segment_index) {
+    uint8_t ret = 0;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
-        return g_fx.segments[segment_index].stop;
+        ret = g_fx.segments[segment_index].stop;
     }
-    return 0;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 void setSegmentStop_WS2812FX(uint8_t segment_index, uint8_t stop) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
         g_fx.segments[segment_index].stop = stop;
     }
+
+    xSemaphoreGive(g_fx.lock);
 }
 
-const char* getSegmentModeString_WS2812FX(uint8_t segment_index) {
+const char *getSegmentModeString_WS2812FX(uint8_t segment_index)
+{
+    const char *ret = "Unknown";
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
-        return name[g_fx.segments[segment_index].mode];
+        ret = name[g_fx.segments[segment_index].mode];
     }
-    return "Unknown";
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 uint16_t getSegmentSpeed_WS2812FX(uint8_t segment_index) {
+    uint16_t ret = 0;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
-        return g_fx.segments[segment_index].speed;
+        ret = g_fx.segments[segment_index].speed;
     }
-    return 0;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 void setSegmentSpeed_WS2812FX(uint8_t segment_index, uint16_t segment_speed) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
         g_fx.segments[segment_index].speed = segment_speed;
     }
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 uint16_t getSegmentColor_WS2812FX(uint8_t segment_index, uint8_t color_index) {
+    uint16_t ret = 0;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (segment_index < g_fx.num_segments) {
-        return g_fx.segments[segment_index].colors[color_index];
+        ret = g_fx.segments[segment_index].colors[color_index];
     }
-    return 0;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 void increaseSpeed_WS2812FX(uint8_t s) {
-    uint16_t newSpeed = constrain(SEGMENT.speed + s, SPEED_MIN, SPEED_MAX);
-    setSpeed_WS2812FX(newSpeed);
+    uint16_t newSpeed;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    newSpeed = constrain(SEGMENT.speed + s, SPEED_MIN, SPEED_MAX);
+    setSpeed_WS2812FX_unlocked(newSpeed);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void decreaseSpeed_WS2812FX(uint8_t s) {
-    uint16_t newSpeed = constrain(SEGMENT.speed - s, SPEED_MIN, SPEED_MAX);
-    setSpeed_WS2812FX(newSpeed);
+    uint16_t newSpeed;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    newSpeed = constrain(SEGMENT.speed - s, SPEED_MIN, SPEED_MAX);
+    setSpeed_WS2812FX_unlocked(newSpeed);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
-void setArrayColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b, uint8_t index) {
-    if (index < NUM_COLORS) {
-        setArrayColor_packed_WS2812FX(
-            ((uint32_t)r << 16) | ((uint32_t)g << 8) | b, index);
-    }
-}
-
-void setColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b) {
-    setColor_packed_WS2812FX(((uint32_t)r << 16) | ((uint32_t)g << 8) | b);
-}
-
-void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index) {
+static void setArrayColor_packed_WS2812FX_unlocked(uint32_t c, uint8_t index)
+{
     if (index < NUM_COLORS) {
         RESET_RUNTIME;
         g_fx.segments[0].colors[index] = c;
-        setBrightness_WS2812FX(g_fx.brightness);
+        setBrightness_WS2812FX_unlocked(g_fx.brightness);
     }
+}
+
+void setArrayColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b, uint8_t index) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    if (index < NUM_COLORS) {
+        setArrayColor_packed_WS2812FX_unlocked(
+            ((uint32_t)r << 16) | ((uint32_t)g << 8) | b, index);
+    }
+
+    xSemaphoreGive(g_fx.lock);
+}
+
+static void setColor_packed_WS2812FX_unlocked(uint32_t c)
+{
+    RESET_RUNTIME;
+    g_fx.segments[0].colors[0] = c;
+    setBrightness_WS2812FX_unlocked(g_fx.brightness);
+}
+
+void setColor_WS2812FX(uint8_t r, uint8_t g, uint8_t b) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    setColor_packed_WS2812FX_unlocked(((uint32_t)r << 16) | ((uint32_t)g << 8) |
+                                      b);
+
+    xSemaphoreGive(g_fx.lock);
+}
+
+void setArrayColor_packed_WS2812FX(uint32_t c, uint8_t index) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    setArrayColor_packed_WS2812FX_unlocked(c, index);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void setSegmentArrayColor_packed_WS2812FX(uint8_t segment_index,
                                           uint8_t color_index, uint32_t c)
 {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (color_index < NUM_COLORS && segment_index < g_fx.num_segments) {
         RESET_RUNTIME;
         g_fx.segments[segment_index].colors[color_index] = c;
-        setBrightness_WS2812FX(g_fx.brightness);
+        setBrightness_WS2812FX_unlocked(g_fx.brightness);
     }
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void setColor_packed_WS2812FX(uint32_t c) {
-    RESET_RUNTIME;
-    g_fx.segments[0].colors[0] = c;
-    setBrightness_WS2812FX(g_fx.brightness);
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    setColor_packed_WS2812FX_unlocked(c);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void setBrightness_WS2812FX(uint8_t b) {
-    g_fx.brightness = constrain(b, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
-    nsec_neoPixel_set_brightness(g_fx.brightness);
-    nsec_neoPixel_show();
-    nrf_delay_ms(1);
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    setBrightness_WS2812FX_unlocked(b);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void increaseBrightness_WS2812FX(uint8_t s) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     s = constrain(g_fx.brightness + s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
-    setBrightness_WS2812FX(s);
+    setBrightness_WS2812FX_unlocked(s);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void decreaseBrightness_WS2812FX(uint8_t s) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     s = constrain(g_fx.brightness - s, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
-    setBrightness_WS2812FX(s);
+    setBrightness_WS2812FX_unlocked(s);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 bool isRunning_WS2812FX(void)
 {
-    return g_fx.running;
+    bool ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    ret = g_fx.running;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 uint8_t getMode_WS2812FX(void)
 {
-    return g_fx.segments[0].mode;
+    uint8_t ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    ret = g_fx.segments[0].mode;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 uint16_t getSpeed_WS2812FX(void)
 {
-    return g_fx.segments[0].speed;
+    uint16_t ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    ret = g_fx.segments[0].speed;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 bool getReverse_WS2812FX(void)
 {
-    return g_fx.segments[0].reverse;
+    bool ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    ret = g_fx.segments[0].reverse;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 uint8_t getBrightness_WS2812FX(void)
 {
-    return g_fx.brightness;
+    uint8_t ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    ret = g_fx.brightness;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 uint16_t getLength_WS2812FX(void) {
-    return g_fx.segments[0].stop - g_fx.segments[0].start + 1;
+    uint16_t ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    ret = g_fx.segments[0].stop - g_fx.segments[0].start + 1;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 uint8_t getModeCount_WS2812FX(void) { return MODE_COUNT; }
 
 uint8_t getNumSegments_WS2812FX(void)
 {
-    return g_fx.num_segments;
+    uint8_t ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    ret = g_fx.num_segments;
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 void setNumSegments_WS2812FX(uint8_t n) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     RESET_RUNTIME;
     g_fx.num_segments = n;
+
+    xSemaphoreGive(g_fx.lock);
 }
 
-uint32_t getColor_WS2812FX(void)
+static uint32_t getColor_WS2812FX_unlocked(void)
 {
     return g_fx.segments[0].colors[0];
 }
 
+uint32_t getColor_WS2812FX(void)
+{
+    uint32_t ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    ret = getColor_WS2812FX_unlocked();
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
+}
+
 uint32_t getArrayColor_WS2812FX(uint8_t index) {
+    uint32_t ret;
+
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (index < NUM_COLORS) {
-        return g_fx.segments[0].colors[index];
+        ret = g_fx.segments[0].colors[index];
     } else {
-        return getColor_WS2812FX();
+        ret = getColor_WS2812FX_unlocked();
     }
+
+    xSemaphoreGive(g_fx.lock);
+
+    return ret;
 }
 
 const char *getModeName_WS2812FX(uint8_t m) {
+    /* This is not locked, as it doesn't access g_fx. */
     if (m < MODE_COUNT) {
         return name[m];
     } else {
@@ -567,8 +825,11 @@ const char *getModeName_WS2812FX(uint8_t m) {
     }
 }
 
-void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode,
-                         uint32_t color, uint16_t speed, bool reverse) {
+static void setSegment_WS2812FX_unlocked(uint8_t n, uint16_t start,
+                                         uint16_t stop, uint8_t mode,
+                                         uint32_t color, uint16_t speed,
+                                         bool reverse)
+{
     if (n < (sizeof(g_fx.segments) / sizeof(g_fx.segments[0]))) {
         if (n + 1 > g_fx.num_segments)
             g_fx.num_segments = n + 1;
@@ -581,9 +842,21 @@ void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode,
     }
 }
 
+void setSegment_WS2812FX(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode,
+                         uint32_t color, uint16_t speed, bool reverse)
+{
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
+    setSegment_WS2812FX_unlocked(n, start, stop, mode, color, speed, reverse);
+
+    xSemaphoreGive(g_fx.lock);
+}
+
 void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop,
                                      uint8_t mode, const uint32_t colors[],
                                      uint16_t speed, bool reverse) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     if (n < (sizeof(g_fx.segments) / sizeof(g_fx.segments[0]))) {
         if (n + 1 > g_fx.num_segments)
             g_fx.num_segments = n + 1;
@@ -597,20 +870,30 @@ void setSegment_color_array_WS2812FX(uint8_t n, uint16_t start, uint16_t stop,
             g_fx.segments[n].colors[i] = colors[i];
         }
     }
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void resetSegments_WS2812FX(void)
 {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     memset(g_fx.segments, 0, sizeof(g_fx.segments));
     memset(g_fx.segment_runtimes, 0, sizeof(g_fx.segment_runtimes));
     g_fx.segment_index = 0;
     g_fx.num_segments = 1;
-    setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT, FX_MODE_STATIC, DEFAULT_COLOR,
-                        DEFAULT_SPEED, false);
+    setSegment_WS2812FX_unlocked(0, 0, NEOPIXEL_COUNT, FX_MODE_STATIC,
+                                 DEFAULT_COLOR, DEFAULT_SPEED, false);
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 void moveSegment_WS2812FX(uint8_t src, uint8_t dest) {
+    xSemaphoreTake(g_fx.lock, portMAX_DELAY);
+
     g_fx.segments[dest] = g_fx.segments[src];
+
+    xSemaphoreGive(g_fx.lock);
 }
 
 /* #####################################################
