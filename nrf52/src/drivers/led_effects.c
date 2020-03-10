@@ -13,8 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void show_with_PWM(void);
-
 // 3 leds/bytes by pixel
 #define NSEC_NEOPIXEL_NUM_BYTES (NEOPIXEL_COUNT * 3)
 
@@ -133,36 +131,23 @@ uint8_t nsec_neoPixel_get_brightness(void) {
     return nsec_pixels.brightness - 1;
 }
 
-void nsec_neoPixel_show(void) {
-    ASSERT(initialized);
-
-    show_with_PWM();
-    // show_with_DWT();
-
-    nrf_delay_us(50);
-}
-
-void show_with_PWM(void) {
+static void show_with_PWM(void)
+{
     // todo Implement the canshow
     uint16_t pixels_pattern[NSEC_NEOPIXEL_NUM_BYTES * 8 + 2];
+    uint16_t pos = 0;
 
-    if (pixels_pattern != NULL && nsec_pixels.pixels != NULL) {
-        uint16_t pos = 0;
+    for (size_t n = 0; n < ARRAY_SIZE(nsec_pixels.pixels); n++) {
+        uint8_t pix = nsec_pixels.pixels[n];
 
-        for (size_t n = 0; n < ARRAY_SIZE(nsec_pixels.pixels); n++) {
-            uint8_t pix = nsec_pixels.pixels[n];
-
-            for (uint8_t mask = 0x80, i = 0; mask > 0; mask >>= 1, i++) {
-                pixels_pattern[pos] = (pix & mask) ? MAGIC_T1H : MAGIC_T0H;
-                pos++;
-            }
+        for (uint8_t mask = 0x80, i = 0; mask > 0; mask >>= 1, i++) {
+            pixels_pattern[pos] = (pix & mask) ? MAGIC_T1H : MAGIC_T0H;
+            pos++;
         }
-        // Zero padding to indicate the end of que sequence
-        pixels_pattern[++pos] = 0 | (0x8000);
-        pixels_pattern[++pos] = 0 | (0x8000);
-    } else {
-        return;
     }
+    // Zero padding to indicate the end of que sequence
+    pixels_pattern[++pos] = 0 | (0x8000);
+    pixels_pattern[++pos] = 0 | (0x8000);
 
     nrf_pwm_configure(NRF_PWM0, NRF_PWM_CLK_16MHz, NRF_PWM_MODE_UP, CTOPVAL);
     nrf_pwm_loop_set(NRF_PWM0, 0);
@@ -191,4 +176,13 @@ void show_with_PWM(void) {
     nrf_pwm_disable(NRF_PWM0);
 
     nrf_pwm_pins_set(NRF_PWM0, mapDisconnect);
+}
+
+void nsec_neoPixel_show(void)
+{
+    ASSERT(initialized);
+
+    show_with_PWM();
+
+    nrf_delay_us(50);
 }
