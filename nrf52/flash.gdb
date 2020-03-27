@@ -23,11 +23,20 @@ end
   monitor swdp_scan
   set non-stop off
 end
+set mem inaccessible-by-default off
+set debug arm
+attach 1
+
 if $LOAD_SOFTDEVICE
   load nordicsdk/softdevice/s132/hex/s132_nrf52_5.0.0_softdevice.hex
 end
+
 load builds/nsec19_nrf52_ctf.out
 file builds/nsec19_nrf52_ctf.out
+
+if $LOCK_AFTER_FLASH
+  monitor enable_approtect
+end
 
 define hook-quit
   set confirm off

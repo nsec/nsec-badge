@@ -5,6 +5,9 @@ target extended-remote /dev/ttyACM0
 # Unlock & Erase all the data (App and SoftDevice) from the chip before flashing.
 set $FORCE_ERASE_ALL = 0
 
+# Lock after flashing is done
+set $LOCK_AFTER_FLASH = 0
+
 # Change to 1 if you need to load the SoftDevice into the chip. This can be once
 # and when SoftDevice version is updated.
 set $LOAD_SOFTDEVICE = 0
