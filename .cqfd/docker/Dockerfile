@@ -13,10 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	python3 \
 	python3-pil \
 	python3-pycparser \
-	python3-serial
-
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
+	python3-serial \
 	wget \
 	unzip
 
