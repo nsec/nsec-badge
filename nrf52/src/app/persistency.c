@@ -39,11 +39,10 @@
 
 #define PERSISTENCY_BASE_ADDRESS 0x07F000
 #define PERSISTENCY_SIZE 4096
-#define PERSISTENCY_REVISION 1
+#define PERSISTENCY_REVISION 0 // never match
 
-/* Led settings  303 bytes*/
 struct led_settings {
-    segment segment[15]; // 20 * 15 = 300bytes
+    segment segment[NEOPIXEL_COUNT];
     uint8_t num_segment;
     bool control;
     uint8_t brightness;
@@ -58,13 +57,13 @@ struct persistency {
     uint8_t display_model;              // 1 byte
     uint8_t screensaver;                // 1 byte
     uint8_t ble_enable;                 // 1 byte
-    uint8_t padding[4096 - 332 - 5];    // 4k - (used memory) - rev - CRC
+//    uint8_t padding[4096 - 332 - 5];    // 4k - (used memory) - rev - CRC
     uint8_t revision;
     uint32_t crc; // 4 bytes
 }__attribute__((packed));
 
 // Static assert to make sure the size of struct persistency is as expected.
-static int persistency_size_static[(sizeof(struct persistency) == 4096) ? 1 : -1] __attribute__((unused));
+//static int persistency_size_static[(sizeof(struct persistency) == 4096) ? 1 : -1] __attribute__((unused));
 
 static uint8_t persistency_bin[4096];
 static struct persistency *persistency = (struct persistency*)persistency_bin;
@@ -91,9 +90,9 @@ static void set_default_led_settings(void)
     persistency->led_settings.control = true;
     persistency->led_settings.num_segment = 1;
 
-    for (int i = 0 ; i < 15; i++) {
+    for (int i = 0 ; i < NEOPIXEL_COUNT; i++) {
         persistency->led_settings.segment[i].start = 0;
-        persistency->led_settings.segment[i].stop = 14;
+        persistency->led_settings.segment[i].stop = NEOPIXEL_COUNT - 1;
         persistency->led_settings.segment[i].mode = FX_MODE_SINGLE_DYNAMIC;
         persistency->led_settings.segment[i].speed = MEDIUM_SPEED;
         persistency->led_settings.segment[i].colors[0] = BLUE;
