@@ -36,24 +36,24 @@ void led_show_error(ret_code_t rc, uint32_t delay) {
     }
 
     if (rc == NRF_SUCCESS) {
-        setSegment_WS2812FX(0, 0, 7, FX_MODE_STATIC, GREEN, 1000, false);
+        setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC, GREEN, 1000, false);
     } else if (rc == NRF_ERROR_NULL) {
-        setSegment_WS2812FX(0, 0, 7, FX_MODE_STATIC, BLUE, 1000, false);
+        setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC, BLUE, 1000, false);
     } else if (rc == NRF_ERROR_INVALID_STATE) {
-        setSegment_WS2812FX(0, 0, 7, FX_MODE_STATIC, YELLOW, 1000, false);
+        setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC, YELLOW, 1000, false);
     } else if (rc == NRF_ERROR_INVALID_LENGTH) {
-        setSegment_WS2812FX(0, 0, 7, FX_MODE_STATIC, CYAN, 1000, false);
+        setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC, CYAN, 1000, false);
     } else if (rc == NRF_ERROR_INVALID_ADDR) {
-        setSegment_WS2812FX(0, 0, 7, FX_MODE_STATIC, MAGENTA, 1000, false);
+        setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC, MAGENTA, 1000, false);
     } else if (rc == NRF_ERROR_NO_MEM) {
-        setSegment_WS2812FX(0, 0, 7, FX_MODE_STATIC, PURPLE, 1000, false);
+        setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC, PURPLE, 1000, false);
     } else {
-        setSegment_WS2812FX(0, 0, 7, FX_MODE_STATIC, RED, 1000, false);
+        setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC, RED, 1000, false);
     }
     service_WS2812FX();
     nrf_delay_ms(delay);
 
-    setSegment_WS2812FX(0, 0, 7, FX_MODE_STATIC, BLACK, 1000, false);
+    setSegment_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC, BLACK, 1000, false);
     service_WS2812FX();
 
     if (stop_before_quit) {

@@ -45,7 +45,7 @@
 
 /* each segment uses 36 bytes of SRAM memory, so if you're application fails
   because of insufficient memory, decreasing MAX_NUM_SEGMENTS may help */
-#define MAX_NUM_SEGMENTS 15
+#define MAX_NUM_SEGMENTS NEOPIXEL_COUNT
 #define NUM_COLORS 3 /* number of colors per segment */
 
 // some common colors
