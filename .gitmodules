@@ -5,3 +5,6 @@
 	path = stm32/blackmagic
 	url = https://github.com/nsec/blackmagic
 	branch = nsec19
+[submodule "esp32/external-components"]
+	path = esp32/external-components
+	url = https://github.com/nsec/nsec-badge-dev-esp32-external-components.git
