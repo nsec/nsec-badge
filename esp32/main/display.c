@@ -6,6 +6,11 @@
 
 TFT_t display_dev;
 
+/**
+ * Temporary JPEG file rendering helper.
+ *
+ * TODO Create a proper set of tools to manipulate graphics.
+ */
 void display_jpeg_file(char *file, int width, int height)
 {
     pixel_s **pixels;
@@ -36,16 +41,20 @@ void display_jpeg_file(char *file, int width, int height)
 
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
-            pixel_s pixel = pixels[y][x];
+            pixel_s pixel = pixels[x][y];
             colors[x] = rgb565_conv(pixel.red, pixel.green, pixel.blue);
         }
-        lcdDrawMultiPixels(&display_dev, _cols, y + _rows, _width, colors);
+        lcdDrawMultiPixels(&display_dev, _cols, (_height - (y + _rows) - 1),
+                           _width, colors);
     }
 
     free(colors);
     release_image(&pixels, width, height);
 }
 
+/**
+ * Temporary implementation of display init routine.
+ */
 void display_init(void)
 {
     esp_vfs_spiffs_conf_t conf = {.base_path = "/spiffs",
