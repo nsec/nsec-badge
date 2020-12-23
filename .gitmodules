@@ -8,3 +8,6 @@
 [submodule "esp32/external-components"]
 	path = esp32/external-components
 	url = https://github.com/nsec/nsec-badge-dev-esp32-external-components.git
+[submodule "esp-idf"]
+	path = esp-idf
+	url = https://github.com/espressif/esp-idf.git
