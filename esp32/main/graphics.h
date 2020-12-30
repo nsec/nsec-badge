@@ -20,3 +20,4 @@
 typedef uint16_t pixel_t;
 
 void graphics_start();
+void graphics_update_display();

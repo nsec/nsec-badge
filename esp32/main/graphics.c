@@ -7,8 +7,14 @@
 
 #include "graphics.h"
 
+/* In-memory framebuffer with the contents of the screen. */
+static pixel_t *display_buffer = NULL;
+
 /* Device state object for the display driver. */
 static TFT_t display_device = {};
+
+/* Bitfield index of updated rows that need to be flushed. */
+static uint8_t display_rows_hot[DISPLAY_WIDTH / 8] = {};
 
 /* SPI handler of the display device. */
 static spi_device_handle_t display_spi_handler;
@@ -98,6 +104,68 @@ static void display_spi_write(uint8_t command, uint8_t *data, uint32_t length)
     }
 }
 
+// Display functions.
+
+/**
+ * Allocate pixel buffers for display data.
+ */
+static void graphics_display_buffers_allocate()
+{
+    assert(display_buffer == NULL);
+
+    display_buffer = calloc(DISPLAY_WIDTH * DISPLAY_HEIGHT, sizeof(pixel_t));
+    assert(display_buffer != NULL);
+    ESP_LOGI(__FUNCTION__, "display_buffer is at %p", display_buffer);
+}
+
+/**
+ * Send the framebuffer to the display.
+ *
+ * Calculate the portion of the rows that need to be updated on the screen and
+ * send all of them in a single SPI transaction, excluding unchanged pixels to
+ * the left and to the right of this region. This approach tries to find a
+ * balance between the cost of setting up an SPI transaction, copying pixels
+ * into a temporary buffer and sending extra unchanged portions of the screen.
+ */
+void graphics_update_display()
+{
+    uint8_t address[] = {0, 0, 0, 0};
+    uint8_t index_bit = 0;
+    uint8_t index_byte = 0;
+    uint8_t slice_end = 0;
+    uint8_t slice_start = DISPLAY_WIDTH;
+    uint8_t x = 0;
+
+    for (; index_byte < DISPLAY_WIDTH / 8; index_byte++, x += 8) {
+        for (index_bit = 0; index_bit < 8; index_bit++) {
+            if (0 == (display_rows_hot[index_byte] & (1 << index_bit)))
+                continue;
+
+            display_rows_hot[index_byte] ^= (1 << index_bit);
+
+            if (slice_start > x + index_bit)
+                slice_start = x + index_bit;
+
+            slice_end = x + index_bit + 1;
+        }
+    }
+
+    if (slice_end < slice_start)
+        return;
+
+    address[1] = 0;
+    address[3] = 240;
+    display_spi_write(0x2A, address, 4);
+
+    address[1] = slice_start;
+    address[3] = slice_end;
+    display_spi_write(0x2B, address, 4);
+
+    display_spi_write(
+        0x2C, (uint8_t *)(display_buffer + (slice_start * DISPLAY_HEIGHT)),
+        ((slice_end - slice_start) * DISPLAY_HEIGHT * 2));
+}
+
 // Badge initialization functions.
 
 /**
@@ -107,6 +175,8 @@ void graphics_start()
 {
     ESP_LOGI(__FUNCTION__, "Starting graphics system. Free heap is %d.",
              esp_get_free_heap_size());
+
+    graphics_display_buffers_allocate();
 
     display_spi_bus_init();
     lcdInit(&display_device, DISPLAY_PHY_WIDTH, DISPLAY_PHY_HEIGHT, 0, 0);
