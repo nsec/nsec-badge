@@ -2,10 +2,21 @@
 #include <driver/spi_master.h>
 #include <string.h>
 
+#include "esp32/rom/tjpgd.h"
 #include "esp_log.h"
+#include "esp_spiffs.h"
+#include "esp_vfs.h"
 #include "st7789.h"
 
 #include "graphics.h"
+
+#define TJPGD_WORK_SZ 3100
+
+typedef struct {
+    FILE *fp;
+    uint8_t offset_x;
+    uint8_t offset_y;
+} jpeg_session_device;
 
 /* In-memory framebuffer with the contents of the screen. */
 static pixel_t *display_buffer = NULL;
@@ -18,6 +29,9 @@ static uint8_t display_rows_hot[DISPLAY_WIDTH / 8] = {};
 
 /* SPI handler of the display device. */
 static spi_device_handle_t display_spi_handler;
+
+/* TJpgDec work area. */
+static char *tjpgd_work = NULL;
 
 // SPI bus functions.
 
@@ -104,6 +118,24 @@ static void display_spi_write(uint8_t command, uint8_t *data, uint32_t length)
     }
 }
 
+// Sprite collection functions.
+
+/**
+ * Initialize storage filesystem.
+ */
+static void graphics_collection_start()
+{
+    esp_vfs_spiffs_conf_t conf = {.base_path = "/spiffs",
+                                  .partition_label = NULL,
+                                  .max_files = 8,
+                                  .format_if_mount_failed = true};
+
+    esp_err_t ret = esp_vfs_spiffs_register(&conf);
+    if (ret != ESP_OK) {
+        abort();
+    }
+}
+
 // Display functions.
 
 /**
@@ -147,6 +179,109 @@ static void graphics_display_buffers_allocate()
     display_buffer = calloc(DISPLAY_WIDTH * DISPLAY_HEIGHT, sizeof(pixel_t));
     assert(display_buffer != NULL);
     ESP_LOGI(__FUNCTION__, "display_buffer is at %p", display_buffer);
+
+    tjpgd_work = calloc(TJPGD_WORK_SZ, sizeof(char));
+    assert(tjpgd_work != NULL);
+}
+
+/**
+ * Decoder input callback for TJpgDec.
+ *
+ * Implements http://elm-chan.org/fsw/tjpgd/en/input.html.
+ */
+static UINT graphics_jpeg_decode_infunc(JDEC *decoder, BYTE *buffer, UINT ndata)
+{
+    jpeg_session_device *session_device =
+        (jpeg_session_device *)decoder->device;
+
+    if (buffer == NULL) {
+        fseek(session_device->fp, ndata, SEEK_CUR);
+        return ndata;
+    }
+
+    return fread(buffer, 1, ndata, session_device->fp);
+}
+
+/**
+ * Decoder output callback for TJpgDec.
+ *
+ * Implements http://elm-chan.org/fsw/tjpgd/en/output.html.
+ */
+static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
+                                         JRECT *rect)
+{
+    uint8_t *rgb = (uint8_t *)bitmap;
+    jpeg_session_device *session_device =
+        (jpeg_session_device *)decoder->device;
+
+    for (int y = rect->top; y <= rect->bottom; y++) {
+        uint16_t offset_y = session_device->offset_y + y;
+        if (offset_y >= DISPLAY_HEIGHT)
+            break;
+
+        for (int x = rect->left; x <= rect->right; x++, rgb += 3) {
+            // Store columns in memory in the reverse order to achieve the
+            // correct mirrored appearance of the image on the display that is
+            // mounted sideways.
+            uint16_t offset_x =
+                DISPLAY_WIDTH - (session_device->offset_x + x) - 1;
+            if (offset_x >= DISPLAY_WIDTH)
+                continue;
+
+            graphics_put_pixel(offset_x, offset_y, rgb[0], rgb[1], rgb[2]);
+        }
+    }
+
+    return 1;
+}
+
+/**
+ * Draw a single JPEG image sprite into the display buffer.
+ */
+void graphics_draw_sprite(char *name, uint8_t x, uint8_t y)
+{
+    int result;
+
+    jpeg_session_device session_device = {
+        .offset_x = x,
+        .offset_y = y,
+    };
+
+    session_device.fp = fopen(name, "rb");
+    if (session_device.fp == NULL) {
+        ESP_LOGW(__FUNCTION__, "Cannot open sprite image \"%s\"", name);
+        return;
+    }
+
+    JDEC decoder;
+    result = jd_prepare(&decoder, graphics_jpeg_decode_infunc, tjpgd_work,
+                        TJPGD_WORK_SZ, (void *)&session_device);
+    if (result != JDR_OK) {
+        ESP_LOGE(__FUNCTION__, "jd_prepare failed for image \"%s\"", name);
+        goto out;
+    }
+
+    result = jd_decomp(&decoder, graphics_jpeg_decode_outfunc, 0);
+    if (result != JDR_OK) {
+        ESP_LOGE(__FUNCTION__, "jd_decomp failed for image \"%s\"", name);
+        goto out;
+    }
+
+out:
+    fclose(session_device.fp);
+}
+
+/**
+ * Draw a single tile sprite into the display buffer.
+ *
+ * This is a simple wrapper around graphics_draw_sprite() that allows to
+ * address individual tiles.
+ */
+void graphics_draw_tile(char *name, uint8_t tile_x, uint8_t tile_y)
+{
+    uint8_t x = tile_x * DISPLAY_TILE_WIDTH;
+    uint8_t y = tile_y * DISPLAY_TILE_HEIGHT;
+    return graphics_draw_sprite(name, x, y);
 }
 
 /**
@@ -213,6 +348,8 @@ void graphics_start()
     lcdInit(&display_device, DISPLAY_PHY_WIDTH, DISPLAY_PHY_HEIGHT, 0, 0);
     lcdFillScreen(&display_device, BLUE);
     gpio_set_level(DISPLAY_SPI_BL, 1);
+
+    graphics_collection_start();
 
     ESP_LOGI(__FUNCTION__, "Graphics system initialized. Free heap is %d.",
              esp_get_free_heap_size());
