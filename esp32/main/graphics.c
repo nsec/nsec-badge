@@ -107,6 +107,37 @@ static void display_spi_write(uint8_t command, uint8_t *data, uint32_t length)
 // Display functions.
 
 /**
+ * Put a single RGB bitmap pixel into the framebuffer.
+ */
+static inline void graphics_put_pixel(uint8_t x, uint8_t y, uint8_t r,
+                                      uint8_t g, uint8_t b)
+{
+    // Treat all very dark colors as faux transparent and skip these pixels.
+    // Cannot simply compare to #000000 because decompressed JPEG will instead
+    // have some approximate color near black.
+    if (r < 18 && g < 18 && b < 18)
+        return;
+
+    // Store colors in RGB565 to use 2 bytes per pixel, instead of 3 bytes.
+    pixel_t new_pixel = rgb565_conv(r, g, b);
+
+    // Swap the two bytes of the color to achieve the memory layout that can be
+    // piped directly to the display without additional processing.
+    new_pixel = ((new_pixel >> 8) & 0xFF) + ((new_pixel << 8) & 0xFF00);
+
+    // Skip unchanged pixels to allow optimized partial screen updates.
+    pixel_t pixel = display_buffer[x * DISPLAY_HEIGHT + y];
+    if (new_pixel == pixel)
+        return;
+
+    display_buffer[x * DISPLAY_HEIGHT + y] = new_pixel;
+
+    uint8_t index_byte = x / 8;
+    uint8_t index_bit = x % 8;
+    display_rows_hot[index_byte] |= 1 << index_bit;
+}
+
+/**
  * Allocate pixel buffers for display data.
  */
 static void graphics_display_buffers_allocate()
