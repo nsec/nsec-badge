@@ -7,7 +7,10 @@
 void app_main(void)
 {
     graphics_start();
-    vTaskDelay(10);
+
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    uart_init();
+    vTaskDelay(500 / portTICK_PERIOD_MS);
 
     xTaskCreate(uart_task, "uart_task", 1024, NULL, 10, NULL);
 

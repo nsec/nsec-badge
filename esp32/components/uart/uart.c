@@ -12,7 +12,7 @@
 
 #define BUF_SIZE (1024)
 
-void uart_task(void *arg)
+void uart_init(void)
 {
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
@@ -24,10 +24,14 @@ void uart_task(void *arg)
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
         .source_clk = UART_SCLK_APB,
     };
+
     uart_driver_install(UART_NUM_1, BUF_SIZE * 2, 0, 0, NULL, 0);
     uart_param_config(UART_NUM_1, &uart_config);
     uart_set_pin(UART_NUM_1, UART1_TXD, UART1_RXD, UART1_RTS, UART1_CTS);
+}
 
+void uart_task(void *arg)
+{
     while (1) {
         uart_write_bytes(UART_NUM_1, "NSEC\n", 5);
         vTaskDelay(100);
