@@ -6,6 +6,7 @@
 #include "esp_log.h"
 #include "esp_spiffs.h"
 #include "esp_vfs.h"
+#include "freertos/task.h"
 #include "st7789.h"
 
 #include "graphics.h"
@@ -238,7 +239,7 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
 /**
  * Draw a single JPEG image sprite into the display buffer.
  */
-void graphics_draw_sprite(char *name, uint8_t x, uint8_t y)
+void graphics_draw_sprite(const char *name, uint8_t x, uint8_t y)
 {
     int result;
 
@@ -277,7 +278,7 @@ out:
  * This is a simple wrapper around graphics_draw_sprite() that allows to
  * address individual tiles.
  */
-void graphics_draw_tile(char *name, uint8_t tile_x, uint8_t tile_y)
+void graphics_draw_tile(const char *name, uint8_t tile_x, uint8_t tile_y)
 {
     uint8_t x = tile_x * DISPLAY_TILE_WIDTH;
     uint8_t y = tile_y * DISPLAY_TILE_HEIGHT;

@@ -1,8 +1,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "graphics.c"
-#include "uart.c"
+#include "graphics.h"
+#include "uart.h"
 
 void app_main(void)
 {

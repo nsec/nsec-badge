@@ -19,7 +19,7 @@
 
 typedef uint16_t pixel_t;
 
-void graphics_draw_sprite(char *name, uint8_t x, uint8_t y);
-void graphics_draw_tile(char *name, uint8_t x, uint8_t y);
-void graphics_start();
-void graphics_update_display();
+void graphics_draw_sprite(const char *, uint8_t, uint8_t);
+void graphics_draw_tile(const char *, uint8_t, uint8_t);
+void graphics_start(void);
+void graphics_update_display(void);
