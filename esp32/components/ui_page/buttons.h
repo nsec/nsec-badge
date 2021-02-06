@@ -23,11 +23,31 @@
 #ifndef buttons_h
 #define buttons_h
 
-#include <FreeRTOS.h>
-#include <app_button.h>
-#include <queue.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
 
-#include "controls.h"
+#define PIN_INPUT_BACK 35
+#define PIN_INPUT_DOWN 4
+#define PIN_INPUT_ENTER 34
+#define PIN_INPUT_LEFT 17
+#define PIN_INPUT_RIGHT 16
+#define PIN_INPUT_UP 5
+
+typedef enum {
+    BUTTON_NONE,
+    BUTTON_BACK,
+    BUTTON_BACK_RELEASE,
+    BUTTON_DOWN,
+    BUTTON_DOWN_RELEASE,
+    BUTTON_ENTER,
+    BUTTON_ENTER_RELEASE,
+    BUTTON_LEFT,
+    BUTTON_LEFT_RELEASE,
+    BUTTON_RIGHT,
+    BUTTON_RIGHT_RELEASE,
+    BUTTON_UP,
+    BUTTON_UP_RELEASE,
+} button_t;
 
 extern QueueHandle_t button_event_queue;
 

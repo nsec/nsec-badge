@@ -21,14 +21,9 @@
  * SOFTWARE.
  */
 
+#include "driver/gpio.h"
+
 #include "buttons.h"
-#include "boards.h"
-#include "controls.h"
-
-#include <app_timer.h>
-
-#include <FreeRTOS.h>
-#include <queue.h>
 
 /*
  * Queue of button events.
@@ -42,54 +37,38 @@ QueueHandle_t button_event_queue = NULL;
  * Delay from a GPIOTE event until a button is reported as pushed (in number of
  * timer ticks).
  */
-#define BUTTON_DETECTION_DELAY APP_TIMER_TICKS(50)
+#define BUTTON_DETECTION_DELAY 50
 
 /**@brief Function for handling events from the button handler module.
- *
- * @param[in] pin_no        The pin that the event applies to.
- * @param[in] button_action The button action (press/release).
  */
-static void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action) {
+static void nsec_button_event_handler(void *arg) {
     button_t btn;
+    uint32_t pin_no = (uint32_t) arg;
 
-    if (button_action == APP_BUTTON_PUSH) {
+    if (gpio_get_level(pin_no)) {
         switch (pin_no) {
-        case PIN_INPUT_UP:
-            btn = BUTTON_UP;
+        case PIN_INPUT_BACK:
+            btn = BUTTON_BACK;
             break;
 
         case PIN_INPUT_DOWN:
             btn = BUTTON_DOWN;
             break;
 
-        case PIN_INPUT_BACK:
-            btn = BUTTON_BACK;
-            break;
-
         case PIN_INPUT_ENTER:
             btn = BUTTON_ENTER;
             break;
 
-        default:
-            /* Should not happen, but just in case. */
-            return;
-        }
-    } else if (button_action == APP_BUTTON_RELEASE) {
-        switch (pin_no) {
+        case PIN_INPUT_LEFT:
+            btn = BUTTON_LEFT;
+            break;
+
+        case PIN_INPUT_RIGHT:
+            btn = BUTTON_RIGHT;
+            break;
+
         case PIN_INPUT_UP:
-            btn = BUTTON_UP_RELEASE;
-            break;
-
-        case PIN_INPUT_DOWN:
-            btn = BUTTON_DOWN_RELEASE;
-            break;
-
-        case PIN_INPUT_BACK:
-            btn = BUTTON_BACK_RELEASE;
-            break;
-
-        case PIN_INPUT_ENTER:
-            btn = BUTTON_ENTER_RELEASE;
+            btn = BUTTON_UP;
             break;
 
         default:
@@ -97,64 +76,96 @@ static void nsec_button_event_handler(uint8_t pin_no, uint8_t button_action) {
             return;
         }
     } else {
-        /* Should not happen, but just in case. */
-        return;
+        switch (pin_no) {
+        case PIN_INPUT_BACK:
+            btn = BUTTON_BACK_RELEASE;
+            break;
+
+        case PIN_INPUT_DOWN:
+            btn = BUTTON_DOWN_RELEASE;
+            break;
+
+        case PIN_INPUT_ENTER:
+            btn = BUTTON_ENTER_RELEASE;
+            break;
+
+        case PIN_INPUT_LEFT:
+            btn = BUTTON_LEFT_RELEASE;
+            break;
+
+        case PIN_INPUT_RIGHT:
+            btn = BUTTON_RIGHT_RELEASE;
+            break;
+
+        case PIN_INPUT_UP:
+            btn = BUTTON_UP_RELEASE;
+            break;
+
+        default:
+            /* Should not happen, but just in case. */
+            return;
+        }
     }
 
     BaseType_t ret = xQueueSendToBackFromISR(button_event_queue, &btn, NULL);
-    APP_ERROR_CHECK_BOOL(ret != errQUEUE_FULL);
-    APP_ERROR_CHECK_BOOL(ret == pdPASS);
+    assert(ret != errQUEUE_FULL && "Buttons queue is full.");
+    assert(ret == pdPASS && "Buttons queue push failed.");
 }
 
 void nsec_buttons_init(void) {
-    ret_code_t err_code;
-
     button_event_queue = xQueueCreate(10, sizeof(button_t));
-    APP_ERROR_CHECK_BOOL(button_event_queue != NULL);
+    assert(button_event_queue != NULL && "Failed to create buttons queue.");
 
-    /*
-     * The array must be static because a pointer to it will be saved in the
-     * button handler module.
-     */
-    static app_button_cfg_t buttons[] = {
-        {PIN_INPUT_UP, APP_BUTTON_ACTIVE_LOW, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_DOWN, APP_BUTTON_ACTIVE_LOW, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_BACK, APP_BUTTON_ACTIVE_LOW, NRF_GPIO_PIN_PULLUP, nsec_button_event_handler},
-        {PIN_INPUT_ENTER, APP_BUTTON_ACTIVE_LOW, NRF_GPIO_PIN_PULLUP,
-         nsec_button_event_handler}};
+    unsigned long long bit_mask = 0;
+    bit_mask |= 1ULL << PIN_INPUT_BACK;
+    bit_mask |= 1ULL << PIN_INPUT_DOWN;
+    bit_mask |= 1ULL << PIN_INPUT_ENTER;
+    bit_mask |= 1ULL << PIN_INPUT_LEFT;
+    bit_mask |= 1ULL << PIN_INPUT_RIGHT;
+    bit_mask |= 1ULL << PIN_INPUT_UP;
 
-    /*
-     * Configure the button library
-     */
-    err_code = app_button_init(buttons, sizeof(buttons) / sizeof(buttons[0]),
-                               BUTTON_DETECTION_DELAY);
-    APP_ERROR_CHECK(err_code);
 
-    /*
-     * Enable the buttons
-     */
-    err_code = app_button_enable();
-    APP_ERROR_CHECK(err_code);
+    gpio_config_t io_conf;
+    io_conf.intr_type = GPIO_INTR_ANYEDGE;
+    io_conf.pin_bit_mask = bit_mask;
+    io_conf.mode = GPIO_MODE_INPUT;
+    io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
+    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    gpio_config(&io_conf);
+
+    gpio_install_isr_service(ESP_INTR_FLAG_LOWMED);
+    gpio_isr_handler_add(PIN_INPUT_BACK, nsec_button_event_handler, (void *)PIN_INPUT_BACK);
+    gpio_isr_handler_add(PIN_INPUT_DOWN, nsec_button_event_handler, (void *)PIN_INPUT_DOWN);
+    gpio_isr_handler_add(PIN_INPUT_ENTER, nsec_button_event_handler, (void *)PIN_INPUT_ENTER);
+    gpio_isr_handler_add(PIN_INPUT_LEFT, nsec_button_event_handler, (void *)PIN_INPUT_LEFT);
+    gpio_isr_handler_add(PIN_INPUT_RIGHT, nsec_button_event_handler, (void *)PIN_INPUT_RIGHT);
+    gpio_isr_handler_add(PIN_INPUT_UP, nsec_button_event_handler, (void *)PIN_INPUT_UP);
 }
 
 bool nsec_button_is_pushed(button_t button) {
     int idx;
     switch (button) {
-    case BUTTON_UP:
-        idx = 0;
+    case BUTTON_BACK:
+        idx = PIN_INPUT_BACK;
         break;
     case BUTTON_DOWN:
-        idx = 1;
-        break;
-    case BUTTON_BACK:
-        idx = 2;
+        idx = PIN_INPUT_DOWN;
         break;
     case BUTTON_ENTER:
-        idx = 3;
+        idx = PIN_INPUT_ENTER;
+        break;
+    case BUTTON_LEFT:
+        idx = PIN_INPUT_LEFT;
+        break;
+    case BUTTON_RIGHT:
+        idx = PIN_INPUT_RIGHT;
+        break;
+    case BUTTON_UP:
+        idx = PIN_INPUT_UP;
         break;
     default:
         return false;
     }
 
-    return app_button_is_pushed(idx);
+    return gpio_get_level(idx) == 1;
 }
