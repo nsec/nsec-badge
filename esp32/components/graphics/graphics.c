@@ -30,6 +30,9 @@ static TFT_t display_device = {};
 /* Bitfield index of updated rows that need to be flushed. */
 static uint8_t display_rows_hot[DISPLAY_WIDTH / 8] = {};
 
+/* File pointer to the concatenated image maps in the library. */
+static FILE *library_maps_fp = NULL;
+
 /* SPI handler of the display device. */
 static spi_device_handle_t display_spi_handler;
 
@@ -135,6 +138,13 @@ static void graphics_collection_start()
 
     esp_err_t ret = esp_vfs_spiffs_register(&conf);
     if (ret != ESP_OK) {
+        abort();
+    }
+
+    // fopen() is a very expensive operation on SPIFFS. Open once and use the
+    // same file pointer for all sprite image reads.
+    library_maps_fp = fopen("/spiffs/library/maps", "r");
+    if (!library_maps_fp) {
         abort();
     }
 }

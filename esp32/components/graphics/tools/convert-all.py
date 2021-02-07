@@ -22,14 +22,13 @@ def convert_to_jpeg(specs, source_path, destination_path):
     out.save(destination_path, quality=92)
 
 
-def convert_to_pixel_map(specs, palette_path, source_path, destination_path):
+def convert_to_pixel_map(specs, palette_path, source_path, destination):
     """Convert into the list of indexed palette colors.
 
-    This format simply lists the indices in the color palette on each pixel in
-    sequence, without any file headers or metadata.
+    This format simply lists the color palette indices of each pixel in
+    sequence, without any file headers or metadata. All mapped images are
+    concatenated into a single file as an optimization.
     """
-    destination_path = destination_path[:-4] + '.map'
-
     palettes = open(palette_path, 'r').readlines()
     if specs['palette'] >= len(palettes):
         raise Exception(
@@ -58,13 +57,13 @@ def convert_to_pixel_map(specs, palette_path, source_path, destination_path):
                 raise Exception(
                     f'Color {pixel} is not present in palette {specs["palette"]}.')
 
-    with open(destination_path, 'wb') as f:
-        f.write(bytes(out))
+    destination.write(bytes(out))
 
 
 def main(images_registry_path, palette_path, source_path, destination_path):
     """Read the list of images in the registry and convert each one."""
     images_registry = load_images_registry(images_registry_path)
+    maps_destination = open(f'{destination_path}/maps', 'wb')
 
     for filename, image in images_registry.items():
         image_destination_path = '{}/{}'.format(destination_path, filename)
@@ -80,10 +79,12 @@ def main(images_registry_path, palette_path, source_path, destination_path):
                 image, image_source_path, image_destination_path)
         elif format_ == 'MAP':
             convert_to_pixel_map(
-                image, palette_path, image_source_path, image_destination_path)
+                image, palette_path, image_source_path, maps_destination)
         else:
             raise Exception(
                 f'Images registry is incorrect: unknown destination format {format_}.')
+
+    maps_destination.close()
 
 
 if __name__ == '__main__':
