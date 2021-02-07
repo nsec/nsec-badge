@@ -41,7 +41,12 @@ typedef struct {
     char filename[24];
 } ImagesRegistry_t;\n
 ''')
-    header_out.write(f'extern const ImagesRegistry_t graphics_static_images_registry[{size}];\n')
+    header_out.write(f'extern const ImagesRegistry_t graphics_static_images_registry[{size}];\n\n')
+
+    for i, image in enumerate(images_registry.values()):
+        name = make_name(image).upper().replace('-', '_')
+        header_out.write(f'#define LIBRARY_IMAGE_{name} {i + 1}\n')
+
     header_out.close()
 
     c_out = open(c_path, 'w')
@@ -60,7 +65,7 @@ typedef struct {
             raise Exception(
                 f'Invalid image type "{image["format"]}".')
 
-        name = image['name'][:-4]
+        name = make_name(image)
 
         c_out.write('   {\n')
         c_out.write(f'      .type={format_},\n')
@@ -73,6 +78,11 @@ typedef struct {
 
     c_out.write('};\n')
     c_out.close()
+
+
+def make_name(image):
+    """Format output filename of the image."""
+    return image['name'][:-4]
 
 
 if __name__ == '__main__':
