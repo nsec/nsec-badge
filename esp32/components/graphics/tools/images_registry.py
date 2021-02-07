@@ -1,9 +1,11 @@
 """Shared functions for images registry manipulation."""
 
+from collections import OrderedDict
+
 
 def load_images_registry(images_registry_path):
     """Parse the images registry into a dictionary."""
-    images_registry = {}
+    images_registry = OrderedDict()
 
     for i, line in enumerate(open(images_registry_path)):
         try:

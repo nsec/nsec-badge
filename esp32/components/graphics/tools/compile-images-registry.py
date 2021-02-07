@@ -11,6 +11,10 @@ def main(images_registry_path, header_path, c_path):
     images_registry = load_images_registry(images_registry_path)
     size = len(images_registry)
 
+    # Add one more dummy entry to represent an "empty" image, real images start
+    # with index 1.
+    size += 1
+
     header_out = open(header_path, 'w')
     header_out.write('#pragma once\n')
     header_out.write('#include <stdint.h>\n')
@@ -32,8 +36,9 @@ typedef struct {
     c_out = open(c_path, 'w')
     c_out.write('#include "images_registry.h"\n\n')
     c_out.write('const ImagesRegistry_t graphics_static_images_registry[] = {\n')
+    c_out.write('   {},\n')
 
-    for i, image in images_registry.items():
+    for image in images_registry.values():
         format_ = 'IMAGE_REGISTRY_JPEG' if image['format'] == 'JPEG' else 'IMAGE_REGISTRY_MAP'
         name = image['name'][:-4]
 
