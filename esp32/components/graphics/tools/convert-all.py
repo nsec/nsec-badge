@@ -19,7 +19,7 @@ def convert_to_jpeg(specs, source_path, destination_path):
 
     out = Image.new('RGB', (width, height), (0, 0, 0))
     out.paste(image, (0, 0))
-    out.save(destination_path, quality=90)
+    out.save(destination_path, quality=92)
 
 
 def convert_to_pixel_map(specs, palette_path, source_path, destination_path):

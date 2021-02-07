@@ -181,7 +181,7 @@ static inline void graphics_put_pixel_rgb(uint8_t x, uint8_t y, uint8_t r,
     // Treat all very dark colors as faux transparent and skip these pixels.
     // Cannot simply compare to #000000 because decompressed JPEG will instead
     // have some approximate color near black.
-    if (r < 18 && g < 18 && b < 18)
+    if (r < 20 && g < 20 && b < 20)
         return;
 
     // Store colors in RGB565 to use 2 bytes per pixel, instead of 3 bytes.
