@@ -23,8 +23,8 @@
 
 typedef uint16_t pixel_t;
 
-void graphics_draw_from_library(int, uint8_t, uint8_t);
-void graphics_draw_jpeg(const char *, uint8_t, uint8_t);
-void graphics_draw_sprite(const ImagesRegistry_t *, uint8_t, uint8_t);
+void graphics_draw_from_library(int, int, int);
+void graphics_draw_jpeg(const char *, int, int);
+void graphics_draw_sprite(const ImagesRegistry_t *, int, int);
 void graphics_start(void);
 void graphics_update_display(void);

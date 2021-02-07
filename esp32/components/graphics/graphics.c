@@ -17,8 +17,8 @@
 
 typedef struct {
     FILE *fp;
-    uint8_t offset_x;
-    uint8_t offset_y;
+    int offset_x;
+    int offset_y;
 } jpeg_session_device;
 
 /* In-memory framebuffer with the contents of the screen. */
@@ -166,9 +166,9 @@ static void graphics_collection_start()
  * an optimisation used to achieve the same memory layout that is used by the
  * screen.
  */
-static inline void graphics_put_pixel(uint8_t x, uint8_t y, pixel_t new_pixel)
+static inline void graphics_put_pixel(int x, int y, pixel_t new_pixel)
 {
-    if (x >= DISPLAY_WIDTH || y >= DISPLAY_HEIGHT)
+    if (x < 0 || x >= DISPLAY_WIDTH || y < 0 || y >= DISPLAY_HEIGHT)
         return;
 
     // Zero pixel is a special value for transparency.
@@ -178,7 +178,7 @@ static inline void graphics_put_pixel(uint8_t x, uint8_t y, pixel_t new_pixel)
     // Store columns in memory in the reverse order to achieve the correct
     // mirrored appearance of the image on the display that is mounted
     // sideways.
-    uint8_t rx = DISPLAY_WIDTH - x - 1;
+    unsigned int rx = DISPLAY_WIDTH - x - 1;
 
     // Skip unchanged pixels to allow optimized partial screen updates.
     pixel_t pixel = display_buffer[rx * DISPLAY_HEIGHT + y];
@@ -195,8 +195,8 @@ static inline void graphics_put_pixel(uint8_t x, uint8_t y, pixel_t new_pixel)
 /**
  * Put a single RGB bitmap pixel into the framebuffer.
  */
-static inline void graphics_put_pixel_rgb(uint8_t x, uint8_t y, uint8_t r,
-                                          uint8_t g, uint8_t b)
+static inline void graphics_put_pixel_rgb(int x, int y, uint8_t r, uint8_t g,
+                                          uint8_t b)
 {
     // Treat all very dark colors as faux transparent and skip these pixels.
     // Cannot simply compare to #000000 because decompressed JPEG will instead
@@ -263,12 +263,12 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
         (jpeg_session_device *)decoder->device;
 
     for (int y = rect->top; y <= rect->bottom; y++) {
-        uint16_t offset_y = session_device->offset_y + y;
+        int offset_y = session_device->offset_y + y;
         if (offset_y >= DISPLAY_HEIGHT)
             break;
 
         for (int x = rect->left; x <= rect->right; x++, rgb += 3) {
-            uint16_t offset_x = session_device->offset_x + x;
+            int offset_x = session_device->offset_x + x;
             if (offset_x >= DISPLAY_WIDTH)
                 continue;
 
@@ -282,7 +282,7 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
 /**
  * Draw a single sprite image from the library into the display buffer.
  */
-void graphics_draw_from_library(int index, uint8_t x, uint8_t y)
+void graphics_draw_from_library(int index, int x, int y)
 {
     // The 0th entry represents an "empty" image, so nothing can be rendered in
     // this case.
@@ -314,7 +314,7 @@ void graphics_draw_from_library(int index, uint8_t x, uint8_t y)
 /**
  * Draw a single JPEG image sprite into the display buffer.
  */
-void graphics_draw_jpeg(const char *name, uint8_t x, uint8_t y)
+void graphics_draw_jpeg(const char *name, int x, int y)
 {
     int result;
 
@@ -350,7 +350,7 @@ out:
 /**
  * Draw a single color mapped image sprite into the display buffer.
  */
-void graphics_draw_sprite(const ImagesRegistry_t *sprite, uint8_t x, uint8_t y)
+void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
 {
     const uint16_t *palette;
     switch (sprite->palette) {
@@ -368,8 +368,8 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, uint8_t x, uint8_t y)
         abort();
     }
 
-    uint8_t width = sprite->width;
-    uint8_t height = sprite->height;
+    int width = sprite->width;
+    int height = sprite->height;
     unsigned int offset = sprite->map_offset;
     unsigned int total_size = width * height;
 
