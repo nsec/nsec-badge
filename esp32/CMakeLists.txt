@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(GRAPHICS_LIBRARY_DIR "${CMAKE_SOURCE_DIR}/graphics")
 set(EXTRA_COMPONENT_DIRS "./external-components/")
 set(SPIFFS_DIR "${CMAKE_SOURCE_DIR}/spiffs")
 

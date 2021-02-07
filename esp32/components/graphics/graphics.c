@@ -10,6 +10,8 @@
 #include "st7789.h"
 
 #include "graphics.h"
+#include "images_registry.h"
+#include "palette.h"
 
 #define TJPGD_WORK_SZ 3100
 
