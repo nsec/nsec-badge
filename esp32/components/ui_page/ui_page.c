@@ -3,26 +3,10 @@
 //
 //  License: MIT (see LICENSE for details)
 
-#include "ui_page.h"
-#include "FreeRTOS.h"
-#include "app_screensaver.h"
-#include "application.h"
-#include "drivers/battery_manager.h"
-#include "drivers/buttons.h"
-#include "drivers/controls.h"
-#include "drivers/display.h"
-#include "gfx_effect.h"
-#include "gui.h"
-#include "home_menu.h"
-#include "main_menu.h"
-#include "menu.h"
-#include "nsec_settings.h"
-#include "persistency.h"
-#include "queue.h"
-#include "status_bar.h"
-#include "timer.h"
-
 #include <string.h>
+
+#include "buttons.h"
+#include "ui_page.h"
 
 static const ui_page *top_most_page = NULL;
 
@@ -53,7 +37,7 @@ void show_ui_page(const ui_page *new, void *init_data)
     flush_buttons();
 
     /* Can't have init data if no init. */
-    ASSERT(new->init || !init_data);
+    assert(new->init || !init_data);
 
     if (new->init) {
         new->init(init_data);
@@ -78,7 +62,7 @@ void show_ui_page(const ui_page *new, void *init_data)
     flush_buttons();
 
     /* The initial page is not allowed to quit / return. */
-    ASSERT(prev_page != NULL);
+    assert(prev_page != NULL);
 
     top_most_page = prev_page;
 

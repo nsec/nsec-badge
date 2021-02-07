@@ -3,8 +3,7 @@
 
 #include <stdbool.h>
 
-#include "FreeRTOS.h"
-#include "drivers/controls.h"
+#include "freertos/FreeRTOS.h"
 
 typedef void (*ui_page_init_func)(void *data);
 typedef void (*ui_page_redraw_func)(void);
