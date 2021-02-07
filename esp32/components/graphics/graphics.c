@@ -401,6 +401,18 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
         palette = graphics_static_palette_1;
         break;
 
+    case 2:
+        palette = graphics_static_palette_2;
+        break;
+
+    case 3:
+        palette = graphics_static_palette_3;
+        break;
+
+    case 4:
+        palette = graphics_static_palette_4;
+        break;
+
     default:
         ESP_LOGE(__FUNCTION__, "Sprite image uses unknown palette %d.",
                  sprite->palette);
