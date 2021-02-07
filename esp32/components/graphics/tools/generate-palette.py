@@ -51,7 +51,7 @@ def main(library_path, images_registry_path, palette_path):
     palette_groups = {}
 
     for image in images_registry.values():
-        if image['format'] != 'MAP':
+        if image['format'] == 'JPEG':
             continue
 
         palette_id = image['palette']

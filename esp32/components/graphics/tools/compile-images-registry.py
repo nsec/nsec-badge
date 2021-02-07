@@ -15,12 +15,22 @@ def main(images_registry_path, header_path, c_path):
     # with index 1.
     size += 1
 
+    # All MAP images are put after FAST images, so the smallest offset of a MAP
+    # image will tell how much space is required for FAST images.
+    try:
+        fast_size = min(image['map_offset'] for image in images_registry.values()
+                        if image['format'] == 'MAP')
+    except ValueError:
+        fast_size = 1
+
     header_out = open(header_path, 'w')
     header_out.write('#pragma once\n')
-    header_out.write('#include <stdint.h>\n')
+    header_out.write('#include <stdint.h>\n\n')
+    header_out.write(f'#define IMAGE_REGISTRY_FAST_SIZE {fast_size}\n')
     header_out.write('''
-#define IMAGE_REGISTRY_JPEG 0
-#define IMAGE_REGISTRY_MAP 1
+#define IMAGE_REGISTRY_FAST 0
+#define IMAGE_REGISTRY_JPEG 1
+#define IMAGE_REGISTRY_MAP 2
 
 typedef struct {
     uint8_t type;
@@ -40,7 +50,16 @@ typedef struct {
     c_out.write('   {},\n')
 
     for image in images_registry.values():
-        format_ = 'IMAGE_REGISTRY_JPEG' if image['format'] == 'JPEG' else 'IMAGE_REGISTRY_MAP'
+        if image['format'] == 'FAST':
+            format_ = 'IMAGE_REGISTRY_FAST'
+        elif image['format'] == 'JPEG':
+            format_ = 'IMAGE_REGISTRY_JPEG'
+        elif image['format'] == 'MAP':
+            format_ = 'IMAGE_REGISTRY_MAP'
+        else:
+            raise Exception(
+                f'Invalid image type "{image["format"]}".')
+
         name = image['name'][:-4]
 
         c_out.write('   {\n')

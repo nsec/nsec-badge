@@ -30,6 +30,9 @@ static TFT_t display_device = {};
 /* Bitfield index of updated rows that need to be flushed. */
 static uint8_t display_rows_hot[DISPLAY_WIDTH / 8] = {};
 
+/* In-memory cache for 'fast' images. */
+static uint8_t *library_maps_fast = NULL;
+
 /* File pointer to the concatenated image maps in the library. */
 static FILE *library_maps_fp = NULL;
 
@@ -147,6 +150,11 @@ static void graphics_collection_start()
     if (!library_maps_fp) {
         abort();
     }
+
+    // Copy the most used 'fast' images into a heap buffer to reduce the number
+    // of flash memory reads.
+    fseek(library_maps_fp, 0, SEEK_CUR);
+    fread(library_maps_fast, 1, IMAGE_REGISTRY_FAST_SIZE, library_maps_fp);
 }
 
 // Display functions.
@@ -216,6 +224,9 @@ static void graphics_display_buffers_allocate()
     display_buffer = calloc(DISPLAY_WIDTH * DISPLAY_HEIGHT, sizeof(pixel_t));
     assert(display_buffer != NULL);
     ESP_LOGI(__FUNCTION__, "display_buffer is at %p", display_buffer);
+
+    library_maps_fast = calloc(IMAGE_REGISTRY_FAST_SIZE, sizeof(char));
+    assert(library_maps_fast != NULL);
 
     tjpgd_work = calloc(TJPGD_WORK_SZ, sizeof(char));
     assert(tjpgd_work != NULL);
@@ -288,6 +299,7 @@ void graphics_draw_from_library(int index, uint8_t x, uint8_t y)
         graphics_draw_jpeg(filepath, x, y);
         return;
 
+    case IMAGE_REGISTRY_FAST:
     case IMAGE_REGISTRY_MAP:
         graphics_draw_sprite(&(graphics_static_images_registry[index]), x, y);
         return;
@@ -361,15 +373,25 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, uint8_t x, uint8_t y)
     unsigned int offset = sprite->map_offset;
     unsigned int total_size = width * height;
 
-    fseek(library_maps_fp, offset, SEEK_SET);
+    if (sprite->type == IMAGE_REGISTRY_FAST) {
+        for (int iy = 0; iy < height; ++iy) {
+            for (int ix = 0; ix < width; ++ix) {
+                graphics_put_pixel(
+                    x + ix, y + iy,
+                    palette[library_maps_fast[offset + (iy * width) + ix]]);
+            }
+        }
+    } else {
+        fseek(library_maps_fp, offset, SEEK_SET);
 
-    uint8_t buffer[576];
-    for (int i = 0; i < total_size; i += 576) {
-        fread(buffer, 1, 576, library_maps_fp);
+        uint8_t buffer[576];
+        for (int i = 0; i < total_size; i += 576) {
+            fread(buffer, 1, 576, library_maps_fp);
 
-        for (int j = 0; j < 576; ++j) {
-            graphics_put_pixel((x + ((i + j) % width)), (y + ((i + j) / width)),
-                               palette[buffer[j]]);
+            for (int j = 0; j < 576; ++j) {
+                graphics_put_pixel((x + ((i + j) % width)),
+                                   (y + ((i + j) / width)), palette[buffer[j]]);
+            }
         }
     }
 }

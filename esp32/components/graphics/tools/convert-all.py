@@ -65,7 +65,12 @@ def main(images_registry_path, palette_path, source_path, destination_path):
     images_registry = load_images_registry(images_registry_path)
     maps_destination = open(f'{destination_path}/maps', 'wb')
 
-    for filename, image in images_registry.items():
+    # Sort the images by the offset value to make sure that they are written
+    # into the maps file in the correct order.
+    images = list(images_registry.items())
+    images.sort(key=lambda x: x[1]['map_offset'])
+
+    for filename, image in images:
         image_destination_path = '{}/{}'.format(destination_path, filename)
         image_source_path = '{}/{}'.format(source_path, filename)
 
@@ -77,7 +82,7 @@ def main(images_registry_path, palette_path, source_path, destination_path):
         if format_ == 'JPEG':
             convert_to_jpeg(
                 image, image_source_path, image_destination_path)
-        elif format_ == 'MAP':
+        elif format_ in ('FAST', 'MAP'):
             convert_to_pixel_map(
                 image, palette_path, image_source_path, maps_destination)
         else:
