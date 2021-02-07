@@ -140,10 +140,43 @@ static void graphics_collection_start()
 // Display functions.
 
 /**
+ * Put a single high color (RGB565) pixel into the framebuffer.
+ *
+ * The hight and low bytes of the pixel value must already be swapped. This is
+ * an optimisation used to achieve the same memory layout that is used by the
+ * screen.
+ */
+static inline void graphics_put_pixel(uint8_t x, uint8_t y, pixel_t new_pixel)
+{
+    if (x >= DISPLAY_WIDTH || y >= DISPLAY_HEIGHT)
+        return;
+
+    // Zero pixel is a special value for transparency.
+    if (new_pixel == 0)
+        return;
+
+    // Store columns in memory in the reverse order to achieve the correct
+    // mirrored appearance of the image on the display that is mounted
+    // sideways.
+    uint8_t rx = DISPLAY_WIDTH - x - 1;
+
+    // Skip unchanged pixels to allow optimized partial screen updates.
+    pixel_t pixel = display_buffer[rx * DISPLAY_HEIGHT + y];
+    if (new_pixel == pixel)
+        return;
+
+    display_buffer[rx * DISPLAY_HEIGHT + y] = new_pixel;
+
+    uint8_t index_byte = rx / 8;
+    uint8_t index_bit = rx % 8;
+    display_rows_hot[index_byte] |= 1 << index_bit;
+}
+
+/**
  * Put a single RGB bitmap pixel into the framebuffer.
  */
-static inline void graphics_put_pixel(uint8_t x, uint8_t y, uint8_t r,
-                                      uint8_t g, uint8_t b)
+static inline void graphics_put_pixel_rgb(uint8_t x, uint8_t y, uint8_t r,
+                                          uint8_t g, uint8_t b)
 {
     // Treat all very dark colors as faux transparent and skip these pixels.
     // Cannot simply compare to #000000 because decompressed JPEG will instead
@@ -158,16 +191,7 @@ static inline void graphics_put_pixel(uint8_t x, uint8_t y, uint8_t r,
     // piped directly to the display without additional processing.
     new_pixel = ((new_pixel >> 8) & 0xFF) + ((new_pixel << 8) & 0xFF00);
 
-    // Skip unchanged pixels to allow optimized partial screen updates.
-    pixel_t pixel = display_buffer[x * DISPLAY_HEIGHT + y];
-    if (new_pixel == pixel)
-        return;
-
-    display_buffer[x * DISPLAY_HEIGHT + y] = new_pixel;
-
-    uint8_t index_byte = x / 8;
-    uint8_t index_bit = x % 8;
-    display_rows_hot[index_byte] |= 1 << index_bit;
+    graphics_put_pixel(x, y, new_pixel);
 }
 
 /**
@@ -221,15 +245,8 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
             break;
 
         for (int x = rect->left; x <= rect->right; x++, rgb += 3) {
-            // Store columns in memory in the reverse order to achieve the
-            // correct mirrored appearance of the image on the display that is
-            // mounted sideways.
-            uint16_t offset_x =
-                DISPLAY_WIDTH - (session_device->offset_x + x) - 1;
-            if (offset_x >= DISPLAY_WIDTH)
-                continue;
-
-            graphics_put_pixel(offset_x, offset_y, rgb[0], rgb[1], rgb[2]);
+            uint16_t offset_x = session_device->offset_x + x;
+            graphics_put_pixel_rgb(offset_x, offset_y, rgb[0], rgb[1], rgb[2]);
         }
     }
 
@@ -239,7 +256,7 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
 /**
  * Draw a single JPEG image sprite into the display buffer.
  */
-void graphics_draw_sprite(const char *name, uint8_t x, uint8_t y)
+void graphics_draw_jpeg(const char *name, uint8_t x, uint8_t y)
 {
     int result;
 
@@ -273,16 +290,37 @@ out:
 }
 
 /**
- * Draw a single tile sprite into the display buffer.
+ * Draw a single JPEG tile into the display buffer.
  *
- * This is a simple wrapper around graphics_draw_sprite() that allows to
- * address individual tiles.
+ * This is a simple wrapper around graphics_draw_jpeg() that allows to use
+ * coordinates on the tile grid.
  */
-void graphics_draw_tile(const char *name, uint8_t tile_x, uint8_t tile_y)
+void graphics_draw_jpeg_tile(const char *name, uint8_t tile_x, uint8_t tile_y)
 {
     uint8_t x = tile_x * DISPLAY_TILE_WIDTH;
     uint8_t y = tile_y * DISPLAY_TILE_HEIGHT;
-    return graphics_draw_sprite(name, x, y);
+    return graphics_draw_jpeg(name, x, y);
+}
+
+/**
+ * Draw a single sprite image from the library into the display buffer.
+ */
+void graphics_draw_sprite(uint8_t index, uint8_t x, uint8_t y)
+{
+    // FIXME
+}
+
+/**
+ * Draw a single sprite tile from the library into the display buffer.
+ *
+ * This is a simple wrapper around graphics_draw_sprite() that allows to use
+ * coordinates on the tile grid.
+ */
+void graphics_draw_sprite_tile(uint8_t index, uint8_t tile_x, uint8_t tile_y)
+{
+    uint8_t x = tile_x * DISPLAY_TILE_WIDTH;
+    uint8_t y = tile_y * DISPLAY_TILE_HEIGHT;
+    return graphics_draw_sprite(index, x, y);
 }
 
 /**
