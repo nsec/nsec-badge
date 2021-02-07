@@ -246,6 +246,9 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
 
         for (int x = rect->left; x <= rect->right; x++, rgb += 3) {
             uint16_t offset_x = session_device->offset_x + x;
+            if (offset_x >= DISPLAY_WIDTH)
+                continue;
+
             graphics_put_pixel_rgb(offset_x, offset_y, rgb[0], rgb[1], rgb[2]);
         }
     }
