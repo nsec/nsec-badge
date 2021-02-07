@@ -24,6 +24,9 @@ typedef struct {
 /* In-memory framebuffer with the contents of the screen. */
 static pixel_t *display_buffer = NULL;
 
+/* Active drawing clip coordinates. */
+static int display_clip[4] = {};
+
 /* Device state object for the display driver. */
 static TFT_t display_device = {};
 
@@ -160,6 +163,39 @@ static void graphics_collection_start()
 // Display functions.
 
 /**
+ * Enable drawing on the whole screen area.
+ */
+void graphics_clip_reset()
+{
+    display_clip[0] = 0;
+    display_clip[1] = 0;
+    display_clip[2] = DISPLAY_WIDTH;
+    display_clip[3] = DISPLAY_HEIGHT;
+}
+
+/**
+ * Set the active drawing clip on the screen.
+ *
+ * Any pixels drawn outside of the clip area will be ignored.
+ */
+void graphics_clip_set(int x1, int y1, int x2, int y2)
+{
+    if (x1 < 0)
+        x1 = 0;
+    if (y1 < 0)
+        y1 = 0;
+    if (x2 > DISPLAY_WIDTH)
+        x2 = DISPLAY_WIDTH;
+    if (y2 > DISPLAY_HEIGHT)
+        y2 = DISPLAY_HEIGHT;
+
+    display_clip[0] = x1;
+    display_clip[1] = y1;
+    display_clip[2] = x2;
+    display_clip[3] = y2;
+}
+
+/**
  * Put a single high color (RGB565) pixel into the framebuffer.
  *
  * The hight and low bytes of the pixel value must already be swapped. This is
@@ -168,7 +204,10 @@ static void graphics_collection_start()
  */
 static inline void graphics_put_pixel(int x, int y, pixel_t new_pixel)
 {
-    if (x < 0 || x >= DISPLAY_WIDTH || y < 0 || y >= DISPLAY_HEIGHT)
+    if (x < display_clip[0] || y < display_clip[1])
+        return;
+
+    if (x >= display_clip[2] || y >= display_clip[3])
         return;
 
     // Zero pixel is a special value for transparency.
@@ -264,12 +303,12 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
 
     for (int y = rect->top; y <= rect->bottom; y++) {
         int offset_y = session_device->offset_y + y;
-        if (offset_y >= DISPLAY_HEIGHT)
+        if (offset_y >= display_clip[3])
             break;
 
         for (int x = rect->left; x <= rect->right; x++, rgb += 3) {
             int offset_x = session_device->offset_x + x;
-            if (offset_x >= DISPLAY_WIDTH)
+            if (offset_x >= display_clip[2])
                 continue;
 
             graphics_put_pixel_rgb(offset_x, offset_y, rgb[0], rgb[1], rgb[2]);
@@ -454,6 +493,7 @@ void graphics_start()
     ESP_LOGI(__FUNCTION__, "Starting graphics system. Free heap is %d.",
              esp_get_free_heap_size());
 
+    graphics_clip_reset();
     graphics_display_buffers_allocate();
 
     display_spi_bus_init();
