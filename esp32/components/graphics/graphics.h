@@ -1,5 +1,9 @@
 #pragma once
 
+#include <stdint.h>
+
+#include "images_registry.h"
+
 #define DISPLAY_PHY_HEIGHT CONFIG_HEIGHT
 #define DISPLAY_PHY_WIDTH CONFIG_WIDTH
 
@@ -19,9 +23,8 @@
 
 typedef uint16_t pixel_t;
 
+void graphics_draw_from_library(int, uint8_t, uint8_t);
 void graphics_draw_jpeg(const char *, uint8_t, uint8_t);
-void graphics_draw_jpeg_tile(const char *, uint8_t, uint8_t);
-void graphics_draw_sprite(uint8_t, uint8_t, uint8_t);
-void graphics_draw_sprite_tile(uint8_t, uint8_t, uint8_t);
+void graphics_draw_sprite(const ImagesRegistry_t *, uint8_t, uint8_t);
 void graphics_start(void);
 void graphics_update_display(void);

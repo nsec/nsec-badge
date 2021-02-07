@@ -269,6 +269,37 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
 }
 
 /**
+ * Draw a single sprite image from the library into the display buffer.
+ */
+void graphics_draw_from_library(int index, uint8_t x, uint8_t y)
+{
+    // The 0th entry represents an "empty" image, so nothing can be rendered in
+    // this case.
+    if (index == 0)
+        return;
+
+    char filepath[64];
+
+    switch (graphics_static_images_registry[index].type) {
+    case IMAGE_REGISTRY_JPEG:
+        sprintf(filepath, "/spiffs/library/%s.jpeg",
+                graphics_static_images_registry[index].filename);
+
+        graphics_draw_jpeg(filepath, x, y);
+        return;
+
+    case IMAGE_REGISTRY_MAP:
+        graphics_draw_sprite(&(graphics_static_images_registry[index]), x, y);
+        return;
+
+    default:
+        ESP_LOGE(__FUNCTION__, "Unknown type of graphics library sprite %d.",
+                 index);
+        abort();
+    }
+}
+
+/**
  * Draw a single JPEG image sprite into the display buffer.
  */
 void graphics_draw_jpeg(const char *name, uint8_t x, uint8_t y)
@@ -305,37 +336,42 @@ out:
 }
 
 /**
- * Draw a single JPEG tile into the display buffer.
- *
- * This is a simple wrapper around graphics_draw_jpeg() that allows to use
- * coordinates on the tile grid.
+ * Draw a single color mapped image sprite into the display buffer.
  */
-void graphics_draw_jpeg_tile(const char *name, uint8_t tile_x, uint8_t tile_y)
+void graphics_draw_sprite(const ImagesRegistry_t *sprite, uint8_t x, uint8_t y)
 {
-    uint8_t x = tile_x * DISPLAY_TILE_WIDTH;
-    uint8_t y = tile_y * DISPLAY_TILE_HEIGHT;
-    return graphics_draw_jpeg(name, x, y);
-}
+    const uint16_t *palette;
+    switch (sprite->palette) {
+    case 0:
+        palette = graphics_static_palette_0;
+        break;
 
-/**
- * Draw a single sprite image from the library into the display buffer.
- */
-void graphics_draw_sprite(uint8_t index, uint8_t x, uint8_t y)
-{
-    // FIXME
-}
+    case 1:
+        palette = graphics_static_palette_1;
+        break;
 
-/**
- * Draw a single sprite tile from the library into the display buffer.
- *
- * This is a simple wrapper around graphics_draw_sprite() that allows to use
- * coordinates on the tile grid.
- */
-void graphics_draw_sprite_tile(uint8_t index, uint8_t tile_x, uint8_t tile_y)
-{
-    uint8_t x = tile_x * DISPLAY_TILE_WIDTH;
-    uint8_t y = tile_y * DISPLAY_TILE_HEIGHT;
-    return graphics_draw_sprite(index, x, y);
+    default:
+        ESP_LOGE(__FUNCTION__, "Sprite image uses unknown palette %d.",
+                 sprite->palette);
+        abort();
+    }
+
+    uint8_t width = sprite->width;
+    uint8_t height = sprite->height;
+    unsigned int offset = sprite->map_offset;
+    unsigned int total_size = width * height;
+
+    fseek(library_maps_fp, offset, SEEK_SET);
+
+    uint8_t buffer[576];
+    for (int i = 0; i < total_size; i += 576) {
+        fread(buffer, 1, 576, library_maps_fp);
+
+        for (int j = 0; j < 576; ++j) {
+            graphics_put_pixel((x + ((i + j) % width)), (y + ((i + j) / width)),
+                               palette[buffer[j]]);
+        }
+    }
 }
 
 /**
