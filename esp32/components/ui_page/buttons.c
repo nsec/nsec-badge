@@ -108,8 +108,9 @@ static void nsec_button_event_handler(void *arg) {
     }
 
     BaseType_t ret = xQueueSendToBackFromISR(button_event_queue, &btn, NULL);
-    assert(ret != errQUEUE_FULL && "Buttons queue is full.");
-    assert(ret == pdPASS && "Buttons queue push failed.");
+    if (ret != errQUEUE_FULL) {
+        assert(ret == pdPASS && "Buttons queue push failed.");
+    }
 }
 
 void nsec_buttons_init(void) {
