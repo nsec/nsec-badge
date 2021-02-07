@@ -5,4 +5,4 @@ idf_component_register(
         "."
 )
 
-spiffs_create_partition_image(storage ../spiffs FLASH_IN_PROJECT)
+spiffs_create_partition_image(storage ${SPIFFS_DIR} FLASH_IN_PROJECT)
