@@ -48,7 +48,9 @@ def generate_palette(library_path, palette_id, images):
 def main(library_path, images_registry_path, palette_path):
     """Group images in the registry by the palette ID and generate each."""
     images_registry = load_images_registry(images_registry_path)
-    palette_groups = {}
+    palette_groups = {
+        0: [], 1: [], 2: [], 3: [], 4: [],
+    }
 
     for image in images_registry.values():
         if image['format'] == 'JPEG':
@@ -56,12 +58,17 @@ def main(library_path, images_registry_path, palette_path):
 
         palette_id = image['palette']
         if palette_id not in palette_groups:
-            palette_groups[palette_id] = []
+            raise Exception(
+                f'Unknown palette "{palette_id}". The number of palettes '
+                f'is hardcoded the generate-palette.py script. If you need a '
+                f'new palette, modify this script and the graphics.c source.')
 
         palette_groups[palette_id].append(image)
 
+    palette_groups = sorted(palette_groups.items(), key=lambda x: x[0])
+
     with open(palette_path, 'w') as f:
-        for palette_id, images in palette_groups.items():
+        for palette_id, images in palette_groups:
             palette = generate_palette(library_path, palette_id, images)
             f.write(','.join(palette))
             f.write('\n')
