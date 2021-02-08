@@ -498,6 +498,26 @@ void graphics_update_display()
 // Badge initialization functions.
 
 /**
+ * Get a pointer to the initialized display device.
+ *
+ * The underlying st7789 library API can still be used directly, even if they
+ * are not used a lot by this module. st7789 library functions expect a pointer
+ * to fully-initialized display device, which can be obtained from this
+ * function.
+ *
+ * The return type is made void* to avoid adding a build dependency on st7789
+ * to every single module. To be able to use this function, a component needs
+ * to have st7789 in the list of its dependencies and to include the
+ * "st7789.h" header. The correct usage then becomes, e.g.:
+ *
+ *    lcdFillScreen((TFT_t *)graphics_get_display_device(), RED);
+ */
+void *graphics_get_display_device()
+{
+    return &display_device;
+}
+
+/**
  * Initialize devices and memory buffers.
  */
 void graphics_start()
