@@ -9,7 +9,7 @@ def load_images_registry(images_registry_path):
 
     for i, line in enumerate(open(images_registry_path)):
         try:
-            format_, width, height, palette, name = line.strip().split('\t')
+            format_, width, height, palette, sinkline, name = line.strip().split('\t')
         except:
             raise ValueError(
                 'Images registry file is not well formed on line #{i+1}.')
@@ -21,6 +21,7 @@ def load_images_registry(images_registry_path):
             'map_offset': 0,
             'name': name,
             'palette': int(palette),
+            'sinkline': int(sinkline),
             'width': int(width),
         }
 

@@ -37,6 +37,7 @@ typedef struct {
     uint8_t width;
     uint8_t height;
     uint8_t palette;
+    uint8_t sinkline;
     uint32_t map_offset;
     char filename[24];
 } ImagesRegistry_t;\n
@@ -72,6 +73,7 @@ typedef struct {
         c_out.write(f'      .width={image["width"]},\n')
         c_out.write(f'      .height={image["height"]},\n')
         c_out.write(f'      .palette={image["palette"]},\n')
+        c_out.write(f'      .sinkline={image["sinkline"]},\n')
         c_out.write(f'      .map_offset={image["map_offset"]},\n')
         c_out.write(f'      .filename="{name}",\n')
         c_out.write('   },\n')

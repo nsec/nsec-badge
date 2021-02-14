@@ -32,3 +32,5 @@ void graphics_draw_jpeg(const char *, int, int);
 void graphics_draw_sprite(const ImagesRegistry_t *, int, int);
 void graphics_start(void);
 void graphics_update_display(void);
+
+int graphics_get_sinkline_from_library(int);

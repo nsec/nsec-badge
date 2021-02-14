@@ -448,6 +448,23 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
 }
 
 /**
+ * Simply returns the sinkline field from the library for an image.
+ *
+ * Sinkline is a distance from the top of an image that will make it appear
+ * either in front or behind the rendered character. When the character crosses
+ * this line on the Y axis on the screen, the image "sinks" behind the
+ * character.
+ */
+int graphics_get_sinkline_from_library(int index)
+{
+    // The 0th entry represents an "empty" image.
+    if (index == 0)
+        return 0;
+
+    return graphics_static_images_registry[index].sinkline;
+}
+
+/**
  * Send the framebuffer to the display.
  *
  * Calculate the portion of the rows that need to be updated on the screen and
