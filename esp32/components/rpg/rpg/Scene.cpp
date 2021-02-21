@@ -14,6 +14,9 @@ void Scene::add_character(Character *character)
 
 void Scene::render()
 {
+    if (!lock())
+        return;
+
     graphics_clip_set(0, 0, viewport_width, viewport_height);
 
     tile_coordinates_t coordinates = viewport.get_tile_coordinates(0, 0);
@@ -33,6 +36,7 @@ void Scene::render()
     graphics_update_display();
     graphics_clip_reset();
     viewport.cache_refresh_state();
+    unlock();
 }
 
 void Scene::render_layer(int layer)

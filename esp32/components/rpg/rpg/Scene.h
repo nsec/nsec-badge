@@ -4,6 +4,9 @@
 #include "rpg/Viewport.h"
 #include "rpg/data/SceneDataReader.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
+
 #include <vector>
 
 namespace rpg
@@ -17,6 +20,7 @@ class Scene
           viewport(width, height)
     {
         characters = {};
+        scene_lock = xSemaphoreCreateMutex();
     }
 
     void add_character(Character *character);
@@ -26,6 +30,16 @@ class Scene
     Viewport *get_viewport()
     {
         return &viewport;
+    }
+
+    bool lock()
+    {
+        return xSemaphoreTake(scene_lock, portMAX_DELAY) == pdTRUE;
+    }
+
+    void unlock()
+    {
+        xSemaphoreGive(scene_lock);
     }
 
   private:
@@ -38,6 +52,8 @@ class Scene
     Viewport viewport;
 
     std::vector<Character *> characters;
+
+    SemaphoreHandle_t scene_lock;
 
     void render_layer(int layer);
 };
