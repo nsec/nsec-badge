@@ -1,5 +1,6 @@
 idf_component_register(
     SRCS
+        "rpg/Character.cpp"
         "rpg/Scene.cpp"
         "rpg/Viewport.cpp"
         "rpg/data/SceneDataReader.cpp"
