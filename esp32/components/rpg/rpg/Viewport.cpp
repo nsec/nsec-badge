@@ -152,14 +152,14 @@ void Viewport::prime_refresh_state(const std::vector<Character *> &characters)
         for (auto &coordinates : coordinates_array) {
             for (int dy = 0, y_limit = coordinates.screen_y +
                                        character_p->get_height() +
-                                       DISPLAY_TILE_HEIGHT;
-                 coordinates.screen_y < y_limit;
+                                       DISPLAY_TILE_HEIGHT * 2;
+                 coordinates.screen_y <= y_limit;
                  ++dy, coordinates.screen_y += DISPLAY_TILE_HEIGHT) {
 
                 for (int dx = 0, x_limit = coordinates.screen_x +
                                            character_p->get_width() +
                                            DISPLAY_TILE_WIDTH;
-                     coordinates.screen_x < x_limit;
+                     coordinates.screen_x <= x_limit;
                      ++dx, coordinates.screen_x += DISPLAY_TILE_WIDTH) {
 
                     prime_refresh_state_tile(coordinates.local_tile_x + dx,
