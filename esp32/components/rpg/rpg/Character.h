@@ -62,7 +62,7 @@ class Character
         return width;
     }
 
-    void move(int new_scene_x, int new_scene_y)
+    virtual void move(int new_scene_x, int new_scene_y)
     {
         scene_x = new_scene_x;
         scene_y = new_scene_y;
