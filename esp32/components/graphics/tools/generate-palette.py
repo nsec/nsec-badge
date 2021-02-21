@@ -39,7 +39,7 @@ def generate_palette(library_path, palette_id, images):
     colors = sorted(colors)
     if len(colors) > 255:
         raise Exception(
-            'There are more than 255 colors in palette {palette_id}')
+            f'There is more than 255 colors in palette {palette_id}')
 
     # First entry is a dummy reserved for transparent pixels.
     return ['00'] + colors
