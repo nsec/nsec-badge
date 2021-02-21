@@ -16,7 +16,7 @@ void run_main_scene(void)
     rpg::MainCharacter mc{blocked_data_reader};
     scene.add_character(&mc);
 
-    scene.get_viewport().move_to_tile(13, 7);
+    scene.get_viewport().move_to_tile(13, 21);
 
     rpg_control_take(scene);
 }

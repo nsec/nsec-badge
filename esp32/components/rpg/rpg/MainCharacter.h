@@ -12,7 +12,7 @@ class MainCharacter : public Character
     MainCharacter(data::BlockedDataReader &data_reader)
         : Character{"main-character", 24, 32, 13, 31}, data_reader{data_reader}
     {
-        move(390, 190);
+        move(650, 1090);
     }
 
     virtual void move(int new_scene_x, int new_scene_y) override;
