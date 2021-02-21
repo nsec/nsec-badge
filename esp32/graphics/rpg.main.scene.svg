@@ -28,10 +28,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="18.114072"
-     inkscape:cy="142.47145"
+     inkscape:cx="269.22468"
+     inkscape:cy="217.87285"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      inkscape:document-rotation="0"
      showgrid="true"
      units="px"
@@ -80,7 +80,8 @@
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="l0"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <image
        sodipodi:absref="grass-1.png"
        xlink:href="grass-1.png"
@@ -22544,8 +22545,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="l1"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <image
        sodipodi:absref="flower-1.png"
        xlink:href="flower-1.png"
@@ -22780,15 +22780,6 @@
        id="image13512"
        x="168"
        y="288" />
-    <image
-       sodipodi:absref="flower-1.png"
-       xlink:href="flower-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image13514"
-       x="48"
-       y="216" />
     <image
        sodipodi:absref="flower-1.png"
        xlink:href="flower-1.png"
@@ -23501,24 +23492,6 @@
        height="48"
        width="48" />
     <image
-       sodipodi:absref="flower-1.png"
-       xlink:href="flower-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image5319"
-       x="24"
-       y="216" />
-    <image
-       sodipodi:absref="flower-1.png"
-       xlink:href="flower-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image5321"
-       x="0"
-       y="216" />
-    <image
        sodipodi:absref="wall-corner-r.png"
        xlink:href="wall-corner-r.png"
        y="216"
@@ -23753,6 +23726,123 @@
        x="456"
        y="144"
        style="display:inline" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="432"
+       x="336"
+       id="image6586"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="432"
+       x="360"
+       id="image6590"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="432"
+       x="384"
+       id="image6592"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="432"
+       x="408"
+       id="image6594"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="432"
+       x="432"
+       id="image6596"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="432"
+       x="456"
+       id="image6598"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="216"
+       x="0"
+       id="image6610"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="216"
+       x="24"
+       id="image6614"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       y="216"
+       x="48"
+       id="image6616"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-3.png"
+       xlink:href="flower-3.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image6628"
+       x="144"
+       y="528" />
+    <image
+       sodipodi:absref="flower-4.png"
+       xlink:href="flower-4.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image6642"
+       x="624"
+       y="408" />
+    <image
+       sodipodi:absref="flower-4.png"
+       xlink:href="flower-4.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image6646"
+       x="0"
+       y="48" />
+    <image
+       sodipodi:absref="flower-4.png"
+       xlink:href="flower-4.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image6648"
+       x="456"
+       y="48" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -25437,11 +25527,13 @@
   <g
      inkscape:groupmode="layer"
      id="layer5"
-     inkscape:label="l4" />
+     inkscape:label="l4"
+     style="display:inline" />
   <g
      inkscape:groupmode="layer"
      id="layer6"
-     inkscape:label="l5" />
+     inkscape:label="l5"
+     style="display:inline" />
   <g
      inkscape:groupmode="layer"
      id="layer7"
@@ -25632,5 +25724,6 @@
   <g
      inkscape:groupmode="layer"
      id="layer8"
-     inkscape:label="l7" />
+     inkscape:label="l7"
+     style="display:inline" />
 </svg>

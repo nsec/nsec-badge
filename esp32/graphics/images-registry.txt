@@ -18,6 +18,8 @@ FAST	24	24	0	0	wall-corner-r.png
 FAST	24	24	0	0	wall-grass.png
 MAP	24	24	0	0	flower-1.png
 MAP	24	24	0	0	flower-2.png
+MAP	24	24	0	0	flower-3.png
+MAP	24	24	0	0	flower-4.png
 MAP	24	24	0	0	road-stone.png
 MAP	24	24	0	0	road-border-bli.png
 MAP	24	24	0	0	road-border-bl.png
