@@ -15,13 +15,13 @@ namespace rpg::data
 
 using tilemap_word_t = uint8_t;
 
-constexpr unsigned int tilemap_cell_extra = 2;
-constexpr unsigned int tilemap_cell_words = 10;
-constexpr unsigned int tilemap_line_words =
+constexpr int tilemap_cell_extra = 2;
+constexpr int tilemap_cell_words = 10;
+constexpr int tilemap_line_words =
     tilemap_cell_words * (DISPLAY_TILES_X + tilemap_cell_extra);
 
-constexpr unsigned int tilemap_read_lines = 11;
-constexpr unsigned int tilemap_read_lines_extra = 2;
+constexpr int tilemap_read_lines = 11;
+constexpr int tilemap_read_lines_extra = 2;
 
 using tilemap_slice_t =
     std::array<tilemap_word_t, (tilemap_line_words * tilemap_read_lines)>;
