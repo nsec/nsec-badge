@@ -437,7 +437,9 @@ out:
  */
 void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
 {
+    uint8_t colorindex;
     const uint16_t *palette;
+
     switch (sprite->palette) {
     case 0:
         palette = graphics_static_palette_0;
@@ -473,9 +475,12 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
     if (sprite->type == IMAGE_REGISTRY_FAST) {
         for (int iy = 0; iy < height; ++iy) {
             for (int ix = 0; ix < width; ++ix) {
-                graphics_put_pixel(
-                    x + ix, y + iy,
-                    palette[library_maps_fast[offset + (iy * width) + ix]]);
+                colorindex = library_maps_fast[offset + (iy * width) + ix];
+
+                if (colorindex == 0)
+                    continue;
+
+                graphics_put_pixel(x + ix, y + iy, palette[colorindex]);
             }
         }
     } else {
@@ -486,8 +491,14 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
             fread(buffer, 1, 576, library_maps_fp);
 
             for (int j = 0; j < 576; ++j) {
+                colorindex = buffer[j];
+
+                if (colorindex == 0)
+                    continue;
+
                 graphics_put_pixel((x + ((i + j) % width)),
-                                   (y + ((i + j) / width)), palette[buffer[j]]);
+                                   (y + ((i + j) / width)),
+                                   palette[colorindex]);
             }
         }
     }
