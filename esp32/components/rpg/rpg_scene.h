@@ -12,8 +12,6 @@ extern "C" {
 namespace rpg
 {
 
-using tile_coordinates_ref = int;
-
 struct tile_coordinates_t {
     int screen_x;
     int screen_y;
@@ -39,9 +37,7 @@ class Viewport
     static const int width = 240;
     static const int height = 240;
 
-    tile_coordinates_ref begin();
-    tile_coordinates_ref end();
-    tile_coordinates_t get_tile_coordinates(tile_coordinates_ref ref);
+    tile_coordinates_t get_tile_coordinates(int local_tile_x, int local_tile_y);
     void move(int new_x, int new_y);
 
   private:

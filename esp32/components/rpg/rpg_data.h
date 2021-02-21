@@ -14,11 +14,16 @@ namespace rpg
 
 using tilemap_word_t = uint8_t;
 
-constexpr unsigned int tilemap_entry_words = 10;
-constexpr unsigned int tilemap_entry_length =
-    sizeof(tilemap_word_t) * tilemap_entry_words;
+constexpr unsigned int tilemap_cell_extra = 2;
+constexpr unsigned int tilemap_cell_words = 10;
+constexpr unsigned int tilemap_line_words =
+    tilemap_cell_words * (DISPLAY_TILES_X + tilemap_cell_extra);
 
-using tilemap_t = std::array<tilemap_word_t, tilemap_entry_length>;
+constexpr unsigned int tilemap_read_lines = 12;
+constexpr unsigned int tilemap_read_lines_extra = 2;
+
+using tilemap_slice_t =
+    std::array<tilemap_word_t, (tilemap_line_words * tilemap_read_lines)>;
 
 class SceneDataReader
 {
@@ -39,17 +44,41 @@ class SceneDataReader
             abort();
         }
 
-        tilemap_width = scene_width / DISPLAY_TILE_WIDTH;
+        tilemap_slice = new tilemap_slice_t();
+        if (!tilemap_slice) {
+            ESP_LOGE(__FUNCTION__, "Failed to allocate tilemap_slice.");
+            abort();
+        }
+
+        tilemap_width = scene_width / DISPLAY_TILE_WIDTH + tilemap_cell_extra;
     }
 
     ~SceneDataReader()
     {
+        delete tilemap_slice;
+
         if (file) {
             fclose(file);
         }
     }
 
-    void read_tilemap(int tile_x, int tile_y, tilemap_t &tilemap);
+    tilemap_word_t get_dependency(int x, int y)
+    {
+        return get_image(x, y, 9);
+    }
+
+    tilemap_word_t get_flags(int x, int y)
+    {
+        return get_image(x, y, 8);
+    }
+
+    tilemap_word_t get_image(int x, int y, int layer)
+    {
+        unsigned int index = calculate_slice_base(x, y) + layer;
+        return (*tilemap_slice)[index];
+    }
+
+    void read_tilemap(int read_x, int read_y);
 
   private:
     FILE *file;
@@ -69,6 +98,14 @@ class SceneDataReader
      * prevent out-of-bound reads.
      */
     int tilemap_width;
+
+    tilemap_slice_t *tilemap_slice;
+
+    unsigned int calculate_slice_base(int x, int y)
+    {
+        return (y + tilemap_read_lines_extra) * tilemap_line_words +
+               (x + tilemap_cell_extra) * tilemap_cell_words;
+    }
 };
 
 } // namespace rpg

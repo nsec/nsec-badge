@@ -22,10 +22,11 @@ several restrictions:
 
 - All images must be aligned to the grid, i.e. x and y coordinates must be
   multiples of the tile size.  Image width and height may be arbitrary and they
-  can span several tiles.  However it is not recommended to use many multi-tile
-  images.  No element scaling is allowed; while the compilation will probably
-  work with scaled images, the rendering will likely produce an unexpected
-  result.
+  can span several tiles, but not more than three tiles.  Images larger than
+  that must be split into multiple tiles, and it is generally recommended to
+  avoid the use of many multi-tile images.  No element scaling is allowed;
+  while the compilation will probably work with scaled images, the rendering
+  will likely produce an unexpected result.
 
 - One layer cannot contain more than one element at the same (x,y) coordinate.
   Overlapping images must be put into different layer.
@@ -97,8 +98,6 @@ from dataclasses import dataclass
 from images_registry import load_images_registry
 
 DEFINED_LAYERS = 8
-OVERLAP_X = DEFINED_LAYERS + 0
-OVERLAP_Y = DEFINED_LAYERS + 1
 TILE_SIZE = 24
 
 
@@ -119,7 +118,16 @@ class Tile:
     """A single tile reference with merged layers."""
 
     def __init__(self, x: int, y: int):
-        self.components = [Empty] * DEFINED_LAYERS + [0, 0]
+        self.components = [Empty] * DEFINED_LAYERS
+        self.dependency = {
+            'backward_x': 0,
+            'backward_y': 0,
+            'forward_x': 0,
+            'forward_y': 0,
+        }
+        self.flags = {
+            'jpeg': False,
+        }
         self.x = x
         self.y = y
 
@@ -153,6 +161,12 @@ class Tilemap:
             return self.tiles[key]
 
         if isinstance(key, tuple) and len(key) == 2:
+            if key[0] < 0 or key[1] < 0:
+                raise KeyError()
+
+            if key[0] >= self.width_tiles or key[1] >= self.height_tiles:
+                raise KeyError()
+
             return self.tiles[key[1] * self.width_tiles + key[0]]
 
         raise TypeError(
@@ -181,7 +195,12 @@ def parse_graphic_layer_into_tilemap(layer_id, layer, tilemap):
 
         if x % TILE_SIZE != 0.0 or y % TILE_SIZE != 0.0:
             raise ValueError(
-                f'Image id="{id_}" in layer {layer_id} is not alligned to grid: x={x}, y={y}')
+                f'Image id="{id_}" in layer {layer_id} is not alligned to '
+                f'grid: x={x}, y={y}')
+
+        if width == 0.0 or height == 0.0:
+            raise ValueError(
+                f'Image id="{id_}" in layer {layer_id} at x={x}, y={y} has zero size.')
 
         if width % 1 != 0.0 or height % 1 != 0.0:
             raise ValueError(
@@ -193,22 +212,41 @@ def parse_graphic_layer_into_tilemap(layer_id, layer, tilemap):
         width, height, x, y = int(width), int(height), int(x), int(y)
         tile_x, tile_y = x // TILE_SIZE, y // TILE_SIZE
 
-        if tilemap[tile_x, tile_y][layer_id] is not Empty:
+        if width > TILE_SIZE * 3 or height > TILE_SIZE * 3:
             raise ValueError(
-                f'Layer {layer_id} has more than one tile at x={x}, y={y}')
+                f'Image id="{id_}" in layer {layer_id} is larger than three '
+                f'tiles. The maximum allowed size is {TILE_SIZE * 3}px in '
+                f'either dimention. Larger images must be split into several '
+                f'smaller ones.')
+
+        try:
+            if tilemap[tile_x, tile_y][layer_id] is not Empty:
+                raise ValueError(
+                    f'Layer {layer_id} has more than one tile at x={x}, y={y}')
+        except KeyError:
+            raise ValueError(
+                f'Image id="{id_}" in layer {layer_id} is outside of the '
+                f'grid at x={x}, y={y}')
 
         tilemap[tile_x, tile_y][layer_id] = Image(href, width, height)
 
         overlap_x, overlap_y = math.ceil(width / TILE_SIZE), math.ceil(height / TILE_SIZE)
+
+        tilemap[tile_x, tile_y].dependency['forward_x'] = max(
+            overlap_x - 1, tilemap[tile_x, tile_y].dependency['forward_x'])
+
+        tilemap[tile_x, tile_y].dependency['forward_y'] = max(
+            overlap_y - 1, tilemap[tile_x, tile_y].dependency['forward_y'])
+
         for i in range(overlap_x):
             for j in range(overlap_y):
-                tilemap[tile_x + i, tile_y + j][OVERLAP_X] = max(
+                tilemap[tile_x + i, tile_y + j].dependency['backward_x'] = max(
                     i,
-                    tilemap[tile_x + i, tile_y + j][OVERLAP_X])
+                    tilemap[tile_x + i, tile_y + j].dependency['backward_x'])
 
-                tilemap[tile_x + i, tile_y + j][OVERLAP_Y] = max(
+                tilemap[tile_x + i, tile_y + j].dependency['backward_y'] = max(
                     j,
-                    tilemap[tile_x + i, tile_y + j][OVERLAP_Y])
+                    tilemap[tile_x + i, tile_y + j].dependency['backward_y'])
 
 
 def parse_tilemap(source_path):
@@ -250,21 +288,49 @@ def main(images_registry_path, source_path, destination_path):
     tilemap = parse_tilemap(source_path)
 
     with open(destination_path, 'wb') as f:
-        for tile in tilemap:
-            for layer_id in range(DEFINED_LAYERS):
-                image = tile[layer_id]
+        # Add two dummy rows at the beginning.
+        for y in range(2):
+            f.write(bytes([0] * ((DEFINED_LAYERS + 2) * (tilemap.width_tiles + 2))))
 
-                if image is Empty:
-                    f.write(bytes([0]))
+        for y in range(tilemap.height_tiles):
+            # Add two dummy columns at the beginning of each row.
+            f.write(bytes([0] * (DEFINED_LAYERS + 2)))
+            f.write(bytes([0] * (DEFINED_LAYERS + 2)))
 
-                elif image.href in images_registry:
-                    f.write(bytes([images_registry[image.href]['index']]))
+            for x in range(tilemap.width_tiles):
+                tile = tilemap[x, y]
 
-                else:
-                    raise Exception(
-                        f'Image {image.href} is not in the registry.')
+                for layer_id in range(DEFINED_LAYERS):
+                    image = tile[layer_id]
 
-            f.write(bytes([tile[OVERLAP_X], tile[OVERLAP_Y]]))
+                    if image is Empty:
+                        f.write(bytes([0]))
+
+                    elif image.href in images_registry:
+                        if images_registry[image.href]['format'] == 'JPEG':
+                            tile.flags['jpeg'] = True
+
+                        f.write(bytes([images_registry[image.href]['index']]))
+
+                    else:
+                        raise Exception(
+                            f'Image {image.href} is not in the registry.')
+
+                # Sanity check.
+                for i in tile.dependency.values():
+                    assert(0 <= i < 3)
+
+                dependency = 0
+                dependency |= tile.dependency['backward_x'] << 6
+                dependency |= tile.dependency['backward_y'] << 4
+                dependency |= tile.dependency['forward_x'] << 2
+                dependency |= tile.dependency['forward_y']
+
+                flags = 0
+                flags |= 2 if tile.flags['jpeg'] else 0
+                flags |= 4 if dependency else 0
+
+                f.write(bytes([flags, dependency]))
 
 
 if __name__ == '__main__':
