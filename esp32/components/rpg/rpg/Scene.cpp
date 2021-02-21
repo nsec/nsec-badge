@@ -27,7 +27,7 @@ void Scene::render()
     if (!lock())
         return;
 
-    graphics_clip_set(0, 0, viewport_width, viewport_height);
+    graphics_clip_set(0, 0, viewport_crop_width, viewport_crop_height);
 
     tile_coordinates_t coordinates = viewport.get_tile_coordinates(0, 0);
     data_reader.read_tilemap(coordinates.tile_x, coordinates.tile_y);
@@ -55,8 +55,8 @@ void Scene::render_layer(int layer)
     data::tilemap_word_t dependency;
     data::tilemap_word_t image;
 
-    for (int y = -data::tilemap_read_lines_extra; y < 0; ++y) {
-        for (int x = -data::tilemap_cell_extra; x < viewport_tiles_width; ++x) {
+    for (int y = -viewport_prepend_rows; y < 0; ++y) {
+        for (int x = -viewport_prepend_cols; x < viewport_tiles_width; ++x) {
             dependency = data_reader.get_dependency(x, y);
             if (dependency == 0)
                 continue;
@@ -75,7 +75,7 @@ void Scene::render_layer(int layer)
     }
 
     for (int y = 0; y < viewport_tiles_height; ++y) {
-        for (int x = -data::tilemap_cell_extra; x < 0; ++x) {
+        for (int x = -viewport_prepend_cols; x < 0; ++x) {
             dependency = data_reader.get_dependency(x, y);
             if (dependency == 0)
                 continue;

@@ -2,6 +2,7 @@
 
 #include "rpg/Character.h"
 #include "rpg/data/SceneDataReader.h"
+#include "rpg_const.h"
 
 extern "C" {
 #include "graphics.h"
@@ -12,14 +13,6 @@ extern "C" {
 
 namespace rpg
 {
-
-constexpr int viewport_width = 240;
-constexpr int viewport_tiles_width = 10;
-constexpr int viewport_height = 210;
-constexpr int viewport_tiles_height = 9;
-
-constexpr int viewport_prepend_cols = 2;
-constexpr int viewport_prepend_rows = 2;
 
 using viewport_refresh_state_t =
     std::array<bool, ((viewport_prepend_cols + viewport_tiles_width) *
