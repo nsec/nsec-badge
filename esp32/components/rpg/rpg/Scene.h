@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rpg/Character.h"
+#include "rpg/MainCharacter.h"
 #include "rpg/Viewport.h"
 #include "rpg/data/SceneDataReader.h"
 
@@ -25,6 +26,8 @@ class Scene
 
     void add_character(Character *character);
 
+    void add_character(MainCharacter *character);
+
     void render();
 
     Viewport &get_viewport()
@@ -35,6 +38,13 @@ class Scene
     bool lock()
     {
         return xSemaphoreTake(scene_lock, portMAX_DELAY) == pdTRUE;
+    }
+
+    MainCharacter *get_main_character()
+    {
+        assert(main_character != nullptr &&
+               "Scene does not have the main character.");
+        return main_character;
     }
 
     void unlock()
@@ -52,6 +62,8 @@ class Scene
     Viewport viewport;
 
     std::vector<Character *> characters;
+
+    MainCharacter *main_character = nullptr;
 
     SemaphoreHandle_t scene_lock;
 

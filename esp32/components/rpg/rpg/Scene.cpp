@@ -12,6 +12,16 @@ void Scene::add_character(Character *character)
     characters.push_back(character);
 }
 
+void Scene::add_character(MainCharacter *character)
+{
+    assert(
+        main_character == nullptr &&
+        "Cannot set pointer to the main character because it is already set.");
+
+    main_character = character;
+    add_character(static_cast<Character *>(character));
+}
+
 void Scene::render()
 {
     if (!lock())
