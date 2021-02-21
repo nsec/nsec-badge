@@ -1,16 +1,18 @@
 #pragma once
 
-#include "rpg_data.h"
-
 extern "C" {
 #include "graphics.h"
 }
 
-#include <tuple>
-#include <vector>
-
 namespace rpg
 {
+
+struct local_coordinates_t {
+    int local_tile_x;
+    int local_tile_y;
+    int screen_x;
+    int screen_y;
+};
 
 struct tile_coordinates_t {
     int screen_x;
@@ -19,16 +21,14 @@ struct tile_coordinates_t {
     int tile_y;
 };
 
-class Scene;
-
 class Viewport
 {
-
   public:
     Viewport(int scene_width, int scene_height)
         : scene_width{scene_width}, scene_height{scene_height},
           scene_width_tiles{scene_width / DISPLAY_TILE_WIDTH},
-          scene_height_tiles{scene_height / DISPLAY_TILE_HEIGHT}, x{0}, y{0}
+          scene_height_tiles{scene_height / DISPLAY_TILE_HEIGHT}, x{0}, y{0},
+          tile_x{0}, tile_y{0}
     {
     }
 
@@ -41,8 +41,9 @@ class Viewport
     static const int height = 210;
     static const int height_tiles = 9;
 
+    local_coordinates_t get_local_coordinates(int scene_x, int scene_y);
     tile_coordinates_t get_tile_coordinates(int local_tile_x, int local_tile_y);
-    void move_to_tile(int new_x, int new_y);
+    void move_to_tile(int new_tile_x, int new_tile_y);
 
   private:
     const int scene_width;
@@ -51,32 +52,8 @@ class Viewport
     const int scene_height_tiles;
     int x;
     int y;
-};
-
-class Scene
-{
-  public:
-    Scene(const char *name, int width, int height)
-        : width{width}, height{height}, data_reader(name, width),
-          viewport(width, height)
-    {
-    }
-
-    void update();
-
-    Viewport *get_viewport()
-    {
-        return &viewport;
-    }
-
-  private:
-    const int width;
-
-    const int height;
-
-    SceneDataReader data_reader;
-
-    Viewport viewport;
+    int tile_x;
+    int tile_y;
 };
 
 } // namespace rpg

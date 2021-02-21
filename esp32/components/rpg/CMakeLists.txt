@@ -1,7 +1,8 @@
 idf_component_register(
     SRCS
-        "rpg_data.cpp"
-        "rpg_scene.cpp"
+        "rpg/Scene.cpp"
+        "rpg/Viewport.cpp"
+        "rpg/data/SceneDataReader.cpp"
         "rpg.cpp"
     INCLUDE_DIRS
         "."

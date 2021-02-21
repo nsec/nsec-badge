@@ -9,7 +9,7 @@ extern "C" {
 #include <array>
 #include <string>
 
-namespace rpg
+namespace rpg::data
 {
 
 using tilemap_word_t = uint8_t;
@@ -108,4 +108,4 @@ class SceneDataReader
     }
 };
 
-} // namespace rpg
+} // namespace rpg::data

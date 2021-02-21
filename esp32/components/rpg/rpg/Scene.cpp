@@ -1,6 +1,8 @@
-#include "rpg_scene.h"
+#include "rpg/Scene.h"
 
-#include "palette.h"
+extern "C" {
+#include "graphics.h"
+}
 
 namespace rpg
 {
@@ -10,15 +12,15 @@ void Scene::update()
     graphics_clip_set(0, 0, viewport.width, viewport.height);
 
     tile_coordinates_t coordinates;
-    tilemap_word_t dependency;
-    tilemap_word_t image;
+    data::tilemap_word_t dependency;
+    data::tilemap_word_t image;
 
     coordinates = viewport.get_tile_coordinates(0, 0);
     data_reader.read_tilemap(coordinates.tile_x, coordinates.tile_y);
 
     for (int layer = 0; layer < 8; ++layer) {
-        for (int y = -tilemap_read_lines_extra; y < 0; ++y) {
-            for (int x = -tilemap_cell_extra; x < viewport.width_tiles; ++x) {
+        for (int y = -data::tilemap_read_lines_extra; y < 0; ++y) {
+            for (int x = -data::tilemap_cell_extra; x < viewport.width_tiles; ++x) {
                 dependency = data_reader.get_dependency(x, y);
                 if (dependency == 0) {
                     continue;
@@ -36,7 +38,7 @@ void Scene::update()
         }
 
         for (int y = 0; y < viewport.height_tiles; ++y) {
-            for (int x = -tilemap_cell_extra; x < 0; ++x) {
+            for (int x = -data::tilemap_cell_extra; x < 0; ++x) {
                 dependency = data_reader.get_dependency(x, y);
                 if (dependency == 0) {
                     continue;
@@ -69,24 +71,4 @@ void Scene::update()
     graphics_clip_set(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 }
 
-inline tile_coordinates_t Viewport::get_tile_coordinates(int local_tile_x,
-                                                         int local_tile_y)
-{
-    return {
-        .screen_x = (local_tile_x * DISPLAY_TILE_WIDTH),
-        .screen_y = (local_tile_y * DISPLAY_TILE_HEIGHT),
-        .tile_x = local_tile_x + x,
-        .tile_y = local_tile_y + y,
-    };
 }
-
-void Viewport::move_to_tile(int new_x, int new_y)
-{
-    if (x >= 0 && x < scene_width_tiles)
-        x = new_x;
-
-    if (y >= 0 && y < scene_height_tiles)
-        y = new_y;
-}
-
-} // namespace rpg

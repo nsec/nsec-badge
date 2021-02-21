@@ -1,6 +1,6 @@
-#include "rpg_data.h"
+#include "rpg/data/SceneDataReader.h"
 
-namespace rpg
+namespace rpg::data
 {
 
 void SceneDataReader::read_tilemap(int read_x, int read_y)
