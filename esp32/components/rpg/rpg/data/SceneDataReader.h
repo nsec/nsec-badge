@@ -27,12 +27,16 @@ struct tilemap_dependency_t {
     char forward_y;
 };
 
-class SceneDataReader
+class SceneBaseDataReader
 {
-
   public:
-    SceneDataReader(const char *scene_name, int scene_width)
-        : scene_width{scene_width}, last_x{INT_MIN}, last_y{INT_MIN}
+    SceneBaseDataReader(const char *scene_name, int scene_width,
+                        int scene_height)
+        : scene_width{scene_width}, scene_height{scene_height}, last_x{INT_MIN},
+          last_y{INT_MIN}, tilemap_width{scene_width / DISPLAY_TILE_WIDTH +
+                                         tilemap_cell_extra},
+          tilemap_height{scene_height / DISPLAY_TILE_HEIGHT +
+                         tilemap_read_lines_extra}
     {
         std::string filename{"/spiffs/rpg/"};
         filename += scene_name;
@@ -45,20 +49,10 @@ class SceneDataReader
                      filename.c_str());
             abort();
         }
-
-        tilemap_slice = new tilemap_slice_t();
-        if (!tilemap_slice) {
-            ESP_LOGE(__FUNCTION__, "Failed to allocate tilemap_slice.");
-            abort();
-        }
-
-        tilemap_width = scene_width / DISPLAY_TILE_WIDTH + tilemap_cell_extra;
     }
 
-    ~SceneDataReader()
+    ~SceneBaseDataReader()
     {
-        delete[] tilemap_slice;
-
         if (file) {
             fclose(file);
         }
@@ -84,21 +78,22 @@ class SceneDataReader
         return get_image(x, y, 8);
     }
 
-    tilemap_word_t get_image(int x, int y, int layer)
-    {
-        unsigned int index = calculate_slice_base(x, y) + layer;
-        return (*tilemap_slice)[index];
-    }
+    virtual tilemap_word_t get_image(int x, int y, int layer) = 0;
 
-    void read_tilemap(int read_x, int read_y);
+    virtual void read_tilemap(int read_x, int read_y) = 0;
 
-  private:
+  protected:
     FILE *file;
 
     /**
      * The total width of the scene in pixels.
      */
     int scene_width;
+
+    /**
+     * The total height of the scene in pixels.
+     */
+    int scene_height;
 
     /**
      * Coordinates used for the last read operation.
@@ -108,22 +103,39 @@ class SceneDataReader
 
     /**
      * The number of tile entries in one row of the tilemap.
-     *
-     * This value is only used to calculate the correct read offset.
-     *
-     * Note that the tilemap_height field does not exist: the tile coordinates
-     * are not validated and it is entirely responsbility of the class user to
-     * prevent out-of-bound reads.
      */
     int tilemap_width;
 
-    tilemap_slice_t *tilemap_slice;
+    /**
+     * The number of tile rows in the tilemap.
+     */
+    int tilemap_height;
+};
 
-    unsigned int calculate_slice_base(int x, int y)
+class SceneDataReader : public SceneBaseDataReader
+{
+  public:
+    SceneDataReader(const char *scene_name, int scene_width, int scene_height)
+        : SceneBaseDataReader(scene_name, scene_width, scene_height)
     {
-        return (y + tilemap_read_lines_extra) * tilemap_line_words +
-               (x + tilemap_cell_extra) * tilemap_cell_words;
+        tilemap_slice = new tilemap_slice_t();
+        if (!tilemap_slice) {
+            ESP_LOGE(__FUNCTION__, "Failed to allocate tilemap_slice.");
+            abort();
+        }
     }
+
+    ~SceneDataReader()
+    {
+        delete[] tilemap_slice;
+    }
+
+    virtual tilemap_word_t get_image(int x, int y, int layer) override;
+
+    virtual void read_tilemap(int read_x, int read_y) override;
+
+  private:
+    tilemap_slice_t *tilemap_slice;
 };
 
 } // namespace rpg::data

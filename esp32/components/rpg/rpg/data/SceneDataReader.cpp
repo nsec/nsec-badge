@@ -3,6 +3,16 @@
 namespace rpg::data
 {
 
+tilemap_word_t SceneDataReader::get_image(int x, int y, int layer)
+{
+    unsigned int slice_base =
+        (y + tilemap_read_lines_extra) * tilemap_line_words +
+        (x + tilemap_cell_extra) * tilemap_cell_words;
+
+    unsigned int index = slice_base + layer;
+    return (*tilemap_slice)[index];
+}
+
 void SceneDataReader::read_tilemap(int read_x, int read_y)
 {
     if (last_x == read_x && last_y == read_y)

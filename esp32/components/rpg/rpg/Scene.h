@@ -3,7 +3,7 @@
 #include "rpg/Character.h"
 #include "rpg/MainCharacter.h"
 #include "rpg/Viewport.h"
-#include "rpg/data/SceneDataReader.h"
+#include "rpg/data/SceneInMemoryDataReader.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -17,7 +17,7 @@ class Scene
 {
   public:
     Scene(const char *name, int width, int height)
-        : width{width}, height{height}, data_reader(name, width),
+        : width{width}, height{height}, data_reader(name, width, height),
           viewport(data_reader, width, height)
     {
         characters = {};
@@ -57,7 +57,7 @@ class Scene
 
     const int height;
 
-    data::SceneDataReader data_reader;
+    data::SceneInMemoryDataReader data_reader;
 
     Viewport viewport;
 

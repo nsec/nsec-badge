@@ -35,7 +35,7 @@ struct tile_coordinates_t {
 class Viewport
 {
   public:
-    Viewport(data::SceneDataReader &data_reader, int scene_width,
+    Viewport(data::SceneBaseDataReader &data_reader, int scene_width,
              int scene_height)
         : scene_width{scene_width}, scene_height{scene_height},
           scene_width_tiles{scene_width / DISPLAY_TILE_WIDTH},
@@ -68,7 +68,7 @@ class Viewport
     const int scene_width_tiles;
     const int scene_height_tiles;
 
-    data::SceneDataReader &data_reader;
+    data::SceneBaseDataReader &data_reader;
 
     int x = 0;
     int y = 0;
