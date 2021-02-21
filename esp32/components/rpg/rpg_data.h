@@ -19,7 +19,7 @@ constexpr unsigned int tilemap_cell_words = 10;
 constexpr unsigned int tilemap_line_words =
     tilemap_cell_words * (DISPLAY_TILES_X + tilemap_cell_extra);
 
-constexpr unsigned int tilemap_read_lines = 12;
+constexpr unsigned int tilemap_read_lines = 11;
 constexpr unsigned int tilemap_read_lines_extra = 2;
 
 using tilemap_slice_t =

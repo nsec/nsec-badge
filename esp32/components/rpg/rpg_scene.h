@@ -35,7 +35,9 @@ class Viewport
     // note: in expansion of macro 'DISPLAY_PHY_HEIGHT'
     // note: in expansion of macro 'DISPLAY_WIDTH'
     static const int width = 240;
-    static const int height = 240;
+    static const int width_tiles = 10;
+    static const int height = 210;
+    static const int height_tiles = 9;
 
     tile_coordinates_t get_tile_coordinates(int local_tile_x, int local_tile_y);
     void move(int new_x, int new_y);

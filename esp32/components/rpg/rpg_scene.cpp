@@ -7,6 +7,8 @@ namespace rpg
 
 void Scene::update()
 {
+    graphics_clip_set(0, 0, viewport.width, viewport.height);
+
     tile_coordinates_t coordinates;
     tilemap_word_t dependency;
     tilemap_word_t image;
@@ -16,7 +18,7 @@ void Scene::update()
 
     for (int layer = 0; layer < 8; ++layer) {
         for (int y = -tilemap_read_lines_extra; y < 0; ++y) {
-            for (int x = -tilemap_cell_extra; x < DISPLAY_TILES_X; ++x) {
+            for (int x = -tilemap_cell_extra; x < viewport.width_tiles; ++x) {
                 dependency = data_reader.get_dependency(x, y);
                 if (dependency == 0) {
                     continue;
@@ -33,7 +35,7 @@ void Scene::update()
             }
         }
 
-        for (int y = 0; y < DISPLAY_TILES_Y; ++y) {
+        for (int y = 0; y < viewport.height_tiles; ++y) {
             for (int x = -tilemap_cell_extra; x < 0; ++x) {
                 dependency = data_reader.get_dependency(x, y);
                 if (dependency == 0) {
@@ -50,7 +52,7 @@ void Scene::update()
                                            coordinates.screen_y);
             }
 
-            for (int x = 0; x < DISPLAY_TILES_X; ++x) {
+            for (int x = 0; x < viewport.width_tiles; ++x) {
                 image = data_reader.get_image(x, y, layer);
                 if (image == 0) {
                     continue;
@@ -64,6 +66,7 @@ void Scene::update()
     }
 
     graphics_update_display();
+    graphics_clip_set(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 }
 
 inline tile_coordinates_t Viewport::get_tile_coordinates(int local_tile_x,
