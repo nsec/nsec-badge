@@ -24,9 +24,10 @@ add_custom_command(
         ${COMPONENT_DIR}/images_registry.c
         ${COMPONENT_DIR}/images_registry.h
     COMMAND
-        python ${COMPONENT_DIR}/tools/compile-images-registry.py ${GRAPHICS_LIBRARY_DIR}/images-registry.txt ${COMPONENT_DIR}/images_registry.h ${COMPONENT_DIR}/images_registry.c
+        python ${COMPONENT_DIR}/tools/compile-images-registry.py ${GRAPHICS_LIBRARY_DIR}/images-registry.txt jpeg-registry.json ${COMPONENT_DIR}/images_registry.h ${COMPONENT_DIR}/images_registry.c
     DEPENDS
         ${GRAPHICS_LIBRARY_DIR}/images-registry.txt
+        jpeg-registry.json
 )
 
 add_custom_command(
@@ -42,11 +43,15 @@ add_custom_command(
 add_custom_target(
     graphics_library ALL
     COMMAND
-        python ${COMPONENT_DIR}/tools/convert-all.py ${GRAPHICS_LIBRARY_DIR}/images-registry.txt palette.txt ${GRAPHICS_LIBRARY_DIR} ${SPIFFS_DIR}/library/
+        python ${COMPONENT_DIR}/tools/convert-all.py ${GRAPHICS_LIBRARY_DIR}/images-registry.txt palette.txt ${GRAPHICS_LIBRARY_DIR} ${SPIFFS_DIR}/library/ jpeg-registry.json
+    BYPRODUCTS
+        jpeg-registry.json
+        ${SPIFFS_DIR}/library/jpeg
+        ${SPIFFS_DIR}/library/maps
     DEPENDS
         palette.txt
 )
 
-add_custom_target(graphics_images_registry DEPENDS ${COMPONENT_DIR}/images_registry.c)
+add_custom_target(graphics_images_registry DEPENDS ${COMPONENT_DIR}/images_registry.c graphics_library)
 add_custom_target(graphics_palette DEPENDS ${COMPONENT_DIR}/palette.c)
 add_dependencies(${COMPONENT_LIB} graphics_images_registry graphics_palette)

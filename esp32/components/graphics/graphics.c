@@ -17,6 +17,7 @@
 
 typedef struct {
     FILE *fp;
+    int left_to_read;
     int offset_x;
     int offset_y;
 } jpeg_session_device;
@@ -35,6 +36,9 @@ static uint8_t display_rows_hot[DISPLAY_WIDTH / 8] = {};
 
 /* In-memory cache for 'fast' images. */
 static uint8_t *library_maps_fast = NULL;
+
+/* File pointer to the concatenated JPEG images in the library. */
+static FILE *library_jpeg_fp = NULL;
 
 /* File pointer to the concatenated image maps in the library. */
 static FILE *library_maps_fp = NULL;
@@ -148,7 +152,13 @@ static void graphics_collection_start()
     }
 
     // fopen() is a very expensive operation on SPIFFS. Open once and use the
-    // same file pointer for all sprite image reads.
+    // same file pointer for all image reads.
+
+    library_jpeg_fp = fopen("/spiffs/library/jpeg", "r");
+    if (!library_jpeg_fp) {
+        abort();
+    }
+
     library_maps_fp = fopen("/spiffs/library/maps", "r");
     if (!library_maps_fp) {
         abort();
@@ -286,7 +296,13 @@ static UINT graphics_jpeg_decode_infunc(JDEC *decoder, BYTE *buffer, UINT ndata)
         return ndata;
     }
 
-    return fread(buffer, 1, ndata, session_device->fp);
+    if (session_device->left_to_read <= 0)
+        return 0;
+
+    int read = fread(buffer, 1, ndata, session_device->fp);
+    session_device->left_to_read -= read;
+
+    return read;
 }
 
 /**
@@ -319,6 +335,39 @@ static UINT graphics_jpeg_decode_outfunc(JDEC *decoder, void *bitmap,
 }
 
 /**
+ * Draw a single JPEG image from the concatenated storage file.
+ */
+void graphics_draw_concatjpeg(const ImagesRegistry_t *sprite, int x, int y)
+{
+    int result;
+
+    fseek(library_jpeg_fp, sprite->jpeg_offset, SEEK_SET);
+
+    jpeg_session_device session_device = {
+        .fp = library_jpeg_fp,
+        .left_to_read = sprite->jpeg_length,
+        .offset_x = x,
+        .offset_y = y,
+    };
+
+    JDEC decoder;
+    result = jd_prepare(&decoder, graphics_jpeg_decode_infunc, tjpgd_work,
+                        TJPGD_WORK_SZ, (void *)&session_device);
+    if (result != JDR_OK) {
+        ESP_LOGE(__FUNCTION__, "jd_prepare failed for image \"%s\"",
+                 sprite->filename);
+        return;
+    }
+
+    result = jd_decomp(&decoder, graphics_jpeg_decode_outfunc, 0);
+    if (result != JDR_OK) {
+        ESP_LOGE(__FUNCTION__, "jd_decomp failed for image \"%s\"",
+                 sprite->filename);
+        return;
+    }
+}
+
+/**
  * Draw a single sprite image from the library into the display buffer.
  */
 void graphics_draw_from_library(int index, int x, int y)
@@ -328,14 +377,10 @@ void graphics_draw_from_library(int index, int x, int y)
     if (index == 0)
         return;
 
-    char filepath[64];
-
     switch (graphics_static_images_registry[index].type) {
     case IMAGE_REGISTRY_JPEG:
-        sprintf(filepath, "/spiffs/library/%s.jpeg",
-                graphics_static_images_registry[index].filename);
-
-        graphics_draw_jpeg(filepath, x, y);
+        graphics_draw_concatjpeg(&(graphics_static_images_registry[index]), x,
+                                 y);
         return;
 
     case IMAGE_REGISTRY_FAST:
@@ -358,6 +403,7 @@ void graphics_draw_jpeg(const char *name, int x, int y)
     int result;
 
     jpeg_session_device session_device = {
+        .left_to_read = INT_MAX,
         .offset_x = x,
         .offset_y = y,
     };

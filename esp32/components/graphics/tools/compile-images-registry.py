@@ -3,17 +3,20 @@
 
 import sys
 
+from images_registry import images_registry_add_jpeg
 from images_registry import load_images_registry
+from images_registry import load_jpeg_registry
 
 
-def main(images_registry_path, header_path, c_path):
+def main(images_registry_path, jpeg_registry_path, header_path, c_path):
     """Generate C source files based on the image registry definitions."""
     images_registry = load_images_registry(images_registry_path)
-    size = len(images_registry)
+    images_registry_add_jpeg(
+        images_registry, load_jpeg_registry(jpeg_registry_path))
 
     # Add one more dummy entry to represent an "empty" image, real images start
     # with index 1.
-    size += 1
+    size = len(images_registry) + 1
 
     # All MAP images are put after FAST images, so the smallest offset of a MAP
     # image will tell how much space is required for FAST images.
@@ -38,6 +41,8 @@ typedef struct {
     uint8_t height;
     uint8_t palette;
     uint8_t sinkline;
+    uint32_t jpeg_length;
+    uint32_t jpeg_offset;
     uint32_t map_offset;
     char filename[24];
 } ImagesRegistry_t;\n
@@ -74,6 +79,8 @@ typedef struct {
         c_out.write(f'      .height={image["height"]},\n')
         c_out.write(f'      .palette={image["palette"]},\n')
         c_out.write(f'      .sinkline={image["sinkline"]},\n')
+        c_out.write(f'      .jpeg_length={image["jpeg_length"]},\n')
+        c_out.write(f'      .jpeg_offset={image["jpeg_offset"]},\n')
         c_out.write(f'      .map_offset={image["map_offset"]},\n')
         c_out.write(f'      .filename="{name}",\n')
         c_out.write('   },\n')
@@ -88,8 +95,8 @@ def make_name(image):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print(f'Usage: {sys.argv[0]} <images registry> <C header> <C file>')
+    if len(sys.argv) != 5:
+        print(f'Usage: {sys.argv[0]} <images registry> <jpeg registry> <C header> <C file>')
         sys.exit(1)
 
-    main(sys.argv[1], sys.argv[2], sys.argv[3])
+    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])

@@ -1,6 +1,21 @@
 """Shared functions for images registry manipulation."""
 
+import json
 from collections import OrderedDict
+
+
+def images_registry_add_jpeg(images_registry, jpeg_registry):
+    """Merge JPEG registry entries into the images registry.
+
+    For performance reasons, all generated JPEG files are concatenated into one
+    single file. Because JPEG images are generated at build time, their length
+    cannot be know in advance, so this information is not part of the images
+    registry. When conversion happens, the length and offset of all concatenated
+    images are written into jpeg_registry.json file.
+    """
+    for name, jpeg_data in jpeg_registry.items():
+        images_registry[name]['jpeg_length'] = jpeg_data['length']
+        images_registry[name]['jpeg_offset'] = jpeg_data['offset']
 
 
 def load_images_registry(images_registry_path):
@@ -18,6 +33,8 @@ def load_images_registry(images_registry_path):
             'format': format_,
             'height': int(height),
             'index': i + 1,
+            'jpeg_length': 0,
+            'jpeg_offset': 0,
             'map_offset': 0,
             'name': name,
             'palette': int(palette),
@@ -44,3 +61,9 @@ def load_images_registry(images_registry_path):
         map_offset += image['width'] * image['height']
 
     return images_registry
+
+
+def load_jpeg_registry(jpeg_registry_path):
+    """Load the jpeg registry JSON into a dictionary."""
+    with open(jpeg_registry_path) as f:
+        return json.load(f)
