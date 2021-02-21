@@ -87,6 +87,7 @@ The following document may be used as a template:
   <g inkscape:groupmode="layer" id="layer6" inkscape:label="l5" />
   <g inkscape:groupmode="layer" id="layer7" inkscape:label="l6" />
   <g inkscape:groupmode="layer" id="layer8" inkscape:label="l7" />
+  <g inkscape:groupmode="layer" id="layer9" inkscape:label="x" />
 </svg>
 """
 
@@ -99,6 +100,42 @@ from images_registry import load_images_registry
 
 DEFINED_LAYERS = 8
 TILE_SIZE = 24
+
+
+class BlockedMask:
+    """Area of the tilemap blocked for player movement."""
+
+    def __init__(self, width: int, height: int):
+        self.width = width
+        self.height = height
+        self.line_words = math.ceil(width / (2 * TILE_SIZE))
+
+        self.area = [0] * (self.line_words * math.ceil(height / 6))
+
+    def block_pixel(self, x: int, y: int):
+        """Exclude the pixel from the area allowed for character movement."""
+        if x < 0 or x >= self.width or y < 0 or y >= self.height:
+            return
+
+        a = y // 6
+        b = x // (2 * TILE_SIZE)
+        c = (x % (2 * TILE_SIZE)) // 6
+
+        self.area[a * self.line_words + b] |= 1 << c
+
+    def compute_tilemap_mask(self, tile_x: int, tile_y: int):
+        reduced = [0] * 16
+
+        for x in range(tile_x * TILE_SIZE, (tile_x + 1) * TILE_SIZE):
+            for y in range(tile_y * TILE_SIZE, (tile_y + 1) * TILE_SIZE):
+                index = (y % TILE_SIZE) // 6 * 4 + (x % TILE_SIZE) // 6
+                reduced[index] += self.area[y * self.width + x]
+
+        mask = 0
+        for index, value in enumerate(reduced):
+            mask |= (1 if value > 18 else 0) << index
+
+        return mask
 
 
 class Empty:
@@ -173,6 +210,27 @@ class Tilemap:
             'Tilemap supports two indexing modes: traditional list indexing '
             'with an integer, or two integer tuple with x and y coordinates '
             'on the grid.')
+
+
+def parse_blocked_layer_into_blocked_maks(layer, blocked):
+    """Read all rectangles in the layer and place pixels into the blocked area."""
+    if any(i.tag != '{http://www.w3.org/2000/svg}rect' for i in layer):
+        raise ValueError(
+            'The blocking layer must be built from rectangles. Any elements '
+            'other than <rect/> are not supported.')
+
+    for rect in layer:
+        id_, width, height, rect_x, rect_y = (
+            rect.attrib['id'],
+            int(float(rect.attrib['width'])),
+            int(float(rect.attrib['height'])),
+            int(float(rect.attrib['x'])),
+            int(float(rect.attrib['y'])),
+        )
+
+        for x in range(rect_x, rect_x + width):
+            for y in range(rect_y, rect_y + height):
+                blocked.block_pixel(x, y)
 
 
 def parse_graphic_layer_into_tilemap(layer_id, layer, tilemap):
@@ -280,14 +338,24 @@ def parse_tilemap(source_path):
 
         parse_graphic_layer_into_tilemap(layer_id, layer, tilemap)
 
-    return tilemap
+    for layer in source_root:
+        if layer.attrib.get('{http://www.inkscape.org/namespaces/inkscape}label') == 'x':
+            break
+    else:
+        raise ValueError(
+            f'Layer group "x" is not found in the document.')
+
+    blocked = BlockedMask(width, height)
+    parse_blocked_layer_into_blocked_maks(layer, blocked)
+
+    return tilemap, blocked
 
 
-def main(images_registry_path, source_path, destination_path):
+def main(images_registry_path, source_path, scene_path, blocked_path):
     images_registry = load_images_registry(images_registry_path)
-    tilemap = parse_tilemap(source_path)
+    tilemap, blocked = parse_tilemap(source_path)
 
-    with open(destination_path, 'wb') as f:
+    with open(scene_path, 'wb') as f:
         # Add two dummy rows at the beginning.
         for y in range(2):
             f.write(bytes([0] * ((DEFINED_LAYERS + 2) * (tilemap.width_tiles + 2))))
@@ -332,10 +400,13 @@ def main(images_registry_path, source_path, destination_path):
 
                 f.write(bytes([flags, dependency]))
 
+    with open(blocked_path, 'wb') as f:
+        f.write(bytes(blocked.area))
+
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print(f'Usage: {sys.argv[0]} <images registry> <source> <destination>')
+    if len(sys.argv) != 5:
+        print(f'Usage: {sys.argv[0]} <images registry> <source> <scene file> <blocked file>')
         sys.exit(1)
 
-    main(sys.argv[1], sys.argv[2], sys.argv[3])
+    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])

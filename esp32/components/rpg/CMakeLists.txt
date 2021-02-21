@@ -17,9 +17,10 @@ idf_component_register(
 
 add_custom_command(
     OUTPUT
+        ${SPIFFS_DIR}/rpg/main.blocked
         ${SPIFFS_DIR}/rpg/main.scene
     COMMAND
-        python ${COMPONENT_DIR}/../graphics/tools/compile-tilemap.py ${GRAPHICS_LIBRARY_DIR}/images-registry.txt ${GRAPHICS_LIBRARY_DIR}/rpg.main.scene.svg ${SPIFFS_DIR}/rpg/main.scene
+        python ${COMPONENT_DIR}/../graphics/tools/compile-tilemap.py ${GRAPHICS_LIBRARY_DIR}/images-registry.txt ${GRAPHICS_LIBRARY_DIR}/rpg.main.scene.svg ${SPIFFS_DIR}/rpg/main.scene ${SPIFFS_DIR}/rpg/main.blocked
     DEPENDS
         ${GRAPHICS_LIBRARY_DIR}/images-registry.txt
         ${GRAPHICS_LIBRARY_DIR}/rpg.main.scene.svg
