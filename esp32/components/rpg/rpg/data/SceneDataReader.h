@@ -56,7 +56,7 @@ class SceneDataReader
 
     ~SceneDataReader()
     {
-        delete tilemap_slice;
+        delete[] tilemap_slice;
 
         if (file) {
             fclose(file);
