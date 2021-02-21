@@ -21,7 +21,7 @@ class Scene
 
     void add_character(Character *character);
 
-    void update();
+    void render();
 
     Viewport *get_viewport()
     {
@@ -38,6 +38,8 @@ class Scene
     Viewport viewport;
 
     std::vector<Character *> characters;
+
+    void render_layer(int layer);
 };
 
 } // namespace rpg
