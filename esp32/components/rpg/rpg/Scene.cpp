@@ -7,6 +7,10 @@ extern "C" {
 namespace rpg
 {
 
+void Scene::add_character(Character *character)
+    characters.push_back(character);
+}
+
 void Scene::update()
 {
     graphics_clip_set(0, 0, viewport.width, viewport.height);
