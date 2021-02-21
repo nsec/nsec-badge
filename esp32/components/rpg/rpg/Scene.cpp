@@ -27,6 +27,13 @@ void Scene::render()
     if (!lock())
         return;
 
+    int character_sinkline =
+        viewport
+            .get_local_coordinates(main_character->get_scene_x(),
+                                   main_character->get_scene_y())
+            .screen_y +
+        main_character->get_ground_base_y();
+
     graphics_clip_set(0, 0, viewport_crop_width, viewport_crop_height);
 
     tile_coordinates_t coordinates = viewport.get_tile_coordinates(0, 0);
@@ -34,14 +41,19 @@ void Scene::render()
 
     viewport.prime_refresh_state(characters);
 
-    for (int layer = 0; layer < 5; ++layer)
-        render_layer(layer);
+    for (int layer = 0; layer < 4; ++layer)
+        render_layer(layer, 0, false);
+
+    bool repeat = render_layer(4, character_sinkline, false);
 
     for (auto character : characters)
         character->render(viewport);
 
+    if (repeat)
+        render_layer(4, character_sinkline, true);
+
     for (int layer = 5; layer < 8; ++layer)
-        render_layer(layer);
+        render_layer(layer, 0, false);
 
     graphics_update_display();
     graphics_clip_reset();
@@ -49,8 +61,11 @@ void Scene::render()
     unlock();
 }
 
-void Scene::render_layer(int layer)
+bool Scene::render_layer(int layer, int sinkline_check, bool sinkline_repeat)
 {
+    bool repeat = false;
+    int sinkline = 0;
+
     tile_coordinates_t coordinates;
     data::tilemap_word_t dependency;
     data::tilemap_word_t image;
@@ -101,10 +116,27 @@ void Scene::render_layer(int layer)
                 continue;
 
             coordinates = viewport.get_tile_coordinates(x, y);
+
+            if (sinkline_check) {
+                sinkline = coordinates.screen_y +
+                           graphics_get_sinkline_from_library(image);
+
+                if (sinkline >= sinkline_check && !sinkline_repeat) {
+                    repeat = true;
+                    continue;
+                }
+
+                if (sinkline < sinkline_check && sinkline_repeat) {
+                    continue;
+                }
+            }
+
             graphics_draw_from_library(image, coordinates.screen_x,
                                        coordinates.screen_y);
         }
     }
+
+    return repeat;
 }
 
 } // namespace rpg

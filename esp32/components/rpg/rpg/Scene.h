@@ -67,7 +67,7 @@ class Scene
 
     SemaphoreHandle_t scene_lock;
 
-    void render_layer(int layer);
+    bool render_layer(int layer, int sinkline_check, bool sunkline_repeat);
 };
 
 } // namespace rpg
