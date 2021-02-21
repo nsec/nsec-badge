@@ -14,7 +14,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07, custom)"
-   sodipodi:docname="tilemap.svg"
+   sodipodi:docname="rpg.main.scene.svg"
    inkscape:export-filename="/tmp/tilemap.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
@@ -27,11 +27,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="269.22468"
-     inkscape:cy="217.87285"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="291.79784"
+     inkscape:cy="317.18185"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer5"
      inkscape:document-rotation="0"
      showgrid="true"
      units="px"
@@ -41,13 +41,25 @@
      inkscape:window-height="1403"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:snap-global="true">
     <inkscape:grid
        type="xygrid"
        id="grid833"
        spacingx="24"
        spacingy="24"
        dotted="false" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid3740"
+       color="#fffd17"
+       opacity="0.1254902"
+       dotted="true"
+       empspacing="0"
+       empcolor="#eaff3f"
+       empopacity="0.25098039"
+       spacingx="6"
+       spacingy="6" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -313,15 +325,6 @@
        y="696"
        x="168"
        id="image902"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-1.png"
-       xlink:href="grass-1.png"
-       y="120"
-       x="480"
-       id="image904"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -1354,15 +1357,6 @@
     <image
        sodipodi:absref="grass-1.png"
        xlink:href="grass-1.png"
-       y="576"
-       x="24"
-       id="image1162"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-1.png"
-       xlink:href="grass-1.png"
        y="912"
        x="96"
        id="image1164"
@@ -1687,15 +1681,6 @@
     <image
        sodipodi:absref="grass-1.png"
        xlink:href="grass-1.png"
-       y="96"
-       x="480"
-       id="image1250"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-1.png"
-       xlink:href="grass-1.png"
        y="408"
        x="216"
        id="image1252"
@@ -1967,15 +1952,6 @@
        sodipodi:absref="grass-1.png"
        xlink:href="grass-1.png"
        y="264"
-       x="168"
-       id="image1316"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-1.png"
-       xlink:href="grass-1.png"
-       y="264"
        x="528"
        id="image1318"
        preserveAspectRatio="none"
@@ -2014,15 +1990,6 @@
        y="1008"
        x="24"
        id="image1330"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-1.png"
-       xlink:href="grass-1.png"
-       y="552"
-       x="0"
-       id="image1332"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -3361,8 +3328,8 @@
     <image
        sodipodi:absref="grass-1.png"
        xlink:href="grass-1.png"
-       y="288"
-       x="192"
+       y="312"
+       x="72"
        id="image1648"
        preserveAspectRatio="none"
        height="24"
@@ -3391,15 +3358,6 @@
        y="96"
        x="648"
        id="image1654"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-1.png"
-       xlink:href="grass-1.png"
-       y="504"
-       x="24"
-       id="image1656"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -4441,15 +4399,6 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="360"
-       x="24"
-       id="image1936"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
        y="384"
        x="672"
        id="image1938"
@@ -5215,15 +5164,6 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="528"
-       x="24"
-       id="image2126"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
        y="240"
        x="864"
        id="image2128"
@@ -5603,17 +5543,8 @@
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
        y="288"
-       x="168"
+       x="96"
        id="image2228"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
-       y="360"
-       x="0"
-       id="image2230"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -5800,15 +5731,6 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="264"
-       x="144"
-       id="image2278"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
        y="720"
        x="624"
        id="image2280"
@@ -5953,15 +5875,6 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="432"
-       x="144"
-       id="image2318"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
        y="672"
        x="672"
        id="image2320"
@@ -6001,24 +5914,6 @@
        y="744"
        x="432"
        id="image2330"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
-       y="480"
-       x="0"
-       id="image2332"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
-       y="552"
-       x="24"
-       id="image2334"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -6325,15 +6220,6 @@
        y="912"
        x="600"
        id="image2408"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
-       y="480"
-       x="24"
-       id="image2410"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -6710,7 +6596,7 @@
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
        y="312"
-       x="192"
+       x="96"
        id="image2506"
        preserveAspectRatio="none"
        height="24"
@@ -8149,15 +8035,6 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="144"
-       x="480"
-       id="image2874"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
        y="1128"
        x="672"
        id="image2876"
@@ -8878,15 +8755,6 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="336"
-       x="24"
-       id="image3052"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
        y="840"
        x="792"
        id="image3054"
@@ -9239,7 +9107,7 @@
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
        y="336"
-       x="192"
+       x="72"
        id="image3150"
        preserveAspectRatio="none"
        height="24"
@@ -9247,7 +9115,7 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="408"
+       y="432"
        x="192"
        id="image3152"
        preserveAspectRatio="none"
@@ -9841,15 +9709,6 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="432"
-       x="192"
-       id="image3304"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
        y="912"
        x="816"
        id="image3306"
@@ -10237,15 +10096,6 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="384"
-       x="0"
-       id="image3398"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
        y="960"
        x="288"
        id="image3400"
@@ -10390,8 +10240,8 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="432"
-       x="168"
+       y="384"
+       x="192"
        id="image3436"
        preserveAspectRatio="none"
        height="24"
@@ -10681,15 +10531,6 @@
        y="312"
        x="960"
        id="image3506"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-2.png"
-       xlink:href="grass-2.png"
-       y="144"
-       x="504"
-       id="image3508"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -11542,8 +11383,8 @@
     <image
        sodipodi:absref="grass-2.png"
        xlink:href="grass-2.png"
-       y="384"
-       x="192"
+       y="360"
+       x="120"
        id="image3720"
        preserveAspectRatio="none"
        height="24"
@@ -12154,15 +11995,6 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="456"
-       x="48"
-       id="image3878"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="984"
        x="672"
        id="image3880"
@@ -12551,7 +12383,7 @@
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
        y="384"
-       x="144"
+       x="120"
        id="image3998"
        preserveAspectRatio="none"
        height="24"
@@ -13423,15 +13255,6 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="96"
-       x="504"
-       id="image4200"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="912"
        x="648"
        id="image4202"
@@ -13864,15 +13687,6 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="72"
-       x="504"
-       id="image4304"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="1056"
        x="120"
        id="image4306"
@@ -14029,15 +13843,6 @@
        y="336"
        x="1008"
        id="image4344"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="432"
-       x="24"
-       id="image4346"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -14332,8 +14137,8 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="336"
-       x="168"
+       y="360"
+       x="72"
        id="image4428"
        preserveAspectRatio="none"
        height="24"
@@ -14389,15 +14194,6 @@
        y="984"
        x="192"
        id="image4440"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="504"
-       x="0"
-       id="image4442"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -15781,8 +15577,8 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="384"
-       x="168"
+       y="408"
+       x="192"
        id="image4792"
        preserveAspectRatio="none"
        height="24"
@@ -15973,15 +15769,6 @@
        y="0"
        x="504"
        id="image4836"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="528"
-       x="0"
-       id="image4838"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -16258,15 +16045,6 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="408"
-       x="24"
-       id="image4906"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="384"
        x="360"
        id="image4908"
@@ -16303,27 +16081,9 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="72"
-       x="480"
-       id="image4918"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="408"
        x="384"
        id="image4922"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="336"
-       x="0"
-       id="image4924"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -16459,15 +16219,6 @@
        y="288"
        x="480"
        id="image4960"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="456"
-       x="0"
-       id="image4962"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -16711,15 +16462,6 @@
        y="432"
        x="552"
        id="image5024"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="120"
-       x="504"
-       id="image5026"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -17752,15 +17494,6 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="384"
-       x="24"
-       id="image5284"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="72"
        x="672"
        id="image5286"
@@ -17771,7 +17504,7 @@
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
        y="360"
-       x="168"
+       x="96"
        id="image5288"
        preserveAspectRatio="none"
        height="24"
@@ -17896,8 +17629,8 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="408"
-       x="168"
+       y="360"
+       x="192"
        id="image5324"
        preserveAspectRatio="none"
        height="24"
@@ -18337,15 +18070,6 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="408"
-       x="0"
-       id="image5446"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="1152"
        x="1008"
        id="image5448"
@@ -18580,8 +18304,8 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="408"
-       x="144"
+       y="384"
+       x="96"
        id="image5504"
        preserveAspectRatio="none"
        height="24"
@@ -18619,15 +18343,6 @@
        y="360"
        x="384"
        id="image5514"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="576"
-       x="0"
-       id="image5518"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -19471,15 +19186,6 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="456"
-       x="24"
-       id="image5730"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="960"
        x="1104"
        id="image5732"
@@ -19660,15 +19366,6 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="432"
-       x="0"
-       id="image5780"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
        y="360"
        x="1152"
        id="image5782"
@@ -19735,15 +19432,6 @@
        y="1032"
        x="1032"
        id="image5796"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="456"
-       x="72"
-       id="image5798"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -19957,8 +19645,8 @@
     <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
-       y="312"
-       x="168"
+       y="336"
+       x="96"
        id="image5862"
        preserveAspectRatio="none"
        height="24"
@@ -19996,15 +19684,6 @@
        y="576"
        x="528"
        id="image5872"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="grass-3.png"
-       xlink:href="grass-3.png"
-       y="360"
-       x="192"
-       id="image5874"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -20164,8 +19843,8 @@
     <image
        sodipodi:absref="road-1.png"
        xlink:href="road-1.png"
-       y="384"
-       x="120"
+       y="432"
+       x="144"
        id="image3457"
        preserveAspectRatio="none"
        height="24"
@@ -21100,8 +20779,8 @@
     <image
        sodipodi:absref="road-3.png"
        xlink:href="road-3.png"
-       y="384"
-       x="96"
+       y="408"
+       x="144"
        id="image3805"
        preserveAspectRatio="none"
        height="24"
@@ -21253,15 +20932,6 @@
     <image
        sodipodi:absref="road-3.png"
        xlink:href="road-3.png"
-       y="456"
-       x="96"
-       id="image3861"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="road-3.png"
-       xlink:href="road-3.png"
        y="336"
        x="264"
        id="image3865"
@@ -21374,8 +21044,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image4487"
-       x="120"
-       y="312"
+       x="168"
+       y="288"
        style="display:inline" />
     <image
        sodipodi:absref="wall-1.png"
@@ -21384,8 +21054,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image4489"
-       x="72"
-       y="312"
+       x="120"
+       y="288"
        style="display:inline" />
     <image
        sodipodi:absref="wall-2.png"
@@ -21394,8 +21064,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image4491"
-       x="96"
-       y="312"
+       x="144"
+       y="288"
        style="display:inline" />
     <image
        sodipodi:absref="wall-1.png"
@@ -21404,8 +21074,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image4493"
-       x="120"
-       y="336"
+       x="168"
+       y="312"
        style="display:inline" />
     <image
        sodipodi:absref="wall-1.png"
@@ -21414,57 +21084,7 @@
        height="24"
        preserveAspectRatio="none"
        id="image4495"
-       x="72"
-       y="336"
-       style="display:inline" />
-    <image
-       sodipodi:absref="wall-2.png"
-       xlink:href="wall-2.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image4497"
-       x="96"
-       y="336"
-       style="display:inline" />
-    <image
-       sodipodi:absref="wall-1.png"
-       xlink:href="wall-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image4499"
        x="120"
-       y="360"
-       style="display:inline" />
-    <image
-       sodipodi:absref="wall-1.png"
-       xlink:href="wall-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image4501"
-       x="72"
-       y="360"
-       style="display:inline" />
-    <image
-       sodipodi:absref="wall-2.png"
-       xlink:href="wall-2.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image4503"
-       x="96"
-       y="360"
-       style="display:inline" />
-    <image
-       sodipodi:absref="wall-2.png"
-       xlink:href="wall-2.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image4505"
-       x="144"
        y="312"
        style="display:inline" />
     <image
@@ -21473,7 +21093,37 @@
        width="24"
        height="24"
        preserveAspectRatio="none"
-       id="image4507"
+       id="image4497"
+       x="144"
+       y="312"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4499"
+       x="168"
+       y="336"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4501"
+       x="120"
+       y="336"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4503"
        x="144"
        y="336"
        style="display:inline" />
@@ -21483,9 +21133,29 @@
        width="24"
        height="24"
        preserveAspectRatio="none"
+       id="image4505"
+       x="192"
+       y="288"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4507"
+       x="192"
+       y="312"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
        id="image4509"
-       x="144"
-       y="360"
+       x="192"
+       y="336"
        style="display:inline" />
     <image
        sodipodi:absref="wall-1.png"
@@ -22505,15 +22175,6 @@
        height="24"
        width="24" />
     <image
-       sodipodi:absref="grass-1.png"
-       xlink:href="grass-1.png"
-       y="288"
-       x="144"
-       id="image5779"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
        sodipodi:absref="grass-3.png"
        xlink:href="grass-3.png"
        y="288"
@@ -22540,12 +22201,373 @@
        preserveAspectRatio="none"
        height="24"
        width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="432"
+       x="168"
+       id="image3793"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-1.png"
+       xlink:href="road-1.png"
+       y="408"
+       x="168"
+       id="image3799"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-2.png"
+       xlink:href="road-2.png"
+       y="384"
+       x="144"
+       id="image3810"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="384"
+       x="168"
+       id="image3813"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-1.png"
+       xlink:href="road-1.png"
+       y="360"
+       x="168"
+       id="image3817"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-2.png"
+       xlink:href="road-2.png"
+       y="360"
+       x="144"
+       id="image3821"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-2.png"
+       xlink:href="road-2.png"
+       y="96"
+       x="480"
+       id="image3874"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="120"
+       x="480"
+       id="image3877"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="72"
+       x="480"
+       id="image3881"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-2.png"
+       xlink:href="road-2.png"
+       y="144"
+       x="480"
+       id="image3888"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="120"
+       x="504"
+       id="image3891"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="96"
+       x="504"
+       id="image3893"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="144"
+       x="504"
+       id="image3895"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="72"
+       x="504"
+       id="image3899"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3921"
+       x="0"
+       y="336"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3927"
+       x="0"
+       y="360"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3929"
+       x="0"
+       y="384"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3931"
+       x="24"
+       y="336"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3933"
+       x="24"
+       y="360"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3935"
+       x="24"
+       y="384"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3939"
+       x="0"
+       y="408"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3942"
+       x="0"
+       y="432"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3956"
+       x="24"
+       y="408"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3966"
+       x="24"
+       y="432"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3976"
+       x="0"
+       y="480"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3978"
+       x="0"
+       y="504"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3980"
+       x="24"
+       y="480"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3982"
+       x="24"
+       y="504"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3988"
+       x="0"
+       y="528"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3990"
+       x="0"
+       y="552"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3992"
+       x="24"
+       y="528"
+       style="display:inline" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image3995"
+       x="24"
+       y="552"
+       style="display:inline" />
+    <image
+       sodipodi:absref="road-2.png"
+       xlink:href="road-2.png"
+       y="456"
+       x="96"
+       id="image4087"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-2.png"
+       xlink:href="road-2.png"
+       y="456"
+       x="72"
+       id="image4093"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="456"
+       x="24"
+       id="image4137"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-3.png"
+       xlink:href="road-3.png"
+       y="456"
+       x="48"
+       id="image4141"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="grass-2.png"
+       xlink:href="grass-2.png"
+       y="576"
+       x="0"
+       id="image4236"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="grass-3.png"
+       xlink:href="grass-3.png"
+       y="576"
+       x="24"
+       id="image4239"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="l1"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <image
        sodipodi:absref="flower-1.png"
        xlink:href="flower-1.png"
@@ -22778,8 +22800,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image13512"
-       x="168"
-       y="288" />
+       x="216"
+       y="264" />
     <image
        sodipodi:absref="flower-1.png"
        xlink:href="flower-1.png"
@@ -22860,7 +22882,7 @@
        preserveAspectRatio="none"
        id="image13560"
        x="72"
-       y="384" />
+       y="336" />
     <image
        sodipodi:absref="flower-1.png"
        xlink:href="flower-1.png"
@@ -23012,7 +23034,7 @@
        height="24"
        preserveAspectRatio="none"
        id="image13620"
-       x="144"
+       x="120"
        y="384" />
     <image
        sodipodi:absref="flower-2.png"
@@ -23152,8 +23174,8 @@
     <image
        sodipodi:absref="door-1.png"
        xlink:href="door-1.png"
-       y="336"
-       x="96"
+       y="312"
+       x="144"
        id="image4658-7"
        preserveAspectRatio="none"
        height="48"
@@ -23296,8 +23318,8 @@
     <image
        sodipodi:absref="wall-corner-l.png"
        xlink:href="wall-corner-l.png"
-       y="312"
-       x="72"
+       y="288"
+       x="120"
        id="image5093"
        preserveAspectRatio="none"
        height="24"
@@ -23305,8 +23327,8 @@
     <image
        sodipodi:absref="wall-corner-l.png"
        xlink:href="wall-corner-l.png"
-       y="336"
-       x="72"
+       y="312"
+       x="120"
        id="image5095"
        preserveAspectRatio="none"
        height="24"
@@ -23314,8 +23336,8 @@
     <image
        sodipodi:absref="wall-corner-l.png"
        xlink:href="wall-corner-l.png"
-       y="360"
-       x="72"
+       y="336"
+       x="120"
        id="image5097"
        preserveAspectRatio="none"
        height="24"
@@ -23377,8 +23399,8 @@
     <image
        sodipodi:absref="wall-corner-r.png"
        xlink:href="wall-corner-r.png"
-       y="312"
-       x="144"
+       y="288"
+       x="192"
        id="image5141"
        preserveAspectRatio="none"
        height="24"
@@ -23386,8 +23408,8 @@
     <image
        sodipodi:absref="wall-corner-r.png"
        xlink:href="wall-corner-r.png"
-       y="336"
-       x="144"
+       y="312"
+       x="192"
        id="image5143"
        preserveAspectRatio="none"
        height="24"
@@ -23413,8 +23435,8 @@
     <image
        sodipodi:absref="wall-corner-r.png"
        xlink:href="wall-corner-r.png"
-       y="360"
-       x="144"
+       y="336"
+       x="192"
        id="image5145"
        preserveAspectRatio="none"
        height="24"
@@ -23464,15 +23486,6 @@
        preserveAspectRatio="none"
        height="24"
        width="24" />
-    <image
-       sodipodi:absref="fountain-1.png"
-       xlink:href="fountain-1.png"
-       y="96"
-       x="384"
-       id="image5221"
-       preserveAspectRatio="none"
-       height="48"
-       width="48" />
     <image
        sodipodi:absref="road-stone.png"
        xlink:href="road-stone.png"
@@ -23645,24 +23658,6 @@
        height="24"
        width="24" />
     <image
-       sodipodi:absref="tree-1.png"
-       xlink:href="tree-1.png"
-       y="456"
-       x="168"
-       id="image5469"
-       preserveAspectRatio="none"
-       height="72"
-       width="72" />
-    <image
-       sodipodi:absref="tree-1.png"
-       xlink:href="tree-1.png"
-       y="120"
-       x="192"
-       id="image5473"
-       preserveAspectRatio="none"
-       height="72"
-       width="72" />
-    <image
        sodipodi:absref="flower-2.png"
        xlink:href="flower-2.png"
        width="24"
@@ -23671,15 +23666,6 @@
        id="image13630"
        x="240"
        y="168" />
-    <image
-       sodipodi:absref="tree-1.png"
-       xlink:href="tree-1.png"
-       y="240"
-       x="480"
-       id="image5475"
-       preserveAspectRatio="none"
-       height="72"
-       width="72" />
     <image
        sodipodi:absref="window-2.png"
        xlink:href="window-2.png"
@@ -23784,15 +23770,6 @@
        sodipodi:absref="flower-3.png"
        xlink:href="flower-3.png"
        y="216"
-       x="0"
-       id="image6610"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="flower-3.png"
-       xlink:href="flower-3.png"
-       y="216"
        x="24"
        id="image6614"
        preserveAspectRatio="none"
@@ -23843,6 +23820,191 @@
        id="image6648"
        x="456"
        y="48" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="360"
+       x="24"
+       id="image4029"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="336"
+       x="24"
+       id="image4031"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="384"
+       x="24"
+       id="image4033"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="408"
+       x="24"
+       id="image4037"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="432"
+       x="24"
+       id="image4044"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="480"
+       x="24"
+       id="image4047"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="504"
+       x="24"
+       id="image4078"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="528"
+       x="24"
+       id="image4081"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-corner-r.png"
+       xlink:href="wall-corner-r.png"
+       y="552"
+       x="24"
+       id="image4083"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-bli.png"
+       xlink:href="road-border-bli.png"
+       style="display:inline"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4349-6"
+       x="96"
+       y="456" />
+    <image
+       sodipodi:absref="road-border-t.png"
+       xlink:href="road-border-t.png"
+       style="display:inline"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4199-7"
+       x="72"
+       y="456" />
+    <image
+       sodipodi:absref="road-border-t.png"
+       xlink:href="road-border-t.png"
+       style="display:inline"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4201-5"
+       x="48"
+       y="456" />
+    <image
+       sodipodi:absref="road-border-t.png"
+       xlink:href="road-border-t.png"
+       style="display:inline"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4203-3"
+       x="24"
+       y="456" />
+    <image
+       sodipodi:absref="window-2.png"
+       xlink:href="window-2.png"
+       y="408"
+       x="0"
+       id="image4287"
+       preserveAspectRatio="none"
+       height="48"
+       width="24" />
+    <image
+       sodipodi:absref="window-2.png"
+       xlink:href="window-2.png"
+       y="360"
+       x="0"
+       id="image4289"
+       preserveAspectRatio="none"
+       height="48"
+       width="24" />
+    <image
+       sodipodi:absref="flower-pot-1.png"
+       xlink:href="flower-pot-1.png"
+       style="display:inline"
+       y="432"
+       x="72"
+       id="image3863"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="hedge-1-rc.png"
+       xlink:href="hedge-1-rc.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4327"
+       x="0"
+       y="264" />
+    <image
+       sodipodi:absref="hedge-1-rc.png"
+       xlink:href="hedge-1-rc.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4359"
+       x="0"
+       y="288" />
+    <image
+       sodipodi:absref="hedge-1-rc.png"
+       xlink:href="hedge-1-rc.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4361"
+       x="0"
+       y="240" />
+    <image
+       sodipodi:absref="hedge-1-rt.png"
+       xlink:href="hedge-1-rt.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image4373"
+       x="0"
+       y="216" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -23850,6 +24012,33 @@
      inkscape:label="l2"
      style="display:inline"
      sodipodi:insensitive="true">
+    <image
+       sodipodi:absref="road-border-b.png"
+       xlink:href="road-border-b.png"
+       y="456"
+       x="72"
+       id="image4241"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-b.png"
+       xlink:href="road-border-b.png"
+       y="456"
+       x="48"
+       id="image4243"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-b.png"
+       xlink:href="road-border-b.png"
+       y="456"
+       x="24"
+       id="image4245"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
     <image
        sodipodi:absref="road-border-b.png"
        xlink:href="road-border-b.png"
@@ -24133,7 +24322,7 @@
        sodipodi:absref="road-border-r.png"
        xlink:href="road-border-r.png"
        y="120"
-       x="456"
+       x="504"
        id="image4049"
        preserveAspectRatio="none"
        height="24"
@@ -24142,7 +24331,7 @@
        sodipodi:absref="road-border-r.png"
        xlink:href="road-border-r.png"
        y="96"
-       x="456"
+       x="504"
        id="image4051"
        preserveAspectRatio="none"
        height="24"
@@ -24258,8 +24447,8 @@
     <image
        sodipodi:absref="road-border-r.png"
        xlink:href="road-border-r.png"
-       y="432"
-       x="120"
+       y="408"
+       x="168"
        id="image4077"
        preserveAspectRatio="none"
        height="24"
@@ -24267,8 +24456,8 @@
     <image
        sodipodi:absref="road-border-r.png"
        xlink:href="road-border-r.png"
-       y="408"
-       x="120"
+       y="384"
+       x="168"
        id="image4079"
        preserveAspectRatio="none"
        height="24"
@@ -24411,8 +24600,8 @@
     <image
        sodipodi:absref="road-border-l.png"
        xlink:href="road-border-l.png"
-       y="408"
-       x="96"
+       y="384"
+       x="144"
        id="image4123"
        preserveAspectRatio="none"
        height="24"
@@ -24423,15 +24612,6 @@
        y="432"
        x="96"
        id="image4125"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="road-border-l.png"
-       xlink:href="road-border-l.png"
-       y="456"
-       x="96"
-       id="image4127"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -24754,7 +24934,7 @@
        sodipodi:absref="road-border-tr.png"
        xlink:href="road-border-tr.png"
        y="72"
-       x="456"
+       x="504"
        id="image4251"
        preserveAspectRatio="none"
        height="24"
@@ -24978,8 +25158,8 @@
     <image
        sodipodi:absref="road-border-r.png"
        xlink:href="road-border-r.png"
-       y="384"
-       x="120"
+       y="360"
+       x="168"
        id="image4511"
        preserveAspectRatio="none"
        height="24"
@@ -24987,8 +25167,8 @@
     <image
        sodipodi:absref="road-border-l.png"
        xlink:href="road-border-l.png"
-       y="384"
-       x="96"
+       y="360"
+       x="144"
        id="image4513"
        preserveAspectRatio="none"
        height="24"
@@ -25140,8 +25320,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image4978-5"
-       x="72"
-       y="360"
+       x="120"
+       y="336"
        style="display:inline" />
     <image
        sodipodi:absref="wall-grass.png"
@@ -25150,8 +25330,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image4983"
-       x="144"
-       y="360"
+       x="192"
+       y="336"
        style="display:inline" />
     <image
        sodipodi:absref="wall-grass.png"
@@ -25320,16 +25500,6 @@
        height="24"
        width="24" />
     <image
-       sodipodi:absref="wall-grass.png"
-       xlink:href="wall-grass.png"
-       style="display:inline"
-       y="216"
-       x="0"
-       id="image5347"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
        sodipodi:absref="roof-red-ol.png"
        xlink:href="roof-red-ol.png"
        y="240"
@@ -25476,8 +25646,8 @@
     <image
        sodipodi:absref="roof-brown-oc.png"
        xlink:href="roof-brown-oc.png"
-       y="312"
-       x="96"
+       y="288"
+       x="144"
        id="image6061"
        preserveAspectRatio="none"
        height="24"
@@ -25485,8 +25655,8 @@
     <image
        sodipodi:absref="roof-brown-oc.png"
        xlink:href="roof-brown-oc.png"
-       y="312"
-       x="120"
+       y="288"
+       x="168"
        id="image6065"
        preserveAspectRatio="none"
        height="24"
@@ -25494,8 +25664,8 @@
     <image
        sodipodi:absref="roof-brown-ol.png"
        xlink:href="roof-brown-ol.png"
-       y="312"
-       x="72"
+       y="288"
+       x="120"
        id="image6077"
        preserveAspectRatio="none"
        height="24"
@@ -25503,18 +25673,173 @@
     <image
        sodipodi:absref="roof-brown-or.png"
        xlink:href="roof-brown-or.png"
-       y="312"
-       x="144"
+       y="288"
+       x="192"
        id="image6091"
        preserveAspectRatio="none"
        height="24"
        width="24" />
     <image
-       sodipodi:absref="road-border-r.png"
-       xlink:href="road-border-r.png"
+       sodipodi:absref="road-border-tl.png"
+       xlink:href="road-border-tl.png"
+       y="408"
+       x="96"
+       id="image3827"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-t.png"
+       xlink:href="road-border-t.png"
+       y="408"
+       x="120"
+       id="image3829"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-tli.png"
+       xlink:href="road-border-tli.png"
+       y="408"
+       x="144"
+       id="image3831"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-br.png"
+       xlink:href="road-border-br.png"
+       y="432"
+       x="168"
+       id="image3843"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-b.png"
+       xlink:href="road-border-b.png"
+       y="432"
+       x="144"
+       id="image3849"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-bri.png"
+       xlink:href="road-border-bri.png"
+       y="432"
+       x="120"
+       id="image3851"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-t.png"
+       xlink:href="road-border-t.png"
+       y="72"
+       x="456"
+       id="image3901"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-t.png"
+       xlink:href="road-border-t.png"
+       y="72"
+       x="480"
+       id="image3903"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-b.png"
+       xlink:href="road-border-b.png"
+       y="144"
+       x="480"
+       id="image3905"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-br.png"
+       xlink:href="road-border-br.png"
+       y="144"
+       x="504"
+       id="image3907"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-bri.png"
+       xlink:href="road-border-bri.png"
        y="144"
        x="456"
-       id="image6574"
+       id="image3911"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="roof-blue-oc.png"
+       xlink:href="roof-blue-oc.png"
+       y="336"
+       x="0"
+       id="image4013"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="roof-blue-or.png"
+       xlink:href="roof-blue-or.png"
+       y="336"
+       x="24"
+       id="image4015"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="roof-red-or.png"
+       xlink:href="roof-red-or.png"
+       y="480"
+       x="24"
+       id="image4017"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="roof-red-oc.png"
+       xlink:href="roof-red-oc.png"
+       y="480"
+       x="0"
+       id="image4019"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-grass.png"
+       xlink:href="wall-grass.png"
+       style="display:inline"
+       y="552"
+       x="24"
+       id="image4025"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-grass.png"
+       xlink:href="wall-grass.png"
+       style="display:inline"
+       y="552"
+       x="0"
+       id="image4027"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-tli.png"
+       xlink:href="road-border-tli.png"
+       y="456"
+       x="96"
+       id="image4219"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -25523,17 +25848,60 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="l3"
-     style="display:inline" />
+     style="display:inline"
+     sodipodi:insensitive="true" />
   <g
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="l4"
-     style="display:inline" />
+     style="display:inline">
+    <image
+       sodipodi:absref="fountain-1.png"
+       xlink:href="fountain-1.png"
+       width="48"
+       height="48"
+       preserveAspectRatio="none"
+       id="image5221"
+       x="384"
+       y="96"
+       style="display:inline" />
+    <image
+       sodipodi:absref="tree-1.png"
+       xlink:href="tree-1.png"
+       width="72"
+       height="72"
+       preserveAspectRatio="none"
+       id="image5469"
+       x="168"
+       y="456"
+       style="display:inline" />
+    <image
+       sodipodi:absref="tree-1.png"
+       xlink:href="tree-1.png"
+       width="72"
+       height="72"
+       preserveAspectRatio="none"
+       id="image5473"
+       x="192"
+       y="120"
+       style="display:inline" />
+    <image
+       sodipodi:absref="tree-1.png"
+       xlink:href="tree-1.png"
+       width="72"
+       height="72"
+       preserveAspectRatio="none"
+       id="image5475"
+       x="480"
+       y="240"
+       style="display:inline" />
+  </g>
   <g
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="l5"
-     style="display:inline" />
+     style="display:inline"
+     sodipodi:insensitive="true" />
   <g
      inkscape:groupmode="layer"
      id="layer7"
@@ -25687,8 +26055,8 @@
     <image
        sodipodi:absref="roof-brown-c.png"
        xlink:href="roof-brown-c.png"
-       y="288"
-       x="96"
+       y="264"
+       x="144"
        id="image6017"
        preserveAspectRatio="none"
        height="24"
@@ -25696,8 +26064,8 @@
     <image
        sodipodi:absref="roof-brown-c.png"
        xlink:href="roof-brown-c.png"
-       y="288"
-       x="120"
+       y="264"
+       x="168"
        id="image6021"
        preserveAspectRatio="none"
        height="24"
@@ -25705,8 +26073,8 @@
     <image
        sodipodi:absref="roof-brown-l.png"
        xlink:href="roof-brown-l.png"
-       y="288"
-       x="72"
+       y="264"
+       x="120"
        id="image6033"
        preserveAspectRatio="none"
        height="24"
@@ -25714,9 +26082,45 @@
     <image
        sodipodi:absref="roof-brown-r.png"
        xlink:href="roof-brown-r.png"
-       y="288"
-       x="144"
+       y="264"
+       x="192"
        id="image6047"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="roof-red-c.png"
+       xlink:href="roof-red-c.png"
+       y="456"
+       x="0"
+       id="image4005"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="roof-red-r.png"
+       xlink:href="roof-red-r.png"
+       y="456"
+       x="24"
+       id="image4007"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="roof-blue-r.png"
+       xlink:href="roof-blue-r.png"
+       y="312"
+       x="24"
+       id="image4009"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="roof-blue-c.png"
+       xlink:href="roof-blue-c.png"
+       y="312"
+       x="0"
+       id="image4011"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -25725,5 +26129,223 @@
      inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="l7"
-     style="display:inline" />
+     style="display:inline"
+     sodipodi:insensitive="true" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer9"
+     inkscape:label="x"
+     style="display:inline;opacity:0.5"
+     sodipodi:insensitive="true">
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3735"
+       width="96"
+       height="24"
+       x="0"
+       y="216" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3737"
+       width="36"
+       height="48"
+       x="210"
+       y="144" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3739"
+       width="78"
+       height="48"
+       x="258"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3741"
+       width="132"
+       height="72"
+       x="330"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3743"
+       width="54"
+       height="48"
+       x="456"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3745"
+       width="48"
+       height="18"
+       x="384"
+       y="120" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3747"
+       width="72"
+       height="48"
+       x="24"
+       y="48" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3749"
+       width="66"
+       height="96"
+       x="72"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3751"
+       width="42.714081"
+       height="96"
+       x="155.28592"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3753"
+       width="48"
+       height="84"
+       x="120"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3755"
+       width="48"
+       height="72"
+       x="114"
+       y="288" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3757"
+       width="42.714081"
+       height="72"
+       x="179.28592"
+       y="288" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3759"
+       width="48"
+       height="60"
+       x="144"
+       y="288" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3761"
+       width="72"
+       height="72"
+       x="330"
+       y="240" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3763"
+       width="42.714081"
+       height="72"
+       x="419.28592"
+       y="240" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3765"
+       width="48"
+       height="60"
+       x="384"
+       y="240" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3767"
+       width="36"
+       height="30"
+       x="186"
+       y="498" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3769"
+       width="36"
+       height="30"
+       x="498"
+       y="282" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3771"
+       width="6"
+       height="1200"
+       x="0"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3773"
+       width="6"
+       height="1200"
+       x="1194"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3775"
+       width="1200"
+       height="6"
+       x="0"
+       y="0" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3777"
+       width="1200"
+       height="6"
+       x="0"
+       y="1194" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3779"
+       width="156"
+       height="18"
+       x="330"
+       y="444" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3781"
+       width="36"
+       height="18"
+       x="138"
+       y="540" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3785"
+       width="30"
+       height="144"
+       x="72"
+       y="96" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3869"
+       width="36"
+       height="30"
+       x="66"
+       y="432" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect4407"
+       width="54"
+       height="120"
+       x="0"
+       y="336" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect4409"
+       width="24"
+       height="96"
+       x="0"
+       y="240" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect4411"
+       width="54"
+       height="96"
+       x="0"
+       y="480" />
+    <rect
+       style="fill:#000000;stroke-width:4.7811;stroke-linecap:round"
+       id="rect3742"
+       width="24"
+       height="6"
+       x="396"
+       y="138" />
+  </g>
 </svg>
