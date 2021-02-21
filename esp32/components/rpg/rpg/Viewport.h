@@ -52,11 +52,19 @@ class Viewport
 
     void cache_refresh_state();
 
+    void center(int scene_x, int scene_y);
+
     local_coordinates_t get_local_coordinates(int scene_x, int scene_y);
 
     tile_coordinates_t get_tile_coordinates(int local_tile_x, int local_tile_y);
 
-    void move_to_tile(int new_tile_x, int new_tile_y);
+    bool move(int new_x, int new_y);
+
+    bool move_relative(int dx, int dy);
+
+    bool move_to_tile(int new_tile_x, int new_tile_y);
+
+    bool move_to_tile_relative(int tile_dx, int tile_dy);
 
     void prime_refresh_state(const std::vector<Character *> &characters);
 

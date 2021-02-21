@@ -18,6 +18,22 @@ void Viewport::cache_refresh_state()
     needs_full_refresh = false;
 }
 
+void Viewport::center(int scene_x, int scene_y)
+{
+    scene_x -= viewport_width / 2;
+    scene_y -= viewport_height / 2;
+
+    int tile_x = scene_x / DISPLAY_TILE_WIDTH;
+    if (tile_x < 0)
+        tile_x = 0;
+
+    int tile_y = scene_y / DISPLAY_TILE_HEIGHT;
+    if (tile_y < 0)
+        tile_y = 0;
+
+    move_to_tile(tile_x, tile_y);
+}
+
 local_coordinates_t Viewport::get_local_coordinates(int scene_x, int scene_y)
 {
     int screen_x = scene_x - x;
@@ -43,26 +59,77 @@ tile_coordinates_t Viewport::get_tile_coordinates(int local_tile_x,
                                                   int local_tile_y)
 {
     return {
-        .screen_x = (local_tile_x * DISPLAY_TILE_WIDTH),
-        .screen_y = (local_tile_y * DISPLAY_TILE_HEIGHT),
+        .screen_x =
+            (local_tile_x * DISPLAY_TILE_WIDTH) - (x % DISPLAY_TILE_WIDTH),
+        .screen_y =
+            (local_tile_y * DISPLAY_TILE_HEIGHT) - (y % DISPLAY_TILE_HEIGHT),
         .tile_x = local_tile_x + tile_x,
         .tile_y = local_tile_y + tile_y,
     };
 }
 
-void Viewport::move_to_tile(int new_tile_x, int new_tile_y)
+bool Viewport::move(int new_x, int new_y)
 {
-    if (new_tile_x >= 0 && new_tile_x < scene_width_tiles) {
+    if (new_x < 0)
+        new_x = 0;
+
+    if (new_x >= scene_width - viewport_width)
+        new_x = scene_width - viewport_width - 1;
+
+    if (new_y < 0)
+        new_y = 0;
+
+    if (new_y >= scene_height - viewport_height)
+        new_y = scene_height - viewport_height - 1;
+
+    if (x != new_x || y != new_y) {
+        x = new_x;
+        y = new_y;
+        tile_x = x / DISPLAY_TILE_WIDTH;
+        tile_y = y / DISPLAY_TILE_HEIGHT;
+
+        needs_full_refresh = true;
+        return true;
+    }
+
+    return false;
+}
+
+bool Viewport::move_relative(int dx, int dy)
+{
+    return move(x + dx, y + dy);
+}
+
+bool Viewport::move_to_tile(int new_tile_x, int new_tile_y)
+{
+    if (new_tile_x < 0)
+        new_tile_x = 0;
+
+    if (new_tile_x >= scene_width_tiles - viewport_tiles_width)
+        new_tile_x = scene_width_tiles - viewport_tiles_width - 1;
+
+    if (new_tile_y < 0)
+        new_tile_y = 0;
+
+    if (new_tile_y >= scene_height_tiles - viewport_tiles_height)
+        new_tile_y = scene_height_tiles - viewport_tiles_height - 1;
+
+    if (tile_x != new_tile_x || tile_y != new_tile_y) {
         tile_x = new_tile_x;
-        x = new_tile_x * DISPLAY_TILE_WIDTH;
-    }
-
-    if (new_tile_y >= 0 && new_tile_y < scene_height_tiles) {
         tile_y = new_tile_y;
+        x = new_tile_x * DISPLAY_TILE_WIDTH;
         y = new_tile_y * DISPLAY_TILE_HEIGHT;
+
+        needs_full_refresh = true;
+        return true;
     }
 
-    needs_full_refresh = true;
+    return false;
+}
+
+bool Viewport::move_to_tile_relative(int tile_dx, int tile_dy)
+{
+    return move_to_tile(tile_x + tile_dx, tile_y + tile_dy);
 }
 
 void Viewport::prime_refresh_state(const std::vector<Character *> &characters)

@@ -1,6 +1,7 @@
 #include "rpg_control.h"
 
 #include "rpg/MainCharacter.h"
+#include "rpg/Viewport.h"
 
 extern "C" {
 #include "buttons.h"
@@ -119,8 +120,39 @@ static void rpg_control_render_task(void *arg)
 {
     RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
     Scene *scene = control_device->scene;
+    MainCharacter *mc = scene->get_main_character();
+    Viewport &viewport = scene->get_viewport();
+
+    const int active_distance_top = 2.5 * DISPLAY_TILE_HEIGHT;
+    const int active_distance_left = 2.5 * DISPLAY_TILE_WIDTH;
+    const int active_distance_right = viewport_width - 5 * DISPLAY_TILE_WIDTH;
+    const int active_distance_bottom =
+        viewport_height - 4.5 * DISPLAY_TILE_HEIGHT;
+    local_coordinates_t coordinates{};
 
     for (;; control_device->fps_counter++) {
+        coordinates = viewport.get_local_coordinates(mc->get_scene_x(),
+                                                     mc->get_scene_y());
+
+        if (coordinates.screen_x < active_distance_left) {
+            viewport.move_relative(
+                (coordinates.screen_x - active_distance_left) / 3, 0);
+        }
+
+        if (coordinates.screen_y < active_distance_top) {
+            viewport.move_relative(
+                0, (coordinates.screen_y - active_distance_top) / 3);
+        }
+
+        if (coordinates.screen_x > active_distance_right) {
+            viewport.move_relative(
+                (coordinates.screen_x - active_distance_right) / 3, 0);
+        }
+
+        if (coordinates.screen_y > active_distance_bottom) {
+            viewport.move_relative(
+                0, (coordinates.screen_y - active_distance_bottom) / 3);
+        }
         scene->render();
         vTaskDelay(1);
     }
