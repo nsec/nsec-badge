@@ -487,17 +487,17 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
         fseek(library_maps_fp, offset, SEEK_SET);
 
         uint8_t buffer[576];
-        for (int i = 0; i < total_size; i += 576) {
+        for (int i = 0; i < total_size;) {
             fread(buffer, 1, 576, library_maps_fp);
 
-            for (int j = 0; j < 576; ++j) {
+            for (int j = 0; j < 576 && i < total_size; ++i, ++j) {
                 colorindex = buffer[j];
 
                 if (colorindex == 0)
                     continue;
 
-                graphics_put_pixel((x + ((i + j) % width)),
-                                   (y + ((i + j) / width)),
+                graphics_put_pixel((x + (i % width)),
+                                   (y + (i / width)),
                                    palette[colorindex]);
             }
         }
