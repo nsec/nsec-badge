@@ -118,6 +118,8 @@ static void rpg_control_main_character_task(void *arg)
 
 static void rpg_control_render_task(void *arg)
 {
+    constexpr int easing = 1;
+
     RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
     Scene *scene = control_device->scene;
     MainCharacter *mc = scene->get_main_character();
@@ -136,22 +138,22 @@ static void rpg_control_render_task(void *arg)
 
         if (coordinates.screen_x < active_distance_left) {
             viewport.move_relative(
-                (coordinates.screen_x - active_distance_left) / 3, 0);
+                (coordinates.screen_x - active_distance_left) / easing, 0);
         }
 
         if (coordinates.screen_y < active_distance_top) {
             viewport.move_relative(
-                0, (coordinates.screen_y - active_distance_top) / 3);
+                0, (coordinates.screen_y - active_distance_top) / easing);
         }
 
         if (coordinates.screen_x > active_distance_right) {
             viewport.move_relative(
-                (coordinates.screen_x - active_distance_right) / 3, 0);
+                (coordinates.screen_x - active_distance_right) / easing, 0);
         }
 
         if (coordinates.screen_y > active_distance_bottom) {
             viewport.move_relative(
-                0, (coordinates.screen_y - active_distance_bottom) / 3);
+                0, (coordinates.screen_y - active_distance_bottom) / easing);
         }
         scene->render();
         vTaskDelay(1);
