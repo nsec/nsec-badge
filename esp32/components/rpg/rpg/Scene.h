@@ -17,7 +17,7 @@ class Scene
   public:
     Scene(const char *name, int width, int height)
         : width{width}, height{height}, data_reader(name, width),
-          viewport(width, height)
+          viewport(data_reader, width, height)
     {
         characters = {};
         scene_lock = xSemaphoreCreateMutex();

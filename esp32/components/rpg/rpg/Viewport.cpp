@@ -65,8 +65,7 @@ void Viewport::move_to_tile(int new_tile_x, int new_tile_y)
     needs_full_refresh = true;
 }
 
-void Viewport::prime_refresh_state(data::SceneDataReader &data_reader,
-                                   const std::vector<Character *> &characters)
+void Viewport::prime_refresh_state(const std::vector<Character *> &characters)
 {
     if (needs_full_refresh) {
         for (auto &i : *refresh_state)
@@ -96,8 +95,7 @@ void Viewport::prime_refresh_state(data::SceneDataReader &data_reader,
                      coordinates.screen_x < x_limit;
                      ++dx, coordinates.screen_x += DISPLAY_TILE_WIDTH) {
 
-                    prime_refresh_state_tile(data_reader,
-                                             coordinates.local_tile_x + dx,
+                    prime_refresh_state_tile(coordinates.local_tile_x + dx,
                                              coordinates.local_tile_y + dy);
                 }
             }
@@ -105,8 +103,7 @@ void Viewport::prime_refresh_state(data::SceneDataReader &data_reader,
     }
 }
 
-void Viewport::prime_refresh_state_tile(data::SceneDataReader &data_reader,
-                                        int tile_x, int tile_y)
+void Viewport::prime_refresh_state_tile(int tile_x, int tile_y)
 {
     if (tile_x < -viewport_prepend_cols || tile_y < -viewport_prepend_rows)
         return;
@@ -129,13 +126,13 @@ void Viewport::prime_refresh_state_tile(data::SceneDataReader &data_reader,
 
         for (int dy = decoded_dependency.backward_y; dy > -1; --dy) {
             for (int dx = decoded_dependency.backward_x; dx > -1; --dx) {
-                prime_refresh_state_tile(data_reader, tile_x - dx, tile_y - dy);
+                prime_refresh_state_tile(tile_x - dx, tile_y - dy);
             }
         }
 
         for (int dy = 0; dy <= decoded_dependency.forward_y; ++dy) {
             for (int dx = 0; dx <= decoded_dependency.forward_x; ++dx) {
-                prime_refresh_state_tile(data_reader, tile_x + dx, tile_y + dy);
+                prime_refresh_state_tile(tile_x + dx, tile_y + dy);
             }
         }
     }

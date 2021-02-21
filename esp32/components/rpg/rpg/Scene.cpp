@@ -22,7 +22,7 @@ void Scene::render()
     tile_coordinates_t coordinates = viewport.get_tile_coordinates(0, 0);
     data_reader.read_tilemap(coordinates.tile_x, coordinates.tile_y);
 
-    viewport.prime_refresh_state(data_reader, characters);
+    viewport.prime_refresh_state(characters);
 
     for (int layer = 0; layer < 5; ++layer)
         render_layer(layer);
