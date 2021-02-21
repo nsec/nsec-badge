@@ -80,10 +80,13 @@ inline tile_coordinates_t Viewport::get_tile_coordinates(int local_tile_x,
     };
 }
 
-void Viewport::move(int new_x, int new_y)
+void Viewport::move_to_tile(int new_x, int new_y)
 {
-    x = new_x;
-    y = new_y;
+    if (x >= 0 && x < scene_width_tiles)
+        x = new_x;
+
+    if (y >= 0 && y < scene_height_tiles)
+        y = new_y;
 }
 
 } // namespace rpg

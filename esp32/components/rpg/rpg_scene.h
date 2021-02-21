@@ -26,7 +26,9 @@ class Viewport
 
   public:
     Viewport(int scene_width, int scene_height)
-        : scene_width{scene_width}, scene_height{scene_height}, x{0}, y{0}
+        : scene_width{scene_width}, scene_height{scene_height},
+          scene_width_tiles{scene_width / DISPLAY_TILE_WIDTH},
+          scene_height_tiles{scene_height / DISPLAY_TILE_HEIGHT}, x{0}, y{0}
     {
     }
 
@@ -40,11 +42,13 @@ class Viewport
     static const int height_tiles = 9;
 
     tile_coordinates_t get_tile_coordinates(int local_tile_x, int local_tile_y);
-    void move(int new_x, int new_y);
+    void move_to_tile(int new_x, int new_y);
 
   private:
     const int scene_width;
     const int scene_height;
+    const int scene_width_tiles;
+    const int scene_height_tiles;
     int x;
     int y;
 };
