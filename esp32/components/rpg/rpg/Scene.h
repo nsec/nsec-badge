@@ -27,9 +27,9 @@ class Scene
 
     void render();
 
-    Viewport *get_viewport()
+    Viewport &get_viewport()
     {
-        return &viewport;
+        return viewport;
     }
 
     bool lock()
