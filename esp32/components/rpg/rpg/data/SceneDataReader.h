@@ -26,6 +26,13 @@ constexpr int tilemap_read_lines_extra = 2;
 using tilemap_slice_t =
     std::array<tilemap_word_t, (tilemap_line_words * tilemap_read_lines)>;
 
+struct tilemap_dependency_t {
+    char backward_x;
+    char backward_y;
+    char forward_x;
+    char forward_y;
+};
+
 class SceneDataReader
 {
 
@@ -61,6 +68,16 @@ class SceneDataReader
         if (file) {
             fclose(file);
         }
+    }
+
+    tilemap_dependency_t decode_dependency(tilemap_word_t dependency) const
+    {
+        return {
+            .backward_x = static_cast<char>((dependency >> 6) & 0x03),
+            .backward_y = static_cast<char>((dependency >> 4) & 0x03),
+            .forward_x = static_cast<char>((dependency >> 2) & 0x03),
+            .forward_y = static_cast<char>(dependency & 0x03),
+        };
     }
 
     tilemap_word_t get_dependency(int x, int y)
