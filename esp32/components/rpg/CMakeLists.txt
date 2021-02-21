@@ -5,10 +5,12 @@ idf_component_register(
         "rpg/Scene.cpp"
         "rpg/Viewport.cpp"
         "rpg/data/SceneDataReader.cpp"
+        "rpg_control.cpp"
         "rpg.cpp"
     INCLUDE_DIRS
         "."
     REQUIRES
+        buttons
         graphics
 )
 

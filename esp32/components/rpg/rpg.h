@@ -4,7 +4,7 @@
 extern "C" {
 #endif
 
-void run_scene(void);
+void run_main_scene(void);
 
 #ifdef __cplusplus
 }

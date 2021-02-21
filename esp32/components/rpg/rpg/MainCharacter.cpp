@@ -37,7 +37,7 @@ void MainCharacter::render(Viewport &viewport)
         ((int64_t)now.tv_sec * 1000000L + (int64_t)now.tv_usec) - move_time;
 
     if (time_diff > 250000) {
-        switch ((time_diff / 600000) % 2) {
+        switch ((get_animation_step() / 2) % 2) {
         case 1:
             image = LIBRARY_IMAGE_MC_04;
             break;
@@ -46,7 +46,7 @@ void MainCharacter::render(Viewport &viewport)
         }
     } else {
         if (move_dy != 0) {
-            switch ((coordinates.screen_y / 15) % 6) {
+            switch (get_animation_step() % 6) {
             case 0:
                 image = move_dy < 0 ? LIBRARY_IMAGE_MC_08 : LIBRARY_IMAGE_MC_01;
                 break;
@@ -68,7 +68,7 @@ void MainCharacter::render(Viewport &viewport)
                 break;
             }
         } else {
-            switch ((coordinates.screen_x / 15) % 6) {
+            switch (get_animation_step() % 6) {
             case 0:
                 image = move_dx < 0 ? LIBRARY_IMAGE_MC_17 : LIBRARY_IMAGE_MC_25;
                 break;

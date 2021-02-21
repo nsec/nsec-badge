@@ -21,10 +21,16 @@ class Character
     Character(const char *name, int width, int height)
         : name{name}, width{width}, height{height}
     {
+        animation_step = 0;
         rendered_scene_x = 0;
         rendered_scene_y = 0;
         scene_x = 0;
         scene_y = 0;
+    }
+
+    unsigned int get_animation_step() const
+    {
+        return animation_step;
     }
 
     const std::string get_name() const
@@ -62,6 +68,11 @@ class Character
         return width;
     }
 
+    void increment_animation_step()
+    {
+        ++animation_step;
+    }
+
     virtual void move(int new_scene_x, int new_scene_y)
     {
         scene_x = new_scene_x;
@@ -74,6 +85,7 @@ class Character
     const std::string name;
     const int width;
     const int height;
+    unsigned int animation_step;
     int rendered_scene_x;
     int rendered_scene_y;
     int scene_x;
