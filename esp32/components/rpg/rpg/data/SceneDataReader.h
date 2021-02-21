@@ -7,6 +7,7 @@ extern "C" {
 #include "esp_log.h"
 
 #include <array>
+#include <climits>
 #include <string>
 
 namespace rpg::data
@@ -30,7 +31,7 @@ class SceneDataReader
 
   public:
     SceneDataReader(const char *scene_name, int scene_width)
-        : scene_width{scene_width}
+        : scene_width{scene_width}, last_x{INT_MIN}, last_y{INT_MIN}
     {
         std::string filename{"/spiffs/rpg/"};
         filename += scene_name;
@@ -87,6 +88,12 @@ class SceneDataReader
      * The total width of the scene in pixels.
      */
     int scene_width;
+
+    /**
+     * Coordinates used for the last read operation.
+     */
+    int last_x;
+    int last_y;
 
     /**
      * The number of tile entries in one row of the tilemap.
