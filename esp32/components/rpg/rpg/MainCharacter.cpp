@@ -11,6 +11,12 @@ namespace rpg
 
 void MainCharacter::move(int new_scene_x, int new_scene_y)
 {
+    int ground_x = new_scene_x + get_ground_base_x();
+    int ground_y = new_scene_y + get_ground_base_y();
+
+    if (data_reader.is_blocked(ground_x, ground_y))
+        return;
+
     move_dx = new_scene_x - get_scene_x();
     move_dy = new_scene_y - get_scene_y();
 

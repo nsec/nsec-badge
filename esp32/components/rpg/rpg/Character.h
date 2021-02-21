@@ -10,16 +10,23 @@ class Viewport;
 class Character
 {
   public:
-    Character() : Character{"", 0, 0}
+    Character() : Character{"", 0, 0, 0, 0}
     {
     }
 
-    Character(const char *name) : Character{name, 0, 0}
+    Character(const char *name) : Character{name, 0, 0, 0, 0}
     {
     }
 
     Character(const char *name, int width, int height)
-        : name{name}, width{width}, height{height}
+        : Character{name, width, height, 0, 0}
+    {
+    }
+
+    Character(const char *name, int width, int height, int ground_base_x,
+              int ground_base_y)
+        : name{name}, width{width}, height{height},
+          ground_base_x{ground_base_x}, ground_base_y{ground_base_y}
     {
         animation_step = 0;
         rendered_scene_x = 0;
@@ -36,6 +43,16 @@ class Character
     const std::string get_name() const
     {
         return name;
+    }
+
+    int get_ground_base_x() const
+    {
+        return ground_base_x;
+    }
+
+    int get_ground_base_y() const
+    {
+        return ground_base_y;
     }
 
     int get_height() const
@@ -85,6 +102,9 @@ class Character
     const std::string name;
     const int width;
     const int height;
+    const int ground_base_x;
+    const int ground_base_y;
+
     unsigned int animation_step;
     int rendered_scene_x;
     int rendered_scene_y;

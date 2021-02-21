@@ -4,6 +4,7 @@ idf_component_register(
         "rpg/MainCharacter.cpp"
         "rpg/Scene.cpp"
         "rpg/Viewport.cpp"
+        "rpg/data/BlockedDataReader.cpp"
         "rpg/data/SceneDataReader.cpp"
         "rpg/data/SceneInMemoryDataReader.cpp"
         "rpg_control.cpp"

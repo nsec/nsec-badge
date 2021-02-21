@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rpg/Character.h"
+#include "rpg/data/BlockedDataReader.h"
 
 namespace rpg
 {
@@ -8,7 +9,8 @@ namespace rpg
 class MainCharacter : public Character
 {
   public:
-    MainCharacter() : Character{"main-character", 24, 32}
+    MainCharacter(data::BlockedDataReader &data_reader)
+        : Character{"main-character", 24, 32, 13, 31}, data_reader{data_reader}
     {
         move(390, 190);
     }
@@ -20,6 +22,8 @@ class MainCharacter : public Character
     int move_dx = 0;
     int move_dy = 0;
     unsigned long long move_time = 0;
+
+    data::BlockedDataReader &data_reader;
 };
 
 } // namespace rpg
