@@ -103,6 +103,16 @@ static void nsec_button_event_task(void *arg)
     }
 }
 
+void nsec_buttons_flush(void)
+{
+    BaseType_t ret;
+
+    do {
+        button_t btn;
+        ret = xQueueReceive(button_event_queue, &btn, 0);
+    } while (ret == pdTRUE);
+}
+
 void nsec_buttons_init(void)
 {
     button_event_queue = xQueueCreate(10, sizeof(button_t));

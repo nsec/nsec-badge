@@ -51,6 +51,7 @@ typedef enum {
 
 extern QueueHandle_t button_event_queue;
 
+void nsec_buttons_flush(void);
 void nsec_buttons_init(void);
 bool nsec_button_is_pushed(button_t button);
 
