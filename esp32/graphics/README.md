@@ -10,13 +10,18 @@ neighboring rights to it waived.
 
 ## List of copyrighted images
 
+  * `bags-1.png` `field-plant-1.png` `field-plant-2.png` `field-plant-3.png` `field-plant-4.png`<br>
+    [Farming tilesets, magic animations and UI elements](https://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements) by [Daniel Eddeland](https://opengameart.org/users/daneeklu), **CC-BY-SA 3.0**.
+
   * `bench-1.png` `bench-2.png`<br>
     Adapted from [various assets](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis) by _Hyptosis_, **CC-BY 3.0**.
 
-  * `booth-1.png` `booth-2.png` `booth-3.png`<br>
+  * `booth-2.png` `booth-3.png` `booth-4.png`<br>
     Include elements adapted from [Farming tilesets, magic animations and UI elements](https://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements) by [Daniel Eddeland](https://opengameart.org/users/daneeklu), **CC-BY-SA 3.0**;
-    [various assets](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis) by _Hyptosis_, **CC-BY 3.0**;
-    and other elements in the public domain.
+    and other elements in the public domain, [originally](https://opengameart.org/content/rpg-item-set) by [Jetrel](https://opengameart.org/users/jetrel).
+
+  * `cart-1.png`<br>
+    Adapted from [LPC art entry by Casper Nilsson](https://opengameart.org/content/lpc-cnilsson), ***CC-BY-SA 3.0**.
 
   * `door-1.png` `door-2.png` `flower-pot-1.png` `window-1.png` `window-2.png`<br>
     Adapted from [Exterior 32x32 Town tileset](https://opengameart.org/content/exterior-32x32-town-tileset) by [n2liquid](https://opengameart.org/users/n2liquid), **CC-BY-SA 4.0**.
@@ -35,5 +40,5 @@ neighboring rights to it waived.
     Adapted from [Liberated Pixel Cup (LPC) Base Assets](https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles) by _Lanea Zimmerman (AKA Sharm)_ et al., **CC-BY-SA 3.0**;
     and NSEC logo by [NorthSec](https://nsec.io).
 
-  * `tree-1.png` `tree-2.png`<br>
+  * `tree-1.png` `tree-2.png` `tree-3.png` `tree-4.png`<br>
     Adapted from [OGA Community Tileset: Nature](https://opengameart.org/content/oga-community-tileset-nature) by _qubodup_, _Bart K._, _Blarumyrran_, **CC-BY-SA 3.0**.

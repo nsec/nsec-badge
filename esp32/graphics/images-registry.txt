@@ -30,6 +30,8 @@ FAST	24	32	2	0	mc-28.png
 FAST	24	32	2	0	mc-29.png
 FAST	24	32	2	0	mc-30.png
 FAST	24	32	2	0	mc-31.png
+FAST	24	24	3	0	fence-h.png
+FAST	24	24	3	0	fence-v.png
 FAST	24	24	0	0	grass-1.png
 FAST	24	24	0	0	grass-2.png
 FAST	24	24	0	0	grass-3.png
@@ -58,6 +60,9 @@ FAST	24	24	0	0	water-1.png
 FAST	24	24	0	0	water-2.png
 FAST	24	24	0	0	water-3.png
 FAST	24	24	0	0	water-4.png
+FAST	24	24	0	0	ploughing-1.png
+FAST	24	24	0	0	ploughing-2.png
+FAST	24	24	0	0	ploughing-3.png
 MAP	24	24	0	0	flower-1.png
 MAP	24	24	0	0	flower-2.png
 MAP	24	24	0	0	flower-3.png
@@ -71,6 +76,9 @@ MAP	24	24	0	0	pavement-4.png
 MAP	24	24	0	0	grass-pavement-r.png
 MAP	24	24	0	0	grass-pavement-t.png
 MAP	24	24	0	0	grass-pavement-tr.png
+MAP	24	24	0	0	trail-h.png
+MAP	24	24	0	0	trail-road-r.png
+MAP	24	24	0	0	trail-start.png
 MAP	24	24	0	0	road-stone.png
 MAP	24	24	0	0	road-border-bli.png
 MAP	24	24	0	0	road-border-bl.png
@@ -80,6 +88,9 @@ MAP	24	24	0	0	road-border-tli.png
 MAP	24	24	0	0	road-border-tl.png
 MAP	24	24	0	0	road-border-tri.png
 MAP	24	24	0	0	road-border-tr.png
+MAP	24	24	0	0	road-border-x-b.png
+MAP	24	24	0	0	road-border-x-h.png
+MAP	24	24	0	0	road-border-x-v.png
 MAP	24	24	0	0	road-pavement-b.png
 MAP	24	24	0	0	road-pavement-l.png
 MAP	24	24	0	0	road-pavement-t.png
@@ -101,6 +112,9 @@ MAP	24	24	1	0	roof-red-r.png
 MAP	24	24	0	0	chest-1.png
 MAP	72	72	0	65	tree-1.png
 MAP	48	72	0	65	tree-2.png
+MAP	72	72	0	65	tree-3.png
+MAP	72	72	0	65	tree-4.png
+MAP	24	24	0	0	box-1.png
 MAP	48	32	0	30	bench-1.png
 MAP	24	32	0	26	bench-2.png
 MAP	24	34	0	0	rao-poster.png
@@ -111,7 +125,16 @@ MAP	72	72	3	55	booth-1.png
 MAP	72	72	3	55	booth-2.png
 MAP	72	72	3	55	booth-3.png
 MAP	72	72	3	55	booth-4.png
+MAP	72	67	3	0	bags-1.png
+MAP	72	48	3	33	cart-1.png
 MAP	24	72	0	0	vine-1.png
+MAP	24	24	3	0	fence-c-b.png
+MAP	24	24	3	0	fence-c-t.png
+MAP	24	32	0	0	field-plant-1.png
+MAP	24	35	0	0	field-plant-2.png
+MAP	24	32	0	0	field-plant-3.png
+MAP	24	33	0	0	field-plant-4.png
+MAP	24	24	0	0	ploughing-4.png
 MAP	56	27	2	0	fisherman-1.png
 JPEG	48	48	0	0	door-1.png
 JPEG	48	48	0	0	door-2.png
