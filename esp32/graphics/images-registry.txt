@@ -150,6 +150,15 @@ MAP	24	35	0	0	field-plant-2.png
 MAP	24	32	0	0	field-plant-3.png
 MAP	24	33	0	0	field-plant-4.png
 MAP	24	24	0	0	ploughing-4.png
+MAP	24	24	0	0	bastion-roof-1.png
+MAP	24	24	0	0	bastion-roof-2.png
+MAP	24	24	0	0	bastion-roof-3.png
+MAP	24	24	0	0	bastion-roof-4.png
+MAP	24	24	0	0	bastion-roof-5.png
+MAP	24	24	0	0	bastion-roof-6.png
+MAP	24	24	0	0	bastion-w.png
+MAP	29	32	3	26	target-1.png
+MAP	29	32	3	26	target-2.png
 MAP	56	27	2	0	fisherman-1.png
 JPEG	48	48	0	0	door-1.png
 JPEG	48	48	0	0	door-2.png

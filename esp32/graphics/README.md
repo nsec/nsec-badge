@@ -40,5 +40,8 @@ neighboring rights to it waived.
   * `nsec-banner-1.png` `nsec-banner-2.png` `rao-poster.png`<br>
     Adapted from artwork by [NorthSec](https://nsec.io) and the respective authors.
 
+  * `target-1.png` `target-2.png`<br>
+    Adapted from [Range](https://opengameart.org/content/range) by [Lionkanzen](https://opengameart.org/users/lionkanzen), **CC-BY 3.0**.
+
   * `tree-1.png` `tree-2.png` `tree-3.png` `tree-4.png`<br>
     Adapted from [OGA Community Tileset: Nature](https://opengameart.org/content/oga-community-tileset-nature) by _qubodup_, _Bart K._, _Blarumyrran_, **CC-BY-SA 3.0**.
