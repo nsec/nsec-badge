@@ -13,6 +13,10 @@ neighboring rights to it waived.
   * `bags-1.png` `field-plant-1.png` `field-plant-2.png` `field-plant-3.png` `field-plant-4.png`<br>
     [Farming tilesets, magic animations and UI elements](https://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements) by [Daniel Eddeland](https://opengameart.org/users/daneeklu), **CC-BY-SA 3.0**.
 
+  * `barrels-1.png` `statue-1.png` `status-bar.png`<br>
+    Adapted from [Liberated Pixel Cup (LPC) Base Assets](https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles) by _Lanea Zimmerman (AKA Sharm)_ et al., **CC-BY-SA 3.0**;
+    and NSEC logo by [NorthSec](https://nsec.io).
+
   * `bench-1.png` `bench-2.png`<br>
     Adapted from [various assets](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis) by _Hyptosis_, **CC-BY 3.0**.
 
@@ -35,10 +39,6 @@ neighboring rights to it waived.
 
   * `nsec-banner-1.png` `nsec-banner-2.png` `rao-poster.png`<br>
     Adapted from artwork by [NorthSec](https://nsec.io) and the respective authors.
-
-  * `statue-1.png` `status-bar.png`<br>
-    Adapted from [Liberated Pixel Cup (LPC) Base Assets](https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles) by _Lanea Zimmerman (AKA Sharm)_ et al., **CC-BY-SA 3.0**;
-    and NSEC logo by [NorthSec](https://nsec.io).
 
   * `tree-1.png` `tree-2.png` `tree-3.png` `tree-4.png`<br>
     Adapted from [OGA Community Tileset: Nature](https://opengameart.org/content/oga-community-tileset-nature) by _qubodup_, _Bart K._, _Blarumyrran_, **CC-BY-SA 3.0**.
