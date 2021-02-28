@@ -30,6 +30,66 @@ struct RpgControlDevice {
     int fps_counter;
 };
 
+#if 1
+/**
+ * Smooth scrolling variant of the viewport scroller.
+ */
+static void rpg_control_render_scoll_viewport(Viewport &viewport,
+                                              local_coordinates_t &coordinates)
+{
+    constexpr int easing = 3;
+
+    constexpr int top = 2.5 * DISPLAY_TILE_HEIGHT;
+    constexpr int left = 2.5 * DISPLAY_TILE_WIDTH;
+    constexpr int right = viewport_width - 5 * DISPLAY_TILE_WIDTH;
+    constexpr int bottom = viewport_height - 4.5 * DISPLAY_TILE_HEIGHT;
+
+    if (coordinates.screen_x < left) {
+        viewport.move_relative((coordinates.screen_x - left) / easing, 0);
+    }
+
+    if (coordinates.screen_y < top) {
+        viewport.move_relative(0, (coordinates.screen_y - top) / easing);
+    }
+
+    if (coordinates.screen_x > right) {
+        viewport.move_relative((coordinates.screen_x - right) / easing, 0);
+    }
+
+    if (coordinates.screen_y > bottom) {
+        viewport.move_relative(0, (coordinates.screen_y - bottom) / easing);
+    }
+}
+#else
+/**
+ * Stepping variant of the viewport scroller.
+ */
+static void rpg_control_render_scoll_viewport(Viewport &viewport,
+                                              local_coordinates_t &coordinates)
+{
+    constexpr int top = 15;
+    constexpr int left = 15;
+    constexpr int right = viewport_width - 55;
+    constexpr int bottom = viewport_height - 65;
+
+    if (coordinates.screen_x < left) {
+        viewport.move_relative(-130, 0);
+    }
+
+    if (coordinates.screen_y < top) {
+        viewport.move_relative(0, -130);
+    }
+
+    if (coordinates.screen_x > right) {
+        viewport.move_relative(130, 0);
+    }
+
+    if (coordinates.screen_y > bottom) {
+        viewport.move_relative(0, 130);
+    }
+}
+#endif
+
 static void rpg_control_animation_step_task(void *arg)
 {
     RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
@@ -118,43 +178,18 @@ static void rpg_control_main_character_task(void *arg)
 
 static void rpg_control_render_task(void *arg)
 {
-    constexpr int easing = 1;
-
     RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
     Scene *scene = control_device->scene;
     MainCharacter *mc = scene->get_main_character();
     Viewport &viewport = scene->get_viewport();
-
-    const int active_distance_top = 2.5 * DISPLAY_TILE_HEIGHT;
-    const int active_distance_left = 2.5 * DISPLAY_TILE_WIDTH;
-    const int active_distance_right = viewport_width - 5 * DISPLAY_TILE_WIDTH;
-    const int active_distance_bottom =
-        viewport_height - 4.5 * DISPLAY_TILE_HEIGHT;
     local_coordinates_t coordinates{};
 
     for (;; control_device->fps_counter++) {
         coordinates = viewport.get_local_coordinates(mc->get_scene_x(),
                                                      mc->get_scene_y());
 
-        if (coordinates.screen_x < active_distance_left) {
-            viewport.move_relative(
-                (coordinates.screen_x - active_distance_left) / easing, 0);
-        }
+        rpg_control_render_scoll_viewport(viewport, coordinates);
 
-        if (coordinates.screen_y < active_distance_top) {
-            viewport.move_relative(
-                0, (coordinates.screen_y - active_distance_top) / easing);
-        }
-
-        if (coordinates.screen_x > active_distance_right) {
-            viewport.move_relative(
-                (coordinates.screen_x - active_distance_right) / easing, 0);
-        }
-
-        if (coordinates.screen_y > active_distance_bottom) {
-            viewport.move_relative(
-                0, (coordinates.screen_y - active_distance_bottom) / easing);
-        }
         scene->render();
         vTaskDelay(1);
     }
