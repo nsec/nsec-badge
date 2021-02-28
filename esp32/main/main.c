@@ -11,8 +11,4 @@ void app_main(void)
     graphics_start();
 
     run_main_scene();
-
-    while (1) {
-        vTaskDelay(1000);
-    }
 }
