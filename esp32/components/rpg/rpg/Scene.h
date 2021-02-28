@@ -3,7 +3,7 @@
 #include "rpg/Character.h"
 #include "rpg/MainCharacter.h"
 #include "rpg/Viewport.h"
-#include "rpg/data/SceneInMemoryDataReader.h"
+#include "rpg/data/SceneDataReader.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -57,7 +57,7 @@ class Scene
 
     const int height;
 
-    data::SceneInMemoryDataReader data_reader;
+    data::SceneDataReader data_reader;
 
     Viewport viewport;
 
