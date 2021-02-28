@@ -1,0 +1,12 @@
+menu "Graphics component"
+
+	config GRAPHICS_FAST_TILES
+		bool "Enable fast tiles cache"
+		default false
+		help
+			Allocate a buffer in the heap for all "fast" tiles in the images
+			library.  This significantly speeds up rendering but uses a large
+			chunk of the memory.
+
+endmenu
+

@@ -164,10 +164,12 @@ static void graphics_collection_start()
         abort();
     }
 
-    // Copy the most used 'fast' images into a heap buffer to reduce the number
-    // of flash memory reads.
-    fseek(library_maps_fp, 0, SEEK_CUR);
-    fread(library_maps_fast, 1, IMAGE_REGISTRY_FAST_SIZE, library_maps_fp);
+    if (library_maps_fast) {
+        // Copy the most used 'fast' images into a heap buffer to reduce the number
+        // of flash memory reads.
+        fseek(library_maps_fp, 0, SEEK_CUR);
+        fread(library_maps_fast, 1, IMAGE_REGISTRY_FAST_SIZE, library_maps_fp);
+    }
 }
 
 // Display functions.
@@ -274,8 +276,10 @@ static void graphics_display_buffers_allocate()
     assert(display_buffer != NULL);
     ESP_LOGI(__FUNCTION__, "display_buffer is at %p", display_buffer);
 
+#ifdef CONFIG_GRAPHICS_FAST_TILES
     library_maps_fast = calloc(IMAGE_REGISTRY_FAST_SIZE, sizeof(char));
     assert(library_maps_fast != NULL);
+#endif
 
     tjpgd_work = calloc(TJPGD_WORK_SZ, sizeof(char));
     assert(tjpgd_work != NULL);
@@ -472,7 +476,7 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
     unsigned int offset = sprite->map_offset;
     unsigned int total_size = width * height;
 
-    if (sprite->type == IMAGE_REGISTRY_FAST) {
+    if (library_maps_fast && sprite->type == IMAGE_REGISTRY_FAST) {
         for (int iy = 0; iy < height; ++iy) {
             for (int ix = 0; ix < width; ++ix) {
                 colorindex = library_maps_fast[offset + (iy * width) + ix];
