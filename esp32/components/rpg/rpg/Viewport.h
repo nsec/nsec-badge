@@ -4,9 +4,7 @@
 #include "rpg/data/SceneDataReader.h"
 #include "rpg_const.h"
 
-extern "C" {
 #include "graphics.h"
-}
 
 #include <array>
 #include <vector>

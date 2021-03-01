@@ -3,10 +3,8 @@
 #include "rpg/MainCharacter.h"
 #include "rpg/Viewport.h"
 
-extern "C" {
 #include "buttons.h"
 #include "graphics.h"
-}
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"

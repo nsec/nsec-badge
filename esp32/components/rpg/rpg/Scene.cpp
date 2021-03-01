@@ -1,8 +1,6 @@
 #include "rpg/Scene.h"
 
-extern "C" {
 #include "graphics.h"
-}
 
 namespace rpg
 {

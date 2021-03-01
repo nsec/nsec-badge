@@ -1,10 +1,8 @@
 #include "rpg/MainCharacter.h"
 #include "rpg/Viewport.h"
 
-extern "C" {
 #include "graphics.h"
 #include "palette.h"
-}
 
 namespace rpg
 {

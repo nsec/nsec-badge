@@ -2,9 +2,7 @@
 
 #include "rpg_const.h"
 
-extern "C" {
 #include "graphics.h"
-}
 
 #include "esp_log.h"
 

@@ -4,6 +4,10 @@
 
 #include "images_registry.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define DISPLAY_PHY_HEIGHT CONFIG_HEIGHT
 #define DISPLAY_PHY_WIDTH CONFIG_WIDTH
 
@@ -35,3 +39,7 @@ void graphics_start(void);
 void graphics_update_display(void);
 
 int graphics_get_sinkline_from_library(int);
+
+#ifdef __cplusplus
+}
+#endif
