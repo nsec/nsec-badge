@@ -9,7 +9,8 @@
 
 extern "C" void app_main(void)
 {
-    xTaskCreate(init_cmd, "repl task", 4096, NULL, 3, NULL);
+    initialize_nvs();
+    xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
     nsec_buttons_init();
     graphics_start();
 

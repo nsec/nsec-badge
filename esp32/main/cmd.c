@@ -23,9 +23,9 @@
 
 #include "cmd.h"
 
-static const char* TAG = "example";
+static const char* TAG = "console";
 
-static void initialize_nvs(void)
+void initialize_nvs(void)
 {
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -92,17 +92,17 @@ static void initialize_console(void)
 }
 
 
-void init_cmd(void * parm)
+void console_task(void * parm)
 {
-    initialize_nvs();
 
     initialize_console();
 
     /* Register commands */
     esp_console_register_help_command();
-    //register_system();
+    register_system();
     register_wifi();
-    //register_nvs();
+
+    // register_nvs();
 
     /* Prompt to be printed before each line.
      * This can be customized, made dynamic, etc.
@@ -110,7 +110,7 @@ void init_cmd(void * parm)
     const char* prompt = LOG_COLOR_I "nsec-badge> " LOG_RESET_COLOR;
 
     printf("\n"
-           "This is an example of ESP-IDF console component.\n"
+           "Welcome to the nsec badge console!\n"
            "Type 'help' to get the list of commands.\n"
            "Use UP/DOWN arrows to navigate through command history.\n"
            "Press TAB when typing command name to auto-complete.\n");
