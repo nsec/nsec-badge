@@ -259,9 +259,11 @@ ControlExitAction rpg_control_take(Scene &scene)
                 &control_device, rpg_control_priority_low,
                 &(control_device.task_animation_step));
 
+#ifdef LOG_REFRESH
     xTaskCreate(rpg_control_fps_report_task, "rpg_fps_report", 2500,
                 &control_device, rpg_control_priority_low,
                 &(control_device.task_fps_report));
+#endif
 
     while (control_device.exit_action == ControlExitAction::nothing) {
         vTaskDelay(10);
