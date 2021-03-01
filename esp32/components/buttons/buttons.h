@@ -26,6 +26,10 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define PIN_INPUT_BACK 35
 #define PIN_INPUT_DOWN 4
 #define PIN_INPUT_ENTER 34
@@ -54,5 +58,9 @@ extern QueueHandle_t button_event_queue;
 void nsec_buttons_flush(void);
 void nsec_buttons_init(void);
 bool nsec_button_is_pushed(button_t button);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
