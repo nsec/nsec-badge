@@ -8,6 +8,7 @@ namespace rpg
 enum class ControlExitAction {
     nothing,
     exit,
+    konami_code,
     restart,
 };
 

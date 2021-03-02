@@ -18,7 +18,7 @@ static ACTION handle_main_enter_action(Scene *scene, int tile_x, int tile_y)
     return ACTION::nothing;
 }
 
-static void handle_main_konami_code(Scene *scene, button_t button,
+static bool handle_main_konami_code(Scene *scene, button_t button,
                                     struct timeval &time)
 {
     static uint32_t konami_code = 0;
@@ -61,8 +61,7 @@ static void handle_main_konami_code(Scene *scene, button_t button,
         break;
     }
 
-    if (konami_code == 910842187)
-        abort();
+    return konami_code == 910842187;
 }
 
 ACTION rpg_action_main_handle(Scene *scene, button_t button, void *extra_arg)
@@ -72,7 +71,8 @@ ACTION rpg_action_main_handle(Scene *scene, button_t button, void *extra_arg)
     struct timeval now;
     gettimeofday(&now, NULL);
 
-    handle_main_konami_code(scene, button, now);
+    if (handle_main_konami_code(scene, button, now))
+        return ACTION::konami_code;
 
     if (button == BUTTON_ENTER_RELEASE) {
         MainCharacter *mc = scene->get_main_character();

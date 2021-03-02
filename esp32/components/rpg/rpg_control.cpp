@@ -202,6 +202,8 @@ static void rpg_control_render_task(void *arg)
     Viewport &viewport = scene->get_viewport();
     local_coordinates_t coordinates{};
 
+    viewport.mark_for_full_refresh();
+
     for (; CONTINUE_RUNNING_TASK; control_device->fps_counter++) {
         coordinates = viewport.get_local_coordinates(mc->get_scene_x(),
                                                      mc->get_scene_y());
