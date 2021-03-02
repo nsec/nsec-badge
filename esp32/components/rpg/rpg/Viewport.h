@@ -56,6 +56,11 @@ class Viewport
 
     tile_coordinates_t get_tile_coordinates(int local_tile_x, int local_tile_y);
 
+    void mark_for_full_refresh()
+    {
+        needs_full_refresh = true;
+    }
+
     bool move(int new_x, int new_y);
 
     bool move_relative(int dx, int dy);

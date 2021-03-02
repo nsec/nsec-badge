@@ -88,7 +88,7 @@ bool Viewport::move(int new_x, int new_y)
         tile_x = x / DISPLAY_TILE_WIDTH;
         tile_y = y / DISPLAY_TILE_HEIGHT;
 
-        needs_full_refresh = true;
+        mark_for_full_refresh();
         return true;
     }
 
@@ -120,7 +120,7 @@ bool Viewport::move_to_tile(int new_tile_x, int new_tile_y)
         x = new_tile_x * DISPLAY_TILE_WIDTH;
         y = new_tile_y * DISPLAY_TILE_HEIGHT;
 
-        needs_full_refresh = true;
+        mark_for_full_refresh();
         return true;
     }
 
