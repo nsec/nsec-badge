@@ -8,6 +8,8 @@
 #include "rpg/Scene.h"
 #include "rpg/data/BlockedDataReader.h"
 
+#include "graphics.h"
+
 void run_main_scene(void)
 {
     rpg::Scene scene{"main", 1200, 1200};
@@ -20,6 +22,18 @@ void run_main_scene(void)
 
     // Just return back to the main scene on any exit action, as temporary
     // implementation.
-    while (true)
+    while (true) {
         rpg_control_take(scene);
+
+        scene.get_viewport().mark_for_full_refresh();
+        scene.render();
+
+        // Scene fade out effect.
+        for (int i = 0; i <= 13; ++i) {
+            graphics_fadeout_display_buffer(20);
+            graphics_update_display();
+        }
+
+        vTaskDelay(200);
+    }
 }
