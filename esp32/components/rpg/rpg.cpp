@@ -18,5 +18,8 @@ void run_main_scene(void)
 
     scene.get_viewport().move_to_tile(13, 21);
 
-    rpg_control_take(scene);
+    // Just return back to the main scene on any exit action, as temporary
+    // implementation.
+    while (true)
+        rpg_control_take(scene);
 }

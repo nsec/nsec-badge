@@ -7,6 +7,7 @@ idf_component_register(
         "rpg/data/BlockedDataReader.cpp"
         "rpg/data/SceneDataReader.cpp"
         "rpg/data/SceneInMemoryDataReader.cpp"
+        "rpg_action.cpp"
         "rpg_control.cpp"
         "rpg.cpp"
     INCLUDE_DIRS

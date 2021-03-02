@@ -5,6 +5,12 @@
 namespace rpg
 {
 
-void rpg_control_take(Scene &scene);
+enum class ControlExitAction {
+    nothing,
+    exit,
+    restart,
+};
+
+ControlExitAction rpg_control_take(Scene &scene);
 
 } // namespace rpg

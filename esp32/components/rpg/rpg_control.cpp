@@ -1,5 +1,7 @@
 #include "rpg_control.h"
 
+#include "rpg_action.h"
+
 #include "rpg/MainCharacter.h"
 #include "rpg/Viewport.h"
 
@@ -10,6 +12,9 @@
 #include "freertos/task.h"
 
 #include <iostream>
+
+#define CONTINUE_RUNNING_TASK                                                  \
+    (control_device->exit_action == ControlExitAction::nothing)
 
 namespace rpg
 {
@@ -25,6 +30,7 @@ struct RpgControlDevice {
     TaskHandle_t task_main_character;
     TaskHandle_t task_render;
     TaskHandle_t task_status_bar;
+    ControlExitAction exit_action;
     int fps_counter;
 };
 
@@ -94,8 +100,11 @@ static void rpg_control_animation_step_task(void *arg)
     Scene *scene = control_device->scene;
     MainCharacter *mc = scene->get_main_character();
 
-    for (;; vTaskDelay(15))
+    for (; CONTINUE_RUNNING_TASK; vTaskDelay(15))
         mc->increment_animation_step();
+
+    // Self-destruct.
+    vTaskDelete(NULL);
 }
 
 static void rpg_control_fps_report_task(void *arg)
@@ -113,7 +122,10 @@ static void rpg_control_fps_report_task(void *arg)
         std::cout << std::endl;
 
         fps_counter_old = control_device->fps_counter;
-    } while (1);
+    } while (CONTINUE_RUNNING_TASK);
+
+    // Self-destruct.
+    vTaskDelete(NULL);
 }
 
 static void rpg_control_main_character_task(void *arg)
@@ -123,15 +135,17 @@ static void rpg_control_main_character_task(void *arg)
     MainCharacter *mc = scene->get_main_character();
 
     button_t button;
-    BaseType_t ret;
-
-    int dx = 0, dy = 0;
+    int dx = 0;
+    int dy = 0;
     int speed = 1;
 
-    while (true) {
-        ret =
-            xQueueReceive(button_event_queue, &button, 10 / portTICK_PERIOD_MS);
-        if (ret == pdTRUE) {
+    nsec_buttons_flush();
+
+    while (CONTINUE_RUNNING_TASK) {
+        button = BUTTON_NONE;
+        xQueueReceive(button_event_queue, &button, 10 / portTICK_PERIOD_MS);
+
+        if (button != BUTTON_NONE) {
             switch (button) {
             case BUTTON_DOWN:
                 dx = 0;
@@ -166,12 +180,18 @@ static void rpg_control_main_character_task(void *arg)
             default:
                 break;
             }
+
+            control_device->exit_action =
+                rpg_action_main_handle(scene, button, nullptr);
         }
 
         if (dx != 0 || dy != 0) {
             mc->move(mc->get_scene_x() + dx, mc->get_scene_y() + dy);
         }
     }
+
+    // Self-destruct.
+    vTaskDelete(NULL);
 }
 
 static void rpg_control_render_task(void *arg)
@@ -182,7 +202,7 @@ static void rpg_control_render_task(void *arg)
     Viewport &viewport = scene->get_viewport();
     local_coordinates_t coordinates{};
 
-    for (;; control_device->fps_counter++) {
+    for (; CONTINUE_RUNNING_TASK; control_device->fps_counter++) {
         coordinates = viewport.get_local_coordinates(mc->get_scene_x(),
                                                      mc->get_scene_y());
 
@@ -191,6 +211,9 @@ static void rpg_control_render_task(void *arg)
         scene->render();
         vTaskDelay(1);
     }
+
+    // Self-destruct.
+    vTaskDelete(NULL);
 }
 
 static void rpg_control_status_bar(void *arg)
@@ -207,13 +230,17 @@ static void rpg_control_status_bar(void *arg)
     scene->unlock();
     vTaskPrioritySet(NULL, rpg_control_priority_low);
 
-    while (1)
+    while (CONTINUE_RUNNING_TASK)
         vTaskDelay(100);
+
+    // Self-destruct.
+    vTaskDelete(NULL);
 }
 
-void rpg_control_take(Scene &scene)
+ControlExitAction rpg_control_take(Scene &scene)
 {
     RpgControlDevice control_device{};
+    control_device.exit_action = ControlExitAction::nothing;
     control_device.scene = &scene;
 
     xTaskCreate(rpg_control_main_character_task, "rpg_main_char", 2500,
@@ -234,25 +261,31 @@ void rpg_control_take(Scene &scene)
                 &control_device, rpg_control_priority_low,
                 &(control_device.task_fps_report));
 
-    while (true) {
+    while (control_device.exit_action == ControlExitAction::nothing) {
         vTaskDelay(10);
-        // TODO break
     }
 
     if (control_device.task_animation_step)
-        vTaskDelete(control_device.task_animation_step);
+        while (eTaskGetState(control_device.task_animation_step) != eDeleted)
+            vTaskDelay(1);
 
     if (control_device.task_fps_report)
-        vTaskDelete(control_device.task_fps_report);
+        while (eTaskGetState(control_device.task_fps_report) != eDeleted)
+            vTaskDelay(1);
 
     if (control_device.task_main_character)
-        vTaskDelete(control_device.task_main_character);
+        while (eTaskGetState(control_device.task_main_character) != eDeleted)
+            vTaskDelay(1);
 
     if (control_device.task_render)
-        vTaskDelete(control_device.task_render);
+        while (eTaskGetState(control_device.task_render) != eDeleted)
+            vTaskDelay(1);
 
     if (control_device.task_status_bar)
-        vTaskDelete(control_device.task_status_bar);
+        while (eTaskGetState(control_device.task_status_bar) != eDeleted)
+            vTaskDelay(1);
+
+    return control_device.exit_action;
 }
 
 } // namespace rpg
