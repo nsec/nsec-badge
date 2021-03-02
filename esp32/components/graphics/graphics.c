@@ -208,6 +208,28 @@ void graphics_clip_set(int x1, int y1, int x2, int y2)
 }
 
 /**
+ * Get the current high color (RGB565) value of one pixel in the framebuffer.
+ *
+ * The hight and low bytes are returned in the swapped order, the same way that
+ * they are stored in the framebuffer.
+ */
+static pixel_t graphics_get_pixel(int x, int y)
+{
+    if (x < 0 || x >= DISPLAY_WIDTH)
+        return 0;
+
+    if (y < 0 || y >= DISPLAY_HEIGHT)
+        return 0;
+
+    // Store columns in memory in the reverse order to achieve the correct
+    // mirrored appearance of the image on the display that is mounted
+    // sideways.
+    unsigned int rx = DISPLAY_WIDTH - x - 1;
+
+    return display_buffer[rx * DISPLAY_HEIGHT + y];
+}
+
+/**
  * Put a single high color (RGB565) pixel into the framebuffer.
  *
  * The hight and low bytes of the pixel value must already be swapped. This is
@@ -504,6 +526,51 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
                                    (y + (i / width)),
                                    palette[colorindex]);
             }
+        }
+    }
+}
+
+/**
+ * Fade out the contents of the display buffer.
+ *
+ * A very crude solution that makes colors darker by directly manipulating the
+ * bits extracted from the framebuffer. The 'percent' argument controls by how
+ * much make the color darker, with 0 - not at all, and 100 to go directly to
+ * black. Avoid using this function if possible.
+ */
+void graphics_fadeout_display_buffer(int percent)
+{
+    if (percent <= 0)
+        return;
+
+    if (percent > 100)
+        percent = 100;
+
+    float multiplier = (100 - percent) / 100.0;
+
+    // Modify only pixels inside of the active clip.
+    for (int x = display_clip[0]; x < display_clip[2]; ++x) {
+        for (int y = display_clip[1]; y < display_clip[3]; ++y) {
+            pixel_t pixel = graphics_get_pixel(x, y);
+
+            // Swap the two bytes back into the correct order.
+            pixel = (pixel << 8) + (pixel >> 8);
+
+            int r = ((pixel & 0b1111100000000000) >> 11) * multiplier;
+            int g = ((pixel & 0b0000011111100000) >> 5) * multiplier;
+            int b = ((pixel & 0b0000000000011111)) * multiplier;
+
+            // Re-assemble the RGB565 and swap the two bytes as expected by
+            // the graphics_put_pixel() function.
+            pixel_t new_pixel = ((r << 11) & 0xF800) + ((g << 5) & 0x7E0) + (b & 0x1F);
+            new_pixel = (new_pixel << 8) + (new_pixel >> 8);
+
+            // 0 is treated as a special value for transparency, so if it is
+            // encountered, show a very dark grey instead (bytes swapped.)
+            if (new_pixel == 0)
+                new_pixel = 0x2108;
+
+            graphics_put_pixel(x, y, new_pixel);
         }
     }
 }

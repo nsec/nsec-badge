@@ -35,6 +35,7 @@ void graphics_draw_concatjpeg(const ImagesRegistry_t *, int, int);
 void graphics_draw_from_library(int, int, int);
 void graphics_draw_jpeg(const char *, int, int);
 void graphics_draw_sprite(const ImagesRegistry_t *, int, int);
+void graphics_fadeout_display_buffer(int);
 void graphics_start(void);
 void graphics_update_display(void);
 
