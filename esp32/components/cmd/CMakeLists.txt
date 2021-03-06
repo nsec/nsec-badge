@@ -1,0 +1,12 @@
+idf_component_register(
+  SRCS
+      "cmd_wifi.c"
+      "cmd.c"
+  INCLUDE_DIRS
+      "."
+  REQUIRES
+      "cmd_nvs"
+      "cmd_system"
+      "console"
+      "fatfs"
+  )
