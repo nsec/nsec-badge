@@ -1,11 +1,11 @@
+#include "esp_console.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_console.h"
 
 #include "buttons.h"
+#include "cmd.h"
 #include "graphics.h"
 #include "rpg.h"
-#include "cmd.h"
 
 extern "C" void app_main(void)
 {
