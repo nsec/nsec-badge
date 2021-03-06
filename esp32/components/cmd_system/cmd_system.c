@@ -27,6 +27,8 @@
 #define WITH_TASKS_INFO 1
 #endif
 
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+
 static const char *TAG = "cmd_system";
 
 static void register_free(void);
@@ -145,20 +147,51 @@ static void register_heap(void)
 
 static int tasks_info(int argc, char **argv)
 {
-    const size_t bytes_per_task = 40; /* see vTaskList description */
-    char *task_list_buffer = malloc(uxTaskGetNumberOfTasks() * bytes_per_task);
-    if (task_list_buffer == NULL) {
-        ESP_LOGE(TAG, "failed to allocate buffer for vTaskList output");
-        return 1;
+    TaskStatus_t tasks[20];
+    uint32_t total_run_time;
+    UBaseType_t ntasks;
+
+    ntasks = uxTaskGetSystemState(tasks, ARRAY_SIZE(tasks), &total_run_time);
+
+    assert(ntasks > 0);
+
+    ESP_LOGI(TAG, "#\tName\t\tState\tPrio\tRuntime\t\tRuntime%%\tStackMin");
+
+    for (UBaseType_t i = 0; i < ntasks; i++) {
+        TaskStatus_t *task = &tasks[i];
+        char state;
+        uint32_t run_time_per_thousand =
+            (task->ulRunTimeCounter * 1000) / total_run_time;
+        unsigned int run_time_percent_whole = run_time_per_thousand / 10;
+        unsigned int run_time_percent_fract = run_time_per_thousand % 10;
+
+        switch (task->eCurrentState) {
+        case eRunning:
+            state = '*';
+            break;
+        case eReady:
+            state = 'R';
+            break;
+        case eBlocked:
+            state = 'B';
+            break;
+        case eSuspended:
+            state = 'S';
+            break;
+        case eDeleted:
+            state = 'D';
+            break;
+        default:
+            state = '?';
+            break;
+        }
+
+        ESP_LOGI(TAG, "%d\t%-10s\t%c\t%d\t%d\t\t%2d.%01d\t\t%d",
+                 task->xTaskNumber, task->pcTaskName, state,
+                 task->uxBasePriority, task->ulRunTimeCounter,
+                 run_time_percent_whole, run_time_percent_fract,
+                 task->usStackHighWaterMark);
     }
-    fputs("Task Name\tStatus\tPrio\tHWM\tTask#", stdout);
-#ifdef CONFIG_FREERTOS_VTASKLIST_INCLUDE_COREID
-    fputs("\tAffinity", stdout);
-#endif
-    fputs("\n", stdout);
-    vTaskList(task_list_buffer);
-    fputs(task_list_buffer, stdout);
-    free(task_list_buffer);
     return 0;
 }
 
