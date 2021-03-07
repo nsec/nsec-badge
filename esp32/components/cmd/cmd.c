@@ -25,6 +25,29 @@
 
 static const char *TAG = "console";
 
+static struct {
+    const char *n_line, *sec_line;
+} nsec_rows[] = {
+    // clang-format off
+    {"                       ", "                                        `/ydmmmdy+.      "},
+    {"                       ", "                                       /mNNmhyhmNNNy`    "},
+    {"                       ", "                                      :NNN+`    -dNNh    "},
+    {"     -ohy  `:+oo+/.    ", "  -+yhdmmdhyo/.      .:/+++/:.        /NNd-:/+++/oNNN`   "},
+    {"  :hNMMMh-hMMMMMMMMNo  ", ":dNNNNNNNNNNNNNd. -sdNNNNNNNNNds-     /NNNNNNNNNNNNNm-   "},
+    {"  sMMMMMNMMMMMMMMMMMMd ", "hNNNNmyssydNNNm/.yNNNNNNNNNNNNNNNy` `sNNNNNNNNNNNNNNNm/  "},
+    {"  sMMMMMMMy+/+yNMMMMMM+", " NNNN/     `:o:-mNNNNmo-` `-sNNNNNd:mNNNNNdo:--:+yNms`   "},
+    {"  sMMMMMN.     .NMMMMMy", " mNNNNho/-`   `mNNNNm-       /NNNNNNNNNNNo        ..     "},
+    {"  sMMMMMh       hMMMMMy", " mNNNNNNNNNds/+NNNNNdsssssssssNNNNNNNNNNh                "},
+    {"  sMMMMMh       hMMMMMy", " -odNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNy                "},
+    {"  sMMMMMh       hMMMMMy", "    `-/oydNNNNNNNNNNm:::::::::::::/NNNNNm.               "},
+    {"  sMMMMMh       hMMMMMy", " o:`      .mNNNNNNNNNy.       -o-  sNNNNNm+`     .oy:    "},
+    {"  sMMMMMh       hMMMMMy", " mNmhs+//+yNNNNNdNNNNNNhsoosymNNNh: omNNNNNNdhyhmNNNNh:  "},
+    {"  sMMMMMh       hMMMMMy", " mNNNNNNNNNNNNNy`-ymNNNNNNNNNNNNmy-  .smNNNNNNNNNNNNms.  "},
+    {"  +hhhhho       ohhhhho", " /shmNNNNNNmho-    `:oyhdmmmdyo:`      `:oyhdmmddyo:`    "},
+    {"                       ", "      `..``                                              "},
+    // clang-format on
+};
+
 void initialize_nvs(void)
 {
     esp_err_t err = nvs_flash_init();
@@ -97,6 +120,14 @@ void console_task(void *parm)
 {
 
     initialize_console();
+
+    /* Diplay Nsec banner */
+    uart_write_bytes(CONFIG_ESP_CONSOLE_UART_NUM, "\n", 1);
+    for (int i = 0; i < sizeof(nsec_rows); i++) {
+        uart_write_bytes(CONFIG_ESP_CONSOLE_UART_NUM, nsec_rows[i].n_line, 23);
+        uart_write_bytes(CONFIG_ESP_CONSOLE_UART_NUM, nsec_rows[i].sec_line, 57);
+        uart_write_bytes(CONFIG_ESP_CONSOLE_UART_NUM, "\r\n", 2);
+    }
 
     /* Register commands */
     esp_console_register_help_command();
