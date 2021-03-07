@@ -1,5 +1,5 @@
-#include "rpg/MainCharacter.h"
 #include "rpg/Viewport.h"
+#include "rpg/characters/MainCharacter.h"
 
 #include "graphics.h"
 #include "palette.h"

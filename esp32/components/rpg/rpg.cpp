@@ -4,8 +4,8 @@
 #include "rpg.h"
 #include "rpg_control.h"
 
-#include "rpg/MainCharacter.h"
 #include "rpg/Scene.h"
+#include "rpg/characters/MainCharacter.h"
 #include "rpg/data/BlockedDataReader.h"
 
 #include "graphics.h"

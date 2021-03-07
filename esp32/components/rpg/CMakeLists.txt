@@ -1,12 +1,12 @@
 idf_component_register(
     SRCS
         "rpg/Character.cpp"
-        "rpg/MainCharacter.cpp"
         "rpg/Scene.cpp"
         "rpg/Viewport.cpp"
         "rpg/data/BlockedDataReader.cpp"
         "rpg/data/SceneDataReader.cpp"
         "rpg/data/SceneInMemoryDataReader.cpp"
+        "rpg/characters/MainCharacter.cpp"
         "rpg_action.cpp"
         "rpg_control.cpp"
         "rpg.cpp"

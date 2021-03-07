@@ -1,8 +1,8 @@
 #pragma once
 
 #include "rpg/Character.h"
-#include "rpg/MainCharacter.h"
 #include "rpg/Viewport.h"
+#include "rpg/characters/MainCharacter.h"
 #include "rpg/data/SceneDataReader.h"
 
 #include "freertos/FreeRTOS.h"
