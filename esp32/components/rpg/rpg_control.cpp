@@ -2,6 +2,7 @@
 
 #include "rpg_action.h"
 
+#include "rpg/Coordinates.h"
 #include "rpg/Viewport.h"
 #include "rpg/characters/MainCharacter.h"
 
@@ -39,7 +40,7 @@ struct RpgControlDevice {
  * Smooth scrolling variant of the viewport scroller.
  */
 static void rpg_control_render_scoll_viewport(Viewport &viewport,
-                                              local_coordinates_t &coordinates)
+                                              ScreenCoordinates coordinates)
 {
     constexpr int easing = 3;
 
@@ -48,20 +49,24 @@ static void rpg_control_render_scoll_viewport(Viewport &viewport,
     constexpr int right = viewport_width - 5 * DISPLAY_TILE_WIDTH;
     constexpr int bottom = viewport_height - 4.5 * DISPLAY_TILE_HEIGHT;
 
-    if (coordinates.screen_x < left) {
-        viewport.move_relative((coordinates.screen_x - left) / easing, 0);
+    if (coordinates.x() < left) {
+        viewport.move_relative(
+            GlobalCoordinates::xy((coordinates.x() - left) / easing, 0));
     }
 
-    if (coordinates.screen_y < top) {
-        viewport.move_relative(0, (coordinates.screen_y - top) / easing);
+    if (coordinates.y() < top) {
+        viewport.move_relative(
+            GlobalCoordinates::xy(0, (coordinates.y() - top) / easing));
     }
 
-    if (coordinates.screen_x > right) {
-        viewport.move_relative((coordinates.screen_x - right) / easing, 0);
+    if (coordinates.x() > right) {
+        viewport.move_relative(
+            GlobalCoordinates::xy((coordinates.x() - right) / easing, 0));
     }
 
-    if (coordinates.screen_y > bottom) {
-        viewport.move_relative(0, (coordinates.screen_y - bottom) / easing);
+    if (coordinates.y() > bottom) {
+        viewport.move_relative(
+            GlobalCoordinates::xy(0, (coordinates.y() - bottom) / easing));
     }
 }
 #else
@@ -69,27 +74,27 @@ static void rpg_control_render_scoll_viewport(Viewport &viewport,
  * Stepping variant of the viewport scroller.
  */
 static void rpg_control_render_scoll_viewport(Viewport &viewport,
-                                              local_coordinates_t &coordinates)
+                                              ScreenCoordinates coordinates)
 {
     constexpr int top = 15;
     constexpr int left = 15;
     constexpr int right = viewport_width - 55;
     constexpr int bottom = viewport_height - 65;
 
-    if (coordinates.screen_x < left) {
-        viewport.move_relative(-130, 0);
+    if (coordinates.x() < left) {
+        viewport.move_relative(GlobalCoordinates::xy(-130, 0));
     }
 
-    if (coordinates.screen_y < top) {
-        viewport.move_relative(0, -130);
+    if (coordinates.y() < top) {
+        viewport.move_relative(GlobalCoordinates::xy(0, -130));
     }
 
-    if (coordinates.screen_x > right) {
-        viewport.move_relative(130, 0);
+    if (coordinates.x() > right) {
+        viewport.move_relative(GlobalCoordinates::xy(130, 0));
     }
 
-    if (coordinates.screen_y > bottom) {
-        viewport.move_relative(0, 130);
+    if (coordinates.y() > bottom) {
+        viewport.move_relative(GlobalCoordinates::xy(0, 130));
     }
 }
 #endif
@@ -186,7 +191,9 @@ static void rpg_control_main_character_task(void *arg)
         }
 
         if (dx != 0 || dy != 0) {
-            mc->move(mc->get_scene_x() + dx, mc->get_scene_y() + dy);
+            auto coordinates = mc->get_coordinates();
+            coordinates.change_xy_by(dx, dy);
+            mc->move(coordinates);
         }
     }
 
@@ -200,15 +207,12 @@ static void rpg_control_render_task(void *arg)
     Scene *scene = control_device->scene;
     MainCharacter *mc = scene->get_main_character();
     Viewport &viewport = scene->get_viewport();
-    local_coordinates_t coordinates{};
 
     viewport.mark_for_full_refresh();
 
     for (; CONTINUE_RUNNING_TASK; control_device->fps_counter++) {
-        coordinates = viewport.get_local_coordinates(mc->get_scene_x(),
-                                                     mc->get_scene_y());
-
-        rpg_control_render_scoll_viewport(viewport, coordinates);
+        rpg_control_render_scoll_viewport(
+            viewport, viewport.to_screen(mc->get_coordinates()));
 
         scene->render();
         vTaskDelay(1);

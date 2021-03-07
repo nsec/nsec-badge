@@ -1,5 +1,5 @@
-#include "rpg/Viewport.h"
 #include "rpg/characters/MainCharacter.h"
+#include "rpg/Viewport.h"
 
 #include "graphics.h"
 #include "palette.h"
@@ -7,16 +7,16 @@
 namespace rpg
 {
 
-void MainCharacter::move(int new_scene_x, int new_scene_y)
+void MainCharacter::move(GlobalCoordinates coordinates)
 {
-    int ground_x = new_scene_x + get_ground_base_x();
-    int ground_y = new_scene_y + get_ground_base_y();
+    int ground_x = coordinates.x() + get_ground_base_x();
+    int ground_y = coordinates.y() + get_ground_base_y();
 
     if (data_reader.is_blocked(ground_x, ground_y))
         return;
 
-    move_dx = new_scene_x - get_scene_x();
-    move_dy = new_scene_y - get_scene_y();
+    move_dx = coordinates.x() - get_coordinates().x();
+    move_dy = coordinates.y() - get_coordinates().y();
 
     if (move_dx != 0 || move_dy != 0) {
         struct timeval now;
@@ -24,15 +24,12 @@ void MainCharacter::move(int new_scene_x, int new_scene_y)
         move_time = (int64_t)now.tv_sec * 1000000L + (int64_t)now.tv_usec;
     }
 
-    Character::move(new_scene_x, new_scene_y);
+    Character::move(coordinates);
 }
 
 void MainCharacter::render(Viewport &viewport)
 {
     int image = LIBRARY_IMAGE_MC_00;
-
-    local_coordinates_t coordinates =
-        viewport.get_local_coordinates(get_scene_x(), get_scene_y());
 
     struct timeval now;
     gettimeofday(&now, NULL);
@@ -96,8 +93,8 @@ void MainCharacter::render(Viewport &viewport)
         }
     }
 
-    graphics_draw_from_library(image, coordinates.screen_x,
-                               coordinates.screen_y);
+    auto coordinates = viewport.to_screen(get_coordinates());
+    graphics_draw_from_library(image, coordinates.x(), coordinates.y());
     Character::render(viewport);
 }
 

@@ -18,118 +18,37 @@ void Viewport::cache_refresh_state()
     needs_full_refresh = false;
 }
 
-void Viewport::center(int scene_x, int scene_y)
+bool Viewport::move(GlobalCoordinates coordinates)
 {
-    scene_x -= viewport_width / 2;
-    scene_y -= viewport_height / 2;
+    int new_move_x = coordinates.x();
+    int new_move_y = coordinates.y();
 
-    int tile_x = scene_x / DISPLAY_TILE_WIDTH;
-    if (tile_x < 0)
-        tile_x = 0;
+    if (new_move_x < 0)
+        new_move_x = 0;
 
-    int tile_y = scene_y / DISPLAY_TILE_HEIGHT;
-    if (tile_y < 0)
-        tile_y = 0;
+    if (new_move_x >= scene_width - viewport_width)
+        new_move_x = scene_width - viewport_width - 1;
 
-    move_to_tile(tile_x, tile_y);
+    if (new_move_y < 0)
+        new_move_y = 0;
+
+    if (new_move_y >= scene_height - viewport_height)
+        new_move_y = scene_height - viewport_height - 1;
+
+    if (new_move_x == offset_move_x && new_move_y == offset_move_y)
+        return false;
+
+    offset_move_x = new_move_x;
+    offset_move_y = new_move_y;
+    mark_for_full_refresh();
+
+    return true;
 }
 
-local_coordinates_t Viewport::get_local_coordinates(int scene_x, int scene_y)
+bool Viewport::move_relative(GlobalCoordinates coordinates)
 {
-    int screen_x = scene_x - x;
-    int screen_y = scene_y - y;
-
-    int local_tile_x = screen_x / DISPLAY_TILE_WIDTH;
-    if (screen_x < 0)
-        local_tile_x--;
-
-    int local_tile_y = screen_y / DISPLAY_TILE_HEIGHT;
-    if (screen_y < 0)
-        local_tile_y--;
-
-    return {
-        local_tile_x = local_tile_x,
-        local_tile_y = local_tile_y,
-        screen_x = screen_x,
-        screen_y = screen_y,
-    };
-}
-
-tile_coordinates_t Viewport::get_tile_coordinates(int local_tile_x,
-                                                  int local_tile_y)
-{
-    return {
-        .screen_x =
-            (local_tile_x * DISPLAY_TILE_WIDTH) - (x % DISPLAY_TILE_WIDTH),
-        .screen_y =
-            (local_tile_y * DISPLAY_TILE_HEIGHT) - (y % DISPLAY_TILE_HEIGHT),
-        .tile_x = local_tile_x + tile_x,
-        .tile_y = local_tile_y + tile_y,
-    };
-}
-
-bool Viewport::move(int new_x, int new_y)
-{
-    if (new_x < 0)
-        new_x = 0;
-
-    if (new_x >= scene_width - viewport_width)
-        new_x = scene_width - viewport_width - 1;
-
-    if (new_y < 0)
-        new_y = 0;
-
-    if (new_y >= scene_height - viewport_height)
-        new_y = scene_height - viewport_height - 1;
-
-    if (x != new_x || y != new_y) {
-        x = new_x;
-        y = new_y;
-        tile_x = x / DISPLAY_TILE_WIDTH;
-        tile_y = y / DISPLAY_TILE_HEIGHT;
-
-        mark_for_full_refresh();
-        return true;
-    }
-
-    return false;
-}
-
-bool Viewport::move_relative(int dx, int dy)
-{
-    return move(x + dx, y + dy);
-}
-
-bool Viewport::move_to_tile(int new_tile_x, int new_tile_y)
-{
-    if (new_tile_x < 0)
-        new_tile_x = 0;
-
-    if (new_tile_x >= scene_width_tiles - viewport_tiles_width)
-        new_tile_x = scene_width_tiles - viewport_tiles_width - 1;
-
-    if (new_tile_y < 0)
-        new_tile_y = 0;
-
-    if (new_tile_y >= scene_height_tiles - viewport_tiles_height)
-        new_tile_y = scene_height_tiles - viewport_tiles_height - 1;
-
-    if (tile_x != new_tile_x || tile_y != new_tile_y) {
-        tile_x = new_tile_x;
-        tile_y = new_tile_y;
-        x = new_tile_x * DISPLAY_TILE_WIDTH;
-        y = new_tile_y * DISPLAY_TILE_HEIGHT;
-
-        mark_for_full_refresh();
-        return true;
-    }
-
-    return false;
-}
-
-bool Viewport::move_to_tile_relative(int tile_dx, int tile_dy)
-{
-    return move_to_tile(tile_x + tile_dx, tile_y + tile_dy);
+    coordinates.change_xy_by(offset_move_x, offset_move_y);
+    return move(coordinates);
 }
 
 void Viewport::prime_refresh_state(const std::vector<Character *> &characters)
@@ -142,28 +61,26 @@ void Viewport::prime_refresh_state(const std::vector<Character *> &characters)
     }
 
     for (auto character_p : characters) {
-        local_coordinates_t coordinates_array[] = {
-            get_local_coordinates(character_p->get_rendered_scene_x(),
-                                  character_p->get_rendered_scene_y()),
-            get_local_coordinates(character_p->get_scene_x(),
-                                  character_p->get_scene_y()),
+        ScreenCoordinates coordinates_array[] = {
+            to_screen(character_p->get_rendered_coordinates()),
+            to_screen(character_p->get_coordinates()),
         };
 
         for (auto &coordinates : coordinates_array) {
-            for (int dy = 0, y_limit = coordinates.screen_y +
+            for (int dy = 0, y_limit = coordinates.y() +
                                        character_p->get_height() +
                                        DISPLAY_TILE_HEIGHT * 2;
-                 coordinates.screen_y <= y_limit;
-                 ++dy, coordinates.screen_y += DISPLAY_TILE_HEIGHT) {
+                 coordinates.y() <= y_limit;
+                 ++dy, y_limit -= DISPLAY_TILE_HEIGHT) {
 
-                for (int dx = 0, x_limit = coordinates.screen_x +
+                for (int dx = 0, x_limit = coordinates.x() +
                                            character_p->get_width() +
                                            DISPLAY_TILE_WIDTH;
-                     coordinates.screen_x <= x_limit;
-                     ++dx, coordinates.screen_x += DISPLAY_TILE_WIDTH) {
+                     coordinates.x() <= x_limit;
+                     ++dx, x_limit -= DISPLAY_TILE_WIDTH) {
 
-                    prime_refresh_state_tile(coordinates.local_tile_x + dx,
-                                             coordinates.local_tile_y + dy);
+                    prime_refresh_state_tile(coordinates.tile_x() + dx,
+                                             coordinates.tile_y() + dy);
                 }
             }
         }
@@ -214,6 +131,51 @@ bool Viewport::tile_needs_refresh(int tile_x, int tile_y) const
         return false;
 
     return (*refresh_state)[refresh_state_tile_offset(tile_x, tile_y)];
+}
+
+GlobalCoordinates Viewport::to_global(LocalCoordinates local)
+{
+    int offset_global_x = local.x() + offset_move_x;
+    int offset_global_y = local.y() + offset_move_y;
+
+    // Local coordinates system is aligned to the tiles grid, so the difference
+    // between the last move location and the start of the closes tile is
+    // already included in the local coordinates value, and it has to be
+    // substracted back.
+    offset_global_x -= offset_move_x % DISPLAY_TILE_WIDTH;
+    offset_global_y -= offset_move_y % DISPLAY_TILE_HEIGHT;
+
+    return GlobalCoordinates::xy(offset_global_x, offset_global_y);
+}
+
+LocalCoordinates Viewport::to_local(GlobalCoordinates global)
+{
+    int offset_local_x = global.x() - offset_move_x;
+    int offset_local_y = global.y() - offset_move_y;
+
+    // Local coordinates system is aligned to the tiles grid, so the distance
+    // between the last move location and the start of the closest tile must be
+    // added back to the converted coordinate.
+    offset_local_x += offset_move_x % DISPLAY_TILE_WIDTH;
+    offset_local_y += offset_move_y % DISPLAY_TILE_HEIGHT;
+
+    return LocalCoordinates::xy(offset_local_x, offset_local_y);
+}
+
+ScreenCoordinates Viewport::to_screen(GlobalCoordinates global)
+{
+    return ScreenCoordinates::xy(global.x() - offset_move_x,
+                                 global.y() - offset_move_y);
+}
+
+ScreenCoordinates Viewport::to_screen(LocalCoordinates local)
+{
+    // The screen coordinates are offset by the difference between the last
+    // viewport move location and the local coordinates that snap to the tiles
+    // grid.
+    return ScreenCoordinates::xy(
+        local.x() - (offset_move_x % DISPLAY_TILE_WIDTH),
+        local.y() - (offset_move_y % DISPLAY_TILE_HEIGHT));
 }
 
 } // namespace rpg

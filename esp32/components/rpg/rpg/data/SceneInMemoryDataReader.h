@@ -42,10 +42,10 @@ class SceneInMemoryDataReader : public SceneBaseDataReader
         return scene_data[index];
     }
 
-    virtual void read_tilemap(int read_x, int read_y) override
+    virtual void read_tilemap(GlobalCoordinates coordinates) override
     {
-        last_x = read_x;
-        last_y = read_y;
+        last_x = coordinates.tile_x();
+        last_y = coordinates.tile_y();
     }
 
   private:

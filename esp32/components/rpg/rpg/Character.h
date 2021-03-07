@@ -1,5 +1,7 @@
 #pragma once
 
+#include "rpg/Coordinates.h"
+
 #include <string>
 
 namespace rpg
@@ -45,6 +47,11 @@ class Character
         return name;
     }
 
+    GlobalCoordinates get_coordinates() const
+    {
+        return GlobalCoordinates::xy(scene_x, scene_y);
+    }
+
     int get_ground_base_x() const
     {
         return ground_base_x;
@@ -60,24 +67,9 @@ class Character
         return height;
     }
 
-    int get_rendered_scene_x() const
+    GlobalCoordinates get_rendered_coordinates() const
     {
-        return rendered_scene_x;
-    }
-
-    int get_rendered_scene_y() const
-    {
-        return rendered_scene_y;
-    }
-
-    int get_scene_x() const
-    {
-        return scene_x;
-    }
-
-    int get_scene_y() const
-    {
-        return scene_y;
+        return GlobalCoordinates::xy(rendered_scene_x, rendered_scene_y);
     }
 
     int get_width() const
@@ -90,10 +82,10 @@ class Character
         ++animation_step;
     }
 
-    virtual void move(int new_scene_x, int new_scene_y)
+    virtual void move(GlobalCoordinates coordinates)
     {
-        scene_x = new_scene_x;
-        scene_y = new_scene_y;
+        scene_x = coordinates.x();
+        scene_y = coordinates.y();
     }
 
     virtual void render(Viewport &viewport) = 0;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rpg/Coordinates.h"
 #include "rpg_const.h"
 
 #include "graphics.h"
@@ -78,7 +79,7 @@ class SceneBaseDataReader
 
     virtual tilemap_word_t get_image(int x, int y, int layer) = 0;
 
-    virtual void read_tilemap(int read_x, int read_y) = 0;
+    virtual void read_tilemap(GlobalCoordinates coordinates) = 0;
 
   protected:
     FILE *file;
@@ -130,7 +131,7 @@ class SceneDataReader : public SceneBaseDataReader
 
     virtual tilemap_word_t get_image(int x, int y, int layer) override;
 
-    virtual void read_tilemap(int read_x, int read_y) override;
+    virtual void read_tilemap(GlobalCoordinates coordinates) override;
 
   private:
     tilemap_slice_t *tilemap_slice;

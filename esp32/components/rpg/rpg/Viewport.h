@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rpg/Character.h"
+#include "rpg/Coordinates.h"
 #include "rpg/data/SceneDataReader.h"
 #include "rpg_const.h"
 
@@ -50,8 +51,6 @@ class Viewport
 
     void cache_refresh_state();
 
-    void center(int scene_x, int scene_y);
-
     local_coordinates_t get_local_coordinates(int scene_x, int scene_y);
 
     tile_coordinates_t get_tile_coordinates(int local_tile_x, int local_tile_y);
@@ -61,17 +60,42 @@ class Viewport
         needs_full_refresh = true;
     }
 
-    bool move(int new_x, int new_y);
+    /**
+     * Move the viewport to a new position on the scene.
+     */
+    bool move(GlobalCoordinates coordinates);
 
-    bool move_relative(int dx, int dy);
-
-    bool move_to_tile(int new_tile_x, int new_tile_y);
-
-    bool move_to_tile_relative(int tile_dx, int tile_dy);
+    /**
+     * Adjust viewport relative to its current position.
+     */
+    bool move_relative(GlobalCoordinates coordinates);
 
     void prime_refresh_state(const std::vector<Character *> &characters);
 
     bool tile_needs_refresh(int tile_x, int tile_y) const;
+
+    /**
+     * Backconvert internal viewport coordinates to global scene coordinates.
+     */
+    GlobalCoordinates to_global(LocalCoordinates local);
+
+    /**
+     * Convert global scene coordinates to internal viewport coordinates.
+     */
+    LocalCoordinates to_local(GlobalCoordinates global);
+
+    /**
+     * Convert scene coordinates to an actual position on the screen.
+     *
+     * Any position in the global coordinates system is accepted, so converted
+     * coordinates may actually be off-screen.
+     */
+    ScreenCoordinates to_screen(LocalCoordinates local);
+
+    /**
+     * Convert internal viewport coordinates to a position on the screen.
+     */
+    ScreenCoordinates to_screen(GlobalCoordinates global);
 
   private:
     const int scene_width;
@@ -81,10 +105,9 @@ class Viewport
 
     data::SceneBaseDataReader &data_reader;
 
-    int x = 0;
-    int y = 0;
-    int tile_x = 0;
-    int tile_y = 0;
+    int offset_move_x = 0;
+    int offset_move_y = 0;
+
     bool needs_full_refresh = true;
 
     viewport_refresh_state_t *refresh_state;

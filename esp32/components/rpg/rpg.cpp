@@ -4,6 +4,7 @@
 #include "rpg.h"
 #include "rpg_control.h"
 
+#include "rpg/Coordinates.h"
 #include "rpg/Scene.h"
 #include "rpg/characters/MainCharacter.h"
 #include "rpg/data/BlockedDataReader.h"
@@ -18,7 +19,8 @@ void run_main_scene(void)
     rpg::MainCharacter mc{blocked_data_reader};
     scene.add_character(&mc);
 
-    scene.get_viewport().move_to_tile(13, 21);
+    scene.get_viewport().move(rpg::GlobalCoordinates::tile(14, 24));
+    mc.move(rpg::GlobalCoordinates::xy(630, 815));
 
     // Just return back to the main scene on any exit action, as temporary
     // implementation.

@@ -13,14 +13,15 @@ tilemap_word_t SceneDataReader::get_image(int x, int y, int layer)
     return (*tilemap_slice)[index];
 }
 
-void SceneDataReader::read_tilemap(int read_x, int read_y)
+void SceneDataReader::read_tilemap(GlobalCoordinates coordinates)
 {
-    if (last_x == read_x && last_y == read_y)
+    if (last_x == coordinates.tile_x() && last_y == coordinates.tile_y())
         return;
 
     tilemap_word_t *data = tilemap_slice->data();
-    unsigned int offset = read_y * (tilemap_width * tilemap_cell_words) +
-                          read_x * tilemap_cell_words;
+    unsigned int offset =
+        coordinates.tile_y() * (tilemap_width * tilemap_cell_words) +
+        coordinates.tile_x() * tilemap_cell_words;
 
     for (int i = 0; i < tilemap_read_lines; ++i) {
         fseek(file, offset, SEEK_SET);
@@ -30,8 +31,8 @@ void SceneDataReader::read_tilemap(int read_x, int read_y)
         offset += sizeof(tilemap_word_t) * (tilemap_width * tilemap_cell_words);
     }
 
-    last_x = read_x;
-    last_y = read_y;
+    last_x = coordinates.tile_x();
+    last_y = coordinates.tile_y();
 }
 
 } // namespace rpg::data
