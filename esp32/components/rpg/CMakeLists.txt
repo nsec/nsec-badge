@@ -1,6 +1,7 @@
 idf_component_register(
     SRCS
         "rpg/Character.cpp"
+        "rpg/Coordinates.cpp"
         "rpg/Scene.cpp"
         "rpg/Viewport.cpp"
         "rpg/data/BlockedDataReader.cpp"
