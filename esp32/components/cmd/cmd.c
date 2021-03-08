@@ -122,11 +122,11 @@ void console_task(void *parm)
     initialize_console();
 
     /* Diplay Nsec banner */
-    uart_write_bytes(CONFIG_ESP_CONSOLE_UART_NUM, "\n", 1);
-    for (int i = 0; i < sizeof(nsec_rows); i++) {
-        uart_write_bytes(CONFIG_ESP_CONSOLE_UART_NUM, nsec_rows[i].n_line, 23);
-        uart_write_bytes(CONFIG_ESP_CONSOLE_UART_NUM, nsec_rows[i].sec_line, 57);
-        uart_write_bytes(CONFIG_ESP_CONSOLE_UART_NUM, "\r\n", 2);
+    fputc('\n', stdout);
+    for (int i = 0; i < sizeof(nsec_rows) / sizeof(nsec_rows[0]); i++) {
+        fwrite(nsec_rows[i].n_line, 1, strlen(nsec_rows[i].n_line), stdout);
+        fwrite(nsec_rows[i].sec_line, 1, strlen(nsec_rows[i].sec_line), stdout);
+        fputc('\n', stdout);
     }
 
     /* Register commands */
