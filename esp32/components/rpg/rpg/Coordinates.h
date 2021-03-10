@@ -88,7 +88,8 @@ class Coordinates
 
     static int convert_to_tile(int xy)
     {
-        return xy / DISPLAY_TILE_WIDTH - (xy < 0 ? 1 : 0);
+        return xy / DISPLAY_TILE_WIDTH -
+               ((xy % DISPLAY_TILE_WIDTH) < 0 ? 1 : 0);
     }
 
     static int convert_to_xy(int tile)
