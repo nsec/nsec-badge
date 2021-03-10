@@ -13,9 +13,11 @@
 
 void run_main_scene(void)
 {
-    rpg::Scene scene{"main", 1200, 1200};
+    rpg::Scene scene{"main", rpg::GlobalCoordinates::xy(1200, 1200)};
 
-    rpg::data::BlockedDataReader blocked_data_reader{"main", 1200, 1200};
+    rpg::data::BlockedDataReader blocked_data_reader{
+        "main", rpg::GlobalCoordinates::xy(1200, 1200)};
+
     rpg::MainCharacter mc{blocked_data_reader};
     scene.add_character(&mc);
 

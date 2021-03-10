@@ -31,9 +31,6 @@ void Scene::render()
 
     graphics_clip_set(0, 0, viewport_crop_width, viewport_crop_height);
 
-    auto coordinates = viewport.to_global(LocalCoordinates::tile(0, 0));
-    data_reader.read_tilemap(coordinates);
-
     viewport.prime_refresh_state(characters);
 
     for (int layer = 0; layer < 4; ++layer)
@@ -66,52 +63,61 @@ bool Scene::render_layer(int layer, int sinkline_check, bool sinkline_repeat)
 
     for (int y = -viewport_prepend_rows; y < 0; ++y) {
         for (int x = -viewport_prepend_cols; x < viewport_tiles_width; ++x) {
-            dependency = data_reader.get_dependency(x, y);
+            auto local = LocalCoordinates::tile(x, y);
+            auto global = viewport.to_global(local);
+
+            dependency = data_reader.get_dependency(global);
             if (dependency == 0)
                 continue;
 
-            image = data_reader.get_image(x, y, layer);
+            image = data_reader.get_image(global, layer);
             if (image == 0)
                 continue;
 
-            if (!viewport.tile_needs_refresh(x, y))
+            if (!viewport.tile_needs_refresh(local))
                 continue;
 
-            auto coordinates = viewport.to_screen(LocalCoordinates::tile(x, y));
-            graphics_draw_from_library(image, coordinates.x(), coordinates.y());
+            auto screen = viewport.to_screen(local);
+            graphics_draw_from_library(image, screen.x(), screen.y());
         }
     }
 
     for (int y = 0; y < viewport_tiles_height; ++y) {
         for (int x = -viewport_prepend_cols; x < 0; ++x) {
-            dependency = data_reader.get_dependency(x, y);
+            auto local = LocalCoordinates::tile(x, y);
+            auto global = viewport.to_global(local);
+
+            dependency = data_reader.get_dependency(global);
             if (dependency == 0)
                 continue;
 
-            image = data_reader.get_image(x, y, layer);
+            image = data_reader.get_image(global, layer);
             if (image == 0)
                 continue;
 
-            if (!viewport.tile_needs_refresh(x, y))
+            if (!viewport.tile_needs_refresh(local))
                 continue;
 
-            auto coordinates = viewport.to_screen(LocalCoordinates::tile(x, y));
-            graphics_draw_from_library(image, coordinates.x(), coordinates.y());
+            auto screen = viewport.to_screen(local);
+            graphics_draw_from_library(image, screen.x(), screen.y());
         }
 
         for (int x = 0; x < viewport_tiles_width; ++x) {
-            image = data_reader.get_image(x, y, layer);
+            auto local = LocalCoordinates::tile(x, y);
+            auto global = viewport.to_global(local);
+
+            image = data_reader.get_image(global, layer);
             if (image == 0)
                 continue;
 
-            if (!viewport.tile_needs_refresh(x, y))
+            if (!viewport.tile_needs_refresh(local))
                 continue;
 
-            auto coordinates = viewport.to_screen(LocalCoordinates::tile(x, y));
+            auto screen = viewport.to_screen(local);
 
             if (sinkline_check) {
                 sinkline =
-                    coordinates.y() + graphics_get_sinkline_from_library(image);
+                    screen.y() + graphics_get_sinkline_from_library(image);
 
                 if (sinkline >= sinkline_check && !sinkline_repeat) {
                     repeat = true;
@@ -123,7 +129,7 @@ bool Scene::render_layer(int layer, int sinkline_check, bool sinkline_repeat)
                 }
             }
 
-            graphics_draw_from_library(image, coordinates.x(), coordinates.y());
+            graphics_draw_from_library(image, screen.x(), screen.y());
         }
     }
 

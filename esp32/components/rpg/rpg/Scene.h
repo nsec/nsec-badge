@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rpg/Character.h"
+#include "rpg/Coordinates.h"
 #include "rpg/Viewport.h"
 #include "rpg/characters/MainCharacter.h"
 #include "rpg/data/SceneDataReader.h"
@@ -16,9 +17,9 @@ namespace rpg
 class Scene
 {
   public:
-    Scene(const char *name, int width, int height)
-        : width{width}, height{height}, data_reader(name, width, height),
-          viewport(data_reader, width, height)
+    Scene(const char *name, GlobalCoordinates scene_size)
+        : scene_size{scene_size}, data_reader(name, scene_size),
+          viewport(data_reader, scene_size)
     {
         characters = {};
         scene_lock = xSemaphoreCreateMutex();
@@ -53,9 +54,7 @@ class Scene
     }
 
   private:
-    const int width;
-
-    const int height;
+    const GlobalCoordinates scene_size;
 
     data::SceneDataReader data_reader;
 

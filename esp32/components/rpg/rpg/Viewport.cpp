@@ -3,11 +3,12 @@
 namespace rpg
 {
 
-static inline unsigned int refresh_state_tile_offset(int tile_x, int tile_y)
+static inline unsigned int
+refresh_state_tile_offset(const LocalCoordinates &coordinates)
 {
-    return (viewport_prepend_rows + tile_y) *
+    return (viewport_prepend_rows + coordinates.tile_y()) *
                (viewport_prepend_cols + viewport_tiles_width) +
-           viewport_prepend_cols + tile_x;
+           viewport_prepend_cols + coordinates.tile_x();
 }
 
 void Viewport::cache_refresh_state()
@@ -26,14 +27,14 @@ bool Viewport::move(GlobalCoordinates coordinates)
     if (new_move_x < 0)
         new_move_x = 0;
 
-    if (new_move_x >= scene_width - viewport_width)
-        new_move_x = scene_width - viewport_width - 1;
+    if (new_move_x >= scene_size.x() - viewport_width)
+        new_move_x = scene_size.x() - viewport_width - 1;
 
     if (new_move_y < 0)
         new_move_y = 0;
 
-    if (new_move_y >= scene_height - viewport_height)
-        new_move_y = scene_height - viewport_height - 1;
+    if (new_move_y >= scene_size.y() - viewport_height)
+        new_move_y = scene_size.y() - viewport_height - 1;
 
     if (new_move_x == offset_move_x && new_move_y == offset_move_y)
         return false;
@@ -53,56 +54,58 @@ bool Viewport::move_relative(GlobalCoordinates coordinates)
 
 void Viewport::prime_refresh_state(const std::vector<Character *> &characters)
 {
-    if (needs_full_refresh) {
-        for (auto &i : *refresh_state)
-            i = true;
-
+    if (needs_full_refresh)
         return;
-    }
 
     for (auto character_p : characters) {
-        ScreenCoordinates coordinates_array[] = {
-            to_screen(character_p->get_rendered_coordinates()),
-            to_screen(character_p->get_coordinates()),
+        LocalCoordinates coordinates_array[] = {
+            to_local(character_p->get_rendered_coordinates()),
+            to_local(character_p->get_coordinates()),
         };
 
         for (auto &coordinates : coordinates_array) {
-            for (int dy = 0, y_limit = coordinates.y() +
-                                       character_p->get_height() +
-                                       DISPLAY_TILE_HEIGHT * 2;
-                 coordinates.y() <= y_limit;
+            int y_limit = coordinates.y() + character_p->get_height() +
+                          DISPLAY_TILE_HEIGHT * 2;
+
+            for (int dy = 0; coordinates.y() <= y_limit;
                  ++dy, y_limit -= DISPLAY_TILE_HEIGHT) {
 
-                for (int dx = 0, x_limit = coordinates.x() +
-                                           character_p->get_width() +
-                                           DISPLAY_TILE_WIDTH;
-                     coordinates.x() <= x_limit;
+                int x_limit = coordinates.x() + character_p->get_width() +
+                              DISPLAY_TILE_WIDTH;
+
+                for (int dx = 0; coordinates.x() <= x_limit;
                      ++dx, x_limit -= DISPLAY_TILE_WIDTH) {
 
-                    prime_refresh_state_tile(coordinates.tile_x() + dx,
-                                             coordinates.tile_y() + dy);
+                    prime_refresh_state_tile(LocalCoordinates::tile(
+                        coordinates.tile_x() + dx, coordinates.tile_y() + dy));
                 }
             }
         }
     }
 }
 
-void Viewport::prime_refresh_state_tile(int tile_x, int tile_y)
+void Viewport::prime_refresh_state_tile(const LocalCoordinates &coordinates)
 {
-    if (tile_x < -viewport_prepend_cols || tile_y < -viewport_prepend_rows)
+    if (coordinates.tile_x() < -viewport_prepend_cols)
         return;
 
-    if (tile_x >= viewport_tiles_width || tile_y >= viewport_tiles_height)
+    if (coordinates.tile_y() < -viewport_prepend_rows)
         return;
 
-    unsigned int offset = refresh_state_tile_offset(tile_x, tile_y);
+    if (coordinates.tile_x() >= viewport_tiles_width)
+        return;
+
+    if (coordinates.tile_y() >= viewport_tiles_height)
+        return;
+
+    unsigned int offset = refresh_state_tile_offset(coordinates);
     if ((*refresh_state)[offset])
         return;
 
     (*refresh_state)[offset] = true;
 
     data::tilemap_word_t dependency =
-        data_reader.get_dependency(tile_x, tile_y);
+        data_reader.get_dependency(to_global(coordinates));
 
     if (dependency != 0) {
         data::tilemap_dependency_t decoded_dependency =
@@ -110,27 +113,34 @@ void Viewport::prime_refresh_state_tile(int tile_x, int tile_y)
 
         for (int dy = decoded_dependency.backward_y; dy > -1; --dy) {
             for (int dx = decoded_dependency.backward_x; dx > -1; --dx) {
-                prime_refresh_state_tile(tile_x - dx, tile_y - dy);
+                prime_refresh_state_tile(LocalCoordinates::tile(
+                    coordinates.tile_x() - dx, coordinates.tile_y() - dy));
             }
         }
 
         for (int dy = 0; dy <= decoded_dependency.forward_y; ++dy) {
             for (int dx = 0; dx <= decoded_dependency.forward_x; ++dx) {
-                prime_refresh_state_tile(tile_x + dx, tile_y + dy);
+                prime_refresh_state_tile(LocalCoordinates::tile(
+                    coordinates.tile_x() + dx, coordinates.tile_y() + dy));
             }
         }
     }
 }
 
-bool Viewport::tile_needs_refresh(int tile_x, int tile_y) const
+bool Viewport::tile_needs_refresh(const LocalCoordinates &coordinates) const
 {
-    if (tile_x < -viewport_prepend_cols || tile_y < -viewport_prepend_rows)
+    if (needs_full_refresh)
+        return true;
+
+    if (coordinates.tile_x() < -viewport_prepend_cols ||
+        coordinates.tile_y() < -viewport_prepend_rows)
         return false;
 
-    if (tile_x >= viewport_tiles_width || tile_y >= viewport_tiles_height)
+    if (coordinates.tile_x() >= viewport_tiles_width ||
+        coordinates.tile_y() >= viewport_tiles_height)
         return false;
 
-    return (*refresh_state)[refresh_state_tile_offset(tile_x, tile_y)];
+    return (*refresh_state)[refresh_state_tile_offset(coordinates)];
 }
 
 GlobalCoordinates Viewport::to_global(LocalCoordinates local)

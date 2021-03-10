@@ -20,12 +20,9 @@ using viewport_refresh_state_t =
 class Viewport
 {
   public:
-    Viewport(data::SceneBaseDataReader &data_reader, int scene_width,
-             int scene_height)
-        : scene_width{scene_width}, scene_height{scene_height},
-          scene_width_tiles{scene_width / DISPLAY_TILE_WIDTH},
-          scene_height_tiles{scene_height / DISPLAY_TILE_HEIGHT},
-          data_reader{data_reader}
+    Viewport(data::SceneBaseDataReader &data_reader,
+             GlobalCoordinates scene_size)
+        : scene_size{scene_size}, data_reader{data_reader}
     {
         refresh_state = new viewport_refresh_state_t();
     }
@@ -54,7 +51,7 @@ class Viewport
 
     void prime_refresh_state(const std::vector<Character *> &characters);
 
-    bool tile_needs_refresh(int tile_x, int tile_y) const;
+    bool tile_needs_refresh(const LocalCoordinates &coordinates) const;
 
     /**
      * Backconvert internal viewport coordinates to global scene coordinates.
@@ -80,11 +77,7 @@ class Viewport
     ScreenCoordinates to_screen(GlobalCoordinates global);
 
   private:
-    const int scene_width;
-    const int scene_height;
-    const int scene_width_tiles;
-    const int scene_height_tiles;
-
+    const GlobalCoordinates scene_size;
     data::SceneBaseDataReader &data_reader;
 
     int offset_move_x = 0;
@@ -94,7 +87,7 @@ class Viewport
 
     viewport_refresh_state_t *refresh_state;
 
-    void prime_refresh_state_tile(int tile_x, int tile_y);
+    void prime_refresh_state_tile(const LocalCoordinates &coordinates);
 };
 
 } // namespace rpg
