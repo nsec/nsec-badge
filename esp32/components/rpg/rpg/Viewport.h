@@ -17,20 +17,6 @@ using viewport_refresh_state_t =
     std::array<bool, ((viewport_prepend_cols + viewport_tiles_width) *
                       (viewport_prepend_rows + viewport_tiles_height))>;
 
-struct local_coordinates_t {
-    int local_tile_x;
-    int local_tile_y;
-    int screen_x;
-    int screen_y;
-};
-
-struct tile_coordinates_t {
-    int screen_x;
-    int screen_y;
-    int tile_x;
-    int tile_y;
-};
-
 class Viewport
 {
   public:
@@ -50,10 +36,6 @@ class Viewport
     }
 
     void cache_refresh_state();
-
-    local_coordinates_t get_local_coordinates(int scene_x, int scene_y);
-
-    tile_coordinates_t get_tile_coordinates(int local_tile_x, int local_tile_y);
 
     void mark_for_full_refresh()
     {
