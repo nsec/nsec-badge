@@ -3,11 +3,19 @@
 namespace rpg::data
 {
 
-tilemap_word_t SceneDataReader::get_image(int x, int y, int layer)
+tilemap_word_t SceneDataReader::get_image(GlobalCoordinates coordinates,
+                                          int layer)
 {
-    unsigned int slice_base =
-        (y + tilemap_read_lines_extra) * tilemap_line_words +
-        (x + tilemap_cell_extra) * tilemap_cell_words;
+    coordinates.change_tile_by(tilemap_cell_extra, tilemap_read_lines_extra);
+
+    if (!coordinates.within(current_start, current_end))
+        read_tilemap(coordinates);
+
+    coordinates.change_tile_by(-current_start.tile_x(),
+                               -current_start.tile_y());
+
+    unsigned int slice_base = coordinates.tile_y() * tilemap_line_words +
+                              coordinates.tile_x() * tilemap_cell_words;
 
     unsigned int index = slice_base + layer;
     return (*tilemap_slice)[index];
@@ -15,8 +23,7 @@ tilemap_word_t SceneDataReader::get_image(int x, int y, int layer)
 
 void SceneDataReader::read_tilemap(GlobalCoordinates coordinates)
 {
-    if (last_x == coordinates.tile_x() && last_y == coordinates.tile_y())
-        return;
+    current_start = coordinates;
 
     tilemap_word_t *data = tilemap_slice->data();
     unsigned int offset =
@@ -31,8 +38,9 @@ void SceneDataReader::read_tilemap(GlobalCoordinates coordinates)
         offset += sizeof(tilemap_word_t) * (tilemap_width * tilemap_cell_words);
     }
 
-    last_x = coordinates.tile_x();
-    last_y = coordinates.tile_y();
+    coordinates.change_tile_by(viewport_tiles_width + 1,
+                               viewport_tiles_height + 1);
+    current_end = coordinates;
 }
 
 } // namespace rpg::data

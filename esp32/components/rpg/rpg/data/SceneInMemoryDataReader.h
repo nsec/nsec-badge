@@ -8,9 +8,9 @@ namespace rpg::data
 class SceneInMemoryDataReader : public SceneBaseDataReader
 {
   public:
-    SceneInMemoryDataReader(const char *scene_name, int scene_width,
-                            int scene_height)
-        : SceneBaseDataReader(scene_name, scene_width, scene_height)
+    SceneInMemoryDataReader(const char *scene_name,
+                            GlobalCoordinates scene_size)
+        : SceneBaseDataReader(scene_name, scene_size)
     {
         size_t scene_data_read_size =
             tilemap_width * tilemap_height * tilemap_cell_words;
@@ -31,25 +31,25 @@ class SceneInMemoryDataReader : public SceneBaseDataReader
         delete[] scene_data;
     }
 
-    virtual tilemap_word_t get_image(int x, int y, int layer) override
+    virtual tilemap_word_t get_image(GlobalCoordinates coordinates,
+                                     int layer) override
     {
-        unsigned int slice_base =
-            ((last_y + y + tilemap_read_lines_extra) *
-             (tilemap_width * tilemap_cell_words)) +
-            ((last_x + x + tilemap_cell_extra) * tilemap_cell_words);
+        coordinates.change_tile_by(tilemap_cell_extra,
+                                   tilemap_read_lines_extra);
+
+        unsigned int slice_base = coordinates.tile_y() * tilemap_line_words +
+                                  coordinates.tile_x() * tilemap_cell_words;
 
         unsigned int index = slice_base + layer;
         return scene_data[index];
     }
 
-    virtual void read_tilemap(GlobalCoordinates coordinates) override
-    {
-        last_x = coordinates.tile_x();
-        last_y = coordinates.tile_y();
-    }
-
   private:
     tilemap_word_t *scene_data;
+
+    virtual void read_tilemap(GlobalCoordinates coordinates) override
+    {
+    }
 };
 
 } // namespace rpg::data

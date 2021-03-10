@@ -29,13 +29,10 @@ struct tilemap_dependency_t {
 class SceneBaseDataReader
 {
   public:
-    SceneBaseDataReader(const char *scene_name, int scene_width,
-                        int scene_height)
-        : scene_width{scene_width}, scene_height{scene_height}, last_x{INT_MIN},
-          last_y{INT_MIN}, tilemap_width{scene_width / DISPLAY_TILE_WIDTH +
-                                         tilemap_cell_extra},
-          tilemap_height{scene_height / DISPLAY_TILE_HEIGHT +
-                         tilemap_read_lines_extra}
+    SceneBaseDataReader(const char *scene_name, GlobalCoordinates scene_size)
+        : scene_size{scene_size}, tilemap_width{scene_size.tile_x() +
+                                                tilemap_cell_extra},
+          tilemap_height{scene_size.y() + tilemap_read_lines_extra}
     {
         std::string filename{"/spiffs/rpg/"};
         filename += scene_name;
@@ -67,38 +64,32 @@ class SceneBaseDataReader
         };
     }
 
-    tilemap_word_t get_dependency(int x, int y)
+    tilemap_word_t get_dependency(GlobalCoordinates coordinates)
     {
-        return get_image(x, y, 9);
+        return get_image(coordinates, 9);
     }
 
-    tilemap_word_t get_flags(int x, int y)
+    tilemap_word_t get_flags(GlobalCoordinates coordinates)
     {
-        return get_image(x, y, 8);
+        return get_image(coordinates, 8);
     }
 
-    virtual tilemap_word_t get_image(int x, int y, int layer) = 0;
-
-    virtual void read_tilemap(GlobalCoordinates coordinates) = 0;
+    virtual tilemap_word_t get_image(GlobalCoordinates coordinates,
+                                     int layer) = 0;
 
   protected:
     FILE *file;
 
     /**
-     * The total width of the scene in pixels.
+     * The size of the scene, expressed as bottom-right corner coordinates.
      */
-    int scene_width;
-
-    /**
-     * The total height of the scene in pixels.
-     */
-    int scene_height;
+    GlobalCoordinates scene_size;
 
     /**
      * Coordinates used for the last read operation.
      */
-    int last_x;
-    int last_y;
+    GlobalCoordinates current_start = GlobalCoordinates::xy(0, 0);
+    GlobalCoordinates current_end = GlobalCoordinates::xy(0, 0);
 
     /**
      * The number of tile entries in one row of the tilemap.
@@ -109,19 +100,23 @@ class SceneBaseDataReader
      * The number of tile rows in the tilemap.
      */
     int tilemap_height;
+
+    virtual void read_tilemap(GlobalCoordinates coordinates) = 0;
 };
 
 class SceneDataReader : public SceneBaseDataReader
 {
   public:
-    SceneDataReader(const char *scene_name, int scene_width, int scene_height)
-        : SceneBaseDataReader(scene_name, scene_width, scene_height)
+    SceneDataReader(const char *scene_name, GlobalCoordinates scene_size)
+        : SceneBaseDataReader(scene_name, scene_size)
     {
         tilemap_slice = new tilemap_slice_t();
         if (!tilemap_slice) {
             ESP_LOGE(__FUNCTION__, "Failed to allocate tilemap_slice.");
             abort();
         }
+
+        read_tilemap(current_start);
     }
 
     ~SceneDataReader()
@@ -129,12 +124,13 @@ class SceneDataReader : public SceneBaseDataReader
         delete[] tilemap_slice;
     }
 
-    virtual tilemap_word_t get_image(int x, int y, int layer) override;
-
-    virtual void read_tilemap(GlobalCoordinates coordinates) override;
+    virtual tilemap_word_t get_image(GlobalCoordinates coordinates,
+                                     int layer) override;
 
   private:
     tilemap_slice_t *tilemap_slice;
+
+    virtual void read_tilemap(GlobalCoordinates coordinates) override;
 };
 
 } // namespace rpg::data

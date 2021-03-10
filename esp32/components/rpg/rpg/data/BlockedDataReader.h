@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rpg/Coordinates.h"
 #include "rpg_const.h"
 
 #include "graphics.h"
@@ -14,8 +15,8 @@ namespace rpg::data
 class BlockedDataReader
 {
   public:
-    BlockedDataReader(const char *scene_name, int scene_width, int scene_height)
-        : scene_width{scene_width}, scene_height{scene_height}
+    BlockedDataReader(const char *scene_name, GlobalCoordinates scene_size)
+        : scene_size(scene_size)
     {
         std::string filename{"/spiffs/rpg/"};
         filename += scene_name;
@@ -29,8 +30,8 @@ class BlockedDataReader
             abort();
         }
 
-        line_words = scene_width / (2 * DISPLAY_TILE_WIDTH);
-        int read_size = line_words * (scene_height / 6);
+        line_words = scene_size.x() / (2 * DISPLAY_TILE_WIDTH);
+        int read_size = line_words * (scene_size.y() / 6);
 
         blocked_data =
             static_cast<uint8_t *>(calloc(read_size, sizeof(uint8_t)));
@@ -55,8 +56,7 @@ class BlockedDataReader
   private:
     uint8_t *blocked_data;
 
-    int scene_width;
-    int scene_height;
+    const GlobalCoordinates scene_size;
 
     unsigned int line_words = 0;
 };
