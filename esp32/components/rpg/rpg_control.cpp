@@ -35,14 +35,15 @@ struct RpgControlDevice {
     int fps_counter;
 };
 
-#if 0
+#if 1
 /**
  * Smooth scrolling variant of the viewport scroller.
  */
 static void rpg_control_render_scoll_viewport(Viewport &viewport,
                                               ScreenCoordinates coordinates)
 {
-    constexpr int easing = 3;
+    constexpr int clipping = 11;
+    constexpr int easing = 2;
 
     constexpr int top = 2.5 * DISPLAY_TILE_HEIGHT;
     constexpr int left = 2.5 * DISPLAY_TILE_WIDTH;
@@ -50,23 +51,35 @@ static void rpg_control_render_scoll_viewport(Viewport &viewport,
     constexpr int bottom = viewport_height - 4.5 * DISPLAY_TILE_HEIGHT;
 
     if (coordinates.x() < left) {
-        viewport.move_relative(
-            GlobalCoordinates::xy((coordinates.x() - left) / easing, 0));
+        int move = (coordinates.x() - left) / easing;
+        if (move > -clipping)
+            move = -clipping;
+
+        viewport.move_relative(GlobalCoordinates::xy(move, 0));
     }
 
     if (coordinates.y() < top) {
-        viewport.move_relative(
-            GlobalCoordinates::xy(0, (coordinates.y() - top) / easing));
+        int move = (coordinates.y() - top) / easing;
+        if (move > -clipping)
+            move = -clipping;
+
+        viewport.move_relative(GlobalCoordinates::xy(0, move));
     }
 
     if (coordinates.x() > right) {
-        viewport.move_relative(
-            GlobalCoordinates::xy((coordinates.x() - right) / easing, 0));
+        int move = (coordinates.x() - right) / easing;
+        if (move < clipping)
+            move = clipping;
+
+        viewport.move_relative(GlobalCoordinates::xy(move, 0));
     }
 
     if (coordinates.y() > bottom) {
-        viewport.move_relative(
-            GlobalCoordinates::xy(0, (coordinates.y() - bottom) / easing));
+        int move = (coordinates.y() - bottom) / easing;
+        if (move < clipping)
+            move = clipping;
+
+        viewport.move_relative(GlobalCoordinates::xy(0, move));
     }
 }
 #else
