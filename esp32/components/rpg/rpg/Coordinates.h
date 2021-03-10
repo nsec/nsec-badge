@@ -11,6 +11,15 @@ namespace rpg
 class Coordinates
 {
   public:
+    void change_tile_by(int dx, int dy)
+    {
+        value_tile_x += dx;
+        value_tile_y += dy;
+
+        value_x += convert_to_xy(dx);
+        value_y += convert_to_xy(dy);
+    }
+
     void change_xy_by(int dx, int dy)
     {
         value_x += dx;
@@ -122,6 +131,11 @@ class GlobalCoordinates : public Coordinates
     {
         return GlobalCoordinates(x, y, convert_to_tile(x), convert_to_tile(y));
     }
+
+    bool within(GlobalCoordinates min, GlobalCoordinates max)
+    {
+        return within_xy(min.x(), min.y(), max.x(), max.y());
+    }
 };
 
 /**
@@ -142,6 +156,11 @@ class LocalCoordinates : public Coordinates
     {
         return LocalCoordinates(x, y, convert_to_tile(x), convert_to_tile(y));
     }
+
+    bool within(LocalCoordinates min, LocalCoordinates max)
+    {
+        return within_xy(min.x(), min.y(), max.x(), max.y());
+    }
 };
 
 /**
@@ -161,6 +180,11 @@ class ScreenCoordinates : public Coordinates
     static ScreenCoordinates xy(int x, int y)
     {
         return ScreenCoordinates(x, y, convert_to_tile(x), convert_to_tile(y));
+    }
+
+    bool within(ScreenCoordinates min, ScreenCoordinates max)
+    {
+        return within_xy(min.x(), min.y(), max.x(), max.y());
     }
 };
 
