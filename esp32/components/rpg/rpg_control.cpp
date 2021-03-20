@@ -128,7 +128,7 @@ static void rpg_control_animation_step_task(void *arg)
     RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
     Scene *scene = control_device->scene;
 
-    for (; CONTINUE_RUNNING_TASK; vTaskDelay(15)) {
+    for (; CONTINUE_RUNNING_TASK; vTaskDelay(5)) {
         for (auto character : scene->get_characters())
             character->increment_animation_step();
     }

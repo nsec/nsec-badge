@@ -28,7 +28,7 @@ void MainCharacter::render(Viewport &viewport)
         ((int64_t)now.tv_sec * 1000000L + (int64_t)now.tv_usec) - move_time;
 
     if (time_diff > 4000000) {
-        render_animation_variant(viewport, Appearance::standing, 2);
+        render_animation_variant(viewport, Appearance::standing, 5);
     } else if (time_diff > 150000) {
         int image = 0;
         auto move_distance = get_move_distance();
@@ -49,15 +49,15 @@ void MainCharacter::render(Viewport &viewport)
         auto move_distance = get_move_distance();
 
         if (move_distance.y() < 0) {
-            render_animation_variant(viewport, Appearance::moving_up);
+            render_animation_variant(viewport, Appearance::moving_up, 3);
         } else if (move_distance.y() > 0) {
-            render_animation_variant(viewport, Appearance::moving_down);
+            render_animation_variant(viewport, Appearance::moving_down, 3);
         } else if (move_distance.x() < 0) {
-            render_animation_variant(viewport, Appearance::moving_left);
+            render_animation_variant(viewport, Appearance::moving_left, 3);
         } else if (move_distance.x() > 0) {
-            render_animation_variant(viewport, Appearance::moving_right);
+            render_animation_variant(viewport, Appearance::moving_right, 3);
         } else {
-            render_animation_variant(viewport, Appearance::standing, 2);
+            render_animation_variant(viewport, Appearance::standing, 5);
         }
     }
 
