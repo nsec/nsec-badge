@@ -188,4 +188,38 @@ class ScreenCoordinates : public Coordinates
     }
 };
 
+inline bool operator==(const GlobalCoordinates &lhs,
+                       const GlobalCoordinates &rhs)
+{
+    return lhs.x() == rhs.x() && lhs.y() == rhs.y();
+}
+
+inline bool operator!=(const GlobalCoordinates &lhs,
+                       const GlobalCoordinates &rhs)
+{
+    return !(lhs == rhs);
+}
+
+inline bool operator==(const LocalCoordinates &lhs, const LocalCoordinates &rhs)
+{
+    return lhs.x() == rhs.x() && lhs.y() == rhs.y();
+}
+
+inline bool operator!=(const LocalCoordinates &lhs, const LocalCoordinates &rhs)
+{
+    return !(lhs == rhs);
+}
+
+inline bool operator==(const ScreenCoordinates &lhs,
+                       const ScreenCoordinates &rhs)
+{
+    return lhs.x() == rhs.x() && lhs.y() == rhs.y();
+}
+
+inline bool operator!=(const ScreenCoordinates &lhs,
+                       const ScreenCoordinates &rhs)
+{
+    return !(lhs == rhs);
+}
+
 } // namespace rpg
