@@ -22,6 +22,8 @@ class SceneObject
 
     virtual int get_width() const = 0;
 
+    virtual void post_render(Viewport &viewport) = 0;
+
     virtual void render(Viewport &viewport) = 0;
 };
 

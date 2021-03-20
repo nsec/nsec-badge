@@ -2,6 +2,7 @@
 
 #include "rpg/Coordinates.h"
 #include "rpg/SceneObject.h"
+#include "rpg/data/BlockedDataReader.h"
 
 #include <string>
 
@@ -12,6 +13,19 @@ class Viewport;
 
 class Character : public SceneObject
 {
+  protected:
+    enum class Appearance {
+        moving_down = 0,
+        moving_left = 1,
+        moving_right = 2,
+        moving_up = 3,
+        standing = 4,
+        action_a = 5,
+        action_b = 6,
+        action_c = 7,
+        LENGTH = 8,
+    };
+
   public:
     Character() : Character{"", 0, 0, 0, 0}
     {
@@ -29,13 +43,9 @@ class Character : public SceneObject
     Character(const char *name, int width, int height, int ground_base_x,
               int ground_base_y)
         : name{name}, width{width}, height{height},
-          ground_base_x{ground_base_x}, ground_base_y{ground_base_y}
+          ground_base_x{ground_base_x}, ground_base_y{ground_base_y},
+          move_distance{GlobalCoordinates::xy(0, 0)}, animation_variants{}
     {
-        animation_step = 0;
-        rendered_scene_x = 0;
-        rendered_scene_y = 0;
-        scene_x = 0;
-        scene_y = 0;
     }
 
     unsigned int get_animation_step() const
@@ -89,19 +99,56 @@ class Character : public SceneObject
         ++animation_step;
     }
 
-    virtual void move(GlobalCoordinates coordinates)
+    /**
+     * Move the character to a new position in the scene.
+     *
+     * If the blocked_data_reader pointer is set, the destination will be
+     * checked before making the move and if the position is blocked, the
+     * character will stay in place. If blocked_data_reader is not set,
+     * every move is possible.
+     *
+     * The return value is true if the character has been moved, and false if
+     * it stayed in place.
+     *
+     * Additionally, the distance between the old and new locations is recorded
+     * into the move_distance property.
+     */
+    virtual bool move(GlobalCoordinates coordinates);
+
+    virtual void post_render(Viewport &viewport) override
     {
-        scene_x = coordinates.x();
-        scene_y = coordinates.y();
+        // No-op.
     }
 
     virtual void render(Viewport &viewport) = 0;
+
+    void set_blocked_data_reader(data::BlockedDataReader &data_reader)
+    {
+        blocked_data_reader = &data_reader;
+    }
 
   protected:
     /**
      * Check that the character is currently visible on screen.
      */
     bool is_visible(Viewport &viewport);
+
+    GlobalCoordinates get_move_distance()
+    {
+        return move_distance;
+    }
+
+    void render_animation_variant(Viewport &viewport,
+                                  const Appearance appearance,
+                                  const int slow_down = 1);
+
+    void reset_move_distance()
+    {
+        move_distance = GlobalCoordinates::xy(0, 0);
+    }
+
+    void set_animation_variant(const Appearance appearance, const int *sprites,
+                               const int count);
 
   private:
     const std::string name;
@@ -110,11 +157,22 @@ class Character : public SceneObject
     const int ground_base_x;
     const int ground_base_y;
 
-    unsigned int animation_step;
-    int rendered_scene_x;
-    int rendered_scene_y;
-    int scene_x;
-    int scene_y;
+    unsigned int animation_step{0};
+    int rendered_scene_x{0};
+    int rendered_scene_y{0};
+    int scene_x{0};
+    int scene_y{0};
+
+    GlobalCoordinates move_distance;
+
+    data::BlockedDataReader *blocked_data_reader = 0;
+
+    struct AnimationVariant {
+        const int *sprites;
+        int count;
+    };
+
+    AnimationVariant animation_variants[static_cast<int>(Appearance::LENGTH)];
 };
 
 } // namespace rpg

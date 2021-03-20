@@ -18,7 +18,8 @@ void run_main_scene(void)
     rpg::data::BlockedDataReader blocked_data_reader{
         "main", rpg::GlobalCoordinates::xy(1200, 1200)};
 
-    rpg::MainCharacter mc{blocked_data_reader};
+    rpg::MainCharacter mc{};
+    mc.set_blocked_data_reader(blocked_data_reader);
     scene.add_character(&mc);
 
     scene.get_viewport().move(rpg::GlobalCoordinates::tile(14, 24));

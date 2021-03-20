@@ -103,6 +103,9 @@ void Scene::render()
     graphics_clip_reset();
     viewport.cache_refresh_state();
     unlock();
+
+    for (auto object : scene_objects)
+        object->post_render(viewport);
 }
 
 void Scene::render_layer(int layer)

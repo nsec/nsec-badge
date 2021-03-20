@@ -43,6 +43,11 @@ class TileObject : public SceneObject
         return width;
     }
 
+    virtual void post_render(Viewport &viewport) override
+    {
+        // No-op.
+    }
+
     virtual void render(Viewport &viewport) override;
 
   private:
