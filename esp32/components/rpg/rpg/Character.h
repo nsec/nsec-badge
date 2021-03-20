@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rpg/Coordinates.h"
+#include "rpg/SceneObject.h"
 
 #include <string>
 
@@ -9,7 +10,7 @@ namespace rpg
 
 class Viewport;
 
-class Character
+class Character : public SceneObject
 {
   public:
     Character() : Character{"", 0, 0, 0, 0}
@@ -47,7 +48,7 @@ class Character
         return name;
     }
 
-    GlobalCoordinates get_coordinates() const
+    virtual GlobalCoordinates get_coordinates() const override
     {
         return GlobalCoordinates::xy(scene_x, scene_y);
     }
@@ -62,7 +63,7 @@ class Character
         return ground_base_y;
     }
 
-    int get_height() const
+    virtual int get_height() const override
     {
         return height;
     }
@@ -72,7 +73,13 @@ class Character
         return GlobalCoordinates::xy(rendered_scene_x, rendered_scene_y);
     }
 
-    int get_width() const
+    virtual int get_sinkline() const override
+    {
+        // Use the ground position of the character as the default sinkline.
+        return get_ground_base_y();
+    }
+
+    virtual int get_width() const override
     {
         return width;
     }
