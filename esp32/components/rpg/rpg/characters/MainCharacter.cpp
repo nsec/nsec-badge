@@ -27,8 +27,24 @@ void MainCharacter::render(Viewport &viewport)
     unsigned int time_diff =
         ((int64_t)now.tv_sec * 1000000L + (int64_t)now.tv_usec) - move_time;
 
-    if (time_diff > 250000) {
+    if (time_diff > 4000000) {
         render_animation_variant(viewport, Appearance::standing, 2);
+    } else if (time_diff > 150000) {
+        int image = 0;
+        auto move_distance = get_move_distance();
+
+        if (move_distance.y() < 0) {
+            image = LIBRARY_IMAGE_MC_12;
+        } else if (move_distance.y() > 0) {
+            image = LIBRARY_IMAGE_MC_00;
+        } else if (move_distance.x() < 0) {
+            image = LIBRARY_IMAGE_MC_16;
+        } else if (move_distance.x() > 0) {
+            image = LIBRARY_IMAGE_MC_24;
+        }
+
+        auto screen = viewport.to_screen(get_coordinates());
+        graphics_draw_from_library(image, screen.x(), screen.y());
     } else {
         auto move_distance = get_move_distance();
 
@@ -40,6 +56,8 @@ void MainCharacter::render(Viewport &viewport)
             render_animation_variant(viewport, Appearance::moving_left);
         } else if (move_distance.x() > 0) {
             render_animation_variant(viewport, Appearance::moving_right);
+        } else {
+            render_animation_variant(viewport, Appearance::standing, 2);
         }
     }
 
