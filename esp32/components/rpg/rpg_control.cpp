@@ -35,7 +35,7 @@ struct RpgControlDevice {
     int fps_counter;
 };
 
-#if 1
+#if 0
 /**
  * Smooth scrolling variant of the viewport scroller.
  */
