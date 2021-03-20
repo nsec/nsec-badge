@@ -51,7 +51,7 @@ class BlockedDataReader
         delete[] blocked_data;
     }
 
-    bool is_blocked(int x, int y);
+    bool is_blocked(GlobalCoordinates coordinates);
 
   private:
     uint8_t *blocked_data;

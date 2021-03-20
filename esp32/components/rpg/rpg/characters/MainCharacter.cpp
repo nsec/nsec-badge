@@ -9,10 +9,10 @@ namespace rpg
 
 void MainCharacter::move(GlobalCoordinates coordinates)
 {
-    int ground_x = coordinates.x() + get_ground_base_x();
-    int ground_y = coordinates.y() + get_ground_base_y();
+    auto ground = coordinates;
+    ground.change_xy_by(get_ground_base_x(), get_ground_base_y());
 
-    if (data_reader.is_blocked(ground_x, ground_y))
+    if (data_reader.is_blocked(ground))
         return;
 
     move_dx = coordinates.x() - get_coordinates().x();
