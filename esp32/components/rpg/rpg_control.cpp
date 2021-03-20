@@ -35,6 +35,17 @@ struct RpgControlDevice {
     int fps_counter;
 };
 
+static void rpg_control_center_on_character(Scene *scene, MainCharacter *mc)
+{
+    auto coordinates = mc->get_coordinates();
+    coordinates.change_xy_by(mc->get_width() / 2, mc->get_height() / 2);
+    coordinates.change_xy_by(-(viewport_width / 2), -(viewport_height / 2));
+
+    scene->lock();
+    scene->get_viewport().move(coordinates);
+    scene->unlock();
+}
+
 #if 0
 /**
  * Smooth scrolling variant of the viewport scroller.
@@ -194,6 +205,10 @@ static void rpg_control_main_character_task(void *arg)
             case BUTTON_DOWN_RELEASE:
             case BUTTON_UP_RELEASE:
                 dy = 0;
+                break;
+
+            case BUTTON_ENTER:
+                rpg_control_center_on_character(scene, mc);
                 break;
 
             default:
