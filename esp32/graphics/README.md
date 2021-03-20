@@ -28,7 +28,7 @@ neighboring rights to it waived.
     and other elements in the public domain, [originally](https://opengameart.org/content/rpg-item-set) by [Jetrel](https://opengameart.org/users/jetrel).
 
   * `cart-1.png`<br>
-    Adapted from [LPC art entry by Casper Nilsson](https://opengameart.org/content/lpc-cnilsson), ***CC-BY-SA 3.0**.
+    Adapted from [LPC art entry by Casper Nilsson](https://opengameart.org/content/lpc-cnilsson), **CC-BY-SA 3.0**.
 
   * `dancer-*.png`<br>
     [JS Actors - Aeon Warriors Field & Battle Sprites](https://opengameart.org/content/js-actors-aeon-warriors-field-battle-sprites) by [JosephSeraph](https://opengameart.org/users/josephseraph), **CC-BY 3.0**.
