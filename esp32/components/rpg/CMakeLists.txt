@@ -3,6 +3,7 @@ idf_component_register(
         "rpg/Character.cpp"
         "rpg/Coordinates.cpp"
         "rpg/Scene.cpp"
+        "rpg/TileObject.cpp"
         "rpg/Viewport.cpp"
         "rpg/data/BlockedDataReader.cpp"
         "rpg/data/SceneDataReader.cpp"
