@@ -65,7 +65,7 @@ void Viewport::prime_refresh_state(const std::vector<Character *> &characters)
 
         for (auto &coordinates : coordinates_array) {
             int y_limit = coordinates.y() + character_p->get_height() +
-                          DISPLAY_TILE_HEIGHT * 2;
+                          DISPLAY_TILE_HEIGHT;
 
             for (int dy = 0; coordinates.y() <= y_limit;
                  ++dy, y_limit -= DISPLAY_TILE_HEIGHT) {
