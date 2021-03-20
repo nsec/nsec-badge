@@ -6,6 +6,11 @@
 
 #include "rpg/Coordinates.h"
 #include "rpg/Scene.h"
+#include "rpg/characters/CharacterArcher.h"
+#include "rpg/characters/CharacterAristocrate.h"
+#include "rpg/characters/CharacterCharles.h"
+#include "rpg/characters/CharacterDancer.h"
+#include "rpg/characters/CharacterFisherman.h"
 #include "rpg/characters/MainCharacter.h"
 #include "rpg/data/BlockedDataReader.h"
 
@@ -22,8 +27,31 @@ void run_main_scene(void)
     mc.set_blocked_data_reader(blocked_data_reader);
     scene.add_character(&mc);
 
-    scene.get_viewport().move(rpg::GlobalCoordinates::tile(14, 24));
-    mc.move(rpg::GlobalCoordinates::xy(630, 815));
+    rpg::CharacterArcher character_archer{};
+    scene.add_character(&character_archer);
+
+    rpg::CharacterAristocrate character_aristocrate{};
+    character_aristocrate.set_blocked_data_reader(blocked_data_reader);
+    scene.add_character(&character_aristocrate);
+
+    rpg::CharacterFisherman character_fisherman{};
+    scene.add_character(&character_fisherman);
+
+    rpg::CharacterCharles character_charles{};
+    scene.add_character(&character_charles);
+
+    rpg::CharacterDancer character_dancer{};
+    character_dancer.set_blocked_data_reader(blocked_data_reader);
+    scene.add_character(&character_dancer);
+
+    scene.get_viewport().move(rpg::GlobalCoordinates::tile(22, 30));
+
+    mc.move(rpg::GlobalCoordinates::xy(640, 815));
+    character_archer.move(rpg::GlobalCoordinates::xy(293, 1034));
+    character_aristocrate.move(rpg::GlobalCoordinates::xy(760, 680));
+    character_fisherman.move(rpg::GlobalCoordinates::xy(970, 1100));
+    character_charles.move(rpg::GlobalCoordinates::xy(105, 745));
+    character_dancer.move(rpg::GlobalCoordinates::xy(740, 477));
 
     // Just return back to the main scene on any exit action, as temporary
     // implementation.

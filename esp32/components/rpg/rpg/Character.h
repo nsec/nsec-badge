@@ -2,6 +2,7 @@
 
 #include "rpg/Coordinates.h"
 #include "rpg/SceneObject.h"
+#include "rpg/TimerDevice.h"
 #include "rpg/data/BlockedDataReader.h"
 
 #include <string>
@@ -128,6 +129,8 @@ class Character : public SceneObject
     }
 
   protected:
+    TimerDevice timer{};
+
     /**
      * Check that the character is currently visible on screen.
      */
