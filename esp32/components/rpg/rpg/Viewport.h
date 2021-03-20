@@ -34,6 +34,28 @@ class Viewport
 
     void cache_refresh_state();
 
+    /**
+     * Check that a point is visible on screen.
+     */
+    bool is_visible(GlobalCoordinates coordinate)
+    {
+        auto screen = to_screen(coordinate);
+
+        if (screen.x() < 0)
+            return false;
+
+        if (screen.y() < 0)
+            return false;
+
+        if (screen.x() >= DISPLAY_WIDTH)
+            return false;
+
+        if (screen.y() >= DISPLAY_HEIGHT)
+            return false;
+
+        return true;
+    }
+
     void mark_for_full_refresh()
     {
         needs_full_refresh = true;
