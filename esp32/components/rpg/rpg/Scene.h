@@ -103,7 +103,11 @@ class Scene
      */
     void populate_objects_from_scene();
 
-    bool render_layer(int layer, int sinkline_check, bool sunkline_repeat);
+    void render_layer(int layer);
+
+    void render_scene_objects();
+
+    void sort_scene_objects();
 };
 
 } // namespace rpg

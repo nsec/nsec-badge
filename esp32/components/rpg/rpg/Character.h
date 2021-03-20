@@ -97,6 +97,12 @@ class Character : public SceneObject
 
     virtual void render(Viewport &viewport) = 0;
 
+  protected:
+    /**
+     * Check that the character is currently visible on screen.
+     */
+    bool is_visible(Viewport &viewport);
+
   private:
     const std::string name;
     const int width;

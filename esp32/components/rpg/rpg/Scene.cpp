@@ -87,27 +87,17 @@ void Scene::render()
     if (!lock())
         return;
 
-    int character_sinkline =
-        viewport.to_screen(main_character->get_coordinates()).y() +
-        main_character->get_ground_base_y();
-
     graphics_clip_set(0, 0, viewport_crop_width, viewport_crop_height);
-
     viewport.prime_refresh_state(characters);
 
     for (int layer = 0; layer < 4; ++layer)
-        render_layer(layer, 0, false);
+        render_layer(layer);
 
-    bool repeat = render_layer(4, character_sinkline, false);
-
-    for (auto character : characters)
-        character->render(viewport);
-
-    if (repeat)
-        render_layer(4, character_sinkline, true);
+    // Layer 4 became scene objects.
+    render_scene_objects();
 
     for (int layer = 5; layer < 8; ++layer)
-        render_layer(layer, 0, false);
+        render_layer(layer);
 
     graphics_update_display();
     graphics_clip_reset();
@@ -115,11 +105,8 @@ void Scene::render()
     unlock();
 }
 
-bool Scene::render_layer(int layer, int sinkline_check, bool sinkline_repeat)
+void Scene::render_layer(int layer)
 {
-    bool repeat = false;
-    int sinkline = 0;
-
     data::tilemap_word_t dependency;
     data::tilemap_word_t image;
 
@@ -176,26 +163,66 @@ bool Scene::render_layer(int layer, int sinkline_check, bool sinkline_repeat)
                 continue;
 
             auto screen = viewport.to_screen(local);
-
-            if (sinkline_check) {
-                sinkline =
-                    screen.y() + graphics_get_sinkline_from_library(image);
-
-                if (sinkline >= sinkline_check && !sinkline_repeat) {
-                    repeat = true;
-                    continue;
-                }
-
-                if (sinkline < sinkline_check && sinkline_repeat) {
-                    continue;
-                }
-            }
-
             graphics_draw_from_library(image, screen.x(), screen.y());
         }
     }
+}
 
-    return repeat;
+/**
+ * Render all scene objects in the correct order.
+ *
+ * The main character is rendered each time because it is expected to move and
+ * animate constantly. Other objects are rendered only if they are located on a
+ * tile that is marked for refresh. This allows to avoid unnecessary rendering
+ * of parts of the screen that do not have anything happening (e.g. parts of
+ * the terrain.)
+ */
+void Scene::render_scene_objects()
+{
+    sort_scene_objects();
+
+    for (auto object : scene_objects) {
+        if (object != main_character) {
+            auto local = viewport.to_local(object->get_coordinates());
+            if (!viewport.tile_needs_refresh(local))
+                continue;
+        }
+
+        object->render(viewport);
+    }
+}
+
+/**
+ * Put objects into correct rendering order.
+ *
+ * The ordering is determined by the sinkline property of each object, which
+ * creates a simple scene depth simulation.
+ *
+ * A custom implementation of the insertion sort is used because of its near
+ * linear performance on small, almost sorted sets, which is the case here.
+ */
+void Scene::sort_scene_objects()
+{
+    for (auto i = scene_objects.begin(); i != scene_objects.end(); ++i) {
+        if (i == scene_objects.begin())
+            continue;
+
+        auto j = i;
+        auto k = i - 1;
+
+        int j_sinkline = (*j)->get_coordinates().y() + (*j)->get_sinkline();
+
+        for (; k != scene_objects.begin(); --j, --k) {
+            int k_sinkline = (*k)->get_coordinates().y() + (*k)->get_sinkline();
+
+            if (j_sinkline >= k_sinkline)
+                break;
+
+            auto temp = *j;
+            *j = *k;
+            *k = temp;
+        }
+    }
 }
 
 } // namespace rpg
