@@ -215,7 +215,7 @@ void Scene::sort_scene_objects()
 
         int j_sinkline = (*j)->get_coordinates().y() + (*j)->get_sinkline();
 
-        for (; k != scene_objects.begin(); --j, --k) {
+        for (; k >= scene_objects.begin(); --j, --k) {
             int k_sinkline = (*k)->get_coordinates().y() + (*k)->get_sinkline();
 
             if (j_sinkline >= k_sinkline)
