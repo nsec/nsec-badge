@@ -13,8 +13,8 @@ neighboring rights to it waived.
   * `aristo-*.png`<br>
     [Characters pack](https://opengameart.org/content/24x32-characters-16x16-tiles) by [Svetlana Kushnariova (lana-chan@yandex.ru)](https://opengameart.org/users/cabbit), **CC-BY 3.0**.
 
-  * `bags-1.png` `field-plant-1.png` `field-plant-2.png` `field-plant-3.png` `field-plant-4.png`<br>
-    [Farming tilesets, magic animations and UI elements](https://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements) by [Daniel Eddeland](https://opengameart.org/users/daneeklu), **CC-BY-SA 3.0**.
+  * `bags-1.png` `field-plant-*.png` `boat-*.png`<br>
+    Adapted from [Farming tilesets, magic animations and UI elements](https://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements) by [Daniel Eddeland](https://opengameart.org/users/daneeklu), **CC-BY-SA 3.0**.
 
   * `barrels-1.png` `statue-1.png` `status-bar.png`<br>
     Adapted from [Liberated Pixel Cup (LPC) Base Assets](https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles) by _Lanea Zimmerman (AKA Sharm)_ et al., **CC-BY-SA 3.0**;

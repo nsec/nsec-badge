@@ -44,9 +44,9 @@ void run_main_scene(void)
     character_dancer.set_blocked_data_reader(blocked_data_reader);
     scene.add_character(&character_dancer);
 
-    scene.get_viewport().move(rpg::GlobalCoordinates::tile(22, 30));
+    scene.get_viewport().move(rpg::GlobalCoordinates::xy(935, 611));
 
-    mc.move(rpg::GlobalCoordinates::xy(640, 815));
+    mc.move(rpg::GlobalCoordinates::xy(1084, 712));
     character_archer.move(rpg::GlobalCoordinates::xy(293, 1034));
     character_aristocrate.move(rpg::GlobalCoordinates::xy(760, 680));
     character_fisherman.move(rpg::GlobalCoordinates::xy(970, 1100));

@@ -135,6 +135,15 @@ MAP	24	32	0	26	bench-2.png
 MAP	24	34	0	0	rao-poster.png
 MAP	24	24	0	0	water-border-1.png
 MAP	48	24	0	0	water-inlet.png
+MAP	48	24	0	0	quay-b.png
+MAP	5	24	0	0	quay-l.png
+MAP	24	24	0	0	quay-s.png
+MAP	72	72	3	68	boat-mast.png
+MAP	72	32	3	0	boat-deck.png
+MAP	24	29	3	0	boat-deck-front.png
+MAP	24	33	3	28	boat-nose.png
+MAP	72	24	3	12	boat-port.png
+MAP	24	41	3	36	boat-port-front.png
 MAP	48	72	0	48	statue-1.png
 MAP	56	72	0	66	statue-2.png
 MAP	48	48	0	24	barrels-1.png
