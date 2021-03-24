@@ -27,11 +27,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="651.99705"
-     inkscape:cy="825.67109"
+     inkscape:zoom="1"
+     inkscape:cx="-3.227106"
+     inkscape:cy="892.02725"
      inkscape:document-units="px"
-     inkscape:current-layer="layer9"
+     inkscape:current-layer="layer6"
      inkscape:document-rotation="0"
      showgrid="true"
      units="px"
@@ -50,7 +50,7 @@
        spacingx="24"
        spacingy="24"
        dotted="false"
-       enabled="false" />
+       enabled="true" />
     <inkscape:grid
        type="xygrid"
        id="grid3740"
@@ -63,7 +63,7 @@
        spacingx="6"
        spacingy="6"
        visible="true"
-       enabled="true" />
+       enabled="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -14293,24 +14293,6 @@
        width="24"
        height="24"
        preserveAspectRatio="none"
-       id="image6122"
-       x="144"
-       y="816" />
-    <image
-       sodipodi:absref="pavement-1.png"
-       xlink:href="pavement-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image6124"
-       x="144"
-       y="840" />
-    <image
-       sodipodi:absref="pavement-1.png"
-       xlink:href="pavement-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
        id="image6136"
        x="120"
        y="720" />
@@ -14341,15 +14323,6 @@
        id="image6142"
        x="120"
        y="792" />
-    <image
-       sodipodi:absref="pavement-1.png"
-       xlink:href="pavement-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image6144"
-       x="120"
-       y="816" />
     <image
        sodipodi:absref="pavement-1.png"
        xlink:href="pavement-1.png"
@@ -14527,15 +14500,6 @@
        width="24"
        height="24"
        preserveAspectRatio="none"
-       id="image6232"
-       x="24"
-       y="816" />
-    <image
-       sodipodi:absref="pavement-1.png"
-       xlink:href="pavement-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
        id="image6246"
        x="0"
        y="720" />
@@ -14566,24 +14530,6 @@
        id="image6252"
        x="0"
        y="792" />
-    <image
-       sodipodi:absref="pavement-1.png"
-       xlink:href="pavement-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image6254"
-       x="0"
-       y="816" />
-    <image
-       sodipodi:absref="pavement-1.png"
-       xlink:href="pavement-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image6256"
-       x="0"
-       y="840" />
     <image
        sodipodi:absref="pavement-1.png"
        xlink:href="pavement-1.png"
@@ -19273,69 +19219,6 @@
     <image
        sodipodi:absref="outer-wall.png"
        xlink:href="outer-wall.png"
-       y="984"
-       x="144"
-       id="image4570-3"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall.png"
-       xlink:href="outer-wall.png"
-       y="984"
-       x="120"
-       id="image4574"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall.png"
-       xlink:href="outer-wall.png"
-       y="984"
-       x="96"
-       id="image4577"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall.png"
-       xlink:href="outer-wall.png"
-       y="984"
-       x="72"
-       id="image4579"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall.png"
-       xlink:href="outer-wall.png"
-       y="984"
-       x="48"
-       id="image4585"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall.png"
-       xlink:href="outer-wall.png"
-       y="984"
-       x="24"
-       id="image4596"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall.png"
-       xlink:href="outer-wall.png"
-       y="984"
-       x="0"
-       id="image4598"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall.png"
-       xlink:href="outer-wall.png"
        y="960"
        x="144"
        id="image4604"
@@ -19375,24 +19258,6 @@
        y="960"
        x="0"
        id="image4652"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="bastion-w.png"
-       xlink:href="bastion-w.png"
-       y="960"
-       x="48"
-       id="image5070"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="bastion-w.png"
-       xlink:href="bastion-w.png"
-       y="960"
-       x="96"
-       id="image5076"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -21307,6 +21172,94 @@
        id="image6027"
        x="792"
        y="720" />
+    <image
+       sodipodi:absref="outer-wall.png"
+       xlink:href="outer-wall.png"
+       y="960"
+       x="96"
+       id="image6121"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="outer-wall.png"
+       xlink:href="outer-wall.png"
+       y="960"
+       x="48"
+       id="image6123"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       style="display:inline"
+       y="984"
+       x="144"
+       id="image6223"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       style="display:inline"
+       y="984"
+       x="120"
+       id="image6225"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       style="display:inline"
+       y="984"
+       x="96"
+       id="image6227"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       style="display:inline"
+       y="984"
+       x="72"
+       id="image6229"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       style="display:inline"
+       y="984"
+       x="48"
+       id="image6231"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-2.png"
+       xlink:href="wall-2.png"
+       style="display:inline"
+       y="984"
+       x="24"
+       id="image6233"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="wall-1.png"
+       xlink:href="wall-1.png"
+       style="display:inline"
+       y="984"
+       x="0"
+       id="image6235"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -24268,6 +24221,33 @@
        id="image5999"
        x="1008"
        y="792" />
+    <image
+       sodipodi:absref="bastion-w-1.png"
+       xlink:href="bastion-w-1.png"
+       y="960"
+       x="24"
+       id="image6159"
+       preserveAspectRatio="none"
+       height="48"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-w-1.png"
+       xlink:href="bastion-w-1.png"
+       y="960"
+       x="72"
+       id="image6163"
+       preserveAspectRatio="none"
+       height="48"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-w-1.png"
+       xlink:href="bastion-w-1.png"
+       y="960"
+       x="120"
+       id="image6165"
+       preserveAspectRatio="none"
+       height="48"
+       width="24" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -29601,33 +29581,6 @@
        height="72"
        width="56" />
     <image
-       sodipodi:absref="target-1.png"
-       xlink:href="target-1.png"
-       y="1008"
-       x="48"
-       id="image4531-6"
-       preserveAspectRatio="none"
-       height="32"
-       width="29" />
-    <image
-       sodipodi:absref="target-1.png"
-       xlink:href="target-1.png"
-       y="1032"
-       x="48"
-       id="image4536"
-       preserveAspectRatio="none"
-       height="32"
-       width="29" />
-    <image
-       sodipodi:absref="target-2.png"
-       xlink:href="target-2.png"
-       y="1056"
-       x="48"
-       id="image4548-75"
-       preserveAspectRatio="none"
-       height="32"
-       width="29" />
-    <image
        sodipodi:absref="boat-nose.png"
        xlink:href="boat-nose.png"
        y="720"
@@ -29686,8 +29639,7 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="l5"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <image
        sodipodi:absref="roof-brown-c.png"
        xlink:href="roof-brown-c.png"
@@ -31040,37 +30992,7 @@
        height="24"
        preserveAspectRatio="none"
        id="image4924"
-       x="24"
-       y="864"
-       style="display:inline" />
-    <image
-       sodipodi:absref="bastion-roof-1.png"
-       xlink:href="bastion-roof-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image4932"
        x="48"
-       y="864"
-       style="display:inline" />
-    <image
-       sodipodi:absref="bastion-roof-1.png"
-       xlink:href="bastion-roof-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image4934"
-       x="72"
-       y="864"
-       style="display:inline" />
-    <image
-       sodipodi:absref="bastion-roof-1.png"
-       xlink:href="bastion-roof-1.png"
-       width="24"
-       height="24"
-       preserveAspectRatio="none"
-       id="image4938"
-       x="96"
        y="864"
        style="display:inline" />
     <image
@@ -31111,28 +31033,10 @@
        height="24"
        width="24" />
     <image
-       sodipodi:absref="bastion-roof-3.png"
-       xlink:href="bastion-roof-3.png"
-       y="864"
-       x="0"
-       id="image4981-1"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="bastion-roof-4.png"
-       xlink:href="bastion-roof-4.png"
-       y="864"
-       x="144"
-       id="image4998-2"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
        sodipodi:absref="bastion-roof-5.png"
        xlink:href="bastion-roof-5.png"
-       y="840"
-       x="120"
+       y="816"
+       x="144"
        id="image5012-7"
        preserveAspectRatio="none"
        height="24"
@@ -31140,36 +31044,9 @@
     <image
        sodipodi:absref="bastion-roof-6.png"
        xlink:href="bastion-roof-6.png"
-       y="840"
-       x="24"
-       id="image5026"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall-w.png"
-       xlink:href="outer-wall-w.png"
-       y="912"
-       x="24"
-       id="image5051"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall-w.png"
-       xlink:href="outer-wall-w.png"
-       y="912"
+       y="816"
        x="120"
-       id="image5055"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="outer-wall-w.png"
-       xlink:href="outer-wall-w.png"
-       y="912"
-       x="72"
-       id="image5058"
+       id="image5026"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -31191,6 +31068,144 @@
        preserveAspectRatio="none"
        height="24"
        width="72" />
+    <image
+       sodipodi:absref="bastion-roof-1.png"
+       xlink:href="bastion-roof-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image6043"
+       x="72"
+       y="864"
+       style="display:inline" />
+    <image
+       sodipodi:absref="bastion-roof-1.png"
+       xlink:href="bastion-roof-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image6045"
+       x="96"
+       y="864"
+       style="display:inline" />
+    <image
+       sodipodi:absref="bastion-roof-1.png"
+       xlink:href="bastion-roof-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image6049"
+       x="24"
+       y="864"
+       style="display:inline" />
+    <image
+       sodipodi:absref="bastion-roof-5.png"
+       xlink:href="bastion-roof-5.png"
+       y="816"
+       x="24"
+       id="image6053"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-roof-6.png"
+       xlink:href="bastion-roof-6.png"
+       y="816"
+       x="0"
+       id="image6055"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-roof-7.png"
+       xlink:href="bastion-roof-7.png"
+       y="864"
+       x="144"
+       id="image6081"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-roof-0.png"
+       xlink:href="bastion-roof-0.png"
+       y="840"
+       x="120"
+       id="image6095"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-roof-8.png"
+       xlink:href="bastion-roof-8.png"
+       y="840"
+       x="144"
+       id="image6113"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-roof-0.png"
+       xlink:href="bastion-roof-0.png"
+       y="840"
+       x="24"
+       id="image6117"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="outer-wall.png"
+       xlink:href="outer-wall.png"
+       y="912"
+       x="24"
+       id="image6125"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="outer-wall.png"
+       xlink:href="outer-wall.png"
+       y="912"
+       x="72"
+       id="image6127"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="outer-wall.png"
+       xlink:href="outer-wall.png"
+       y="912"
+       x="120"
+       id="image6129"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-roof-9.png"
+       xlink:href="bastion-roof-9.png"
+       y="840"
+       x="0"
+       id="image6219"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-entrance.png"
+       xlink:href="bastion-entrance.png"
+       y="816"
+       x="48"
+       id="image6299"
+       preserveAspectRatio="none"
+       height="24"
+       width="72" />
+    <image
+       sodipodi:absref="bastion-roof-3.png"
+       xlink:href="bastion-roof-3.png"
+       y="864"
+       x="0"
+       id="image6313"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -31822,6 +31837,42 @@
        preserveAspectRatio="none"
        height="24"
        width="24" />
+    <image
+       sodipodi:absref="bastion-w-2.png"
+       xlink:href="bastion-w-2.png"
+       y="912"
+       x="24"
+       id="image6141"
+       preserveAspectRatio="none"
+       height="48"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-w-2.png"
+       xlink:href="bastion-w-2.png"
+       y="912"
+       x="72"
+       id="image6145"
+       preserveAspectRatio="none"
+       height="48"
+       width="24" />
+    <image
+       sodipodi:absref="bastion-w-2.png"
+       xlink:href="bastion-w-2.png"
+       y="912"
+       x="120"
+       id="image6147"
+       preserveAspectRatio="none"
+       height="48"
+       width="24" />
+    <image
+       sodipodi:absref="ubisoft.png"
+       xlink:href="ubisoft.png"
+       y="888"
+       x="0"
+       id="image6191"
+       preserveAspectRatio="none"
+       height="24"
+       width="72" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -31948,7 +31999,7 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="x"
-     style="display:inline;opacity:0.5">
+     style="display:none;opacity:0.5">
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
        id="rect3735"
