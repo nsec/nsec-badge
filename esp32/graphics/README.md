@@ -49,5 +49,6 @@ neighboring rights to it waived.
   * `target-1.png` `target-2.png`<br>
     Adapted from [Range](https://opengameart.org/content/range) by [Lionkanzen](https://opengameart.org/users/lionkanzen), **CC-BY 3.0**.
 
-  * `tree-1.png` `tree-2.png` `tree-3.png` `tree-4.png`<br>
-    Adapted from [OGA Community Tileset: Nature](https://opengameart.org/content/oga-community-tileset-nature) by _qubodup_, _Bart K._, _Blarumyrran_, **CC-BY-SA 3.0**.
+  * `tree-*.png` `forest-*.png`<br>
+    Adapted from [OGA Community Tileset: Nature](https://opengameart.org/content/oga-community-tileset-nature) by _qubodup_, _Bart K._, _Blarumyrran_, **CC-BY-SA 3.0**;
+    and [Liberated Pixel Cup (LPC) Base Assets](https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles) by _Lanea Zimmerman (AKA Sharm)_ et al., **CC-BY-SA 3.0**;

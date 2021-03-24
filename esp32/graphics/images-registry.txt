@@ -80,6 +80,7 @@ MAP	48	24	0	0	gate-br.png
 MAP	48	48	0	0	gate-tl.png
 MAP	48	48	0	0	gate-tr.png
 MAP	24	24	0	0	outer-wall-bl.png
+MAP	24	24	0	0	outer-wall-bg.png
 MAP	24	24	0	0	outer-wall-br.png
 MAP	24	24	0	0	outer-wall-e.png
 MAP	24	24	0	0	outer-wall-ter.png
@@ -90,6 +91,7 @@ MAP	24	24	0	0	grass-pavement-r.png
 MAP	24	24	0	0	grass-pavement-t.png
 MAP	24	24	0	0	grass-pavement-tr.png
 MAP	24	24	0	0	trail-h.png
+MAP	24	24	0	0	trail-road-l.png
 MAP	24	24	0	0	trail-road-r.png
 MAP	24	24	0	0	trail-start.png
 MAP	24	24	0	0	road-stone.png
@@ -103,6 +105,7 @@ MAP	24	24	0	0	road-border-tri.png
 MAP	24	24	0	0	road-border-tr.png
 MAP	24	24	0	0	road-border-x-b.png
 MAP	24	24	0	0	road-border-x-h.png
+MAP	24	24	0	0	road-border-x-r.png
 MAP	24	24	0	0	road-border-x-v.png
 MAP	24	24	0	0	road-pavement-b.png
 MAP	24	24	0	0	road-pavement-l.png
@@ -222,5 +225,12 @@ JPEG	24	48	0	0	window-1.png
 JPEG	24	48	0	0	window-2.png
 JPEG	48	48	0	30	fountain-1.png
 JPEG	24	24	0	0	flower-pot-1.png
+JPEG	72	72	0	0	forest-aa.png
+JPEG	72	72	0	72	forest-ab.png
+JPEG	72	72	0	0	forest-ba.png
+JPEG	72	24	0	24	forest-bb-1.png
+JPEG	72	48	0	27	forest-bb-2.png
+JPEG	72	72	0	0	forest-ca.png
+JPEG	72	72	0	0	forest-cb.png
 JPEG	24	45	0	40	post-1.png
 JPEG	240	30	0	0	status-bar.png
