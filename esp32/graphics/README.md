@@ -20,7 +20,7 @@ neighboring rights to it waived.
     Adapted from [Liberated Pixel Cup (LPC) Base Assets](https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles) by _Lanea Zimmerman (AKA Sharm)_ et al., **CC-BY-SA 3.0**;
     and NSEC logo by [NorthSec](https://nsec.io).
 
-  * `bench-1.png` `bench-2.png`<br>
+  * `bench-1.png` `bench-2.png` `box-2.png`<br>
     Adapted from [various assets](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis) by _Hyptosis_, **CC-BY 3.0**.
 
   * `booth-2.png` `booth-3.png` `booth-4.png`<br>
@@ -33,7 +33,7 @@ neighboring rights to it waived.
   * `dancer-*.png`<br>
     [JS Actors - Aeon Warriors Field & Battle Sprites](https://opengameart.org/content/js-actors-aeon-warriors-field-battle-sprites) by [JosephSeraph](https://opengameart.org/users/josephseraph), **CC-BY 3.0**.
 
-  * `door-1.png` `door-2.png` `flower-pot-1.png` `window-1.png` `window-2.png`<br>
+  * `door-1.png` `door-2.png` `flower-pot-1.png` `flower-pot-2.png` `window-1.png` `window-2.png` `window-3.png`<br>
     Adapted from [Exterior 32x32 Town tileset](https://opengameart.org/content/exterior-32x32-town-tileset) by [n2liquid](https://opengameart.org/users/n2liquid), **CC-BY-SA 4.0**.
 
   * `fisherman-*.png`<br>

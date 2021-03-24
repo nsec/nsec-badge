@@ -87,6 +87,8 @@ MAP	24	24	0	0	outer-wall-ter.png
 MAP	24	24	0	0	outer-wall-tl.png
 MAP	24	24	0	0	outer-wall-v.png
 MAP	24	24	0	0	outer-wall-w.png
+MAP	24	24	0	0	grass-4.png
+MAP	24	24	0	0	grass-5.png
 MAP	24	24	0	0	grass-pavement-r.png
 MAP	24	24	0	0	grass-pavement-t.png
 MAP	24	24	0	0	grass-pavement-tr.png
@@ -137,6 +139,9 @@ MAP	48	32	0	30	bench-1.png
 MAP	24	32	0	26	bench-2.png
 MAP	24	34	0	0	rao-poster.png
 MAP	24	24	0	0	water-border-1.png
+MAP	24	24	0	0	water-border-2.png
+MAP	24	24	0	0	water-border-3.png
+MAP	24	24	0	0	water-border-4.png
 MAP	48	24	0	0	water-inlet.png
 MAP	48	24	0	0	quay-b.png
 MAP	5	24	0	0	quay-l.png
@@ -223,8 +228,10 @@ JPEG	48	48	0	0	door-1.png
 JPEG	48	48	0	0	door-2.png
 JPEG	24	48	0	0	window-1.png
 JPEG	24	48	0	0	window-2.png
+JPEG	24	48	0	0	window-3.png
 JPEG	48	48	0	30	fountain-1.png
 JPEG	24	24	0	0	flower-pot-1.png
+JPEG	35	43	3	38	flower-pot-2.png
 JPEG	72	72	0	0	forest-aa.png
 JPEG	72	72	0	72	forest-ab.png
 JPEG	72	72	0	0	forest-ba.png
@@ -233,4 +240,5 @@ JPEG	72	48	0	27	forest-bb-2.png
 JPEG	72	72	0	0	forest-ca.png
 JPEG	72	72	0	0	forest-cb.png
 JPEG	24	45	0	40	post-1.png
+JPEG	64	48	0	0	box-2.png
 JPEG	240	30	0	0	status-bar.png
