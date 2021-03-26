@@ -27,11 +27,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="551.76638"
-     inkscape:cy="1123.6519"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="508.88541"
+     inkscape:cy="783.85318"
      inkscape:document-units="px"
-     inkscape:current-layer="layer9"
+     inkscape:current-layer="layer7"
      inkscape:document-rotation="0"
      showgrid="true"
      units="px"
@@ -43,14 +43,15 @@
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:snap-global="true"
-     showguides="false">
+     showguides="false"
+     inkscape:snap-others="true">
     <inkscape:grid
        type="xygrid"
        id="grid833"
        spacingx="24"
        spacingy="24"
        dotted="false"
-       enabled="false"
+       enabled="true"
        visible="true" />
     <inkscape:grid
        type="xygrid"
@@ -64,7 +65,7 @@
        spacingx="6"
        spacingy="6"
        visible="true"
-       enabled="true" />
+       enabled="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -29412,8 +29413,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="l3"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <image
        sodipodi:absref="quay-s.png"
        xlink:href="quay-s.png"
@@ -29469,6 +29469,53 @@
        preserveAspectRatio="none"
        height="54"
        width="68" />
+    <image
+       sodipodi:absref="icon-led.png"
+       xlink:href="icon-led.png"
+       y="360"
+       x="744"
+       id="image10999"
+       preserveAspectRatio="none"
+       height="48"
+       width="48" />
+    <image
+       sodipodi:absref="icon-wifi.png"
+       xlink:href="icon-wifi.png"
+       y="336"
+       x="600"
+       id="image11013"
+       preserveAspectRatio="none"
+       height="48"
+       width="48" />
+    <image
+       sodipodi:absref="icon-question.png"
+       xlink:href="icon-question.png"
+       y="288"
+       x="168"
+       id="image11027"
+       preserveAspectRatio="none"
+       height="48"
+       width="48" />
+    <image
+       sodipodi:absref="icon-info.png"
+       xlink:href="icon-info.png"
+       style="display:inline"
+       y="672"
+       x="840"
+       id="image11041"
+       preserveAspectRatio="none"
+       height="48"
+       width="48" />
+    <image
+       sodipodi:absref="icon-sound.png"
+       xlink:href="icon-sound.png"
+       width="48"
+       height="48"
+       preserveAspectRatio="none"
+       id="image10965"
+       x="408"
+       y="240"
+       style="display:inline" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -31737,8 +31784,7 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="l6"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <image
        sodipodi:absref="nsec-banner-1.png"
        xlink:href="nsec-banner-1.png"
@@ -32731,6 +32777,16 @@
        preserveAspectRatio="none"
        height="24"
        width="24" />
+    <image
+       sodipodi:absref="icon-spiral.png"
+       xlink:href="icon-spiral.png"
+       width="48"
+       height="48"
+       preserveAspectRatio="none"
+       id="image11095"
+       x="744"
+       y="984"
+       style="display:inline" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -33061,7 +33117,7 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="x"
-     style="display:inline;opacity:0.5">
+     style="display:none;opacity:0.5">
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
        id="rect3735"
@@ -33121,9 +33177,9 @@
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
        id="rect3751"
-       width="42.714081"
+       width="48"
        height="96"
-       x="155.28592"
+       x="150"
        y="0" />
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
@@ -33142,9 +33198,9 @@
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
        id="rect3757"
-       width="42.714081"
+       width="48"
        height="72"
-       x="179.28592"
+       x="174"
        y="288" />
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
@@ -33163,9 +33219,9 @@
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
        id="rect3763"
-       width="42.714081"
+       width="48"
        height="72"
-       x="419.28592"
+       x="414"
        y="240" />
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
@@ -33387,9 +33443,9 @@
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
        id="rect4799"
-       width="18"
+       width="24"
        height="102"
-       x="780"
+       x="774"
        y="360" />
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
@@ -33401,9 +33457,9 @@
     <rect
        style="fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect7423"
-       width="90"
+       width="96"
        height="102"
-       x="84"
+       x="78"
        y="624" />
     <rect
        style="fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
@@ -33571,21 +33627,21 @@
        style="fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect9578"
        width="66"
-       height="84"
+       height="90"
        x="780"
        y="996" />
     <rect
        style="fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect9580"
        width="48"
-       height="72"
+       height="78"
        x="714"
        y="1008" />
     <rect
        style="fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect9582"
        width="18"
-       height="54"
+       height="66"
        x="762"
        y="1008" />
     <rect
@@ -33864,10 +33920,10 @@
     <rect
        style="fill:#d4ff2a;stroke-width:4.7811;stroke-linecap:round"
        id="rect5032"
-       width="180"
-       height="72"
-       x="0"
-       y="936" />
+       width="174"
+       height="108"
+       x="6"
+       y="900" />
     <rect
        style="fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect5768"
@@ -34088,7 +34144,7 @@
     <rect
        style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
        id="rect6031"
-       width="132"
+       width="48"
        height="102"
        x="834"
        y="648" />
@@ -34369,16 +34425,16 @@
        style="opacity:1;fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect9979"
        width="84"
-       height="66"
+       height="60"
        x="594"
        y="336" />
     <rect
        style="opacity:1;fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect9981"
-       width="18"
-       height="6"
-       x="660"
-       y="402" />
+       width="24"
+       height="12"
+       x="654"
+       y="396" />
     <rect
        style="opacity:1;fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect9983"
@@ -34403,10 +34459,10 @@
     <rect
        style="opacity:1;fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect10033"
-       width="42"
-       height="6"
+       width="48"
+       height="12"
        x="594"
-       y="402" />
+       y="396" />
     <rect
        style="opacity:1;fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect10035"
@@ -34484,6 +34540,27 @@
        height="6"
        x="444"
        y="1122" />
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
+       id="rect11065"
+       width="6"
+       height="18"
+       x="774"
+       y="1068" />
+    <rect
+       style="fill:#000000;stroke:none;stroke-width:4.7811;stroke-linecap:round"
+       id="rect11067"
+       width="66"
+       height="102"
+       x="894"
+       y="648" />
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
+       id="rect11069"
+       width="12"
+       height="90"
+       x="882"
+       y="648" />
   </g>
   <g
      inkscape:groupmode="layer"

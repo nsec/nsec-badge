@@ -138,6 +138,12 @@ MAP	24	24	0	0	box-1.png
 MAP	48	32	0	30	bench-1.png
 MAP	24	32	0	26	bench-2.png
 MAP	24	34	0	0	rao-poster.png
+MAP	48	48	3	0	icon-info.png
+MAP	48	48	3	0	icon-led.png
+MAP	48	48	3	0	icon-question.png
+MAP	48	48	3	0	icon-spiral.png
+MAP	48	48	3	0	icon-sound.png
+MAP	48	48	3	0	icon-wifi.png
 MAP	24	24	0	0	water-border-1.png
 MAP	24	24	0	0	water-border-2.png
 MAP	24	24	0	0	water-border-3.png
