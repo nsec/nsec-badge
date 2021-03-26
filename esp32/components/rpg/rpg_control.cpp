@@ -259,7 +259,8 @@ static void rpg_control_status_bar(void *arg)
     while (!scene->lock())
         ;
 
-    graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR, 0, 210);
+    graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR, 0,
+                               viewport_crop_height);
     graphics_update_display();
 
     scene->unlock();

@@ -16,7 +16,7 @@ neighboring rights to it waived.
   * `bags-1.png` `field-plant-*.png` `boat-*.png`<br>
     Adapted from [Farming tilesets, magic animations and UI elements](https://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements) by [Daniel Eddeland](https://opengameart.org/users/daneeklu), **CC-BY-SA 3.0**.
 
-  * `barrels-1.png` `statue-1.png` `status-bar.png`<br>
+  * `barrels-1.png` `statue-1.png`<br>
     Adapted from [Liberated Pixel Cup (LPC) Base Assets](https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles) by _Lanea Zimmerman (AKA Sharm)_ et al., **CC-BY-SA 3.0**;
     and NSEC logo by [NorthSec](https://nsec.io).
 

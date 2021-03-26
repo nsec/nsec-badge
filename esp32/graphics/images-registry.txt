@@ -247,4 +247,4 @@ JPEG	72	72	0	0	forest-ca.png
 JPEG	72	72	0	0	forest-cb.png
 JPEG	24	45	0	40	post-1.png
 JPEG	64	48	0	0	box-2.png
-JPEG	240	30	0	0	status-bar.png
+JPEG	240	20	0	0	status-bar.png
