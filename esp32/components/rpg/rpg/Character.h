@@ -30,12 +30,12 @@ class Character : public SceneObject
     {
     }
 
-    Character(int width, int height)
+    Character(int16_t width, int16_t height)
         : Character{width, height, 0, 0}
     {
     }
 
-    Character(int width, int height, int ground_base_x, int ground_base_y)
+    Character(int16_t width, int16_t height, int16_t ground_base_x, int16_t ground_base_y)
         : width{width}, height{height},
           ground_base_x{ground_base_x}, ground_base_y{ground_base_y},
           move_distance{GlobalCoordinates::xy(0, 0)}, animation_variants{}
@@ -157,18 +157,18 @@ class Character : public SceneObject
                                const int count);
 
   private:
-    const int width;
-    const int height;
-    const int ground_base_x;
-    const int ground_base_y;
+    const int16_t width;
+    const int16_t height;
+    const int16_t ground_base_x;
+    const int16_t ground_base_y;
 
     unsigned int animation_step{0};
-    int initial_scene_x{0};
-    int initial_scene_y{0};
-    int rendered_scene_x{0};
-    int rendered_scene_y{0};
-    int scene_x{0};
-    int scene_y{0};
+    int16_t initial_scene_x{0};
+    int16_t initial_scene_y{0};
+    int16_t rendered_scene_x{0};
+    int16_t rendered_scene_y{0};
+    int16_t scene_x{0};
+    int16_t scene_y{0};
 
     GlobalCoordinates move_distance;
 
