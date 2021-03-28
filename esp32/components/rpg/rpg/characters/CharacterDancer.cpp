@@ -53,7 +53,7 @@ void CharacterDancer::render_dancing(Viewport &viewport)
         case 3:
         case 4:
             current_mode = Mode::walking;
-            set_moving_direction(get_animation_step() % 4);
+            set_moving_direction(get_animation_step() % direction::_count);
             timer.start(get_animation_step(), 61, 23);
             break;
 
@@ -83,7 +83,7 @@ void CharacterDancer::render_standing(Viewport &viewport)
         case 4:
         case 5:
             current_mode = Mode::walking;
-            set_moving_direction(get_animation_step() % 4);
+            set_moving_direction(get_animation_step() % direction::_count);
             timer.start(get_animation_step(), 90, 50);
             break;
 
@@ -97,19 +97,19 @@ void CharacterDancer::render_standing(Viewport &viewport)
 void CharacterDancer::render_walking(Viewport &viewport)
 {
     switch (get_moving_direction()) {
-    case 0:
+    case direction::left:
         render_animation_variant(viewport, Appearance::moving_left, 2);
         break;
 
-    case 1:
+    case direction::right:
         render_animation_variant(viewport, Appearance::moving_right, 2);
         break;
 
-    case 2:
+    case direction::up:
         render_animation_variant(viewport, Appearance::moving_up, 4);
         break;
 
-    case 3:
+    case direction::down:
     default:
         render_animation_variant(viewport, Appearance::moving_down, 4);
     }
@@ -121,7 +121,7 @@ void CharacterDancer::render_walking(Viewport &viewport)
         case 2:
         case 3:
             current_mode = Mode::walking;
-            set_moving_direction(get_animation_step() % 4);
+            set_moving_direction(get_animation_step() % direction::_count);
             timer.start(get_animation_step(), 13, 5);
             break;
 

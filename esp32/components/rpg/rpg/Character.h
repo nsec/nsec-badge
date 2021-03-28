@@ -116,6 +116,14 @@ class Character : public SceneObject
      */
     virtual bool move(GlobalCoordinates coordinates);
 
+    /**
+     * Move the character to the initial position.
+     *
+     * This method must be called right after the character initialization,
+     * before any other calls to move().
+     */
+    void move_initial(GlobalCoordinates coordinates);
+
     virtual void post_render(Viewport &viewport) override
     {
         // No-op.
@@ -135,6 +143,11 @@ class Character : public SceneObject
      * Check that the character is currently visible on screen.
      */
     bool is_visible(Viewport &viewport);
+
+    GlobalCoordinates get_initial_coordinates() const
+    {
+        return GlobalCoordinates::xy(initial_scene_x, initial_scene_y);
+    }
 
     GlobalCoordinates get_move_distance()
     {
@@ -161,6 +174,8 @@ class Character : public SceneObject
     const int ground_base_y;
 
     unsigned int animation_step{0};
+    int initial_scene_x{0};
+    int initial_scene_y{0};
     int rendered_scene_x{0};
     int rendered_scene_y{0};
     int scene_x{0};

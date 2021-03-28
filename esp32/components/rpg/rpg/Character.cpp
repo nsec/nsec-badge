@@ -45,6 +45,18 @@ bool Character::move(GlobalCoordinates coordinates)
     return true;
 }
 
+void Character::move_initial(GlobalCoordinates coordinates)
+{
+    move(coordinates);
+
+    // Reset the move_distance that is set by the move() method because it does
+    // not make sense for the initial move.
+    move_distance = GlobalCoordinates::xy(0, 0);
+
+    initial_scene_x = coordinates.x();
+    initial_scene_y = coordinates.y();
+}
+
 void Character::render(Viewport &viewport)
 {
     rendered_scene_x = scene_x;

@@ -26,7 +26,7 @@ void CharacterAristocrate::render(Viewport &viewport)
             switch (get_animation_step() % 3) {
             case 0:
                 current_mode = Mode::walking;
-                set_moving_direction(get_animation_step() % 4);
+                set_moving_direction(get_animation_step() % direction::_count);
                 timer.start(get_animation_step(), 57, 23);
                 break;
 
@@ -37,19 +37,19 @@ void CharacterAristocrate::render(Viewport &viewport)
         }
     } else if (current_mode == Mode::walking) {
         switch (get_moving_direction()) {
-        case 0:
+        case direction::left:
             render_animation_variant(viewport, Appearance::moving_left, 3);
             break;
 
-        case 1:
+        case direction::right:
             render_animation_variant(viewport, Appearance::moving_right, 3);
             break;
 
-        case 2:
+        case direction::up:
             render_animation_variant(viewport, Appearance::moving_up, 4);
             break;
 
-        case 3:
+        case direction::down:
         default:
             render_animation_variant(viewport, Appearance::moving_down, 4);
         }
