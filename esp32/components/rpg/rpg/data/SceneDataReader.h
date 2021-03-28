@@ -14,7 +14,7 @@
 namespace rpg::data
 {
 
-using tilemap_word_t = uint8_t;
+using tilemap_word_t = uint16_t;
 
 using tilemap_slice_t =
     std::array<tilemap_word_t, (tilemap_line_words * tilemap_read_lines)>;

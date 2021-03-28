@@ -92,6 +92,7 @@ The following document may be used as a template:
 """
 
 import math
+import struct
 import sys
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
@@ -358,12 +359,13 @@ def main(images_registry_path, source_path, scene_path, blocked_path):
     with open(scene_path, 'wb') as f:
         # Add two dummy rows at the beginning.
         for y in range(2):
-            f.write(bytes([0] * ((DEFINED_LAYERS + 2) * (tilemap.width_tiles + 2))))
+            for _ in range(((DEFINED_LAYERS + 2) * (tilemap.width_tiles + 2))):
+                f.write(struct.pack('<H', 0))
 
         for y in range(tilemap.height_tiles):
             # Add two dummy columns at the beginning of each row.
-            f.write(bytes([0] * (DEFINED_LAYERS + 2)))
-            f.write(bytes([0] * (DEFINED_LAYERS + 2)))
+            for _ in range(2 * (DEFINED_LAYERS + 2)):
+                f.write(struct.pack('<H', 0))
 
             for x in range(tilemap.width_tiles):
                 tile = tilemap[x, y]
@@ -372,13 +374,13 @@ def main(images_registry_path, source_path, scene_path, blocked_path):
                     image = tile[layer_id]
 
                     if image is Empty:
-                        f.write(bytes([0]))
+                        f.write(struct.pack('<H', 0))
 
                     elif image.href in images_registry:
                         if images_registry[image.href]['format'] == 'JPEG':
                             tile.flags['jpeg'] = True
 
-                        f.write(bytes([images_registry[image.href]['index']]))
+                        f.write(struct.pack('<H', images_registry[image.href]['index']))
 
                     else:
                         raise Exception(
@@ -398,7 +400,8 @@ def main(images_registry_path, source_path, scene_path, blocked_path):
                 flags |= 2 if tile.flags['jpeg'] else 0
                 flags |= 4 if dependency else 0
 
-                f.write(bytes([flags, dependency]))
+                f.write(struct.pack('<H', flags))
+                f.write(struct.pack('<H', dependency))
 
     with open(blocked_path, 'wb') as f:
         f.write(bytes(blocked.area))

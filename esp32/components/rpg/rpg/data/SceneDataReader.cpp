@@ -27,8 +27,9 @@ void SceneDataReader::read_tilemap(GlobalCoordinates coordinates)
 
     tilemap_word_t *data = tilemap_slice->data();
     unsigned int offset =
-        coordinates.tile_y() * (tilemap_width * tilemap_cell_words) +
-        coordinates.tile_x() * tilemap_cell_words;
+        (coordinates.tile_y() * (tilemap_width * tilemap_cell_words) +
+         coordinates.tile_x() * tilemap_cell_words) *
+        sizeof(tilemap_word_t);
 
     for (int i = 0; i < tilemap_read_lines; ++i) {
         fseek(file, offset, SEEK_SET);
