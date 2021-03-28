@@ -36,6 +36,7 @@ def main(images_registry_path, jpeg_registry_path, header_path, c_path):
 #define IMAGE_REGISTRY_MAP 2
 
 typedef struct {
+    int index;
     uint8_t type;
     uint8_t width;
     uint8_t height;
@@ -44,7 +45,6 @@ typedef struct {
     uint32_t jpeg_length;
     uint32_t jpeg_offset;
     uint32_t map_offset;
-    char filename[24];
 } ImagesRegistry_t;\n
 ''')
     header_out.write(f'extern const ImagesRegistry_t graphics_static_images_registry[{size}];\n\n')
@@ -60,7 +60,7 @@ typedef struct {
     c_out.write('const ImagesRegistry_t graphics_static_images_registry[] = {\n')
     c_out.write('   {},\n')
 
-    for image in images_registry.values():
+    for i, image in enumerate(images_registry.values()):
         if image['format'] == 'FAST':
             format_ = 'IMAGE_REGISTRY_FAST'
         elif image['format'] == 'JPEG':
@@ -71,9 +71,8 @@ typedef struct {
             raise Exception(
                 f'Invalid image type "{image["format"]}".')
 
-        name = make_name(image)
-
         c_out.write('   {\n')
+        c_out.write(f'      .index={i + 1},\n')
         c_out.write(f'      .type={format_},\n')
         c_out.write(f'      .width={image["width"]},\n')
         c_out.write(f'      .height={image["height"]},\n')
@@ -82,7 +81,6 @@ typedef struct {
         c_out.write(f'      .jpeg_length={image["jpeg_length"]},\n')
         c_out.write(f'      .jpeg_offset={image["jpeg_offset"]},\n')
         c_out.write(f'      .map_offset={image["map_offset"]},\n')
-        c_out.write(f'      .filename="{name}",\n')
         c_out.write('   },\n')
 
     c_out.write('};\n')

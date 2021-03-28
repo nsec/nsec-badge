@@ -380,15 +380,15 @@ void graphics_draw_concatjpeg(const ImagesRegistry_t *sprite, int x, int y)
     result = jd_prepare(&decoder, graphics_jpeg_decode_infunc, tjpgd_work,
                         TJPGD_WORK_SZ, (void *)&session_device);
     if (result != JDR_OK) {
-        ESP_LOGE(__FUNCTION__, "jd_prepare failed for image \"%s\"",
-                 sprite->filename);
+        ESP_LOGE(__FUNCTION__, "jd_prepare failed for image \"%d\"",
+                 sprite->index);
         return;
     }
 
     result = jd_decomp(&decoder, graphics_jpeg_decode_outfunc, 0);
     if (result != JDR_OK) {
-        ESP_LOGE(__FUNCTION__, "jd_decomp failed for image \"%s\"",
-                 sprite->filename);
+        ESP_LOGE(__FUNCTION__, "jd_decomp failed for image \"%d\"",
+                 sprite->index);
         return;
     }
 }
