@@ -10,8 +10,9 @@ neighboring rights to it waived.
 
 ## List of copyrighted images
 
-  * `aristo-*.png`<br>
-    [Characters pack](https://opengameart.org/content/24x32-characters-16x16-tiles) by [Svetlana Kushnariova (lana-chan@yandex.ru)](https://opengameart.org/users/cabbit), **CC-BY 3.0**.
+  * `angela-*.png` `aristo-*.png` `chloe-*.png` `farmer-*.png` `fil-*.png` `merchant-*.png` `monk-*.png` `oldwoman-*.png` `punk-*.png` `red-*.png` `retailer-*.png` `sailor-*.png` `soldier-*.png` `vijay-*.png` `yue-*.png`<br>
+    Collection of character sprites based on [Characters pack](https://opengameart.org/content/24x32-characters-16x16-tiles) by [Svetlana Kushnariova (lana-chan@yandex.ru)](https://opengameart.org/users/cabbit)
+    and [Cabbit Collection](https://opengameart.org/content/cabbit-collection) by [diamonddmgirl](https://opengameart.org/user/39061) and [Jordan Irwin (AntumDeluge)](https://opengameart.org/users/antumdeluge), **CC-BY 3.0**, **CC-BY 4.0**.
 
   * `bags-1.png` `field-plant-*.png` `boat-*.png`<br>
     Adapted from [Farming tilesets, magic animations and UI elements](https://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements) by [Daniel Eddeland](https://opengameart.org/users/daneeklu), **CC-BY-SA 3.0**.
@@ -33,6 +34,9 @@ neighboring rights to it waived.
   * `dancer-*.png`<br>
     [JS Actors - Aeon Warriors Field & Battle Sprites](https://opengameart.org/content/js-actors-aeon-warriors-field-battle-sprites) by [JosephSeraph](https://opengameart.org/users/josephseraph), **CC-BY 3.0**.
 
+  * `dog-*.png`<br>
+    [LPC Cats and Dogs](https://opengameart.org/content/lpc-cats-and-dogs) by [bluecarrot16](https://opengameart.org/users/bluecarrot16), **CC-BY 3.0**
+
   * `door-1.png` `door-2.png` `flower-pot-1.png` `flower-pot-2.png` `window-1.png` `window-2.png` `window-3.png`<br>
     Adapted from [Exterior 32x32 Town tileset](https://opengameart.org/content/exterior-32x32-town-tileset) by [n2liquid](https://opengameart.org/users/n2liquid), **CC-BY-SA 4.0**.
 
@@ -45,6 +49,9 @@ neighboring rights to it waived.
 
   * `nsec-banner-1.png` `nsec-banner-2.png` `rao-poster.png`<br>
     Adapted from artwork by [NorthSec](https://nsec.io) and the respective authors.
+
+  * `oldman-*.png`<br>
+    Adapted from [Old Man Overflow Sprite](https://opengameart.org/content/old-man-32x32-overflow-sprite-from-foss-lightstone-project) by [Syrsly](https://opengameart.org/users/syrsly), **OGA-BY 3.0**.
 
   * `target-1.png` `target-2.png`<br>
     Adapted from [Range](https://opengameart.org/content/range) by [Lionkanzen](https://opengameart.org/users/lionkanzen), **CC-BY 3.0**.
