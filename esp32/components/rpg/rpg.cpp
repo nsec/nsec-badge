@@ -103,7 +103,7 @@ void run_main_scene(void)
 
     rpg::CharacterRed character_red{};
     character_red.set_blocked_data_reader(blocked_data_reader);
-    character_red.set_max_distance(54, 240);
+    character_red.set_max_distance(150, 240);
     scene.add_character(&character_red);
 
     rpg::CharacterRetailer character_retailer{};
@@ -151,7 +151,7 @@ void run_main_scene(void)
     character_oldman.move_initial(rpg::GlobalCoordinates::xy(975, 753));
     character_oldwoman.move_initial(rpg::GlobalCoordinates::xy(250, 111));
     character_punk.move_initial(rpg::GlobalCoordinates::xy(24, 768));
-    character_red.move_initial(rpg::GlobalCoordinates::xy(744, 795));
+    character_red.move_initial(rpg::GlobalCoordinates::xy(648, 805));
     character_retailer.move_initial(rpg::GlobalCoordinates::xy(550, 615));
     character_sailor.move_initial(rpg::GlobalCoordinates::xy(1017, 826));
     character_solider1.move_initial(rpg::GlobalCoordinates::xy(590, 1080));
