@@ -36,7 +36,7 @@ namespace rpg
 class CharacterDog : virtual public Character, public MovingMixin
 {
   public:
-    CharacterDog() : Character("dog", 27, 27, 13, 25)
+    CharacterDog() : Character(27, 27, 13, 25)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::dog_moving_down, 2);
@@ -50,6 +50,8 @@ class CharacterDog : virtual public Character, public MovingMixin
         set_animation_variant(Appearance::moving_up, animation::dog_moving_up,
                               2);
     }
+
+    virtual const char *get_name() const override { return "dog"; }
 
     virtual unsigned int get_animation_step() const override
     {

@@ -35,7 +35,7 @@ namespace rpg
 class MainCharacter : public Character
 {
   public:
-    MainCharacter() : Character{"main-character", 24, 32, 13, 31}
+    MainCharacter() : Character{24, 32, 13, 31}
     {
         set_animation_variant(Appearance::moving_down,
                               animation::mc_moving_down, 6);
@@ -51,6 +51,8 @@ class MainCharacter : public Character
 
         set_animation_variant(Appearance::standing, animation::mc_standing, 2);
     }
+
+    virtual const char *get_name() const override { return "main-character"; }
 
     virtual bool move(GlobalCoordinates coordinates) override;
     virtual void render(Viewport &viewport) override;

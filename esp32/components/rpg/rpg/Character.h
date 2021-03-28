@@ -5,8 +5,6 @@
 #include "rpg/TimerDevice.h"
 #include "rpg/data/BlockedDataReader.h"
 
-#include <string>
-
 namespace rpg
 {
 
@@ -28,22 +26,17 @@ class Character : public SceneObject
     };
 
   public:
-    Character() : Character{"", 0, 0, 0, 0}
+    Character() : Character{0, 0, 0, 0}
     {
     }
 
-    Character(const char *name) : Character{name, 0, 0, 0, 0}
+    Character(int width, int height)
+        : Character{width, height, 0, 0}
     {
     }
 
-    Character(const char *name, int width, int height)
-        : Character{name, width, height, 0, 0}
-    {
-    }
-
-    Character(const char *name, int width, int height, int ground_base_x,
-              int ground_base_y)
-        : name{name}, width{width}, height{height},
+    Character(int width, int height, int ground_base_x, int ground_base_y)
+        : width{width}, height{height},
           ground_base_x{ground_base_x}, ground_base_y{ground_base_y},
           move_distance{GlobalCoordinates::xy(0, 0)}, animation_variants{}
     {
@@ -54,10 +47,7 @@ class Character : public SceneObject
         return animation_step;
     }
 
-    const std::string get_name() const
-    {
-        return name;
-    }
+    virtual const char *get_name() const = 0;
 
     virtual GlobalCoordinates get_coordinates() const override
     {
@@ -167,7 +157,6 @@ class Character : public SceneObject
                                const int count);
 
   private:
-    const std::string name;
     const int width;
     const int height;
     const int ground_base_x;

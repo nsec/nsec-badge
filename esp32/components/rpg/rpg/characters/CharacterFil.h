@@ -40,7 +40,7 @@ namespace rpg
 class CharacterFil : virtual public Character, public MovingMixin
 {
   public:
-    CharacterFil() : Character("Fil", 22, 29, 11, 26)
+    CharacterFil() : Character(22, 29, 11, 26)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::fil_moving_down, 2);
@@ -54,6 +54,8 @@ class CharacterFil : virtual public Character, public MovingMixin
         set_animation_variant(Appearance::moving_up, animation::fil_moving_up,
                               2);
     }
+
+    virtual const char *get_name() const override { return "Fil"; }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

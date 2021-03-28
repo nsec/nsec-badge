@@ -38,11 +38,13 @@ namespace rpg
 class CharacterArcher : public Character
 {
   public:
-    CharacterArcher() : Character("archer", 33, 36, 17, 34)
+    CharacterArcher() : Character(33, 36, 17, 34)
     {
         set_animation_variant(Appearance::standing, animation::archer_standing,
                               60);
     }
+
+    virtual const char *get_name() const override { return "archer"; }
 
     virtual void render(Viewport &viewport) override;
 };

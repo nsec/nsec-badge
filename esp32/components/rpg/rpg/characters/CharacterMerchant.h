@@ -40,7 +40,7 @@ namespace rpg
 class CharacterMerchant : virtual public Character, public MovingMixin
 {
   public:
-    CharacterMerchant() : Character("merchant", 22, 29, 11, 27)
+    CharacterMerchant() : Character(22, 29, 11, 27)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::merchant_moving_down, 2);
@@ -54,6 +54,8 @@ class CharacterMerchant : virtual public Character, public MovingMixin
         set_animation_variant(Appearance::moving_up,
                               animation::merchant_moving_up, 2);
     }
+
+    virtual const char *get_name() const override { return "Merchant"; }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

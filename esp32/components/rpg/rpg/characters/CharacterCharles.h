@@ -20,11 +20,13 @@ namespace rpg
 class CharacterCharles : public Character
 {
   public:
-    CharacterCharles() : Character("Charles", 15, 34, 8, 33)
+    CharacterCharles() : Character(15, 34, 8, 33)
     {
         set_animation_variant(Appearance::standing, animation::charles_standing,
                               2);
     }
+
+    virtual const char *get_name() const override { return "Charles"; }
 
     virtual void render(Viewport &viewport) override;
 };

@@ -40,7 +40,7 @@ namespace rpg
 class CharacterOldwoman : virtual public Character, public MovingMixin
 {
   public:
-    CharacterOldwoman() : Character("oldwoman", 22, 29, 11, 29)
+    CharacterOldwoman() : Character(22, 29, 11, 29)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::oldwoman_moving_down, 2);
@@ -54,6 +54,8 @@ class CharacterOldwoman : virtual public Character, public MovingMixin
         set_animation_variant(Appearance::moving_up,
                               animation::oldwoman_moving_up, 2);
     }
+
+    virtual const char *get_name() const override { return "oldwoman"; }
 
     virtual unsigned int get_animation_step() const override
     {

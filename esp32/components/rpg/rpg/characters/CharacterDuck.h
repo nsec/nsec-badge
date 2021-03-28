@@ -11,10 +11,12 @@ namespace rpg
 class CharacterDuck : virtual public Character, public MovingMixin
 {
   public:
-    CharacterDuck() : Character("duck", 23, 15, 12, 13)
+    CharacterDuck() : Character(23, 15, 12, 13)
     {
         set_moving_direction(direction::right);
     }
+
+    virtual const char *get_name() const override { return "duck"; }
 
     virtual unsigned int get_animation_step() const override
     {

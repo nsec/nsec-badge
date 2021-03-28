@@ -22,11 +22,13 @@ namespace rpg
 class CharacterFisherman : public Character
 {
   public:
-    CharacterFisherman() : Character("fisherman", 56, 27, 9, 24)
+    CharacterFisherman() : Character(56, 27, 9, 24)
     {
         set_animation_variant(Appearance::standing,
                               animation::fisherman_standing, 8);
     }
+
+    virtual const char *get_name() const override { return "fisherman"; }
 
     virtual void render(Viewport &viewport) override;
 };
