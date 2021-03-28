@@ -1,3 +1,6 @@
+# Larger than default stack size of the main task
+CONFIG_MAIN_TASK_STACK_SIZE=8192
+
 # Graphics performance finetuning
 CONFIG_GRAPHICS_FAST_TILES=n
 
