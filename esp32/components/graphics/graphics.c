@@ -4,8 +4,6 @@
 
 #include "esp32/rom/tjpgd.h"
 #include "esp_log.h"
-#include "esp_spiffs.h"
-#include "esp_vfs.h"
 #include "freertos/task.h"
 #include "st7789.h"
 
@@ -137,20 +135,10 @@ static void display_spi_write(uint8_t command, uint8_t *data, uint32_t length)
 // Sprite collection functions.
 
 /**
- * Initialize storage filesystem.
+ * Initialize image collections from the filesystem.
  */
 static void graphics_collection_start()
 {
-    esp_vfs_spiffs_conf_t conf = {.base_path = "/spiffs",
-                                  .partition_label = NULL,
-                                  .max_files = 8,
-                                  .format_if_mount_failed = true};
-
-    esp_err_t ret = esp_vfs_spiffs_register(&conf);
-    if (ret != ESP_OK) {
-        abort();
-    }
-
     // fopen() is a very expensive operation on SPIFFS. Open once and use the
     // same file pointer for all image reads.
 
