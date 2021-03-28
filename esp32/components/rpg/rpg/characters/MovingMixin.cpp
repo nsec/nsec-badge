@@ -6,8 +6,8 @@ namespace rpg
 void MovingMixin::moving_mixin()
 {
     int delta = (get_animation_step() - move_counter) * 2;
-    if (delta > 5) {
-        delta = 5;
+    if (delta > 10) {
+        delta = 10;
     }
 
     if (timer.has_expired(get_animation_step()))
