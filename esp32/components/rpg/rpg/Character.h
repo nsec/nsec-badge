@@ -49,7 +49,7 @@ class Character : public SceneObject
     {
     }
 
-    unsigned int get_animation_step() const
+    virtual unsigned int get_animation_step() const
     {
         return animation_step;
     }
