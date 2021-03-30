@@ -1,6 +1,11 @@
-#ifndef __CMD_NEOPIXEL_H_
-#define __CMD_NEOPIXEL_H_
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void register_neopixel(void);
 
-#endif // __CMD_NEOPIXEL_H_
+#ifdef __cplusplus
+}
+#endif

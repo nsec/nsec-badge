@@ -3,7 +3,7 @@
 #include "argtable3/argtable3.h"
 #include "esp_console.h"
 #include "esp_log.h"
-#include "neopixel_c.h"
+#include "neopixel.h"
 
 static struct {
     struct arg_int *mode;
@@ -20,9 +20,9 @@ static int configure_neopixel(int argc, char **argv)
         return 1;
     }
 
-    neopixel_set_brightness(neopixel_args.brightness->ival[0]);
-    neopixel_set_color(neopixel_args.color->ival[0]);
-    neopixel_set_mode(neopixel_args.mode->ival[0]);
+    NeoPixel::getInstance().setBrightness(neopixel_args.brightness->ival[0]);
+    NeoPixel::getInstance().setColor(neopixel_args.color->ival[0]);
+    NeoPixel::getInstance().setMode(neopixel_args.mode->ival[0]);
     return 0;
 }
 

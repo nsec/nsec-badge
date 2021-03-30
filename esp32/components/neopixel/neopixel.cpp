@@ -1,5 +1,4 @@
 #include "neopixel.h"
-#include "neopixel_c.h"
 
 #include "esp_spi_flash.h"
 #include "esp_system.h"
@@ -27,7 +26,7 @@ void NeoPixel::init()
     FastLED.addLeds<LED_TYPE, DATA_PIN_1>(leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(3, 1000);
     NeoPixel::_ws2812fx.init(NUM_LEDS, leds, false);
-    setBrightness(50);
+    setBrightness(25);
 }
 
 void NeoPixel::stop()
@@ -58,7 +57,7 @@ void NeoPixel::setMode(uint16_t mode)
         vTaskDelete(NeoPixel::_displayTaskHandle);
     }
     NeoPixel::_ws2812fx.setMode(0, mode);
-    xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 4000, NULL, 5,
+    xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 1024, NULL, 5,
                 &NeoPixel::_displayTaskHandle);
     _mode = mode;
 }

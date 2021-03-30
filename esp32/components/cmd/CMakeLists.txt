@@ -1,8 +1,8 @@
 idf_component_register(
   SRCS
-      "cmd_wifi.c"
-      "cmd_neopixel.c"
-      "cmd.c"
+      "cmd_wifi.cpp"
+      "cmd_neopixel.cpp"
+      "cmd.cpp"
   INCLUDE_DIRS
       "."
   REQUIRES
