@@ -1,4 +1,5 @@
 #include "neopixel.h"
+#include "neopixel_c.h"
 
 #include "esp_spi_flash.h"
 #include "esp_system.h"
@@ -10,56 +11,82 @@
 #include "FX.h"
 #include "FastLED.h"
 
+<<<<<<< HEAD
 #define NUM_LEDS 15
+=======
+>>>>>>> 2b2b648 (Moved neopixel implementation to a singleton + C wrapper)
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
 #define COLOR_ORDER RGB
 
-CRGB leds1[NUM_LEDS];
-TaskHandle_t displayTaskHandle = NULL;
-static WS2812FX ws2812fx;
+WS2812FX NeoPixel::_ws2812fx;
+TaskHandle_t NeoPixel::_displayTaskHandle;
 
-void neopixel_init()
+void NeoPixel::init()
 {
-    FastLED.addLeds<LED_TYPE, DATA_PIN_1>(leds1, NUM_LEDS);
+    FastLED.addLeds<LED_TYPE, DATA_PIN_1>(leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(3, 1000);
-    ws2812fx.init(NUM_LEDS, leds1, false);
+    NeoPixel::_ws2812fx.init(NUM_LEDS, leds, false);
+    setBrightness(50);
 }
 
-void neopixel_stop()
+void NeoPixel::stop()
 {
-    if (displayTaskHandle) {
-        vTaskDelete(displayTaskHandle);
+    if (NeoPixel::_displayTaskHandle) {
+        vTaskDelete(NeoPixel::_displayTaskHandle);
     }
-    ws2812fx.setBrightness(0);
+    NeoPixel::_ws2812fx.setBrightness(0);
     FastLED.setBrightness(0);
 }
 
-void neopixel_set_color(int color)
+void NeoPixel::setColor(int color)
 {
-    ws2812fx.setColor(0, color);
+    NeoPixel::_ws2812fx.setColor(0, color);
+    _color = color;
+}
+
+void NeoPixel::setBrightness(uint8_t brightness)
+{
+    FastLED.setBrightness(brightness);
+    NeoPixel::_ws2812fx.setBrightness(brightness);
+    _brightness = brightness;
+}
+
+void NeoPixel::setMode(uint16_t mode)
+{
+    if (NeoPixel::_displayTaskHandle) {
+        vTaskDelete(NeoPixel::_displayTaskHandle);
+    }
+    NeoPixel::_ws2812fx.setMode(0, mode);
+    xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 4000, NULL, 5,
+                &NeoPixel::_displayTaskHandle);
+    _mode = mode;
+}
+
+uint8_t NeoPixel::getBrightNess()
+{
+    return _brightness;
+}
+
+uint16_t NeoPixel::getMode()
+{
+    return _mode;
+}
+
+int NeoPixel::getColor()
+{
+    return _color;
 }
 
 void neopixel_set_brightness(uint8_t brightness)
 {
-    FastLED.setBrightness(brightness);
-    ws2812fx.setBrightness(brightness);
+    NeoPixel::getInstance().setBrightness(brightness);
 }
-
-static void display_patterns(void *pvParameters)
-{
-    while (true) {
-        ws2812fx.service();
-        vTaskDelay(10 / portTICK_PERIOD_MS); /*10ms*/
-    }
-}
-
 void neopixel_set_mode(uint16_t mode)
 {
-    if (displayTaskHandle) {
-        vTaskDelete(displayTaskHandle);
-    }
-    ws2812fx.setMode(0, mode);
-    xTaskCreate(&display_patterns, "display_patterns", 4000, NULL, 5,
-                &displayTaskHandle);
+    NeoPixel::getInstance().setMode(mode);
+}
+void neopixel_set_color(int color)
+{
+    NeoPixel::getInstance().setColor(color);
 }

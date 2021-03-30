@@ -126,6 +126,7 @@ extern "C" void app_main(void)
     TaskHandle_t welcome_task;
     xTaskCreate(welcome_screen_task, NULL, 2048, NULL, 1, &welcome_task);
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
+<<<<<<< HEAD
 
     while (eTaskGetState(welcome_task) != eDeleted) {
         xQueueReceive(button_event_queue, &button, 0);
@@ -154,5 +155,8 @@ extern "C" void app_main(void)
         xQueueReceive(button_event_queue, &button, 0);
     } while (button != BUTTON_ENTER_RELEASE);
 
+=======
+    NeoPixel::getInstance().setMode(FX_MODE_RAINBOW);
+>>>>>>> 2b2b648 (Moved neopixel implementation to a singleton + C wrapper)
     run_main_scene();
 }
