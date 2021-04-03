@@ -27,7 +27,6 @@ constexpr int rpg_control_priority_high = 20;
 struct RpgControlDevice {
     Scene *scene;
     TaskHandle_t task_animation_step;
-    TaskHandle_t task_fps_report;
     TaskHandle_t task_main_character;
     TaskHandle_t task_render;
     TaskHandle_t task_status_bar;
@@ -132,27 +131,6 @@ static void rpg_control_animation_step_task(void *arg)
         for (auto character : scene->get_characters())
             character->increment_animation_step();
     }
-
-    // Self-destruct.
-    vTaskDelete(NULL);
-}
-
-static void rpg_control_fps_report_task(void *arg)
-{
-    RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
-    int fps_counter_old = 0;
-
-    do {
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-        std::cout << "screen refresh ";
-        std::cout << control_device->fps_counter - fps_counter_old;
-        std::cout << " heap ";
-        std::cout << esp_get_free_heap_size();
-        std::cout << std::endl;
-
-        fps_counter_old = control_device->fps_counter;
-    } while (CONTINUE_RUNNING_TASK);
 
     // Self-destruct.
     vTaskDelete(NULL);
@@ -293,22 +271,12 @@ ControlExitAction rpg_control_take(Scene &scene)
                 &control_device, rpg_control_priority_low,
                 &(control_device.task_animation_step));
 
-#ifdef LOG_REFRESH
-    xTaskCreate(rpg_control_fps_report_task, "rpg_fps_report", 2500,
-                &control_device, rpg_control_priority_low,
-                &(control_device.task_fps_report));
-#endif
-
     while (control_device.exit_action == ControlExitAction::nothing) {
         vTaskDelay(10);
     }
 
     if (control_device.task_animation_step)
         while (eTaskGetState(control_device.task_animation_step) != eDeleted)
-            vTaskDelay(1);
-
-    if (control_device.task_fps_report)
-        while (eTaskGetState(control_device.task_fps_report) != eDeleted)
             vTaskDelay(1);
 
     if (control_device.task_main_character)
