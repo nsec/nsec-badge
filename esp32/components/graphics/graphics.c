@@ -585,8 +585,6 @@ void graphics_fadeout_display_buffer(int percent)
     if (percent > 100)
         percent = 100;
 
-    float multiplier = (100 - percent) / 100.0;
-
     // Modify only pixels inside of the active clip.
     for (int x = display_clip[0]; x < display_clip[2]; ++x) {
         for (int y = display_clip[1]; y < display_clip[3]; ++y) {
@@ -595,13 +593,19 @@ void graphics_fadeout_display_buffer(int percent)
             // Swap the two bytes back into the correct order.
             pixel = (pixel << 8) + (pixel >> 8);
 
-            int r = ((pixel & 0b1111100000000000) >> 11) * multiplier;
-            int g = ((pixel & 0b0000011111100000) >> 5) * multiplier;
-            int b = ((pixel & 0b0000000000011111)) * multiplier;
+            int r = (pixel & 0b1111100000000000) >> 11;
+            int g = (pixel & 0b0000011111100000) >> 5;
+            int b = (pixel & 0b0000000000011111);
+
+            r = r * (100 - percent) / 100;
+            g = g * (100 - percent) / 100;
+            b = b * (100 - percent) / 100;
 
             // Re-assemble the RGB565 and swap the two bytes as expected by
             // the graphics_put_pixel() function.
-            pixel_t new_pixel = ((r << 11) & 0xF800) + ((g << 5) & 0x7E0) + (b & 0x1F);
+            pixel_t new_pixel =
+                ((r << 11) & 0xF800) + ((g << 5) & 0x7E0) + (b & 0x1F);
+
             new_pixel = (new_pixel << 8) + (new_pixel >> 8);
 
             // 0 is treated as a special value for transparency, so if it is
