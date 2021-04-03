@@ -21,9 +21,6 @@ typedef struct {
     int offset_y;
 } jpeg_session_device;
 
-/* Default font used for all text rendering through this component. */
-static FontxFile default_font[2];
-
 /* In-memory framebuffer with the contents of the screen. */
 static pixel_t *display_buffer = NULL;
 
@@ -35,6 +32,10 @@ static TFT_t display_device = {};
 
 /* Bitfield index of updated rows that need to be flushed. */
 static uint8_t display_rows_hot[DISPLAY_WIDTH / 8] = {};
+
+/* Default fonts used for all text rendering through this component. */
+static FontxFile font_large[2];
+static FontxFile font_small[2];
 
 /* In-memory cache for 'fast' images. */
 static uint8_t *library_maps_fast = NULL;
@@ -712,6 +713,8 @@ void graphics_start()
 
     graphics_collection_start();
 
+    InitFontx(font_large, "/spiffs/fonts/ILGH24XB.FNT", "");
+    InitFontx(font_small, "/spiffs/fonts/ILGH16XB.FNT", "");
     lcdSetFontDirection(&display_device, 3);
 
     ESP_LOGI(__FUNCTION__, "Graphics system initialized. Free heap is %d.",
