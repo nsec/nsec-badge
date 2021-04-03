@@ -301,6 +301,52 @@ static void graphics_display_buffers_allocate()
 }
 
 /**
+ * Write text on screen using the default font at the specified position.
+ *
+ * The two optional pointers out_x and out_y, if provided, will be set to the
+ * position of the next character after the printed string. To get back the
+ * position at the beginning of the next line, the printed string should end
+ * with the '\n' symbol.
+ *
+ * Text printed using this function bypasses the display buffer and is written
+ * directly to screen pixel by pixel, which makes it unsuitable for using in
+ * rendering loops.
+ *
+ * Since this function needs a pointer to a font structure, it is not
+ * accessible directly and must be used through one of the wrapper functions:
+ * graphics_print_large() or graphics_print_small().
+ */
+static void graphics_print(const char *string, int x, int y, pixel_t color,
+                           int *out_x, int *out_y, FontxFile *font,
+                           int font_width, int font_height)
+{
+    int print_x = x;
+    int print_y = y;
+
+    for (int i = 0; string[i] != '\0'; ++i) {
+        if (string[i] == '\n') {
+            print_x = x;
+            print_y += font_height;
+            continue;
+        }
+
+        int screen_x = print_y;
+        int screen_y = DISPLAY_HEIGHT - print_x;
+
+        lcdDrawChar(&display_device, font, screen_x, screen_y, string[i],
+                    color);
+
+        print_x += font_width;
+    }
+
+    if (out_x)
+        *out_x = print_x;
+
+    if (out_y)
+        *out_y = print_y;
+}
+
+/**
  * Decoder input callback for TJpgDec.
  *
  * Implements http://elm-chan.org/fsw/tjpgd/en/input.html.
@@ -586,43 +632,21 @@ int graphics_get_sinkline_from_library(int index)
 }
 
 /**
- * Write text on screen using the default font at the specified position.
- *
- * The two optional pointers out_x and out_y, if provided, will be set to the
- * position of the next character after the printed string. To get back the
- * position at the beginning of the next line, the printed string should end
- * with the '\n' symbol.
- *
- * Text printed using this function bypasses the display buffer and is written
- * directly to screen pixel by pixel, which makes it unsuitable for using in
- * rendering loops.
+ * Write text on screen using a larger font at the specified position.
  */
-void graphics_print(const char *string, int x, int y, pixel_t color, int *out_x,
-                    int *out_y)
+void graphics_print_large(const char *string, int x, int y, pixel_t color,
+                          int *out_x, int *out_y)
 {
-    int print_x = x;
-    int print_y = y;
+    graphics_print(string, x, y, color, out_x, out_y, font_large, 12, 24);
+}
 
-    for (int i = 0; string[i] != '\0'; ++i) {
-        if (string[i] == '\n') {
-            print_x = x;
-            print_y += 24;
-            continue;
-        }
-
-        int screen_x = print_y;
-        int screen_y = DISPLAY_HEIGHT - print_x;
-
-        lcdDrawChar(&display_device, default_font, screen_x, screen_y,
-                    string[i], color);
-        print_x += 12;
-    }
-
-    if (out_x)
-        *out_x = print_x;
-
-    if (out_y)
-        *out_y = print_y;
+/**
+ * Write text on screen using a smaller font at the specified position.
+ */
+void graphics_print_small(const char *string, int x, int y, pixel_t color,
+                          int *out_x, int *out_y)
+{
+    graphics_print(string, x, y, color, out_x, out_y, font_small, 8, 16);
 }
 
 /**
