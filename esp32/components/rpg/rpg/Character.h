@@ -47,6 +47,11 @@ class Character : public SceneObject
         return animation_step;
     }
 
+    virtual const char **get_dialog()
+    {
+        return nullptr;
+    }
+
     virtual const char *get_name() const = 0;
 
     virtual GlobalCoordinates get_coordinates() const override

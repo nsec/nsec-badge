@@ -14,6 +14,18 @@ static constexpr int oldman_standing[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *oldman_dialog_1[] = {
+    "Thou art most\n",
+    "welcome to\n",
+    "North Sectoria.\n",
+    "",
+};
+
+} // namespace rgp::dialog
+
 namespace rpg
 {
 
@@ -24,6 +36,11 @@ class CharacterOldman : public Character
     {
         set_animation_variant(Appearance::standing, animation::oldman_standing,
                               2);
+    }
+
+    virtual const char **get_dialog() override
+    {
+        return dialog::oldman_dialog_1;
     }
 
     virtual const char *get_name() const override { return "Oldman"; }
