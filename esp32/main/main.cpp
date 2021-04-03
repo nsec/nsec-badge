@@ -6,6 +6,7 @@
 #include "buttons.h"
 #include "cmd.h"
 #include "graphics.h"
+#include "infoscreen.h"
 #include "rpg.h"
 
 static bool mount_spiffs()
@@ -135,6 +136,8 @@ extern "C" void app_main(void)
 
         vTaskDelay(1);
     }
+
+    infoscreen_display_bootwarning();
 
     for (int i = 100; i >= 0; i -= 25) {
         graphics_draw_jpeg("/spiffs/welcome/start.jpeg", 0, 0);
