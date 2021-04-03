@@ -4,6 +4,7 @@
 #include "rpg/Viewport.h"
 #include "rpg/characters/CharacterDuck.h"
 #include "rpg/characters/MainCharacter.h"
+#include "rpg_duck.h"
 
 namespace rpg
 {
@@ -86,7 +87,7 @@ static ACTION handle_character_interaction(Character *character, Scene *scene)
     }
 
     if (CharacterDuck::identify(character)) {
-        // FIXME
+        rpg_duck_challenge();
     }
 
     while (displayed) {
