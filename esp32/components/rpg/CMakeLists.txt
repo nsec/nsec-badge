@@ -34,6 +34,7 @@ idf_component_register(
         "rpg/characters/MovingMixin.cpp"
         "rpg_action.cpp"
         "rpg_control.cpp"
+        "rpg_statusbar.cpp"
         "rpg.cpp"
     INCLUDE_DIRS
         "."

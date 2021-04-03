@@ -1,6 +1,7 @@
 #include "rpg_control.h"
 
 #include "rpg_action.h"
+#include "rpg_statusbar.h"
 
 #include "rpg/Coordinates.h"
 #include "rpg/Viewport.h"
@@ -29,7 +30,7 @@ struct RpgControlDevice {
     TaskHandle_t task_animation_step;
     TaskHandle_t task_main_character;
     TaskHandle_t task_render;
-    TaskHandle_t task_status_bar;
+    TaskHandle_t task_statusbar;
     ControlExitAction exit_action;
     int fps_counter;
 };
@@ -242,23 +243,20 @@ static void rpg_control_render_task(void *arg)
     vTaskDelete(NULL);
 }
 
-static void rpg_control_status_bar(void *arg)
+static void rpg_control_statusbar(void *arg)
 {
     RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
     Scene *scene = control_device->scene;
 
-    while (!scene->lock())
-        ;
-
-    graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR, 0,
-                               viewport_crop_height);
-    graphics_update_display();
-
-    scene->unlock();
+    rpg_statusbar_render(scene);
     vTaskPrioritySet(NULL, rpg_control_priority_low);
 
-    while (CONTINUE_RUNNING_TASK)
+    while (CONTINUE_RUNNING_TASK) {
+        rpg_control_trap_paused(scene);
+
+        rpg_statusbar_render(scene);
         vTaskDelay(100);
+    }
 
     // Self-destruct.
     vTaskDelete(NULL);
@@ -274,8 +272,8 @@ ControlExitAction rpg_control_take(Scene &scene)
                 &control_device, rpg_control_priority_high,
                 &(control_device.task_main_character));
 
-    xTaskCreate(rpg_control_status_bar, "rpg_status_bar", 4000, &control_device,
-                rpg_control_priority_high, &(control_device.task_status_bar));
+    xTaskCreate(rpg_control_statusbar, "rpg_statusbar", 4000, &control_device,
+                rpg_control_priority_high, &(control_device.task_statusbar));
 
     xTaskCreate(rpg_control_render_task, "rpg_render", 4000, &control_device,
                 rpg_control_priority_medium, &(control_device.task_render));
@@ -300,8 +298,8 @@ ControlExitAction rpg_control_take(Scene &scene)
         while (eTaskGetState(control_device.task_render) != eDeleted)
             vTaskDelay(1);
 
-    if (control_device.task_status_bar)
-        while (eTaskGetState(control_device.task_status_bar) != eDeleted)
+    if (control_device.task_statusbar)
+        while (eTaskGetState(control_device.task_statusbar) != eDeleted)
             vTaskDelay(1);
 
     return control_device.exit_action;
