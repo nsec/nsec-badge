@@ -38,7 +38,7 @@ namespace rpg
 class CharacterArcher : public Character
 {
   public:
-    CharacterArcher() : Character(33, 36, 17, 34)
+    CharacterArcher() : Character(character::Identity::GENERIC, 33, 36, 17, 34)
     {
         set_animation_variant(Appearance::standing, animation::archer_standing,
                               60);

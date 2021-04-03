@@ -40,7 +40,8 @@ namespace rpg
 class CharacterOldwoman : virtual public Character, public MovingMixin
 {
   public:
-    CharacterOldwoman() : Character(22, 29, 11, 29)
+    CharacterOldwoman()
+        : Character(character::Identity::GENERIC, 22, 29, 11, 29)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::oldwoman_moving_down, 2);

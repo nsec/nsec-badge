@@ -26,19 +26,19 @@ class Character : public SceneObject
     };
 
   public:
-    Character() : Character{0, 0, 0, 0}
+    Character() : Character{character::Identity::GENERIC, 0, 0, 0, 0}
     {
     }
 
-    Character(int16_t width, int16_t height)
-        : Character{width, height, 0, 0}
+    Character(character::Identity identity, int16_t width, int16_t height)
+        : Character{identity, width, height, 0, 0}
     {
     }
 
-    Character(int16_t width, int16_t height, int16_t ground_base_x, int16_t ground_base_y)
+    Character(character::Identity identity, int16_t width, int16_t height, int16_t ground_base_x, int16_t ground_base_y)
         : width{width}, height{height},
           ground_base_x{ground_base_x}, ground_base_y{ground_base_y},
-          move_distance{GlobalCoordinates::xy(0, 0)}, animation_variants{}
+          move_distance{GlobalCoordinates::xy(0, 0)}, animation_variants{}, identity{identity}
     {
     }
 
@@ -67,6 +67,11 @@ class Character : public SceneObject
     virtual int get_height() const override
     {
         return height;
+    }
+
+    character::Identity get_identity() const
+    {
+        return identity;
     }
 
     GlobalCoordinates get_rendered_coordinates() const
@@ -180,6 +185,8 @@ class Character : public SceneObject
     };
 
     AnimationVariant animation_variants[static_cast<int>(Appearance::LENGTH)];
+
+    character::Identity identity;
 };
 
 } // namespace rpg

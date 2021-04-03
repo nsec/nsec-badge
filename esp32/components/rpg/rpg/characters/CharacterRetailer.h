@@ -30,7 +30,8 @@ namespace rpg
 class CharacterRetailer : virtual public Character, public MovingMixin
 {
   public:
-    CharacterRetailer() : Character(22, 29, 11, 27)
+    CharacterRetailer()
+        : Character(character::Identity::GENERIC, 22, 29, 11, 27)
     {
         set_animation_variant(Appearance::moving_left,
                               animation::retailer_moving_left, 4);

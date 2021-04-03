@@ -40,7 +40,7 @@ namespace rpg
 class CharacterFil : virtual public Character, public MovingMixin
 {
   public:
-    CharacterFil() : Character(22, 29, 11, 26)
+    CharacterFil() : Character(character::Identity::GENERIC, 22, 29, 11, 26)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::fil_moving_down, 2);

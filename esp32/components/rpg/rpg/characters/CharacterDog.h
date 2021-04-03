@@ -36,7 +36,7 @@ namespace rpg
 class CharacterDog : virtual public Character, public MovingMixin
 {
   public:
-    CharacterDog() : Character(27, 27, 13, 25)
+    CharacterDog() : Character(character::Identity::GENERIC, 27, 27, 13, 25)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::dog_moving_down, 2);

@@ -40,7 +40,7 @@ namespace rpg
 class CharacterMonk : virtual public Character, public MovingMixin
 {
   public:
-    CharacterMonk() : Character(22, 29, 11, 27)
+    CharacterMonk() : Character(character::Identity::GENERIC, 22, 29, 11, 27)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::monk_moving_down, 2);

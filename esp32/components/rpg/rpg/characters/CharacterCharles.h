@@ -20,7 +20,7 @@ namespace rpg
 class CharacterCharles : public Character
 {
   public:
-    CharacterCharles() : Character(15, 34, 8, 33)
+    CharacterCharles() : Character(character::Identity::GENERIC, 15, 34, 8, 33)
     {
         set_animation_variant(Appearance::standing, animation::charles_standing,
                               2);

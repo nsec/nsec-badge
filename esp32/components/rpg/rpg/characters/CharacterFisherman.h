@@ -22,7 +22,8 @@ namespace rpg
 class CharacterFisherman : public Character
 {
   public:
-    CharacterFisherman() : Character(56, 27, 9, 24)
+    CharacterFisherman()
+        : Character(character::Identity::GENERIC, 56, 27, 9, 24)
     {
         set_animation_variant(Appearance::standing,
                               animation::fisherman_standing, 8);

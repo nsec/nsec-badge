@@ -40,7 +40,7 @@ namespace rpg
 class CharacterSailor : virtual public Character, public MovingMixin
 {
   public:
-    CharacterSailor() : Character(22, 29, 11, 27)
+    CharacterSailor() : Character(character::Identity::GENERIC, 22, 29, 11, 27)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::sailor_moving_down, 2);

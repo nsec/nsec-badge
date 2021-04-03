@@ -40,7 +40,7 @@ namespace rpg
 class CharacterAngela : virtual public Character, public MovingMixin
 {
   public:
-    CharacterAngela() : Character(22, 29, 11, 28)
+    CharacterAngela() : Character(character::Identity::GENERIC, 22, 29, 11, 28)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::angela_moving_down, 2);
