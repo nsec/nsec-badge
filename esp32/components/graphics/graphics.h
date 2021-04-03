@@ -41,6 +41,8 @@ void graphics_update_display(void);
 
 int graphics_get_sinkline_from_library(int);
 
+void graphics_print(const char *, int, int, pixel_t, int *, int *);
+
 #ifdef __cplusplus
 }
 #endif

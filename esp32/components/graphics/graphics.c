@@ -4,6 +4,7 @@
 
 #include "esp32/rom/tjpgd.h"
 #include "esp_log.h"
+#include "fontx.h"
 #include "freertos/task.h"
 #include "st7789.h"
 
@@ -19,6 +20,9 @@ typedef struct {
     int offset_x;
     int offset_y;
 } jpeg_session_device;
+
+/* Default font used for all text rendering through this component. */
+static FontxFile default_font[2];
 
 /* In-memory framebuffer with the contents of the screen. */
 static pixel_t *display_buffer = NULL;
@@ -581,6 +585,46 @@ int graphics_get_sinkline_from_library(int index)
 }
 
 /**
+ * Write text on screen using the default font at the specified position.
+ *
+ * The two optional pointers out_x and out_y, if provided, will be set to the
+ * position of the next character after the printed string. To get back the
+ * position at the beginning of the next line, the printed string should end
+ * with the '\n' symbol.
+ *
+ * Text printed using this function bypasses the display buffer and is written
+ * directly to screen pixel by pixel, which makes it unsuitable for using in
+ * rendering loops.
+ */
+void graphics_print(const char *string, int x, int y, pixel_t color, int *out_x,
+                    int *out_y)
+{
+    int print_x = x;
+    int print_y = y;
+
+    for (int i = 0; string[i] != '\0'; ++i) {
+        if (string[i] == '\n') {
+            print_x = x;
+            print_y += 24;
+            continue;
+        }
+
+        int screen_x = print_y;
+        int screen_y = DISPLAY_HEIGHT - print_x;
+
+        lcdDrawChar(&display_device, default_font, screen_x, screen_y,
+                    string[i], color);
+        print_x += 12;
+    }
+
+    if (out_x)
+        *out_x = print_x;
+
+    if (out_y)
+        *out_y = print_y;
+}
+
+/**
  * Send the framebuffer to the display.
  *
  * Calculate the portion of the rows that need to be updated on the screen and
@@ -667,6 +711,8 @@ void graphics_start()
     gpio_set_level(DISPLAY_SPI_BL, 1);
 
     graphics_collection_start();
+
+    lcdSetFontDirection(&display_device, 3);
 
     ESP_LOGI(__FUNCTION__, "Graphics system initialized. Free heap is %d.",
              esp_get_free_heap_size());
