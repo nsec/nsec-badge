@@ -10,10 +10,7 @@
 #include "FX.h"
 #include "FastLED.h"
 
-<<<<<<< HEAD
 #define NUM_LEDS 15
-=======
->>>>>>> 2b2b648 (Moved neopixel implementation to a singleton + C wrapper)
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
 #define COLOR_ORDER RGB
@@ -40,15 +37,19 @@ void NeoPixel::stop()
 
 void NeoPixel::setColor(int color)
 {
-    NeoPixel::_ws2812fx.setColor(0, color);
-    _color = color;
+    if (color <= 0xffffff && color >= 0) {
+        NeoPixel::_ws2812fx.setColor(0, color);
+        _color = color;
+    }
 }
 
 void NeoPixel::setBrightness(uint8_t brightness)
 {
-    FastLED.setBrightness(brightness);
-    NeoPixel::_ws2812fx.setBrightness(brightness);
-    _brightness = brightness;
+    if (brightness <= 0xff && brightness >= 0) {
+        FastLED.setBrightness(brightness);
+        NeoPixel::_ws2812fx.setBrightness(brightness);
+        _brightness = brightness;
+    }
 }
 
 void NeoPixel::setMode(uint16_t mode)
