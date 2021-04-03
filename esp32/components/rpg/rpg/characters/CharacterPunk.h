@@ -34,6 +34,16 @@ static constexpr int punk_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *punk_dialog_1[] = {
+    "I AM ERROR",
+    "",
+};
+
+} // namespace rgp::dialog
+
 namespace rpg
 {
 
@@ -53,6 +63,11 @@ class CharacterPunk : virtual public Character, public MovingMixin
 
         set_animation_variant(Appearance::moving_up, animation::punk_moving_up,
                               2);
+    }
+
+    virtual const char **get_dialog() override
+    {
+        return dialog::punk_dialog_1;
     }
 
     virtual const char *get_name() const override { return "punk"; }

@@ -24,6 +24,18 @@ static constexpr int retailer_moving_right[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *retailer_dialog_1[] = {
+    "Stay a while and\n",
+    "listen what people\n",
+    "are saying.",
+    "",
+};
+
+} // namespace rgp::dialog
+
 namespace rpg
 {
 
@@ -38,6 +50,11 @@ class CharacterRetailer : virtual public Character, public MovingMixin
 
         set_animation_variant(Appearance::moving_right,
                               animation::retailer_moving_right, 4);
+    }
+
+    virtual const char **get_dialog() override
+    {
+        return dialog::retailer_dialog_1;
     }
 
     virtual const char *get_name() const override { return "retailer"; }

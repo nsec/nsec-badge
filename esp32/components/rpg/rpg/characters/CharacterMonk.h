@@ -34,6 +34,18 @@ static constexpr int monk_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *monk_dialog_1[] = {
+    "Ommmm... join..\n",
+    "the.. resistance...\n",
+    "..ommm....\n",
+    "",
+};
+
+} // namespace rgp::dialog
+
 namespace rpg
 {
 
@@ -53,6 +65,11 @@ class CharacterMonk : virtual public Character, public MovingMixin
 
         set_animation_variant(Appearance::moving_up, animation::monk_moving_up,
                               2);
+    }
+
+    virtual const char **get_dialog() override
+    {
+        return dialog::monk_dialog_1;
     }
 
     virtual const char *get_name() const override { return "monk"; }

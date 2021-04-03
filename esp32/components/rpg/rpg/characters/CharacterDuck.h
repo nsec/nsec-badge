@@ -5,6 +5,16 @@
 
 #include "graphics.h"
 
+namespace rpg::dialog
+{
+
+static const char *duck_dialog_1[] = {
+    "... quack.",
+    "",
+};
+
+} // namespace rgp::dialog
+
 namespace rpg
 {
 
@@ -21,7 +31,14 @@ class CharacterDuck : virtual public Character, public MovingMixin
         return character_p->get_identity() == character::Identity::duck;
     }
 
-    virtual const char *get_name() const override { return "duck"; }
+    virtual const char **get_dialog() override
+    {
+        return dialog::duck_dialog_1;
+    }
+
+    virtual const char *get_name() const override {
+        return "Duck";
+    }
 
     virtual unsigned int get_animation_step() const override
     {
