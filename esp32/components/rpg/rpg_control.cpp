@@ -122,12 +122,23 @@ static void rpg_control_render_scoll_viewport(Viewport &viewport,
 }
 #endif
 
+/**
+ * Loop and suspend useful task work until scene is unpaused.
+ */
+static inline void rpg_control_trap_paused(Scene *scene)
+{
+    while (scene->is_paused())
+        vTaskDelay(10);
+}
+
 static void rpg_control_animation_step_task(void *arg)
 {
     RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
     Scene *scene = control_device->scene;
 
     for (; CONTINUE_RUNNING_TASK; vTaskDelay(5)) {
+        rpg_control_trap_paused(scene);
+
         for (auto character : scene->get_characters())
             character->increment_animation_step();
     }
@@ -218,6 +229,8 @@ static void rpg_control_render_task(void *arg)
     viewport.mark_for_full_refresh();
 
     for (; CONTINUE_RUNNING_TASK; control_device->fps_counter++) {
+        rpg_control_trap_paused(scene);
+
         rpg_control_render_scoll_viewport(
             viewport, viewport.to_screen(mc->get_coordinates()));
 

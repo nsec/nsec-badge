@@ -51,6 +51,11 @@ class Scene
         return viewport;
     }
 
+    bool is_paused()
+    {
+        return paused;
+    }
+
     bool lock()
     {
         return xSemaphoreTake(scene_lock, portMAX_DELAY) == pdTRUE;
@@ -63,12 +68,24 @@ class Scene
         return main_character;
     }
 
+    void pause()
+    {
+        paused = true;
+    }
+
     void unlock()
     {
         xSemaphoreGive(scene_lock);
     }
 
+    void unpause()
+    {
+        paused = false;
+    }
+
   private:
+    bool paused = false;
+
     const GlobalCoordinates scene_size;
 
     data::SceneDataReader data_reader;
