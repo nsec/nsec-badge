@@ -393,6 +393,7 @@ MAP	22	29	2	0	yue-right-3.png
 MAP	22	29	2	0	yue-standing.png
 MAP	22	29	2	0	yue-up-1.png
 MAP	22	29	2	0	yue-up-2.png
+MAP	240	240	4	0	dialog-panel.png
 MAP	240	240	4	0	oversign-badger.png
 MAP	240	240	4	0	oversign-customs.png
 MAP	240	240	4	0	oversign-hut.png
