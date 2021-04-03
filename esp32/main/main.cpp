@@ -1,12 +1,15 @@
+#include "FX.h"
 #include "esp_console.h"
 #include "esp_spiffs.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "FastLED.h"
 #include "buttons.h"
 #include "cmd.h"
 #include "graphics.h"
 #include "infoscreen.h"
+#include "neopixel.h"
 #include "rpg.h"
 
 static bool mount_spiffs()
@@ -117,6 +120,7 @@ extern "C" void app_main(void)
 
     initialize_nvs();
     nsec_buttons_init();
+    neopixel_init();
     graphics_start();
 
     TaskHandle_t welcome_task;

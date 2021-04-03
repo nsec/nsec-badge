@@ -1,6 +1,7 @@
 idf_component_register(
   SRCS
       "cmd_wifi.c"
+      "cmd_neopixel.c"
       "cmd.c"
   INCLUDE_DIRS
       "."
@@ -9,4 +10,5 @@ idf_component_register(
       "cmd_system"
       "console"
       "fatfs"
+      "neopixel"
   )
