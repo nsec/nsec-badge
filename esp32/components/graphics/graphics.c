@@ -736,7 +736,7 @@ void graphics_start()
 
     display_spi_bus_init();
     lcdInit(&display_device, DISPLAY_PHY_WIDTH, DISPLAY_PHY_HEIGHT, 0, 0);
-    lcdFillScreen(&display_device, BLUE);
+    lcdFillScreen(&display_device, BLACK);
     gpio_set_level(DISPLAY_SPI_BL, 1);
 
     graphics_collection_start();
