@@ -168,9 +168,27 @@ static ACTION handle_main_enter_action(Scene *scene)
     auto mc = scene->get_main_character();
     auto coordinates = mc->get_coordinates();
 
+    if (coordinates.within_tile(2, 28, 2, 28))
+        return ACTION::slideshow;
+
+    if (coordinates.within_tile(6, 13, 6, 13))
+        return ACTION::reverse_challenge;
+
+    if (coordinates.within_tile(16, 11, 16, 11))
+        return ACTION::menu_sound;
+
+    if (coordinates.within_tile(26, 15, 26, 15))
+        return ACTION::menu_wifi;
+
+    if (coordinates.within_tile(31, 17, 32, 17))
+        return ACTION::menu_led;
+
     // Active area near the Door #6.
-    if (coordinates.within_tile(31, 42, 32, 43))
+    if (coordinates.within_tile(31, 42, 31, 42))
         return ACTION::exit;
+
+    if (coordinates.within_tile(36, 29, 36, 29))
+        return ACTION::badge_info;
 
     if (coordinates.within_xy(100, 360, 140, 390))
         return handle_show_oversign(Oversign::hut, scene);
