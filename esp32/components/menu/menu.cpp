@@ -6,6 +6,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include <cstring>
+
 namespace menu
 {
 
@@ -171,23 +173,33 @@ void display_led_settings()
             return;
 
         case BUTTON_DOWN:
-            // Change LED mode.
+            temp_state_led_color = (temp_state_led_color + 1) % 7;
             break;
 
         case BUTTON_ENTER:
-            // Switch LED on/off.
+            temp_state_led_on = !temp_state_led_on;
             break;
 
         case BUTTON_LEFT:
-            // Decrease LED brightness.
+            temp_state_led_brightness -= 10;
+            if (temp_state_led_brightness < 10)
+                temp_state_led_brightness = 10;
+
             break;
 
         case BUTTON_RIGHT:
-            // Increase LED brightness.
+            temp_state_led_brightness += 10;
+            if (temp_state_led_brightness > 99)
+                temp_state_led_brightness = 99;
+
             break;
 
         case BUTTON_UP:
-            // Change LED mode.
+            if (temp_state_led_pattern[0] == 'W')
+                strncpy(temp_state_led_pattern, "Rainbow", 8);
+            else
+                strncpy(temp_state_led_pattern, "Waterfall", 10);
+
             break;
 
         default:
@@ -214,8 +226,16 @@ void display_sound_settings()
             // Go back to the menu.
             return;
 
+        case BUTTON_DOWN:
+            temp_state_sound_steps_on = !temp_state_sound_steps_on;;
+            break;
+
         case BUTTON_ENTER:
-            // Switch sound on/off.
+            temp_state_sound_music_on = !temp_state_sound_music_on;;
+            break;
+
+        case BUTTON_UP:
+            temp_state_sound_sfx_on = !temp_state_sound_sfx_on;;
             break;
 
         default:
@@ -243,7 +263,7 @@ void display_wifi_settings()
             return;
 
         case BUTTON_ENTER:
-            // Switch WiFi on/off.
+            temp_state_wifi_on = !temp_state_wifi_on;
             break;
 
         default:
