@@ -118,10 +118,10 @@ extern "C" void app_main(void)
     if (!mount_spiffs())
         abort();
 
+    graphics_start();
     initialize_nvs();
     nsec_buttons_init();
     NeoPixel::getInstance().setMode(FX_MODE_RAINBOW);
-    graphics_start();
 
     TaskHandle_t welcome_task;
     xTaskCreate(welcome_screen_task, NULL, 2048, NULL, 1, &welcome_task);
