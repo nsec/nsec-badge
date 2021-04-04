@@ -38,7 +38,8 @@ void NeoPixel::stop()
 void NeoPixel::setColor(int color)
 {
     if (color <= 0xffffff && color >= 0) {
-        NeoPixel::_ws2812fx.setColor(0, color);
+        int color_corr = ((color >> 8) & 0x00ff00) | ((color << 8) & 0xff0000) | (color & 0x0000ff);
+        NeoPixel::_ws2812fx.setColor(0, color_corr);
         _color = color;
     }
 }
