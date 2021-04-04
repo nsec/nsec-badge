@@ -120,5 +120,13 @@ typedef struct {
     int duration;
 } playback_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void buzzer_init();
 void buzzer_play_song(void * pvParameters);
+
+#ifdef __cplusplus
+}
+#endif
