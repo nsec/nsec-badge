@@ -8,154 +8,175 @@
 
 #include <cstring>
 
+// Custom DSL for building menu from a set of standard widgets.
+
+/**
+ * Change the horizontal position of the widget by a few pixels.
+ *
+ * This is needed for the TEXT widget that must be rendered a little bit to the
+ * left, compared to the other widgets, for correct visual alignment.
+ */
+#define INSET                                                                  \
+    for (int __i = 1, __widget_x_save = __widget_x; __i > 0; --__i)            \
+        for (int __j = 1, __widget_x = __widget_x_save - 5; __j > 0; --__j)
+
+/**
+ * Start the menu rendering by displaying the correct backround image.
+ */
+#define MENU(base)                                                             \
+    do {                                                                       \
+        graphics_draw_from_library(LIBRARY_IMAGE_MENU_B_##base, 0, 0);         \
+    } while (0)
+
+/**
+ * Increment the horizontal position for the next widget.
+ *
+ * Must be used inside of a loop while rendering a row of segmented widgets.
+ */
+#define NEXT_SEGMENT (__widget_x += 15)
+
+/**
+ * Change the vertial position of the widget by a single pixel.
+ *
+ * This may be needed in some configuration to achieve the correct visual
+ * alignment of an element in a row of widgets.
+ */
+#define OUTSET                                                                 \
+    for (int __i = 1, __widget_y_save = __widget_y; __i > 0; --__i)            \
+        for (int __j = 1, __widget_y = __widget_y_save - 1; __j > 0; --__j)
+
+/**
+ * Start widget rendering.
+ *
+ * The y argument specifies the vertical position of the next widget, and the
+ * horizontal position is set to a standard value.
+ */
+#define PLACE_AT(y)                                                            \
+    for (int __i = 1, __widget_x = 78, __widget_y = y; __i > 0; --__i)
+
+/**
+ * Print a text string with the correct offset for visual alignment.
+ */
+#define PRINT(string)                                                          \
+    do {                                                                       \
+        graphics_print_small(string, __widget_x + 3, __widget_y, 0, 0, 0);     \
+    } while (0)
+
+/**
+ * Add a color to already rendered segmented widget.
+ */
+#define SEGMENT_COLOR(color)                                                   \
+    do {                                                                       \
+        graphics_draw_from_library(LIBRARY_IMAGE_MENU_S_##color, __widget_x,   \
+                                   __widget_y);                                \
+    } while (0)
+
+/**
+ * Simply flush the screen.
+ */
+#define UPDATE                                                                 \
+    do {                                                                       \
+        graphics_update_display();                                             \
+    } while (0)
+
+/**
+ * Render one of the predefined widgets at the position of the cursor.
+ */
+#define WIDGET(id)                                                             \
+    graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_##id, __widget_x,          \
+                               __widget_y)
+
 namespace menu
 {
 
 static bool temp_state_led_on = true;
-static bool temp_state_sound_music_on = false;;
-static bool temp_state_sound_sfx_on = true;;
+static bool temp_state_sound_music_on = false;
+static bool temp_state_sound_sfx_on = true;
 static bool temp_state_sound_steps_on = true;
 static bool temp_state_wifi_on = true;
 static char temp_state_led_pattern[32] = "Rainbow";
 static int temp_state_led_brightness = 55;
 static int temp_state_led_color = 3;
 
-static constexpr int menu_widget_x_text = 74;
-static constexpr int menu_widget_x_widget = 78;
-
+// clang-format off
 static void render_led_settings()
 {
-    graphics_draw_from_library(LIBRARY_IMAGE_MENU_B_LED, 0, 0);
+    MENU(LED);
 
-    if (temp_state_led_on) {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_ON,
-                                   menu_widget_x_widget, 22);
-    } else {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_OFF,
-                                   menu_widget_x_widget, 22);
-    }
+    PLACE_AT(22)
+        temp_state_led_on ? WIDGET(SWITCH_ON)
+                          : WIDGET(SWITCH_OFF);
 
-    graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_TEXT, menu_widget_x_text,
-                               131);
+    PLACE_AT(78)
+        for (int threshold = 9; threshold < 98; threshold += 10, NEXT_SEGMENT)
+            temp_state_led_brightness >= threshold ? WIDGET(SEGMENT_ON)
+                                                   : WIDGET(SEGMENT_OFF);
 
-    for (int i = 0; i < 9; ++i) {
-        int threshold = i * 10 + 9;
-        int widget_x = menu_widget_x_widget + (15 * i);
+    PLACE_AT(131)
+        INSET WIDGET(TEXT);
 
-        if (temp_state_led_brightness >= threshold) {
-            graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SEGMENT_ON,
-                                       widget_x, 78);
-        } else {
-            graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SEGMENT_OFF,
-                                       widget_x, 78);
-        }
-    }
+    PLACE_AT(196)
+        for (int color_id = 0; color_id < 7; ++color_id, NEXT_SEGMENT)
+            if (color_id != temp_state_led_color)
+                WIDGET(SEGMENT_OFF);
 
-    for (int i = 0; i < 7; ++i) {
-        int widget_x = menu_widget_x_widget + (15 * i);
-        int widget_y = 196;
+            else OUTSET {
+                WIDGET(SEGMENT_ON);
 
-        if (i == temp_state_led_color) {
-            graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SEGMENT_ON,
-                                       widget_x, widget_y - 1);
-
-            switch (i) {
-            case 0:
-                // The base widget is already blue.
-                break;
-
-            case 1:
-                graphics_draw_from_library(LIBRARY_IMAGE_MENU_S_GREEN, widget_x,
-                                           widget_y - 1);
-                break;
-
-            case 2:
-                graphics_draw_from_library(LIBRARY_IMAGE_MENU_S_YELLOW,
-                                           widget_x, widget_y - 1);
-                break;
-
-            case 3:
-                graphics_draw_from_library(LIBRARY_IMAGE_MENU_S_PURPLE,
-                                           widget_x, widget_y - 1);
-                break;
-
-            case 4:
-                graphics_draw_from_library(LIBRARY_IMAGE_MENU_S_RED, widget_x,
-                                           widget_y - 1);
-                break;
-
-            case 5:
-                graphics_draw_from_library(LIBRARY_IMAGE_MENU_S_CYAN, widget_x,
-                                           widget_y - 1);
-                break;
-
-            case 6:
-                graphics_draw_from_library(LIBRARY_IMAGE_MENU_S_WHITE, widget_x,
-                                           widget_y - 1);
-                break;
+                if (color_id == 1)      SEGMENT_COLOR(GREEN);
+                else if (color_id == 2) SEGMENT_COLOR(YELLOW);
+                else if (color_id == 3) SEGMENT_COLOR(PURPLE);
+                else if (color_id == 4) SEGMENT_COLOR(RED);
+                else if (color_id == 5) SEGMENT_COLOR(CYAN);
+                else if (color_id == 6) SEGMENT_COLOR(WHITE);
             }
-        } else {
-            graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SEGMENT_OFF,
-                                       widget_x, widget_y);
-        }
-    }
 
-    graphics_update_display();
+    UPDATE;
 
-    graphics_print_small(temp_state_led_pattern, 80, 153, 0, 0, 0);
+    PLACE_AT(153)
+        PRINT(temp_state_led_pattern);
 }
+// clang-format on
 
+// clang-format off
 static void render_sound_settings()
 {
-    graphics_draw_from_library(LIBRARY_IMAGE_MENU_B_SOUND, 0, 0);
+    MENU(SOUND);
 
-    if (temp_state_sound_music_on) {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_ON,
-                                   menu_widget_x_widget, 37);
-    } else {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_OFF,
-                                   menu_widget_x_widget, 37);
-    }
+    PLACE_AT(37)
+        temp_state_sound_music_on ? WIDGET(SWITCH_ON)
+                                  : WIDGET(SWITCH_OFF);
 
-    graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_TEXT, menu_widget_x_text,
-                               76);
+    PLACE_AT(76)
+        INSET WIDGET(TEXT);
 
-    if (temp_state_sound_sfx_on) {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_ON,
-                                   menu_widget_x_widget, 141);
-    } else {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_OFF,
-                                   menu_widget_x_widget, 141);
-    }
+    PLACE_AT(141)
+        temp_state_sound_sfx_on ? WIDGET(SWITCH_ON)
+                                : WIDGET(SWITCH_OFF);
 
-    if (temp_state_sound_steps_on) {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_ON,
-                                   menu_widget_x_widget, 177);
-    } else {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_OFF,
-                                   menu_widget_x_widget, 177);
-    }
+    PLACE_AT(177)
+        temp_state_sound_steps_on ? WIDGET(SWITCH_ON)
+                                  : WIDGET(SWITCH_OFF);
 
-    graphics_update_display();
+    UPDATE;
 }
+// clang-format on
 
+// clang-format off
 static void render_wifi_settings()
 {
-    graphics_draw_from_library(LIBRARY_IMAGE_MENU_B_WIFI, 0, 0);
+    MENU(WIFI);
 
-    graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_TEXT, menu_widget_x_text,
-                               106);
+    PLACE_AT(37)
+        temp_state_wifi_on ? WIDGET(SWITCH_ON)
+                           : WIDGET(SWITCH_OFF);
 
-    if (temp_state_wifi_on) {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_ON,
-                                   menu_widget_x_widget, 37);
-    } else {
-        graphics_draw_from_library(LIBRARY_IMAGE_MENU_W_SWITCH_OFF,
-                                   menu_widget_x_widget, 37);
-    }
+    PLACE_AT(106)
+        INSET WIDGET(TEXT);
 
-    graphics_update_display();
+    UPDATE;
 }
+// clang-format on
 
 void display_led_settings()
 {
@@ -227,15 +248,18 @@ void display_sound_settings()
             return;
 
         case BUTTON_DOWN:
-            temp_state_sound_steps_on = !temp_state_sound_steps_on;;
+            temp_state_sound_steps_on = !temp_state_sound_steps_on;
+            ;
             break;
 
         case BUTTON_ENTER:
-            temp_state_sound_music_on = !temp_state_sound_music_on;;
+            temp_state_sound_music_on = !temp_state_sound_music_on;
+            ;
             break;
 
         case BUTTON_UP:
-            temp_state_sound_sfx_on = !temp_state_sound_sfx_on;;
+            temp_state_sound_sfx_on = !temp_state_sound_sfx_on;
+            ;
             break;
 
         default:
