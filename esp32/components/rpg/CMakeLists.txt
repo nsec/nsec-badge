@@ -42,6 +42,7 @@ idf_component_register(
     REQUIRES
         buttons
         graphics
+        menu
 )
 
 add_custom_command(
