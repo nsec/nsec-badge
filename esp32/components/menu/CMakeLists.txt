@@ -1,0 +1,9 @@
+idf_component_register(
+    SRCS
+        "menu.cpp"
+    INCLUDE_DIRS
+        "."
+    REQUIRES
+        buttons
+        graphics
+)
