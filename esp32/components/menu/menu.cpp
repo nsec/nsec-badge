@@ -248,18 +248,19 @@ void display_sound_settings()
             return;
 
         case BUTTON_DOWN:
+            temp_state_sound_music_on = false;
             temp_state_sound_steps_on = !temp_state_sound_steps_on;
-            ;
             break;
 
         case BUTTON_ENTER:
             temp_state_sound_music_on = !temp_state_sound_music_on;
-            ;
+            temp_state_sound_sfx_on = false;
+            temp_state_sound_steps_on = false;
             break;
 
         case BUTTON_UP:
+            temp_state_sound_music_on = false;
             temp_state_sound_sfx_on = !temp_state_sound_sfx_on;
-            ;
             break;
 
         default:
