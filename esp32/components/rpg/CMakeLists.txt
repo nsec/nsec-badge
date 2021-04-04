@@ -42,6 +42,7 @@ idf_component_register(
     REQUIRES
         buttons
         graphics
+        infoscreen
         menu
 )
 

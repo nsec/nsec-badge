@@ -9,6 +9,13 @@
 #define INFOSCREEN_SCROLLBAR_BAR 234
 #define INFOSCREEN_SCROLLBAR_HEIGHT 86
 
+static const int infoscreen_style_info[] = {
+    LIBRARY_IMAGE_INFSC_POLE_INFO_0,    LIBRARY_IMAGE_INFSC_POLE_INFO_1,
+    LIBRARY_IMAGE_INFSC_POLE_INFO_2,    LIBRARY_IMAGE_INFSC_POLE_INFO_3,
+    LIBRARY_IMAGE_INFSC_POLE_INFO_4,    LIBRARY_IMAGE_INFSC_POLE_INFO_5,
+    LIBRARY_IMAGE_INFSC_SCROLLBAR_INFO,
+};
+
 static const int infoscreen_style_warn[] = {
     LIBRARY_IMAGE_INFSC_POLE_WARN_0,    LIBRARY_IMAGE_INFSC_POLE_WARN_1,
     LIBRARY_IMAGE_INFSC_POLE_WARN_2,    LIBRARY_IMAGE_INFSC_POLE_WARN_3,
@@ -71,6 +78,12 @@ static void infoscreen_render(const char *message, const int message_height,
 
         graphics_update_display();
     }
+}
+
+void infoscreen_display_badgeinfo()
+{
+    infoscreen_render("/spiffs/infoscreen/badgeinfo.jpeg", 640,
+                      infoscreen_style_info);
 }
 
 void infoscreen_display_bootwarning()

@@ -31,6 +31,7 @@
 #include "rpg/data/BlockedDataReader.h"
 
 #include "graphics.h"
+#include "infoscreen.h"
 #include "menu.h"
 
 void run_main_scene(void)
@@ -177,6 +178,10 @@ void run_main_scene(void)
         }
 
         switch (action) {
+        case rpg::ControlExitAction::badge_info:
+            infoscreen_display_badgeinfo();
+            break;
+
         case rpg::ControlExitAction::konami_code:
             // FIXME
             graphics_draw_jpeg("/spiffs/nsec.jpeg", 0, 0);
@@ -198,7 +203,6 @@ void run_main_scene(void)
 
         case rpg::ControlExitAction::slideshow:
         case rpg::ControlExitAction::reverse_challenge:
-        case rpg::ControlExitAction::badge_info:
             // TODO
             break;
 
