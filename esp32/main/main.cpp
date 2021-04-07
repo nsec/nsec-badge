@@ -147,7 +147,7 @@ extern "C" void app_main(void)
     graphics_start();
     initialize_nvs();
     nsec_buttons_init();
-    NeoPixel::getInstance().setMode(FX_MODE_RAINBOW);
+    NeoPixel::getInstance().setPublicMode(0);
 
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 

@@ -26,10 +26,13 @@ class NeoPixel
 
     void init();
 
+    const uint8_t _unlocked_mode[10] = {2, 8, 23, 30, 43, 63, 67, 20, 37, 9};
     CRGB leds[NUM_LEDS];
     uint8_t _brightness;
     uint16_t _mode;
+    uint16_t _public_mode;
     int _color;
+    static bool is_on;
     static WS2812FX _ws2812fx;
     static TaskHandle_t _displayTaskHandle;
 
@@ -39,16 +42,19 @@ class NeoPixel
 
     static void displayPatterns(void *pvParameters)
     {
-        while (true) {
+        while (NeoPixel::is_on) {
             NeoPixel::_ws2812fx.service();
             vTaskDelay(10 / portTICK_PERIOD_MS); /*10ms*/
         }
+        vTaskDelete(NULL);
     }
     void stop();
     void setBrightness(uint8_t brightness);
-    void setMode(uint16_t mode);
+    void setMode(uint8_t mode);
+    void setPublicMode(uint8_t mode);
     void setColor(int color);
     uint8_t getBrightNess();
+    uint16_t getPublicMode();
     uint16_t getMode();
     int getColor();
 };

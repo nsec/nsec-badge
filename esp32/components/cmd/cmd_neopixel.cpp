@@ -22,14 +22,14 @@ static int configure_neopixel(int argc, char **argv)
 
     NeoPixel::getInstance().setBrightness(neopixel_args.brightness->ival[0]);
     NeoPixel::getInstance().setColor(neopixel_args.color->ival[0]);
-    NeoPixel::getInstance().setMode(neopixel_args.mode->ival[0]);
+    NeoPixel::getInstance().setPublicMode(neopixel_args.mode->ival[0]);
     return 0;
 }
 
 void register_neopixel(void)
 {
     neopixel_args.mode =
-        arg_int1(NULL, NULL, "<pattern>", "pattern to be displayed [0-133]");
+        arg_int1(NULL, NULL, "<pattern>", "pattern to be displayed [0-9]");
     neopixel_args.brightness =
         arg_int1(NULL, NULL, "<brightness>", "neopixels brightness [0-255]");
     neopixel_args.color = arg_int1(NULL, NULL, "<color>",

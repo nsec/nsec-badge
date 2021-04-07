@@ -6,4 +6,5 @@ idf_component_register(
     REQUIRES
         buttons
         graphics
+        neopixel
 )

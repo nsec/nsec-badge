@@ -2,6 +2,7 @@
 
 #include "buttons.h"
 #include "graphics.h"
+#include "neopixel.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -95,9 +96,12 @@ static bool temp_state_sound_sfx_on = true;
 static bool temp_state_sound_steps_on = true;
 static bool temp_state_wifi_on = true;
 static char temp_state_led_pattern[32] = "Rainbow";
-static int temp_state_led_brightness = 55;
-static int temp_state_led_color = 3;
+static uint8_t temp_state_led_pattern_id = 0;
+static uint8_t temp_state_led_brightness = 55;
+static uint8_t temp_state_led_color = 3;
 
+int color_id_to_rgb[7] = {0x0000ff, 0x00ff00, 0xffff00, 0x400080,
+                          0xff0000, 0x00ffff, 0xffffff};
 // clang-format off
 static void render_led_settings()
 {
@@ -176,12 +180,67 @@ static void render_wifi_settings()
 
     UPDATE;
 }
+
 // clang-format on
 
+void update_current_neopixel_state()
+{
+    temp_state_led_brightness =
+        int(NeoPixel::getInstance().getBrightNess() / 2.5);
+    int color_value = NeoPixel::getInstance().getColor();
+    uint8_t color_id;
+    for (color_id = 0;
+         color_id < sizeof(color_id_to_rgb) / sizeof(color_id_to_rgb[0]);
+         color_id++) {
+        if (color_value == color_id_to_rgb[color_id]) {
+            break;
+        }
+    }
+    temp_state_led_color = color_id;
+    temp_state_led_pattern_id = NeoPixel::getInstance().getPublicMode();
+}
+
+void set_pattern_display_name()
+{
+    switch (temp_state_led_pattern_id) {
+    case 0:
+        strncpy(temp_state_led_pattern, "Breath", 7);
+        break;
+    case 1:
+        strncpy(temp_state_led_pattern, "Rainbow", 8);
+        break;
+    case 2:
+        strncpy(temp_state_led_pattern, "Strobe", 7);
+        break;
+    case 3:
+        strncpy(temp_state_led_pattern, "Chase", 6);
+        break;
+    case 4:
+        strncpy(temp_state_led_pattern, "Rain", 5);
+        break;
+    case 5:
+        strncpy(temp_state_led_pattern, "Pride", 6);
+        break;
+    case 6:
+        strncpy(temp_state_led_pattern, "Waves", 6);
+        break;
+    case 7:
+        strncpy(temp_state_led_pattern, "Sparkle", 8);
+        break;
+    case 8:
+        strncpy(temp_state_led_pattern, "Running", 8);
+        break;
+    case 9:
+        strncpy(temp_state_led_pattern, "Rainbow 2", 10);
+        break;
+    default:
+        break;
+    }
+}
 void display_led_settings()
 {
     button_t button;
-
+    update_current_neopixel_state();
     render_led_settings();
 
     while (true) {
@@ -199,6 +258,7 @@ void display_led_settings()
 
         case BUTTON_ENTER:
             temp_state_led_on = !temp_state_led_on;
+
             break;
 
         case BUTTON_LEFT:
@@ -216,15 +276,24 @@ void display_led_settings()
             break;
 
         case BUTTON_UP:
-            if (temp_state_led_pattern[0] == 'W')
-                strncpy(temp_state_led_pattern, "Rainbow", 8);
-            else
-                strncpy(temp_state_led_pattern, "Waterfall", 10);
-
+            temp_state_led_pattern_id = (temp_state_led_pattern_id + 1) % 10;
+            set_pattern_display_name();
             break;
 
         default:
             continue;
+        }
+
+        if (temp_state_led_on) {
+            NeoPixel::getInstance().setBrightness(
+                int(temp_state_led_brightness * 2.5));
+            NeoPixel::getInstance().setColor(
+                color_id_to_rgb[temp_state_led_color]);
+
+            NeoPixel::getInstance().setPublicMode(temp_state_led_pattern_id);
+            //                pattern_id_to_mode[temp_state_led_pattern_id]);
+        } else {
+            NeoPixel::getInstance().setBrightness(0);
         }
 
         // Refresh the widgets on the display.
