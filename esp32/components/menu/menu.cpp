@@ -100,7 +100,7 @@ static uint8_t temp_state_led_pattern_id = 0;
 static uint8_t temp_state_led_brightness = 55;
 static uint8_t temp_state_led_color = 3;
 
-int color_id_to_rgb[7] = {0x0000ff, 0x00ff00, 0xffff00, 0x400080,
+int color_id_to_rgb[7] = {0x0000ff, 0x00ff00, 0xffff00, 0xff00ff,
                           0xff0000, 0x00ffff, 0xffffff};
 // clang-format off
 static void render_led_settings()
