@@ -783,7 +783,7 @@ uint16_t WS2812FX::mode_chase_random(void) {
  * Primary, secondary running on rainbow.
  */
 uint16_t WS2812FX::mode_chase_rainbow(void) {
-  uint8_t color_sep = 256 / SEGLEN;
+  uint8_t color_sep = 256 / (SEGLEN > 0 ? SEGLEN : 1);
   uint8_t color_index = SEGENV.call & 0xFF;
   uint32_t color = color_wheel(((SEGENV.step * color_sep) + color_index) & 0xFF);
 
