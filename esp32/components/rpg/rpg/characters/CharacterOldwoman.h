@@ -56,7 +56,7 @@ class CharacterOldwoman : virtual public Character, public MovingMixin
                               animation::oldwoman_moving_up, 2);
     }
 
-    virtual const char *get_name() const override { return "oldwoman"; }
+    virtual const char *get_name() const override { return "Gran-gran"; }
 
     virtual unsigned int get_animation_step() const override
     {

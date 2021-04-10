@@ -55,7 +55,7 @@ class CharacterRed : virtual public Character, public MovingMixin
                               2);
     }
 
-    virtual const char *get_name() const override { return "red"; }
+    virtual const char *get_name() const override { return "Rouge"; }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

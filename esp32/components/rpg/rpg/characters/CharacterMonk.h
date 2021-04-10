@@ -72,7 +72,7 @@ class CharacterMonk : virtual public Character, public MovingMixin
         return dialog::monk_dialog_1;
     }
 
-    virtual const char *get_name() const override { return "monk"; }
+    virtual const char *get_name() const override { return "Brother Tux"; }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;
