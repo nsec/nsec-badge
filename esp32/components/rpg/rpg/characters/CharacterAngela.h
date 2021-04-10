@@ -49,7 +49,7 @@ static const char *angela_dialog_1[] = {
     "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -77,7 +77,10 @@ class CharacterAngela : virtual public Character, public MovingMixin
         return dialog::angela_dialog_1;
     }
 
-    virtual const char *get_name() const override { return "Angela"; }
+    virtual const char *get_name() const override
+    {
+        return "Angela";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

@@ -45,7 +45,7 @@ static const char *oldwoman_dialog_1[] = {
     "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -74,7 +74,10 @@ class CharacterOldwoman : virtual public Character, public MovingMixin
         return dialog::oldwoman_dialog_1;
     }
 
-    virtual const char *get_name() const override { return "Gran-gran"; }
+    virtual const char *get_name() const override
+    {
+        return "Gran-gran";
+    }
 
     virtual unsigned int get_animation_step() const override
     {

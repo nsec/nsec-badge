@@ -55,7 +55,10 @@ class CharacterFarmer : virtual public Character, public MovingMixin
                               animation::farmer_moving_up, 2);
     }
 
-    virtual const char *get_name() const override { return "farmer"; }
+    virtual const char *get_name() const override
+    {
+        return "farmer";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

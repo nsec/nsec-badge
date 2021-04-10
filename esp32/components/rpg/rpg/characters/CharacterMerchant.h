@@ -56,7 +56,10 @@ class CharacterMerchant : virtual public Character, public MovingMixin
                               animation::merchant_moving_up, 2);
     }
 
-    virtual const char *get_name() const override { return "Merchant"; }
+    virtual const char *get_name() const override
+    {
+        return "Merchant";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

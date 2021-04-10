@@ -44,7 +44,7 @@ static const char *sailor_dialog_1[] = {
     "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -72,7 +72,10 @@ class CharacterSailor : virtual public Character, public MovingMixin
         return dialog::sailor_dialog_1;
     }
 
-    virtual const char *get_name() const override { return "sailor"; }
+    virtual const char *get_name() const override
+    {
+        return "sailor";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

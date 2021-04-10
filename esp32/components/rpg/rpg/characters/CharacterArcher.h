@@ -44,7 +44,10 @@ class CharacterArcher : public Character
                               60);
     }
 
-    virtual const char *get_name() const override { return "archer"; }
+    virtual const char *get_name() const override
+    {
+        return "archer";
+    }
 
     virtual void render(Viewport &viewport) override;
 };

@@ -20,11 +20,7 @@ namespace rpg::dialog
 {
 
 static const char *fisherman_dialog_1[] = {
-    "I heard you were\n",
-    "coming.\n",
-    "\n",
-    "Want to go phishing?\n",
-    "",
+    "I heard you were\n", "coming.\n", "\n", "Want to go phishing?\n", "",
 };
 
 static const char *fisherman_dialog_2[] = {
@@ -40,7 +36,7 @@ static const char *fisherman_dialog_3[] = {
     "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -70,7 +66,10 @@ class CharacterFisherman : public Character
         }
     }
 
-    virtual const char *get_name() const override { return "fisherman"; }
+    virtual const char *get_name() const override
+    {
+        return "fisherman";
+    }
 
     virtual void render(Viewport &viewport) override;
 };

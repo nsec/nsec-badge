@@ -50,7 +50,7 @@ static const char *monk_dialog_2[] = {
     "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -85,7 +85,10 @@ class CharacterMonk : virtual public Character, public MovingMixin
         }
     }
 
-    virtual const char *get_name() const override { return "Brother Tux"; }
+    virtual const char *get_name() const override
+    {
+        return "Brother Tux";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

@@ -34,7 +34,7 @@ static const char *charles_dialog_2[] = {
     "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -60,7 +60,10 @@ class CharacterCharles : public Character
         }
     }
 
-    virtual const char *get_name() const override { return "Charles"; }
+    virtual const char *get_name() const override
+    {
+        return "Charles";
+    }
 
     virtual void render(Viewport &viewport) override;
 };

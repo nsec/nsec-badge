@@ -13,7 +13,7 @@ static const char *duck_dialog_1[] = {
     "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -36,7 +36,8 @@ class CharacterDuck : virtual public Character, public MovingMixin
         return dialog::duck_dialog_1;
     }
 
-    virtual const char *get_name() const override {
+    virtual const char *get_name() const override
+    {
         return "Duck";
     }
 

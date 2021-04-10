@@ -51,7 +51,10 @@ class CharacterDog : virtual public Character, public MovingMixin
                               2);
     }
 
-    virtual const char *get_name() const override { return "dog"; }
+    virtual const char *get_name() const override
+    {
+        return "dog";
+    }
 
     virtual unsigned int get_animation_step() const override
     {

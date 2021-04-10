@@ -55,7 +55,10 @@ class CharacterSoldier : virtual public Character, public MovingMixin
                               animation::soldier_moving_up, 2);
     }
 
-    virtual const char *get_name() const override { return "Soldier"; }
+    virtual const char *get_name() const override
+    {
+        return "Soldier";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

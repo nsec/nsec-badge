@@ -38,16 +38,11 @@ namespace rpg::dialog
 {
 
 static const char *fil_dialog_1[] = {
-    "I don't often\n",
-    "exit vi.\n",
-    "\n",
-    "But when I do,\n",
-    "it's with \n",
-    "sudo shutdown -r now",
-    "",
+    "I don't often\n", "exit vi.\n",           "\n", "But when I do,\n",
+    "it's with \n",    "sudo shutdown -r now", "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -75,7 +70,10 @@ class CharacterFil : virtual public Character, public MovingMixin
         return dialog::fil_dialog_1;
     }
 
-    virtual const char *get_name() const override { return "Vim Diesel"; }
+    virtual const char *get_name() const override
+    {
+        return "Vim Diesel";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

@@ -52,7 +52,10 @@ class MainCharacter : public Character
         set_animation_variant(Appearance::standing, animation::mc_standing, 2);
     }
 
-    virtual const char *get_name() const override { return "main-character"; }
+    virtual const char *get_name() const override
+    {
+        return "main-character";
+    }
 
     virtual bool move(GlobalCoordinates coordinates) override;
     virtual void render(Viewport &viewport) override;

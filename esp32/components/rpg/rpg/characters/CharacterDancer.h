@@ -48,15 +48,11 @@ namespace rpg::dialog
 {
 
 static const char *dancer_dialog_1[] = {
-    "Where did the\n",
-    "hacker go?\n",
-    "\n",
-    "I don't know,\n",
-    "he ransomware.",
-    "",
+    "Where did the\n", "hacker go?\n",   "\n",
+    "I don't know,\n", "he ransomware.", "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -87,7 +83,10 @@ class CharacterDancer : virtual public Character, public MovingMixin
         return dialog::dancer_dialog_1;
     }
 
-    virtual const char *get_name() const override { return "dancer"; }
+    virtual const char *get_name() const override
+    {
+        return "dancer";
+    }
 
     virtual void post_render(Viewport &viewport) override;
 

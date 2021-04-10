@@ -55,7 +55,10 @@ class CharacterVijay : virtual public Character, public MovingMixin
                               2);
     }
 
-    virtual const char *get_name() const override { return "Vijay"; }
+    virtual const char *get_name() const override
+    {
+        return "Vijay";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

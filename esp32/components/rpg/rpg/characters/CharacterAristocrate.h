@@ -56,7 +56,10 @@ class CharacterAristocrate : virtual public Character, public MovingMixin
                               animation::aristocrate_moving_up, 2);
     }
 
-    virtual const char *get_name() const override { return "aristocrate"; }
+    virtual const char *get_name() const override
+    {
+        return "aristocrate";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;

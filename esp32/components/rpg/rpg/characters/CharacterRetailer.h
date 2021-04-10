@@ -34,7 +34,7 @@ static const char *retailer_dialog_1[] = {
     "",
 };
 
-} // namespace rgp::dialog
+} // namespace rpg::dialog
 
 namespace rpg
 {
@@ -57,7 +57,10 @@ class CharacterRetailer : virtual public Character, public MovingMixin
         return dialog::retailer_dialog_1;
     }
 
-    virtual const char *get_name() const override { return "retailer"; }
+    virtual const char *get_name() const override
+    {
+        return "retailer";
+    }
 
     virtual void post_render(Viewport &viewport) override;
     virtual void render(Viewport &viewport) override;
