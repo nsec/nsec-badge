@@ -34,6 +34,21 @@ static constexpr int fil_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *fil_dialog_1[] = {
+    "I don't often\n",
+    "exit vi.\n",
+    "\n",
+    "But when I do,\n",
+    "it's with \n",
+    "sudo shutdown -r now",
+    "",
+};
+
+} // namespace rgp::dialog
+
 namespace rpg
 {
 
@@ -53,6 +68,11 @@ class CharacterFil : virtual public Character, public MovingMixin
 
         set_animation_variant(Appearance::moving_up, animation::fil_moving_up,
                               2);
+    }
+
+    virtual const char **get_dialog() override
+    {
+        return dialog::fil_dialog_1;
     }
 
     virtual const char *get_name() const override { return "Vim Diesel"; }

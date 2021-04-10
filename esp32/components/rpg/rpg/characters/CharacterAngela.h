@@ -34,6 +34,23 @@ static constexpr int angela_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *angela_dialog_1[] = {
+    "I have heard rumors\n",
+    "that this place has\n",
+    "an \"underground\n",
+    "city.\"\n",
+    "\n",
+    "I have been looking\n",
+    "for an entrance for\n",
+    "a long time.",
+    "",
+};
+
+} // namespace rgp::dialog
+
 namespace rpg
 {
 
@@ -53,6 +70,11 @@ class CharacterAngela : virtual public Character, public MovingMixin
 
         set_animation_variant(Appearance::moving_up,
                               animation::angela_moving_up, 2);
+    }
+
+    virtual const char **get_dialog() override
+    {
+        return dialog::angela_dialog_1;
     }
 
     virtual const char *get_name() const override { return "Angela"; }

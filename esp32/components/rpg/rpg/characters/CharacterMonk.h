@@ -44,6 +44,12 @@ static const char *monk_dialog_1[] = {
     "",
 };
 
+static const char *monk_dialog_2[] = {
+    "Pray for PHP's\n",
+    "safe return...",
+    "",
+};
+
 } // namespace rgp::dialog
 
 namespace rpg
@@ -69,7 +75,14 @@ class CharacterMonk : virtual public Character, public MovingMixin
 
     virtual const char **get_dialog() override
     {
-        return dialog::monk_dialog_1;
+        switch (get_animation_step() % 2) {
+        case 0:
+            return dialog::monk_dialog_1;
+
+        case 1:
+        default:
+            return dialog::monk_dialog_2;
+        }
     }
 
     virtual const char *get_name() const override { return "Brother Tux"; }

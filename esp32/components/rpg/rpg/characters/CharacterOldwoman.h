@@ -34,6 +34,19 @@ static constexpr int oldwoman_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *oldwoman_dialog_1[] = {
+    "Just overflow the\n",
+    "shellcode on the\n",
+    "stack and jump to\n",
+    "it.",
+    "",
+};
+
+} // namespace rgp::dialog
+
 namespace rpg
 {
 
@@ -54,6 +67,11 @@ class CharacterOldwoman : virtual public Character, public MovingMixin
 
         set_animation_variant(Appearance::moving_up,
                               animation::oldwoman_moving_up, 2);
+    }
+
+    virtual const char **get_dialog() override
+    {
+        return dialog::oldwoman_dialog_1;
     }
 
     virtual const char *get_name() const override { return "Gran-gran"; }

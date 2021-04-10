@@ -38,7 +38,14 @@ namespace rpg::dialog
 {
 
 static const char *punk_dialog_1[] = {
-    "I AM ERROR",
+    "Are you really\n",
+    "CYBER!? PROVE IT\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "FLAG-KLJV490uhkEJF28\n",
     "",
 };
 

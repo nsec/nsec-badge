@@ -24,6 +24,15 @@ static const char *oldman_dialog_1[] = {
     "",
 };
 
+static const char *oldman_dialog_2[] = {
+    "One does not simply\n",
+    "exit vim! I was\n",
+    "trapped there for\n",
+    "20 years, be\n",
+    "careful out there.",
+    "",
+};
+
 } // namespace rgp::dialog
 
 namespace rpg
@@ -40,12 +49,27 @@ class CharacterOldman : public Character
 
     virtual const char **get_dialog() override
     {
-        return dialog::oldman_dialog_1;
+        if (first_dialog) {
+            first_dialog = false;
+            return dialog::oldman_dialog_1;
+        }
+
+        switch (get_animation_step() % 2) {
+        case 0:
+            return dialog::oldman_dialog_1;
+
+        case 1:
+        default:
+            return dialog::oldman_dialog_2;
+        }
     }
 
     virtual const char *get_name() const override { return "Oldman"; }
 
     virtual void render(Viewport &viewport) override;
+
+  private:
+    bool first_dialog = true;
 };
 
 } // namespace rpg

@@ -34,6 +34,12 @@ static const char *fisherman_dialog_2[] = {
     "",
 };
 
+static const char *fisherman_dialog_3[] = {
+    "I got the Babel\n",
+    "Fish.",
+    "",
+};
+
 } // namespace rgp::dialog
 
 namespace rpg
@@ -51,13 +57,16 @@ class CharacterFisherman : public Character
 
     virtual const char **get_dialog() override
     {
-        switch (get_animation_step() % 2) {
+        switch (get_animation_step() % 3) {
         case 0:
             return dialog::fisherman_dialog_1;
 
         case 1:
-        default:
             return dialog::fisherman_dialog_2;
+
+        case 2:
+        default:
+            return dialog::fisherman_dialog_3;
         }
     }
 
