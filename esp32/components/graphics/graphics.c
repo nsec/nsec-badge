@@ -356,6 +356,8 @@ static void graphics_print(const char *string, int x, int y, pixel_t color,
     int print_y = y;
 
     for (int i = 0; string[i] != '\0'; ++i) {
+        vTaskDelay(2);
+
         if (++led_counter % 2)
             graphics_led_on();
         else
