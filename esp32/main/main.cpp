@@ -23,18 +23,37 @@ static bool mount_spiffs()
     return ret == ESP_OK;
 }
 
-static void welcome_screen_task(void *arg)
+static void welcome_screen_exit()
 {
+    vTaskDelay(250 / portTICK_PERIOD_MS);
+    nsec_buttons_flush();
+}
+
+static void welcome_screen()
+{
+    button_t button = BUTTON_NONE;
+    nsec_buttons_flush();
+
     graphics_draw_jpeg("/spiffs/welcome/blank.jpeg", 0, 0);
     graphics_update_display();
-    vTaskDelay(750 / portTICK_PERIOD_MS);
+
+    xQueueReceive(button_event_queue, &button, 750 / portTICK_PERIOD_MS);
+    if (button != BUTTON_NONE)
+        return welcome_screen_exit();
 
     graphics_draw_jpeg("/spiffs/welcome/nsec2021.jpeg", 0, 53);
     graphics_update_display();
-    vTaskDelay(750 / portTICK_PERIOD_MS);
+
+    xQueueReceive(button_event_queue, &button, 750 / portTICK_PERIOD_MS);
+    if (button != BUTTON_NONE)
+        return welcome_screen_exit();
 
     int sponsored_y = 183;
     for (int fade = 0; fade <= 100; ++fade) {
+        xQueueReceive(button_event_queue, &button, 0);
+        if (button != BUTTON_NONE)
+            return welcome_screen_exit();
+
         switch (fade) {
         case 0:
             graphics_draw_jpeg("/spiffs/welcome/sponsored-0.jpeg", 0,
@@ -98,11 +117,16 @@ static void welcome_screen_task(void *arg)
         graphics_update_display();
     }
 
-    vTaskDelay(300 / portTICK_PERIOD_MS);
+    xQueueReceive(button_event_queue, &button, 300 / portTICK_PERIOD_MS);
+    if (button != BUTTON_NONE)
+        return welcome_screen_exit();
 
     graphics_draw_jpeg("/spiffs/welcome/design.jpeg", 0, 11);
     graphics_update_display();
-    vTaskDelay(2000 / portTICK_PERIOD_MS);
+
+    xQueueReceive(button_event_queue, &button, 2000 / portTICK_PERIOD_MS);
+    if (button != BUTTON_NONE)
+        return welcome_screen_exit();
 
     for (int i = 0; i < 66; i += 7) {
         graphics_fadeout_display_buffer(i);
@@ -110,9 +134,7 @@ static void welcome_screen_task(void *arg)
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 
-    vTaskDelay(500 / portTICK_PERIOD_MS);
-
-    vTaskDelete(NULL);
+    welcome_screen_exit();
 }
 
 extern "C" void app_main(void)
@@ -127,24 +149,9 @@ extern "C" void app_main(void)
     nsec_buttons_init();
     NeoPixel::getInstance().setMode(FX_MODE_RAINBOW);
 
-    TaskHandle_t welcome_task;
-    xTaskCreate(welcome_screen_task, NULL, 2048, NULL, 1, &welcome_task);
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 
-    while (eTaskGetState(welcome_task) != eDeleted) {
-        xQueueReceive(button_event_queue, &button, 0);
-
-        // Make it possible to skip the welcome screen.
-        if (button == BUTTON_BACK_RELEASE || button == BUTTON_ENTER_RELEASE) {
-            vTaskDelete(welcome_task);
-
-            while (eTaskGetState(welcome_task) != eDeleted)
-                vTaskDelay(1);
-        }
-
-        vTaskDelay(1);
-    }
-
+    welcome_screen();
     infoscreen_display_bootwarning();
 
     for (int i = 100; i >= 0; i -= 25) {
