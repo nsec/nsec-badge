@@ -50,14 +50,18 @@ class CharacterCharles : public Character
 
     virtual const char **get_dialog() override
     {
-        switch (get_animation_step() % 2) {
-        case 0:
+        if (next_dialog == dialog::charles_dialog_1) {
+            next_dialog = dialog::charles_dialog_2;
             return dialog::charles_dialog_1;
+        }
 
-        case 1:
-        default:
+        if (next_dialog == dialog::charles_dialog_2) {
+            next_dialog = dialog::charles_dialog_1;
             return dialog::charles_dialog_2;
         }
+
+        next_dialog = dialog::charles_dialog_2;
+        return dialog::charles_dialog_1;
     }
 
     virtual const char *get_name() const override
@@ -66,6 +70,9 @@ class CharacterCharles : public Character
     }
 
     virtual void render(Viewport &viewport) override;
+
+  private:
+    const char **next_dialog;
 };
 
 } // namespace rpg

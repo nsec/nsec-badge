@@ -75,14 +75,18 @@ class CharacterMonk : virtual public Character, public MovingMixin
 
     virtual const char **get_dialog() override
     {
-        switch (get_animation_step() % 2) {
-        case 0:
+        if (next_dialog == dialog::monk_dialog_1) {
+            next_dialog = dialog::monk_dialog_2;
             return dialog::monk_dialog_1;
+        }
 
-        case 1:
-        default:
+        if (next_dialog == dialog::monk_dialog_2) {
+            next_dialog = dialog::monk_dialog_1;
             return dialog::monk_dialog_2;
         }
+
+        next_dialog = dialog::monk_dialog_2;
+        return dialog::monk_dialog_1;
     }
 
     virtual const char *get_name() const override
@@ -101,6 +105,7 @@ class CharacterMonk : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg

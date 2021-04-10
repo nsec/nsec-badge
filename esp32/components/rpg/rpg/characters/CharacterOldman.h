@@ -45,19 +45,18 @@ class CharacterOldman : public Character
 
     virtual const char **get_dialog() override
     {
-        if (first_dialog) {
-            first_dialog = false;
+        if (next_dialog == dialog::oldman_dialog_1) {
+            next_dialog = dialog::oldman_dialog_2;
             return dialog::oldman_dialog_1;
         }
 
-        switch (get_animation_step() % 2) {
-        case 0:
-            return dialog::oldman_dialog_1;
-
-        case 1:
-        default:
+        if (next_dialog == dialog::oldman_dialog_2) {
+            next_dialog = dialog::oldman_dialog_1;
             return dialog::oldman_dialog_2;
         }
+
+        next_dialog = dialog::oldman_dialog_2;
+        return dialog::oldman_dialog_1;
     }
 
     virtual const char *get_name() const override
@@ -68,7 +67,7 @@ class CharacterOldman : public Character
     virtual void render(Viewport &viewport) override;
 
   private:
-    bool first_dialog = true;
+    const char **next_dialog;
 };
 
 } // namespace rpg

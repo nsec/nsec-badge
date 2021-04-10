@@ -53,17 +53,23 @@ class CharacterFisherman : public Character
 
     virtual const char **get_dialog() override
     {
-        switch (get_animation_step() % 3) {
-        case 0:
+        if (next_dialog == dialog::fisherman_dialog_1) {
+            next_dialog = dialog::fisherman_dialog_2;
             return dialog::fisherman_dialog_1;
+        }
 
-        case 1:
+        if (next_dialog == dialog::fisherman_dialog_2) {
+            next_dialog = dialog::fisherman_dialog_3;
             return dialog::fisherman_dialog_2;
+        }
 
-        case 2:
-        default:
+        if (next_dialog == dialog::fisherman_dialog_3) {
+            next_dialog = dialog::fisherman_dialog_1;
             return dialog::fisherman_dialog_3;
         }
+
+        next_dialog = dialog::fisherman_dialog_2;
+        return dialog::fisherman_dialog_1;
     }
 
     virtual const char *get_name() const override
@@ -72,6 +78,9 @@ class CharacterFisherman : public Character
     }
 
     virtual void render(Viewport &viewport) override;
+
+  private:
+    const char **next_dialog;
 };
 
 } // namespace rpg
