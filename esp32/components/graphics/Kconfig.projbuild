@@ -1,5 +1,11 @@
 menu "Graphics component"
 
+	config GRAPHICS_EYE_LED_GPIO
+		int "GPIO of the eye LED"
+		default 2
+		help
+			The GPIO pin number for the "eye" LED on the badge.
+
 	config GRAPHICS_FAST_TILES
 		bool "Enable fast tiles cache"
 		default false
@@ -9,4 +15,3 @@ menu "Graphics component"
 			chunk of the memory.
 
 endmenu
-

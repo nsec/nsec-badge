@@ -137,6 +137,37 @@ static void display_spi_write(uint8_t command, uint8_t *data, uint32_t length)
     }
 }
 
+// LED functions.
+
+/**
+ * Initialize the 'eye' LED to use as an activity indicator.
+ *
+ * This is a scope creep for th graphics component, but as a temporary
+ * implementation, it will take control of the 'eye' LED on the badge and use
+ * it to show certain renderind activity.
+ */
+static void graphics_led_init()
+{
+    gpio_pad_select_gpio(CONFIG_GRAPHICS_EYE_LED_GPIO);
+    gpio_set_direction(CONFIG_GRAPHICS_EYE_LED_GPIO, GPIO_MODE_OUTPUT);
+}
+
+/**
+ * Turn on the activity LED.
+ */
+static void graphics_led_on()
+{
+    gpio_set_level(CONFIG_GRAPHICS_EYE_LED_GPIO, 1);
+}
+
+/**
+ * Turn off the activity LED.
+ */
+static void graphics_led_off()
+{
+    gpio_set_level(CONFIG_GRAPHICS_EYE_LED_GPIO, 0);
+}
+
 // Sprite collection functions.
 
 /**
@@ -320,10 +351,16 @@ static void graphics_print(const char *string, int x, int y, pixel_t color,
                            int *out_x, int *out_y, FontxFile *font,
                            int font_width, int font_height)
 {
+    int led_counter = 0;
     int print_x = x;
     int print_y = y;
 
     for (int i = 0; string[i] != '\0'; ++i) {
+        if (++led_counter % 2)
+            graphics_led_on();
+        else
+            graphics_led_off();
+
         if (string[i] == '\n') {
             print_x = x;
             print_y += font_height;
@@ -344,6 +381,8 @@ static void graphics_print(const char *string, int x, int y, pixel_t color,
 
     if (out_y)
         *out_y = print_y;
+
+    graphics_led_off();
 }
 
 /**
@@ -744,6 +783,8 @@ void graphics_start()
     InitFontx(font_large, "/spiffs/fonts/ILGH24XB.FNT", "");
     InitFontx(font_small, "/spiffs/fonts/ILGH16XB.FNT", "");
     lcdSetFontDirection(&display_device, 3);
+
+    graphics_led_init();
 
     ESP_LOGI(__FUNCTION__, "Graphics system initialized. Free heap is %d.",
              esp_get_free_heap_size());
