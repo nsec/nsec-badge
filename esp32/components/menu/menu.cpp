@@ -183,23 +183,6 @@ static void render_wifi_settings()
 
 // clang-format on
 
-void update_current_neopixel_state()
-{
-    temp_state_led_brightness =
-        int(NeoPixel::getInstance().getBrightNess() / 2.5);
-    int color_value = NeoPixel::getInstance().getColor();
-    uint8_t color_id;
-    for (color_id = 0;
-         color_id < sizeof(color_id_to_rgb) / sizeof(color_id_to_rgb[0]);
-         color_id++) {
-        if (color_value == color_id_to_rgb[color_id]) {
-            break;
-        }
-    }
-    temp_state_led_color = color_id;
-    temp_state_led_pattern_id = NeoPixel::getInstance().getPublicMode();
-}
-
 void set_pattern_display_name()
 {
     switch (temp_state_led_pattern_id) {
@@ -237,6 +220,26 @@ void set_pattern_display_name()
         break;
     }
 }
+
+void update_current_neopixel_state()
+{
+    temp_state_led_brightness =
+        int(NeoPixel::getInstance().getBrightNess() / 2.5);
+    int color_value = NeoPixel::getInstance().getColor();
+    uint8_t color_id;
+    for (color_id = 0;
+         color_id < sizeof(color_id_to_rgb) / sizeof(color_id_to_rgb[0]);
+         color_id++) {
+        if (color_value == color_id_to_rgb[color_id]) {
+            break;
+        }
+    }
+    temp_state_led_color = color_id;
+    temp_state_led_pattern_id = NeoPixel::getInstance().getPublicMode();
+
+    set_pattern_display_name();
+}
+
 void display_led_settings()
 {
     button_t button;
@@ -291,7 +294,6 @@ void display_led_settings()
                 color_id_to_rgb[temp_state_led_color]);
 
             NeoPixel::getInstance().setPublicMode(temp_state_led_pattern_id);
-            //                pattern_id_to_mode[temp_state_led_pattern_id]);
         } else {
             NeoPixel::getInstance().setBrightness(0);
         }
