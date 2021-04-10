@@ -29,7 +29,7 @@ static void welcome_screen_task(void *arg)
     graphics_update_display();
     vTaskDelay(750 / portTICK_PERIOD_MS);
 
-    graphics_draw_jpeg("/spiffs/welcome/nsec2021.jpeg", 0, 29);
+    graphics_draw_jpeg("/spiffs/welcome/nsec2021.jpeg", 0, 53);
     graphics_update_display();
     vTaskDelay(750 / portTICK_PERIOD_MS);
 
@@ -98,7 +98,11 @@ static void welcome_screen_task(void *arg)
         graphics_update_display();
     }
 
-    vTaskDelay(3000 / portTICK_PERIOD_MS);
+    vTaskDelay(300 / portTICK_PERIOD_MS);
+
+    graphics_draw_jpeg("/spiffs/welcome/design.jpeg", 0, 11);
+    graphics_update_display();
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
 
     for (int i = 0; i < 66; i += 7) {
         graphics_fadeout_display_buffer(i);
@@ -106,7 +110,7 @@ static void welcome_screen_task(void *arg)
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    vTaskDelay(500 / portTICK_PERIOD_MS);
 
     vTaskDelete(NULL);
 }
