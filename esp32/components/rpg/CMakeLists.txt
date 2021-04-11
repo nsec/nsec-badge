@@ -46,6 +46,7 @@ idf_component_register(
         graphics
         infoscreen
         menu
+        save
 )
 
 add_custom_command(

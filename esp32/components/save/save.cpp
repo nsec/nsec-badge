@@ -11,6 +11,10 @@
 #define STORAGE_NAMESPACE "storage"
 
 SaveData Save::save_data = {
+    .chest_opened_island = false,
+    .chest_opened_konami = false,
+    .chest_opened_welcome = false,
+    .konami_done = false,
     .neopixel_brightness = 25,
     .neopixel_mode = 0,
     .neopixel_is_on = true,

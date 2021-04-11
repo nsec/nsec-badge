@@ -11,8 +11,9 @@ class Viewport;
 class ChestObject : public SceneObject
 {
   public:
-    ChestObject(SceneObjectIdentity identity, GlobalCoordinates coordinates)
-        : coordinates{coordinates}, identity{identity}
+    ChestObject(SceneObjectIdentity identity, GlobalCoordinates coordinates,
+                bool opened)
+        : coordinates{coordinates}, identity{identity}, opened{opened}
     {
     }
 

@@ -36,6 +36,7 @@
 #include "graphics.h"
 #include "infoscreen.h"
 #include "menu.h"
+#include "save.h"
 
 void run_main_scene(void)
 {
@@ -165,15 +166,18 @@ void run_main_scene(void)
     character_yue.move_initial(rpg::GlobalCoordinates::xy(660, 125));
 
     rpg::ChestObject chest_island{rpg::SceneObjectIdentity::chest_island,
-                                  rpg::GlobalCoordinates::tile(48, 48)};
+                                  rpg::GlobalCoordinates::tile(48, 48),
+                                  Save::save_data.chest_opened_island};
     scene.add_scene_object(&chest_island);
 
     rpg::ChestObject chest_konami{rpg::SceneObjectIdentity::chest_konami,
-                                  rpg::GlobalCoordinates::tile(0, 1)};
+                                  rpg::GlobalCoordinates::tile(0, 1),
+                                  Save::save_data.chest_opened_konami};
     scene.add_scene_object(&chest_konami);
 
     rpg::ChestObject chest_welcome{rpg::SceneObjectIdentity::chest_welcome,
-                                   rpg::GlobalCoordinates::tile(41, 26)};
+                                   rpg::GlobalCoordinates::tile(41, 26),
+                                   Save::save_data.chest_opened_welcome};
     scene.add_scene_object(&chest_welcome);
 
     rpg::KonamiHandler konami_handler{scene, blocked_data_reader};

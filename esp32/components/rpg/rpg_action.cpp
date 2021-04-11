@@ -7,6 +7,8 @@
 #include "rpg/characters/MainCharacter.h"
 #include "rpg_duck.h"
 
+#include "save.h"
+
 namespace rpg
 {
 
@@ -214,11 +216,19 @@ static ACTION handle_main_enter_action(Scene *scene)
     if (coordinates.within_tile(36, 29, 36, 29))
         return ACTION::badge_info;
 
-    if (coordinates.within_tile(47, 47, 50, 50))
+    if (coordinates.within_tile(47, 47, 50, 50)) {
+        Save::save_data.chest_opened_island = true;
+        Save::save_data.flag3 = true;
+        Save::write_save();
         return handle_open_chest(SceneObjectIdentity::chest_island, scene);
+    }
 
-    if (coordinates.within_xy(0, 0, 18, 40))
+    if (coordinates.within_xy(0, 0, 18, 40)) {
+        Save::save_data.chest_opened_konami = true;
+        Save::save_data.flag2 = true;
+        Save::write_save();
         return handle_open_chest(SceneObjectIdentity::chest_konami, scene);
+    }
 
     if (coordinates.within_xy(100, 360, 140, 390))
         return handle_show_oversign(Oversign::hut, scene);
@@ -232,8 +242,12 @@ static ACTION handle_main_enter_action(Scene *scene)
     if (coordinates.within_xy(485, 530, 525, 550))
         return handle_show_oversign(Oversign::quack, scene);
 
-    if (coordinates.within_xy(960, 600, 1005, 625))
+    if (coordinates.within_xy(960, 600, 1005, 625)) {
+        Save::save_data.chest_opened_welcome = true;
+        Save::save_data.flag1 = true;
+        Save::write_save();
         return handle_open_chest(SceneObjectIdentity::chest_welcome, scene);
+    }
 
     if (coordinates.within_xy(1000, 675, 1040, 700))
         return handle_show_oversign(Oversign::port, scene);

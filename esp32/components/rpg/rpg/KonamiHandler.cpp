@@ -2,12 +2,14 @@
 
 #include "rpg/Coordinates.h"
 
+#include "save.h"
+
 namespace rpg
 {
 
 void KonamiHandler::patch()
 {
-    if (/* TODO check if the global state is already patched */ false)
+    if (Save::save_data.konami_done)
         return;
 
     auto coordinates =
@@ -30,7 +32,9 @@ void KonamiHandler::patch()
     blocked_data_reader.patch(0x401, 0xbf);
     blocked_data_reader.refresh();
 
-    // TODO mark the global state.
+    Save::save_data.konami_done = true;
+    Save::write_save();
+
     // TODO play "good" sound.
 
     scene.get_viewport().mark_for_full_refresh();

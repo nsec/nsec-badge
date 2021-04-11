@@ -4,13 +4,25 @@
 #include <stdint.h>
 
 struct SaveData {
+    bool chest_opened_island;
+    bool chest_opened_konami;
+    bool chest_opened_welcome;
+    bool konami_done;
     uint8_t neopixel_brightness;
     uint8_t neopixel_mode;
     bool neopixel_is_on;
     int neopixel_color;
+
+    // Welcome flag.
     bool flag1;
+
+    // Konami code flag.
     bool flag2;
+
+    // Island flag.
     bool flag3;
+
+    // Unused.
     bool flag4;
     bool flag5;
     bool flag6;
