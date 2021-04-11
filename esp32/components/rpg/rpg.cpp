@@ -183,6 +183,10 @@ void run_main_scene(void)
             infoscreen_display_badgeinfo();
             break;
 
+        case rpg::ControlExitAction::hall_of_fame:
+            infoscreen_display_halloffame();
+            break;
+
         case rpg::ControlExitAction::konami_code:
             // FIXME
             graphics_draw_jpeg("/spiffs/nsec.jpeg", 0, 0);
@@ -202,7 +206,6 @@ void run_main_scene(void)
             menu::display_wifi_settings();
             break;
 
-        case rpg::ControlExitAction::slideshow:
         case rpg::ControlExitAction::reverse_challenge:
             // TODO
             break;

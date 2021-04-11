@@ -96,3 +96,9 @@ void infoscreen_display_bootwarning()
         graphics_update_display();
     }
 }
+
+void infoscreen_display_halloffame()
+{
+    infoscreen_render("/spiffs/infoscreen/halloffame.jpeg", 1350,
+                      infoscreen_style_info);
+}

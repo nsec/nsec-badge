@@ -6,6 +6,7 @@ extern "C" {
 
 void infoscreen_display_badgeinfo();
 void infoscreen_display_bootwarning();
+void infoscreen_display_halloffame();
 
 #ifdef __cplusplus
 }

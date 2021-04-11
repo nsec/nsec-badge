@@ -169,7 +169,7 @@ static ACTION handle_main_enter_action(Scene *scene)
     auto coordinates = mc->get_coordinates();
 
     if (coordinates.within_tile(2, 28, 2, 28))
-        return ACTION::slideshow;
+        return ACTION::hall_of_fame;
 
     if (coordinates.within_tile(6, 13, 6, 13))
         return ACTION::reverse_challenge;
