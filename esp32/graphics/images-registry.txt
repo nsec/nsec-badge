@@ -168,6 +168,7 @@ MAP	48	48	0	24	barrels-1.png
 MAP	72	72	3	55	booth-1.png
 MAP	72	72	3	55	booth-2.png
 MAP	72	72	3	55	booth-3.png
+MAP	72	72	3	55	booth-3a.png
 MAP	72	72	3	55	booth-4.png
 MAP	72	67	3	0	bags-1.png
 MAP	72	48	3	33	cart-1.png

@@ -28,10 +28,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="230.9874"
-     inkscape:cy="5.1486535"
+     inkscape:cx="598.94025"
+     inkscape:cy="658.37929"
      inkscape:document-units="px"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer5"
      inkscape:document-rotation="0"
      showgrid="true"
      units="px"
@@ -29230,7 +29230,8 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="l3"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <image
        sodipodi:absref="quay-s.png"
        xlink:href="quay-s.png"
@@ -29365,8 +29366,16 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="l4"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
+    <image
+       sodipodi:absref="booth-3a.png"
+       xlink:href="booth-3a.png"
+       y="600"
+       x="600"
+       id="image4792-3"
+       preserveAspectRatio="none"
+       height="72"
+       width="72" />
     <image
        sodipodi:absref="fountain-1.png"
        xlink:href="fountain-1.png"
@@ -29525,15 +29534,6 @@
        y="600"
        x="480"
        id="image8717"
-       preserveAspectRatio="none"
-       height="72"
-       width="72" />
-    <image
-       sodipodi:absref="booth-3.png"
-       xlink:href="booth-3.png"
-       y="600"
-       x="600"
-       id="image8731"
        preserveAspectRatio="none"
        height="72"
        width="72" />
