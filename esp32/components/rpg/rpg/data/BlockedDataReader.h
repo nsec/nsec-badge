@@ -9,6 +9,13 @@
 
 #include <string>
 
+namespace rpg
+{
+
+class KonamiHandler;
+
+}
+
 namespace rpg::data
 {
 

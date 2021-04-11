@@ -16,6 +16,8 @@
 namespace rpg
 {
 
+class KonamiHandler;
+
 class Scene
 {
     constexpr static unsigned int characters_vector_reserve = 25;
@@ -90,6 +92,8 @@ class Scene
     {
         paused = false;
     }
+
+    friend class KonamiHandler;
 
   private:
     bool paused = false;

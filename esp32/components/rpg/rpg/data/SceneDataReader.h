@@ -11,6 +11,13 @@
 #include <climits>
 #include <string>
 
+namespace rpg
+{
+
+class KonamiHandler;
+
+}
+
 namespace rpg::data
 {
 
@@ -130,6 +137,8 @@ class SceneDataReader : public SceneBaseDataReader
 
     virtual tilemap_word_t get_image(GlobalCoordinates coordinates,
                                      int layer) override;
+
+    friend class rpg::KonamiHandler;
 
   protected:
     virtual void patch(unsigned int offset, uint8_t value) override;

@@ -3,6 +3,7 @@ idf_component_register(
         "rpg/Character.cpp"
         "rpg/ChestObject.cpp"
         "rpg/Coordinates.cpp"
+        "rpg/KonamiHandler.cpp"
         "rpg/Scene.cpp"
         "rpg/TileObject.cpp"
         "rpg/Viewport.cpp"

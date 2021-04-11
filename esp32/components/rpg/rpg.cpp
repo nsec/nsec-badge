@@ -7,6 +7,7 @@
 
 #include "rpg/ChestObject.h"
 #include "rpg/Coordinates.h"
+#include "rpg/KonamiHandler.h"
 #include "rpg/Scene.h"
 #include "rpg/characters/CharacterAngela.h"
 #include "rpg/characters/CharacterAristocrate.h"
@@ -175,14 +176,20 @@ void run_main_scene(void)
                                    rpg::GlobalCoordinates::tile(41, 26)};
     scene.add_scene_object(&chest_welcome);
 
+    rpg::KonamiHandler konami_handler{scene, blocked_data_reader};
+
     rpg::RpgControlDevice control_device{};
     control_device.scene = &scene;
-
     while (true) {
         rpg_control_take(control_device);
 
         scene.get_viewport().mark_for_full_refresh();
         scene.render();
+
+        if (control_device.exit_action == rpg::ControlExitAction::konami_code) {
+            konami_handler.patch();
+            continue;
+        }
 
         // Scene fade out effect.
         graphics_fadeout_display_buffer(40);
@@ -199,13 +206,6 @@ void run_main_scene(void)
 
         case rpg::ControlExitAction::hall_of_fame:
             infoscreen_display_halloffame();
-            break;
-
-        case rpg::ControlExitAction::konami_code:
-            // FIXME
-            graphics_draw_jpeg("/spiffs/nsec.jpeg", 0, 0);
-            graphics_update_display();
-            vTaskDelay(200);
             break;
 
         case rpg::ControlExitAction::menu_led:
