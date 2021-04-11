@@ -35,7 +35,7 @@ namespace rpg
 class MainCharacter : public Character
 {
   public:
-    MainCharacter() : Character{character::Identity::GENERIC, 24, 32, 13, 31}
+    MainCharacter() : Character{SceneObjectIdentity::GENERIC, 24, 32, 13, 31}
     {
         set_animation_variant(Appearance::moving_down,
                               animation::mc_moving_down, 6);

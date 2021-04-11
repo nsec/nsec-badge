@@ -43,7 +43,7 @@ class CharacterRetailer : virtual public Character, public MovingMixin
 {
   public:
     CharacterRetailer()
-        : Character(character::Identity::GENERIC, 22, 29, 11, 27)
+        : Character(SceneObjectIdentity::GENERIC, 22, 29, 11, 27)
     {
         set_animation_variant(Appearance::moving_left,
                               animation::retailer_moving_left, 4);

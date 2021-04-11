@@ -37,7 +37,7 @@ namespace rpg
 class CharacterOldman : public Character
 {
   public:
-    CharacterOldman() : Character(character::Identity::GENERIC, 20, 33, 10, 31)
+    CharacterOldman() : Character(SceneObjectIdentity::GENERIC, 20, 33, 10, 31)
     {
         set_animation_variant(Appearance::standing, animation::oldman_standing,
                               2);

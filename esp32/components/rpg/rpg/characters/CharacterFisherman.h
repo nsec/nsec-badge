@@ -45,7 +45,7 @@ class CharacterFisherman : public Character
 {
   public:
     CharacterFisherman()
-        : Character(character::Identity::GENERIC, 56, 27, 9, 24)
+        : Character(SceneObjectIdentity::GENERIC, 56, 27, 9, 24)
     {
         set_animation_variant(Appearance::standing,
                               animation::fisherman_standing, 8);

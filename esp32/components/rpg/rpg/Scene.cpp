@@ -27,6 +27,22 @@ void Scene::add_character(MainCharacter *character)
 }
 
 /**
+ * Search list of scene objects for an object with the requested identity.
+ *
+ * The first one matched object is returned. This is not enforced, but the
+ * assumption is that any identity will be used by at most one object in the
+ * scene.
+ */
+SceneObject *Scene::find_object_by_identity(SceneObjectIdentity identity)
+{
+    for (auto object_p : scene_objects)
+        if (object_p->get_identity() == identity)
+            return object_p;
+
+    return nullptr;
+}
+
+/**
  * Find all tiles that should be treated as objects.
  *
  * The current implementation of the rendering loop treats level 4 differently

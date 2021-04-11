@@ -3,6 +3,11 @@
 namespace rpg
 {
 
+enum class SceneObjectIdentity : uint8_t {
+    GENERIC,
+    character_duck,
+};
+
 constexpr int viewport_width = 264;
 constexpr int viewport_tiles_width = 11;
 constexpr int viewport_height = 264;
@@ -15,16 +20,6 @@ constexpr int viewport_crop_width = 240;
 constexpr int viewport_crop_height = 220;
 
 } // namespace rpg
-
-namespace rpg::character
-{
-
-enum class Identity : uint8_t {
-    GENERIC,
-    duck,
-};
-
-} // namespace rpg::character
 
 namespace rpg::data
 {

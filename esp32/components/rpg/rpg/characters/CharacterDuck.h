@@ -21,14 +21,16 @@ namespace rpg
 class CharacterDuck : virtual public Character, public MovingMixin
 {
   public:
-    CharacterDuck() : Character(character::Identity::duck, 23, 15, 12, 13)
+    CharacterDuck()
+        : Character(SceneObjectIdentity::character_duck, 23, 15, 12, 13)
     {
         set_moving_direction(direction::right);
     }
 
     static bool identify(Character *character_p)
     {
-        return character_p->get_identity() == character::Identity::duck;
+        return character_p->get_identity() ==
+               SceneObjectIdentity::character_duck;
     }
 
     virtual const char **get_dialog() override

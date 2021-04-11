@@ -40,7 +40,7 @@ namespace rpg
 class CharacterSoldier : virtual public Character, public MovingMixin
 {
   public:
-    CharacterSoldier() : Character(character::Identity::GENERIC, 22, 29, 11, 26)
+    CharacterSoldier() : Character(SceneObjectIdentity::GENERIC, 22, 29, 11, 26)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::soldier_moving_down, 2);

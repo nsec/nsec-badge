@@ -40,7 +40,7 @@ namespace rpg
 class CharacterYue : virtual public Character, public MovingMixin
 {
   public:
-    CharacterYue() : Character(character::Identity::GENERIC, 22, 29, 11, 28)
+    CharacterYue() : Character(SceneObjectIdentity::GENERIC, 22, 29, 11, 28)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::yue_moving_down, 2);

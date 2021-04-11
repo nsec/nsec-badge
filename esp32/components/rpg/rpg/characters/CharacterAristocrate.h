@@ -41,7 +41,7 @@ class CharacterAristocrate : virtual public Character, public MovingMixin
 {
   public:
     CharacterAristocrate()
-        : Character(character::Identity::GENERIC, 24, 28, 11, 26)
+        : Character(SceneObjectIdentity::GENERIC, 24, 28, 11, 26)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::aristocrate_moving_down, 2);

@@ -40,7 +40,7 @@ namespace rpg
 class CharacterVijay : virtual public Character, public MovingMixin
 {
   public:
-    CharacterVijay() : Character(character::Identity::GENERIC, 22, 29, 11, 28)
+    CharacterVijay() : Character(SceneObjectIdentity::GENERIC, 22, 29, 11, 28)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::vijay_moving_down, 2);

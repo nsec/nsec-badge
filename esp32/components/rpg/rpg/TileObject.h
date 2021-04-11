@@ -28,6 +28,11 @@ class TileObject : public SceneObject
         return height;
     }
 
+    virtual SceneObjectIdentity get_identity() const override
+    {
+        return SceneObjectIdentity::GENERIC;
+    }
+
     int get_image() const
     {
         return tile_image;

@@ -40,7 +40,7 @@ namespace rpg
 class CharacterFarmer : virtual public Character, public MovingMixin
 {
   public:
-    CharacterFarmer() : Character(character::Identity::GENERIC, 22, 29, 11, 28)
+    CharacterFarmer() : Character(SceneObjectIdentity::GENERIC, 22, 29, 11, 28)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::farmer_moving_down, 2);

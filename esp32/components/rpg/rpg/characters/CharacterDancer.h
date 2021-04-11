@@ -60,7 +60,7 @@ namespace rpg
 class CharacterDancer : virtual public Character, public MovingMixin
 {
   public:
-    CharacterDancer() : Character(character::Identity::GENERIC, 30, 29, 14, 27)
+    CharacterDancer() : Character(SceneObjectIdentity::GENERIC, 30, 29, 14, 27)
     {
         set_animation_variant(Appearance::action_a, animation::dancer_dancing,
                               17);

@@ -40,7 +40,7 @@ namespace rpg
 class CharacterRed : virtual public Character, public MovingMixin
 {
   public:
-    CharacterRed() : Character(character::Identity::GENERIC, 22, 29, 11, 28)
+    CharacterRed() : Character(SceneObjectIdentity::GENERIC, 22, 29, 11, 28)
     {
         set_animation_variant(Appearance::moving_down,
                               animation::red_moving_down, 2);

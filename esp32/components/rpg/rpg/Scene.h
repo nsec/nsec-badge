@@ -45,6 +45,8 @@ class Scene
 
     void add_scene_object(SceneObject *object);
 
+    SceneObject *find_object_by_identity(SceneObjectIdentity identity);
+
     void render();
 
     std::vector<Character *> get_characters()
