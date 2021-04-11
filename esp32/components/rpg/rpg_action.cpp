@@ -1,5 +1,6 @@
 #include "rpg_action.h"
 
+#include "rpg/ChestObject.h"
 #include "rpg/Coordinates.h"
 #include "rpg/Viewport.h"
 #include "rpg/characters/CharacterDuck.h"
@@ -121,6 +122,29 @@ static ACTION handle_character_interaction(Character *character, Scene *scene)
     return ACTION::nothing;
 }
 
+static ACTION handle_open_chest(SceneObjectIdentity chest_identity,
+                                Scene *scene)
+{
+    SceneObject *object_p{scene->find_object_by_identity(chest_identity)};
+    if (!object_p)
+        return ACTION::nothing;
+
+    ChestObject *chest_p = static_cast<ChestObject *>(object_p);
+    if (chest_p->is_opened())
+        return ACTION::nothing;
+
+    scene->pause();
+    scene->lock();
+
+    chest_p->open();
+
+    scene->get_viewport().mark_for_full_refresh();
+    scene->unlock();
+    scene->unpause();
+
+    return ACTION::nothing;
+}
+
 static ACTION handle_show_oversign(Oversign oversign, Scene *scene)
 {
     scene->pause();
@@ -190,6 +214,12 @@ static ACTION handle_main_enter_action(Scene *scene)
     if (coordinates.within_tile(36, 29, 36, 29))
         return ACTION::badge_info;
 
+    if (coordinates.within_tile(47, 47, 50, 50))
+        return handle_open_chest(SceneObjectIdentity::chest_island, scene);
+
+    if (coordinates.within_xy(0, 0, 18, 40))
+        return handle_open_chest(SceneObjectIdentity::chest_konami, scene);
+
     if (coordinates.within_xy(100, 360, 140, 390))
         return handle_show_oversign(Oversign::hut, scene);
 
@@ -201,6 +231,9 @@ static ACTION handle_main_enter_action(Scene *scene)
 
     if (coordinates.within_xy(485, 530, 525, 550))
         return handle_show_oversign(Oversign::quack, scene);
+
+    if (coordinates.within_xy(960, 600, 1005, 625))
+        return handle_open_chest(SceneObjectIdentity::chest_welcome, scene);
 
     if (coordinates.within_xy(1000, 675, 1040, 700))
         return handle_show_oversign(Oversign::port, scene);

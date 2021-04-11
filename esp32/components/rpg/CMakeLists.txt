@@ -1,6 +1,7 @@
 idf_component_register(
     SRCS
         "rpg/Character.cpp"
+        "rpg/ChestObject.cpp"
         "rpg/Coordinates.cpp"
         "rpg/Scene.cpp"
         "rpg/TileObject.cpp"

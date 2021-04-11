@@ -6,6 +6,9 @@ namespace rpg
 enum class SceneObjectIdentity : uint8_t {
     GENERIC,
     character_duck,
+    chest_island,
+    chest_konami,
+    chest_welcome,
 };
 
 constexpr int viewport_width = 264;

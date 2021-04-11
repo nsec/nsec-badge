@@ -2,8 +2,10 @@
 #include "freertos/task.h"
 
 #include "rpg.h"
+#include "rpg_const.h"
 #include "rpg_control.h"
 
+#include "rpg/ChestObject.h"
 #include "rpg/Coordinates.h"
 #include "rpg/Scene.h"
 #include "rpg/characters/CharacterAngela.h"
@@ -160,6 +162,18 @@ void run_main_scene(void)
     character_solider2.move_initial(rpg::GlobalCoordinates::xy(705, 1135));
     character_vijay.move_initial(rpg::GlobalCoordinates::xy(616, 1010));
     character_yue.move_initial(rpg::GlobalCoordinates::xy(660, 125));
+
+    rpg::ChestObject chest_island{rpg::SceneObjectIdentity::chest_island,
+                                  rpg::GlobalCoordinates::tile(48, 48)};
+    scene.add_scene_object(&chest_island);
+
+    rpg::ChestObject chest_konami{rpg::SceneObjectIdentity::chest_konami,
+                                  rpg::GlobalCoordinates::tile(0, 1)};
+    scene.add_scene_object(&chest_konami);
+
+    rpg::ChestObject chest_welcome{rpg::SceneObjectIdentity::chest_welcome,
+                                   rpg::GlobalCoordinates::tile(41, 26)};
+    scene.add_scene_object(&chest_welcome);
 
     rpg::RpgControlDevice control_device{};
     control_device.scene = &scene;
