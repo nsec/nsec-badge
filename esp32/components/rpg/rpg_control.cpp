@@ -10,30 +10,12 @@
 #include "buttons.h"
 #include "graphics.h"
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
-#include <iostream>
-
-#define CONTINUE_RUNNING_TASK                                                  \
-    (control_device->exit_action == ControlExitAction::nothing)
-
 namespace rpg
 {
 
 constexpr int rpg_control_priority_low = 10;
 constexpr int rpg_control_priority_medium = 15;
 constexpr int rpg_control_priority_high = 20;
-
-struct RpgControlDevice {
-    Scene *scene;
-    TaskHandle_t task_animation_step;
-    TaskHandle_t task_main_character;
-    TaskHandle_t task_render;
-    TaskHandle_t task_statusbar;
-    ControlExitAction exit_action;
-    int fps_counter;
-};
 
 static void rpg_control_center_on_character(Scene *scene, MainCharacter *mc)
 {
@@ -137,7 +119,7 @@ static void rpg_control_animation_step_task(void *arg)
     RpgControlDevice *control_device = static_cast<RpgControlDevice *>(arg);
     Scene *scene = control_device->scene;
 
-    for (; CONTINUE_RUNNING_TASK; vTaskDelay(5)) {
+    for (; true; vTaskDelay(5)) {
         rpg_control_trap_paused(scene);
 
         for (auto character : scene->get_characters())
@@ -161,7 +143,9 @@ static void rpg_control_main_character_task(void *arg)
 
     nsec_buttons_flush();
 
-    while (CONTINUE_RUNNING_TASK) {
+    while (true) {
+        rpg_control_trap_paused(scene);
+
         button = BUTTON_NONE;
         xQueueReceive(button_event_queue, &button, 10 / portTICK_PERIOD_MS);
 
@@ -229,7 +213,7 @@ static void rpg_control_render_task(void *arg)
 
     viewport.mark_for_full_refresh();
 
-    for (; CONTINUE_RUNNING_TASK; control_device->fps_counter++) {
+    for (; true; control_device->fps_counter++) {
         rpg_control_trap_paused(scene);
 
         rpg_control_render_scoll_viewport(
@@ -251,7 +235,7 @@ static void rpg_control_statusbar(void *arg)
     rpg_statusbar_render(scene);
     vTaskPrioritySet(NULL, rpg_control_priority_low);
 
-    while (CONTINUE_RUNNING_TASK) {
+    while (true) {
         rpg_control_trap_paused(scene);
 
         rpg_statusbar_render(scene);
@@ -262,47 +246,52 @@ static void rpg_control_statusbar(void *arg)
     vTaskDelete(NULL);
 }
 
-ControlExitAction rpg_control_take(Scene &scene)
+void rpg_control_take(RpgControlDevice &control_device)
 {
-    RpgControlDevice control_device{};
-    control_device.exit_action = ControlExitAction::nothing;
-    control_device.scene = &scene;
+    BaseType_t returned;
 
-    xTaskCreate(rpg_control_main_character_task, "rpg_main_char", 2500,
+    control_device.scene->pause();
+    control_device.scene->lock();
+
+    if (!control_device.task_main_character) {
+        returned = xTaskCreate(rpg_control_main_character_task, "rpg_main_char", 2500,
                 &control_device, rpg_control_priority_high,
                 &(control_device.task_main_character));
 
-    xTaskCreate(rpg_control_statusbar, "rpg_statusbar", 4000, &control_device,
-                rpg_control_priority_high, &(control_device.task_statusbar));
-
-    xTaskCreate(rpg_control_render_task, "rpg_render", 4000, &control_device,
-                rpg_control_priority_medium, &(control_device.task_render));
-
-    xTaskCreate(rpg_control_animation_step_task, "rpg_animation", 1500,
-                &control_device, rpg_control_priority_low,
-                &(control_device.task_animation_step));
-
-    while (control_device.exit_action == ControlExitAction::nothing) {
-        vTaskDelay(10);
+        assert(returned == pdPASS);
     }
 
-    if (control_device.task_animation_step)
-        while (eTaskGetState(control_device.task_animation_step) != eDeleted)
-            vTaskDelay(1);
+    if (!control_device.task_statusbar) {
+        returned = xTaskCreate(rpg_control_statusbar, "rpg_statusbar", 4000, &control_device,
+                    rpg_control_priority_high, &(control_device.task_statusbar));
 
-    if (control_device.task_main_character)
-        while (eTaskGetState(control_device.task_main_character) != eDeleted)
-            vTaskDelay(1);
+        assert(returned == pdPASS);
+    }
 
-    if (control_device.task_render)
-        while (eTaskGetState(control_device.task_render) != eDeleted)
-            vTaskDelay(1);
+    if (!control_device.task_render) {
+        returned = xTaskCreate(rpg_control_render_task, "rpg_render", 4000, &control_device,
+                    rpg_control_priority_medium, &(control_device.task_render));
 
-    if (control_device.task_statusbar)
-        while (eTaskGetState(control_device.task_statusbar) != eDeleted)
-            vTaskDelay(1);
+        assert(returned == pdPASS);
+    }
 
-    return control_device.exit_action;
+    if (!control_device.task_animation_step) {
+        returned = xTaskCreate(rpg_control_animation_step_task, "rpg_animation", 1500,
+                    &control_device, rpg_control_priority_low,
+                    &(control_device.task_animation_step));
+
+        assert(returned == pdPASS);
+    }
+
+    control_device.exit_action = ControlExitAction::nothing;
+    control_device.scene->get_viewport().mark_for_full_refresh();
+    control_device.scene->unlock();
+    control_device.scene->unpause();
+
+    while (control_device.exit_action == ControlExitAction::nothing)
+        vTaskDelay(10);
+
+    control_device.scene->pause();
 }
 
 } // namespace rpg

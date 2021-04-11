@@ -2,6 +2,9 @@
 
 #include "rpg/Scene.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 namespace rpg
 {
 
@@ -18,6 +21,16 @@ enum class ControlExitAction {
     restart,
 };
 
-ControlExitAction rpg_control_take(Scene &scene);
+struct RpgControlDevice {
+    Scene *scene;
+    TaskHandle_t task_animation_step;
+    TaskHandle_t task_main_character;
+    TaskHandle_t task_render;
+    TaskHandle_t task_statusbar;
+    ControlExitAction exit_action;
+    int fps_counter;
+};
+
+void rpg_control_take(RpgControlDevice &control_device);
 
 } // namespace rpg

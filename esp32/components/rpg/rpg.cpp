@@ -161,10 +161,11 @@ void run_main_scene(void)
     character_vijay.move_initial(rpg::GlobalCoordinates::xy(616, 1010));
     character_yue.move_initial(rpg::GlobalCoordinates::xy(660, 125));
 
-    // Just return back to the main scene on any exit action, as temporary
-    // implementation.
+    rpg::RpgControlDevice control_device{};
+    control_device.scene = &scene;
+
     while (true) {
-        rpg::ControlExitAction action = rpg_control_take(scene);
+        rpg_control_take(control_device);
 
         scene.get_viewport().mark_for_full_refresh();
         scene.render();
@@ -177,7 +178,7 @@ void run_main_scene(void)
             graphics_update_display();
         }
 
-        switch (action) {
+        switch (control_device.exit_action) {
         case rpg::ControlExitAction::badge_info:
             infoscreen_display_badgeinfo();
             break;
