@@ -28,10 +28,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="917.46029"
-     inkscape:cy="1064.193"
+     inkscape:cx="1142.0878"
+     inkscape:cy="1167.2193"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer9"
      inkscape:document-rotation="0"
      showgrid="true"
      units="px"
@@ -98,8 +98,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="l0"
-     style="display:inline"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <image
        sodipodi:absref="grass-1.png"
        xlink:href="grass-1.png"
@@ -14623,15 +14622,6 @@
        height="24"
        width="24" />
     <image
-       sodipodi:absref="water-1.png"
-       xlink:href="water-1.png"
-       y="1176"
-       x="1128"
-       id="image8253"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
        sodipodi:absref="water-3.png"
        xlink:href="water-3.png"
        y="1176"
@@ -14661,27 +14651,9 @@
     <image
        sodipodi:absref="water-4.png"
        xlink:href="water-4.png"
-       y="1176"
-       x="1104"
-       id="image8265"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="water-4.png"
-       xlink:href="water-4.png"
        y="1152"
        x="1104"
        id="image8267"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
-       sodipodi:absref="water-1.png"
-       xlink:href="water-1.png"
-       y="1152"
-       x="1128"
-       id="image8269"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -20613,12 +20585,40 @@
        preserveAspectRatio="none"
        height="24"
        width="24" />
+    <image
+       sodipodi:absref="grass-2.png"
+       xlink:href="grass-2.png"
+       y="1176"
+       x="1128"
+       id="image5129"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="water-4.png"
+       xlink:href="water-4.png"
+       y="1176"
+       x="1104"
+       id="image5213"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="water-4.png"
+       xlink:href="water-4.png"
+       y="1152"
+       x="1128"
+       id="image5215"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="l1"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <image
        sodipodi:absref="flower-2.png"
        xlink:href="flower-2.png"
@@ -20626,8 +20626,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image13606"
-       x="672"
-       y="216" />
+       x="696"
+       y="240" />
     <image
        sodipodi:absref="flower-1.png"
        xlink:href="flower-1.png"
@@ -20752,8 +20752,8 @@
        height="24"
        preserveAspectRatio="none"
        id="image13500"
-       x="600"
-       y="240" />
+       x="576"
+       y="216" />
     <image
        sodipodi:absref="flower-1.png"
        xlink:href="flower-1.png"
@@ -24205,6 +24205,60 @@
        preserveAspectRatio="none"
        height="24"
        width="24" />
+    <image
+       sodipodi:absref="flower-1.png"
+       xlink:href="flower-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image5151"
+       x="624"
+       y="192" />
+    <image
+       sodipodi:absref="flower-2.png"
+       xlink:href="flower-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image5154"
+       x="720"
+       y="264" />
+    <image
+       sodipodi:absref="flower-1.png"
+       xlink:href="flower-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image5172"
+       x="672"
+       y="264" />
+    <image
+       sodipodi:absref="road-stone.png"
+       xlink:href="road-stone.png"
+       y="264"
+       x="648"
+       id="image5181"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="flower-2.png"
+       xlink:href="flower-2.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image5183"
+       x="720"
+       y="192" />
+    <image
+       sodipodi:absref="flower-1.png"
+       xlink:href="flower-1.png"
+       width="24"
+       height="24"
+       preserveAspectRatio="none"
+       id="image5211"
+       x="624"
+       y="240" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -27476,15 +27530,6 @@
        height="24"
        width="48" />
     <image
-       sodipodi:absref="road-border-r.png"
-       xlink:href="road-border-r.png"
-       y="1152"
-       x="1128"
-       id="image8550"
-       preserveAspectRatio="none"
-       height="24"
-       width="24" />
-    <image
        sodipodi:absref="road-border-b.png"
        xlink:href="road-border-b.png"
        y="1128"
@@ -28586,7 +28631,7 @@
        sodipodi:absref="road-border-r.png"
        xlink:href="road-border-r.png"
        y="1176"
-       x="1128"
+       x="1104"
        id="image5832"
        preserveAspectRatio="none"
        height="24"
@@ -29285,6 +29330,24 @@
        y="1056"
        x="936"
        id="image4991-3"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="water-border-3.png"
+       xlink:href="water-border-3.png"
+       y="1152"
+       x="1128"
+       id="image5096-1"
+       preserveAspectRatio="none"
+       height="24"
+       width="24" />
+    <image
+       sodipodi:absref="road-border-bri.png"
+       xlink:href="road-border-bri.png"
+       y="1152"
+       x="1104"
+       id="image5124"
        preserveAspectRatio="none"
        height="24"
        width="24" />
@@ -34154,7 +34217,7 @@
        style="fill:#000000;fill-opacity:1;stroke-width:4.7811;stroke-linecap:round"
        id="rect5778"
        width="114"
-       height="264"
+       height="360"
        x="1038"
        y="792" />
     <rect
