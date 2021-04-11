@@ -18,6 +18,8 @@ namespace rpg
 
 class Scene
 {
+    constexpr static unsigned int characters_vector_reserve = 25;
+    constexpr static unsigned int scene_objects_extra_reserve = 10;
     constexpr static unsigned int tile_objects_vector_reserve = 100;
 
   public:
@@ -28,8 +30,10 @@ class Scene
         scene_lock = xSemaphoreCreateMutex();
 
         // Allocate a reasonable amount of space once.
-        characters.reserve(20);
-        scene_objects.reserve((tile_objects_vector_reserve + 20) * 1.1);
+        characters.reserve(characters_vector_reserve);
+        scene_objects.reserve(characters_vector_reserve +
+                              scene_objects_extra_reserve +
+                              tile_objects_vector_reserve);
         tile_objects.reserve(tile_objects_vector_reserve);
 
         populate_objects_from_scene();
@@ -38,6 +42,8 @@ class Scene
     void add_character(Character *character);
 
     void add_character(MainCharacter *character);
+
+    void add_scene_object(SceneObject *object);
 
     void render();
 

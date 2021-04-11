@@ -8,7 +8,12 @@ namespace rpg
 void Scene::add_character(Character *character)
 {
     characters.push_back(character);
-    scene_objects.push_back(character);
+    add_scene_object(character);
+}
+
+void Scene::add_scene_object(SceneObject *object)
+{
+    scene_objects.push_back(object);
 }
 
 void Scene::add_character(MainCharacter *character)
@@ -74,7 +79,7 @@ void Scene::populate_objects_from_scene()
                         tile_objects.emplace_back(coordinates, width, height,
                                                   image, sinkline);
 
-                        scene_objects.push_back(&(tile_objects.back()));
+                        add_scene_object(&(tile_objects.back()));
                     }
                 }
             }
