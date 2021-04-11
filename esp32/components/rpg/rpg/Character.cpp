@@ -7,23 +7,8 @@ namespace rpg
 
 bool Character::is_visible(Viewport &viewport)
 {
-    auto coordinates = GlobalCoordinates::xy(scene_x, scene_y);
-    if (viewport.is_visible(coordinates))
-        return true;
-
-    coordinates.change_xy_by(width, 0);
-    if (viewport.is_visible(coordinates))
-        return true;
-
-    coordinates.change_xy_by(0, height);
-    if (viewport.is_visible(coordinates))
-        return true;
-
-    coordinates.change_xy_by(-width, 0);
-    if (viewport.is_visible(coordinates))
-        return true;
-
-    return false;
+    return viewport.is_visible(GlobalCoordinates::xy(scene_x, scene_y), width,
+                               height);
 }
 
 bool Character::move(GlobalCoordinates coordinates)

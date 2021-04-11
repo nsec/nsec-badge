@@ -56,6 +56,15 @@ class Viewport
         return true;
     }
 
+    /**
+     * Check that an object is at least partially visible.
+     *
+     * An object is anything that has a coordinate on the scene, non-zero width
+     * and height. Even if one pixel of the object is in the viewport, the
+     * function will return true.
+     */
+    bool is_visible(GlobalCoordinates coordinate, int width, int height);
+
     void mark_for_full_refresh()
     {
         needs_full_refresh = true;

@@ -19,6 +19,26 @@ void Viewport::cache_refresh_state()
     needs_full_refresh = false;
 }
 
+bool Viewport::is_visible(GlobalCoordinates coordinates, int width, int height)
+{
+    if (is_visible(coordinates))
+        return true;
+
+    coordinates.change_xy_by(width, 0);
+    if (is_visible(coordinates))
+        return true;
+
+    coordinates.change_xy_by(0, height);
+    if (is_visible(coordinates))
+        return true;
+
+    coordinates.change_xy_by(-width, 0);
+    if (is_visible(coordinates))
+        return true;
+
+    return false;
+}
+
 bool Viewport::move(GlobalCoordinates coordinates)
 {
     int new_move_x = coordinates.x();
