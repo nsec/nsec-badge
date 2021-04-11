@@ -22,7 +22,7 @@ class BlockedDataReader
         filename += scene_name;
         filename += ".blocked";
 
-        FILE *file = fopen(filename.c_str(), "r");
+        file = fopen(filename.c_str(), "r+");
         if (!file) {
             ESP_LOGE(__FUNCTION__,
                      "Scene blocked area cannot be read from SPIFFS: %s",
@@ -31,7 +31,7 @@ class BlockedDataReader
         }
 
         line_words = scene_size.x() / (2 * DISPLAY_TILE_WIDTH);
-        int read_size = line_words * (scene_size.y() / 6);
+        read_size = line_words * (scene_size.y() / 6);
 
         blocked_data =
             static_cast<uint8_t *>(calloc(read_size, sizeof(uint8_t)));
@@ -41,24 +41,34 @@ class BlockedDataReader
             abort();
         }
 
-        fseek(file, 0, SEEK_SET);
-        fread(blocked_data, sizeof(uint8_t), read_size, file);
-        fclose(file);
+        refresh();
     }
 
     ~BlockedDataReader()
     {
         delete[] blocked_data;
+
+        if (file)
+            fclose(file);
     }
 
     bool is_blocked(GlobalCoordinates coordinates);
 
+    friend class rpg::KonamiHandler;
+
   private:
+    FILE *file;
+
     uint8_t *blocked_data;
 
     const GlobalCoordinates scene_size;
 
     unsigned int line_words = 0;
+    int read_size = 0;
+
+    void patch(unsigned int offset, uint8_t value);
+
+    void refresh();
 };
 
 } // namespace rpg::data

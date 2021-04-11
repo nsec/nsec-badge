@@ -21,6 +21,12 @@ tilemap_word_t SceneDataReader::get_image(GlobalCoordinates coordinates,
     return (*tilemap_slice)[index];
 }
 
+void SceneDataReader::patch(unsigned int offset, uint8_t value)
+{
+    fseek(file, offset, SEEK_SET);
+    fwrite(&value, sizeof(value), 1, file);
+}
+
 void SceneDataReader::read_tilemap(GlobalCoordinates coordinates)
 {
     current_start = coordinates;
@@ -42,6 +48,11 @@ void SceneDataReader::read_tilemap(GlobalCoordinates coordinates)
     coordinates.change_tile_by(viewport_tiles_width + 1,
                                viewport_tiles_height + 1);
     current_end = coordinates;
+}
+
+void SceneDataReader::refresh()
+{
+    read_tilemap(current_start);
 }
 
 } // namespace rpg::data

@@ -19,4 +19,16 @@ bool BlockedDataReader::is_blocked(GlobalCoordinates coordinates)
     return (blocked_data[offset] & (1 << shift)) != 0;
 }
 
+void BlockedDataReader::patch(unsigned int offset, uint8_t value)
+{
+    fseek(file, offset, SEEK_SET);
+    fwrite(&value, sizeof(value), 1, file);
+}
+
+void BlockedDataReader::refresh()
+{
+    fseek(file, 0, SEEK_SET);
+    fread(blocked_data, sizeof(uint8_t), read_size, file);
+}
+
 } // namespace rpg::data

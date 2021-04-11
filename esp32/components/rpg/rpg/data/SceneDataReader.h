@@ -38,7 +38,7 @@ class SceneBaseDataReader
         filename += scene_name;
         filename += ".scene";
 
-        file = fopen(filename.c_str(), "r");
+        file = fopen(filename.c_str(), "r+");
         if (!file) {
             ESP_LOGE(__FUNCTION__,
                      "Scene datafile cannot be read from SPIFFS: %s",
@@ -101,7 +101,11 @@ class SceneBaseDataReader
      */
     int tilemap_height;
 
+    virtual void patch(unsigned int offset, uint8_t value) = 0;
+
     virtual void read_tilemap(GlobalCoordinates coordinates) = 0;
+
+    virtual void refresh() = 0;
 };
 
 class SceneDataReader : public SceneBaseDataReader
@@ -116,7 +120,7 @@ class SceneDataReader : public SceneBaseDataReader
             abort();
         }
 
-        read_tilemap(current_start);
+        refresh();
     }
 
     ~SceneDataReader()
@@ -126,6 +130,11 @@ class SceneDataReader : public SceneBaseDataReader
 
     virtual tilemap_word_t get_image(GlobalCoordinates coordinates,
                                      int layer) override;
+
+  protected:
+    virtual void patch(unsigned int offset, uint8_t value) override;
+
+    virtual void refresh();
 
   private:
     tilemap_slice_t *tilemap_slice;
