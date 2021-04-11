@@ -70,6 +70,8 @@ MAP	24	24	0	0	flower-2.png
 MAP	24	24	0	0	flower-3.png
 MAP	24	24	0	0	flower-4.png
 MAP	24	24	0	0	flower-5.png
+MAP	48	48	0	0	city-banner-1.png
+MAP	48	16	0	0	city-banner-2.png
 MAP	35	59	0	0	nsec-banner-1.png
 MAP	11	59	0	0	nsec-banner-2.png
 MAP	24	24	0	0	pavement-2.png
