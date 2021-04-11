@@ -162,6 +162,9 @@ MAP	24	29	3	0	boat-deck-front.png
 MAP	24	33	3	28	boat-nose.png
 MAP	72	24	3	12	boat-port.png
 MAP	24	41	3	36	boat-port-front.png
+MAP	72	68	3	0	hut-1.png
+MAP	72	68	3	61	hut-2.png
+MAP	72	68	3	0	hut-3.png
 MAP	48	72	0	48	statue-1.png
 MAP	56	72	0	66	statue-2.png
 MAP	48	48	0	24	barrels-1.png
