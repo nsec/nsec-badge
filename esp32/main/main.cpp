@@ -1,5 +1,6 @@
 #include "FX.h"
 #include "esp_console.h"
+#include "esp_err.h"
 #include "esp_spiffs.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -11,6 +12,7 @@
 #include "infoscreen.h"
 #include "neopixel.h"
 #include "rpg.h"
+#include "save.h"
 
 static bool mount_spiffs()
 {
@@ -147,7 +149,10 @@ extern "C" void app_main(void)
     graphics_start();
     initialize_nvs();
     nsec_buttons_init();
-    NeoPixel::getInstance().setPublicMode(0);
+
+    Save::load_save();
+
+    NeoPixel::getInstance().init();
 
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 

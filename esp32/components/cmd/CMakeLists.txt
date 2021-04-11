@@ -11,4 +11,5 @@ idf_component_register(
       "console"
       "fatfs"
       "neopixel"
+      "save"
   )

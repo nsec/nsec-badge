@@ -1,7 +1,10 @@
 #include "menu.h"
 
+#include "esp_log.h"
+#include "esp_err.h"
 #include "buttons.h"
 #include "graphics.h"
+#include "save.h"
 #include "neopixel.h"
 
 #include "freertos/FreeRTOS.h"
@@ -252,6 +255,7 @@ void display_led_settings()
 
         switch (button) {
         case BUTTON_BACK_RELEASE:
+            Save::write_save();
             // Go back to the menu.
             return;
 

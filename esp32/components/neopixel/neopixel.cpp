@@ -9,6 +9,7 @@
 
 #include "FX.h"
 #include "FastLED.h"
+#include "save.h"
 
 #define NUM_LEDS 15
 #define DATA_PIN_1 33
@@ -24,10 +25,17 @@ void NeoPixel::init()
     FastLED.addLeds<LED_TYPE, DATA_PIN_1>(leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(3, 1000);
     NeoPixel::_ws2812fx.init(NUM_LEDS, leds, false);
-    setColor(0xff0000);
-    setBrightness(25);
+
+    if (Save::save_data.neopixel_is_on) {
+        NeoPixel::start();
+    }
 }
 
+void NeoPixel::start() {
+        setColor(Save::save_data.neopixel_color);
+        setBrightness(Save::save_data.neopixel_brightness);
+        setPublicMode(Save::save_data.neopixel_mode);
+}
 void NeoPixel::stop()
 {
     if (NeoPixel::_displayTaskHandle) {
@@ -35,6 +43,7 @@ void NeoPixel::stop()
     }
     NeoPixel::_ws2812fx.setBrightness(0);
     FastLED.setBrightness(0);
+    Save::save_data.neopixel_is_on = false;
 }
 
 void NeoPixel::setColor(int color)
@@ -44,6 +53,7 @@ void NeoPixel::setColor(int color)
                          (color & 0x0000ff);
         NeoPixel::_ws2812fx.setColor(0, color_corr);
         _color = color;
+        Save::save_data.neopixel_color = color;
     }
 }
 
@@ -53,6 +63,7 @@ void NeoPixel::setBrightness(uint8_t brightness)
         FastLED.setBrightness(brightness);
         NeoPixel::_ws2812fx.setBrightness(brightness);
         _brightness = brightness;
+        Save::save_data.neopixel_brightness = brightness;
     }
 }
 
@@ -60,6 +71,7 @@ void NeoPixel::setPublicMode(uint8_t mode)
 {
     NeoPixel::setMode(_unlocked_mode[mode % 10]);
     _public_mode = mode;
+    Save::save_data.neopixel_mode = mode;
 }
 
 void NeoPixel::setMode(uint8_t mode)

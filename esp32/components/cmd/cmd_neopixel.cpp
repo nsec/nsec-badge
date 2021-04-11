@@ -4,6 +4,7 @@
 #include "esp_console.h"
 #include "esp_log.h"
 #include "neopixel.h"
+#include "save.h"
 
 static struct {
     struct arg_int *mode;
@@ -23,6 +24,7 @@ static int configure_neopixel(int argc, char **argv)
     NeoPixel::getInstance().setBrightness(neopixel_args.brightness->ival[0]);
     NeoPixel::getInstance().setColor(neopixel_args.color->ival[0]);
     NeoPixel::getInstance().setPublicMode(neopixel_args.mode->ival[0]);
+    Save::write_save();
     return 0;
 }
 

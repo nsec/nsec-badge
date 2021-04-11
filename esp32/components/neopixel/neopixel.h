@@ -21,10 +21,8 @@ class NeoPixel
   private:
     NeoPixel()
     {
-        NeoPixel::init();
     }
 
-    void init();
 
     const uint8_t _unlocked_mode[10] = {2, 8, 23, 30, 43, 63, 67, 20, 37, 9};
     CRGB leds[NUM_LEDS];
@@ -48,7 +46,9 @@ class NeoPixel
         }
         vTaskDelete(NULL);
     }
+    void init();
     void stop();
+    void start();
     void setBrightness(uint8_t brightness);
     void setMode(uint8_t mode);
     void setPublicMode(uint8_t mode);
