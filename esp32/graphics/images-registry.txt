@@ -83,6 +83,7 @@ MAP	24	24	0	0	outer-wall-bl.png
 MAP	24	24	0	0	outer-wall-bg.png
 MAP	24	24	0	0	outer-wall-br.png
 MAP	24	24	0	0	outer-wall-e.png
+MAP	24	24	0	0	outer-wall-e-arch.png
 MAP	24	24	0	0	outer-wall-ter.png
 MAP	24	24	0	0	outer-wall-tl.png
 MAP	24	24	0	0	outer-wall-v.png
