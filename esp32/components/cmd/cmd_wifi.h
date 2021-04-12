@@ -14,6 +14,7 @@ extern "C" {
 
 // Register WiFi functions
 void register_wifi(void);
+void wifi_join_if_configured();
 
 #ifdef __cplusplus
 }

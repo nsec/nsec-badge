@@ -56,10 +56,32 @@ static void initialise_wifi(void)
         WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &event_handler, NULL));
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP,
                                                &event_handler, NULL));
-    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_FLASH));
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_NULL));
     ESP_ERROR_CHECK(esp_wifi_start());
     initialized = true;
+}
+
+void wifi_join_if_configured()
+{
+    initialise_wifi();
+    esp_wifi_set_mode(WIFI_MODE_STA);
+    wifi_config_t wifi_cfg;
+    if (esp_wifi_get_config(static_cast<wifi_interface_t>(ESP_IF_WIFI_STA),
+                            &wifi_cfg) != ESP_OK) {
+        return;
+    }
+
+    if (strlen((const char *)wifi_cfg.sta.ssid)) {
+        ESP_LOGI("wifi", "Found ssid %s", (const char *)wifi_cfg.sta.ssid);
+        ESP_LOGI("wifi", "Found password %s",
+                 (const char *)wifi_cfg.sta.password);
+    }
+    esp_wifi_connect();
+    int bits =
+        xEventGroupWaitBits(wifi_event_group, CONNECTED_BIT, pdFALSE, pdTRUE,
+                            JOIN_TIMEOUT_MS / portTICK_PERIOD_MS);
+    return;
 }
 
 static bool wifi_join(const char *ssid, const char *pass, int timeout_ms)
@@ -73,7 +95,8 @@ static bool wifi_join(const char *ssid, const char *pass, int timeout_ms)
     }
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_set_config(static_cast<wifi_interface_t>(ESP_IF_WIFI_STA), &wifi_config));
+    ESP_ERROR_CHECK(esp_wifi_set_config(
+        static_cast<wifi_interface_t>(ESP_IF_WIFI_STA), &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_connect());
 
     int bits = xEventGroupWaitBits(wifi_event_group, CONNECTED_BIT, pdFALSE,

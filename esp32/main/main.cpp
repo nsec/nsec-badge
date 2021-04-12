@@ -8,6 +8,7 @@
 #include "FastLED.h"
 #include "buttons.h"
 #include "cmd.h"
+#include "cmd_wifi.h"
 #include "graphics.h"
 #include "buzzer.h"
 #include "infoscreen.h"
@@ -157,6 +158,8 @@ extern "C" void app_main(void)
     Save::load_save();
 
     NeoPixel::getInstance().init();
+
+    wifi_join_if_configured();
 
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 
