@@ -152,9 +152,7 @@ extern "C" void app_main(void)
     nsec_buttons_init();
 
     buzzer_init();
-    xTaskCreate(buzzer_play_song, "Buzzer", 1024*6, NULL, 2, NULL);
-    NeoPixel::getInstance().setMode(FX_MODE_RAINBOW);
-    graphics_start();
+    xTaskCreate(buzzer_play_song, "Buzzer", 1024*4, NULL, 99, NULL);
 
     Save::load_save();
 

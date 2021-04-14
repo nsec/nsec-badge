@@ -7,7 +7,6 @@
 
 #define PIN_BUZZER 26
 
-
 const static playback_t music0[] = {
     {NOTE_LA3, Q},    {NOTE_LA3, Q},     {NOTE_LA3, Q},
     {NOTE_F3, E + S}, {NOTE_C4, S},
@@ -186,12 +185,14 @@ void buzzer_init()
 void buzzer_play_tone(int note, int duration)
 {
     // Set the note's frequency
-    ledc_set_freq(ledc_channel.speed_mode, ledc_channel.channel, note);
+    if (note != 0) {
+        ledc_set_freq(ledc_channel.speed_mode, ledc_channel.channel, note);
+    }
+
     // Set the note's duration
     ledc_set_duty(ledc_channel.speed_mode, ledc_channel.channel, duration);
     // update
     ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel);
-
     vTaskDelay(duration / portTICK_PERIOD_MS);
 
     // Set back to the default values
@@ -199,13 +200,15 @@ void buzzer_play_tone(int note, int duration)
     ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel);
 }
 
-void buzzer_play_song(void * pvParameters)
+void buzzer_play_song(void *pvParameters)
 {
-    for (int i = 0; i < sizeof(music0) / sizeof(playback_t); i++) {
-        buzzer_play_tone(music0[i].note, music0[i].duration);
-    }
-    buzzer_play_tone(0, Q);
-    for (int i = 0; i < sizeof(music1) / sizeof(playback_t); i++) {
-        buzzer_play_tone(music1[i].note, music1[i].duration);
+    while (true) {
+        for (int i = 0; i < sizeof(music0) / sizeof(playback_t); i++) {
+            buzzer_play_tone(music0[i].note, music0[i].duration);
+        }
+        buzzer_play_tone(0, Q);
+        for (int i = 0; i < sizeof(music1) / sizeof(playback_t); i++) {
+            buzzer_play_tone(music1[i].note, music1[i].duration);
+        }
     }
 }
