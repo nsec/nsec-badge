@@ -133,6 +133,7 @@ void console_task(void *parm)
     esp_console_register_help_command();
     register_system();
     register_wifi();
+    register_wifi_disconnect();
     register_neopixel();
 
     // register_nvs();

@@ -1,11 +1,12 @@
 #include "menu.h"
 
-#include "esp_log.h"
-#include "esp_err.h"
 #include "buttons.h"
+#include "cmd_wifi.h"
+#include "esp_err.h"
+#include "esp_log.h"
 #include "graphics.h"
-#include "save.h"
 #include "neopixel.h"
+#include "save.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -169,6 +170,7 @@ static void render_sound_settings()
 }
 // clang-format on
 
+static char temp_state_wifi_ssid[32] = "";
 // clang-format off
 static void render_wifi_settings()
 {
@@ -182,6 +184,9 @@ static void render_wifi_settings()
         INSET WIDGET(TEXT);
 
     UPDATE;
+    PLACE_AT(128)
+        PRINT(temp_state_wifi_ssid);
+
 }
 
 // clang-format on
@@ -346,11 +351,20 @@ void display_sound_settings()
         render_sound_settings();
     }
 }
+void update_current_wifi_state()
+{
+    temp_state_wifi_on = is_wifi_connected();
+    if(temp_state_wifi_on) {
+        wifi_get_ssid(temp_state_wifi_ssid);
+    } else {
+        temp_state_wifi_ssid[0] = '\0';
+    }
+}
 
 void display_wifi_settings()
 {
     button_t button;
-
+    update_current_wifi_state();
     render_wifi_settings();
 
     while (true) {
@@ -364,6 +378,13 @@ void display_wifi_settings()
 
         case BUTTON_ENTER:
             temp_state_wifi_on = !temp_state_wifi_on;
+            if (temp_state_wifi_on) {
+                wifi_join_if_configured();
+                wifi_get_ssid(temp_state_wifi_ssid);
+            } else {
+                wifi_disconnect();
+                temp_state_wifi_ssid[0] = '\0';
+            }
             break;
 
         default:

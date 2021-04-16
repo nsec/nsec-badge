@@ -13,8 +13,12 @@ extern "C" {
 #endif
 
 // Register WiFi functions
-void register_wifi(void);
+void wifi_disconnect();
+void wifi_get_ssid(char *ssid);
+void register_wifi();
 void wifi_join_if_configured();
+void register_wifi_disconnect();
+bool is_wifi_connected();
 
 #ifdef __cplusplus
 }

@@ -8,4 +8,5 @@ idf_component_register(
         graphics
         neopixel
         save
+        cmd
 )

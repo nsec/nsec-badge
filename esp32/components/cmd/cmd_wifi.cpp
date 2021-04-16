@@ -17,6 +17,7 @@
 #include "esp_wifi.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
+#include <cstring>
 #include <stdio.h>
 #include <string.h>
 
@@ -25,10 +26,14 @@
 static EventGroupHandle_t wifi_event_group;
 const int CONNECTED_BIT = BIT0;
 
+static bool manual_disconnect = false;
+static bool is_connected = false;
+
 static void event_handler(void *arg, esp_event_base_t event_base,
                           int32_t event_id, void *event_data)
 {
-    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED &&
+        !manual_disconnect) {
         esp_wifi_connect();
         xEventGroupClearBits(wifi_event_group, CONNECTED_BIT);
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
@@ -62,6 +67,17 @@ static void initialise_wifi(void)
     initialized = true;
 }
 
+void wifi_get_ssid(char *ssid)
+{
+    wifi_config_t wifi_cfg;
+    if (esp_wifi_get_config(static_cast<wifi_interface_t>(ESP_IF_WIFI_STA),
+                            &wifi_cfg) != ESP_OK) {
+        return;
+    }
+    strncpy(ssid, reinterpret_cast<const char *>(wifi_cfg.sta.ssid),
+            strlen(reinterpret_cast<const char *>(wifi_cfg.sta.ssid)));
+}
+
 void wifi_join_if_configured()
 {
     initialise_wifi();
@@ -81,6 +97,7 @@ void wifi_join_if_configured()
     int bits =
         xEventGroupWaitBits(wifi_event_group, CONNECTED_BIT, pdFALSE, pdTRUE,
                             JOIN_TIMEOUT_MS / portTICK_PERIOD_MS);
+    is_connected = true;
     return;
 }
 
@@ -114,6 +131,7 @@ static struct {
 
 static int connect(int argc, char **argv)
 {
+    manual_disconnect = false;
     int nerrors = arg_parse(argc, argv, (void **)&join_args);
     if (nerrors != 0) {
         arg_print_errors(stderr, join_args.end, argv[0]);
@@ -126,15 +144,48 @@ static int connect(int argc, char **argv)
         join_args.timeout->ival[0] = JOIN_TIMEOUT_MS;
     }
 
-    bool connected =
+    wifi_disconnect();
+
+    is_connected =
         wifi_join(join_args.ssid->sval[0], join_args.password->sval[0],
                   join_args.timeout->ival[0]);
-    if (!connected) {
+    if (!is_connected) {
+        esp_wifi_disconnect();
         ESP_LOGW(__func__, "Connection timed out");
         return 1;
     }
     ESP_LOGI(__func__, "Connected");
     return 0;
+}
+
+bool is_wifi_connected()
+{
+    return is_connected;
+}
+
+void wifi_disconnect()
+{
+    ESP_LOGI(__func__, "[+] disconnecting");
+    manual_disconnect = true;
+    esp_wifi_disconnect();
+    is_connected = false;
+}
+
+static int disconnect(int argc, char **argv)
+{
+    wifi_disconnect();
+    return 0;
+}
+
+void register_wifi_disconnect(void)
+{
+    const esp_console_cmd_t disconnect_cmd = {.command = "disconnect",
+                                              .help = "Disconnect from WiFi AP",
+                                              .hint = NULL,
+                                              .func = &disconnect,
+                                              .argtable = nullptr};
+
+    ESP_ERROR_CHECK(esp_console_cmd_register(&disconnect_cmd));
 }
 
 void register_wifi(void)
