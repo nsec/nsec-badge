@@ -80,6 +80,7 @@ void wifi_get_ssid(char *ssid)
 
 void wifi_join_if_configured()
 {
+
     initialise_wifi();
     esp_wifi_set_mode(WIFI_MODE_STA);
     wifi_config_t wifi_cfg;
@@ -98,7 +99,11 @@ void wifi_join_if_configured()
         xEventGroupWaitBits(wifi_event_group, CONNECTED_BIT, pdFALSE, pdTRUE,
                             JOIN_TIMEOUT_MS / portTICK_PERIOD_MS);
     is_connected = true;
-    return;
+}
+void wifi_join_if_configured_task(void *parm)
+{
+    wifi_join_if_configured();
+    vTaskDelete(NULL);
 }
 
 static bool wifi_join(const char *ssid, const char *pass, int timeout_ms)

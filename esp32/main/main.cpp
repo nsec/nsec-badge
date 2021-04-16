@@ -159,8 +159,6 @@ extern "C" void app_main(void)
 
     NeoPixel::getInstance().init();
 
-    wifi_join_if_configured();
-
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 
     welcome_screen();

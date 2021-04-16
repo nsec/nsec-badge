@@ -17,6 +17,7 @@ void wifi_disconnect();
 void wifi_get_ssid(char *ssid);
 void register_wifi();
 void wifi_join_if_configured();
+void wifi_join_if_configured_task(void *parm);
 void register_wifi_disconnect();
 bool is_wifi_connected();
 

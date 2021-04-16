@@ -118,7 +118,7 @@ static void initialize_console(void)
 
 void console_task(void *parm)
 {
-
+    wifi_join_if_configured();
     initialize_console();
 
     /* Diplay Nsec banner */
