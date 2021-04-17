@@ -22,6 +22,7 @@
 #include <string.h>
 
 #define JOIN_TIMEOUT_MS (10000)
+#define HOSTNAME "the_horse"
 
 static EventGroupHandle_t wifi_event_group;
 const int CONNECTED_BIT = BIT0;
@@ -52,6 +53,7 @@ static void initialise_wifi(void)
     wifi_event_group = xEventGroupCreate();
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     esp_netif_t *ap_netif = esp_netif_create_default_wifi_ap();
+    esp_netif_set_hostname(ap_netif, HOSTNAME);
     assert(ap_netif);
     esp_netif_t *sta_netif = esp_netif_create_default_wifi_sta();
     assert(sta_netif);
