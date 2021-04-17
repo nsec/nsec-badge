@@ -95,6 +95,8 @@ void wifi_join_if_configured()
         ESP_LOGI("wifi", "Found ssid %s", (const char *)wifi_cfg.sta.ssid);
         ESP_LOGI("wifi", "Found password %s",
                  (const char *)wifi_cfg.sta.password);
+    } else {
+        return;
     }
     esp_wifi_connect();
     int bits =
