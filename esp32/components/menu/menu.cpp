@@ -357,6 +357,7 @@ void display_sound_settings()
 void update_current_wifi_state()
 {
     menu_state_wifi_on = is_wifi_connected();
+    memset(menu_state_wifi_ssid, 0, 32);
 
     if (menu_state_wifi_on) {
         wifi_get_ssid(menu_state_wifi_ssid);
@@ -383,8 +384,12 @@ void display_wifi_settings()
         case BUTTON_ENTER:
             menu_state_wifi_on = !menu_state_wifi_on;
             if (menu_state_wifi_on) {
+                memset(menu_state_wifi_ssid, 0, 32);
+                strncpy(menu_state_wifi_ssid, "Connecting...", 14);
+                render_wifi_settings();
+
                 wifi_join_if_configured();
-                wifi_get_ssid(menu_state_wifi_ssid);
+                update_current_wifi_state();
             } else {
                 wifi_disconnect();
                 menu_state_wifi_ssid[0] = '\0';
