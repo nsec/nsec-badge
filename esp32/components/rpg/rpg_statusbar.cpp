@@ -1,5 +1,6 @@
 #include "rpg_statusbar.h"
 
+#include "cmd_wifi.h"
 #include "save.h"
 
 namespace rpg
@@ -52,8 +53,13 @@ void rpg_statusbar_render(Scene *scene)
                                    statusbar_icons_position);
     }
 
-    graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR_WIFI_OFF, 200,
-                               statusbar_icons_position);
+    if (is_wifi_connected())
+        graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR_WIFI_ON, 200,
+                                   statusbar_icons_position);
+    else
+        graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR_WIFI_OFF, 200,
+                                   statusbar_icons_position);
+
     graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR_SOUND_ON, 216,
                                statusbar_icons_position);
     graphics_update_display();

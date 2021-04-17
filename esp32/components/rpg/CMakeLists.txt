@@ -43,6 +43,7 @@ idf_component_register(
         "."
     REQUIRES
         buttons
+        cmd
         graphics
         infoscreen
         menu
