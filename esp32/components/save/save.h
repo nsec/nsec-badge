@@ -32,8 +32,10 @@ struct SaveData {
     // Punk dialog flag.
     bool flag5;
 
-    // Unused.
+    // Wifi connection flag.
     bool flag6;
+
+    // Unused.
     bool flag7;
     bool flag8;
     bool flag9;
