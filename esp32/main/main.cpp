@@ -16,6 +16,11 @@
 #include "rpg.h"
 #include "save.h"
 
+static const char firmware_dump_flag[] =
+    "Have you dumped the firmware? Here is your flag "
+    "[FLAG-JTAGPower0verwhelming]. Now flip the right bit in memory to "
+    "activate the flag icon in the status bar on screen.";
+
 static bool mount_spiffs()
 {
     esp_vfs_spiffs_conf_t conf = {.base_path = "/spiffs",
