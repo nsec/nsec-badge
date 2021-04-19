@@ -4,6 +4,10 @@
 #include <stdint.h>
 
 struct SaveData {
+    bool buzzer_enable_music;
+    int buzzer_enable_music_id;
+    bool buzzer_enable_sfx;
+    bool buzzer_enable_steps;
     bool chest_opened_island;
     bool chest_opened_konami;
     bool chest_opened_welcome;

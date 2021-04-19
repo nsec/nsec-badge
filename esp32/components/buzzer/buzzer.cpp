@@ -1,4 +1,7 @@
 #include "buzzer.h"
+
+#include "save.h"
+
 #include "driver/ledc.h"
 #include "esp_err.h"
 #include "esp_log.h"
@@ -204,30 +207,41 @@ void buzzer_init()
     // Initialize fade service.
     ledc_fade_func_install(0);
 
+    if (Save::save_data.buzzer_enable_music)
+        buzzer_request_music(static_cast<music::Music>(
+            Save::save_data.buzzer_enable_music_id));
+
     xTaskCreate(buzzer_task, "Buzzer", 4096, NULL, 99, &buzzer_task_handle);
 }
 
 void buzzer_request_music(music::Music music_id)
 {
-    playlist.id = music_id;
-
     switch (music_id) {
     case music::Music::music_astronomia:
-        playlist.bpm = 1800;
-        playlist.music = music::music_astronomia;
-        playlist.repeat = 1000;
+        if (Save::save_data.buzzer_enable_music) {
+            playlist.bpm = 1800;
+            playlist.id = music_id;
+            playlist.music = music::music_astronomia;
+            playlist.repeat = 1000;
+        }
         return;
 
     case music::Music::music_nyan:
-        playlist.bpm = 1111;
-        playlist.music = music::music_nyan;
-        playlist.repeat = 1000;
+        if (Save::save_data.buzzer_enable_music) {
+            playlist.bpm = 1111;
+            playlist.id = music_id;
+            playlist.music = music::music_nyan;
+            playlist.repeat = 1000;
+        }
         return;
 
     case music::Music::music_starwars:
-        playlist.bpm = 2200;
-        playlist.music = music::music_starwars;
-        playlist.repeat = 1000;
+        if (Save::save_data.buzzer_enable_music) {
+            playlist.bpm = 2200;
+            playlist.id = music_id;
+            playlist.music = music::music_starwars;
+            playlist.repeat = 1000;
+        }
         return;
 
     default:

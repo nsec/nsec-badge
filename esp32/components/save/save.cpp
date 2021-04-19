@@ -11,6 +11,10 @@
 #define STORAGE_NAMESPACE "storage"
 
 SaveData Save::save_data = {
+    .buzzer_enable_music = false,
+    .buzzer_enable_music_id = 1,
+    .buzzer_enable_sfx = true,
+    .buzzer_enable_steps = true,
     .chest_opened_island = false,
     .chest_opened_konami = false,
     .chest_opened_welcome = false,

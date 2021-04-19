@@ -151,10 +151,9 @@ extern "C" void app_main(void)
     graphics_start();
     initialize_nvs();
     nsec_buttons_init();
-    buzzer_init();
 
     Save::load_save();
-
+    buzzer_init();
     NeoPixel::getInstance().init();
 
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
