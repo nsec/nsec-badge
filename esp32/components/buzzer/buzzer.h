@@ -105,7 +105,24 @@ constexpr int Db8 = 443492 << 5;
 constexpr int D_8 = 469864 << 5;
 constexpr int Eb8 = 497803 << 5;
 
+enum class Music {
+    NONE = 0,
+    music_astronomia,
+    music_nyan,
+    music_starwars,
+};
+
+struct Playlist
+{
+    Music id = Music::NONE;
+    const int *music = nullptr;
+    int bpm = 0;
+    int repeat = 0;
+};
+
 } // namespace music
 
 void buzzer_init();
-void buzzer_task(void *pvParameters);
+void buzzer_request_music(music::Music music_id);
+void buzzer_stop_music();
+void buzzer_stop_music(music::Music music_id);

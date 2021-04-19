@@ -114,8 +114,72 @@ const static int music_starwars[] = {
 
 } // namespace music
 
-ledc_timer_config_t ledc_timer;
-ledc_channel_config_t ledc_channel;
+static TaskHandle_t buzzer_task_handle;
+static ledc_timer_config_t ledc_timer;
+static ledc_channel_config_t ledc_channel;
+static music::Playlist playlist{};
+
+static void buzzer_play_tone(int note, int duration)
+{
+    // Set the note's frequency
+    if (note != 0) {
+        ledc_set_freq(ledc_channel.speed_mode, ledc_timer.timer_num, note);
+    }
+
+    // Set the note's duration
+    ledc_set_duty(ledc_channel.speed_mode, ledc_channel.channel, duration);
+    // update
+    ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel);
+    vTaskDelay(duration / portTICK_PERIOD_MS);
+
+    // Set back to the default values
+    ledc_set_duty(ledc_channel.speed_mode, ledc_channel.channel, 0);
+    ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel);
+}
+
+static void buzzer_play_music()
+{
+    const int *music = playlist.music;
+    int duration;
+    int note;
+
+    if (!music)
+        return;
+
+    while (playlist.repeat > 0) {
+        for (int i = 0; music[i] != 0; ++i) {
+            if (music != playlist.music || playlist.repeat < 1)
+                return;
+
+            duration = 0;
+            duration += (playlist.bpm * (music[i] & 1));
+            duration += (playlist.bpm * (music[i] & 2)) / 4;
+            duration += (playlist.bpm * (music[i] & 4)) / 16;
+            duration += (playlist.bpm * (music[i] & 8)) / 64;
+            duration += (playlist.bpm * (music[i] & 16)) / 256;
+
+            if (duration == 0)
+                break;
+
+            note = (music[i] >> 5) / 100;
+            buzzer_play_tone(note, duration);
+        }
+
+        playlist.repeat--;
+    }
+}
+
+static void buzzer_task(void *arg)
+{
+    while (true) {
+        if (playlist.music && playlist.repeat > 0) {
+            buzzer_play_music();
+            continue;
+        }
+
+        vTaskDelay(5);
+    }
+}
 
 void buzzer_init()
 {
@@ -139,52 +203,47 @@ void buzzer_init()
 
     // Initialize fade service.
     ledc_fade_func_install(0);
+
+    xTaskCreate(buzzer_task, "Buzzer", 4096, NULL, 99, &buzzer_task_handle);
 }
 
-static void buzzer_play_tone(int note, int duration)
+void buzzer_request_music(music::Music music_id)
 {
-    // Set the note's frequency
-    if (note != 0) {
-        ledc_set_freq(ledc_channel.speed_mode, ledc_timer.timer_num, note);
-    }
+    playlist.id = music_id;
 
-    // Set the note's duration
-    ledc_set_duty(ledc_channel.speed_mode, ledc_channel.channel, duration);
-    // update
-    ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel);
-    vTaskDelay(duration / portTICK_PERIOD_MS);
+    switch (music_id) {
+    case music::Music::music_astronomia:
+        playlist.bpm = 1800;
+        playlist.music = music::music_astronomia;
+        playlist.repeat = 1000;
+        return;
 
-    // Set back to the default values
-    ledc_set_duty(ledc_channel.speed_mode, ledc_channel.channel, 0);
-    ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel);
-}
+    case music::Music::music_nyan:
+        playlist.bpm = 1111;
+        playlist.music = music::music_nyan;
+        playlist.repeat = 1000;
+        return;
 
-static void buzzer_play_song(const int *music, int bpm)
-{
-    int duration;
-    int note;
+    case music::Music::music_starwars:
+        playlist.bpm = 2200;
+        playlist.music = music::music_starwars;
+        playlist.repeat = 1000;
+        return;
 
-    for (int i = 0; music[i] != 0; ++i) {
-        duration = 0;
-        duration += (bpm * (music[i] & 1));
-        duration += (bpm * (music[i] & 2)) / 4;
-        duration += (bpm * (music[i] & 4)) / 16;
-        duration += (bpm * (music[i] & 8)) / 64;
-        duration += (bpm * (music[i] & 16)) / 256;
-
-        if (duration == 0)
-            return;
-
-        note = (music[i] >> 5) / 100;
-        buzzer_play_tone(note, duration);
+    default:
+        buzzer_stop_music();
     }
 }
 
-void buzzer_task(void *pvParameters)
+void buzzer_stop_music()
 {
-    while (true) {
-        buzzer_play_song(music::music0, 2200);
-        buzzer_play_song(music::music1, 1700);
-        buzzer_play_song(music::music2, 1111);
-    }
+    playlist.id = music::Music::NONE;
+    playlist.music = nullptr;
+    playlist.repeat = 0;
+}
+
+void buzzer_stop_music(music::Music music_id)
+{
+    if (playlist.id == music_id)
+        buzzer_stop_music();
 }

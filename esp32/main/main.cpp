@@ -151,9 +151,7 @@ extern "C" void app_main(void)
     graphics_start();
     initialize_nvs();
     nsec_buttons_init();
-
     buzzer_init();
-    xTaskCreate(buzzer_task, "Buzzer", 1024*4, NULL, 99, NULL);
 
     Save::load_save();
 
