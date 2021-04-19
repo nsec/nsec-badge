@@ -230,6 +230,8 @@ static ACTION handle_open_chest(SceneObjectIdentity chest_identity,
     scene->unlock();
     scene->unpause();
 
+    buzzer_request_music(music::Music::sfx_success);
+
     return ACTION::nothing;
 }
 
