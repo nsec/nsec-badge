@@ -81,6 +81,41 @@ static bool display_character_dialog(Character *character, Scene *scene,
     return true;
 }
 
+static void display_island_flag()
+{
+    display_dialog_panel();
+
+    int x = DIALOG_X;
+    int y = DIALOG_Y + 50;
+
+    char flag[20] = "\x2f\x5a\x2e\x5f\x19\x19\xf4\xe6\x37\xfd\x27\xd2\x37\x42"
+                    "\xf3\x13\x0a\x32";
+
+    flag[0] ^= 73;
+    flag[1] ^= 54;
+    flag[2] ^= 79;
+    flag[3] ^= 56;
+    flag[4] ^= 84;
+    flag[5] ^= 116;
+    flag[6] ^= 114;
+    flag[7] ^= 105;
+    flag[8] ^= 86;
+    flag[9] ^= 118;
+    flag[10] ^= 77;
+    flag[11] ^= 71;
+    flag[12] ^= 103;
+    flag[13] ^= 54;
+    flag[14] ^= 103;
+    flag[15] ^= 119;
+    flag[16] ^= 89;
+    flag[17] ^= 100;
+
+    for (int i = 0; i < 18; ++i)
+        flag[i] -= 32;
+
+    graphics_print_small(flag, x, y, DIALOG_COLOR, &x, &y);
+}
+
 static void display_welcome_flag()
 {
     display_dialog_panel();
@@ -218,6 +253,33 @@ static ACTION handle_show_oversign(Oversign oversign, Scene *scene)
     return ACTION::nothing;
 }
 
+static ACTION handle_island_flag(Scene *scene)
+{
+    button_t button = BUTTON_NONE;
+
+    Save::save_data.chest_opened_island = true;
+    Save::save_data.flag3 = true;
+    Save::write_save();
+
+    handle_open_chest(SceneObjectIdentity::chest_island, scene);
+
+    scene->pause();
+    scene->lock();
+    display_island_flag();
+
+    while (true) {
+        xQueueReceive(button_event_queue, &button, 10 / portTICK_PERIOD_MS);
+        if (button == BUTTON_BACK_RELEASE)
+            break;
+    }
+
+    scene->get_viewport().mark_for_full_refresh();
+    scene->unlock();
+    scene->unpause();
+
+    return ACTION::nothing;
+}
+
 static ACTION handle_welcome_flag(Scene *scene)
 {
     button_t button = BUTTON_NONE;
@@ -285,12 +347,8 @@ static ACTION handle_main_enter_action(Scene *scene)
     if (coordinates.within_tile(36, 29, 36, 29))
         return ACTION::badge_info;
 
-    if (coordinates.within_tile(47, 47, 50, 50)) {
-        Save::save_data.chest_opened_island = true;
-        Save::save_data.flag3 = true;
-        Save::write_save();
-        return handle_open_chest(SceneObjectIdentity::chest_island, scene);
-    }
+    if (coordinates.within_tile(47, 47, 50, 50))
+        return handle_island_flag(scene);
 
     if (coordinates.within_xy(0, 0, 18, 40)) {
         Save::save_data.chest_opened_konami = true;
