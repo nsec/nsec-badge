@@ -8,6 +8,7 @@
 #include "rpg/characters/MainCharacter.h"
 
 #include "buttons.h"
+#include "buzzer.h"
 #include "graphics.h"
 
 namespace rpg
@@ -197,7 +198,9 @@ static void rpg_control_main_character_task(void *arg)
             auto coordinates = mc->get_coordinates();
             coordinates.change_xy_by(dx, dy);
             mc->move(coordinates);
-        }
+            buzzer_request_music(music::Music::sfx_steps);
+        } else
+            buzzer_stop_music(music::Music::sfx_steps);
     }
 
     // Self-destruct.

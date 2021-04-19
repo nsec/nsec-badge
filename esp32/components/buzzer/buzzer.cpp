@@ -122,6 +122,13 @@ const static int sfx_failure[] = {
     0,
 };
 
+const static int sfx_steps[] = {
+    C_3 | 4,
+    A_3 | 4,
+    C_0 | 2,
+    0,
+};
+
 const static int sfx_success[] = {
     A_4 | 4, A_4 | 8, D_5 | 8, F_5 | 8, A_5 | 8, D_5 | 8, F_5 | 8, A_5 | 2, 0,
 };
@@ -261,6 +268,15 @@ void buzzer_request_music(music::Music music_id)
             playlist.id = music_id;
             playlist.music = music::sfx_failure;
             playlist.repeat = 1;
+        }
+        return;
+
+    case music::Music::sfx_steps:
+        if (Save::save_data.buzzer_enable_steps) {
+            playlist.bpm = 200;
+            playlist.id = music_id;
+            playlist.music = music::sfx_steps;
+            playlist.repeat = 1000;
         }
         return;
 

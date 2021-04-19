@@ -111,6 +111,7 @@ enum class Music {
     music_nyan,
     music_starwars,
     sfx_failure,
+    sfx_steps,
     sfx_success,
 };
 
