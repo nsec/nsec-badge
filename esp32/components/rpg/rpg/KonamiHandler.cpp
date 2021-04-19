@@ -2,6 +2,7 @@
 
 #include "rpg/Coordinates.h"
 
+#include "buzzer.h"
 #include "save.h"
 
 namespace rpg
@@ -15,7 +16,7 @@ void KonamiHandler::patch()
     auto coordinates =
         scene.get_viewport().to_screen(GlobalCoordinates::tile(0, 8));
     if (coordinates.x() < 0 || coordinates.y() < 0) {
-        // TODO play "bad" sound.
+        buzzer_request_music(music::Music::sfx_failure);
         return;
     }
 
@@ -35,7 +36,7 @@ void KonamiHandler::patch()
     Save::save_data.konami_done = true;
     Save::write_save();
 
-    // TODO play "good" sound.
+    buzzer_request_music(music::Music::sfx_success);
 
     scene.get_viewport().mark_for_full_refresh();
 }

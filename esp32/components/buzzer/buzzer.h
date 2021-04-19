@@ -110,10 +110,11 @@ enum class Music {
     music_astronomia,
     music_nyan,
     music_starwars,
+    sfx_failure,
+    sfx_success,
 };
 
-struct Playlist
-{
+struct Playlist {
     Music id = Music::NONE;
     const int *music = nullptr;
     int bpm = 0;

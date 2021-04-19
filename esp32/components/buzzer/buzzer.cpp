@@ -115,6 +115,17 @@ const static int music_starwars[] = {
     0,
 };
 
+const static int sfx_failure[] = {
+    Gb3 | 4,
+    F_3 | 4,
+    E_3 | 1,
+    0,
+};
+
+const static int sfx_success[] = {
+    A_4 | 4, A_4 | 8, D_5 | 8, F_5 | 8, A_5 | 8, D_5 | 8, F_5 | 8, A_5 | 2, 0,
+};
+
 } // namespace music
 
 static TaskHandle_t buzzer_task_handle;
@@ -208,8 +219,8 @@ void buzzer_init()
     ledc_fade_func_install(0);
 
     if (Save::save_data.buzzer_enable_music)
-        buzzer_request_music(static_cast<music::Music>(
-            Save::save_data.buzzer_enable_music_id));
+        buzzer_request_music(
+            static_cast<music::Music>(Save::save_data.buzzer_enable_music_id));
 
     xTaskCreate(buzzer_task, "Buzzer", 4096, NULL, 99, &buzzer_task_handle);
 }
@@ -241,6 +252,24 @@ void buzzer_request_music(music::Music music_id)
             playlist.id = music_id;
             playlist.music = music::music_starwars;
             playlist.repeat = 1000;
+        }
+        return;
+
+    case music::Music::sfx_failure:
+        if (Save::save_data.buzzer_enable_sfx) {
+            playlist.bpm = 1000;
+            playlist.id = music_id;
+            playlist.music = music::sfx_failure;
+            playlist.repeat = 1;
+        }
+        return;
+
+    case music::Music::sfx_success:
+        if (Save::save_data.buzzer_enable_sfx) {
+            playlist.bpm = 1000;
+            playlist.id = music_id;
+            playlist.music = music::sfx_success;
+            playlist.repeat = 1;
         }
         return;
 

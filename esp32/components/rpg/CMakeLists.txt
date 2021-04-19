@@ -43,6 +43,7 @@ idf_component_register(
         "."
     REQUIRES
         buttons
+        buzzer
         cmd
         graphics
         infoscreen
