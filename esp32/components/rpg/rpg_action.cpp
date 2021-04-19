@@ -7,6 +7,7 @@
 #include "rpg/characters/MainCharacter.h"
 #include "rpg_duck.h"
 
+#include "buzzer.h"
 #include "save.h"
 
 namespace rpg
@@ -59,12 +60,16 @@ static bool display_character_dialog(Character *character, Scene *scene,
     int x = dialog_position_x;
     int y = dialog_position_y;
 
+    buzzer_request_music(music::Music::sfx_dialog);
+
     graphics_print_large(character->get_name(), x, y, color, &x, &y);
     graphics_print_large("_\n", x, y, color, &x, &y);
 
     x = dialog_position_x;
     for (; line < start_line + 6 && dialog[line][0] != '\0'; ++line)
         graphics_print_small(dialog[line], x, y, color, &x, &y);
+
+    buzzer_stop_music(music::Music::sfx_dialog);
 
     return true;
 }

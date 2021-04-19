@@ -110,6 +110,7 @@ enum class Music {
     music_astronomia,
     music_nyan,
     music_starwars,
+    sfx_dialog,
     sfx_failure,
     sfx_steps,
     sfx_success,

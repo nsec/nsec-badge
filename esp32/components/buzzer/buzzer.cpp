@@ -115,6 +115,12 @@ const static int music_starwars[] = {
     0,
 };
 
+const static int sfx_dialog[] = {
+    D_3 | 1,
+    E_3 | 1,
+    0,
+};
+
 const static int sfx_failure[] = {
     Gb3 | 4,
     F_3 | 4,
@@ -258,6 +264,15 @@ void buzzer_request_music(music::Music music_id)
             playlist.bpm = 2200;
             playlist.id = music_id;
             playlist.music = music::music_starwars;
+            playlist.repeat = 1000;
+        }
+        return;
+
+    case music::Music::sfx_dialog:
+        if (Save::save_data.buzzer_enable_sfx) {
+            playlist.bpm = 200;
+            playlist.id = music_id;
+            playlist.music = music::sfx_dialog;
             playlist.repeat = 1000;
         }
         return;
