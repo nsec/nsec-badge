@@ -1,5 +1,7 @@
 #include "rpg_duck.h"
 
+#include "save.h"
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -19,16 +21,19 @@ static constexpr char quack[] =
     "quickquickquack quackquickquackquick quackquickquack quack "
     "quackquackquack quackquackquick quick quack quackquickquickquick "
     "quickquackquick quick quickquack quackquickquick quickquickquack "
-    "quickquickquick quick quack quickquickquickquick quickquickquick "
-    "quackquickquackquick quickquackquickquick quickquick quackquickquackquick "
-    "quackquack quackquickquick quickquickquackquick quickquackquickquick "
-    "quickquack quackquackquick quackquickquickquick quackquick "
-    "quickquickquickquack quackquackquickquick quackquickquack quickquack "
-    "quickquackquack quackquack quickquickquick quackquickquackquack "
-    "quickquickquick";
+    "quickquickquick quick quack quickquickquickquick quickquick "
+    "quickquickquick quickquickquackquick quickquackquickquick quickquack "
+    "quackquackquick quackquickquickquick quackquick quickquickquickquack "
+    "quackquackquickquick quackquickquack quickquack quickquackquack "
+    "quackquack quickquickquick quackquickquackquack quickquickquick";
 
 void rpg_duck_challenge()
 {
+    if (!Save::save_data.flag4) {
+        Save::save_data.flag4 = true;
+        Save::write_save();
+    }
+
     std::cout << alt_buffer_start;
 
     for (int i = 0; quack[i] != '\0'; ++i) {

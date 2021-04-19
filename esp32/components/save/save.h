@@ -26,8 +26,10 @@ struct SaveData {
     // Island flag.
     bool flag3;
 
-    // Unused.
+    // Duck flag.
     bool flag4;
+
+    // Unused.
     bool flag5;
     bool flag6;
     bool flag7;
