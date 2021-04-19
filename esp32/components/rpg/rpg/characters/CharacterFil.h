@@ -42,6 +42,18 @@ static const char *fil_dialog_1[] = {
     "it's with \n",    "sudo shutdown -r now", "",
 };
 
+static const char *fil_dialog_2[] = {
+    "Q: How do you\n",
+    "   generate a\n",
+    "   random string?\n",
+    "\n",
+    "A: Put a Windows\n",
+    "   user in front\n",
+    "   of vi, and tell\n",
+    "   them to exit.",
+    "",
+};
+
 } // namespace rpg::dialog
 
 namespace rpg
@@ -67,6 +79,17 @@ class CharacterFil : virtual public Character, public MovingMixin
 
     virtual const char **get_dialog() override
     {
+        if (next_dialog == dialog::fil_dialog_1) {
+            next_dialog = dialog::fil_dialog_2;
+            return dialog::fil_dialog_1;
+        }
+
+        if (next_dialog == dialog::fil_dialog_2) {
+            next_dialog = dialog::fil_dialog_1;
+            return dialog::fil_dialog_2;
+        }
+
+        next_dialog = dialog::fil_dialog_2;
         return dialog::fil_dialog_1;
     }
 
@@ -85,6 +108,7 @@ class CharacterFil : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg
