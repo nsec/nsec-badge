@@ -481,7 +481,7 @@ static bool handle_main_konami_code(Scene *scene, button_t button,
         break;
     }
 
-    return konami_code == 910842187;
+    return (konami_code & 0x3FFFFFFF) == 910842187;
 }
 
 ACTION rpg_action_main_handle(Scene *scene, button_t button, void *extra_arg)
