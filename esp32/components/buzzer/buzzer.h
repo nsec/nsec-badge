@@ -103,7 +103,7 @@
 #define NOTE_D8 4698.64
 #define NOTE_Eb8 4978.03
 
-#define BPM 103 // for the imperial march
+#define BPM 200 // for the imperial march
 
 // From the formula:
 // 60,000 / Bpm = Ms We can break this down as 60'000 (the number of
