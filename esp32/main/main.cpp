@@ -153,7 +153,7 @@ extern "C" void app_main(void)
     nsec_buttons_init();
 
     buzzer_init();
-    xTaskCreate(buzzer_play_song, "Buzzer", 1024*4, NULL, 99, NULL);
+    xTaskCreate(buzzer_task, "Buzzer", 1024*4, NULL, 99, NULL);
 
     Save::load_save();
 

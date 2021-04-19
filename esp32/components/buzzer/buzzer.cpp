@@ -7,385 +7,112 @@
 
 #define PIN_BUZZER 26
 
-const static playback_t music0[] = {
-    {NOTE_LA3, Q},    {NOTE_LA3, Q},     {NOTE_LA3, Q},
-    {NOTE_F3, E + S}, {NOTE_C4, S},
+namespace music
+{
 
-    {NOTE_LA3, Q},    {NOTE_F3, E + S},  {NOTE_C4, S},
-    {NOTE_LA3, H},
+//// https://onlinesequencer.net/1675803#t0
+const static int music_astronomia[] = {
+    Bb4 | 8, Bb4 | 8, Bb4 | 8, Bb4 | 8, D_5 | 8, D_5 | 8, D_5 | 8, D_5 | 8,
+    C_5 | 8, C_5 | 8, C_5 | 8, C_5 | 8, F_5 | 8, F_5 | 8, F_5 | 8, F_5 | 8,
+    G_5 | 8, G_5 | 8, G_5 | 8, G_5 | 8, G_5 | 8, G_5 | 8, G_5 | 8, G_5 | 8,
+    G_5 | 4, G_5 | 4, C_5 | 8, Bb4 | 8, A_4 | 8, F_4 | 8,
 
-    {NOTE_E4, Q},     {NOTE_E4, Q},      {NOTE_E4, Q},
-    {NOTE_F4, E + S}, {NOTE_C4, S},
+    G_4 | 4, G_4 | 8, D_5 | 8, C_5 | 4, Bb4 | 4, A_4 | 4, A_4 | 8, A_4 | 8,
+    C_5 | 4, Bb4 | 8, A_4 | 8, G_4 | 4, G_4 | 8, Ab5 | 8, A_5 | 8, Ab5 | 8,
+    A_5 | 8, Ab5 | 8, G_4 | 4, G_4 | 8, Ab5 | 8, A_5 | 8, Ab5 | 8, A_5 | 8,
+    Ab5 | 8,
 
-    {NOTE_Ab3, Q},    {NOTE_F3, E + S},  {NOTE_C4, S},
-    {NOTE_LA3, H},
+    G_4 | 4, G_4 | 8, D_5 | 8, C_5 | 4, Bb4 | 4, A_4 | 4, A_4 | 8, A_4 | 8,
+    C_5 | 4, Bb4 | 8, A_4 | 8, G_4 | 4, G_4 | 8, Ab5 | 8, A_5 | 8, Ab5 | 8,
+    A_5 | 8, Ab5 | 8, G_4 | 4, G_4 | 8, Ab5 | 8, A_5 | 8, Ab5 | 8, A_5 | 8,
+    Ab5 | 8,
 
-    {NOTE_LA4, Q},    {NOTE_LA3, E + S}, {NOTE_LA3, S},
-    {NOTE_LA4, Q},    {NOTE_Ab4, E + S}, {NOTE_G4, S},
-
-    {NOTE_Gb4, S},    {NOTE_E4, S},      {NOTE_F4, E},
-
-    {0, E},           {NOTE_F3, E},      {NOTE_Ab3, Q},
-    {NOTE_F3, E + S}, {NOTE_LA3, S},
-
-    {NOTE_C4, Q},     {NOTE_LA3, E + S}, {NOTE_C4, S},
-    {NOTE_E4, H},
-
-    {NOTE_LA4, Q},    {NOTE_LA3, E + S}, {NOTE_LA3, S},
-    {NOTE_LA4, Q},    {NOTE_Ab4, E + S}, {NOTE_G4, S},
-
-    {NOTE_Gb4, S},    {NOTE_E4, S},      {NOTE_F4, E},
-    {0, E},           {NOTE_Bb3, E},     {NOTE_Eb4, Q},
-    {NOTE_D4, E + S}, {NOTE_Db4, S},
-
-    {NOTE_C4, S},     {NOTE_B3, S},      {NOTE_C4, E},
-    {0, E},           {NOTE_F3, E},      {NOTE_Ab3, Q},
-    {NOTE_F3, E + S}, {NOTE_C4, S},
-
-    {NOTE_LA3, Q},    {NOTE_F3, E + S},  {NOTE_C4, S},
-    {NOTE_LA3, H},    {0, 2 * E}};
-
-// https://onlinesequencer.net/1675803#t0
-const static playback_t music1[] = {
-    {NOTE_Bb4, E},
-    {NOTE_Bb4, E},
-    {NOTE_Bb4, E},
-    {NOTE_Bb4, E},
-
-    {NOTE_D5, E},
-    {NOTE_D5, E},
-    {NOTE_D5, E},
-    {NOTE_D5, E},
-
-    {NOTE_C5, E},
-    {NOTE_C5, E},
-    {NOTE_C5, E},
-    {NOTE_C5, E},
-
-    {NOTE_F5, E},
-    {NOTE_F5, E},
-    {NOTE_F5, E},
-    {NOTE_F5, E},
-    // --------------
-    {NOTE_G5, E},
-    {NOTE_G5, E},
-    {NOTE_G5, E},
-    {NOTE_G5, E},
-
-    {NOTE_G5, E},
-    {NOTE_G5, E},
-    {NOTE_G5, E},
-    {NOTE_G5, E},
-
-    {NOTE_G5, Q},
-    {NOTE_G5, Q},
-
-    {NOTE_C5, E},
-    {NOTE_Bb4, E},
-    {NOTE_LA4, E},
-    {NOTE_F4, E},
-    // --------------
-    {NOTE_G4, Q},
-    {NOTE_G4, E},
-    {NOTE_D5, E},
-
-    {NOTE_C5, Q},
-    {NOTE_Bb4, Q},
-
-    {NOTE_LA4, Q},
-    {NOTE_LA4, E},
-    {NOTE_LA4, E},
-
-    {NOTE_C5, Q},
-    {NOTE_Bb4, E},
-    {NOTE_LA4, E},
-    // --------------
-    {NOTE_G4, Q},
-    {NOTE_G4, E},
-    {NOTE_Ab4, E},
-
-    {NOTE_LA4, E},
-    {NOTE_Ab4, E},
-    {NOTE_LA4, E},
-    {NOTE_Ab4, E},
-
-    {NOTE_G4, Q},
-    {NOTE_G4, E},
-    {NOTE_Ab4, E},
-
-    {NOTE_LA4, E},
-    {NOTE_Ab4, E},
-    {NOTE_LA4, E},
-    {NOTE_Ab4, E},
-    // --------------
-    {NOTE_G4, Q},
-    {NOTE_G4, E},
-    {NOTE_D5, E},
-
-    {NOTE_C5, Q},
-    {NOTE_Bb4, Q},
-
-    {NOTE_LA4, Q},
-    {NOTE_LA4, E},
-    {NOTE_LA4, E},
-
-    {NOTE_C5, Q},
-    {NOTE_Bb4, E},
-    {NOTE_LA4, E},
-    // --------------
-    {NOTE_G4, Q},
-    {NOTE_G4, E},
-    {NOTE_Ab4, E},
-
-    {NOTE_LA4, E},
-    {NOTE_Ab4, E},
-    {NOTE_LA4, E},
-    {NOTE_Ab4, E},
-
-    {NOTE_G4, Q},
-    {NOTE_G4, E},
-    {NOTE_Ab4, E},
-
-    {NOTE_LA4, E},
-    {NOTE_Ab4, E},
-    {NOTE_LA4, E},
-    {NOTE_Ab4, E},
-    // --------------
-    {NOTE_G4, Q},
-
+    0,
 };
 
-const static playback_t music2[] = {
-// Part 1
-    {NOTE_G5, Q},
-    {NOTE_LA5, Q},
-    {NOTE_E5, E},
-    {NOTE_E5, Q},
-    {NOTE_C5, E},
-    {NOTE_Eb5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, H},
-    {NOTE_D5, Q},
+const static int music_nyan[] = {
+    G_5 | 4, A_5 | 4, E_5 | 8, E_5 | 4, C_5 | 8, Eb5 | 8, D_5 | 8, C_5 | 2,
+    D_5 | 4,
 
-    {NOTE_Eb5, Q},
-    {NOTE_Eb5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_G5, E},
-    {NOTE_LA5, E},
-    {NOTE_E5, E},
-    {NOTE_G5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
+    Eb5 | 4, Eb5 | 8, D_5 | 8, C_5 | 8, D_5 | 8, E_5 | 8, G_5 | 8, A_5 | 8,
+    E_5 | 8, G_5 | 8, D_5 | 8, E_5 | 8, C_5 | 8, D_5 | 8, C_5 | 8,
 
-// Part 1 repeat
-    {NOTE_G5, Q},
-    {NOTE_LA5, Q},
-    {NOTE_E5, E},
-    {NOTE_E5, Q},
-    {NOTE_C5, E},
-    {NOTE_Eb5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, H},
-    {NOTE_D5, Q},
+    G_5 | 4, A_5 | 4, E_5 | 8, E_5 | 4, C_5 | 8, Eb5 | 8, D_5 | 8, C_5 | 2,
+    D_5 | 4,
 
-    {NOTE_Eb5, Q},
-    {NOTE_Eb5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_G5, E},
-    {NOTE_LA5, E},
-    {NOTE_E5, E},
-    {NOTE_G5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
+    Eb5 | 4, Eb5 | 8, D_5 | 8, C_5 | 8, D_5 | 8, E_5 | 8, G_5 | 8, A_5 | 8,
+    E_5 | 8, G_5 | 8, D_5 | 8, E_5 | 8, C_5 | 8, D_5 | 8, C_5 | 8,
 
-// Part 1 repeat again
-    {NOTE_G5, Q},
-    {NOTE_LA5, Q},
-    {NOTE_E5, E},
-    {NOTE_E5, Q},
-    {NOTE_C5, E},
-    {NOTE_Eb5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, H},
-    {NOTE_D5, Q},
+    G_5 | 4, A_5 | 4, E_5 | 8, E_5 | 4, C_5 | 8, Eb5 | 8, D_5 | 8, C_5 | 2,
+    D_5 | 4,
 
-    {NOTE_Eb5, Q},
-    {NOTE_Eb5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_G5, E},
-    {NOTE_LA5, E},
-    {NOTE_E5, E},
-    {NOTE_G5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
+    Eb5 | 4, Eb5 | 8, D_5 | 8, C_5 | 8, D_5 | 8, E_5 | 8, G_5 | 8, A_5 | 8,
+    E_5 | 8, G_5 | 8, D_5 | 8, E_5 | 8, C_5 | 8, D_5 | 8, C_5 | 8,
 
-// Part 2
-    {NOTE_E5, Q},
-    {NOTE_G5, Q},
-    {NOTE_LA5, E},
-    {NOTE_E5, E},
-    {NOTE_G5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_C5, E},
-    {NOTE_Eb5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
+    E_5 | 4, G_5 | 4, A_5 | 8, E_5 | 8, G_5 | 8, D_5 | 8, E_5 | 8, C_5 | 8,
+    Eb5 | 8, D_5 | 8, C_5 | 8, D_5 | 8,
 
-    {NOTE_Eb5, Q},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_G5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, Q},
-    {NOTE_C5, Q},
-    {NOTE_D5, Q},
+    Eb5 | 4, C_5 | 8, D_5 | 8, E_5 | 8, G_5 | 8, D_5 | 8, E_5 | 8, D_5 | 8,
+    C_5 | 8, D_5 | 4, C_5 | 4, D_5 | 4,
 
-// Part 3
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_C5, E},
-    {NOTE_F5, E},
-    {NOTE_E5, E},
-    {NOTE_F5, E},
-    {NOTE_G5, E},
+    C_5 | 4, G_4 | 8, A_4 | 8, C_5 | 4, G_4 | 8, A_4 | 8, C_5 | 8, D_5 | 8,
+    E_5 | 8, C_5 | 8, F_5 | 8, E_5 | 8, F_5 | 8, G_5 | 8,
 
-    {NOTE_C5, E},
-    {0, E},
-    {NOTE_C5, E},
-    {0, E},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, E},
-    {NOTE_G4, E},
-    {NOTE_F5, E},
-    {NOTE_E5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
-    {NOTE_G4, E},
-    {NOTE_E4, E},
-    {NOTE_F4, E},
-    {NOTE_G4, E},
+    C_5 | 8, 000 | 8, C_5 | 8, 000 | 8, G_4 | 8, A_4 | 8, C_5 | 8, G_4 | 8,
+    F_5 | 8, E_5 | 8, D_5 | 8, C_5 | 8, G_4 | 8, E_4 | 8, F_4 | 8, G_4 | 8,
 
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_C5, E},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_G4, E},
+    C_5 | 4, G_4 | 8, A_4 | 8, C_5 | 4, G_4 | 8, A_4 | 8, C_5 | 8, C_5 | 8,
+    D_5 | 8, E_5 | 8, C_5 | 8, G_4 | 8, A_4 | 8, G_4 | 8,
 
-    {NOTE_C5, E},
-    {NOTE_C5, E},
-    {NOTE_C5, E},
-    {NOTE_B5, E},
-    {NOTE_C5, E},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, E},
-    {NOTE_F5, E},
-    {NOTE_E5, E},
-    {NOTE_F5, E},
-    {NOTE_G5, E},
-    {NOTE_C5, E},
-    {NOTE_B5, E},
+    C_5 | 8, C_5 | 8, C_5 | 8, B_5 | 8, C_5 | 8, G_4 | 8, A_4 | 8, C_5 | 8,
+    F_5 | 8, E_5 | 8, F_5 | 8, G_5 | 8, C_5 | 8, B_5 | 8,
 
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_C5, E},
-    {NOTE_F5, E},
-    {NOTE_E5, E},
-    {NOTE_F5, E},
-    {NOTE_G5, E},
+    C_5 | 4, G_4 | 8, A_4 | 8, C_5 | 4, G_4 | 8, A_5 | 8, C_5 | 8, D_5 | 8,
+    E_5 | 8, C_5 | 8, F_5 | 8, E_5 | 8, F_5 | 8, G_5 | 8,
 
-    {NOTE_C5, Q},
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, E},
-    {NOTE_G4, E},
-    {NOTE_F5, E},
-    {NOTE_E5, E},
-    {NOTE_D5, E},
-    {NOTE_C5, E},
-    {NOTE_G4, E},
-    {NOTE_E4, E},
-    {NOTE_F4, E},
-    {NOTE_G4, E},
+    C_5 | 4, C_5 | 4, G_4 | 8, A_4 | 8, C_5 | 8, G_4 | 8, F_5 | 8, E_5 | 8,
+    D_5 | 8, C_5 | 8, G_4 | 8, E_4 | 8, F_4 | 8, G_4 | 8,
 
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, Q},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, E},
-    {NOTE_C5, E},
-    {NOTE_D5, E},
-    {NOTE_E5, E},
-    {NOTE_C5, E},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_G4, E},
+    C_5 | 4, G_4 | 8, A_4 | 8, C_5 | 4, G_4 | 8, A_4 | 8, C_5 | 8, C_5 | 8,
+    D_5 | 8, E_5 | 8, C_5 | 8, G_4 | 8, A_4 | 8, G_4 | 8,
 
-    {NOTE_C5, Q},
-    {NOTE_C5, E},
-    {NOTE_B5, E},
-    {NOTE_C5, E},
-    {NOTE_G4, E},
-    {NOTE_LA4, E},
-    {NOTE_C5, E},
-    {NOTE_F5, E},
-    {NOTE_E5, E},
-    {NOTE_F5, E},
-    {NOTE_G5, E},
-    {NOTE_C5, Q},
-    {NOTE_D5, Q},
+    C_5 | 4, C_5 | 8, B_5 | 8, C_5 | 8, G_4 | 8, A_4 | 8, C_5 | 8, F_5 | 8,
+    E_5 | 8, F_5 | 8, G_5 | 8, C_5 | 4, D_5 | 4,
+
+    0,
 };
+
+const static int music_starwars[] = {
+    A_3 | 4,  A_3 | 4,  A_3 | 4,  F_3 | 24, C_4 | 16,
+
+    A_3 | 4,  F_3 | 24, C_4 | 16, A_3 | 2,
+
+    E_4 | 4,  E_4 | 4,  E_4 | 4,  F_4 | 24, C_4 | 16,
+
+    Ab3 | 4,  F_3 | 24, C_4 | 16, A_3 | 2,
+
+    A_4 | 4,  A_3 | 24, A_3 | 16, A_4 | 4,  Ab4 | 24, G_4 | 16,
+
+    Gb4 | 16, E_4 | 16, F_4 | 8,  F_4 | 8,
+
+    F_3 | 8,  Ab3 | 4,  F_3 | 24, A_3 | 16,
+
+    C_4 | 4,  A_3 | 24, C_4 | 16, E_4 | 2,
+
+    A_4 | 4,  A_3 | 24, A_3 | 16, A_4 | 4,  Ab4 | 24, G_4 | 16,
+
+    Gb4 | 16, E_4 | 16, F_4 | 8,  F_4 | 8,  Bb3 | 8,  Eb4 | 4,
+    D_4 | 24, Db4 | 16,
+
+    C_4 | 16, B_3 | 16, C_4 | 8,  C_4 | 8,  F_3 | 8,  Ab3 | 4,
+    F_3 | 24, C_4 | 16,
+
+    A_3 | 4,  F_3 | 24, C_4 | 16, A_3 | 2,
+
+    0,
+};
+
+} // namespace music
 
 ledc_timer_config_t ledc_timer;
 ledc_channel_config_t ledc_channel;
@@ -414,7 +141,7 @@ void buzzer_init()
     ledc_fade_func_install(0);
 }
 
-void buzzer_play_tone(int note, int duration)
+static void buzzer_play_tone(int note, int duration)
 {
     // Set the note's frequency
     if (note != 0) {
@@ -432,18 +159,32 @@ void buzzer_play_tone(int note, int duration)
     ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel);
 }
 
-void buzzer_play_song(void *pvParameters)
+static void buzzer_play_song(const int *music, int bpm)
+{
+    int duration;
+    int note;
+
+    for (int i = 0; music[i] != 0; ++i) {
+        duration = 0;
+        duration += (bpm * (music[i] & 1));
+        duration += (bpm * (music[i] & 2)) / 4;
+        duration += (bpm * (music[i] & 4)) / 16;
+        duration += (bpm * (music[i] & 8)) / 64;
+        duration += (bpm * (music[i] & 16)) / 256;
+
+        if (duration == 0)
+            return;
+
+        note = (music[i] >> 5) / 100;
+        buzzer_play_tone(note, duration);
+    }
+}
+
+void buzzer_task(void *pvParameters)
 {
     while (true) {
-        for (int i = 0; i < sizeof(music2) / sizeof(playback_t); i++) {
-            buzzer_play_tone(music2[i].note, music2[i].duration);
-        }
-        for (int i = 0; i < sizeof(music0) / sizeof(playback_t); i++) {
-            buzzer_play_tone(music0[i].note, music0[i].duration);
-        }
-        buzzer_play_tone(0, Q);
-        for (int i = 0; i < sizeof(music1) / sizeof(playback_t); i++) {
-            buzzer_play_tone(music1[i].note, music1[i].duration);
-        }
+        buzzer_play_song(music::music0, 2200);
+        buzzer_play_song(music::music1, 1700);
+        buzzer_play_song(music::music2, 1111);
     }
 }
