@@ -45,7 +45,27 @@ static const char *punk_dialog_1[] = {
     "\n",
     "\n",
     "\n",
-    "FLAG-KLJV490uhkEJF28\n",
+    "F\xff"
+    "L\xff"
+    "A\xff"
+    "G\xff"
+    "-\xff"
+    "K\xff"
+    "L\xff"
+    "J\xff"
+    "V\xff"
+    "4\xff"
+    "9\xff"
+    "0\xff"
+    "u\xff"
+    "h\xff"
+    "k\xff"
+    "E\xff"
+    "J\xff"
+    "F\xff"
+    "2\xff"
+    "8\n",
+    "\xf1",
     "",
 };
 

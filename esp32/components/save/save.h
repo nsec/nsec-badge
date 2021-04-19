@@ -29,8 +29,10 @@ struct SaveData {
     // Duck flag.
     bool flag4;
 
-    // Unused.
+    // Punk dialog flag.
     bool flag5;
+
+    // Unused.
     bool flag6;
     bool flag7;
     bool flag8;

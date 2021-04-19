@@ -73,8 +73,15 @@ static bool display_character_dialog(Character *character, Scene *scene,
     graphics_print_large("_\n", x, y, DIALOG_COLOR, &x, &y);
 
     x = DIALOG_X;
-    for (; line < start_line + 6 && dialog[line][0] != '\0'; ++line)
+    for (; line < start_line + 6 && dialog[line][0] != '\0'; ++line) {
+        if (dialog[line][0] == '\xf1') {
+            Save::save_data.flag5 = true;
+            Save::write_save();
+            continue;
+        }
+
         graphics_print_small(dialog[line], x, y, DIALOG_COLOR, &x, &y);
+    }
 
     buzzer_stop_music(music::Music::sfx_dialog);
 

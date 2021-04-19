@@ -367,7 +367,8 @@ static void graphics_print(const char *string, int x, int y, pixel_t color,
             print_x = x;
             print_y += font_height;
             continue;
-        }
+        } else if (string[i] == '\xff')
+            continue;
 
         int screen_x = print_y;
         int screen_y = DISPLAY_HEIGHT - print_x;
