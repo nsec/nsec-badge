@@ -108,6 +108,7 @@ constexpr int Eb8 = 497803 << 5;
 enum class Music {
     NONE = 0,
     music_astronomia,
+    music_mk,
     music_nyan,
     music_starwars,
     sfx_dialog,
