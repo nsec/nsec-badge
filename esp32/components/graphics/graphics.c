@@ -52,6 +52,9 @@ static spi_device_handle_t display_spi_handler;
 /* TJpgDec work area. */
 static char *tjpgd_work = NULL;
 
+/* The "mixer" easter egg offset to create rendering glitches. */
+int mixer_offset = 0;
+
 // SPI bus functions.
 
 /**
@@ -591,6 +594,7 @@ void graphics_draw_sprite(const ImagesRegistry_t *sprite, int x, int y)
             }
         }
     } else {
+        offset += mixer_offset;
         fseek(library_maps_fp, offset, SEEK_SET);
 
         uint8_t buffer[576];

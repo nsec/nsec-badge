@@ -114,6 +114,7 @@ enum class Music {
     music_korobeiniki,
     sfx_dialog,
     sfx_failure,
+    sfx_mixer,
     sfx_steps,
     sfx_success,
 };

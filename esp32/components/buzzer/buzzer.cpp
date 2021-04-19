@@ -334,6 +334,13 @@ const static int sfx_failure[] = {
     0,
 };
 
+const static int sfx_mixer[] = {
+    E_4 | 8, F_4 | 8, Gb4 | 8, G_4 | 8, Ab4 | 8, F_4 | 8, Gb4 | 8,
+    G_4 | 8, Ab4 | 8, A_4 | 8, Gb4 | 8, G_4 | 8, Ab4 | 8, A_4 | 8,
+    Bb4 | 8, G_4 | 8, Ab4 | 8, A_4 | 8, Bb4 | 8, B_4 | 8, C_5 | 8,
+    Db5 | 8, D_2 | 8, Db5 | 8, D_0 | 4, 0,
+};
+
 const static int sfx_steps[] = {
     C_3 | 4,
     A_3 | 4,
@@ -507,6 +514,15 @@ void buzzer_request_music(music::Music music_id)
             playlist.id = music_id;
             playlist.music = music::sfx_failure;
             playlist.repeat = 1;
+        }
+        return;
+
+    case music::Music::sfx_mixer:
+        if (Save::save_data.buzzer_enable_sfx) {
+            playlist.bpm = 450;
+            playlist.id = music_id;
+            playlist.music = music::sfx_mixer;
+            playlist.repeat = 10;
         }
         return;
 

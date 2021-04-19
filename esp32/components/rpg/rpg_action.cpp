@@ -210,6 +210,17 @@ static ACTION handle_character_interaction(Character *character, Scene *scene)
     return ACTION::nothing;
 }
 
+static ACTION handle_mixer(Scene *scene)
+{
+    unsigned int animation_step =
+        scene->get_main_character()->get_animation_step();
+
+    mixer_offset = (animation_step * 199) % 22222;
+    buzzer_request_music(music::Music::sfx_mixer);
+
+    return ACTION::nothing;
+}
+
 static ACTION handle_open_chest(SceneObjectIdentity chest_identity,
                                 Scene *scene)
 {
@@ -391,9 +402,8 @@ static ACTION handle_main_enter_action(Scene *scene)
     if (coordinates.within_tile(31, 17, 32, 17))
         return ACTION::menu_led;
 
-    // Active area near the Door #6.
-    if (coordinates.within_tile(31, 42, 31, 42))
-        return ACTION::exit;
+    if (coordinates.within_tile(31, 43, 31, 43))
+        return handle_mixer(scene);
 
     if (coordinates.within_tile(36, 29, 36, 29))
         return ACTION::badge_info;
