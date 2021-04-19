@@ -60,8 +60,15 @@ void rpg_statusbar_render(Scene *scene)
         graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR_WIFI_OFF, 200,
                                    statusbar_icons_position);
 
-    graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR_SOUND_ON, 216,
-                               statusbar_icons_position);
+    if (Save::save_data.buzzer_enable_music ||
+        Save::save_data.buzzer_enable_sfx ||
+        Save::save_data.buzzer_enable_steps)
+        graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR_SOUND_ON, 216,
+                                   statusbar_icons_position);
+    else
+        graphics_draw_from_library(LIBRARY_IMAGE_STATUS_BAR_SOUND_OFF, 216,
+                                   statusbar_icons_position);
+
     graphics_update_display();
 
     scene->unlock();
