@@ -23,13 +23,27 @@ enum class Oversign {
     quack,
 };
 
+static constexpr int DIALOG_COLOR = 0x39c4;
+static constexpr int DIALOG_X = 40;
+static constexpr int DIALOG_Y = 65;
+
+/**
+ * Workaround the problem that the printed text bypasses the display buffer.
+ *
+ * As the result, the buffer content does not change between two draws of the
+ * dialog panel and nothing is actually sent to display.
+ */
+static void display_dialog_panel()
+{
+    graphics_draw_from_library(LIBRARY_IMAGE_DIALOG_PANEL, 0, 1);
+    graphics_draw_from_library(LIBRARY_IMAGE_DIALOG_PANEL, 0, 0);
+    graphics_update_display();
+}
+
 static bool display_character_dialog(Character *character, Scene *scene,
                                      const char **dialog, int &start_line,
                                      int change)
 {
-    constexpr int dialog_position_x = 40;
-    constexpr int dialog_position_y = 65;
-
     // Look for an array terminator and hope for the best. So much for memory
     // safety.
     int total_lines = 0;
@@ -48,30 +62,40 @@ static bool display_character_dialog(Character *character, Scene *scene,
         return true;
 
     start_line = line;
+    display_dialog_panel();
 
-    // Workaround the problem that the printed text bypasses the display
-    // buffer. As the result, the buffer content does not change between two
-    // draws of the dialog panel and nothing is actually sent to display.
-    graphics_draw_from_library(LIBRARY_IMAGE_DIALOG_PANEL, 0, 1);
-    graphics_draw_from_library(LIBRARY_IMAGE_DIALOG_PANEL, 0, 0);
-    graphics_update_display();
-
-    int color = 0x39c4;
-    int x = dialog_position_x;
-    int y = dialog_position_y;
+    int x = DIALOG_X;
+    int y = DIALOG_Y;
 
     buzzer_request_music(music::Music::sfx_dialog);
 
-    graphics_print_large(character->get_name(), x, y, color, &x, &y);
-    graphics_print_large("_\n", x, y, color, &x, &y);
+    graphics_print_large(character->get_name(), x, y, DIALOG_COLOR, &x, &y);
+    graphics_print_large("_\n", x, y, DIALOG_COLOR, &x, &y);
 
-    x = dialog_position_x;
+    x = DIALOG_X;
     for (; line < start_line + 6 && dialog[line][0] != '\0'; ++line)
-        graphics_print_small(dialog[line], x, y, color, &x, &y);
+        graphics_print_small(dialog[line], x, y, DIALOG_COLOR, &x, &y);
 
     buzzer_stop_music(music::Music::sfx_dialog);
 
     return true;
+}
+
+static void display_welcome_flag()
+{
+    display_dialog_panel();
+
+    int x = DIALOG_X;
+    int y = DIALOG_Y - 10;
+
+    graphics_print_small("Welcome! Your flag:\n", x, y, DIALOG_COLOR, &x, &y);
+    graphics_print_small(" FLAG-W3lc0m2NSECxx\n\n", x, y, DIALOG_COLOR, &x, &y);
+    graphics_print_small("To learn how to\nsubmit it, visit\n", x, y,
+                         DIALOG_COLOR, &x, &y);
+    graphics_print_small("https://nsec.io\n          /badge2021\n", x, y,
+                         DIALOG_COLOR, &x, &y);
+    graphics_print_small("(press ENTER to\n  display a QR code)", x, y,
+                         DIALOG_COLOR, &x, &y);
 }
 
 static ACTION handle_character_interaction(Character *character, Scene *scene)
@@ -194,6 +218,46 @@ static ACTION handle_show_oversign(Oversign oversign, Scene *scene)
     return ACTION::nothing;
 }
 
+static ACTION handle_welcome_flag(Scene *scene)
+{
+    button_t button = BUTTON_NONE;
+
+    Save::save_data.chest_opened_welcome = true;
+    Save::save_data.flag1 = true;
+    Save::write_save();
+
+    handle_open_chest(SceneObjectIdentity::chest_welcome, scene);
+
+    scene->pause();
+    scene->lock();
+    display_welcome_flag();
+
+    while (true) {
+        xQueueReceive(button_event_queue, &button, 10 / portTICK_PERIOD_MS);
+
+        switch (button) {
+        case BUTTON_BACK_RELEASE:
+            break;
+
+        case BUTTON_ENTER_RELEASE:
+            graphics_draw_jpeg("/spiffs/qr.jpeg", 40, 30);
+            graphics_update_display();
+            continue;
+
+        default:
+            continue;
+        }
+
+        break;
+    }
+
+    scene->get_viewport().mark_for_full_refresh();
+    scene->unlock();
+    scene->unpause();
+
+    return ACTION::nothing;
+}
+
 static ACTION handle_main_enter_action(Scene *scene)
 {
     auto mc = scene->get_main_character();
@@ -247,12 +311,8 @@ static ACTION handle_main_enter_action(Scene *scene)
     if (coordinates.within_xy(485, 530, 525, 550))
         return handle_show_oversign(Oversign::quack, scene);
 
-    if (coordinates.within_xy(960, 600, 1005, 625)) {
-        Save::save_data.chest_opened_welcome = true;
-        Save::save_data.flag1 = true;
-        Save::write_save();
-        return handle_open_chest(SceneObjectIdentity::chest_welcome, scene);
-    }
+    if (coordinates.within_xy(960, 600, 1005, 625))
+        return handle_welcome_flag(scene);
 
     if (coordinates.within_xy(1000, 675, 1040, 700))
         return handle_show_oversign(Oversign::port, scene);
