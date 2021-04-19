@@ -5,6 +5,7 @@ idf_component_register(
         "."
     REQUIRES
         buttons
+        buzzer
         graphics
         neopixel
         save

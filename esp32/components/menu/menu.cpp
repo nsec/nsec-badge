@@ -1,6 +1,7 @@
 #include "menu.h"
 
 #include "buttons.h"
+#include "buzzer.h"
 #include "cmd_wifi.h"
 #include "esp_err.h"
 #include "esp_log.h"
@@ -96,9 +97,6 @@ namespace menu
 
 static bool menu_state_led_on = true;
 static char menu_state_led_pattern[32] = "Rainbow";
-static bool menu_state_sound_music_on = false;
-static bool menu_state_sound_sfx_on = true;
-static bool menu_state_sound_steps_on = true;
 static bool menu_state_wifi_on = true;
 static char menu_state_wifi_ssid[32] = "";
 static uint8_t menu_state_led_brightness = 55;
@@ -107,6 +105,21 @@ static uint8_t menu_state_led_pattern_id = 0;
 
 int color_id_to_rgb[7] = {0x0000ff, 0x00ff00, 0xffff00, 0xff00ff,
                           0xff0000, 0x00ffff, 0xffffff};
+
+const char music_names[][32] = {
+    "",
+    "Coffin Dance",
+    "Nyan Cat",
+    "Imperial March",
+};
+
+static const char *get_music_display_name()
+{
+    if (Save::save_data.buzzer_enable_music_id < 4)
+        return music_names[Save::save_data.buzzer_enable_music_id];
+    else
+        return music_names[0];
+}
 
 // clang-format off
 static void render_led_settings()
@@ -154,21 +167,25 @@ static void render_sound_settings()
     MENU(SOUND);
 
     PLACE_AT(37)
-        menu_state_sound_music_on ? WIDGET(SWITCH_ON)
-                                  : WIDGET(SWITCH_OFF);
+        Save::save_data.buzzer_enable_music ? WIDGET(SWITCH_ON)
+                                            : WIDGET(SWITCH_OFF);
 
     PLACE_AT(76)
         INSET WIDGET(TEXT);
 
     PLACE_AT(141)
-        menu_state_sound_sfx_on ? WIDGET(SWITCH_ON)
-                                : WIDGET(SWITCH_OFF);
+        Save::save_data.buzzer_enable_sfx ? WIDGET(SWITCH_ON)
+                                          : WIDGET(SWITCH_OFF);
 
     PLACE_AT(177)
-        menu_state_sound_steps_on ? WIDGET(SWITCH_ON)
-                                  : WIDGET(SWITCH_OFF);
+        Save::save_data.buzzer_enable_steps ? WIDGET(SWITCH_ON)
+                                            : WIDGET(SWITCH_OFF);
 
     UPDATE;
+
+    PLACE_AT(98)
+        if (Save::save_data.buzzer_enable_music)
+            PRINT(get_music_display_name());
 }
 // clang-format on
 
@@ -331,19 +348,62 @@ void display_sound_settings()
             return;
 
         case BUTTON_DOWN:
-            menu_state_sound_music_on = false;
-            menu_state_sound_steps_on = !menu_state_sound_steps_on;
+            Save::save_data.buzzer_enable_music = false;
+            Save::save_data.buzzer_enable_steps =
+                !Save::save_data.buzzer_enable_steps;
+            Save::write_save();
+
+            buzzer_stop_music();
             break;
 
         case BUTTON_ENTER:
-            menu_state_sound_music_on = !menu_state_sound_music_on;
-            menu_state_sound_sfx_on = false;
-            menu_state_sound_steps_on = false;
+            Save::save_data.buzzer_enable_music =
+                !Save::save_data.buzzer_enable_music;
+            Save::save_data.buzzer_enable_sfx = false;
+            Save::save_data.buzzer_enable_steps = false;
+            Save::write_save();
+
+            if (Save::save_data.buzzer_enable_music)
+                buzzer_request_music(static_cast<music::Music>(
+                    Save::save_data.buzzer_enable_music_id));
+            else
+                buzzer_stop_music();
+
+            break;
+
+        case BUTTON_LEFT:
+            Save::save_data.buzzer_enable_music_id--;
+            if (Save::save_data.buzzer_enable_music_id < 1)
+                Save::save_data.buzzer_enable_music_id = 1;
+
+            Save::write_save();
+
+            if (Save::save_data.buzzer_enable_music)
+                buzzer_request_music(static_cast<music::Music>(
+                    Save::save_data.buzzer_enable_music_id));
+
+            break;
+
+        case BUTTON_RIGHT:
+            Save::save_data.buzzer_enable_music_id++;
+            if (Save::save_data.buzzer_enable_music_id > 3)
+                Save::save_data.buzzer_enable_music_id = 3;
+
+            Save::write_save();
+
+            if (Save::save_data.buzzer_enable_music)
+                buzzer_request_music(static_cast<music::Music>(
+                    Save::save_data.buzzer_enable_music_id));
+
             break;
 
         case BUTTON_UP:
-            menu_state_sound_music_on = false;
-            menu_state_sound_sfx_on = !menu_state_sound_sfx_on;
+            Save::save_data.buzzer_enable_music = false;
+            Save::save_data.buzzer_enable_sfx =
+                !Save::save_data.buzzer_enable_sfx;
+            Save::write_save();
+
+            buzzer_stop_music();
             break;
 
         default:
