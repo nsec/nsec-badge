@@ -111,6 +111,7 @@ enum class Music {
     music_mk,
     music_nyan,
     music_starwars,
+    music_korobeiniki,
     sfx_dialog,
     sfx_failure,
     sfx_steps,

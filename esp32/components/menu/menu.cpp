@@ -107,16 +107,13 @@ int color_id_to_rgb[7] = {0x0000ff, 0x00ff00, 0xffff00, 0xff00ff,
                           0xff0000, 0x00ffff, 0xffffff};
 
 const char music_names[][32] = {
-    "",
-    "Coffin Dance",
-    "Mortal Kombat",
-    "Nyan Cat",
-    "Imperial March",
+    "",         "Coffin Dance",   "Mortal Kombat",
+    "Nyan Cat", "Imperial March", "Korobeiniki",
 };
 
 static const char *get_music_display_name()
 {
-    if (Save::save_data.buzzer_enable_music_id < 5)
+    if (Save::save_data.buzzer_enable_music_id < 6)
         return music_names[Save::save_data.buzzer_enable_music_id];
     else
         return music_names[0];
@@ -387,8 +384,8 @@ void display_sound_settings()
 
         case BUTTON_RIGHT:
             Save::save_data.buzzer_enable_music_id++;
-            if (Save::save_data.buzzer_enable_music_id > 4)
-                Save::save_data.buzzer_enable_music_id = 4;
+            if (Save::save_data.buzzer_enable_music_id > 5)
+                Save::save_data.buzzer_enable_music_id = 5;
 
             Save::write_save();
 

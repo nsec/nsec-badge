@@ -33,6 +33,24 @@ const static int music_astronomia[] = {
     0,
 };
 
+const static int music_korobeiniki[] = {
+    E_6 | 4,     000 | 4, B_5 | 8, 000 | 8,     C_6 | 8,     000 | 8, D_6 | 8,
+    000 | 8 | 4, C_6 | 8, 000 | 8, B_5 | 8,     000 | 8,     A_5 | 4, 000 | 4,
+    A_5 | 8,     000 | 8, C_6 | 8, 000 | 8,     E_6 | 4,     000 | 4, D_6 | 8,
+    000 | 8,     C_6 | 8, 000 | 8, B_5 | 4 | 8, 000 | 4 | 8, C_6 | 8, 000 | 8,
+    D_6 | 4,     000 | 4, E_6 | 4, 000 | 4,     C_6 | 4,     000 | 4, A_5 | 4,
+    A_0 | 4,     A_5 | 2, A_0 | 2,
+
+    D_6 | 2,     0 | 4,   F_6 | 8, 0 | 8,       A_6 | 4,     0 | 4,   G_6 | 8,
+    0 | 8,       F_6 | 8, 0 | 8,   E_6 | 4 | 8, E_1 | 4 | 8, C_6 | 8, 0 | 8,
+    E_6 | 4,     0 | 4,   D_6 | 8, 0 | 8,       C_6 | 8,     0 | 8,   B_5 | 4,
+    0 | 4,       B_5 | 8, 0 | 8,   C_6 | 8,     0 | 8,       D_6 | 4, 0 | 4,
+    E_6 | 4,     0 | 4,   C_6 | 4, 0 | 4,       A_5 | 4,     Ab1 | 4, A_5 | 2,
+    Ab1 | 2,
+
+    0,
+};
+
 const static int music_mk[] = {
     A_5 | 4,
     A_5 | 4,
@@ -434,6 +452,15 @@ void buzzer_request_music(music::Music music_id)
             playlist.bpm = 1800;
             playlist.id = music_id;
             playlist.music = music::music_astronomia;
+            playlist.repeat = 1000;
+        }
+        return;
+
+    case music::Music::music_korobeiniki:
+        if (Save::save_data.buzzer_enable_music) {
+            playlist.bpm = 800;
+            playlist.id = music_id;
+            playlist.music = music::music_korobeiniki;
             playlist.repeat = 1000;
         }
         return;
