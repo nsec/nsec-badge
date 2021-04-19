@@ -102,21 +102,21 @@ const static playback_t music1[] = {
     // --------------
     {NOTE_G4, Q},
     {NOTE_G4, E},
-    {NOTE_Ab5, E},
+    {NOTE_Ab4, E},
 
-    {NOTE_LA5, E},
-    {NOTE_Ab5, E},
-    {NOTE_LA5, E},
-    {NOTE_Ab5, E},
+    {NOTE_LA4, E},
+    {NOTE_Ab4, E},
+    {NOTE_LA4, E},
+    {NOTE_Ab4, E},
 
     {NOTE_G4, Q},
     {NOTE_G4, E},
-    {NOTE_Ab5, E},
+    {NOTE_Ab4, E},
 
-    {NOTE_LA5, E},
-    {NOTE_Ab5, E},
-    {NOTE_LA5, E},
-    {NOTE_Ab5, E},
+    {NOTE_LA4, E},
+    {NOTE_Ab4, E},
+    {NOTE_LA4, E},
+    {NOTE_Ab4, E},
     // --------------
     {NOTE_G4, Q},
     {NOTE_G4, E},
@@ -135,21 +135,21 @@ const static playback_t music1[] = {
     // --------------
     {NOTE_G4, Q},
     {NOTE_G4, E},
-    {NOTE_Ab5, E},
+    {NOTE_Ab4, E},
 
-    {NOTE_LA5, E},
-    {NOTE_Ab5, E},
-    {NOTE_LA5, E},
-    {NOTE_Ab5, E},
+    {NOTE_LA4, E},
+    {NOTE_Ab4, E},
+    {NOTE_LA4, E},
+    {NOTE_Ab4, E},
 
     {NOTE_G4, Q},
     {NOTE_G4, E},
-    {NOTE_Ab5, E},
+    {NOTE_Ab4, E},
 
-    {NOTE_LA5, E},
-    {NOTE_Ab5, E},
-    {NOTE_LA5, E},
-    {NOTE_Ab5, E},
+    {NOTE_LA4, E},
+    {NOTE_Ab4, E},
+    {NOTE_LA4, E},
+    {NOTE_Ab4, E},
     // --------------
     {NOTE_G4, Q},
 
@@ -418,7 +418,7 @@ void buzzer_play_tone(int note, int duration)
 {
     // Set the note's frequency
     if (note != 0) {
-        ledc_set_freq(ledc_channel.speed_mode, ledc_channel.channel, note);
+        ledc_set_freq(ledc_channel.speed_mode, ledc_timer.timer_num, note);
     }
 
     // Set the note's duration

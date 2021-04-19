@@ -1,6 +1,6 @@
 idf_component_register(
     SRCS
-        "buzzer.c"
+        "buzzer.cpp"
     INCLUDE_DIRS
         "."
 )

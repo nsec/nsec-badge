@@ -116,17 +116,9 @@
 #define W 4 * Q       // whole 4/4
 
 typedef struct {
-    int note;
+    double note;
     int duration;
 } playback_t;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void buzzer_init();
 void buzzer_play_song(void * pvParameters);
-
-#ifdef __cplusplus
-}
-#endif
