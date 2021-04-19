@@ -116,6 +116,21 @@ static void display_island_flag()
     graphics_print_small(flag, x, y, DIALOG_COLOR, &x, &y);
 }
 
+static void display_konami_flag()
+{
+    display_dialog_panel();
+
+    int x = DIALOG_X;
+    int y = DIALOG_Y + 50;
+
+    char flag[20] = {28, 34, 23, 29, 3,  43, 75, 26, 58, 34,
+                     72, 34, 72, 24, 23, 6,  6,  6,  6};
+    for (int i = 0; i < 19; ++i)
+        flag[i] += 42;
+
+    graphics_print_small(flag, x, y, DIALOG_COLOR, &x, &y);
+}
+
 static void display_welcome_flag()
 {
     display_dialog_panel();
@@ -280,6 +295,33 @@ static ACTION handle_island_flag(Scene *scene)
     return ACTION::nothing;
 }
 
+static ACTION handle_konami_flag(Scene *scene)
+{
+    button_t button = BUTTON_NONE;
+
+    Save::save_data.chest_opened_konami = true;
+    Save::save_data.flag2 = true;
+    Save::write_save();
+
+    handle_open_chest(SceneObjectIdentity::chest_konami, scene);
+
+    scene->pause();
+    scene->lock();
+    display_konami_flag();
+
+    while (true) {
+        xQueueReceive(button_event_queue, &button, 10 / portTICK_PERIOD_MS);
+        if (button == BUTTON_BACK_RELEASE)
+            break;
+    }
+
+    scene->get_viewport().mark_for_full_refresh();
+    scene->unlock();
+    scene->unpause();
+
+    return ACTION::nothing;
+}
+
 static ACTION handle_welcome_flag(Scene *scene)
 {
     button_t button = BUTTON_NONE;
@@ -350,12 +392,8 @@ static ACTION handle_main_enter_action(Scene *scene)
     if (coordinates.within_tile(47, 47, 50, 50))
         return handle_island_flag(scene);
 
-    if (coordinates.within_xy(0, 0, 18, 40)) {
-        Save::save_data.chest_opened_konami = true;
-        Save::save_data.flag2 = true;
-        Save::write_save();
-        return handle_open_chest(SceneObjectIdentity::chest_konami, scene);
-    }
+    if (coordinates.within_xy(0, 0, 18, 40))
+        return handle_konami_flag(scene);
 
     if (coordinates.within_xy(100, 360, 140, 390))
         return handle_show_oversign(Oversign::hut, scene);
