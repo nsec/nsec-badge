@@ -20,6 +20,7 @@
 #include "nvs_flash.h"
 #include <stdio.h>
 #include <string.h>
+#include "challenges.h"
 
 #include "cmd.h"
 
@@ -136,6 +137,7 @@ void console_task(void *parm)
     register_wifi_disconnect();
     register_neopixel();
     register_hidden();
+    register_challenges();
 
     // register_nvs();
 
