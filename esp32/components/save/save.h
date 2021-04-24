@@ -35,8 +35,10 @@ struct SaveData {
     // Wifi connection flag.
     bool flag6;
 
-    // Unused.
+    // Hidden CLI command flag.
     bool flag7;
+
+    // Unused.
     bool flag8;
     bool flag9;
     bool flag10;

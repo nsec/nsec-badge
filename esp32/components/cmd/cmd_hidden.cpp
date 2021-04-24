@@ -2,16 +2,18 @@
 
 #include "argtable3/argtable3.h"
 #include "esp_log.h"
-#include <stdio.h>
-#include <string.h>
 
 #include "cmd_decl.h"
 #include "esp_console.h"
 #include "save.h"
 
+#include <iostream>
+#include <string.h>
+
 static int hint(int argc, char **argv)
 {
-    printf("The legend says there is a hidden command, can you find it?\n");
+    std::cout << "The legend says there is a hidden command, can you find it?"
+              << std::endl;
     return 0;
 }
 
@@ -32,9 +34,13 @@ static int hidden(int argc, char **argv)
     for (uint8_t i = 0; i < strlen(flag); i++) {
         flag[i] = flag[i] ^ 0x14;
     }
-    printf("%s\n", flag);
-    Save::save_data.flag7 = true;
-    Save::write_save();
+
+    std::cout << flag << std::endl;
+
+    if (!Save::save_data.flag7) {
+        Save::save_data.flag7 = true;
+        Save::write_save();
+    }
 
     return 0;
 }
