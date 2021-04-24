@@ -30,12 +30,25 @@ void register_hint(void)
 
 static int hidden(int argc, char **argv)
 {
+    char message[] = {
+        101, 189, 213, 201, 128, 141, 213, 201, 165, 189, 205, 165, 209, 229,
+        128, 161, 133, 205, 128, 177, 149, 145, 128, 229, 189, 213, 128, 209,
+        189, 128, 133, 128, 177, 149, 157, 149, 185, 145, 133, 201, 229, 128,
+        209, 201, 149, 133, 205, 213, 201, 149, 128, 180, 128, 229, 189, 213,
+        128, 133, 201, 149, 128, 209, 161, 149, 128, 77,  93,  61,  73,  17,
+        128, 53,  5,   77,  81,  21,  73,  128, 185, 189, 221, 132, 0,
+    };
+
+    for (uint8_t i = 0; i < strlen(message); ++i) {
+        message[i] = (message[i] >> 2) + (message[i] << 6);
+    }
+
     char flag[] = "RXUS9Wx%R$fRaz2Df$r%`";
     for (uint8_t i = 0; i < strlen(flag); i++) {
         flag[i] = flag[i] ^ 0x14;
     }
 
-    std::cout << flag << std::endl;
+    std::cout << message << ' ' << flag << std::endl;
 
     if (!Save::save_data.flag7) {
         Save::save_data.flag7 = true;
