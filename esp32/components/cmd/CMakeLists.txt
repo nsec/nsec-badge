@@ -2,6 +2,7 @@ idf_component_register(
   SRCS
       "cmd_wifi.cpp"
       "cmd_neopixel.cpp"
+      "cmd_hidden.cpp"
       "cmd.cpp"
   INCLUDE_DIRS
       "."

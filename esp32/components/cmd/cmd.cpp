@@ -135,6 +135,8 @@ void console_task(void *parm)
     register_wifi();
     register_wifi_disconnect();
     register_neopixel();
+    register_hint();
+    register_hidden();
 
     // register_nvs();
 

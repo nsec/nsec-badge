@@ -16,6 +16,7 @@ extern "C" {
 #include "cmd_system.h"
 #include "cmd_wifi.h"
 #include "cmd_neopixel.h"
+#include "cmd_hidden.h"
 
 #ifdef __cplusplus
 }
