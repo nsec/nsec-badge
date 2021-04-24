@@ -1,3 +1,7 @@
+#include "challenge1.h"
+
+#include "challenges_flag.h"
+
 #include <stdio.h>
 
 static const int ARRAY_LEN = 32;
@@ -63,6 +67,7 @@ void challenge_RE101(const char *user_code)
         }
 
         printf("\n");
+        challenge_RE101_save_flag();
     } else {
         printf("Nope try again\n");
     }

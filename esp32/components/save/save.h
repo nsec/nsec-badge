@@ -38,9 +38,13 @@ struct SaveData {
     // Hidden CLI command flag.
     bool flag7;
 
-    // Unused.
+    // Reverse 101 flag.
     bool flag8;
+
+    // Reverse 102 flag.
     bool flag9;
+
+    // Unused.
     bool flag10;
     bool flag11;
     bool flag12;

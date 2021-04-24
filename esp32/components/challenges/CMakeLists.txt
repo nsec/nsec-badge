@@ -3,8 +3,10 @@ idf_component_register(
     "challenge1.c"
     "challenge2.c"
     "challenges.c"
+    "challenges_flag.cpp"
   INCLUDE_DIRS
     "."
   REQUIRES
     "cmd"
+    "save"
 )

@@ -1,3 +1,7 @@
+#include "challenge2.h"
+
+#include "challenges_flag.h"
+
 #include <stdio.h>
 
 static int verify(const char *user_code)
@@ -153,6 +157,7 @@ void challenge_RE102(const char *user_code)
         }
 
         printf("\n");
+        challenge_RE102_save_flag();
     } else {
         printf("Nope try again\n");
     }
