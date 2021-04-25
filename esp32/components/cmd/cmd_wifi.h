@@ -14,6 +14,7 @@ extern "C" {
 
 // Register WiFi functions
 void wifi_disconnect();
+const char *wifi_get_ip();
 void wifi_get_ssid(char *ssid);
 void register_wifi();
 void wifi_join_if_configured();

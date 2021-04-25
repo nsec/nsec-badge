@@ -27,7 +27,11 @@
 static EventGroupHandle_t wifi_event_group;
 const int CONNECTED_BIT = BIT0;
 
+static esp_netif_t *ap_netif;
+static esp_netif_t *sta_netif;
+
 static bool manual_disconnect = false;
+static char ip_address[64] = {};
 static bool is_connected = false;
 
 static void event_handler(void *arg, esp_event_base_t event_base,
@@ -39,35 +43,53 @@ static void event_handler(void *arg, esp_event_base_t event_base,
         xEventGroupClearBits(wifi_event_group, CONNECTED_BIT);
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         xEventGroupSetBits(wifi_event_group, CONNECTED_BIT);
+
+        esp_netif_ip_info_t ip_info = {};
+        esp_netif_get_ip_info(sta_netif, &ip_info);
+        esp_ip4addr_ntoa(&ip_info.ip, ip_address, 64);
     }
 }
 
 static void initialise_wifi(void)
 {
-    esp_log_level_set("wifi", ESP_LOG_WARN);
     static bool initialized = false;
-    if (initialized) {
+    if (initialized)
         return;
-    }
+
+    esp_log_level_set("wifi", ESP_LOG_WARN);
+
     ESP_ERROR_CHECK(esp_netif_init());
+
     wifi_event_group = xEventGroupCreate();
     ESP_ERROR_CHECK(esp_event_loop_create_default());
-    esp_netif_t *ap_netif = esp_netif_create_default_wifi_ap();
+
+    ap_netif = esp_netif_create_default_wifi_ap();
     assert(ap_netif);
     esp_netif_set_hostname(ap_netif, HOSTNAME);
-    esp_netif_t *sta_netif = esp_netif_create_default_wifi_sta();
+
+    sta_netif = esp_netif_create_default_wifi_sta();
     assert(sta_netif);
     esp_netif_set_hostname(sta_netif, HOSTNAME);
+
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+
     ESP_ERROR_CHECK(esp_event_handler_register(
         WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &event_handler, NULL));
+
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP,
                                                &event_handler, NULL));
+
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_FLASH));
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_NULL));
     ESP_ERROR_CHECK(esp_wifi_start());
+
     initialized = true;
+}
+
+const char *wifi_get_ip()
+{
+    return ip_address;
 }
 
 void wifi_get_ssid(char *ssid)
@@ -114,7 +136,7 @@ void wifi_join_if_configured_task(void *parm)
 static bool wifi_join(const char *ssid, const char *pass, int timeout_ms)
 {
     initialise_wifi();
-    wifi_config_t wifi_config = {0};
+    wifi_config_t wifi_config = {};
     strlcpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid));
     if (pass) {
         strlcpy((char *)wifi_config.sta.password, pass,
