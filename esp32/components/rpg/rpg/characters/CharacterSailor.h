@@ -44,6 +44,28 @@ static const char *sailor_dialog_1[] = {
     "",
 };
 
+static const char *sailor_dialog_2[] = {
+    "What is the pirate's\n",
+    "favorite programming\n",
+    "language?\n\n",
+    "R.",
+    "",
+};
+
+static const char *sailor_dialog_3[] = {
+    "Weigh heigh and up\n",
+    "she rises...",
+    "",
+};
+
+static const char *sailor_dialog_4[] = {
+    "What shell we do\n",
+    "with a drunken\n",
+    "coder, early in\n",
+    "the morning?",
+    "",
+};
+
 } // namespace rpg::dialog
 
 namespace rpg
@@ -69,12 +91,33 @@ class CharacterSailor : virtual public Character, public MovingMixin
 
     virtual const char **get_dialog() override
     {
+        if (next_dialog == dialog::sailor_dialog_1) {
+            next_dialog = dialog::sailor_dialog_2;
+            return dialog::sailor_dialog_1;
+        }
+
+        if (next_dialog == dialog::sailor_dialog_2) {
+            next_dialog = dialog::sailor_dialog_3;
+            return dialog::sailor_dialog_2;
+        }
+
+        if (next_dialog == dialog::sailor_dialog_3) {
+            next_dialog = dialog::sailor_dialog_4;
+            return dialog::sailor_dialog_3;
+        }
+
+        if (next_dialog == dialog::sailor_dialog_4) {
+            next_dialog = dialog::sailor_dialog_1;
+            return dialog::sailor_dialog_4;
+        }
+
+        next_dialog = dialog::sailor_dialog_2;
         return dialog::sailor_dialog_1;
     }
 
     virtual const char *get_name() const override
     {
-        return "sailor";
+        return "Sailor";
     }
 
     virtual void post_render(Viewport &viewport) override;
@@ -87,6 +130,7 @@ class CharacterSailor : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg

@@ -38,6 +38,23 @@ namespace rpg::dialog
 {
 
 static const char *oldwoman_dialog_1[] = {
+    "Back in my day, we\n",
+    "used to punch\n",
+    "programs, and when\n",
+    "they did not give\n",
+    "the correct result,\n",
+    "we punched them\n",
+    "some more.",
+    "",
+};
+
+static const char *oldwoman_dialog_2[] = {
+    "Nobody needs more\n",
+    "than 32Mb of RAM!",
+    "",
+};
+
+static const char *oldwoman_dialog_3[] = {
     "Just overflow the\n",
     "shellcode on the\n",
     "stack and jump to\n",
@@ -71,6 +88,22 @@ class CharacterOldwoman : virtual public Character, public MovingMixin
 
     virtual const char **get_dialog() override
     {
+        if (next_dialog == dialog::oldwoman_dialog_1) {
+            next_dialog = dialog::oldwoman_dialog_2;
+            return dialog::oldwoman_dialog_1;
+        }
+
+        if (next_dialog == dialog::oldwoman_dialog_2) {
+            next_dialog = dialog::oldwoman_dialog_3;
+            return dialog::oldwoman_dialog_2;
+        }
+
+        if (next_dialog == dialog::oldwoman_dialog_3) {
+            next_dialog = dialog::oldwoman_dialog_1;
+            return dialog::oldwoman_dialog_3;
+        }
+
+        next_dialog = dialog::oldwoman_dialog_2;
         return dialog::oldwoman_dialog_1;
     }
 
@@ -94,6 +127,7 @@ class CharacterOldwoman : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg

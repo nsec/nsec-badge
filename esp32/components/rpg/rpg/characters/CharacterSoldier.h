@@ -34,6 +34,32 @@ static constexpr int soldier_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *soldier_dialog_1[] = {
+    "Stop right there!",
+    "",
+};
+
+static const char *soldier_dialog_2[] = {
+    "Did you hear?\n",
+    "What is that?",
+    "",
+};
+
+static const char *soldier_dialog_3[] = {
+    "What's the password?",
+    "",
+};
+
+static const char *soldier_dialog_4[] = {
+    "You can't do that!",
+    "",
+};
+
+} // namespace rpg::dialog
+
 namespace rpg
 {
 
@@ -55,9 +81,35 @@ class CharacterSoldier : virtual public Character, public MovingMixin
                               animation::soldier_moving_up, 2);
     }
 
+    virtual const char **get_dialog() override
+    {
+        if (next_dialog == dialog::soldier_dialog_1) {
+            next_dialog = dialog::soldier_dialog_2;
+            return dialog::soldier_dialog_1;
+        }
+
+        if (next_dialog == dialog::soldier_dialog_2) {
+            next_dialog = dialog::soldier_dialog_3;
+            return dialog::soldier_dialog_2;
+        }
+
+        if (next_dialog == dialog::soldier_dialog_3) {
+            next_dialog = dialog::soldier_dialog_4;
+            return dialog::soldier_dialog_3;
+        }
+
+        if (next_dialog == dialog::soldier_dialog_4) {
+            next_dialog = dialog::soldier_dialog_1;
+            return dialog::soldier_dialog_4;
+        }
+
+        next_dialog = dialog::soldier_dialog_2;
+        return dialog::soldier_dialog_1;
+    }
+
     virtual const char *get_name() const override
     {
-        return "Soldier";
+        return "Guard";
     }
 
     virtual void post_render(Viewport &viewport) override;
@@ -70,6 +122,7 @@ class CharacterSoldier : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 
     void render_standing(Viewport &viewport);
     void render_walking(Viewport &viewport);

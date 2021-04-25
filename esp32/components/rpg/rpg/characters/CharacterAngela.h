@@ -49,6 +49,18 @@ static const char *angela_dialog_1[] = {
     "",
 };
 
+static const char *angela_dialog_2[] = {
+    "This wall seems\n",
+    "very suspicious.",
+    "",
+};
+
+static const char *angela_dialog_3[] = {
+    "Every puzzle has\n",
+    "an answer.",
+    "",
+};
+
 } // namespace rpg::dialog
 
 namespace rpg
@@ -74,6 +86,22 @@ class CharacterAngela : virtual public Character, public MovingMixin
 
     virtual const char **get_dialog() override
     {
+        if (next_dialog == dialog::angela_dialog_1) {
+            next_dialog = dialog::angela_dialog_2;
+            return dialog::angela_dialog_1;
+        }
+
+        if (next_dialog == dialog::angela_dialog_2) {
+            next_dialog = dialog::angela_dialog_3;
+            return dialog::angela_dialog_2;
+        }
+
+        if (next_dialog == dialog::angela_dialog_3) {
+            next_dialog = dialog::angela_dialog_1;
+            return dialog::angela_dialog_3;
+        }
+
+        next_dialog = dialog::angela_dialog_2;
         return dialog::angela_dialog_1;
     }
 
@@ -92,6 +120,7 @@ class CharacterAngela : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 
     void render_standing(Viewport &viewport);
     void render_walking(Viewport &viewport);

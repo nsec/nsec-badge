@@ -54,6 +54,18 @@ static const char *fil_dialog_2[] = {
     "",
 };
 
+static const char *fil_dialog_3[] = {
+    "I am not a quitter!\n",
+    "I use vim. I don't\n",
+    "know how to quit.",
+    "",
+};
+
+static const char *fil_dialog_4[] = {
+    "vi > emacs > nano",
+    "",
+};
+
 } // namespace rpg::dialog
 
 namespace rpg
@@ -85,8 +97,18 @@ class CharacterFil : virtual public Character, public MovingMixin
         }
 
         if (next_dialog == dialog::fil_dialog_2) {
-            next_dialog = dialog::fil_dialog_1;
+            next_dialog = dialog::fil_dialog_3;
             return dialog::fil_dialog_2;
+        }
+
+        if (next_dialog == dialog::fil_dialog_3) {
+            next_dialog = dialog::fil_dialog_4;
+            return dialog::fil_dialog_3;
+        }
+
+        if (next_dialog == dialog::fil_dialog_4) {
+            next_dialog = dialog::fil_dialog_1;
+            return dialog::fil_dialog_4;
         }
 
         next_dialog = dialog::fil_dialog_2;

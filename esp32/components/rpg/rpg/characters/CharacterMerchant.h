@@ -34,6 +34,32 @@ static constexpr int merchant_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *merchant_dialog_1[] = {
+    "Hmm.",
+    "",
+};
+
+static const char *merchant_dialog_2[] = {
+    "Hmm??",
+    "",
+};
+
+static const char *merchant_dialog_3[] = {
+    "Hhmmm...",
+    "",
+};
+
+static const char *merchant_dialog_4[] = {
+    "\n\n",
+    "* Hmm intensifies *",
+    "",
+};
+
+} // namespace rpg::dialog
+
 namespace rpg
 {
 
@@ -56,9 +82,35 @@ class CharacterMerchant : virtual public Character, public MovingMixin
                               animation::merchant_moving_up, 2);
     }
 
+    virtual const char **get_dialog() override
+    {
+        if (next_dialog == dialog::merchant_dialog_1) {
+            next_dialog = dialog::merchant_dialog_2;
+            return dialog::merchant_dialog_1;
+        }
+
+        if (next_dialog == dialog::merchant_dialog_2) {
+            next_dialog = dialog::merchant_dialog_3;
+            return dialog::merchant_dialog_2;
+        }
+
+        if (next_dialog == dialog::merchant_dialog_3) {
+            next_dialog = dialog::merchant_dialog_4;
+            return dialog::merchant_dialog_3;
+        }
+
+        if (next_dialog == dialog::merchant_dialog_4) {
+            next_dialog = dialog::merchant_dialog_1;
+            return dialog::merchant_dialog_4;
+        }
+
+        next_dialog = dialog::merchant_dialog_2;
+        return dialog::merchant_dialog_1;
+    }
+
     virtual const char *get_name() const override
     {
-        return "Merchant";
+        return "Faisal";
     }
 
     virtual void post_render(Viewport &viewport) override;
@@ -71,6 +123,7 @@ class CharacterMerchant : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg

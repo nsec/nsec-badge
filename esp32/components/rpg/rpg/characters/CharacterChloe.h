@@ -34,6 +34,35 @@ static constexpr int chloe_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *chloe_dialog_1[] = {
+    "Have you seen Cloud?\n",
+    "I heard he is on\n",
+    "someone else's badge.",
+    "",
+};
+
+static const char *chloe_dialog_2[] = {
+    "No matter how dark\n",
+    "the night, morning\n",
+    "always comes, and\n",
+    "our journey begins\n",
+    "anew.",
+    "",
+};
+
+static const char *chloe_dialog_3[] = {
+    "They say the User\n",
+    "lives outside the\n",
+    "badge. No one knows\n",
+    "for sure...",
+    "",
+};
+
+} // namespace rpg::dialog
+
 namespace rpg
 {
 
@@ -55,6 +84,27 @@ class CharacterChloe : virtual public Character, public MovingMixin
                               2);
     }
 
+    virtual const char **get_dialog() override
+    {
+        if (next_dialog == dialog::chloe_dialog_1) {
+            next_dialog = dialog::chloe_dialog_2;
+            return dialog::chloe_dialog_1;
+        }
+
+        if (next_dialog == dialog::chloe_dialog_2) {
+            next_dialog = dialog::chloe_dialog_3;
+            return dialog::chloe_dialog_2;
+        }
+
+        if (next_dialog == dialog::chloe_dialog_3) {
+            next_dialog = dialog::chloe_dialog_1;
+            return dialog::chloe_dialog_3;
+        }
+
+        next_dialog = dialog::chloe_dialog_2;
+        return dialog::chloe_dialog_1;
+    }
+
     virtual const char *get_name() const override
     {
         return "Chloe";
@@ -70,6 +120,7 @@ class CharacterChloe : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg

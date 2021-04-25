@@ -34,6 +34,47 @@ static constexpr int red_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *red_dialog_1[] = {
+    "I am this city's\n",
+    "antivirus.",
+    "",
+};
+
+static const char *red_dialog_2[] = {
+    "Repeat after me:\n",
+    "EICAR-STANDARD-ANTI\n",
+    "VIRUS-TEST-FILE",
+    "",
+};
+
+static const char *red_dialog_3[] = {
+    "I hear a lot that\n",
+    "they \"bring their\n",
+    "own land.\" How will\n",
+    "it fit through the\n",
+    "gate?!",
+    "",
+};
+
+static const char *red_dialog_4[] = {
+    "I am watching that\n",
+    "guy over there. I\n",
+    "think he has a fork\n",
+    "bomb.",
+    "",
+};
+
+static const char *red_dialog_5[] = {
+    "Go sit in a\n",
+    "detonation box.",
+    "",
+};
+
+} // namespace rpg::dialog
+
 namespace rpg
 {
 
@@ -55,6 +96,37 @@ class CharacterRed : virtual public Character, public MovingMixin
                               2);
     }
 
+    virtual const char **get_dialog() override
+    {
+        if (next_dialog == dialog::red_dialog_1) {
+            next_dialog = dialog::red_dialog_2;
+            return dialog::red_dialog_1;
+        }
+
+        if (next_dialog == dialog::red_dialog_2) {
+            next_dialog = dialog::red_dialog_3;
+            return dialog::red_dialog_2;
+        }
+
+        if (next_dialog == dialog::red_dialog_3) {
+            next_dialog = dialog::red_dialog_4;
+            return dialog::red_dialog_3;
+        }
+
+        if (next_dialog == dialog::red_dialog_4) {
+            next_dialog = dialog::red_dialog_5;
+            return dialog::red_dialog_4;
+        }
+
+        if (next_dialog == dialog::red_dialog_5) {
+            next_dialog = dialog::red_dialog_1;
+            return dialog::red_dialog_5;
+        }
+
+        next_dialog = dialog::red_dialog_2;
+        return dialog::red_dialog_1;
+    }
+
     virtual const char *get_name() const override
     {
         return "Rouge";
@@ -70,6 +142,7 @@ class CharacterRed : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg

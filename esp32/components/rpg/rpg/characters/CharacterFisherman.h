@@ -74,7 +74,7 @@ class CharacterFisherman : public Character
 
     virtual const char *get_name() const override
     {
-        return "fisherman";
+        return "Fisher";
     }
 
     virtual void render(Viewport &viewport) override;

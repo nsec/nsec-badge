@@ -52,6 +52,19 @@ static const char *dancer_dialog_1[] = {
     "I don't know,\n", "he ransomware.", "",
 };
 
+static const char *dancer_dialog_2[] = {
+    "You're breathtaking.",
+    "",
+};
+
+static const char *dancer_dialog_3[] = {
+    "It's time to capture\n",
+    "flags and drink\n",
+    "MATA mate... and I'm\n",
+    "all outta MATA.",
+    "",
+};
+
 } // namespace rpg::dialog
 
 namespace rpg
@@ -80,12 +93,28 @@ class CharacterDancer : virtual public Character, public MovingMixin
 
     virtual const char **get_dialog() override
     {
+        if (next_dialog == dialog::dancer_dialog_1) {
+            next_dialog = dialog::dancer_dialog_2;
+            return dialog::dancer_dialog_1;
+        }
+
+        if (next_dialog == dialog::dancer_dialog_2) {
+            next_dialog = dialog::dancer_dialog_3;
+            return dialog::dancer_dialog_2;
+        }
+
+        if (next_dialog == dialog::dancer_dialog_3) {
+            next_dialog = dialog::dancer_dialog_1;
+            return dialog::dancer_dialog_3;
+        }
+
+        next_dialog = dialog::dancer_dialog_2;
         return dialog::dancer_dialog_1;
     }
 
     virtual const char *get_name() const override
     {
-        return "dancer";
+        return "Danny";
     }
 
     virtual void post_render(Viewport &viewport) override;
@@ -100,6 +129,7 @@ class CharacterDancer : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::dancing;
+    const char **next_dialog;
 
     void render_dancing(Viewport &viewport);
     void render_standing(Viewport &viewport);

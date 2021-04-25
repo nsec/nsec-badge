@@ -50,6 +50,12 @@ static const char *monk_dialog_2[] = {
     "",
 };
 
+static const char *monk_dialog_3[] = {
+    "Praise the Sun\n",
+    "Microsystems!",
+    "",
+};
+
 } // namespace rpg::dialog
 
 namespace rpg
@@ -81,8 +87,13 @@ class CharacterMonk : virtual public Character, public MovingMixin
         }
 
         if (next_dialog == dialog::monk_dialog_2) {
-            next_dialog = dialog::monk_dialog_1;
+            next_dialog = dialog::monk_dialog_3;
             return dialog::monk_dialog_2;
+        }
+
+        if (next_dialog == dialog::monk_dialog_3) {
+            next_dialog = dialog::monk_dialog_1;
+            return dialog::monk_dialog_3;
         }
 
         next_dialog = dialog::monk_dialog_2;

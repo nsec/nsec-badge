@@ -34,6 +34,19 @@ static const char *retailer_dialog_1[] = {
     "",
 };
 
+static const char *retailer_dialog_2[] = {
+    "We only accept Goat\n",
+    "Pieces here, but\n",
+    "it's not a stable\n",
+    "currency.",
+    "",
+};
+
+static const char *retailer_dialog_3[] = {
+    "Many people\n",        "incorrectly call\n", "it GIF, but the\n",
+    "correct way to say\n", "it is GIF.",         "",
+};
+
 } // namespace rpg::dialog
 
 namespace rpg
@@ -54,12 +67,28 @@ class CharacterRetailer : virtual public Character, public MovingMixin
 
     virtual const char **get_dialog() override
     {
+        if (next_dialog == dialog::retailer_dialog_1) {
+            next_dialog = dialog::retailer_dialog_2;
+            return dialog::retailer_dialog_1;
+        }
+
+        if (next_dialog == dialog::retailer_dialog_2) {
+            next_dialog = dialog::retailer_dialog_3;
+            return dialog::retailer_dialog_2;
+        }
+
+        if (next_dialog == dialog::retailer_dialog_3) {
+            next_dialog = dialog::retailer_dialog_1;
+            return dialog::retailer_dialog_3;
+        }
+
+        next_dialog = dialog::retailer_dialog_2;
         return dialog::retailer_dialog_1;
     }
 
     virtual const char *get_name() const override
     {
-        return "retailer";
+        return "Sveta";
     }
 
     virtual void post_render(Viewport &viewport) override;
@@ -72,6 +101,7 @@ class CharacterRetailer : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg

@@ -34,6 +34,50 @@ static constexpr int vijay_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *vijay_dialog_1[] = {
+    "They say I cannot\n",
+    "enter the city.",
+    "",
+};
+
+static const char *vijay_dialog_2[] = {
+    "I did not come all\n",
+    "the way here to\n",
+    "stand in front\n",
+    "of the firewall!",
+    "",
+};
+
+static const char *vijay_dialog_3[] = {
+    "That wall is not\n",
+    "even on fire!",
+    "",
+};
+
+static const char *vijay_dialog_4[] = {
+    "Vijay has warez\n",
+    "if you have coin.",
+    "",
+};
+
+static const char *vijay_dialog_5[] = {
+    "I'm NOT in!",
+    "",
+};
+
+static const char *vijay_dialog_6[] = {
+    "Every access control\n",
+    "must come with a\n",
+    "backdoor for times\n",
+    "like this.",
+    "",
+};
+
+} // namespace rpg::dialog
+
 namespace rpg
 {
 
@@ -55,6 +99,42 @@ class CharacterVijay : virtual public Character, public MovingMixin
                               2);
     }
 
+    virtual const char **get_dialog() override
+    {
+        if (next_dialog == dialog::vijay_dialog_1) {
+            next_dialog = dialog::vijay_dialog_2;
+            return dialog::vijay_dialog_1;
+        }
+
+        if (next_dialog == dialog::vijay_dialog_2) {
+            next_dialog = dialog::vijay_dialog_3;
+            return dialog::vijay_dialog_2;
+        }
+
+        if (next_dialog == dialog::vijay_dialog_3) {
+            next_dialog = dialog::vijay_dialog_4;
+            return dialog::vijay_dialog_3;
+        }
+
+        if (next_dialog == dialog::vijay_dialog_4) {
+            next_dialog = dialog::vijay_dialog_5;
+            return dialog::vijay_dialog_4;
+        }
+
+        if (next_dialog == dialog::vijay_dialog_5) {
+            next_dialog = dialog::vijay_dialog_6;
+            return dialog::vijay_dialog_5;
+        }
+
+        if (next_dialog == dialog::vijay_dialog_6) {
+            next_dialog = dialog::vijay_dialog_1;
+            return dialog::vijay_dialog_6;
+        }
+
+        next_dialog = dialog::vijay_dialog_2;
+        return dialog::vijay_dialog_1;
+    }
+
     virtual const char *get_name() const override
     {
         return "Vijay";
@@ -70,6 +150,7 @@ class CharacterVijay : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg

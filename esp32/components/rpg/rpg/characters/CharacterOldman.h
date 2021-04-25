@@ -25,6 +25,14 @@ static const char *oldman_dialog_1[] = {
 };
 
 static const char *oldman_dialog_2[] = {
+    "It is dangerous to\n",
+    "go alone, take\n",
+    "this.. wait..\n\n",
+    "Where did I put it?..",
+    "",
+};
+
+static const char *oldman_dialog_3[] = {
     "One does not simply\n", "exit vim! I was\n",  "trapped there for\n",
     "20 years, be\n",        "careful out there.", "",
 };
@@ -51,8 +59,13 @@ class CharacterOldman : public Character
         }
 
         if (next_dialog == dialog::oldman_dialog_2) {
-            next_dialog = dialog::oldman_dialog_1;
+            next_dialog = dialog::oldman_dialog_3;
             return dialog::oldman_dialog_2;
+        }
+
+        if (next_dialog == dialog::oldman_dialog_3) {
+            next_dialog = dialog::oldman_dialog_1;
+            return dialog::oldman_dialog_3;
         }
 
         next_dialog = dialog::oldman_dialog_2;
@@ -61,7 +74,7 @@ class CharacterOldman : public Character
 
     virtual const char *get_name() const override
     {
-        return "Oldman";
+        return "Mayor";
     }
 
     virtual void render(Viewport &viewport) override;

@@ -34,6 +34,13 @@ static const char *charles_dialog_2[] = {
     "",
 };
 
+static const char *charles_dialog_3[] = {
+    "What is a man?\n\n",
+    "A miserable little\n",
+    "pile of secrets.",
+    "",
+};
+
 } // namespace rpg::dialog
 
 namespace rpg
@@ -56,8 +63,13 @@ class CharacterCharles : public Character
         }
 
         if (next_dialog == dialog::charles_dialog_2) {
-            next_dialog = dialog::charles_dialog_1;
+            next_dialog = dialog::charles_dialog_3;
             return dialog::charles_dialog_2;
+        }
+
+        if (next_dialog == dialog::charles_dialog_3) {
+            next_dialog = dialog::charles_dialog_1;
+            return dialog::charles_dialog_3;
         }
 
         next_dialog = dialog::charles_dialog_2;

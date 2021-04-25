@@ -34,6 +34,29 @@ static constexpr int aristocrate_moving_up[] = {
 
 } // namespace rpg::animation
 
+namespace rpg::dialog
+{
+
+static const char *aristocrate_dialog_1[] = {
+    "It is a good life\n",
+    "we live, brother.\n\n",
+    "The best. And may\n",
+    "it never change.",
+    "",
+};
+
+static const char *aristocrate_dialog_2[] = {
+    "Nothing is true,\n", "everything is\n", "permitted.", ""};
+
+static const char *aristocrate_dialog_3[] = {
+    "Database, database,\n",
+    "just living in the\n",
+    "Database.",
+    "",
+};
+
+} // namespace rpg::dialog
+
 namespace rpg
 {
 
@@ -56,9 +79,30 @@ class CharacterAristocrate : virtual public Character, public MovingMixin
                               animation::aristocrate_moving_up, 2);
     }
 
+    virtual const char **get_dialog() override
+    {
+        if (next_dialog == dialog::aristocrate_dialog_1) {
+            next_dialog = dialog::aristocrate_dialog_2;
+            return dialog::aristocrate_dialog_1;
+        }
+
+        if (next_dialog == dialog::aristocrate_dialog_2) {
+            next_dialog = dialog::aristocrate_dialog_3;
+            return dialog::aristocrate_dialog_2;
+        }
+
+        if (next_dialog == dialog::aristocrate_dialog_3) {
+            next_dialog = dialog::aristocrate_dialog_1;
+            return dialog::aristocrate_dialog_3;
+        }
+
+        next_dialog = dialog::aristocrate_dialog_2;
+        return dialog::aristocrate_dialog_1;
+    }
+
     virtual const char *get_name() const override
     {
-        return "aristocrate";
+        return "Guildmaster";
     }
 
     virtual void post_render(Viewport &viewport) override;
@@ -71,6 +115,7 @@ class CharacterAristocrate : virtual public Character, public MovingMixin
     };
 
     Mode current_mode = Mode::standing;
+    const char **next_dialog;
 };
 
 } // namespace rpg
