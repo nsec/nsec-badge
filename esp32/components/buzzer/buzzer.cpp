@@ -342,9 +342,9 @@ const static int sfx_mixer[] = {
 };
 
 const static int sfx_steps[] = {
-    C_3 | 4,
     A_3 | 4,
-    C_0 | 2,
+    C_1 | 2,
+    C_3 | 4,
     0,
 };
 
