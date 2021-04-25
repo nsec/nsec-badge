@@ -202,6 +202,10 @@ extern "C" void app_main(void)
     if (!mount_spiffs())
         abort();
 
+    int *checksum = static_cast<int *>(calloc(1, sizeof(int)));
+    for (int i = 0; i < 10; ++i)
+        *checksum += firmware_dump_flag[i];
+
     graphics_start();
     initialize_nvs();
     nsec_buttons_init();
