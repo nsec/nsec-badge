@@ -33,6 +33,7 @@
 #include "rpg/characters/MainCharacter.h"
 #include "rpg/data/BlockedDataReader.h"
 
+#include "challenges_screen.h"
 #include "graphics.h"
 #include "infoscreen.h"
 #include "menu.h"
@@ -225,7 +226,7 @@ void run_main_scene(void)
             break;
 
         case rpg::ControlExitAction::reverse_challenge:
-            // TODO
+            challenges_screen_display();
             break;
 
         default:

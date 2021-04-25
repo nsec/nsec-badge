@@ -44,6 +44,7 @@ idf_component_register(
     REQUIRES
         buttons
         buzzer
+        challenges
         cmd
         graphics
         infoscreen

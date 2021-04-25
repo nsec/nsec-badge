@@ -4,9 +4,12 @@ idf_component_register(
     "challenge2.c"
     "challenges.c"
     "challenges_flag.cpp"
+    "challenges_screen.cpp"
   INCLUDE_DIRS
     "."
   REQUIRES
+    "buttons"
     "cmd"
+    "graphics"
     "save"
 )
