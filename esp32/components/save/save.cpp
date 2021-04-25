@@ -33,11 +33,6 @@ SaveData Save::save_data = {
     .flag8 = false,
     .flag9 = false,
     .flag10 = false,
-    .flag11 = false,
-    .flag12 = false,
-    .flag13 = false,
-    .flag14 = false,
-    .flag15 = false,
 };
 
 esp_err_t Save::write_save()

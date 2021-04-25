@@ -44,13 +44,8 @@ struct SaveData {
     // Reverse 102 flag.
     bool flag9;
 
-    // Unused.
+    // Firmware dump cleartext flag.
     bool flag10;
-    bool flag11;
-    bool flag12;
-    bool flag13;
-    bool flag14;
-    bool flag15;
 };
 
 class Save
