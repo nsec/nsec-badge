@@ -1,10 +1,3 @@
-[submodule "libopencm3"]
-	path = stm32/libopencm3
-	url = https://github.com/libopencm3/libopencm3
-[submodule "stm32/blackmagic"]
-	path = stm32/blackmagic
-	url = https://github.com/nsec/blackmagic
-	branch = nsec19
 [submodule "esp-idf"]
 	path = esp-idf
 	url = https://github.com/espressif/esp-idf.git
