@@ -13,4 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	python3 \
 	python3-pil \
 	python3-pycparser \
-	python3-serial
+	python3-serial \
+	wget \
+	unzip
+
+RUN ln -nsf /usr/bin/python3 /usr/local/bin/python

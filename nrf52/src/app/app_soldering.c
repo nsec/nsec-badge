@@ -117,7 +117,7 @@ static void init_soldering_track(void) {
     start_WS2812FX();
     resetSegments_WS2812FX();
 
-    setSegment_color_array_WS2812FX(0, 0, 14, FX_MODE_FIRE_FLICKER_INTENSE,
+    setSegment_color_array_WS2812FX(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_FIRE_FLICKER_INTENSE,
                          colors, MEDIUM_SPEED, false);
 
     gfx_fill_screen(DISPLAY_BLACK);

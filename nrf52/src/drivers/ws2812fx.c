@@ -882,7 +882,7 @@ void resetSegments_WS2812FX(void)
     memset(g_fx.segment_runtimes, 0, sizeof(g_fx.segment_runtimes));
     g_fx.segment_index = 0;
     g_fx.num_segments = 1;
-    setSegment_WS2812FX_unlocked(0, 0, NEOPIXEL_COUNT, FX_MODE_STATIC,
+    setSegment_WS2812FX_unlocked(0, 0, NEOPIXEL_COUNT - 1, FX_MODE_STATIC,
                                  DEFAULT_COLOR, DEFAULT_SPEED, false);
 
     xSemaphoreGive(g_fx.lock);
