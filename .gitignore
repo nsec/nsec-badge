@@ -1,16 +1,4 @@
-builds
-nrf52/*.jlink
-nrf52/nordicsdk
-nrf52/mergehex
-nrf52/nrfjprog
-nrf52/tools
-stm32/src/*.o
-stm32/src/*.d
-stm32/src/*.elf
-stm32/src/*.map
 xcuserdata
-nrf52/flash_config.gdb
-stm32/flash_config.gdb
 # python
 __pycache__/
 *.py[cod]
