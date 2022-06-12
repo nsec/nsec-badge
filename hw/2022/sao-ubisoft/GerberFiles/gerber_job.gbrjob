@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2022-04-11T05:38:14Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.6.2"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 0.27,
+        "LayerNumber": 2,
+        "Name": {
+            "ProjectId": "ubi1"
+        },
+        "Owner": "Lambert Le <lambertofmtl@gmail.com>",
+        "Size": {
+            "X": 47.924619,
+            "Y": 47.924619
+        }
+    }
+}
