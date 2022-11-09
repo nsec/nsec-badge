@@ -1700,45 +1700,45 @@ design rules under a new name.</description>
 <attribute name="PRICE" value="None" x="132.08" y="-71.12" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="81.64451875" y="50.861909375" size="1.27075" layer="27"/>
 </element>
-<element name="U15" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="83.82" y="27.94" smashed="yes" rot="R180">
-<attribute name="AVAILABILITY" value="Not in stock" x="22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="DESCRIPTION" value=" Intelligent control LED light source, SMD-4 " x="22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MF" value="Worldsemi" x="22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MP" value="WS2812-2020" x="22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="NAME" x="85.818490625" y="26.48378125" size="1.270140625" layer="25" rot="R180"/>
-<attribute name="PACKAGE" value="Package " x="22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="PRICE" value="None" x="22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="VALUE" x="85.99548125" y="30.418090625" size="1.27075" layer="27" rot="R180"/>
+<element name="U15" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="83.82" y="26.67" smashed="yes" rot="R180">
+<attribute name="AVAILABILITY" value="Not in stock" x="22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="DESCRIPTION" value=" Intelligent control LED light source, SMD-4 " x="22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MF" value="Worldsemi" x="22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MP" value="WS2812-2020" x="22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="NAME" x="85.818490625" y="25.21378125" size="1.270140625" layer="25" rot="R180"/>
+<attribute name="PACKAGE" value="Package " x="22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="PRICE" value="None" x="22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="VALUE" x="85.99548125" y="29.148090625" size="1.27075" layer="27" rot="R180"/>
 </element>
-<element name="U16" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="73.66" y="27.94" smashed="yes" rot="R180">
-<attribute name="AVAILABILITY" value="Not in stock" x="0" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="DESCRIPTION" value=" Intelligent control LED light source, SMD-4 " x="0" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MF" value="Worldsemi" x="0" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MP" value="WS2812-2020" x="0" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="NAME" x="75.658490625" y="26.48378125" size="1.270140625" layer="25" rot="R180"/>
-<attribute name="PACKAGE" value="Package " x="0" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="PRICE" value="None" x="0" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="VALUE" x="75.83548125" y="30.418090625" size="1.27075" layer="27" rot="R180"/>
+<element name="U16" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="73.66" y="26.67" smashed="yes" rot="R180">
+<attribute name="AVAILABILITY" value="Not in stock" x="0" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="DESCRIPTION" value=" Intelligent control LED light source, SMD-4 " x="0" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MF" value="Worldsemi" x="0" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MP" value="WS2812-2020" x="0" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="NAME" x="75.658490625" y="25.21378125" size="1.270140625" layer="25" rot="R180"/>
+<attribute name="PACKAGE" value="Package " x="0" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="PRICE" value="None" x="0" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="VALUE" x="75.83548125" y="29.148090625" size="1.27075" layer="27" rot="R180"/>
 </element>
-<element name="U17" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="63.5" y="27.94" smashed="yes" rot="R180">
-<attribute name="AVAILABILITY" value="Not in stock" x="-22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="DESCRIPTION" value=" Intelligent control LED light source, SMD-4 " x="-22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MF" value="Worldsemi" x="-22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MP" value="WS2812-2020" x="-22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="NAME" x="65.498490625" y="26.48378125" size="1.270140625" layer="25" rot="R180"/>
-<attribute name="PACKAGE" value="Package " x="-22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="PRICE" value="None" x="-22.86" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="VALUE" x="65.67548125" y="30.418090625" size="1.27075" layer="27" rot="R180"/>
+<element name="U17" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="63.5" y="26.67" smashed="yes" rot="R180">
+<attribute name="AVAILABILITY" value="Not in stock" x="-22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="DESCRIPTION" value=" Intelligent control LED light source, SMD-4 " x="-22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MF" value="Worldsemi" x="-22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MP" value="WS2812-2020" x="-22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="NAME" x="65.498490625" y="25.21378125" size="1.270140625" layer="25" rot="R180"/>
+<attribute name="PACKAGE" value="Package " x="-22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="PRICE" value="None" x="-22.86" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="VALUE" x="65.67548125" y="29.148090625" size="1.27075" layer="27" rot="R180"/>
 </element>
-<element name="U18" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="53.34" y="27.94" smashed="yes" rot="R180">
-<attribute name="AVAILABILITY" value="Not in stock" x="-45.72" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="DESCRIPTION" value=" Intelligent control LED light source, SMD-4 " x="-45.72" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MF" value="Worldsemi" x="-45.72" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="MP" value="WS2812-2020" x="-45.72" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="NAME" x="55.338490625" y="26.48378125" size="1.270140625" layer="25" rot="R180"/>
-<attribute name="PACKAGE" value="Package " x="-45.72" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="PRICE" value="None" x="-45.72" y="152.4" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="VALUE" x="55.51548125" y="30.418090625" size="1.27075" layer="27" rot="R180"/>
+<element name="U18" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="53.34" y="26.67" smashed="yes" rot="R180">
+<attribute name="AVAILABILITY" value="Not in stock" x="-45.72" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="DESCRIPTION" value=" Intelligent control LED light source, SMD-4 " x="-45.72" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MF" value="Worldsemi" x="-45.72" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="MP" value="WS2812-2020" x="-45.72" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="NAME" x="55.338490625" y="25.21378125" size="1.270140625" layer="25" rot="R180"/>
+<attribute name="PACKAGE" value="Package " x="-45.72" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="PRICE" value="None" x="-45.72" y="151.13" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="VALUE" x="55.51548125" y="29.148090625" size="1.27075" layer="27" rot="R180"/>
 </element>
 <element name="U19" library="WS2812-2020" package="LED_WS2812-2020" value="WS2812-2020" x="83.82" y="6.35" smashed="yes">
 <attribute name="AVAILABILITY" value="Not in stock" x="106.68" y="-124.46" size="1.778" layer="27" display="off"/>
@@ -1939,16 +1939,16 @@ design rules under a new name.</description>
 <wire x1="77.05" y1="8.89" x2="83.5" y2="8.89" width="0" layer="19" extent="1-1"/>
 <wire x1="80.86" y1="6.35" x2="77.05" y2="8.89" width="0" layer="19" extent="1-1"/>
 <wire x1="84.67" y1="6.35" x2="80.86" y2="6.35" width="0" layer="19" extent="1-1"/>
-<wire x1="74.575" y1="28.49" x2="79.69" y2="8.89" width="0" layer="19" extent="1-1"/>
-<wire x1="30.835" y1="52.79" x2="74.575" y2="28.49" width="0" layer="19" extent="1-1"/>
-<wire x1="64.415" y1="28.49" x2="77.05" y2="8.89" width="0" layer="19" extent="1-1"/>
-<wire x1="40.995" y1="52.79" x2="64.415" y2="28.49" width="0" layer="19" extent="1-1"/>
-<wire x1="54.255" y1="28.49" x2="84.67" y2="6.35" width="0" layer="19" extent="1-1"/>
-<wire x1="51.155" y1="52.79" x2="54.255" y2="28.49" width="0" layer="19" extent="1-1"/>
+<wire x1="74.575" y1="27.22" x2="79.69" y2="8.89" width="0" layer="19" extent="1-1"/>
+<wire x1="30.835" y1="52.79" x2="74.575" y2="27.22" width="0" layer="19" extent="1-1"/>
+<wire x1="64.415" y1="27.22" x2="77.05" y2="8.89" width="0" layer="19" extent="1-1"/>
+<wire x1="40.995" y1="52.79" x2="64.415" y2="27.22" width="0" layer="19" extent="1-1"/>
+<wire x1="54.255" y1="27.22" x2="84.67" y2="6.35" width="0" layer="19" extent="1-1"/>
+<wire x1="51.155" y1="52.79" x2="54.255" y2="27.22" width="0" layer="19" extent="1-1"/>
 <wire x1="82.905" y1="52.79" x2="72.745" y2="52.79" width="0" layer="19" extent="1-1"/>
 <wire x1="10.515" y1="52.79" x2="82.905" y2="52.79" width="0" layer="19" extent="1-1"/>
-<wire x1="84.735" y1="28.49" x2="74.575" y2="28.49" width="0" layer="19" extent="1-1"/>
-<wire x1="20.675" y1="52.79" x2="84.735" y2="28.49" width="0" layer="19" extent="1-1"/>
+<wire x1="84.735" y1="27.22" x2="74.575" y2="27.22" width="0" layer="19" extent="1-1"/>
+<wire x1="20.675" y1="52.79" x2="84.735" y2="27.22" width="0" layer="19" extent="1-1"/>
 <wire x1="17.78" y1="36.83" x2="10.414" y2="14.605" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="AREF">
@@ -2093,16 +2093,16 @@ design rules under a new name.</description>
 <wire x1="74.575" y1="53.89" x2="82.195" y2="6.9" width="0" layer="19" extent="1-1"/>
 <wire x1="84.735" y1="53.89" x2="74.575" y2="53.89" width="0" layer="19" extent="1-1"/>
 <wire x1="12.345" y1="53.89" x2="84.735" y2="53.89" width="0" layer="19" extent="1-1"/>
-<wire x1="82.905" y1="27.39" x2="84.735" y2="53.89" width="0" layer="19" extent="1-1"/>
-<wire x1="22.505" y1="53.89" x2="82.905" y2="27.39" width="0" layer="19" extent="1-1"/>
-<wire x1="72.745" y1="27.39" x2="82.905" y2="27.39" width="0" layer="19" extent="1-1"/>
-<wire x1="32.665" y1="53.89" x2="72.745" y2="27.39" width="0" layer="19" extent="1-1"/>
-<wire x1="84.14" y1="8.89" x2="72.745" y2="27.39" width="0" layer="19" extent="1-1"/>
-<wire x1="62.585" y1="27.39" x2="72.745" y2="27.39" width="0" layer="19" extent="1-1"/>
-<wire x1="42.825" y1="53.89" x2="62.585" y2="27.39" width="0" layer="19" extent="1-1"/>
-<wire x1="52.425" y1="27.39" x2="62.585" y2="27.39" width="0" layer="19" extent="1-1"/>
-<wire x1="52.985" y1="53.89" x2="52.425" y2="27.39" width="0" layer="19" extent="1-1"/>
-<wire x1="79.59" y1="6.35" x2="52.425" y2="27.39" width="0" layer="19" extent="1-1"/>
+<wire x1="82.905" y1="26.12" x2="84.735" y2="53.89" width="0" layer="19" extent="1-1"/>
+<wire x1="22.505" y1="53.89" x2="82.905" y2="26.12" width="0" layer="19" extent="1-1"/>
+<wire x1="72.745" y1="26.12" x2="82.905" y2="26.12" width="0" layer="19" extent="1-1"/>
+<wire x1="32.665" y1="53.89" x2="72.745" y2="26.12" width="0" layer="19" extent="1-1"/>
+<wire x1="84.14" y1="8.89" x2="72.745" y2="26.12" width="0" layer="19" extent="1-1"/>
+<wire x1="62.585" y1="26.12" x2="72.745" y2="26.12" width="0" layer="19" extent="1-1"/>
+<wire x1="42.825" y1="53.89" x2="62.585" y2="26.12" width="0" layer="19" extent="1-1"/>
+<wire x1="52.425" y1="26.12" x2="62.585" y2="26.12" width="0" layer="19" extent="1-1"/>
+<wire x1="52.985" y1="53.89" x2="52.425" y2="26.12" width="0" layer="19" extent="1-1"/>
+<wire x1="79.59" y1="6.35" x2="52.425" y2="26.12" width="0" layer="19" extent="1-1"/>
 <wire x1="33.31" y1="5.6407" x2="12.345" y2="53.89" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$34">
@@ -2220,27 +2220,27 @@ design rules under a new name.</description>
 <signal name="N$11">
 <contactref element="U14" pad="1"/>
 <contactref element="U15" pad="3"/>
-<wire x1="82.905" y1="28.49" x2="82.905" y2="53.89" width="0" layer="19" extent="1-1"/>
+<wire x1="82.905" y1="27.22" x2="82.905" y2="53.89" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$12">
 <contactref element="U15" pad="1"/>
 <contactref element="U16" pad="3"/>
-<wire x1="72.745" y1="28.49" x2="84.735" y2="27.39" width="0" layer="19" extent="1-1"/>
+<wire x1="72.745" y1="27.22" x2="84.735" y2="26.12" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$13">
 <contactref element="U16" pad="1"/>
 <contactref element="U17" pad="3"/>
-<wire x1="62.585" y1="28.49" x2="74.575" y2="27.39" width="0" layer="19" extent="1-1"/>
+<wire x1="62.585" y1="27.22" x2="74.575" y2="26.12" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$14">
 <contactref element="U17" pad="1"/>
 <contactref element="U18" pad="3"/>
-<wire x1="52.425" y1="28.49" x2="64.415" y2="27.39" width="0" layer="19" extent="1-1"/>
+<wire x1="52.425" y1="27.22" x2="64.415" y2="26.12" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$15">
 <contactref element="U18" pad="1"/>
 <contactref element="U19" pad="3"/>
-<wire x1="54.255" y1="27.39" x2="84.735" y2="5.8" width="0" layer="19" extent="1-1"/>
+<wire x1="54.255" y1="26.12" x2="84.735" y2="5.8" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$16">
 <contactref element="U19" pad="1"/>

@@ -259,6 +259,9 @@ your OLED screen</text>
 <vertex x="78.74" y="16.51"/>
 <vertex x="81.28" y="19.05"/>
 </polygon>
+<text x="27.94" y="1.27" size="0.8128" layer="21" align="bottom-right">NORTHSEC
+CONF.BADGE
+2023.PROTO1</text>
 </plain>
 <libraries>
 <library name="SparkFun">
