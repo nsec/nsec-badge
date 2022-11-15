@@ -2342,77 +2342,6 @@ Small SMD resonator. This is the itty bitty 10/20MHz resonators with built in ca
 <text x="-1.524" y="1.016" size="1.27" layer="96">&gt;VALUE</text>
 <pin name="3.3V" x="0" y="-2.54" visible="off" length="short" direction="sup" rot="R90"/>
 </symbol>
-<symbol name="FRAME_A4">
-<wire x1="256.54" y1="3.81" x2="256.54" y2="8.89" width="0.1016" layer="94"/>
-<wire x1="256.54" y1="8.89" x2="256.54" y2="13.97" width="0.1016" layer="94"/>
-<wire x1="256.54" y1="13.97" x2="256.54" y2="19.05" width="0.1016" layer="94"/>
-<wire x1="256.54" y1="19.05" x2="256.54" y2="36.83" width="0.1016" layer="94"/>
-<frame x1="0" y1="0" x2="260.35" y2="179.07" columns="6" rows="4" layer="94"/>
-</symbol>
-<symbol name="FRAME_DOCFIELD">
-<description>&lt;p&gt;Frame doc - Courtesy Robert Starr (bobstarr.net)&lt;/p&gt;</description>
-<wire x1="20.0152" y1="1.5748" x2="95.5802" y2="1.5748" width="0.6096" layer="94"/>
-<wire x1="20.0152" y1="1.5748" x2="20.0152" y2="6.6548" width="0.3048" layer="94"/>
-<wire x1="20.0152" y1="6.6548" x2="88.5952" y2="6.6548" width="0.3048" layer="94"/>
-<wire x1="20.0152" y1="6.6548" x2="20.0152" y2="10.4648" width="0.3048" layer="94"/>
-<wire x1="20.0152" y1="10.4648" x2="20.0152" y2="16.8148" width="0.3048" layer="94"/>
-<wire x1="121.6152" y1="16.8148" x2="121.6152" y2="6.6548" width="0.6096" layer="94"/>
-<wire x1="95.5802" y1="6.6548" x2="95.5802" y2="1.5748" width="0.3048" layer="94"/>
-<wire x1="95.5802" y1="1.5748" x2="121.6152" y2="1.5748" width="0.6096" layer="94"/>
-<wire x1="88.5952" y1="16.8148" x2="88.5952" y2="6.6548" width="0.3048" layer="94"/>
-<wire x1="88.5952" y1="6.6548" x2="95.5802" y2="6.6548" width="0.3048" layer="94"/>
-<wire x1="121.6152" y1="16.8148" x2="110.1852" y2="16.8148" width="0.3048" layer="94"/>
-<wire x1="110.1852" y1="16.8148" x2="88.5952" y2="16.8148" width="0.3048" layer="94"/>
-<wire x1="88.5952" y1="16.8148" x2="20.0152" y2="16.8148" width="0.3048" layer="94"/>
-<wire x1="95.5802" y1="6.6548" x2="121.6152" y2="6.6548" width="0.3048" layer="94"/>
-<wire x1="121.6152" y1="6.6548" x2="121.6152" y2="1.5748" width="0.6096" layer="94"/>
-<wire x1="20.0152" y1="16.8148" x2="20.0152" y2="19.3548" width="0.3048" layer="94"/>
-<wire x1="20.0152" y1="19.3548" x2="20.0152" y2="28.2448" width="0.3048" layer="94"/>
-<wire x1="121.6152" y1="34.5948" x2="105.7402" y2="34.5948" width="0.6096" layer="94"/>
-<wire x1="105.7402" y1="34.5948" x2="20.0152" y2="34.5948" width="0.6096" layer="94"/>
-<wire x1="121.6152" y1="34.5948" x2="121.6152" y2="28.2448" width="0.6096" layer="94"/>
-<wire x1="20.0152" y1="28.2448" x2="105.7402" y2="28.2448" width="0.3048" layer="94"/>
-<wire x1="105.7402" y1="28.2448" x2="110.1852" y2="28.2448" width="0.3048" layer="94"/>
-<wire x1="110.1852" y1="28.2448" x2="121.6152" y2="28.2448" width="0.3048" layer="94"/>
-<wire x1="20.0152" y1="28.2448" x2="20.0152" y2="34.5948" width="0.3048" layer="94"/>
-<wire x1="121.6152" y1="28.2448" x2="121.6152" y2="16.8148" width="0.6096" layer="94"/>
-<wire x1="101.2952" y1="13.3223" x2="102.2477" y2="13.3223" width="0.254" layer="94"/>
-<wire x1="110.1852" y1="28.2448" x2="110.1852" y2="16.8148" width="0.3048" layer="94"/>
-<wire x1="105.7402" y1="28.2448" x2="105.7402" y2="34.5948" width="0.3048" layer="94"/>
-<wire x1="20.0152" y1="34.5948" x2="-0.3048" y2="34.5948" width="0.6096" layer="94"/>
-<wire x1="-0.3048" y1="34.5948" x2="-0.3048" y2="28.2448" width="0.6096" layer="94"/>
-<wire x1="-0.3048" y1="28.2448" x2="-0.3048" y2="19.3548" width="0.6096" layer="94"/>
-<wire x1="-0.3048" y1="19.3548" x2="-0.3048" y2="10.4648" width="0.6096" layer="94"/>
-<wire x1="-0.3048" y1="10.4648" x2="-0.3048" y2="1.5748" width="0.6096" layer="94"/>
-<wire x1="-0.3048" y1="1.5748" x2="20.0152" y2="1.5748" width="0.6096" layer="94"/>
-<wire x1="-0.3048" y1="28.2448" x2="20.0152" y2="28.2448" width="0.3048" layer="94"/>
-<wire x1="-0.3048" y1="19.3548" x2="20.0152" y2="19.3548" width="0.3048" layer="94"/>
-<wire x1="-0.3048" y1="10.4648" x2="20.0152" y2="10.4648" width="0.3048" layer="94"/>
-<circle x="109.2327" y="31.4198" radius="1.4199" width="0.254" layer="94"/>
-<text x="108.9152" y="2.8448" size="2.54" layer="94" font="vector" ratio="10">&gt;SHEET</text>
-<text x="112.4077" y="24.4348" size="2.54" layer="94" font="vector" ratio="12">REV</text>
-<text x="21.2852" y="24.4348" size="2.54" layer="94" font="vector" ratio="12">TITLE</text>
-<text x="89.8652" y="13.0048" size="2.54" layer="94" font="vector" ratio="12">DRG</text>
-<text x="100.9777" y="13.9573" size="2.1844" layer="94" ratio="12">o</text>
-<text x="33.0327" y="2.8448" size="2.54" layer="94" ratio="10">&gt;DRAWING_NAME</text>
-<text x="98.4377" y="13.0048" size="2.54" layer="94" font="vector" ratio="12">N</text>
-<text x="21.2852" y="13.0048" size="2.54" layer="94" font="vector" ratio="12">DATE</text>
-<text x="32.7152" y="9.1948" size="2.54" layer="94" ratio="10">&gt;LAST_DATE_TIME</text>
-<text x="112.4077" y="30.4673" size="1.778" layer="94" ratio="12">&gt;YEAR</text>
-<text x="108.7564" y="30.7848" size="1.27" layer="94" ratio="12">C</text>
-<text x="5.0927" y="30.4673" size="1.9304" layer="94" ratio="12">ISSUE</text>
-<text x="0.9652" y="25.0698" size="1.778" layer="94" ratio="12">DRAWN</text>
-<text x="0.9652" y="16.1798" size="1.778" layer="94" ratio="12">CHECKED</text>
-<text x="0.9652" y="7.2898" size="1.778" layer="94" ratio="12">DATE</text>
-<text x="23.349" y="29.6735" size="3.175" layer="94" ratio="18">&gt;COMPANY</text>
-<text x="21.2852" y="2.8448" size="2.54" layer="94" font="vector" ratio="12">FILE:</text>
-<text x="96.8502" y="2.8448" size="2.54" layer="94" font="vector" ratio="12">PAGE:</text>
-<text x="2.2352" y="20.6248" size="1.778" layer="94">&gt;DRAWN</text>
-<text x="2.2352" y="11.7348" size="1.778" layer="94">&gt;CHECKED</text>
-<text x="2.2352" y="2.8448" size="1.778" layer="94">&gt;DATE</text>
-<text x="91.1352" y="9.1948" size="2.1844" layer="94">&gt;DRGNO</text>
-<text x="113.9952" y="18.7198" size="3.81" layer="94" ratio="12">&gt;REV</text>
-</symbol>
 <symbol name="VBUS">
 <text x="-1.524" y="1.016" size="1.27" layer="96">&gt;VALUE</text>
 <pin name="VBUS" x="0" y="-2.54" visible="off" length="short" direction="sup" rot="R90"/>
@@ -3173,21 +3102,6 @@ Small SMD resonator. This is the itty bitty 10/20MHz resonators with built in ca
 <description>&lt;b&gt;3.3V Supply&lt;/b&gt;</description>
 <gates>
 <gate name="G$1" symbol="3.3V" x="0" y="0"/>
-</gates>
-<devices>
-<device name="">
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="FRAME_A4" prefix="FRAME" uservalue="yes">
-<description>&lt;b&gt;FRAME&lt;/b&gt;&lt;p&gt;
-DIN A4, landscape with location and doc. field</description>
-<gates>
-<gate name="G$1" symbol="FRAME_A4" x="0" y="0"/>
-<gate name="G$3" symbol="FRAME_DOCFIELD" x="134.62" y="3.81"/>
 </gates>
 <devices>
 <device name="">
@@ -11159,9 +11073,9 @@ Source: www.kingbright.com</description>
 <part name="U3" library="WS2812-2020" deviceset="WS2812-2020" device=""/>
 <part name="U6" library="36-2479-ND_AAA-3x" deviceset="2479" device="2479PCB_37P49X52P63_KEY"/>
 <part name="U$1" library="microbuilder" deviceset="VBAT" device=""/>
-<part name="FRAME1" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device=""/>
-<part name="FRAME2" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device=""/>
-<part name="FRAME3" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device=""/>
+<part name="FRAME1" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="MCU"/>
+<part name="FRAME2" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="NEOPIXEL"/>
+<part name="FRAME3" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="POWER"/>
 <part name="GND21" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="S2" library="SparkFun-Switches" deviceset="MOMENTARY-SWITCH-SPST-2" device="-SMD-5.2MM" value="NC"/>
 <part name="S3" library="SparkFun-Switches" deviceset="MOMENTARY-SWITCH-SPST-2" device="-SMD-5.2MM" value="NC"/>
@@ -11170,14 +11084,13 @@ Source: www.kingbright.com</description>
 <part name="S6" library="SparkFun-Switches" deviceset="MOMENTARY-SWITCH-SPST-2" device="-SMD-5.2MM" value="L"/>
 <part name="S7" library="SparkFun-Switches" deviceset="MOMENTARY-SWITCH-SPST-2" device="-SMD-5.2MM" value="R"/>
 <part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="FRAME4" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device=""/>
+<part name="FRAME4" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="BUTTON"/>
 <part name="U$11" library="microbuilder" deviceset="GND" device=""/>
 <part name="C29" library="microbuilder" deviceset="CAP_CERAMIC" device="0805-NOOUTLINE" value="0.1uF"/>
 <part name="U$17" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$18" library="microbuilder" deviceset="VBUS" device=""/>
 <part name="U$24" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="J1" library="10118192-0002LF" deviceset="10118192-0002LF" device=""/>
-<part name="FRAME5" library="microbuilder" deviceset="FRAME_A4" device=""/>
 <part name="U7" library="CH340C" deviceset="CH340C" device=""/>
 <part name="U$2" library="microbuilder" deviceset="GND" device=""/>
 <part name="U8" library="SMF05CT1G" deviceset="SMF05CT1G" device=""/>
@@ -11185,10 +11098,9 @@ Source: www.kingbright.com</description>
 <part name="U$7" library="microbuilder" deviceset="VBUS" device=""/>
 <part name="U$3" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$4" library="microbuilder" deviceset="3.3V" device=""/>
-<part name="S1" library="SparkFun-Switches" deviceset="MOMENTARY-SWITCH-SPST-2" device="-SMD-5.2MM"/>
+<part name="S1" library="SparkFun-Switches" deviceset="MOMENTARY-SWITCH-SPST-2" device="-SMD-5.2MM" value="RST"/>
 <part name="SV1" library="con-lsta" library_urn="urn:adsk.eagle:library:161" deviceset="FE05W" device="" package3d_urn="urn:adsk.eagle:package:8195/1" value="SYNCOUT"/>
 <part name="SV2" library="con-lsta" library_urn="urn:adsk.eagle:library:161" deviceset="FE05W" device="" package3d_urn="urn:adsk.eagle:package:8195/1" value="SYNCIN"/>
-<part name="FRAME6" library="microbuilder" deviceset="FRAME_A4" device=""/>
 <part name="GND6" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND7" library="SparkFun" deviceset="GND" device=""/>
 <part name="VDD1" library="supply1" deviceset="VDD" device=""/>
@@ -11287,6 +11199,8 @@ Source: www.kingbright.com</description>
 <part name="U$45" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$46" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$47" library="microbuilder" deviceset="3.3V" device=""/>
+<part name="FRAME6" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="SOLDERING"/>
+<part name="FRAME7" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="USB"/>
 </parts>
 <sheets>
 <sheet>
@@ -11530,7 +11444,6 @@ Source: www.kingbright.com</description>
 <attribute name="NAME" x="345.44" y="128.27" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="345.44" y="152.4" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="FRAME5" gate="G$1" x="266.7" y="0" smashed="yes"/>
 <instance part="U7" gate="G$1" x="383.54" y="58.42" smashed="yes">
 <attribute name="NAME" x="373.38" y="79.375" size="1.778" layer="95"/>
 <attribute name="VALUE" x="373.38" y="38.1" size="1.778" layer="96"/>
@@ -11566,7 +11479,6 @@ Source: www.kingbright.com</description>
 <attribute name="VALUE" x="590.55" y="76.2" size="1.778" layer="96"/>
 <attribute name="NAME" x="590.55" y="94.742" size="1.778" layer="95"/>
 </instance>
-<instance part="FRAME6" gate="G$1" x="533.4" y="0" smashed="yes"/>
 <instance part="GND6" gate="1" x="622.3" y="88.9" smashed="yes" rot="R180">
 <attribute name="VALUE" x="624.84" y="91.44" size="1.778" layer="96" rot="R180"/>
 </instance>
@@ -11910,6 +11822,16 @@ Source: www.kingbright.com</description>
 </instance>
 <instance part="U$47" gate="G$1" x="701.04" y="144.78" smashed="yes">
 <attribute name="VALUE" x="699.516" y="145.796" size="1.27" layer="96"/>
+</instance>
+<instance part="FRAME6" gate="G$1" x="533.4" y="0" smashed="yes">
+<attribute name="DRAWING_NAME" x="750.57" y="15.24" size="2.54" layer="94"/>
+<attribute name="LAST_DATE_TIME" x="750.57" y="10.16" size="2.286" layer="94"/>
+<attribute name="SHEET" x="763.905" y="5.08" size="2.54" layer="94"/>
+</instance>
+<instance part="FRAME7" gate="G$1" x="266.7" y="0" smashed="yes">
+<attribute name="DRAWING_NAME" x="483.87" y="15.24" size="2.54" layer="94"/>
+<attribute name="LAST_DATE_TIME" x="483.87" y="10.16" size="2.286" layer="94"/>
+<attribute name="SHEET" x="497.205" y="5.08" size="2.54" layer="94"/>
 </instance>
 </instances>
 <busses>
