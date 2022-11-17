@@ -6,20 +6,20 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="10" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
@@ -33,9 +33,9 @@
 <layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
 <layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
-<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
-<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
@@ -45,7 +45,7 @@
 <layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
 <layer number="51" name="tDocu" color="7" fill="1" visible="no" active="yes"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
 <layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
@@ -85,8 +85,8 @@
 <layer number="118" name="Rect_Pads" color="7" fill="1" visible="no" active="no"/>
 <layer number="119" name="KAP_TEKEN" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="120" name="KAP_MAAT1" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="121" name="_tsilk" color="29" fill="1" visible="no" active="yes"/>
-<layer number="122" name="_bsilk" color="21" fill="1" visible="no" active="yes"/>
+<layer number="121" name="_tsilk" color="29" fill="1" visible="yes" active="yes"/>
+<layer number="122" name="_bsilk" color="21" fill="1" visible="yes" active="yes"/>
 <layer number="123" name="tTestmark" color="7" fill="1" visible="no" active="yes"/>
 <layer number="124" name="bTestmark" color="7" fill="1" visible="no" active="yes"/>
 <layer number="125" name="_tNames" color="7" fill="1" visible="yes" active="yes"/>
@@ -112,7 +112,7 @@
 <layer number="154" name="FabDoc2" color="2" fill="1" visible="no" active="no"/>
 <layer number="155" name="FabDoc3" color="7" fill="15" visible="no" active="no"/>
 <layer number="199" name="Contour" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="200" name="200bmp" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="200" name="200bmp" color="1" fill="10" visible="no" active="yes"/>
 <layer number="201" name="201bmp" color="2" fill="10" visible="yes" active="yes"/>
 <layer number="202" name="202bmp" color="3" fill="1" visible="no" active="no"/>
 <layer number="203" name="203bmp" color="4" fill="10" visible="yes" active="yes"/>
@@ -174,7 +174,7 @@
 <wire x1="0" y1="22.86" x2="0" y2="5.08" width="0" layer="20"/>
 <hole x="7.62" y="73.66" drill="5"/>
 <hole x="81.28" y="73.66" drill="5"/>
-<text x="5.08" y="60.96" size="5.588" layer="21">HELLO MY NAME IS</text>
+<text x="5.08" y="59.69" size="5.588" layer="21" font="vector">HELLO MY NAME IS</text>
 <wire x1="15.24" y1="35.56" x2="12.7" y2="30.48" width="0.1524" layer="21" curve="-75.963757"/>
 <wire x1="13.97" y1="35.052" x2="15.24" y2="36.322" width="0.1524" layer="21"/>
 <wire x1="15.24" y1="36.322" x2="16.256" y2="34.798" width="0.1524" layer="21"/>
@@ -183,7 +183,7 @@ soldering village to add
 your OLED screen</text>
 <wire x1="0" y1="0" x2="96.52" y2="78.74" width="0.4064" layer="109"/>
 <wire x1="0" y1="78.74" x2="96.52" y2="0" width="0.4064" layer="109"/>
-<polygon width="0.4064" layer="121">
+<polygon width="0.4064" layer="21">
 <vertex x="3.904515625" y="53.34"/>
 <vertex x="86.36" y="53.34"/>
 <vertex x="88.9" y="50.8"/>
@@ -193,20 +193,23 @@ your OLED screen</text>
 <vertex x="12.7" y="44.450003125"/>
 <vertex x="3.90691875" y="53.243084375"/>
 </polygon>
-<polygon width="0.4064" layer="121">
+<polygon width="0.4064" layer="21">
 <vertex x="2.54" y="73.66"/>
-<vertex x="2.54" y="71.12"/>
-<vertex x="5.08" y="68.58"/>
-<vertex x="83.82" y="68.58"/>
-<vertex x="86.36" y="71.12"/>
+<vertex x="2.54" y="68.58"/>
+<vertex x="5.08" y="66.04"/>
+<vertex x="83.82" y="66.04"/>
+<vertex x="86.36" y="68.58"/>
 <vertex x="86.36" y="73.66"/>
-<vertex x="83.82" y="71.12"/>
-<vertex x="78.74" y="71.12"/>
-<vertex x="76.2" y="73.66"/>
-<vertex x="73.66" y="76.2"/>
-<vertex x="15.24" y="76.2"/>
-<vertex x="10.16" y="71.12"/>
-<vertex x="5.08" y="71.12"/>
+<vertex x="82.55" y="69.85"/>
+<vertex x="80.01" y="69.85"/>
+<vertex x="77.47" y="72.39"/>
+<vertex x="74.93" y="72.39"/>
+<vertex x="69.85" y="67.31"/>
+<vertex x="19.05" y="67.31"/>
+<vertex x="13.97" y="72.39"/>
+<vertex x="11.43" y="72.39"/>
+<vertex x="8.89" y="69.85"/>
+<vertex x="6.35" y="69.85"/>
 </polygon>
 <dimension x1="13.97" y1="44.45" x2="52.07" y2="44.45" x3="33.02" y3="50.8" textsize="1.016" layer="109"/>
 <dimension x1="16.51" y1="38.1" x2="16.51" y2="50.8" x3="52.07" y3="44.45" textsize="1.016" layer="109"/>
@@ -2381,6 +2384,10 @@ add a screen to your badge</text>
 <text x="5.715" y="1.27" size="1.8288" layer="22" rot="MR0" align="bottom-right">NORTHSEC
 CONF.BADGE
 2023.PROTO1</text>
+<text x="1.27" y="7.112" size="1.27" layer="21" rot="R45">ISP</text>
+<hole x="36.195" y="33.909" drill="3.2"/>
+<hole x="59.69" y="33.909" drill="3.2"/>
+<text x="25.4" y="23.114" size="0.9144" layer="22" rot="MR0">RST</text>
 </plain>
 <libraries>
 <library name="SparkFun">
@@ -4744,7 +4751,7 @@ Source: http://www.osram.convergy.de/ ... LG_LY N971.pdf</description>
 <class number="1" name="vcc" width="0.254" drill="0">
 </class>
 </classes>
-<designrules name="JLC_2Layer_(workInProgress) *">
+<designrules name="JLC_2Layer_(workInProgress)">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
 Die Standard-Design-Rules sind so gewählt, dass sie für 
@@ -4763,7 +4770,7 @@ design rules under a new name.</description>
 </description>
 <param name="layerSetup" value="(1*16)"/>
 <param name="mtCopper" value="0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm 0.035mm"/>
-<param name="mtIsolate" value="1.6mm 1.2mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm"/>
+<param name="mtIsolate" value="0.2mm 1.2mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm 0.15mm 0.2mm"/>
 <param name="mdWireWire" value="3.5mil"/>
 <param name="mdWirePad" value="5mil"/>
 <param name="mdWireVia" value="5mil"/>
