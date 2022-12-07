@@ -9,7 +9,7 @@
 <grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
@@ -2387,6 +2387,7 @@ CONF.BADGE
 <text x="1.27" y="7.112" size="1.27" layer="21" rot="R45">ISP</text>
 <hole x="36.195" y="33.909" drill="3.2"/>
 <hole x="59.69" y="33.909" drill="3.2"/>
+<text x="25.4" y="23.114" size="0.9144" layer="22" rot="MR0">RST</text>
 </plain>
 <libraries>
 <library name="SparkFun">

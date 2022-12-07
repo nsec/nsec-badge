@@ -174,7 +174,7 @@
 <wire x1="0" y1="22.86" x2="0" y2="5.08" width="0" layer="20"/>
 <hole x="7.62" y="73.66" drill="5"/>
 <hole x="81.28" y="73.66" drill="5"/>
-<text x="5.08" y="59.69" size="5.588" layer="21">HELLO MY NAME IS</text>
+<text x="5.08" y="59.69" size="5.588" layer="21" font="vector">HELLO MY NAME IS</text>
 <wire x1="15.24" y1="35.56" x2="12.7" y2="30.48" width="0.1524" layer="21" curve="-75.963757"/>
 <wire x1="13.97" y1="35.052" x2="15.24" y2="36.322" width="0.1524" layer="21"/>
 <wire x1="15.24" y1="36.322" x2="16.256" y2="34.798" width="0.1524" layer="21"/>
