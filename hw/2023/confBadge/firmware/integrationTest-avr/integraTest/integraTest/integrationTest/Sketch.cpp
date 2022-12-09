@@ -18,6 +18,12 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 #define SCREEN_ADDRESS	0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+//BUTTON
+#define BTN_U	A1
+#define BTN_D	A2
+#define BTN_L	A3
+#define BTN_R	A0
+
 //NSEC COMM PORT
 #define SIG_L1		2	
 #define SIG_L2		3
@@ -32,20 +38,27 @@ void neopix_connectLeft(void);
 void neopix_connectRight(void);
 void incrementLoadingBar(void);
 void neopix_success(void);
+void display_idle(void);
 
 //VARIABLE
+uint8_t currentLevel = 1;
 bool	currentlyLoading = false;
 bool	waitingForDisconnect = false;
 uint8_t loadingBarPos = 0;
+uint32_t idle_refreshInterval = 200;
 
 void setup() 
 {
 	//GPIO INIT
+	
 	pinMode(13, OUTPUT);
+	pinMode(A0, INPUT_PULLUP);
+	pinMode(A1, INPUT_PULLUP);
+	pinMode(A2, INPUT_PULLUP);
+	pinMode(A3, INPUT_PULLUP);
 	pinMode(SIG_R2, INPUT_PULLUP);
 	pinMode(SIG_R3, OUTPUT);
 	digitalWrite(SIG_R3, LOW);
-	
 	pinMode(SIG_L2, OUTPUT);
 	digitalWrite(SIG_L2, LOW);
 	pinMode(SIG_L3, INPUT_PULLUP);
@@ -63,8 +76,12 @@ void setup()
 	}
 
 	//OLED INIT
-	display.setTextSize(1); // Draw 2X-scale text
-	display.setTextColor(SSD1306_WHITE);
+	display.setTextColor(SSD1306_WHITE);	
+	display.clearDisplay();
+	display.setTextSize(2); // Draw 2X-scale text
+	display.print(F("John Smith"));
+	display.display();      // Show initial text
+	display.startscrollleft(0x00, 0x0F);
 }
 
 void loop() 
@@ -93,14 +110,52 @@ void loop()
 	if(millis() - ts_uart > 100)
 	{
 		ts_uart = millis();
-		Serial.println(millis());	
+		Serial.print((float)millis()/1000.f);	
+		Serial.print("\t LVL:");
+		Serial.print(currentLevel);
+		
+		//cheat code
+		if(digitalRead(BTN_U) == LOW)
+		{
+			//while(digitalRead(BTN_U) == LOW)
+			{
+				Serial.print("\t Level Up");
+				currentLevel++;
+
+				display.stopscroll();
+				display.clearDisplay();
+				display.setTextSize(2);
+				display.setCursor(0,0);
+				display.print(F("[md]LVL"));
+				display.print(currentLevel);
+				display.display();
+			}
+		}
+		else if(digitalRead(BTN_D) == LOW)
+		{
+			//while(digitalRead(BTN_D) == LOW)
+			{
+				Serial.print("\t Level Down");
+				currentLevel--;
+				
+				display.stopscroll();
+				display.clearDisplay();
+				display.setTextSize(2);
+				display.setCursor(0,0);
+				display.print(F("[md]LVL"));
+				display.print(currentLevel);
+				display.display();
+			}
+		}
+		
+		Serial.println("");	
 	}
   
   
 	//--------------------------------------------
 	//NEOPIXEL UPDATE
 	static uint32_t ts_neopix = 0;
-	if(millis() - ts_neopix > 10)
+	if(millis() - ts_neopix > 1)
 	{
 		ts_neopix = millis();
 		if(commLeftConnected == true)
@@ -127,6 +182,15 @@ void loop()
 		else
 		{
 			neopix_idle();
+			if(waitingForDisconnect == true)	//if you just disconnect after pairing successfully. Return to showing the name
+			{
+				display.clearDisplay();
+				display.setTextSize(2); // Draw 2X-scale text
+				display.print(F("John Smith"));
+				display.display();      // Show initial text
+				display.startscrollleft(0x00, 0x0F);	
+			}
+			
 			waitingForDisconnect = false;	//clear loading bar variables
 			currentlyLoading = false;
 			loadingBarPos = 0;
@@ -140,15 +204,32 @@ void loop()
 	if(millis() - ts_oled > 100)
 	{
 		ts_oled = millis();
-		display.clearDisplay();
-		display.setCursor(0,0);
-		if		(commLeftConnected==true)
-			display.println(F("left connected"));
-		else if (commRightConnected==true)
-			display.println(F("right connected"));
-		else
-			display.println(F("disconnected"));
-		display.display();	
+		
+		if(waitingForDisconnect == false)	//only show "pairing" if you just disconnected. After pairing is completed, "waitingForDisconnect" flag will be asserted. Another message will be shown
+		{
+			if		(commLeftConnected==true)
+			{
+				display.stopscroll();
+				display.clearDisplay();
+				display.setTextSize(2);
+				display.setCursor(0,0);
+				display.println(F("<<<PAIRING"));
+				display.display();	
+			}			
+			else if (commRightConnected==true)
+			{
+				display.stopscroll();
+				display.clearDisplay();
+				display.setTextSize(2);
+				display.setCursor(0,0);
+				display.println(F("PAIRING>>>"));	
+				display.display();	
+			}
+			else
+			{
+				
+			}
+		}
 	}
 }
 
@@ -157,13 +238,106 @@ void loop()
 void neopix_idle()
 {
 	static uint32_t ts_slowIdle = 0;
-	if(millis() - ts_slowIdle > 100)	//SLOW DOWN
+	static uint8_t startPosition = 0;
+	if(millis() - ts_slowIdle > idle_refreshInterval)	//slow down animation
 	{
 		ts_slowIdle = millis();
+		startPosition++;
+		
+		if(startPosition > 15)	//wrap around when reaching the end led strip
+			startPosition = 0;	
+			
 		pixels.clear(); // Set all pixel colors to 'off'
-		for(int i=0; i<16; i++)
+		for(int i=0; i<currentLevel; i++)		//determine how many LED should be one
 		{
-			pixels.setPixelColor(i, pixels.Color(0,0, random(0,10)));
+			//led_ID is the current LED index that we are update. 
+			uint8_t led_ID = (startPosition+i) % 16; //This is going over every single LED that needs to be on based on the current LVL
+			
+			/*
+			if(led_ID > 15)
+				led_ID = i;	//wrap around
+			*/
+				
+			//enable more colors if your lvl is more than the 16 LEDs
+			uint8_t b = 0;
+			uint8_t r = 0;
+			uint8_t g = 0;
+			uint8_t r_factor = 1;
+			uint8_t g_factor = 1;
+			uint8_t b_factor = 1;
+			if (i < 16)			//only blue to start
+			{
+				b = 10;
+			}
+			else if(i >= 16 && i < 32)	//introduce red 
+			{
+				b = 10;
+				r = 10;
+			}
+			else if(i >= 32 && i < 48)	//introduce green
+			{
+				b = 10;
+				g = 10;	
+			}
+			else if(i >= 48 && i < 64)	//have all 3 colors
+			{
+				g=10;	
+				r=10;
+				b=10;
+			}
+			else if(i >= 64 && i < 80)	//increase brightness + speed
+			{
+				idle_refreshInterval = 100;
+				b=30;
+				r=10;
+				b=10;
+			}
+			else if(i >= 80 && i < 96)	//increase brightness
+			{
+				idle_refreshInterval = 50;
+				b=30;
+				r=30;
+				b=10;
+			}
+			else if(i >= 96 && i < 112)	//increase brightness
+			{
+				idle_refreshInterval = 25;
+				b=30;
+				r=30;
+				b=30;
+			}
+			else if(i >= 112 && i < 128)	//max score
+			{
+				idle_refreshInterval = 12;
+				r=random(5,20);
+				g=0;
+				b=0;
+			}
+			else if(i >= 128 && i < 144)	//max score
+			{
+				idle_refreshInterval = 6;
+				r=random(5,20);
+				g=0;				
+				b=random(5,20);
+			}
+			else if(i >= 144 && i < 160)	//max score
+			{
+				idle_refreshInterval = 3;
+				r=random(5,20);
+				g=random(5,20);
+				b=random(5,20);
+			}
+			else if(i >= 160)	//max score
+			{
+				idle_refreshInterval = 1;
+				r=random(20,30);
+				g=random(20,30);
+				b=random(20,30);
+			}
+
+				
+			//apply color
+			pixels.setPixelColor(led_ID, pixels.Color(r,g,b)	);	
 		}
 		pixels.show();   // Send the updated pixel colors to the hardware.	
 	}
@@ -171,33 +345,55 @@ void neopix_idle()
 
 void neopix_success()
 {
-	pixels.clear(); // Set all pixel colors to 'off'
-	for(int i=0; i<16; i++)
+	static uint32_t ts_lastRefresh = 0;
+	
+	if(millis() - ts_lastRefresh > 10)
 	{
-		pixels.setPixelColor(i, pixels.Color(random(0,10), random(0,10), random(0,10)));
+		ts_lastRefresh = millis();
+		pixels.clear(); // Set all pixel colors to 'off'
+		for(int i=0; i<16; i++)
+		{
+			pixels.setPixelColor(i, pixels.Color(random(0,10), random(0,10), random(0,10)));
+		}
+		pixels.show();   // Send the updated pixel colors to the hardware.
 	}
-	pixels.show();   // Send the updated pixel colors to the hardware.
 }
 
 void neopix_connectRight()
 {
-	for(int i=0; i<8; i++)
+	static uint32_t ts_lastRefresh = 0;
+	static int i = 0;
+	
+	if(millis() - ts_lastRefresh > 25)
 	{
+		ts_lastRefresh = millis();
+		
+		i++;
+		if(i==7)
+			i=0;
+			
 		pixels.fill(pixels.Color(0,0,0), 0, 8);	//clear top row
 		pixels.setPixelColor(i, pixels.Color(10,0,0) );
 		pixels.show();
-		delay(25);
-	}	
+	}
 }
 
 void neopix_connectLeft()
 {
-	for(int i=0; i<8; i++)
+	static uint32_t ts_lastRefresh = 0;
+	static int i = 0;
+	
+	if(millis() - ts_lastRefresh > 25)
 	{
+		ts_lastRefresh = millis();
+			
+		i++;
+		if(i==7)
+			i=0;
+			
 		pixels.fill(pixels.Color(0,0,0), 0, 8);	//clear top row
 		pixels.setPixelColor(7-i, pixels.Color(10,0,0) );
 		pixels.show();
-		delay(25);
 	}
 }
 
@@ -211,23 +407,34 @@ void incrementLoadingBar()
 		ts_loadingStartTime = millis();
 		ts_loadingNextIncrement = ts_loadingStartTime + 1000;
 		pixels.fill( pixels.Color(0,0,0), 8, 15);	//clear bottom row
-		pixels.setPixelColor(15, pixels.Color(10,0,10) );
+		pixels.setPixelColor(15, pixels.Color(30,0,30) );
 		pixels.show();
 	}
 	
-	if(	millis() > ts_loadingNextIncrement)
+	if(	millis() > ts_loadingNextIncrement && waitingForDisconnect == false)
 	{
 		if(loadingBarPos < 8)
 		{
 			ts_loadingNextIncrement = millis() + 1000;	//next increment is in 1 seconds
 			loadingBarPos++;
 			pixels.fill( pixels.Color(0,0,0), 8, 15);	//clear bottom row
-			pixels.fill( pixels.Color(10,0,10), 15-loadingBarPos+1, loadingBarPos);
+			pixels.fill( pixels.Color(30,0,30), 15-loadingBarPos+1, loadingBarPos);
 			pixels.show();
 		}
 		else
-		{
+		{			
+			currentLevel++;
+			if(currentLevel>=200)	
+				currentLevel = 199;		//cap level at 199. No more additional LED animation after 199
 			waitingForDisconnect = true;
+			
+			display.clearDisplay();
+			display.setTextSize(2);
+			display.setCursor(0,0);
+			display.println(F("YAY LVL++"));
+			display.print(F("LVL"));
+			display.println(currentLevel);
+			display.display();
 		}
 	}
 }
