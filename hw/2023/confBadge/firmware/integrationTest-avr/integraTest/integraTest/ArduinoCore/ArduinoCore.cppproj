@@ -1,0 +1,692 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>7.0</ProjectVersion>
+    <ToolchainName>com.Atmel.AVRGCC8.CPP</ToolchainName>
+    <ProjectGuid>60eddd34-e91f-40d5-b564-13366f53f86f</ProjectGuid>
+    <avrdevice>atmega328p</avrdevice>
+    <avrdeviceseries>none</avrdeviceseries>
+    <OutputType>StaticLibrary</OutputType>
+    <Language>CPP</Language>
+    <OutputFileName>lib$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.a</OutputFileExtension>
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <Name>ArduinoCore</Name>
+    <ArduinoIdeDir>C:\Program Files (x86)\Arduino</ArduinoIdeDir>
+    <ArduinoProjectType>Core</ArduinoProjectType>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <AssemblyName>ArduinoCore</AssemblyName>
+    <RootNamespace>ArduinoCore</RootNamespace>
+    <KeepTimersRunning>true</KeepTimersRunning>
+    <OverrideVtor>false</OverrideVtor>
+    <CacheFlash>true</CacheFlash>
+    <ProgFlashFromRam>true</ProgFlashFromRam>
+    <RamSnippetAddress />
+    <UncachedRange />
+    <preserveEEPROM>true</preserveEEPROM>
+    <OverrideVtorValue />
+    <BootSegment>2</BootSegment>
+    <ResetRule>0</ResetRule>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <EraseKey />
+    <AsfFrameworkConfig>
+      <framework-data xmlns="">
+  <options />
+  <configurations />
+  <files />
+  <documentation help="" />
+  <offline-documentation help="" />
+  <dependencies>
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.52.0" />
+  </dependencies>
+</framework-data>
+    </AsfFrameworkConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <ToolchainSettings>
+      <AvrGccCpp>
+  <avrgcc.common.Device>-mmcu=atmega328p -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p"</avrgcc.common.Device>
+  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>NDEBUG</Value>
+      <Value>F_CPU=8000000L</Value>
+      <Value>ARDUINO=108016</Value>
+      <Value>ARDUINO_AVR_PRO</Value>
+      <Value>ARDUINO_ARCH_AVR</Value>
+    </ListValues>
+  </avrgcc.compiler.symbols.DefSymbols>
+  <avrgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\include\</Value>
+      <Value>..\include\libraries\SoftwareSerial</Value>
+      <Value>..\include\libraries\adafruit_neopixel</Value>
+      <Value>..\include\libraries\adafruit_neopixel\examples\StrandtestBLE</Value>
+      <Value>..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay</Value>
+      <Value>..\include\libraries\SPI</Value>
+      <Value>..\include\libraries\Wire</Value>
+      <Value>..\include\libraries\Wire\utility</Value>
+      <Value>..\include\libraries\adafruit_gfx_library</Value>
+      <Value>..\include\libraries\adafruit_gfx_library\examples\GFXcanvas</Value>
+      <Value>..\include\libraries\adafruit_gfx_library\Fonts</Value>
+      <Value>..\include\libraries\adafruit_busio</Value>
+      <Value>..\include\libraries\adafruit_ssd1306</Value>
+      <Value>..\include\core</Value>
+      <Value>..\include\variants\eightanaloginputs</Value>
+      <Value>..\include\variants\standard</Value>
+    </ListValues>
+  </avrgcc.compiler.directories.IncludePaths>
+  <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+  <avrgcc.compiler.optimization.OtherFlags>-fno-threadsafe-statics</avrgcc.compiler.optimization.OtherFlags>
+  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+  <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+  <avrgcc.compiler.warnings.InhibitAllWarnings>True</avrgcc.compiler.warnings.InhibitAllWarnings>
+  <avrgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -std=gnu11</avrgcc.compiler.miscellaneous.OtherFlags>
+  <avrgcccpp.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultCharTypeUnsigned>
+  <avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcccpp.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>NDEBUG</Value>
+      <Value>F_CPU=8000000L</Value>
+      <Value>ARDUINO=108016</Value>
+      <Value>ARDUINO_AVR_PRO</Value>
+      <Value>ARDUINO_ARCH_AVR</Value>
+    </ListValues>
+  </avrgcccpp.compiler.symbols.DefSymbols>
+  <avrgcccpp.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\include\</Value>
+      <Value>..\include\libraries\SoftwareSerial</Value>
+      <Value>..\include\libraries\adafruit_neopixel</Value>
+      <Value>..\include\libraries\adafruit_neopixel\examples\StrandtestBLE</Value>
+      <Value>..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay</Value>
+      <Value>..\include\libraries\SPI</Value>
+      <Value>..\include\libraries\Wire</Value>
+      <Value>..\include\libraries\Wire\utility</Value>
+      <Value>..\include\libraries\adafruit_gfx_library</Value>
+      <Value>..\include\libraries\adafruit_gfx_library\examples\GFXcanvas</Value>
+      <Value>..\include\libraries\adafruit_gfx_library\Fonts</Value>
+      <Value>..\include\libraries\adafruit_busio</Value>
+      <Value>..\include\libraries\adafruit_ssd1306</Value>
+      <Value>..\include\core</Value>
+      <Value>..\include\variants\eightanaloginputs</Value>
+      <Value>..\include\variants\standard</Value>
+    </ListValues>
+  </avrgcccpp.compiler.directories.IncludePaths>
+  <avrgcccpp.compiler.optimization.level>Optimize for size (-Os)</avrgcccpp.compiler.optimization.level>
+  <avrgcccpp.compiler.optimization.OtherFlags>-fno-threadsafe-statics</avrgcccpp.compiler.optimization.OtherFlags>
+  <avrgcccpp.compiler.optimization.PackStructureMembers>True</avrgcccpp.compiler.optimization.PackStructureMembers>
+  <avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>
+  <avrgcccpp.compiler.optimization.DebugLevel>Default (-g2)</avrgcccpp.compiler.optimization.DebugLevel>
+  <avrgcccpp.compiler.warnings.InhibitAllWarnings>True</avrgcccpp.compiler.warnings.InhibitAllWarnings>
+  <avrgcccpp.compiler.miscellaneous.OtherFlags>-std=gnu++11</avrgcccpp.compiler.miscellaneous.OtherFlags>
+  <avrgcccpp.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libm</Value>
+    </ListValues>
+  </avrgcccpp.linker.libraries.Libraries>
+  <avrgcccpp.linker.miscellaneous.LinkerFlags>-Os</avrgcccpp.linker.miscellaneous.LinkerFlags>
+  <avrgcccpp.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\include\</Value>
+    </ListValues>
+  </avrgcccpp.assembler.general.IncludePaths>
+  <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
+</AvrGccCpp>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ToolchainSettings>
+      <AvrGccCpp>
+  <avrgcc.common.Device>-mmcu=atmega328p -B "%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega328p"</avrgcc.common.Device>
+  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+      <Value>F_CPU=8000000L</Value>
+      <Value>ARDUINO=108016</Value>
+      <Value>ARDUINO_AVR_PRO</Value>
+      <Value>ARDUINO_ARCH_AVR</Value>
+    </ListValues>
+  </avrgcc.compiler.symbols.DefSymbols>
+  <avrgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\include\</Value>
+      <Value>..\include\libraries\SoftwareSerial</Value>
+      <Value>..\include\libraries\adafruit_neopixel</Value>
+      <Value>..\include\libraries\adafruit_neopixel\examples\StrandtestBLE</Value>
+      <Value>..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay</Value>
+      <Value>..\include\libraries\SPI</Value>
+      <Value>..\include\libraries\Wire</Value>
+      <Value>..\include\libraries\Wire\utility</Value>
+      <Value>..\include\libraries\adafruit_gfx_library</Value>
+      <Value>..\include\libraries\adafruit_gfx_library\examples\GFXcanvas</Value>
+      <Value>..\include\libraries\adafruit_gfx_library\Fonts</Value>
+      <Value>..\include\libraries\adafruit_busio</Value>
+      <Value>..\include\libraries\adafruit_ssd1306</Value>
+      <Value>..\include\core</Value>
+      <Value>..\include\variants\eightanaloginputs</Value>
+      <Value>..\include\variants\standard</Value>
+    </ListValues>
+  </avrgcc.compiler.directories.IncludePaths>
+  <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+  <avrgcc.compiler.optimization.OtherFlags>-fno-threadsafe-statics</avrgcc.compiler.optimization.OtherFlags>
+  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+  <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+  <avrgcc.compiler.warnings.InhibitAllWarnings>True</avrgcc.compiler.warnings.InhibitAllWarnings>
+  <avrgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -std=gnu11</avrgcc.compiler.miscellaneous.OtherFlags>
+  <avrgcccpp.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultCharTypeUnsigned>
+  <avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcccpp.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcccpp.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+      <Value>F_CPU=8000000L</Value>
+      <Value>ARDUINO=108016</Value>
+      <Value>ARDUINO_AVR_PRO</Value>
+      <Value>ARDUINO_ARCH_AVR</Value>
+    </ListValues>
+  </avrgcccpp.compiler.symbols.DefSymbols>
+  <avrgcccpp.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\include\</Value>
+      <Value>..\include\libraries\SoftwareSerial</Value>
+      <Value>..\include\libraries\adafruit_neopixel</Value>
+      <Value>..\include\libraries\adafruit_neopixel\examples\StrandtestBLE</Value>
+      <Value>..\include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay</Value>
+      <Value>..\include\libraries\SPI</Value>
+      <Value>..\include\libraries\Wire</Value>
+      <Value>..\include\libraries\Wire\utility</Value>
+      <Value>..\include\libraries\adafruit_gfx_library</Value>
+      <Value>..\include\libraries\adafruit_gfx_library\examples\GFXcanvas</Value>
+      <Value>..\include\libraries\adafruit_gfx_library\Fonts</Value>
+      <Value>..\include\libraries\adafruit_busio</Value>
+      <Value>..\include\libraries\adafruit_ssd1306</Value>
+      <Value>..\include\core</Value>
+      <Value>..\include\variants\eightanaloginputs</Value>
+      <Value>..\include\variants\standard</Value>
+    </ListValues>
+  </avrgcccpp.compiler.directories.IncludePaths>
+  <avrgcccpp.compiler.optimization.level>Optimize for size (-Os)</avrgcccpp.compiler.optimization.level>
+  <avrgcccpp.compiler.optimization.OtherFlags>-fno-threadsafe-statics</avrgcccpp.compiler.optimization.OtherFlags>
+  <avrgcccpp.compiler.optimization.PackStructureMembers>True</avrgcccpp.compiler.optimization.PackStructureMembers>
+  <avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>
+  <avrgcccpp.compiler.optimization.DebugLevel>Default (-g2)</avrgcccpp.compiler.optimization.DebugLevel>
+  <avrgcccpp.compiler.warnings.InhibitAllWarnings>True</avrgcccpp.compiler.warnings.InhibitAllWarnings>
+  <avrgcccpp.compiler.miscellaneous.OtherFlags>-std=gnu++11</avrgcccpp.compiler.miscellaneous.OtherFlags>
+  <avrgcccpp.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libm</Value>
+    </ListValues>
+  </avrgcccpp.linker.libraries.Libraries>
+  <avrgcccpp.linker.miscellaneous.LinkerFlags>-Os</avrgcccpp.linker.miscellaneous.LinkerFlags>
+  <avrgcccpp.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.7.374\include\</Value>
+    </ListValues>
+  </avrgcccpp.assembler.general.IncludePaths>
+  <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
+</AvrGccCpp>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="include\core\Arduino.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\binary.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\Client.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\HardwareSerial.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\HardwareSerial_private.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\IPAddress.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\new.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\PluggableUSB.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\Print.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\Printable.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\Server.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\Stream.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\Udp.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\USBAPI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\USBCore.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\USBDesc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\WCharacter.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\wiring_private.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\core\WString.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_busio\Adafruit_BusIO_Register.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_busio\Adafruit_I2CDevice.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_busio\Adafruit_I2CRegister.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_busio\Adafruit_SPIDevice.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Adafruit_GFX.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Adafruit_GrayOLED.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Adafruit_SPITFT.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Adafruit_SPITFT_Macros.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\examples\GFXcanvas\GFXcanvasSerialDemo.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMono12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMono18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMono24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMono9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoBold12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoBold18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoBold24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoBold9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoBoldOblique12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoBoldOblique18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoBoldOblique24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoBoldOblique9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoOblique12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoOblique18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoOblique24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeMonoOblique9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSans12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSans18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSans24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSans9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansBold12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansBold18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansBold24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansBold9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansBoldOblique12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansBoldOblique18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansBoldOblique24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansBoldOblique9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansOblique12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansOblique18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansOblique24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSansOblique9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerif12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerif18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerif24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerif9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifBold12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifBold18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifBold24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifBold9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifBoldItalic12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifBoldItalic18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifBoldItalic24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifBoldItalic9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifItalic12pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifItalic18pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifItalic24pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\FreeSerifItalic9pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\Org_01.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\Picopixel.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\Tiny3x3a2pt7b.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\Fonts\TomThumb.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_gfx_library\gfxfont.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_neopixel\Adafruit_NeoPixel.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_neopixel\examples\StrandtestBLE\BLESerial.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay\BLESerial.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_neopixel\rp2040_pio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_ssd1306\Adafruit_SSD1306.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\adafruit_ssd1306\splash.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\SoftwareSerial\SoftwareSerial.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\SPI\SPI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\Wire\utility\twi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\libraries\Wire\Wire.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\variants\eightanaloginputs\pins_arduino.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="include\variants\standard\pins_arduino.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\abi.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\CDC.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\HardwareSerial.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\HardwareSerial0.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\HardwareSerial1.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\HardwareSerial2.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\HardwareSerial3.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\hooks.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\IPAddress.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\main.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\new.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\PluggableUSB.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\PreprocessingAssembly\wiring_pulse.S">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\Print.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\Stream.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\Tone.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\USBCore.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\WInterrupts.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\wiring.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\wiring_analog.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\wiring_digital.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\wiring_pulse.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\wiring_shift.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\WMath.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\core\WString.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_busio\Adafruit_BusIO_Register.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_busio\Adafruit_I2CDevice.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_busio\Adafruit_SPIDevice.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_gfx_library\Adafruit_GFX.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_gfx_library\Adafruit_GrayOLED.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_gfx_library\Adafruit_SPITFT.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_gfx_library\fontconvert\fontconvert.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_gfx_library\glcdfont.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_neopixel\Adafruit_NeoPixel.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_neopixel\esp.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_neopixel\esp8266.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_neopixel\kendyte_k210.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_neopixel\rp2040.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\adafruit_ssd1306\Adafruit_SSD1306.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\SoftwareSerial\SoftwareSerial.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\SPI\SPI.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\Wire\utility\twi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\libraries\Wire\Wire.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="include\" />
+    <Folder Include="include\core\" />
+    <Folder Include="include\libraries\" />
+    <Folder Include="include\libraries\adafruit_busio\" />
+    <Folder Include="include\libraries\adafruit_gfx_library\" />
+    <Folder Include="include\libraries\adafruit_gfx_library\examples\" />
+    <Folder Include="include\libraries\adafruit_gfx_library\examples\GFXcanvas\" />
+    <Folder Include="include\libraries\adafruit_gfx_library\Fonts\" />
+    <Folder Include="include\libraries\adafruit_neopixel\" />
+    <Folder Include="include\libraries\adafruit_neopixel\examples\" />
+    <Folder Include="include\libraries\adafruit_neopixel\examples\StrandtestBLE\" />
+    <Folder Include="include\libraries\adafruit_neopixel\examples\StrandtestBLE_nodelay\" />
+    <Folder Include="include\libraries\adafruit_ssd1306\" />
+    <Folder Include="include\libraries\SoftwareSerial\" />
+    <Folder Include="include\libraries\SPI\" />
+    <Folder Include="include\libraries\Wire\" />
+    <Folder Include="include\libraries\Wire\utility\" />
+    <Folder Include="include\variants\" />
+    <Folder Include="include\variants\eightanaloginputs\" />
+    <Folder Include="include\variants\standard\" />
+    <Folder Include="src\" />
+    <Folder Include="src\core\" />
+    <Folder Include="src\core\PreprocessingAssembly\" />
+    <Folder Include="src\libraries\" />
+    <Folder Include="src\libraries\adafruit_busio\" />
+    <Folder Include="src\libraries\adafruit_gfx_library\" />
+    <Folder Include="src\libraries\adafruit_gfx_library\fontconvert\" />
+    <Folder Include="src\libraries\adafruit_neopixel\" />
+    <Folder Include="src\libraries\adafruit_ssd1306\" />
+    <Folder Include="src\libraries\SoftwareSerial\" />
+    <Folder Include="src\libraries\SPI\" />
+    <Folder Include="src\libraries\Wire\" />
+    <Folder Include="src\libraries\Wire\utility\" />
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>
