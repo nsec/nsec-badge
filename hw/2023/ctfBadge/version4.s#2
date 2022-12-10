@@ -8708,11 +8708,10 @@ V3i -&gt; V3j
 <text x="104.14" y="332.74" size="3.556" layer="94">POWER SWITCH</text>
 <text x="160.02" y="147.32" size="3.556" layer="94">SAO CONNECTOR</text>
 <text x="170.18" y="22.86" size="5.08" layer="94">NorthSec2022 V3</text>
-<text x="15.24" y="350.52" size="3.556" layer="94">BATTERY 3x AAA</text>
+<text x="17.78" y="342.9" size="3.556" layer="94">BATTERY 3x AAA</text>
 <text x="299.72" y="137.16" size="1.778" layer="91">Mnfr: Korean Hroparts Elec
 Part#: TYPE-C-31-M-14
 JLCPCB#: C223907</text>
-<text x="15.24" y="345.44" size="1.778" layer="91">Digikey: 36-1020-ND</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$3" x="134.62" y="2.54" smashed="yes">
