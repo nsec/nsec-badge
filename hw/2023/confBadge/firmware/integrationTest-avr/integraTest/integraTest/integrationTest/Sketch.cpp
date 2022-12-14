@@ -6,6 +6,10 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+//SOFTWARE SERIAL
+SoftwareSerial rightSerial(6, 5); // RX, TX
+SoftwareSerial leftSerial(2, 3); // RX, TX
+
 //NEOPIXEL DECLARATION
 #define PIN			9
 #define NUMPIXELS	16
@@ -33,6 +37,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define SIG_R3		7
 
 //PROTOTYPE FUNCTION
+void softSerialRoutine(void);
 void neopix_idle(void);
 void neopix_connectLeft(void);
 void neopix_connectRight(void);
@@ -41,6 +46,7 @@ void neopix_success(void);
 void display_idle(void);
 
 //VARIABLE
+const uint8_t MAX_MESSAGE_LENGTH = 8;
 uint8_t currentLevel = 1;
 bool	currentlyLoading = false;
 bool	waitingForDisconnect = false;
@@ -50,7 +56,6 @@ uint32_t idle_refreshInterval = 200;
 void setup() 
 {
 	//GPIO INIT
-	
 	pinMode(13, OUTPUT);
 	pinMode(A0, INPUT_PULLUP);
 	pinMode(A1, INPUT_PULLUP);
@@ -65,6 +70,8 @@ void setup()
 	
 	//SERIAL INIT
 	Serial.begin(9600);
+	rightSerial.begin(4800);
+	leftSerial.begin(4800);
   
 	//NEOPIXEL INIT
 	pixels.begin();
@@ -78,14 +85,18 @@ void setup()
 	//OLED INIT
 	display.setTextColor(SSD1306_WHITE);	
 	display.clearDisplay();
-	display.setTextSize(2); // Draw 2X-scale text
+	display.setTextSize(1); 
+	/*
 	display.print(F("John Smith"));
-	display.display();      // Show initial text
 	display.startscrollleft(0x00, 0x0F);
+	*/
+	display.display();      // Show initial text
 }
 
 void loop() 
 {
+	softSerialRoutine();
+	
 	//NSEC COMMUNICATION
 	bool commLeftConnected = false;
 	bool commRightConnected = false;
@@ -120,13 +131,13 @@ void loop()
 			//while(digitalRead(BTN_U) == LOW)
 			{
 				Serial.print("\t Level Up");
-				currentLevel++;
+				if(currentLevel<199)
+					currentLevel++;
 
-				display.stopscroll();
 				display.clearDisplay();
-				display.setTextSize(2);
 				display.setCursor(0,0);
-				display.print(F("[md]LVL"));
+				display.println();
+				display.print(F("LVL="));
 				display.print(currentLevel);
 				display.display();
 			}
@@ -136,13 +147,13 @@ void loop()
 			//while(digitalRead(BTN_D) == LOW)
 			{
 				Serial.print("\t Level Down");
-				currentLevel--;
+				if(currentLevel > 1)
+					currentLevel--;
 				
-				display.stopscroll();
 				display.clearDisplay();
-				display.setTextSize(2);
 				display.setCursor(0,0);
-				display.print(F("[md]LVL"));
+				display.println();
+				display.print(F("LVL="));
 				display.print(currentLevel);
 				display.display();
 			}
@@ -182,6 +193,7 @@ void loop()
 		else
 		{
 			neopix_idle();
+			/*
 			if(waitingForDisconnect == true)	//if you just disconnect after pairing successfully. Return to showing the name
 			{
 				display.clearDisplay();
@@ -190,6 +202,7 @@ void loop()
 				display.display();      // Show initial text
 				display.startscrollleft(0x00, 0x0F);	
 			}
+			*/
 			
 			waitingForDisconnect = false;	//clear loading bar variables
 			currentlyLoading = false;
@@ -204,7 +217,7 @@ void loop()
 	if(millis() - ts_oled > 100)
 	{
 		ts_oled = millis();
-		
+		/*
 		if(waitingForDisconnect == false)	//only show "pairing" if you just disconnected. After pairing is completed, "waitingForDisconnect" flag will be asserted. Another message will be shown
 		{
 			if		(commLeftConnected==true)
@@ -230,11 +243,102 @@ void loop()
 				
 			}
 		}
+		*/
 	}
 }
 
 
 //FUNCTION DECLARATION
+void softSerialRoutine()
+{
+	static bool pingpongSelector = false;
+	static uint32_t sending = 0;
+	static char receivedRight[MAX_MESSAGE_LENGTH];
+	static char receivedLeft[MAX_MESSAGE_LENGTH];
+	
+	static uint32_t ts_loop = 0;
+	if(millis() - ts_loop > 1000)
+	{
+		ts_loop = millis();
+		
+		sending = millis();
+		leftSerial.println(sending);
+		rightSerial.println(sending);
+	}
+	
+	static uint32_t ts_pingpong = 0;
+	if(millis() - ts_pingpong > 200)
+	{
+		ts_pingpong = millis();
+		pingpongSelector = !pingpongSelector;
+	}
+	
+	static uint32_t ts_display = 0;
+	if(millis() - ts_display > 100)
+	{
+		ts_display = millis();
+		display.clearDisplay();
+		display.setCursor(0,0);
+		display.print("broadcast:");
+		display.println(sending);
+		display.print("\nLeft RX:");
+		display.println(receivedLeft);
+		display.print("Right RX:");
+		display.println(receivedRight);
+		display.display();
+	}
+	
+	
+	static char msgRxRight[MAX_MESSAGE_LENGTH];
+	static unsigned int msgRxRight_pos = 0;
+	static char msgRxLeft[MAX_MESSAGE_LENGTH];
+	static unsigned int msgRxLeft_pos = 0;
+	if(pingpongSelector == false)
+	{
+		rightSerial.listen();
+		while(rightSerial.available() > 0)
+		{
+			char inByte = rightSerial.read();
+			if ( inByte != '\n' && (msgRxRight_pos < MAX_MESSAGE_LENGTH - 1) )
+			{
+				msgRxRight[msgRxRight_pos] = inByte; //Add the incoming byte to our message
+				msgRxRight_pos++;
+			}
+			else
+			{
+				msgRxRight[msgRxRight_pos] = '\0';	//Add null character to string
+				msgRxRight_pos = 0;				//Reset for the next message
+				for(int i=0; i<MAX_MESSAGE_LENGTH; i++)
+				{
+					receivedRight[i] = msgRxRight[i];
+				}
+			}
+		}
+	}
+	else
+	{
+		leftSerial.listen();
+		while(leftSerial.available() > 0)
+		{
+			char inByte = leftSerial.read();
+			if ( inByte != '\n' && (msgRxLeft_pos < MAX_MESSAGE_LENGTH - 1) )
+			{
+				msgRxLeft[msgRxLeft_pos] = inByte; //Add the incoming byte to our message
+				msgRxLeft_pos++;
+			}
+			else
+			{
+				msgRxLeft[msgRxLeft_pos] = '\0';	//Add null character to string
+				msgRxLeft_pos = 0;				//Reset for the next message
+				for(int i=0; i<MAX_MESSAGE_LENGTH; i++)
+				{
+					receivedLeft[i] = msgRxLeft[i];
+				}
+			}
+		}
+	}
+}
+
 void neopix_idle()
 {
 	static uint32_t ts_slowIdle = 0;
@@ -267,72 +371,72 @@ void neopix_idle()
 			uint8_t b_factor = 1;
 			if (i < 16)			//only blue to start
 			{
-				b = 10;
+				b = 5;
 			}
 			else if(i >= 16 && i < 32)	//introduce red 
 			{
-				b = 10;
-				r = 10;
+				b = 5;
+				r = 5;
 			}
 			else if(i >= 32 && i < 48)	//introduce green
 			{
-				b = 10;
-				g = 10;	
+				b = 5;
+				g = 5;	
 			}
 			else if(i >= 48 && i < 64)	//have all 3 colors
 			{
-				g=10;	
-				r=10;
-				b=10;
+				g=5;	
+				r=5;
+				b=5;
 			}
 			else if(i >= 64 && i < 80)	//increase brightness + speed
 			{
 				idle_refreshInterval = 100;
-				b=30;
-				r=10;
 				b=10;
+				r=5;
+				b=5;
 			}
 			else if(i >= 80 && i < 96)	//increase brightness
 			{
 				idle_refreshInterval = 50;
-				b=30;
-				r=30;
 				b=10;
+				r=10;
+				b=5;
 			}
 			else if(i >= 96 && i < 112)	//increase brightness
 			{
 				idle_refreshInterval = 25;
-				b=30;
-				r=30;
-				b=30;
+				b=10;
+				r=10;
+				b=10;
 			}
 			else if(i >= 112 && i < 128)	//max score
 			{
 				idle_refreshInterval = 12;
-				r=random(5,20);
+				r=random(1,10);
 				g=0;
 				b=0;
 			}
 			else if(i >= 128 && i < 144)	//max score
 			{
 				idle_refreshInterval = 6;
-				r=random(5,20);
+				r=random(1,10);
 				g=0;				
-				b=random(5,20);
+				b=random(1,10);
 			}
 			else if(i >= 144 && i < 160)	//max score
 			{
 				idle_refreshInterval = 3;
-				r=random(5,20);
-				g=random(5,20);
-				b=random(5,20);
+				r=random(1,10);
+				g=random(1,10);
+				b=random(1,10);
 			}
 			else if(i >= 160)	//max score
 			{
 				idle_refreshInterval = 1;
-				r=random(20,30);
-				g=random(20,30);
-				b=random(20,30);
+				r=random(1,15);
+				g=random(1,15);
+				b=random(1,15);
 			}
 
 				
@@ -428,6 +532,7 @@ void incrementLoadingBar()
 				currentLevel = 199;		//cap level at 199. No more additional LED animation after 199
 			waitingForDisconnect = true;
 			
+			/*
 			display.clearDisplay();
 			display.setTextSize(2);
 			display.setCursor(0,0);
@@ -435,6 +540,7 @@ void incrementLoadingBar()
 			display.print(F("LVL"));
 			display.println(currentLevel);
 			display.display();
+			*/
 		}
 	}
 }
