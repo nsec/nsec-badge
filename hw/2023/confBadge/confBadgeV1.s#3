@@ -11753,6 +11753,10 @@ MOSI
 MISO
 3V3</text>
 <text x="205.74" y="55.88" size="3.556" layer="94">ISP CONNECTOR</text>
+<text x="695.96" y="96.52" size="1.27" layer="91">Digikey: S5441-ND
+Manuf: PPTC051LGBN</text>
+<text x="596.9" y="96.52" size="1.27" layer="91">Digikey: 2057-PH1RB-05-UA-ND
+Manuf: PH1RB-05-UA</text>
 </plain>
 <instances>
 <instance part="R2" gate="G$1" x="58.42" y="129.54" smashed="yes" rot="R90">

@@ -12836,6 +12836,16 @@ Manuf: PH1RB-05-UA</text>
 <text x="93.98" y="50.8" size="2.54" layer="91">Switch to Atmega328PB
 (for UID)</text>
 <text x="81.28" y="83.82" size="2.54" layer="91">8MHZ</text>
+<text x="584.2" y="86.36" size="1.778" layer="91">D2
+D3
+D4</text>
+<text x="731.52" y="86.36" size="1.778" layer="91">D5
+D6
+D7</text>
+<text x="581.66" y="88.9" size="1.778" layer="91">rx
+tx</text>
+<text x="736.6" y="88.9" size="1.778" layer="91">tx
+rx</text>
 </plain>
 <instances>
 <instance part="R2" gate="G$1" x="58.42" y="129.54" smashed="yes" rot="R90">
