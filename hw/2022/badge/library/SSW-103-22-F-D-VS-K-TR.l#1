@@ -257,19 +257,13 @@
 <text x="-5.7245" y="-3.2512" size="1.27" layer="51" ratio="6">5</text>
 <text x="-3.2712" y="-0.635" size="1.27" layer="27" ratio="6">&gt;Name</text>
 </package>
-<package name="CON3_SSW-D-DUMZ_HDR_SAI-M" urn="urn:adsk.eagle:footprint:3/1">
+<package name="CON3_SSW-D-DUMZ_HDR_SAI-M" urn="urn:adsk.eagle:footprint:3/1" locally_modified="yes">
 <smd name="1" x="2.54" y="-2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="2" x="2.54" y="2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="3" x="0" y="-2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="4" x="0" y="2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="5" x="-2.54" y="-2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="6" x="-2.54" y="2.667" dx="0.7874" dy="3.556" layer="1"/>
-<polygon width="0.1524" layer="41">
-<vertex x="-7.239" y="-7.6708"/>
-<vertex x="-7.239" y="7.6708"/>
-<vertex x="7.239" y="7.6708"/>
-<vertex x="7.239" y="-7.6708"/>
-</polygon>
 <wire x1="2.54" y1="3.937" x2="10.795" y2="3.937" width="0.1524" layer="47"/>
 <wire x1="2.54" y1="-3.937" x2="10.795" y2="-3.937" width="0.1524" layer="47"/>
 <wire x1="10.414" y1="3.937" x2="10.414" y2="-3.937" width="0.1524" layer="47"/>

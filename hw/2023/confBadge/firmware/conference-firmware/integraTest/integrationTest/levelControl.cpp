@@ -7,7 +7,7 @@
 
 #include <Arduino.h>
 
-uint8_t currentLevel = 0;
+uint8_t currentLevel = 1;
 uint8_t level_getCurrLvl()
 {
 	return currentLevel;

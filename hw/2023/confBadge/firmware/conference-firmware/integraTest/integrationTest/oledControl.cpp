@@ -32,6 +32,8 @@ void oled_init()
 	display.setTextColor(SSD1306_WHITE);
 	display.clearDisplay();
 	display.setTextSize(1);
+	display.println("Northsec2023");
+	UniqueIDdump(display);
 	display.display();      // Show initial text
 }
 
@@ -49,6 +51,7 @@ void oled_outputUID()
 	display.display();      // Show initial text
 }
 
+/*
 void oled_testCypher()
 {
 	display.clearDisplay();
@@ -79,6 +82,7 @@ void oled_testCypher()
 	}
 	display.display();
 }
+*/
 
 void oled_showSoftSerial()
 {

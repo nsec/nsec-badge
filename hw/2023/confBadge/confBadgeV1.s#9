@@ -3406,8 +3406,6 @@ integrated light source &lt;a href="https://pricing.snapeda.com/parts/WS2812-202
 <package name="2479PCB_37P49X52P63_KEY">
 <pad name="1" x="0" y="0" drill="1.016" diameter="1.524"/>
 <pad name="2" x="12.7" y="0" drill="1.016" diameter="1.524"/>
-<pad name="3" x="0" y="23.7236" drill="3.4544" diameter="3.4544" rot="R90"/>
-<pad name="4" x="23.495" y="23.7236" drill="3.4544" diameter="3.4544" rot="R90"/>
 <wire x1="0" y1="0" x2="0" y2="52.578" width="0.1524" layer="47"/>
 <wire x1="12.7" y1="0" x2="12.7" y2="52.578" width="0.1524" layer="47"/>
 <wire x1="0" y1="52.197" x2="12.7" y2="52.197" width="0.1524" layer="47"/>
@@ -3436,7 +3434,6 @@ integrated light source &lt;a href="https://pricing.snapeda.com/parts/WS2812-202
 <wire x1="30.4927" y1="60.452" x2="30.2387" y2="60.325" width="0.1524" layer="47"/>
 <wire x1="30.2387" y1="60.579" x2="30.2387" y2="60.325" width="0.1524" layer="47"/>
 <wire x1="0" y1="0" x2="33.4137" y2="0" width="0.1524" layer="47"/>
-<wire x1="0" y1="0" x2="33.4137" y2="0" width="0.1524" layer="47"/>
 <wire x1="33.0327" y1="0" x2="33.0327" y2="1.27" width="0.1524" layer="47"/>
 <wire x1="33.0327" y1="0" x2="33.0327" y2="-1.27" width="0.1524" layer="47"/>
 <wire x1="33.0327" y1="0" x2="32.9057" y2="0.254" width="0.1524" layer="47"/>
@@ -3446,7 +3443,7 @@ integrated light source &lt;a href="https://pricing.snapeda.com/parts/WS2812-202
 <wire x1="33.0327" y1="0" x2="33.1597" y2="-0.254" width="0.1524" layer="47"/>
 <wire x1="32.9057" y1="-0.254" x2="33.1597" y2="-0.254" width="0.1524" layer="47"/>
 <wire x1="23.495" y1="23.7236" x2="-9.5377" y2="23.7236" width="0.1524" layer="47"/>
-<wire x1="11.7475" y1="0" x2="-9.5377" y2="0" width="0.1524" layer="47"/>
+<wire x1="11.7475" y1="0" x2="-16.5227" y2="0" width="0.1524" layer="47"/>
 <wire x1="-9.1567" y1="23.7236" x2="-9.1567" y2="0" width="0.1524" layer="47"/>
 <wire x1="-9.1567" y1="23.7236" x2="-9.2837" y2="23.4696" width="0.1524" layer="47"/>
 <wire x1="-9.1567" y1="23.7236" x2="-9.0297" y2="23.4696" width="0.1524" layer="47"/>
@@ -3454,8 +3451,6 @@ integrated light source &lt;a href="https://pricing.snapeda.com/parts/WS2812-202
 <wire x1="-9.1567" y1="0" x2="-9.2837" y2="0.254" width="0.1524" layer="47"/>
 <wire x1="-9.1567" y1="0" x2="-9.0297" y2="0.254" width="0.1524" layer="47"/>
 <wire x1="-9.2837" y1="0.254" x2="-9.0297" y2="0.254" width="0.1524" layer="47"/>
-<wire x1="-6.9977" y1="50.038" x2="-16.5227" y2="50.038" width="0.1524" layer="47"/>
-<wire x1="11.7475" y1="0" x2="-16.5227" y2="0" width="0.1524" layer="47"/>
 <wire x1="-16.1417" y1="50.038" x2="-16.1417" y2="0" width="0.1524" layer="47"/>
 <wire x1="-16.1417" y1="50.038" x2="-16.2687" y2="49.784" width="0.1524" layer="47"/>
 <wire x1="-16.1417" y1="50.038" x2="-16.0147" y2="49.784" width="0.1524" layer="47"/>
@@ -3463,7 +3458,7 @@ integrated light source &lt;a href="https://pricing.snapeda.com/parts/WS2812-202
 <wire x1="-16.1417" y1="0" x2="-16.2687" y2="0.254" width="0.1524" layer="47"/>
 <wire x1="-16.1417" y1="0" x2="-16.0147" y2="0.254" width="0.1524" layer="47"/>
 <wire x1="-16.2687" y1="0.254" x2="-16.0147" y2="0.254" width="0.1524" layer="47"/>
-<wire x1="-6.9977" y1="50.038" x2="-15.2527" y2="50.038" width="0.1524" layer="47"/>
+<wire x1="-6.9977" y1="50.038" x2="-16.5227" y2="50.038" width="0.1524" layer="47"/>
 <wire x1="-6.9977" y1="-2.5908" x2="-15.2527" y2="-2.5908" width="0.1524" layer="47"/>
 <wire x1="-14.8717" y1="50.038" x2="-14.8717" y2="-2.5908" width="0.1524" layer="47"/>
 <wire x1="-14.8717" y1="50.038" x2="-14.9987" y2="49.784" width="0.1524" layer="47"/>
@@ -3498,19 +3493,19 @@ integrated light source &lt;a href="https://pricing.snapeda.com/parts/WS2812-202
 <wire x1="30.4927" y1="-2.5908" x2="30.4927" y2="50.038" width="0.1524" layer="51"/>
 <wire x1="30.4927" y1="50.038" x2="-6.9977" y2="50.038" width="0.1524" layer="51"/>
 <wire x1="-6.9977" y1="50.038" x2="-6.9977" y2="-2.5908" width="0.1524" layer="51"/>
-<wire x1="0.381" y1="1.905" x2="-0.381" y2="1.905" width="0.508" layer="21" curve="-180"/>
-<wire x1="-0.381" y1="1.905" x2="0.381" y2="1.905" width="0.508" layer="21" curve="-180"/>
+<wire x1="0.381" y1="1.905" x2="-0.381" y2="1.905" width="0.508" layer="51" curve="-180"/>
+<wire x1="-0.381" y1="1.905" x2="0.381" y2="1.905" width="0.508" layer="51" curve="-180"/>
 <wire x1="-7.3787" y1="0" x2="-8.1407" y2="0" width="0.508" layer="22" curve="-180"/>
 <wire x1="-8.1407" y1="0" x2="-7.3787" y2="0" width="0.508" layer="22" curve="-180"/>
 <text x="8.4763" y="-0.635" size="1.27" layer="27" ratio="6">&gt;Name</text>
+<hole x="0" y="23.749" drill="3.2"/>
+<hole x="23.495" y="23.749" drill="3.2"/>
 </package>
 </packages>
 <symbols>
 <symbol name="2479PCB_37P49X52P63">
 <pin name="1" x="2.54" y="0" length="middle" direction="pas"/>
 <pin name="2" x="2.54" y="-2.54" length="middle" direction="pas"/>
-<pin name="3" x="38.1" y="-2.54" length="middle" direction="pas" rot="R180"/>
-<pin name="4" x="38.1" y="0" length="middle" direction="pas" rot="R180"/>
 <wire x1="7.62" y1="5.08" x2="7.62" y2="-7.62" width="0.1524" layer="94"/>
 <wire x1="7.62" y1="-7.62" x2="33.02" y2="-7.62" width="0.1524" layer="94"/>
 <wire x1="33.02" y1="-7.62" x2="33.02" y2="5.08" width="0.1524" layer="94"/>
@@ -3529,8 +3524,6 @@ integrated light source &lt;a href="https://pricing.snapeda.com/parts/WS2812-202
 <connects>
 <connect gate="A" pin="1" pad="1"/>
 <connect gate="A" pin="2" pad="2"/>
-<connect gate="A" pin="3" pad="3"/>
-<connect gate="A" pin="4" pad="4"/>
 </connects>
 <technologies>
 <technology name="">
@@ -11048,7 +11041,6 @@ Source: www.kingbright.com</description>
 <part name="GND5" library="SparkFun" deviceset="GND" device=""/>
 <part name="C2" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
 <part name="Q1" library="Testing" deviceset="RESONATOR" device="1:1" value="8/16/20MHz"/>
-<part name="C25" library="microbuilder" deviceset="CAP_CERAMIC" device="0805-NOOUTLINE" value="1uF"/>
 <part name="C26" library="microbuilder" deviceset="CAP_CERAMIC" device="0603_NO" value="1uF"/>
 <part name="U$27" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$28" library="microbuilder" deviceset="GND" device=""/>
@@ -11086,7 +11078,6 @@ Source: www.kingbright.com</description>
 <part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="FRAME4" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="A4L-LOC" device="" value="BUTTON"/>
 <part name="U$11" library="microbuilder" deviceset="GND" device=""/>
-<part name="C29" library="microbuilder" deviceset="CAP_CERAMIC" device="0805-NOOUTLINE" value="0.1uF"/>
 <part name="U$17" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$18" library="microbuilder" deviceset="VBUS" device=""/>
 <part name="U$24" library="microbuilder" deviceset="3.3V" device=""/>
@@ -11204,6 +11195,8 @@ Source: www.kingbright.com</description>
 <part name="SV5" library="con-lstb" library_urn="urn:adsk.eagle:library:162" deviceset="MA03-2" device="" package3d_urn="urn:adsk.eagle:package:8334/1" value="ICSP"/>
 <part name="GND11" library="SparkFun" deviceset="GND" device=""/>
 <part name="U$48" library="microbuilder" deviceset="3.3V" device=""/>
+<part name="C20" library="SparkFun" deviceset="CAP" device="0603-CAP" value="0.1uF"/>
+<part name="C21" library="microbuilder" deviceset="CAP_CERAMIC" device="0603_NO" value="1uF"/>
 </parts>
 <sheets>
 <sheet>
@@ -11294,10 +11287,6 @@ GND</text>
 <instance part="Q1" gate="G$1" x="104.14" y="93.98" smashed="yes" rot="R270">
 <attribute name="NAME" x="100.584" y="97.79" size="1.778" layer="95"/>
 <attribute name="VALUE" x="97.282" y="88.392" size="1.778" layer="96"/>
-</instance>
-<instance part="C25" gate="G$1" x="172.72" y="276.86" smashed="yes">
-<attribute name="NAME" x="170.43" y="278.11" size="1.27" layer="95" font="vector" rot="R90" align="center"/>
-<attribute name="VALUE" x="175.02" y="278.11" size="1.27" layer="96" font="vector" rot="R90" align="center"/>
 </instance>
 <instance part="C26" gate="G$1" x="228.6" y="276.86" smashed="yes">
 <attribute name="NAME" x="226.31" y="278.11" size="1.27" layer="95" font="vector" rot="R90" align="center"/>
@@ -11435,10 +11424,6 @@ GND</text>
 </instance>
 <instance part="U$11" gate="G$1" x="365.76" y="142.24" smashed="yes">
 <attribute name="VALUE" x="364.236" y="139.7" size="1.27" layer="96"/>
-</instance>
-<instance part="C29" gate="G$1" x="406.4" y="78.74" smashed="yes">
-<attribute name="NAME" x="404.11" y="79.99" size="1.27" layer="95" font="vector" rot="R90" align="center"/>
-<attribute name="VALUE" x="408.7" y="79.99" size="1.27" layer="96" font="vector" rot="R90" align="center"/>
 </instance>
 <instance part="U$17" gate="G$1" x="406.4" y="71.12" smashed="yes">
 <attribute name="VALUE" x="404.876" y="68.58" size="1.27" layer="96"/>
@@ -11852,6 +11837,14 @@ GND</text>
 <instance part="U$48" gate="G$1" x="233.68" y="48.26" smashed="yes">
 <attribute name="VALUE" x="232.156" y="49.276" size="1.27" layer="96"/>
 </instance>
+<instance part="C20" gate="G$1" x="406.4" y="81.28" smashed="yes" rot="R180">
+<attribute name="NAME" x="407.416" y="81.407" size="1.778" layer="95"/>
+<attribute name="VALUE" x="407.416" y="76.581" size="1.778" layer="96"/>
+</instance>
+<instance part="C21" gate="G$1" x="172.72" y="276.86" smashed="yes">
+<attribute name="NAME" x="170.43" y="278.11" size="1.27" layer="95" font="vector" rot="R90" align="center"/>
+<attribute name="VALUE" x="175.02" y="278.11" size="1.27" layer="96" font="vector" rot="R90" align="center"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -11901,9 +11894,9 @@ GND</text>
 <wire x1="228.6" y1="274.32" x2="228.6" y2="271.78" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="C25" gate="G$1" pin="2"/>
 <pinref part="U$27" gate="G$1" pin="GND"/>
 <wire x1="172.72" y1="274.32" x2="172.72" y2="271.78" width="0.1524" layer="91"/>
+<pinref part="C21" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="C27" gate="G$1" pin="2"/>
@@ -11971,9 +11964,9 @@ GND</text>
 <junction x="360.68" y="147.32"/>
 </segment>
 <segment>
-<pinref part="C29" gate="G$1" pin="2"/>
 <pinref part="U$17" gate="G$1" pin="GND"/>
 <wire x1="406.4" y1="76.2" x2="406.4" y2="73.66" width="0.1524" layer="91"/>
+<pinref part="C20" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <pinref part="U$2" gate="G$1" pin="GND"/>
@@ -12393,7 +12386,6 @@ GND</text>
 <wire x1="236.22" y1="287.02" x2="236.22" y2="284.48" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="C29" gate="G$1" pin="1"/>
 <wire x1="406.4" y1="83.82" x2="406.4" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="U$24" gate="G$1" pin="3.3V"/>
 <pinref part="U7" gate="G$1" pin="VCC"/>
@@ -12406,6 +12398,7 @@ GND</text>
 <wire x1="398.78" y1="73.66" x2="401.32" y2="73.66" width="0.1524" layer="91"/>
 <wire x1="401.32" y1="73.66" x2="401.32" y2="76.2" width="0.1524" layer="91"/>
 <junction x="401.32" y="76.2"/>
+<pinref part="C20" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="U$3" gate="G$1" pin="3.3V"/>
@@ -12496,7 +12489,6 @@ GND</text>
 </net>
 <net name="VDD" class="0">
 <segment>
-<pinref part="C25" gate="G$1" pin="1"/>
 <wire x1="182.88" y1="287.02" x2="172.72" y2="287.02" width="0.1524" layer="91"/>
 <wire x1="172.72" y1="287.02" x2="172.72" y2="281.94" width="0.1524" layer="91"/>
 <pinref part="R7" gate="G$1" pin="2"/>
@@ -12512,6 +12504,7 @@ GND</text>
 <pinref part="D5" gate="G$1" pin="A"/>
 <wire x1="162.56" y1="284.48" x2="162.56" y2="287.02" width="0.1524" layer="91"/>
 <junction x="162.56" y="287.02"/>
+<pinref part="C21" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <pinref part="U3" gate="G$1" pin="VDD"/>

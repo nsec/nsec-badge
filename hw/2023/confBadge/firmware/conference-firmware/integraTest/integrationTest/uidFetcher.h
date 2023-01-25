@@ -72,26 +72,26 @@ extern "C" {
 
 #define UniqueIDdump(stream)                      \
 {                                             \
-	stream.print("UniqueID: ");       \
+	stream.println("UID:");       \
 	for (size_t i = 0; i < UniqueIDsize; i++) \
 	{                                         \
 		if (UniqueID[i] < 0x10)               \
-		stream.print("0");                \
+			stream.print("0");                \
 		stream.print(UniqueID[i], HEX);       \
-		stream.print(" ");                    \
+		stream.print("");                    \
 	}                                         \
 	stream.println();                         \
 }
 
 #define UniqueID8dump(stream)                \
 {                                        \
-	stream.print("UniqueID: ");  \
+	stream.println("UID:");  \
 	for (size_t i = 0; i < 8; i++)       \
 	{                                    \
 		if (UniqueID8[i] < 0x10)         \
-		stream.print("0");           \
+			stream.print("0");           \
 		stream.print(UniqueID8[i], HEX); \
-		stream.print(" ");               \
+		stream.print("");               \
 	}                                    \
 	stream.println();                    \
 }

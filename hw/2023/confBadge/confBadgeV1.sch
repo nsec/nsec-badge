@@ -11191,10 +11191,6 @@ Source: www.kingbright.com</description>
 <wire x1="-0.701" y1="2.6035" x2="-1.839" y2="2.6035" width="0.1524" layer="21"/>
 <wire x1="-1.839" y1="-2.6035" x2="-0.701" y2="-2.6035" width="0.1524" layer="21"/>
 <wire x1="-3.241" y1="2.6035" x2="-4.191" y2="2.6035" width="0.1524" layer="21"/>
-<text x="4.572" y="2.032" size="1.27" layer="21" ratio="6">2</text>
-<text x="4.572" y="-3.302" size="1.27" layer="21" ratio="6">1</text>
-<text x="-5.7245" y="2.032" size="1.27" layer="21" ratio="6">6</text>
-<text x="-5.7245" y="-3.302" size="1.27" layer="21" ratio="6">5</text>
 <text x="-1.7288" y="-0.635" size="1.27" layer="21" ratio="6">&gt;Value</text>
 <wire x1="2.54" y1="-4.5491" x2="1.905" y2="-5.8191" width="0.1524" layer="51"/>
 <wire x1="1.905" y1="-5.8191" x2="3.175" y2="-5.8191" width="0.1524" layer="51"/>
@@ -11203,25 +11199,15 @@ Source: www.kingbright.com</description>
 <wire x1="4.064" y1="-2.4765" x2="4.064" y2="2.4765" width="0.1524" layer="51"/>
 <wire x1="4.064" y1="2.4765" x2="-4.064" y2="2.4765" width="0.1524" layer="51"/>
 <wire x1="-4.064" y1="2.4765" x2="-4.064" y2="-2.4765" width="0.1524" layer="51"/>
-<text x="4.572" y="2.032" size="1.27" layer="51" ratio="6">2</text>
-<text x="4.572" y="-3.302" size="1.27" layer="51" ratio="6">1</text>
-<text x="-5.7245" y="2.032" size="1.27" layer="51" ratio="6">6</text>
-<text x="-5.7245" y="-3.302" size="1.27" layer="51" ratio="6">5</text>
 <text x="-3.2712" y="-0.635" size="1.27" layer="27" ratio="6">&gt;Name</text>
 </package>
-<package name="CON3_SSW-D-DUMZ_HDR_SAI-M" urn="urn:adsk.eagle:footprint:3/1">
+<package name="CON3_SSW-D-DUMZ_HDR_SAI-M" urn="urn:adsk.eagle:footprint:3/1" locally_modified="yes">
 <smd name="1" x="2.54" y="-2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="2" x="2.54" y="2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="3" x="0" y="-2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="4" x="0" y="2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="5" x="-2.54" y="-2.667" dx="0.7874" dy="3.556" layer="1"/>
 <smd name="6" x="-2.54" y="2.667" dx="0.7874" dy="3.556" layer="1"/>
-<polygon width="0.1524" layer="41">
-<vertex x="-7.239" y="-7.6708"/>
-<vertex x="-7.239" y="7.6708"/>
-<vertex x="7.239" y="7.6708"/>
-<vertex x="7.239" y="-7.6708"/>
-</polygon>
 <wire x1="2.54" y1="3.937" x2="10.795" y2="3.937" width="0.1524" layer="47"/>
 <wire x1="2.54" y1="-3.937" x2="10.795" y2="-3.937" width="0.1524" layer="47"/>
 <wire x1="10.414" y1="3.937" x2="10.414" y2="-3.937" width="0.1524" layer="47"/>
@@ -11308,19 +11294,13 @@ Source: www.kingbright.com</description>
 <text x="-5.7245" y="-3.3528" size="1.27" layer="51" ratio="6">5</text>
 <text x="-3.2712" y="-0.635" size="1.27" layer="27" ratio="6">&gt;Name</text>
 </package>
-<package name="CON3_SSW-D-DUMZ_HDR_SAI-L" urn="urn:adsk.eagle:footprint:2/1">
+<package name="CON3_SSW-D-DUMZ_HDR_SAI-L" urn="urn:adsk.eagle:footprint:2/1" locally_modified="yes">
 <smd name="1" x="2.54" y="-2.667" dx="0.7366" dy="2.9464" layer="1"/>
 <smd name="2" x="2.54" y="2.667" dx="0.7366" dy="2.9464" layer="1"/>
 <smd name="3" x="0" y="-2.667" dx="0.7366" dy="2.9464" layer="1"/>
 <smd name="4" x="0" y="2.667" dx="0.7366" dy="2.9464" layer="1"/>
 <smd name="5" x="-2.54" y="-2.667" dx="0.7366" dy="2.9464" layer="1"/>
 <smd name="6" x="-2.54" y="2.667" dx="0.7366" dy="2.9464" layer="1"/>
-<polygon width="0.1524" layer="41">
-<vertex x="-7.239" y="-7.2644"/>
-<vertex x="-7.239" y="7.2644"/>
-<vertex x="7.239" y="7.2644"/>
-<vertex x="7.239" y="-7.2644"/>
-</polygon>
 <wire x1="2.54" y1="3.937" x2="10.795" y2="3.937" width="0.1524" layer="47"/>
 <wire x1="2.54" y1="-3.937" x2="10.795" y2="-3.937" width="0.1524" layer="47"/>
 <wire x1="10.414" y1="3.937" x2="10.414" y2="-3.937" width="0.1524" layer="47"/>
@@ -12846,6 +12826,7 @@ D7</text>
 tx</text>
 <text x="736.6" y="88.9" size="1.778" layer="91">tx
 rx</text>
+<text x="152.4" y="104.14" size="1.778" layer="91">BTN A and B are analogOnly</text>
 </plain>
 <instances>
 <instance part="R2" gate="G$1" x="58.42" y="129.54" smashed="yes" rot="R90">

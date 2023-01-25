@@ -9,12 +9,21 @@
  * it under the terms of either the GNU General Public License version 2
  * or the GNU Lesser General Public License version 2.1, both as
  * published by the Free Software Foundation.
+ 
+ *	URL: https://github.com/watterott/ATmega328PB-Testing/blob/master/hardware/atmega328pb/avr/libraries/SPI/src/SPI.h
+ 
  */
 
 #ifndef _SPI_H_INCLUDED
 #define _SPI_H_INCLUDED
 
 #include <Arduino.h>
+
+#ifndef SPCR
+ #define SPCR SPCR0
+ #define SPSR SPSR0
+ #define SPDR SPDR0
+#endif
 
 // SPI_HAS_TRANSACTION means SPI has beginTransaction(), endTransaction(),
 // usingInterrupt(), and SPISetting(clock, bitOrder, dataMode)

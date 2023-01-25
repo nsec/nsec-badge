@@ -81,7 +81,7 @@
 <layer number="100" name="Muster" color="7" fill="1" visible="no" active="yes"/>
 <layer number="101" name="Patch_Top" color="12" fill="4" visible="no" active="yes"/>
 <layer number="102" name="Mittellin" color="7" fill="1" visible="no" active="yes"/>
-<layer number="103" name="Stiffner" color="11" fill="1" visible="yes" active="yes"/>
+<layer number="103" name="Stiffner" color="11" fill="1" visible="no" active="yes"/>
 <layer number="104" name="Name" color="7" fill="1" visible="no" active="yes"/>
 <layer number="105" name="Beschreib" color="7" fill="1" visible="no" active="yes"/>
 <layer number="106" name="BGA-Top" color="7" fill="1" visible="no" active="yes"/>
@@ -286,7 +286,6 @@ V3i -&gt; V3j
 <vertex x="-22" y="-270"/>
 <vertex x="21.75" y="-270"/>
 <vertex x="23" y="-268.75"/>
-<vertex x="23" y="-204.543021875"/>
 <vertex x="23" y="-204"/>
 <vertex x="36.7" y="-204"/>
 </polygon>
@@ -1061,7 +1060,7 @@ FOR SWITCH</text>
 2
 3
 4</text>
-<text x="-5.08" y="-73.66" size="10.3632" layer="21" rot="R270">NORTHSEC 2022 V4</text>
+<text x="-5.08" y="-73.66" size="10.3632" layer="21" rot="R270">NORTHSEC 2023 V4</text>
 <rectangle x1="-26.9748" y1="1.905" x2="-26.5684" y2="2.0066" layer="21"/>
 <rectangle x1="-26.3652" y1="1.905" x2="-26.162" y2="2.0066" layer="21"/>
 <rectangle x1="-24.7396" y1="1.905" x2="-24.5364" y2="2.0066" layer="21"/>

@@ -12,6 +12,8 @@
 #define BTN_D	A2
 #define BTN_L	A3
 #define BTN_R	A0
+#define BTN_A	A6
+#define BTN_B	A7
 
 //NSEC COMM PORT
 #define SIG_L1		2	
@@ -29,10 +31,13 @@ void setup()
 {
 	//GPIO INIT
 	pinMode(13, OUTPUT);
-	pinMode(A0, INPUT_PULLUP);
-	pinMode(A1, INPUT_PULLUP);
-	pinMode(A2, INPUT_PULLUP);
-	pinMode(A3, INPUT_PULLUP);
+	pinMode(BTN_U, INPUT);
+	pinMode(BTN_D, INPUT);
+	pinMode(BTN_R, INPUT);
+	pinMode(BTN_L, INPUT);
+	pinMode(BTN_A, INPUT);
+	pinMode(BTN_B, INPUT);
+	
 	pinMode(SIG_R2, INPUT_PULLUP);
 	pinMode(SIG_R3, OUTPUT);
 	digitalWrite(SIG_R3, LOW);
@@ -48,8 +53,7 @@ void setup()
 	neopix_init();
 
 	//DISPLAY INIT
-	oled_init();
-	
+	oled_init();	
 }
 
 void loop() 
@@ -84,6 +88,12 @@ void loop()
 		Serial.print((float)millis()/1000.f);	
 		Serial.print("\t LVL:");
 		Serial.print(level_getCurrLvl());
+		
+		Serial.print("\t");
+		Serial.print(digitalRead(BTN_R)); Serial.print("\t");
+		Serial.print(digitalRead(BTN_L)); Serial.print("\t");
+		Serial.print(analogRead(BTN_A)%2); Serial.print("\t");
+		Serial.print(analogRead(BTN_B)%2); Serial.print("\t");
 		
 		//cheat code
 		if(digitalRead(BTN_U) == LOW)
@@ -143,7 +153,6 @@ void loop()
 	if(millis() - ts_oled > 1000)
 	{
 		ts_oled = millis();
-		oled_testCypher();
 	}
 }
 
