@@ -2447,7 +2447,6 @@ BADGE 2023</text>
 </polygon>
 <text x="41.529" y="70.612" size="1.778" layer="21" rot="R90">NSEC</text>
 <text x="49.403" y="77.089" size="2.032" layer="21" rot="SR270" align="top-left">2023</text>
-<dimension x1="83.82" y1="78.74" x2="5.08" y2="78.74" x3="44.45" y3="78.74" textsize="1.778" layer="1"/>
 <dimension x1="44.45" y1="76.2" x2="44.45" y2="78.74" x3="39.37" y3="77.47" textsize="1.778" layer="47"/>
 <text x="79.375" y="63.5" size="1.778" layer="21">+</text>
 <text x="80.645" y="59.055" size="2.54" layer="21" rot="R180">-</text>

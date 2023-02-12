@@ -8,7 +8,7 @@
 </settings>
 <grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
@@ -28,13 +28,13 @@
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
@@ -2370,7 +2370,6 @@ add a screen to your badge</text>
 <text x="87.63" y="5.08" size="1.8288" layer="22" rot="MR270" align="bottom-right">NORTHSEC
 CONF.BADGE
 2023.PROTO2</text>
-<text x="3.683" y="10.795" size="1.27" layer="22" rot="MR315">ISP</text>
 <text x="25.4" y="23.114" size="0.9144" layer="22" rot="MR0">RST</text>
 <dimension x1="85.725" y1="43.18" x2="96.52" y2="43.18" x3="91.1225" y3="29.845" textsize="1.778" layer="47"/>
 <dimension x1="12.065" y1="33.02" x2="7.62" y2="33.02" x3="9.8425" y3="44.45" textsize="1.778" layer="47"/>
@@ -5780,7 +5779,7 @@ design rules under a new name.</description>
 <attribute name="DIGI-KEY_PART_NUMBER_3" value="SAM14622TR-ND" x="83.82" y="60.96" size="1.778" layer="27" display="off"/>
 <attribute name="MANUFACTURER_PART_NUMBER" value="SSW-103-22-F-D-VS-K-TR" x="83.82" y="60.96" size="1.778" layer="27" display="off"/>
 <attribute name="MFR_NAME" value="Samtec Inc" x="83.82" y="60.96" size="1.778" layer="27" display="off"/>
-<attribute name="NAME" x="80.5488" y="60.325" size="1.27" layer="27" ratio="6"/>
+<attribute name="NAME" x="88.265" y="64.0388" size="1.27" layer="27" ratio="6" rot="R90"/>
 </element>
 <element name="J1" library="SSW-103-22-F-D-VS-K-TR" package="CON3_SSW-D-DUMZ_HDR_SAI" value="SSW-103-22-F-D-VS-K-TRCON3_SSW-D-DUMZ_HDR_SAI" x="6.35" y="6.35" smashed="yes" rot="MR225">
 <attribute name="COPYRIGHT" value="Copyright (C) 2022 Ultra Librarian. All rights reserved." x="6.35" y="6.35" size="1.778" layer="28" rot="MR225" display="off"/>
@@ -5789,7 +5788,7 @@ design rules under a new name.</description>
 <attribute name="DIGI-KEY_PART_NUMBER_3" value="SAM14622TR-ND" x="6.35" y="6.35" size="1.778" layer="28" rot="MR225" display="off"/>
 <attribute name="MANUFACTURER_PART_NUMBER" value="SSW-103-22-F-D-VS-K-TR" x="6.35" y="6.35" size="1.778" layer="28" rot="MR225" display="off"/>
 <attribute name="MFR_NAME" value="Samtec Inc" x="6.35" y="6.35" size="1.778" layer="28" rot="MR225" display="off"/>
-<attribute name="NAME" x="4.485928125" y="9.1121" size="1.27" layer="28" ratio="6" rot="MR225"/>
+<attribute name="NAME" x="1.6829" y="10.200928125" size="1.27" layer="28" ratio="6" rot="MR135"/>
 </element>
 <element name="TP1" library="testpad" library_urn="urn:adsk.eagle:library:385" package="B1,27" package3d_urn="urn:adsk.eagle:package:27944/2" value="TPB1,27" x="46.99" y="12.065" smashed="yes" rot="MR0">
 <attribute name="NAME" x="45.72" y="11.176" size="1.27" layer="26" ratio="10" rot="MR0"/>

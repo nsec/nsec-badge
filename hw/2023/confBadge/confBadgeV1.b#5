@@ -8,7 +8,7 @@
 </settings>
 <grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
@@ -28,14 +28,14 @@
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
@@ -2453,6 +2453,11 @@ CONF.BADGE
 <text x="49.403" y="77.089" size="2.032" layer="21" rot="SR270" align="top-left">2023</text>
 <dimension x1="83.82" y1="78.74" x2="5.08" y2="78.74" x3="44.45" y3="78.74" textsize="1.778" layer="1"/>
 <dimension x1="44.45" y1="76.2" x2="44.45" y2="78.74" x3="39.37" y3="77.47" textsize="1.778" layer="47"/>
+<text x="86.995" y="56.515" size="1.778" layer="21">+</text>
+<text x="86.995" y="64.135" size="2.54" layer="21">-</text>
+<text x="5.842" y="2.794" size="2.54" layer="22" rot="MR180">-</text>
+<text x="1.905" y="5.715" size="1.778" layer="22" rot="MR0">+</text>
+<text x="10.795" y="6.223" size="0.8128" layer="22" rot="MR135">RST</text>
 </plain>
 <libraries>
 <library name="SparkFun">
@@ -5004,10 +5009,6 @@ Source: http://www.osram.convergy.de/ ... LG_LY N971.pdf</description>
 <wire x1="-0.701" y1="2.6035" x2="-1.839" y2="2.6035" width="0.1524" layer="21"/>
 <wire x1="-1.839" y1="-2.6035" x2="-0.701" y2="-2.6035" width="0.1524" layer="21"/>
 <wire x1="-3.241" y1="2.6035" x2="-4.191" y2="2.6035" width="0.1524" layer="21"/>
-<text x="4.572" y="2.032" size="1.27" layer="21" ratio="6">2</text>
-<text x="4.572" y="-3.302" size="1.27" layer="21" ratio="6">1</text>
-<text x="-5.7245" y="2.032" size="1.27" layer="21" ratio="6">6</text>
-<text x="-5.7245" y="-3.302" size="1.27" layer="21" ratio="6">5</text>
 <text x="-1.7288" y="-0.635" size="1.27" layer="21" ratio="6">&gt;Value</text>
 <wire x1="2.54" y1="-4.5491" x2="1.905" y2="-5.8191" width="0.1524" layer="51"/>
 <wire x1="1.905" y1="-5.8191" x2="3.175" y2="-5.8191" width="0.1524" layer="51"/>
@@ -5016,10 +5017,6 @@ Source: http://www.osram.convergy.de/ ... LG_LY N971.pdf</description>
 <wire x1="4.064" y1="-2.4765" x2="4.064" y2="2.4765" width="0.1524" layer="51"/>
 <wire x1="4.064" y1="2.4765" x2="-4.064" y2="2.4765" width="0.1524" layer="51"/>
 <wire x1="-4.064" y1="2.4765" x2="-4.064" y2="-2.4765" width="0.1524" layer="51"/>
-<text x="4.572" y="2.032" size="1.27" layer="51" ratio="6">2</text>
-<text x="4.572" y="-3.302" size="1.27" layer="51" ratio="6">1</text>
-<text x="-5.7245" y="2.032" size="1.27" layer="51" ratio="6">6</text>
-<text x="-5.7245" y="-3.302" size="1.27" layer="51" ratio="6">5</text>
 <text x="-3.2712" y="-0.635" size="1.27" layer="27" ratio="6">&gt;Name</text>
 </package>
 </packages>

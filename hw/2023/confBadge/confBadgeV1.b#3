@@ -2363,7 +2363,7 @@ your OLED screen</text>
 to unlock more LEDs
 Go to the soldering village to add a screen 
 to your badge</text>
-<text x="85.725" y="8.89" size="1.8288" layer="22" rot="MR180" align="bottom-right">NORTHSEC
+<text x="83.82" y="2.54" size="3.7592" layer="22" rot="MR270" align="bottom-right">NORTHSEC
 CONFERENCE
 BADGE 2023</text>
 <text x="25.4" y="23.114" size="0.9144" layer="22" rot="MR0">RST</text>

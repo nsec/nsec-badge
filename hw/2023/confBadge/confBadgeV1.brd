@@ -6,9 +6,9 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
@@ -23,7 +23,7 @@
 <layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
@@ -54,7 +54,7 @@
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
@@ -2456,6 +2456,8 @@ BADGE 2023</text>
 <text x="64.135" y="69.85" size="1.524" layer="22" font="vector" rot="MR0" align="top-left">[1]  
 
 [2] </text>
+<dimension x1="0" y1="73.66" x2="96.52" y2="45.72" x3="48.26" y3="93.98" textsize="3.81" layer="47" dtype="horizontal"/>
+<dimension x1="5.08" y1="78.74" x2="5.08" y2="0" x3="-10.16" y3="39.37" textsize="3.81" layer="47" dtype="vertical"/>
 </plain>
 <libraries>
 <library name="SparkFun">
