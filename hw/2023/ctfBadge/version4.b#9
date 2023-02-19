@@ -286,7 +286,6 @@ V3i -&gt; V3j
 <vertex x="-22" y="-270"/>
 <vertex x="21.75" y="-270"/>
 <vertex x="23" y="-268.75"/>
-<vertex x="23" y="-204.543021875"/>
 <vertex x="23" y="-204"/>
 <vertex x="36.7" y="-204"/>
 </polygon>
