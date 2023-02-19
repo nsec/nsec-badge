@@ -6,9 +6,9 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="100" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="1" altunitdist="mm" altunit="mm"/>
+<grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="1" altunitdist="mm" altunit="mm"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
 <layer number="2" name="Route2" color="16" fill="1" visible="no" active="no"/>
 <layer number="3" name="Route3" color="17" fill="1" visible="no" active="no"/>
 <layer number="4" name="Route4" color="18" fill="1" visible="no" active="no"/>
@@ -23,7 +23,7 @@
 <layer number="13" name="Route13" color="21" fill="1" visible="no" active="no"/>
 <layer number="14" name="Route14" color="22" fill="1" visible="no" active="no"/>
 <layer number="15" name="Route15" color="23" fill="1" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
@@ -54,7 +54,7 @@
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
@@ -179,7 +179,6 @@
 <wire x1="30" y1="5" x2="-30" y2="5" width="0" layer="20"/>
 <wire x1="-30" y1="5" x2="-35" y2="0" width="0" layer="20"/>
 <wire x1="-35" y1="0" x2="-25" y2="-40" width="0" layer="20"/>
-<dimension x1="30" y1="0" x2="50" y2="-300" x3="-75" y3="-150" textsize="3.81" layer="47" dtype="vertical"/>
 <dimension x1="-40" y1="-250" x2="-40" y2="-300" x3="-50" y3="-275" textsize="3.81" layer="47" dtype="vertical"/>
 <dimension x1="30" y1="-95" x2="30" y2="-85" x3="66.59" y3="-90" textsize="1.778" layer="103" dtype="vertical"/>
 <dimension x1="35" y1="-155" x2="35" y2="-145" x3="66.59" y3="-150" textsize="1.5" layer="103" dtype="vertical" width="0.1"/>
@@ -2102,7 +2101,12 @@ Input: 4.5V</text>
 <wire x1="-1.27" y1="-56.515" x2="-0.4572" y2="-57.8612" width="0.1524" layer="21"/>
 <wire x1="-0.4572" y1="-57.8612" x2="2.032" y2="-56.388" width="0.1524" layer="21"/>
 <circle x="18.8468" y="-31.5722" radius="0.13678125" width="0.3048" layer="21"/>
-<dimension x1="-40" y1="-250" x2="40" y2="-250" x3="0" y3="-307.34" textsize="1.778" layer="47"/>
+<dimension x1="-40" y1="-250" x2="40" y2="-250" x3="0" y3="-307.34" textsize="3.81" layer="47"/>
+<dimension x1="0" y1="-300" x2="0" y2="5.08" x3="-62.23" y3="-147.46" textsize="3.81" layer="47" dtype="vertical"/>
+<dimension x1="30.48" y1="5.08" x2="25" y2="-40" x3="52.07" y3="-17.46" textsize="3.81" layer="47" dtype="vertical"/>
+<dimension x1="-35" y1="0" x2="35" y2="0" x3="0" y3="21.59" textsize="3.81" layer="47" dtype="horizontal"/>
+<dimension x1="-30" y1="5" x2="30" y2="5" x3="0" y3="12.7" textsize="3.81" layer="47" dtype="horizontal"/>
+<dimension x1="25" y1="-40" x2="40" y2="-250" x3="52.07" y3="-145" textsize="3.81" layer="47" dtype="vertical"/>
 </plain>
 <libraries>
 <library name="rcl">
