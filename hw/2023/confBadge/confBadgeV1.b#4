@@ -54,7 +54,7 @@
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
@@ -128,7 +128,7 @@
 <layer number="199" name="Contour" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="200" name="200bmp" color="1" fill="10" visible="no" active="yes"/>
 <layer number="201" name="201bmp" color="2" fill="10" visible="yes" active="yes"/>
-<layer number="202" name="202bmp" color="3" fill="1" visible="no" active="no"/>
+<layer number="202" name="202bmp" color="3" fill="1" visible="yes" active="yes"/>
 <layer number="203" name="203bmp" color="4" fill="10" visible="yes" active="yes"/>
 <layer number="204" name="204bmp" color="5" fill="10" visible="yes" active="yes"/>
 <layer number="205" name="205bmp" color="6" fill="10" visible="yes" active="yes"/>
@@ -187,7 +187,6 @@
 <wire x1="7.62" y1="30.48" x2="0" y2="22.86" width="0" layer="20"/>
 <wire x1="0" y1="22.86" x2="0" y2="5.08" width="0" layer="20"/>
 <hole x="44.45" y="74.295" drill="4"/>
-<text x="5.08" y="59.69" size="5.588" layer="21">HELLO MY NAME IS</text>
 <wire x1="15.24" y1="35.56" x2="12.7" y2="30.48" width="0.1524" layer="21" curve="-75.963757"/>
 <wire x1="13.97" y1="35.052" x2="15.24" y2="36.322" width="0.1524" layer="21"/>
 <wire x1="15.24" y1="36.322" x2="16.256" y2="34.798" width="0.1524" layer="21"/>
@@ -202,56 +201,6 @@ your OLED screen</text>
 </polygon>
 <dimension x1="13.97" y1="44.45" x2="52.07" y2="44.45" x3="33.02" y3="50.8" textsize="1.016" layer="109"/>
 <dimension x1="16.51" y1="38.1" x2="16.51" y2="50.8" x3="52.07" y3="44.45" textsize="1.016" layer="109"/>
-<polygon width="0.4064" layer="21">
-<vertex x="10.16" y="19.05"/>
-<vertex x="10.16" y="22.86"/>
-<vertex x="13.97" y="26.67"/>
-<vertex x="17.78" y="22.86"/>
-<vertex x="17.78" y="19.05"/>
-</polygon>
-<polygon width="0.4064" layer="21">
-<vertex x="8.89" y="17.78"/>
-<vertex x="5.08" y="17.78"/>
-<vertex x="1.27" y="13.97"/>
-<vertex x="5.08" y="10.16"/>
-<vertex x="8.89" y="10.16"/>
-</polygon>
-<polygon width="0.4064" layer="21">
-<vertex x="10.16" y="8.89"/>
-<vertex x="10.16" y="5.08"/>
-<vertex x="13.97" y="1.27"/>
-<vertex x="17.78" y="5.08"/>
-<vertex x="17.78" y="8.89"/>
-</polygon>
-<polygon width="0.4064" layer="21">
-<vertex x="19.05" y="17.78"/>
-<vertex x="22.86" y="17.78"/>
-<vertex x="26.67" y="13.97"/>
-<vertex x="22.86" y="10.16"/>
-<vertex x="19.05" y="10.16"/>
-</polygon>
-<polygon width="0.4064" layer="21">
-<vertex x="78.74" y="8.89"/>
-<vertex x="81.28" y="6.35"/>
-<vertex x="85.09" y="12.7"/>
-<vertex x="86.36" y="11.43"/>
-<vertex x="81.28" y="3.81"/>
-<vertex x="78.74" y="6.35"/>
-</polygon>
-<polygon width="0.4064" layer="21">
-<vertex x="78.74" y="21.59"/>
-<vertex x="80.01" y="22.86"/>
-<vertex x="82.55" y="20.32"/>
-<vertex x="85.09" y="22.86"/>
-<vertex x="86.36" y="21.59"/>
-<vertex x="83.82" y="19.05"/>
-<vertex x="86.36" y="16.51"/>
-<vertex x="85.09" y="15.24"/>
-<vertex x="82.55" y="17.78"/>
-<vertex x="80.01" y="15.24"/>
-<vertex x="78.74" y="16.51"/>
-<vertex x="81.28" y="19.05"/>
-</polygon>
 <rectangle x1="72.5678" y1="41.021" x2="72.7202" y2="41.1734" layer="22"/>
 <rectangle x1="72.8726" y1="41.021" x2="73.025" y2="41.1734" layer="22"/>
 <rectangle x1="84.1502" y1="41.021" x2="84.3026" y2="41.1734" layer="22"/>
@@ -2371,80 +2320,10 @@ BADGE 2023</text>
 <dimension x1="12.065" y1="33.02" x2="7.62" y2="33.02" x3="9.8425" y3="44.45" textsize="1.778" layer="47"/>
 <text x="91.44" y="45.085" size="1.2192" layer="21">SV1</text>
 <text x="8.255" y="45.085" size="0.8128" layer="21">SV2</text>
-<polygon width="0.3048" layer="21">
-<vertex x="15.24" y="38.1"/>
-<vertex x="20.32" y="33.02"/>
-<vertex x="86.36" y="33.02"/>
-<vertex x="86.36" y="53.34"/>
-<vertex x="5.08" y="53.34"/>
-<vertex x="15.24" y="43.18"/>
-<vertex x="15.24" y="41.275"/>
-<vertex x="17.78" y="41.275"/>
-<vertex x="17.78" y="50.8"/>
-<vertex x="24.13" y="50.8"/>
-<vertex x="53.34" y="50.8"/>
-<vertex x="53.34" y="38.1"/>
-<vertex x="17.78" y="38.1"/>
-<vertex x="17.78" y="40.005"/>
-<vertex x="15.24" y="40.005"/>
-</polygon>
 <dimension x1="15.24" y1="40.64" x2="53.34" y2="40.64" x3="34.29" y3="45.72" textsize="0.8128" layer="47"/>
 <dimension x1="17.78" y1="38.1" x2="17.78" y2="50.8" x3="20.32" y3="44.45" textsize="0.8128" layer="47"/>
-<wire x1="50.165" y1="50.165" x2="52.705" y2="50.165" width="0.3048" layer="21" style="shortdash"/>
-<wire x1="52.705" y1="38.735" x2="50.165" y2="38.735" width="0.3048" layer="21" style="shortdash"/>
-<polygon width="0.3048" layer="21">
-<vertex x="17.78" y="49.53"/>
-<vertex x="24.13" y="49.53"/>
-<vertex x="52.07" y="49.53"/>
-<vertex x="52.07" y="39.37"/>
-<vertex x="17.78" y="39.37"/>
-</polygon>
-<wire x1="18.415" y1="38.735" x2="21.59" y2="38.735" width="0.3048" layer="21" style="shortdash"/>
-<wire x1="18.415" y1="50.165" x2="21.59" y2="50.165" width="0.3048" layer="21" style="shortdash"/>
-<polygon width="0.3048" layer="21">
-<vertex x="22.225" y="50.8"/>
-<vertex x="22.225" y="49.53"/>
-<vertex x="49.53" y="49.53"/>
-<vertex x="49.53" y="50.8"/>
-</polygon>
-<polygon width="0.3048" layer="21">
-<vertex x="22.225" y="39.37"/>
-<vertex x="22.225" y="38.1"/>
-<vertex x="49.53" y="38.1"/>
-<vertex x="49.53" y="39.37"/>
-</polygon>
-<wire x1="52.705" y1="50.165" x2="52.705" y2="47.625" width="0.3048" layer="21" style="shortdash"/>
-<wire x1="52.705" y1="38.735" x2="52.705" y2="41.275" width="0.3048" layer="21" style="shortdash"/>
-<polygon width="0.3048" layer="21">
-<vertex x="52.07" y="46.99"/>
-<vertex x="53.34" y="46.99"/>
-<vertex x="53.34" y="41.91"/>
-<vertex x="52.07" y="41.91"/>
-</polygon>
 <wire x1="0" y1="53.34" x2="88.9" y2="78.74" width="0.1524" layer="47"/>
 <wire x1="88.9" y1="53.34" x2="0" y2="78.74" width="0.1524" layer="47"/>
-<polygon width="0.1524" layer="21">
-<vertex x="1.27" y="72.39"/>
-<vertex x="6.35" y="77.47"/>
-<vertex x="11.43" y="77.47"/>
-<vertex x="12.7" y="76.2"/>
-<vertex x="12.7" y="68.58"/>
-<vertex x="13.97" y="67.31"/>
-<vertex x="39.37" y="67.31"/>
-<vertex x="41.91" y="69.85"/>
-<vertex x="46.99" y="69.85"/>
-<vertex x="49.53" y="67.31"/>
-<vertex x="74.93" y="67.31"/>
-<vertex x="76.2" y="68.58"/>
-<vertex x="76.2" y="76.2"/>
-<vertex x="77.47" y="77.47"/>
-<vertex x="82.55" y="77.47"/>
-<vertex x="87.63" y="72.39"/>
-<vertex x="87.63" y="67.31"/>
-<vertex x="86.36" y="66.04"/>
-<vertex x="2.54" y="66.04"/>
-<vertex x="1.27" y="67.31"/>
-</polygon>
 <text x="41.529" y="70.612" size="1.778" layer="21" rot="R90">NSEC</text>
 <text x="49.403" y="77.089" size="2.032" layer="21" rot="SR270" align="top-left">2023</text>
 <dimension x1="44.45" y1="76.2" x2="44.45" y2="78.74" x3="39.37" y3="77.47" textsize="1.778" layer="47"/>

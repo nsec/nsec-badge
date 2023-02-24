@@ -6,9 +6,9 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="1" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="1" altunitdist="mm" altunit="mm"/>
+<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="1" altunitdist="mm" altunit="mm"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="16" fill="1" visible="no" active="no"/>
 <layer number="3" name="Route3" color="17" fill="1" visible="no" active="no"/>
 <layer number="4" name="Route4" color="18" fill="1" visible="no" active="no"/>
@@ -23,7 +23,7 @@
 <layer number="13" name="Route13" color="21" fill="1" visible="no" active="no"/>
 <layer number="14" name="Route14" color="22" fill="1" visible="no" active="no"/>
 <layer number="15" name="Route15" color="23" fill="1" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
@@ -2096,6 +2096,11 @@ FOR SWITCH</text>
 <text x="2.54" y="-269.24" size="2.4384" layer="22" rot="MR180">3x AAA 
 Input: 4.5V</text>
 <dimension x1="45" y1="-300" x2="45" y2="-204" x3="52" y3="-252" textsize="2.9" layer="103"/>
+<wire x1="-5.08" y1="-60.579" x2="-2.5908" y2="-59.0804" width="0.1524" layer="21"/>
+<wire x1="-2.5908" y1="-59.0804" x2="-3.302" y2="-57.785" width="0.1524" layer="21"/>
+<wire x1="-3.302" y1="-57.785" x2="-1.27" y2="-56.515" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="-56.515" x2="-0.4572" y2="-57.8612" width="0.1524" layer="21"/>
+<wire x1="-0.4572" y1="-57.8612" x2="2.032" y2="-56.388" width="0.1524" layer="21"/>
 </plain>
 <libraries>
 <library name="rcl">
