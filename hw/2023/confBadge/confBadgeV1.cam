@@ -1,7 +1,7 @@
 {
     "author": {
-        "email": "lambertofmtl@gmail.com",
-        "name": "Lambert Le"
+        "email": "support.eagle@autodesk.com",
+        "name": "Autodesk EAGLE"
     },
     "description": {
         "EN": "EAGLE default 2 layer CAM job."
@@ -195,7 +195,9 @@
                         25,
                         200,
                         201,
-                        202
+                        202,
+                        203,
+                        204
                     ],
                     "milling": false,
                     "name": "Silkscreen Top",
@@ -223,28 +225,6 @@
                     ],
                     "milling": false,
                     "name": "Silkscreen Bottom",
-                    "polarity": "positive",
-                    "type": "gerber_layer"
-                },
-                {
-                    "advanced_options": {
-                        "mirror": false,
-                        "offset_x": 0,
-                        "offset_y": 0,
-                        "rotate": false,
-                        "upside_down": false
-                    },
-                    "board_outline": false,
-                    "config": {
-                        "file_function": "Profile",
-                        "plating": "plated"
-                    },
-                    "filename_format": "%PREFIX/StiffnerBottom.gbr",
-                    "layers": [
-                        103
-                    ],
-                    "milling": false,
-                    "name": "StiffenerBottom",
                     "polarity": "positive",
                     "type": "gerber_layer"
                 }
@@ -282,13 +262,13 @@
                     "list_attribute": true,
                     "list_type": "values",
                     "name": "Bill of Material",
-                    "output_format": "csv",
+                    "output_format": "txt",
                     "type": "bom"
                 },
                 {
                     "filename_format": "%ASSEMBLYPREFIX/PnP_%N_%BOARDSIDE",
                     "name": "Pick and Place",
-                    "output_format": "csv",
+                    "output_format": "txt",
                     "type": "pick_and_place"
                 }
             ]
@@ -300,7 +280,7 @@
             ]
         }
     ],
-    "timestamp": "2022-01-10T14:33:26",
+    "timestamp": "2019-07-17T17:48:33",
     "type": "EAGLE CAM job",
     "units": "metric",
     "version": "9.2.0"
