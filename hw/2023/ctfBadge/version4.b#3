@@ -6,9 +6,9 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="1" altunitdist="mm" altunit="mm"/>
+<grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="1" altunitdist="mm" altunit="mm"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="16" fill="1" visible="no" active="no"/>
 <layer number="3" name="Route3" color="17" fill="1" visible="no" active="no"/>
 <layer number="4" name="Route4" color="18" fill="1" visible="no" active="no"/>
@@ -23,17 +23,17 @@
 <layer number="13" name="Route13" color="21" fill="1" visible="no" active="no"/>
 <layer number="14" name="Route14" color="22" fill="1" visible="no" active="no"/>
 <layer number="15" name="Route15" color="23" fill="1" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
@@ -52,7 +52,7 @@
 <layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
-<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
@@ -81,7 +81,7 @@
 <layer number="100" name="Muster" color="7" fill="1" visible="no" active="yes"/>
 <layer number="101" name="Patch_Top" color="12" fill="4" visible="no" active="yes"/>
 <layer number="102" name="Mittellin" color="7" fill="1" visible="no" active="yes"/>
-<layer number="103" name="Stiffner" color="11" fill="1" visible="no" active="yes"/>
+<layer number="103" name="Stiffner" color="11" fill="1" visible="yes" active="yes"/>
 <layer number="104" name="Name" color="7" fill="1" visible="no" active="yes"/>
 <layer number="105" name="Beschreib" color="7" fill="1" visible="no" active="yes"/>
 <layer number="106" name="BGA-Top" color="7" fill="1" visible="no" active="yes"/>
@@ -126,9 +126,9 @@
 <layer number="154" name="FabDoc2" color="2" fill="1" visible="no" active="no"/>
 <layer number="155" name="FabDoc3" color="7" fill="15" visible="no" active="no"/>
 <layer number="199" name="Contour" color="7" fill="1" visible="no" active="yes"/>
-<layer number="200" name="200bmp" color="1" fill="10" visible="yes" active="yes"/>
-<layer number="201" name="201bmp" color="1" fill="10" visible="yes" active="yes"/>
-<layer number="202" name="202bmp" color="7" fill="1" visible="no" active="yes"/>
+<layer number="200" name="200bmp" color="1" fill="10" visible="no" active="yes"/>
+<layer number="201" name="201bmp" color="1" fill="10" visible="no" active="yes"/>
+<layer number="202" name="202bmp" color="1" fill="10" visible="no" active="yes"/>
 <layer number="203" name="203bmp" color="7" fill="1" visible="no" active="yes"/>
 <layer number="204" name="204bmp" color="7" fill="1" visible="no" active="yes"/>
 <layer number="205" name="205bmp" color="7" fill="1" visible="no" active="yes"/>
@@ -269,7 +269,7 @@ V3i -&gt; V3j
 <vertex x="-34.6" y="-175"/>
 <vertex x="-33.9" y="-165"/>
 </polygon>
-<polygon width="0.2" layer="103">
+<polygon width="0.2" layer="103" spacing="2.54">
 <vertex x="35.3" y="-185"/>
 <vertex x="36" y="-195"/>
 <vertex x="-36" y="-195"/>
@@ -4140,13 +4140,10 @@ Input: 4.5V</text>
 <wire x1="-1.67356875" y1="-163.634409375" x2="-1.66963125" y2="-163.62525" width="0.001" layer="200"/>
 <wire x1="-1.66963125" y1="-163.62525" x2="-1.66531875" y2="-163.6162" width="0.001" layer="200"/>
 <wire x1="-1.66531875" y1="-163.6162" x2="-1.660640625" y2="-163.60728125" width="0.001" layer="200"/>
-<wire x1="-1.660640625" y1="-163.60728125" x2="-1.655590625" y2="-163.59846875" width="0.001" layer="200"/>
 <wire x1="-1.655590625" y1="-163.59846875" x2="-1.650209375" y2="-163.589759375" width="0.001" layer="200"/>
 <wire x1="-1.650209375" y1="-163.589759375" x2="-1.644540625" y2="-163.58115" width="0.001" layer="200"/>
 <wire x1="-1.644540625" y1="-163.58115" x2="-1.638640625" y2="-163.572609375" width="0.001" layer="200"/>
 <wire x1="-1.638640625" y1="-163.572609375" x2="-1.63253125" y2="-163.564140625" width="0.001" layer="200"/>
-<wire x1="-1.63253125" y1="-163.564140625" x2="-1.62626875" y2="-163.555709375" width="0.001" layer="200"/>
-<wire x1="-1.62626875" y1="-163.555709375" x2="-1.6199" y2="-163.54731875" width="0.001" layer="200"/>
 <wire x1="-1.6199" y1="-163.54731875" x2="-1.613459375" y2="-163.538959375" width="0.001" layer="200"/>
 <wire x1="-1.613459375" y1="-163.538959375" x2="-1.607" y2="-163.5306" width="0.001" layer="200"/>
 <wire x1="-1.607" y1="-163.5306" x2="-1.60051875" y2="-163.52228125" width="0.001" layer="200"/>
@@ -4283,7 +4280,6 @@ Input: 4.5V</text>
 <wire x1="-0.84128125" y1="-163.79053125" x2="-0.843240625" y2="-163.79486875" width="0.001" layer="200"/>
 <wire x1="-0.843240625" y1="-163.79486875" x2="-0.84578125" y2="-163.79925" width="0.001" layer="200"/>
 <wire x1="-0.84578125" y1="-163.79925" x2="-0.848809375" y2="-163.803640625" width="0.001" layer="200"/>
-<wire x1="-0.848809375" y1="-163.803640625" x2="-0.85223125" y2="-163.808059375" width="0.001" layer="200"/>
 <wire x1="-0.85223125" y1="-163.808059375" x2="-0.855940625" y2="-163.8125" width="0.001" layer="200"/>
 <wire x1="-0.855940625" y1="-163.8125" x2="-0.85985" y2="-163.81695" width="0.001" layer="200"/>
 <wire x1="-0.85985" y1="-163.81695" x2="-0.86386875" y2="-163.821409375" width="0.001" layer="200"/>
@@ -5354,6 +5350,42 @@ Input: 4.5V</text>
 <vertex x="0" y="-195"/>
 <vertex x="-33.21734375" y="-153.354375"/>
 <vertex x="-34.71715" y="-175.351540625"/>
+</polygon>
+<polygon width="0.0762" layer="202">
+<vertex x="-5.2" y="-132"/>
+<vertex x="-0.6" y="-128.5"/>
+<vertex x="4" y="-132"/>
+</polygon>
+<polygon width="0.0762" layer="202">
+<vertex x="-5.4" y="-127.6"/>
+<vertex x="-3.8" y="-129.2"/>
+<vertex x="-3.2" y="-128.6"/>
+<vertex x="-4.8" y="-127"/>
+</polygon>
+<polygon width="0.0762" layer="202">
+<vertex x="-1" y="-127.1"/>
+<vertex x="-0.2" y="-127.1"/>
+<vertex x="-0.2" y="-124.8"/>
+<vertex x="-1" y="-124.8"/>
+</polygon>
+<polygon width="0.0762" layer="202">
+<vertex x="2.1" y="-128.7"/>
+<vertex x="2.6" y="-129.2"/>
+<vertex x="4.2" y="-127.6"/>
+<vertex x="3.6" y="-127"/>
+<vertex x="2" y="-128.6"/>
+</polygon>
+<polygon width="0.1524" layer="103">
+<vertex x="-36.195" y="-241.3"/>
+<vertex x="-35.56" y="-240.665"/>
+<vertex x="-34.925" y="-241.3"/>
+<vertex x="-35.56" y="-241.935"/>
+</polygon>
+<polygon width="0.1524" layer="103">
+<vertex x="-31.115" y="-236.22"/>
+<vertex x="-30.48" y="-235.585"/>
+<vertex x="-29.845" y="-236.22"/>
+<vertex x="-30.48" y="-236.855"/>
 </polygon>
 </plain>
 <libraries>
@@ -9061,6 +9093,153 @@ design rules under a new name.</description>
 <contactref element="U28" pad="1"/>
 <contactref element="U27" pad="2"/>
 <wire x1="-15.24" y1="-265.0617" x2="0" y2="-265.0617" width="0.8128" layer="16"/>
+</signal>
+<signal name="N$12">
+<via x="-17.78" y="-190.5" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$13">
+<via x="-7.62" y="-190.5" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$14">
+<via x="7.62" y="-190.5" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$15">
+<via x="17.78" y="-190.5" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$16">
+<via x="-30.48" y="-170.18" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$17">
+<via x="-7.62" y="-170.18" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$18">
+<via x="7.62" y="-170.18" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$19">
+<via x="31.75" y="-170.18" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$20">
+<via x="-7.62" y="-149.86" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$21">
+<via x="7.62" y="-149.86" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$22">
+<via x="-29.21" y="-149.86" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$23">
+<via x="30.48" y="-149.86" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$24">
+<via x="-27.94" y="-129.54" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$25">
+<via x="-7.62" y="-129.54" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$34">
+<via x="7.62" y="-129.54" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$37">
+<via x="27.94" y="-129.54" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$39">
+<via x="-25.4" y="-109.22" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$53">
+<via x="-7.62" y="-109.22" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$54">
+<via x="0" y="-109.22" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$55">
+<via x="7.62" y="-109.22" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$56">
+<via x="25.4" y="-109.22" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$58">
+<via x="-7.62" y="-88.9" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$59">
+<via x="0" y="-88.9" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$60">
+<via x="7.62" y="-88.9" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$62">
+<via x="-7.62" y="-71.12" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$63">
+<via x="0" y="-71.12" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$64">
+<via x="7.62" y="-71.12" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$65">
+<via x="12.7" y="-63.5" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$67">
+<via x="-7.62" y="-58.42" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$68">
+<via x="-7.62" y="-45.72" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$69">
+<via x="5.08" y="-45.72" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$70">
+<via x="20.32" y="-63.5" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$71">
+<via x="-20.32" y="-45.72" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$72">
+<via x="-30.48" y="-223.52" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$73">
+<via x="-30.48" y="-236.22" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$74">
+<via x="-35.56" y="-241.3" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$75">
+<via x="-30.48" y="-248.92" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$76">
+<via x="30.48" y="-223.52" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$77">
+<via x="30.48" y="-236.22" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$78">
+<via x="30.48" y="-248.92" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$79">
+<via x="35.56" y="-241.3" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$80">
+<via x="-7.62" y="-279.4" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$81">
+<via x="-5.08" y="-287.02" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$82">
+<via x="7.62" y="-279.4" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$83">
+<via x="5.08" y="-287.02" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$27">
+<via x="-25.4" y="-88.9" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$57">
+<via x="25.4" y="-88.9" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$61">
+<via x="-22.86" y="-71.12" extent="1-16" drill="0.7" diameter="1.3"/>
+</signal>
+<signal name="N$66">
+<via x="22.86" y="-71.12" extent="1-16" drill="0.7" diameter="1.3"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
