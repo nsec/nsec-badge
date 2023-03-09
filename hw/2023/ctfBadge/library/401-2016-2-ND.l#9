@@ -234,6 +234,8 @@
 <circle x="22.352" y="2.54" radius="0.508" width="0.1524" layer="94"/>
 <circle x="22.352" y="-5.08" radius="0.508" width="0.1524" layer="94"/>
 <wire x1="18.288" y1="-2.032" x2="22.352" y2="1.524" width="0.1524" layer="94"/>
+<pin name="P$1" x="20.32" y="-12.7" length="middle" rot="R90"/>
+<text x="20.32" y="-10.16" size="1.778" layer="94">shield</text>
 </symbol>
 </symbols>
 <devicesets>

@@ -8716,6 +8716,8 @@ JLCPCB#: C223907</text>
 
 </text>
 <text x="15.24" y="345.44" size="1.778" layer="91">Digikey: 36-1020-ND</text>
+<text x="182.88" y="274.32" size="2.54" layer="91">todo: standard c25 to 0603</text>
+<text x="386.08" y="58.42" size="2.54" layer="91">todo: standard c29 to 0603</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$3" x="134.62" y="2.54" smashed="yes">

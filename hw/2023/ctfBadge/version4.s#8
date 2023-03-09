@@ -9049,35 +9049,35 @@ JLCPCB#: C223907</text>
 <instance part="U$23" gate="G$1" x="629.92" y="327.66" smashed="yes">
 <attribute name="VALUE" x="628.396" y="325.12" size="1.27" layer="96"/>
 </instance>
-<instance part="U9" gate="G$1" x="647.7" y="342.9" smashed="yes">
-<attribute name="NAME" x="637.5222" y="350.533340625" size="1.781109375" layer="95"/>
-<attribute name="VALUE" x="637.5221" y="332.7221" size="1.78113125" layer="96"/>
-</instance>
-<instance part="VDD12" gate="G$1" x="668.02" y="358.14" smashed="yes">
-<attribute name="VALUE" x="665.48" y="355.6" size="1.778" layer="96" rot="R90"/>
-</instance>
-<instance part="U$34" gate="G$1" x="668.02" y="327.66" smashed="yes">
-<attribute name="VALUE" x="666.496" y="325.12" size="1.27" layer="96"/>
-</instance>
-<instance part="U10" gate="G$1" x="685.8" y="342.9" smashed="yes">
+<instance part="U9" gate="G$1" x="685.8" y="342.9" smashed="yes">
 <attribute name="NAME" x="675.6222" y="350.533340625" size="1.781109375" layer="95"/>
 <attribute name="VALUE" x="675.6221" y="332.7221" size="1.78113125" layer="96"/>
 </instance>
-<instance part="VDD13" gate="G$1" x="706.12" y="358.14" smashed="yes">
+<instance part="VDD12" gate="G$1" x="706.12" y="358.14" smashed="yes">
 <attribute name="VALUE" x="703.58" y="355.6" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U$35" gate="G$1" x="706.12" y="327.66" smashed="yes">
+<instance part="U$34" gate="G$1" x="706.12" y="327.66" smashed="yes">
 <attribute name="VALUE" x="704.596" y="325.12" size="1.27" layer="96"/>
 </instance>
-<instance part="U11" gate="G$1" x="723.9" y="342.9" smashed="yes">
+<instance part="U10" gate="G$1" x="723.9" y="342.9" smashed="yes">
 <attribute name="NAME" x="713.7222" y="350.533340625" size="1.781109375" layer="95"/>
 <attribute name="VALUE" x="713.7221" y="332.7221" size="1.78113125" layer="96"/>
 </instance>
-<instance part="VDD14" gate="G$1" x="744.22" y="358.14" smashed="yes">
+<instance part="VDD13" gate="G$1" x="744.22" y="358.14" smashed="yes">
 <attribute name="VALUE" x="741.68" y="355.6" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U$42" gate="G$1" x="744.22" y="327.66" smashed="yes">
+<instance part="U$35" gate="G$1" x="744.22" y="327.66" smashed="yes">
 <attribute name="VALUE" x="742.696" y="325.12" size="1.27" layer="96"/>
+</instance>
+<instance part="U11" gate="G$1" x="762" y="342.9" smashed="yes">
+<attribute name="NAME" x="751.8222" y="350.533340625" size="1.781109375" layer="95"/>
+<attribute name="VALUE" x="751.8221" y="332.7221" size="1.78113125" layer="96"/>
+</instance>
+<instance part="VDD14" gate="G$1" x="782.32" y="358.14" smashed="yes">
+<attribute name="VALUE" x="779.78" y="355.6" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="U$42" gate="G$1" x="782.32" y="327.66" smashed="yes">
+<attribute name="VALUE" x="780.796" y="325.12" size="1.27" layer="96"/>
 </instance>
 <instance part="U12" gate="G$1" x="574.04" y="299.72" smashed="yes">
 <attribute name="NAME" x="563.8622" y="307.353340625" size="1.781109375" layer="95"/>
@@ -9189,55 +9189,55 @@ JLCPCB#: C223907</text>
 <instance part="U$53" gate="G$1" x="594.36" y="200.66" smashed="yes">
 <attribute name="VALUE" x="592.836" y="198.12" size="1.27" layer="96"/>
 </instance>
-<instance part="U8" gate="G$1" x="612.14" y="215.9" smashed="yes">
-<attribute name="NAME" x="601.9622" y="223.533340625" size="1.781109375" layer="95"/>
-<attribute name="VALUE" x="601.9621" y="205.7221" size="1.78113125" layer="96"/>
+<instance part="U8" gate="G$1" x="647.7" y="342.9" smashed="yes">
+<attribute name="NAME" x="637.5222" y="350.533340625" size="1.781109375" layer="95"/>
+<attribute name="VALUE" x="637.5221" y="332.7221" size="1.78113125" layer="96"/>
 </instance>
-<instance part="VDD1" gate="G$1" x="632.46" y="231.14" smashed="yes">
-<attribute name="VALUE" x="629.92" y="228.6" size="1.778" layer="96" rot="R90"/>
+<instance part="VDD1" gate="G$1" x="668.02" y="358.14" smashed="yes">
+<attribute name="VALUE" x="665.48" y="355.6" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U$54" gate="G$1" x="632.46" y="200.66" smashed="yes">
-<attribute name="VALUE" x="630.936" y="198.12" size="1.27" layer="96"/>
+<instance part="U$54" gate="G$1" x="668.02" y="327.66" smashed="yes">
+<attribute name="VALUE" x="666.496" y="325.12" size="1.27" layer="96"/>
 </instance>
-<instance part="U23" gate="G$1" x="650.24" y="215.9" smashed="yes">
-<attribute name="NAME" x="640.0622" y="223.533340625" size="1.781109375" layer="95"/>
-<attribute name="VALUE" x="640.0621" y="205.7221" size="1.78113125" layer="96"/>
+<instance part="U23" gate="G$1" x="614.68" y="215.9" smashed="yes">
+<attribute name="NAME" x="604.5022" y="223.533340625" size="1.781109375" layer="95"/>
+<attribute name="VALUE" x="604.5021" y="205.7221" size="1.78113125" layer="96"/>
 </instance>
-<instance part="VDD4" gate="G$1" x="670.56" y="231.14" smashed="yes">
-<attribute name="VALUE" x="668.02" y="228.6" size="1.778" layer="96" rot="R90"/>
+<instance part="VDD4" gate="G$1" x="635" y="231.14" smashed="yes">
+<attribute name="VALUE" x="632.46" y="228.6" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U$55" gate="G$1" x="670.56" y="200.66" smashed="yes">
-<attribute name="VALUE" x="669.036" y="198.12" size="1.27" layer="96"/>
+<instance part="U$55" gate="G$1" x="635" y="200.66" smashed="yes">
+<attribute name="VALUE" x="633.476" y="198.12" size="1.27" layer="96"/>
 </instance>
-<instance part="U24" gate="G$1" x="688.34" y="215.9" smashed="yes">
-<attribute name="NAME" x="678.1622" y="223.533340625" size="1.781109375" layer="95"/>
-<attribute name="VALUE" x="678.1621" y="205.7221" size="1.78113125" layer="96"/>
+<instance part="U24" gate="G$1" x="652.78" y="215.9" smashed="yes">
+<attribute name="NAME" x="642.6022" y="223.533340625" size="1.781109375" layer="95"/>
+<attribute name="VALUE" x="642.6021" y="205.7221" size="1.78113125" layer="96"/>
 </instance>
-<instance part="VDD5" gate="G$1" x="708.66" y="231.14" smashed="yes">
-<attribute name="VALUE" x="706.12" y="228.6" size="1.778" layer="96" rot="R90"/>
+<instance part="VDD5" gate="G$1" x="673.1" y="231.14" smashed="yes">
+<attribute name="VALUE" x="670.56" y="228.6" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U$56" gate="G$1" x="708.66" y="200.66" smashed="yes">
-<attribute name="VALUE" x="707.136" y="198.12" size="1.27" layer="96"/>
+<instance part="U$56" gate="G$1" x="673.1" y="200.66" smashed="yes">
+<attribute name="VALUE" x="671.576" y="198.12" size="1.27" layer="96"/>
 </instance>
-<instance part="U25" gate="G$1" x="726.44" y="215.9" smashed="yes">
-<attribute name="NAME" x="716.2622" y="223.533340625" size="1.781109375" layer="95"/>
-<attribute name="VALUE" x="716.2621" y="205.7221" size="1.78113125" layer="96"/>
+<instance part="U25" gate="G$1" x="690.88" y="215.9" smashed="yes">
+<attribute name="NAME" x="680.7022" y="223.533340625" size="1.781109375" layer="95"/>
+<attribute name="VALUE" x="680.7021" y="205.7221" size="1.78113125" layer="96"/>
 </instance>
-<instance part="VDD7" gate="G$1" x="746.76" y="231.14" smashed="yes">
-<attribute name="VALUE" x="744.22" y="228.6" size="1.778" layer="96" rot="R90"/>
+<instance part="VDD7" gate="G$1" x="711.2" y="231.14" smashed="yes">
+<attribute name="VALUE" x="708.66" y="228.6" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U$57" gate="G$1" x="746.76" y="200.66" smashed="yes">
-<attribute name="VALUE" x="745.236" y="198.12" size="1.27" layer="96"/>
+<instance part="U$57" gate="G$1" x="711.2" y="200.66" smashed="yes">
+<attribute name="VALUE" x="709.676" y="198.12" size="1.27" layer="96"/>
 </instance>
-<instance part="U26" gate="G$1" x="764.54" y="215.9" smashed="yes">
-<attribute name="NAME" x="754.3622" y="223.533340625" size="1.781109375" layer="95"/>
-<attribute name="VALUE" x="754.3621" y="205.7221" size="1.78113125" layer="96"/>
+<instance part="U26" gate="G$1" x="728.98" y="215.9" smashed="yes">
+<attribute name="NAME" x="718.8022" y="223.533340625" size="1.781109375" layer="95"/>
+<attribute name="VALUE" x="718.8021" y="205.7221" size="1.78113125" layer="96"/>
 </instance>
-<instance part="VDD8" gate="G$1" x="784.86" y="231.14" smashed="yes">
-<attribute name="VALUE" x="782.32" y="228.6" size="1.778" layer="96" rot="R90"/>
+<instance part="VDD8" gate="G$1" x="749.3" y="231.14" smashed="yes">
+<attribute name="VALUE" x="746.76" y="228.6" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U$58" gate="G$1" x="784.86" y="200.66" smashed="yes">
-<attribute name="VALUE" x="783.336" y="198.12" size="1.27" layer="96"/>
+<instance part="U$58" gate="G$1" x="749.3" y="200.66" smashed="yes">
+<attribute name="VALUE" x="747.776" y="198.12" size="1.27" layer="96"/>
 </instance>
 <instance part="U$9" gate="G$1" x="71.12" y="317.5" smashed="yes">
 <attribute name="VALUE" x="69.596" y="318.516" size="1.27" layer="96"/>
@@ -9498,20 +9498,20 @@ JLCPCB#: C223907</text>
 </segment>
 <segment>
 <pinref part="U9" gate="G$1" pin="GND"/>
-<wire x1="662.94" y1="337.82" x2="668.02" y2="337.82" width="0.1524" layer="91"/>
-<wire x1="668.02" y1="337.82" x2="668.02" y2="330.2" width="0.1524" layer="91"/>
+<wire x1="701.04" y1="337.82" x2="706.12" y2="337.82" width="0.1524" layer="91"/>
+<wire x1="706.12" y1="337.82" x2="706.12" y2="330.2" width="0.1524" layer="91"/>
 <pinref part="U$34" gate="G$1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="U10" gate="G$1" pin="GND"/>
-<wire x1="701.04" y1="337.82" x2="706.12" y2="337.82" width="0.1524" layer="91"/>
-<wire x1="706.12" y1="337.82" x2="706.12" y2="330.2" width="0.1524" layer="91"/>
+<wire x1="739.14" y1="337.82" x2="744.22" y2="337.82" width="0.1524" layer="91"/>
+<wire x1="744.22" y1="337.82" x2="744.22" y2="330.2" width="0.1524" layer="91"/>
 <pinref part="U$35" gate="G$1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="U11" gate="G$1" pin="GND"/>
-<wire x1="739.14" y1="337.82" x2="744.22" y2="337.82" width="0.1524" layer="91"/>
-<wire x1="744.22" y1="337.82" x2="744.22" y2="330.2" width="0.1524" layer="91"/>
+<wire x1="777.24" y1="337.82" x2="782.32" y2="337.82" width="0.1524" layer="91"/>
+<wire x1="782.32" y1="337.82" x2="782.32" y2="330.2" width="0.1524" layer="91"/>
 <pinref part="U$42" gate="G$1" pin="GND"/>
 </segment>
 <segment>
@@ -9582,31 +9582,31 @@ JLCPCB#: C223907</text>
 </segment>
 <segment>
 <pinref part="U8" gate="G$1" pin="GND"/>
-<wire x1="627.38" y1="210.82" x2="632.46" y2="210.82" width="0.1524" layer="91"/>
-<wire x1="632.46" y1="210.82" x2="632.46" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="662.94" y1="337.82" x2="668.02" y2="337.82" width="0.1524" layer="91"/>
+<wire x1="668.02" y1="337.82" x2="668.02" y2="330.2" width="0.1524" layer="91"/>
 <pinref part="U$54" gate="G$1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="U23" gate="G$1" pin="GND"/>
-<wire x1="665.48" y1="210.82" x2="670.56" y2="210.82" width="0.1524" layer="91"/>
-<wire x1="670.56" y1="210.82" x2="670.56" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="629.92" y1="210.82" x2="635" y2="210.82" width="0.1524" layer="91"/>
+<wire x1="635" y1="210.82" x2="635" y2="203.2" width="0.1524" layer="91"/>
 <pinref part="U$55" gate="G$1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="U24" gate="G$1" pin="GND"/>
-<wire x1="703.58" y1="210.82" x2="708.66" y2="210.82" width="0.1524" layer="91"/>
-<wire x1="708.66" y1="210.82" x2="708.66" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="668.02" y1="210.82" x2="673.1" y2="210.82" width="0.1524" layer="91"/>
+<wire x1="673.1" y1="210.82" x2="673.1" y2="203.2" width="0.1524" layer="91"/>
 <pinref part="U$56" gate="G$1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="U25" gate="G$1" pin="GND"/>
-<wire x1="741.68" y1="210.82" x2="746.76" y2="210.82" width="0.1524" layer="91"/>
-<wire x1="746.76" y1="210.82" x2="746.76" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="706.12" y1="210.82" x2="711.2" y2="210.82" width="0.1524" layer="91"/>
+<wire x1="711.2" y1="210.82" x2="711.2" y2="203.2" width="0.1524" layer="91"/>
 <pinref part="U$57" gate="G$1" pin="GND"/>
 </segment>
 <segment>
-<wire x1="779.78" y1="210.82" x2="784.86" y2="210.82" width="0.1524" layer="91"/>
-<wire x1="784.86" y1="210.82" x2="784.86" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="744.22" y1="210.82" x2="749.3" y2="210.82" width="0.1524" layer="91"/>
+<wire x1="749.3" y1="210.82" x2="749.3" y2="203.2" width="0.1524" layer="91"/>
 <pinref part="U$58" gate="G$1" pin="GND"/>
 <pinref part="U26" gate="G$1" pin="GND"/>
 </segment>
@@ -10250,20 +10250,20 @@ JLCPCB#: C223907</text>
 </segment>
 <segment>
 <pinref part="U9" gate="G$1" pin="VDD"/>
-<wire x1="662.94" y1="347.98" x2="668.02" y2="347.98" width="0.1524" layer="91"/>
-<wire x1="668.02" y1="347.98" x2="668.02" y2="355.6" width="0.1524" layer="91"/>
+<wire x1="701.04" y1="347.98" x2="706.12" y2="347.98" width="0.1524" layer="91"/>
+<wire x1="706.12" y1="347.98" x2="706.12" y2="355.6" width="0.1524" layer="91"/>
 <pinref part="VDD12" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
 <pinref part="U10" gate="G$1" pin="VDD"/>
-<wire x1="701.04" y1="347.98" x2="706.12" y2="347.98" width="0.1524" layer="91"/>
-<wire x1="706.12" y1="347.98" x2="706.12" y2="355.6" width="0.1524" layer="91"/>
+<wire x1="739.14" y1="347.98" x2="744.22" y2="347.98" width="0.1524" layer="91"/>
+<wire x1="744.22" y1="347.98" x2="744.22" y2="355.6" width="0.1524" layer="91"/>
 <pinref part="VDD13" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
 <pinref part="U11" gate="G$1" pin="VDD"/>
-<wire x1="739.14" y1="347.98" x2="744.22" y2="347.98" width="0.1524" layer="91"/>
-<wire x1="744.22" y1="347.98" x2="744.22" y2="355.6" width="0.1524" layer="91"/>
+<wire x1="777.24" y1="347.98" x2="782.32" y2="347.98" width="0.1524" layer="91"/>
+<wire x1="782.32" y1="347.98" x2="782.32" y2="355.6" width="0.1524" layer="91"/>
 <pinref part="VDD14" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
@@ -10334,31 +10334,31 @@ JLCPCB#: C223907</text>
 </segment>
 <segment>
 <pinref part="U8" gate="G$1" pin="VDD"/>
-<wire x1="627.38" y1="220.98" x2="632.46" y2="220.98" width="0.1524" layer="91"/>
-<wire x1="632.46" y1="220.98" x2="632.46" y2="228.6" width="0.1524" layer="91"/>
+<wire x1="662.94" y1="347.98" x2="668.02" y2="347.98" width="0.1524" layer="91"/>
+<wire x1="668.02" y1="347.98" x2="668.02" y2="355.6" width="0.1524" layer="91"/>
 <pinref part="VDD1" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
 <pinref part="U23" gate="G$1" pin="VDD"/>
-<wire x1="665.48" y1="220.98" x2="670.56" y2="220.98" width="0.1524" layer="91"/>
-<wire x1="670.56" y1="220.98" x2="670.56" y2="228.6" width="0.1524" layer="91"/>
+<wire x1="629.92" y1="220.98" x2="635" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="635" y1="220.98" x2="635" y2="228.6" width="0.1524" layer="91"/>
 <pinref part="VDD4" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
 <pinref part="U24" gate="G$1" pin="VDD"/>
-<wire x1="703.58" y1="220.98" x2="708.66" y2="220.98" width="0.1524" layer="91"/>
-<wire x1="708.66" y1="220.98" x2="708.66" y2="228.6" width="0.1524" layer="91"/>
+<wire x1="668.02" y1="220.98" x2="673.1" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="673.1" y1="220.98" x2="673.1" y2="228.6" width="0.1524" layer="91"/>
 <pinref part="VDD5" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
 <pinref part="U25" gate="G$1" pin="VDD"/>
-<wire x1="741.68" y1="220.98" x2="746.76" y2="220.98" width="0.1524" layer="91"/>
-<wire x1="746.76" y1="220.98" x2="746.76" y2="228.6" width="0.1524" layer="91"/>
+<wire x1="706.12" y1="220.98" x2="711.2" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="711.2" y1="220.98" x2="711.2" y2="228.6" width="0.1524" layer="91"/>
 <pinref part="VDD7" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
-<wire x1="779.78" y1="220.98" x2="784.86" y2="220.98" width="0.1524" layer="91"/>
-<wire x1="784.86" y1="220.98" x2="784.86" y2="228.6" width="0.1524" layer="91"/>
+<wire x1="744.22" y1="220.98" x2="749.3" y2="220.98" width="0.1524" layer="91"/>
+<wire x1="749.3" y1="220.98" x2="749.3" y2="228.6" width="0.1524" layer="91"/>
 <pinref part="VDD8" gate="G$1" pin="VDD"/>
 <pinref part="U26" gate="G$1" pin="VDD"/>
 </segment>
@@ -10438,33 +10438,26 @@ JLCPCB#: C223907</text>
 <pinref part="U7" gate="G$1" pin="DI"/>
 </segment>
 </net>
-<net name="N$39" class="0">
-<segment>
-<pinref part="U7" gate="G$1" pin="DO"/>
-<wire x1="624.84" y1="342.9" x2="632.46" y2="342.9" width="0.1524" layer="91"/>
-<pinref part="U9" gate="G$1" pin="DI"/>
-</segment>
-</net>
 <net name="N$40" class="0">
 <segment>
 <pinref part="U9" gate="G$1" pin="DO"/>
-<wire x1="662.94" y1="342.9" x2="670.56" y2="342.9" width="0.1524" layer="91"/>
+<wire x1="701.04" y1="342.9" x2="708.66" y2="342.9" width="0.1524" layer="91"/>
 <pinref part="U10" gate="G$1" pin="DI"/>
 </segment>
 </net>
 <net name="N$41" class="0">
 <segment>
 <pinref part="U10" gate="G$1" pin="DO"/>
-<wire x1="701.04" y1="342.9" x2="708.66" y2="342.9" width="0.1524" layer="91"/>
+<wire x1="739.14" y1="342.9" x2="746.76" y2="342.9" width="0.1524" layer="91"/>
 <pinref part="U11" gate="G$1" pin="DI"/>
 </segment>
 </net>
 <net name="N$42" class="0">
 <segment>
 <pinref part="U11" gate="G$1" pin="DO"/>
-<wire x1="739.14" y1="342.9" x2="759.46" y2="342.9" width="0.1524" layer="91"/>
-<wire x1="759.46" y1="342.9" x2="759.46" y2="320.04" width="0.1524" layer="91"/>
-<wire x1="759.46" y1="320.04" x2="541.02" y2="320.04" width="0.1524" layer="91"/>
+<wire x1="777.24" y1="342.9" x2="797.56" y2="342.9" width="0.1524" layer="91"/>
+<wire x1="797.56" y1="342.9" x2="797.56" y2="320.04" width="0.1524" layer="91"/>
+<wire x1="797.56" y1="320.04" x2="541.02" y2="320.04" width="0.1524" layer="91"/>
 <wire x1="541.02" y1="320.04" x2="541.02" y2="299.72" width="0.1524" layer="91"/>
 <wire x1="541.02" y1="299.72" x2="558.8" y2="299.72" width="0.1524" layer="91"/>
 <pinref part="U12" gate="G$1" pin="DI"/>
@@ -10548,30 +10541,16 @@ JLCPCB#: C223907</text>
 <wire x1="546.1" y1="215.9" x2="558.8" y2="215.9" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$1" class="0">
-<segment>
-<wire x1="589.28" y1="215.9" x2="596.9" y2="215.9" width="0.1524" layer="91"/>
-<pinref part="U8" gate="G$1" pin="DI"/>
-<pinref part="U22" gate="G$1" pin="DO"/>
-</segment>
-</net>
-<net name="N$2" class="0">
-<segment>
-<pinref part="U8" gate="G$1" pin="DO"/>
-<wire x1="627.38" y1="215.9" x2="635" y2="215.9" width="0.1524" layer="91"/>
-<pinref part="U23" gate="G$1" pin="DI"/>
-</segment>
-</net>
 <net name="N$3" class="0">
 <segment>
 <pinref part="U23" gate="G$1" pin="DO"/>
-<wire x1="665.48" y1="215.9" x2="673.1" y2="215.9" width="0.1524" layer="91"/>
+<wire x1="629.92" y1="215.9" x2="637.54" y2="215.9" width="0.1524" layer="91"/>
 <pinref part="U24" gate="G$1" pin="DI"/>
 </segment>
 </net>
 <net name="N$4" class="0">
 <segment>
-<wire x1="703.58" y1="215.9" x2="711.2" y2="215.9" width="0.1524" layer="91"/>
+<wire x1="668.02" y1="215.9" x2="675.64" y2="215.9" width="0.1524" layer="91"/>
 <pinref part="U25" gate="G$1" pin="DI"/>
 <pinref part="U24" gate="G$1" pin="DO"/>
 </segment>
@@ -10579,7 +10558,7 @@ JLCPCB#: C223907</text>
 <net name="N$5" class="0">
 <segment>
 <pinref part="U25" gate="G$1" pin="DO"/>
-<wire x1="741.68" y1="215.9" x2="749.3" y2="215.9" width="0.1524" layer="91"/>
+<wire x1="706.12" y1="215.9" x2="713.74" y2="215.9" width="0.1524" layer="91"/>
 <pinref part="U26" gate="G$1" pin="DI"/>
 </segment>
 </net>
@@ -10610,6 +10589,27 @@ JLCPCB#: C223907</text>
 <wire x1="294.64" y1="121.92" x2="287.02" y2="121.92" width="0.1524" layer="91"/>
 <pinref part="R2" gate="G$1" pin="1"/>
 <wire x1="287.02" y1="121.92" x2="287.02" y2="119.38" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$1" class="0">
+<segment>
+<pinref part="U7" gate="G$1" pin="DO"/>
+<pinref part="U8" gate="G$1" pin="DI"/>
+<wire x1="624.84" y1="342.9" x2="632.46" y2="342.9" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="U9" gate="G$1" pin="DI"/>
+<wire x1="670.56" y1="342.9" x2="662.94" y2="342.9" width="0.1524" layer="91"/>
+<pinref part="U8" gate="G$1" pin="DO"/>
+</segment>
+</net>
+<net name="N$9" class="0">
+<segment>
+<pinref part="U22" gate="G$1" pin="DO"/>
+<pinref part="U23" gate="G$1" pin="DI"/>
+<wire x1="589.28" y1="215.9" x2="599.44" y2="215.9" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

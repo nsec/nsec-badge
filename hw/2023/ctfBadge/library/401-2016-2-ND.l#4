@@ -35,8 +35,8 @@
 <layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
-<layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
-<layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
@@ -105,7 +105,7 @@
 <wire x1="1.4224" y1="2.8259" x2="1.4224" y2="-2.8259" width="0.1524" layer="21"/>
 <wire x1="0.2259" y1="-3.4798" x2="-0.2259" y2="-3.4798" width="0.1524" layer="21"/>
 <text x="3.2337" y="2.54" size="1.27" layer="21" ratio="6">*</text>
-<text x="-1.7288" y="-0.635" size="1.27" layer="21" ratio="6">&gt;Value</text>
+<text x="-1.27" y="6.35" size="1.27" layer="21" ratio="6">&gt;Value</text>
 <wire x1="-1.2954" y1="0" x2="-1.2954" y2="5.6388" width="0.1524" layer="47"/>
 <wire x1="1.2954" y1="0" x2="1.2954" y2="5.6388" width="0.1524" layer="47"/>
 <wire x1="-1.2954" y1="5.2578" x2="-2.5654" y2="5.2578" width="0.1524" layer="47"/>
@@ -184,33 +184,7 @@
 <text x="-0.9417" y="-6.4008" size="0.635" layer="47" ratio="4">0.059in/1.499mm</text>
 <text x="-7.1628" y="-1.0668" size="0.635" layer="47" ratio="4">0.059in/1.499mm</text>
 <text x="-5.9855" y="-5.3848" size="0.635" layer="47" ratio="4">0.051in/1.295mm</text>
-<polygon width="0.0254" layer="41">
-<vertex x="4.5866" y="0.012"/>
-<vertex x="1.6764" y="0.012"/>
-<vertex x="1.6764" y="1.488"/>
-<vertex x="4.5866" y="1.488"/>
-<vertex x="4.5866" y="3.012"/>
-<vertex x="1.7524" y="3.012"/>
-<vertex x="1.7524" y="4.5263"/>
-<vertex x="0.1776" y="4.5263"/>
-<vertex x="0.1776" y="3.7338"/>
-<vertex x="-0.1776" y="3.7338"/>
-<vertex x="-0.1776" y="4.5263"/>
-<vertex x="-1.7524" y="4.5263"/>
-<vertex x="-1.7524" y="2.7737"/>
-<vertex x="-1.6764" y="2.7737"/>
-<vertex x="-1.6764" y="-2.7737"/>
-<vertex x="-1.7524" y="-2.7737"/>
-<vertex x="-1.7524" y="-4.5263"/>
-<vertex x="-0.1776" y="-4.5263"/>
-<vertex x="-0.1776" y="-3.7338"/>
-<vertex x="0.1776" y="-3.7338"/>
-<vertex x="0.1776" y="-4.5263"/>
-<vertex x="1.7524" y="-4.5263"/>
-<vertex x="1.7524" y="-3.012"/>
-<vertex x="4.5866" y="-3.012"/>
-</polygon>
-<text x="-3.2712" y="-0.635" size="1.27" layer="27" ratio="6">&gt;Name</text>
+<text x="-1.27" y="5.08" size="1.27" layer="27" ratio="6">&gt;Name</text>
 <circle x="0" y="1.4986" radius="0.45" width="0.0254" layer="20"/>
 <circle x="0" y="-1.4986" radius="0.45" width="0.0254" layer="20"/>
 </package>

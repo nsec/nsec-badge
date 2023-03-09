@@ -6773,10 +6773,10 @@ BJT configuration in SOT23 package. MMBT2222 is the common NPN we use. Double ch
 <smd name="3" x="3.1007" y="-2.25" dx="2.2098" dy="0.762" layer="1"/>
 <smd name="2" x="3.1007" y="-0.75" dx="2.2098" dy="0.762" layer="1"/>
 <smd name="1" x="3.1007" y="2.25" dx="2.2098" dy="0.762" layer="1"/>
-<smd name="6" x="-0.965" y="3.65" dx="0.8128" dy="0.9906" layer="1"/>
-<smd name="7" x="0.965" y="3.65" dx="0.8128" dy="0.9906" layer="1"/>
-<smd name="8" x="-0.965" y="-3.65" dx="0.8128" dy="0.9906" layer="1"/>
-<smd name="9" x="0.965" y="-3.65" dx="0.8128" dy="0.9906" layer="1"/>
+<smd name="6" x="-0.965" y="3.65" dx="0.8128" dy="1.524" layer="1"/>
+<smd name="7" x="0.965" y="3.65" dx="0.8128" dy="1.524" layer="1"/>
+<smd name="8" x="-0.965" y="-3.65" dx="0.8128" dy="1.524" layer="1"/>
+<smd name="9" x="0.965" y="-3.65" dx="0.8128" dy="1.524" layer="1"/>
 <wire x1="1.2954" y1="-1.8944" x2="1.2954" y2="-2.6056" width="0.1524" layer="51"/>
 <wire x1="1.2954" y1="-2.6056" x2="3.85" y2="-2.6056" width="0.1524" layer="51"/>
 <wire x1="3.85" y1="-2.6056" x2="3.85" y2="-1.8944" width="0.1524" layer="51"/>

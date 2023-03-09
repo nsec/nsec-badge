@@ -185,8 +185,8 @@
 <text x="-7.1628" y="-1.0668" size="0.635" layer="47" ratio="4">0.059in/1.499mm</text>
 <text x="-5.9855" y="-5.3848" size="0.635" layer="47" ratio="4">0.051in/1.295mm</text>
 <text x="-1.27" y="5.08" size="1.27" layer="27" ratio="6">&gt;Name</text>
-<circle x="0" y="1.4986" radius="0.45" width="0.0254" layer="20"/>
-<circle x="0" y="-1.4986" radius="0.45" width="0.0254" layer="20"/>
+<circle x="0" y="1.4986" radius="0.45" width="0" layer="20"/>
+<circle x="0" y="-1.4986" radius="0.45" width="0" layer="20"/>
 </package>
 </packages>
 <symbols>
