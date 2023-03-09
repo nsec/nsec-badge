@@ -8582,10 +8582,10 @@ integrated light source &lt;a href="https://pricing.snapeda.com/parts/WS2812-202
 <part name="FRAME6" library="microbuilder" deviceset="FRAME_A4" device=""/>
 <part name="U5" library="401-2016-2-ND" deviceset="PCM12SMTR" device="PCM12SMTR_CNK"/>
 <part name="D5" library="microbuilder" deviceset="LED" device="0805_NOOUTLINE" value="RED"/>
-<part name="R13" library="microbuilder" deviceset="RESISTOR" device="_0603_NOOUT" value="1K"/>
+<part name="R13" library="microbuilder" deviceset="RESISTOR" device="_0603_NOOUT" value="5.1K"/>
 <part name="U$31" library="microbuilder" deviceset="GND" device=""/>
 <part name="D1" library="microbuilder" deviceset="LED" device="0805_NOOUTLINE" value="RED"/>
-<part name="R14" library="microbuilder" deviceset="RESISTOR" device="_0603_NOOUT" value="1K"/>
+<part name="R14" library="microbuilder" deviceset="RESISTOR" device="_0603_NOOUT" value="5.1K"/>
 <part name="U$32" library="microbuilder" deviceset="GND" device=""/>
 <part name="TP1" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="PTR1" device="B1,27" package3d_urn="urn:adsk.eagle:package:27944/2"/>
 <part name="TP2" library="testpad" library_urn="urn:adsk.eagle:library:385" deviceset="PTR1" device="B1,27" package3d_urn="urn:adsk.eagle:package:27944/2"/>
@@ -9002,7 +9002,7 @@ JLCPCB#: C223907</text>
 </instance>
 <instance part="R14" gate="G$1" x="241.3" y="289.56" smashed="yes" rot="R270">
 <attribute name="NAME" x="243.84" y="289.56" size="1.27" layer="95" font="vector" rot="R270" align="center"/>
-<attribute name="VALUE" x="241.3" y="289.56" size="1.016" layer="96" font="vector" ratio="15" rot="R270" align="center"/>
+<attribute name="VALUE" x="238.76" y="289.56" size="1.016" layer="96" font="vector" ratio="15" rot="R270" align="center"/>
 </instance>
 <instance part="U$32" gate="G$1" x="241.3" y="279.4" smashed="yes">
 <attribute name="VALUE" x="239.776" y="276.86" size="1.27" layer="96"/>

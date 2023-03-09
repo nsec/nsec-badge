@@ -8712,6 +8712,9 @@ V3i -&gt; V3j
 <text x="299.72" y="137.16" size="1.778" layer="91">Mnfr: Korean Hroparts Elec
 Part#: TYPE-C-31-M-14
 JLCPCB#: C223907</text>
+<text x="50.8" y="294.64" size="1.778" layer="91">Digikey:
+
+</text>
 <text x="15.24" y="345.44" size="1.778" layer="91">Digikey: 36-1020-ND</text>
 </plain>
 <instances>
