@@ -269,7 +269,7 @@ V3i -&gt; V3j
 <vertex x="-34.6" y="-175"/>
 <vertex x="-33.9" y="-165"/>
 </polygon>
-<polygon width="0.2" layer="103">
+<polygon width="0.2" layer="103" pour="hatch">
 <vertex x="35.3" y="-185"/>
 <vertex x="36" y="-195"/>
 <vertex x="-36" y="-195"/>
@@ -5375,9 +5375,6 @@ Input: 4.5V</text>
 <vertex x="3.6" y="-127"/>
 <vertex x="2" y="-128.6"/>
 </polygon>
-<circle x="-30.48" y="-236.22" radius="0.635" width="0.1524" layer="103"/>
-<circle x="-35.56" y="-241.3" radius="0.635" width="0.1524" layer="103"/>
-<circle x="-30.48" y="-248.92" radius="0.635" width="0.1524" layer="103"/>
 </plain>
 <libraries>
 <library name="rcl">
