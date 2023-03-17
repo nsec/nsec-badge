@@ -269,7 +269,7 @@ V3i -&gt; V3j
 <vertex x="-34.6" y="-175"/>
 <vertex x="-33.9" y="-165"/>
 </polygon>
-<polygon width="0.2" layer="103" pour="hatch">
+<polygon width="0.2" layer="103" spacing="2.54">
 <vertex x="35.3" y="-185"/>
 <vertex x="36" y="-195"/>
 <vertex x="-36" y="-195"/>
@@ -5374,6 +5374,18 @@ Input: 4.5V</text>
 <vertex x="4.2" y="-127.6"/>
 <vertex x="3.6" y="-127"/>
 <vertex x="2" y="-128.6"/>
+</polygon>
+<polygon width="0.1524" layer="103">
+<vertex x="-36.195" y="-241.3"/>
+<vertex x="-35.56" y="-240.665"/>
+<vertex x="-34.925" y="-241.3"/>
+<vertex x="-35.56" y="-241.935"/>
+</polygon>
+<polygon width="0.1524" layer="103">
+<vertex x="-31.115" y="-236.22"/>
+<vertex x="-30.48" y="-235.585"/>
+<vertex x="-29.845" y="-236.22"/>
+<vertex x="-30.48" y="-236.855"/>
 </polygon>
 </plain>
 <libraries>
