@@ -24,8 +24,8 @@
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="no" active="yes"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="no" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="no" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
@@ -195,8 +195,8 @@
 </polygon>
 <dimension x1="13.97" y1="44.45" x2="52.07" y2="44.45" x3="33.02" y3="50.8" textsize="1.016" layer="109"/>
 <dimension x1="16.51" y1="38.1" x2="16.51" y2="50.8" x3="52.07" y3="44.45" textsize="1.016" layer="109"/>
-<text x="88.241503125" y="39.60621875" size="3.1496" layer="22" font="vector" rot="MR315" align="top-left">QUESTS</text>
-<text x="62.23" y="66.675" size="0.9144" layer="22" font="vector" rot="MR225" align="top-left">[1] Connect the badge with other participants to unlock more LEDs
+<text x="92.71" y="39.37" size="1.3716" layer="22" font="vector" rot="MR45" align="top-left">QUESTS</text>
+<text x="86.995" y="45.085" size="0.8636" layer="22" font="vector" rot="MR45" align="top-left">[1] Connect the badge with other participants to level-up
 [2] Go to the soldering village to add a screen to your badge</text>
 <text x="25.4" y="23.114" size="0.9144" layer="22" rot="MR0">RST</text>
 <dimension x1="85.725" y1="43.18" x2="96.52" y2="43.18" x3="91.1225" y3="29.845" textsize="1.778" layer="47"/>
@@ -4434,11 +4434,6 @@
 <wire x1="83.60445" y1="1.005725" x2="83.60096875" y2="1.00569375" width="0.001" layer="204"/>
 <wire x1="83.60096875" y1="1.00569375" x2="55.3278" y2="1.00569375" width="0.001" layer="204"/>
 <wire x1="55.3278" y1="1.00569375" x2="55.32011875" y2="1.005703125" width="0.001" layer="204"/>
-<wire x1="15.321859375" y1="77.743953125" x2="15.32021875" y2="77.74569375" width="0.001" layer="204"/>
-<wire x1="15.32021875" y1="77.74569375" x2="43.00871875" y2="77.74569375" width="0.001" layer="204"/>
-<wire x1="43.00871875" y1="77.74569375" x2="43.60441875" y2="77.74569375" width="0.001" layer="204"/>
-<wire x1="43.60441875" y1="77.74569375" x2="43.60785" y2="77.7422625" width="0.001" layer="204"/>
-<wire x1="43.6043" y1="1.00569375" x2="15.32011875" y2="1.00569375" width="0.001" layer="204"/>
 <wire x1="7.5486" y1="47.4099125" x2="7.0406" y2="47.917903125" width="0.001" layer="204"/>
 <wire x1="7.0406" y1="47.917903125" x2="6.449140625" y2="48.509375" width="0.001" layer="204"/>
 <wire x1="6.449140625" y1="48.509375" x2="5.800578125" y2="49.157925" width="0.001" layer="204"/>
@@ -4574,13 +4569,9 @@
 <wire x1="8.640309375" y1="46.318203125" x2="8.485990625" y2="46.4725125" width="0.001" layer="204"/>
 <wire x1="8.485990625" y1="46.4725125" x2="8.2614" y2="46.6971125" width="0.001" layer="204"/>
 <wire x1="8.2614" y1="46.6971125" x2="7.5486" y2="47.4099125" width="0.001" layer="204"/>
-<wire x1="43.00871875" y1="77.74569375" x2="81.676509375" y2="39.077903125" width="0.001" layer="204"/>
-<wire x1="43.6043" y1="1.00569375" x2="81.676509375" y2="39.077903125" width="0.001" layer="204"/>
 <wire x1="55.320978125" y1="77.744834375" x2="93.69011875" y2="39.37569375" width="0.001" layer="204"/>
-<wire x1="15.32011875" y1="1.00569375" x2="53.69016875" y2="39.37574375" width="0.001" layer="204"/>
 <wire x1="4.649378125" y1="2.050653125" x2="41.97441875" y2="39.37569375" width="0.001" layer="204"/>
 <wire x1="4.648928125" y1="76.701184375" x2="41.97441875" y2="39.37569375" width="0.001" layer="204"/>
-<wire x1="15.32021875" y1="77.74569375" x2="53.69016875" y2="39.37574375" width="0.001" layer="204"/>
 <wire x1="55.32011875" y1="1.005703125" x2="93.69011875" y2="39.37569375" width="0.001" layer="204"/>
 <wire x1="80.728278125" y1="6.157603125" x2="81.34015" y2="6.157603125" width="0.001" layer="204"/>
 <wire x1="81.34015" y1="6.157603125" x2="81.340209375" y2="6.157684375" width="0.001" layer="204"/>
@@ -7883,6 +7874,14 @@
 <wire x1="75.70991875" y1="4.99034375" x2="75.716278125" y2="4.9797125" width="0.001" layer="204"/>
 <wire x1="75.716278125" y1="4.9797125" x2="75.7225" y2="4.968475" width="0.001" layer="204"/>
 <wire x1="75.7225" y1="4.968475" x2="75.728409375" y2="4.9567125" width="0.001" layer="204"/>
+<polygon width="0.001" layer="204">
+<vertex x="15.367" y="77.724"/>
+<vertex x="43.053" y="77.724"/>
+<vertex x="81.661" y="39.116"/>
+<vertex x="43.561" y="1.016"/>
+<vertex x="15.367" y="1.016"/>
+<vertex x="53.721" y="39.37"/>
+</polygon>
 </plain>
 <libraries>
 <library name="SparkFun">

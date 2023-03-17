@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -28,12 +28,12 @@
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="no" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
-<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
@@ -126,11 +126,11 @@
 <layer number="154" name="FabDoc2" color="2" fill="1" visible="no" active="no"/>
 <layer number="155" name="FabDoc3" color="7" fill="15" visible="no" active="no"/>
 <layer number="199" name="Contour" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="200" name="200bmp" color="1" fill="10" visible="no" active="yes"/>
-<layer number="201" name="201bmp" color="1" fill="10" visible="no" active="yes"/>
-<layer number="202" name="202bmp" color="3" fill="1" visible="no" active="yes"/>
-<layer number="203" name="203bmp" color="4" fill="10" visible="yes" active="yes"/>
-<layer number="204" name="204bmp" color="5" fill="10" visible="yes" active="yes"/>
+<layer number="200" name="200bmp" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="201" name="201bmp" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="202" name="202bmp" color="3" fill="1" visible="yes" active="yes"/>
+<layer number="203" name="203bmp" color="4" fill="10" visible="no" active="yes"/>
+<layer number="204" name="204bmp" color="5" fill="10" visible="no" active="yes"/>
 <layer number="205" name="205bmp" color="6" fill="10" visible="yes" active="yes"/>
 <layer number="206" name="206bmp" color="7" fill="10" visible="yes" active="yes"/>
 <layer number="207" name="207bmp" color="8" fill="10" visible="yes" active="yes"/>
@@ -195,10 +195,10 @@
 </polygon>
 <dimension x1="13.97" y1="44.45" x2="52.07" y2="44.45" x3="33.02" y3="50.8" textsize="1.016" layer="109"/>
 <dimension x1="16.51" y1="38.1" x2="16.51" y2="50.8" x3="52.07" y3="44.45" textsize="1.016" layer="109"/>
-<text x="74.953496875" y="26.43378125" size="3.1496" layer="22" font="vector" rot="MR135" align="top-left">QUESTS</text>
-<text x="53.34" y="74.295" size="1.0668" layer="22" font="vector" rot="MR225" align="top-left">[1] Connect the badge with other participants to level-up
+<text x="92.71" y="39.37" size="1.3716" layer="22" font="vector" rot="MR45" align="top-left">QUESTS</text>
+<text x="86.995" y="45.085" size="0.8636" layer="22" font="vector" rot="MR45" align="top-left">[1] Connect the badge with other participants to level-up
 [2] Go to the soldering village to add a screen to your badge</text>
-<text x="25.4" y="23.114" size="0.9144" layer="22" rot="MR0">RST</text>
+<text x="25.4" y="16.764" size="0.9144" layer="22" rot="MR0">RST</text>
 <dimension x1="85.725" y1="43.18" x2="96.52" y2="43.18" x3="91.1225" y3="29.845" textsize="1.778" layer="47"/>
 <dimension x1="12.065" y1="33.02" x2="7.62" y2="33.02" x3="9.8425" y3="44.45" textsize="1.778" layer="47"/>
 <text x="91.44" y="45.085" size="1.2192" layer="21">SV1</text>
@@ -213,9 +213,6 @@
 <text x="5.842" y="2.794" size="2.54" layer="22" rot="MR180">-</text>
 <text x="1.905" y="5.715" size="1.778" layer="22" rot="MR0">+</text>
 <text x="10.795" y="6.223" size="0.8128" layer="22" rot="MR135">RST</text>
-<text x="78.97621875" y="71.143496875" size="1.524" layer="22" font="vector" rot="MR0" align="top-left">[1]  
-
-[2] </text>
 <dimension x1="0" y1="73.66" x2="96.52" y2="45.72" x3="48.26" y3="93.98" textsize="3.81" layer="47" dtype="horizontal"/>
 <dimension x1="5.08" y1="78.74" x2="5.08" y2="0" x3="-10.16" y3="39.37" textsize="3.81" layer="47" dtype="vertical"/>
 <wire x1="15.186828125" y1="12.033425" x2="17.126040625" y2="10.675975" width="0.001" layer="202"/>
