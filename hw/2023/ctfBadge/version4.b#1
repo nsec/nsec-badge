@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="100" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="1" altunitdist="mm" altunit="mm"/>
+<grid distance="1.27" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="1" altunitdist="mm" altunit="mm"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="16" fill="1" visible="no" active="no"/>
@@ -23,9 +23,9 @@
 <layer number="13" name="Route13" color="21" fill="1" visible="no" active="no"/>
 <layer number="14" name="Route14" color="22" fill="1" visible="no" active="no"/>
 <layer number="15" name="Route15" color="23" fill="1" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="no" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="no" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="no" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
@@ -5360,16 +5360,16 @@ Input: 4.5V</text>
 <wire x1="-20" y1="-275" x2="20" y2="-275" width="0.127" layer="103"/>
 <wire x1="-20" y1="-275" x2="0" y2="-300" width="0.127" layer="103"/>
 <wire x1="0" y1="-300" x2="20" y2="-275" width="0.127" layer="103"/>
-<circle x="-7.62" y="-48.26" radius="1" width="0.127" layer="103"/>
-<circle x="5.08" y="-48.26" radius="1" width="0.127" layer="103"/>
-<circle x="17.78" y="-48.26" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-58.42" radius="1" width="0.127" layer="103"/>
-<circle x="17.78" y="-58.42" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-71.12" radius="1" width="0.127" layer="103"/>
-<circle x="0" y="-71.12" radius="1" width="0.127" layer="103"/>
-<circle x="7.62" y="-71.12" radius="1" width="0.127" layer="103"/>
-<circle x="22.86" y="-71.12" radius="1" width="0.127" layer="103"/>
-<circle x="-22.86" y="-71.12" radius="1" width="0.127" layer="103"/>
+<circle x="-7.62" y="-48.26" radius="0.5" width="0.127" layer="103"/>
+<circle x="5.08" y="-48.26" radius="0.5" width="0.127" layer="103"/>
+<circle x="17.78" y="-48.26" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-59.69" radius="0.5" width="0.127" layer="103"/>
+<circle x="17.78" y="-59.69" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-71.12" radius="0.5" width="0.127" layer="103"/>
+<circle x="0" y="-71.12" radius="0.5" width="0.127" layer="103"/>
+<circle x="7.62" y="-71.12" radius="0.5" width="0.127" layer="103"/>
+<circle x="22.86" y="-71.12" radius="0.5" width="0.127" layer="103"/>
+<circle x="-22.86" y="-71.12" radius="0.5" width="0.127" layer="103"/>
 <wire x1="16.256" y1="-14.478" x2="16.256" y2="-7.62" width="0.127" layer="103"/>
 <wire x1="18.034" y1="-7.62" x2="18.034" y2="-14.478" width="0.127" layer="103"/>
 <wire x1="16.256" y1="-14.478" x2="18.034" y2="-14.478" width="0.127" layer="103" curve="180"/>
@@ -5378,52 +5378,53 @@ Input: 4.5V</text>
 <circle x="-20.4978" y="-27.178" radius="0.803215625" width="0.127" layer="103"/>
 <circle x="-22.479" y="-36.576" radius="0.803215625" width="0.127" layer="103"/>
 <circle x="-18.415" y="-35.56" radius="0.803215625" width="0.127" layer="103"/>
-<circle x="-25.4" y="-88.9" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-88.9" radius="1" width="0.127" layer="103"/>
-<circle x="0" y="-88.9" radius="1" width="0.127" layer="103"/>
-<circle x="7.62" y="-88.9" radius="1" width="0.127" layer="103"/>
-<circle x="25.4" y="-88.9" radius="1" width="0.127" layer="103"/>
-<circle x="25.4" y="-109.22" radius="1" width="0.127" layer="103"/>
-<circle x="7.62" y="-109.22" radius="1" width="0.127" layer="103"/>
-<circle x="0" y="-109.22" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-109.22" radius="1" width="0.127" layer="103"/>
-<circle x="-25.4" y="-109.22" radius="1" width="0.127" layer="103"/>
-<circle x="-27.94" y="-129.54" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-129.54" radius="1" width="0.127" layer="103"/>
-<circle x="7.62" y="-129.54" radius="1" width="0.127" layer="103"/>
-<circle x="27.94" y="-129.54" radius="1" width="0.127" layer="103"/>
-<circle x="-29.21" y="-149.86" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-149.86" radius="1" width="0.127" layer="103"/>
-<circle x="7.62" y="-149.86" radius="1" width="0.127" layer="103"/>
-<circle x="30.48" y="-149.86" radius="1" width="0.127" layer="103"/>
-<circle x="-30.48" y="-170.18" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-170.18" radius="1" width="0.127" layer="103"/>
-<circle x="7.62" y="-170.18" radius="1" width="0.127" layer="103"/>
-<circle x="31.75" y="-170.18" radius="1" width="0.127" layer="103"/>
-<circle x="-17.78" y="-190.5" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-190.5" radius="1" width="0.127" layer="103"/>
-<circle x="7.62" y="-190.5" radius="1" width="0.127" layer="103"/>
-<circle x="17.78" y="-190.5" radius="1" width="0.127" layer="103"/>
-<circle x="-30.48" y="-223.52" radius="1" width="0.127" layer="103"/>
-<circle x="-35.56" y="-241.3" radius="1" width="0.127" layer="103"/>
-<circle x="-30.48" y="-236.22" radius="1" width="0.127" layer="103"/>
-<circle x="-30.48" y="-248.92" radius="1" width="0.127" layer="103"/>
-<circle x="30.48" y="-248.92" radius="1" width="0.127" layer="103"/>
-<circle x="35.56" y="-241.3" radius="1" width="0.127" layer="103"/>
-<circle x="30.48" y="-236.22" radius="1" width="0.127" layer="103"/>
-<circle x="30.48" y="-223.52" radius="1" width="0.127" layer="103"/>
-<circle x="-7.62" y="-279.4" radius="1" width="0.127" layer="103"/>
-<circle x="-5.08" y="-287.02" radius="1" width="0.127" layer="103"/>
-<circle x="5.08" y="-287.02" radius="1" width="0.127" layer="103"/>
-<circle x="7.62" y="-279.4" radius="1" width="0.127" layer="103"/>
-<circle x="-5.08" y="-17.78" radius="1" width="0.1524" layer="103"/>
-<circle x="5.08" y="-17.78" radius="1" width="0.1524" layer="103"/>
-<circle x="-5.08" y="-5.08" radius="1" width="0.1524" layer="103"/>
-<circle x="5.08" y="-5.08" radius="1" width="0.1524" layer="103"/>
-<circle x="-5.08" y="-30.48" radius="1" width="0.1524" layer="103"/>
-<circle x="5.08" y="-30.48" radius="1" width="0.1524" layer="103"/>
-<circle x="-30.48" y="-5.08" radius="1" width="0.1524" layer="103"/>
-<circle x="30.48" y="-5.08" radius="1" width="0.1524" layer="103"/>
+<circle x="-25.4" y="-88.9" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-88.9" radius="0.5" width="0.127" layer="103"/>
+<circle x="0" y="-88.9" radius="0.5" width="0.127" layer="103"/>
+<circle x="7.62" y="-88.9" radius="0.5" width="0.127" layer="103"/>
+<circle x="25.4" y="-88.9" radius="0.5" width="0.127" layer="103"/>
+<circle x="25.4" y="-109.22" radius="0.5" width="0.127" layer="103"/>
+<circle x="7.62" y="-109.22" radius="0.5" width="0.127" layer="103"/>
+<circle x="0" y="-109.22" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-109.22" radius="0.5" width="0.127" layer="103"/>
+<circle x="-25.4" y="-109.22" radius="0.5" width="0.127" layer="103"/>
+<circle x="-27.94" y="-129.54" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-129.54" radius="0.5" width="0.127" layer="103"/>
+<circle x="7.62" y="-129.54" radius="0.5" width="0.127" layer="103"/>
+<circle x="27.94" y="-129.54" radius="0.5" width="0.127" layer="103"/>
+<circle x="-29.21" y="-149.86" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-149.86" radius="0.5" width="0.127" layer="103"/>
+<circle x="7.62" y="-149.86" radius="0.5" width="0.127" layer="103"/>
+<circle x="30.48" y="-149.86" radius="0.5" width="0.127" layer="103"/>
+<circle x="-30.48" y="-170.18" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-170.18" radius="0.5" width="0.127" layer="103"/>
+<circle x="7.62" y="-170.18" radius="0.5" width="0.127" layer="103"/>
+<circle x="31.75" y="-170.18" radius="0.5" width="0.127" layer="103"/>
+<circle x="-17.78" y="-190.5" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-190.5" radius="0.5" width="0.127" layer="103"/>
+<circle x="7.62" y="-190.5" radius="0.5" width="0.127" layer="103"/>
+<circle x="17.78" y="-190.5" radius="0.5" width="0.127" layer="103"/>
+<circle x="-30.48" y="-223.52" radius="0.5" width="0.127" layer="103"/>
+<circle x="-35.56" y="-241.3" radius="0.5" width="0.127" layer="103"/>
+<circle x="-30.48" y="-236.22" radius="0.5" width="0.127" layer="103"/>
+<circle x="-30.48" y="-248.92" radius="0.5" width="0.127" layer="103"/>
+<circle x="30.48" y="-248.92" radius="0.5" width="0.127" layer="103"/>
+<circle x="35.56" y="-241.3" radius="0.5" width="0.127" layer="103"/>
+<circle x="30.48" y="-236.22" radius="0.5" width="0.127" layer="103"/>
+<circle x="30.48" y="-223.52" radius="0.5" width="0.127" layer="103"/>
+<circle x="-7.62" y="-279.4" radius="0.5" width="0.127" layer="103"/>
+<circle x="-5.08" y="-287.02" radius="0.5" width="0.127" layer="103"/>
+<circle x="5.08" y="-287.02" radius="0.5" width="0.127" layer="103"/>
+<circle x="7.62" y="-279.4" radius="0.5" width="0.127" layer="103"/>
+<circle x="-5.08" y="-17.78" radius="0.5" width="0.1524" layer="103"/>
+<circle x="5.08" y="-17.78" radius="0.5" width="0.1524" layer="103"/>
+<circle x="-5.08" y="-5.08" radius="0.5" width="0.1524" layer="103"/>
+<circle x="5.08" y="-5.08" radius="0.5" width="0.1524" layer="103"/>
+<circle x="-5.08" y="-30.48" radius="0.5" width="0.1524" layer="103"/>
+<circle x="5.08" y="-25.4" radius="0.5" width="0.1524" layer="103"/>
+<circle x="-30.48" y="-5.08" radius="0.5" width="0.1524" layer="103"/>
+<circle x="30.48" y="-5.08" radius="0.5" width="0.1524" layer="103"/>
+<circle x="0.7" y="-10.46" radius="0.5" width="0.1524" layer="103"/>
 </plain>
 <libraries>
 <library name="rcl">
