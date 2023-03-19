@@ -1,9 +1,0 @@
-idf_component_register(
-    SRCS
-        "infoscreen.c"
-    INCLUDE_DIRS
-        "."
-    REQUIRES
-        buttons
-        graphics
-)
