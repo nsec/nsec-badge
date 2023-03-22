@@ -5,9 +5,38 @@
 #include "freertos/task.h"
 #include "esp_chip_info.h"
 #include "esp_flash.h"
+#include "nvs_flash.h"
+#include "esp_spiffs.h"
+#include "console.h"
 
-extern "C" void app_main(void)
+#define MOUNT_PATH "/spiffs"
+
+static bool mount_spiffs()
 {
+    esp_vfs_spiffs_conf_t conf = {.base_path = MOUNT_PATH,
+                                  .partition_label = NULL,
+                                  .max_files = 8,
+                                  .format_if_mount_failed = false};
+
+    esp_err_t ret = esp_vfs_spiffs_register(&conf);
+    return ret == ESP_OK;
+}
+
+static void initialize_nvs(void)
+{
+    esp_err_t err = nvs_flash_init();
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK( nvs_flash_erase() );
+        err = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(err);
+}
+
+extern "C" void app_main(void) {
+
+    initialize_nvs();
+    mount_spiffs();
+
     printf("Hello world!\n");
 
     /* Print chip information */
@@ -32,12 +61,7 @@ extern "C" void app_main(void)
            (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     printf("Minimum free heap size: %" PRIu32 " bytes\n", esp_get_minimum_free_heap_size());
-
-    for (int i = 10; i >= 0; i--) {
-        printf("Restarting in %d seconds...\n", i);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-    printf("Restarting now.\n");
     fflush(stdout);
-    esp_restart();
+
+	xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
