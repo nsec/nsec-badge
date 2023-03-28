@@ -23,6 +23,7 @@
 #include "soc/io_mux_reg.h"
 #include "soc/gpio_struct.h"
 #include "soc/rtc_io_reg.h"
+#include "soc/rtc_io_periph.h"
 
 #include "driver/rtc_io.h"
 
@@ -151,7 +152,7 @@ static bool IRAM_ATTR __pinModeLockRTC(uint8_t pin, uint8_t mode) {
 static bool IRAM_ATTR __pinModeLockRTC(uint8_t pin, uint8_t mode) {
 
     // Find out if GPIO pin is RTC pin
-    int rtc_pin = rtc_io_num_map[pin];
+    int rtc_pin = rtc_io_number_get(pin);
 
     if(mode == ANALOG) {
         if(rtc_pin == -1) {
