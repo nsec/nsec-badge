@@ -47,7 +47,9 @@ const uint16_t customMappingSize = sizeof(customMappingTable)/sizeof(uint16_t); 
 void WS2812FX::init( uint16_t countPixels, CRGB *leds, bool skipFirst)
 {
   if ( countPixels == _length && _skipFirstMode == skipFirst) return;
-  RESET_RUNTIME;
+  for (int i=0; i<MAX_NUM_SEGMENTS; i++) {
+    _segment_runtimes[i] = segment_runtime();
+  }
   _length = countPixels;
   _leds = leds;
   _skipFirstMode = skipFirst;
