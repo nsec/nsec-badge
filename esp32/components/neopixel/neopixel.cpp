@@ -14,7 +14,7 @@
 #define NUM_LEDS 21
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
-#define COLOR_ORDER RGB
+#define COLOR_ORDER GRB
 
 WS2812FX NeoPixel::_ws2812fx;
 TaskHandle_t NeoPixel::_displayTaskHandle;
@@ -22,7 +22,7 @@ bool NeoPixel::is_on;
 
 void NeoPixel::init()
 {
-    FastLED.addLeds<LED_TYPE, DATA_PIN_1>(leds, NUM_LEDS);
+    FastLED.addLeds<LED_TYPE, DATA_PIN_1, COLOR_ORDER>(leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(3, 1000);
     NeoPixel::_ws2812fx.init(NUM_LEDS, leds, false);
 
@@ -49,9 +49,7 @@ void NeoPixel::stop()
 void NeoPixel::setColor(int color)
 {
     if (color <= 0xffffff && color >= 0) {
-        int color_corr = ((color >> 8) & 0x00ff00) | ((color << 8) & 0xff0000) |
-                         (color & 0x0000ff);
-        NeoPixel::_ws2812fx.setColor(0, color_corr);
+        NeoPixel::_ws2812fx.setColor(0, color);
         _color = color;
         Save::save_data.neopixel_color = color;
     }
