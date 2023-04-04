@@ -46,5 +46,6 @@ extern "C" void app_main(void) {
     }
     fflush(stdout);
 	NeoPixel::getInstance().init();
+	NeoPixel::getInstance().setColor(CRGB::Red);
 	xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
