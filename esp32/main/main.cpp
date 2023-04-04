@@ -8,6 +8,7 @@
 #include "nvs_flash.h"
 #include "esp_spiffs.h"
 #include "console.h"
+#include "neopixel.h"
 
 #define MOUNT_PATH "/spiffs"
 
@@ -44,6 +45,6 @@ extern "C" void app_main(void) {
         return;
     }
     fflush(stdout);
-
+	NeoPixel::getInstance().init();
 	xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
