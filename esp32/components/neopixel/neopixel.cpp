@@ -11,7 +11,8 @@
 #include "FastLED.h"
 #include "save.h"
 
-#define NUM_LEDS 21
+#include "esp_log.h"
+
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
 #define COLOR_ORDER GRB
@@ -22,9 +23,10 @@ bool NeoPixel::is_on;
 
 void NeoPixel::init()
 {
-    FastLED.addLeds<LED_TYPE, DATA_PIN_1, COLOR_ORDER>(leds, NUM_LEDS);
+    ESP_LOGI("NSEC", "this is NeoPixel::init in esp32/components/neopixel/neopixel.cpp");
+    FastLED.addLeds<LED_TYPE, DATA_PIN_1, COLOR_ORDER>(_leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(3, 1000);
-    NeoPixel::_ws2812fx.init(NUM_LEDS, leds, false);
+    NeoPixel::_ws2812fx.init(NUM_LEDS, _leds, false);
 
     if (Save::save_data.neopixel_is_on) {
         NeoPixel::start();
@@ -32,17 +34,23 @@ void NeoPixel::init()
 }
 
 void NeoPixel::start() {
-        setColor(Save::save_data.neopixel_color);
-        setBrightness(Save::save_data.neopixel_brightness);
-        setPublicMode(Save::save_data.neopixel_mode);
+    if (!NeoPixel::is_on && NeoPixel::_displayTaskHandle) {
+        vTaskResume(NeoPixel::_displayTaskHandle);
+    }
+    setColor(Save::save_data.neopixel_color);
+    setBrightness(Save::save_data.neopixel_brightness);
+    setPublicMode(Save::save_data.neopixel_mode);
 }
 void NeoPixel::stop()
 {
-    if (NeoPixel::_displayTaskHandle) {
-        NeoPixel::is_on = false;
-    }
     NeoPixel::_ws2812fx.setBrightness(0);
     FastLED.setBrightness(0);
+    vTaskDelay(100);
+    if (NeoPixel::_displayTaskHandle) {
+        ESP_LOGI("NSEC", "NeoPixel::is_on = false;");
+        NeoPixel::is_on = false;
+        vTaskSuspend(NeoPixel::_displayTaskHandle);
+    }
     Save::save_data.neopixel_is_on = false;
 }
 
@@ -103,6 +111,10 @@ uint16_t NeoPixel::getPublicMode()
 int NeoPixel::getColor()
 {
     return _color;
+}
+
+CRGB* NeoPixel::getFastLeds() {
+    return _leds;
 }
 
 void neopixel_set_brightness(uint8_t brightness)
