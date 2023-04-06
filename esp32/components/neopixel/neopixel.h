@@ -7,7 +7,7 @@
 #include "freertos/task.h"
 #include <stdint.h>
 
-#define NUM_LEDS 15
+#define NUM_LEDS 21
 
 class NeoPixel
 {
@@ -25,7 +25,7 @@ class NeoPixel
 
 
     const uint8_t _unlocked_mode[10] = {2, 8, 23, 30, 43, 63, 67, 20, 37, 9};
-    CRGB leds[NUM_LEDS];
+    CRGB _leds[NUM_LEDS];
     uint8_t _brightness;
     uint16_t _mode;
     uint16_t _public_mode;
@@ -57,4 +57,5 @@ class NeoPixel
     uint16_t getPublicMode();
     uint16_t getMode();
     int getColor();
+    CRGB* getFastLeds();
 };
