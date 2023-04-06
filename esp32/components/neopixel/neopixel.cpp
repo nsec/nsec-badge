@@ -2,6 +2,7 @@
 
 #include "esp_spi_flash.h"
 #include "esp_system.h"
+#include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <stdint.h>
@@ -15,15 +16,18 @@
 #define LED_TYPE WS2811
 #define COLOR_ORDER GRB
 
+static const char *TAG = "neopixel";
+
 WS2812FX NeoPixel::_ws2812fx;
-TaskHandle_t NeoPixel::_displayTaskHandle;
-bool NeoPixel::is_on;
+TaskHandle_t NeoPixel::_displayTaskHandle = NULL;
+bool NeoPixel::is_on = false;
 
 void NeoPixel::init()
 {
-    FastLED.addLeds<LED_TYPE, DATA_PIN_1, COLOR_ORDER>(leds, NUM_LEDS);
+    ESP_LOGV(TAG, "%s: starting", __func__);
+    FastLED.addLeds<LED_TYPE, DATA_PIN_1, COLOR_ORDER>(_leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(3, 1000);
-    NeoPixel::_ws2812fx.init(NUM_LEDS, leds, false);
+    NeoPixel::_ws2812fx.init(NUM_LEDS, _leds, false);
 
     if (Save::save_data.neopixel_is_on) {
         NeoPixel::start();
@@ -31,18 +35,23 @@ void NeoPixel::init()
 }
 
 void NeoPixel::start() {
-        setColor(Save::save_data.neopixel_color);
-        setBrightness(Save::save_data.neopixel_brightness);
-        setPublicMode(Save::save_data.neopixel_mode);
+    setColor(Save::save_data.neopixel_color);
+    setBrightness(Save::save_data.neopixel_brightness);
+    setPublicMode(Save::save_data.neopixel_mode);
+
+    if(NeoPixel::_displayTaskHandle == NULL) {
+        NeoPixel::is_on = true;
+        ESP_LOGV(TAG, "%s: creating neopixel task", __func__);
+        xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 1024, NULL, 5, &NeoPixel::_displayTaskHandle);
+    }
 }
+
 void NeoPixel::stop()
 {
-    if (NeoPixel::_displayTaskHandle) {
-        NeoPixel::is_on = false;
-    }
     NeoPixel::_ws2812fx.setBrightness(0);
     FastLED.setBrightness(0);
-    Save::save_data.neopixel_is_on = false;
+    vTaskDelay(100);
+    NeoPixel::is_on = false;
 }
 
 void NeoPixel::setColor(int color)
@@ -74,9 +83,6 @@ void NeoPixel::setPublicMode(uint8_t mode)
 void NeoPixel::setMode(uint8_t mode)
 {
     NeoPixel::_ws2812fx.setMode(0, mode);
-    NeoPixel::is_on = true;
-    if(NeoPixel::_displayTaskHandle == NULL)
-        xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 1024, NULL, 5, &NeoPixel::_displayTaskHandle);
     _mode = mode;
 }
 
@@ -98,6 +104,10 @@ uint16_t NeoPixel::getPublicMode()
 int NeoPixel::getColor()
 {
     return _color;
+}
+
+CRGB* NeoPixel::getFastLeds() {
+    return _leds;
 }
 
 void neopixel_set_brightness(uint8_t brightness)
