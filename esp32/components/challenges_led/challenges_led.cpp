@@ -16,6 +16,7 @@
 #include "neopixel.h"
 
 #include "challenge_led1.h"
+#include "challenge_led3.h"
 
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
@@ -44,7 +45,7 @@ void register_challenges_led(void)
 static int challenge_led1(int argc, char **argv) {
     ESP_LOGI(TAG, "This is LED challenge 1!\n");
     challenges_led_init();
-    challenge_led1_code();
+    challenge_led3_code();
     challenges_led_end();
     return 0;
 }
