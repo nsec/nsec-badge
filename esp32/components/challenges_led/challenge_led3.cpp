@@ -1,7 +1,6 @@
 #include "challenge_led3.h"
 #include "FastLED.h"
 #include "neopixel.h"
-#include "esp_random.h"
 
 #define DELAY 100
 
@@ -51,12 +50,6 @@ void led4_off(CRGB *leds) {
     leds[10] = CRGB::Red;
     leds[11] = CRGB::Red;
     FastLED.show();
-}
-
-int unimportant_random(int max) {
-    uint32_t rnd = esp_random();
-    rnd ^= esp_random();
-    return (rnd % max) + 1;
 }
 
 void challenge_led3_code() {
