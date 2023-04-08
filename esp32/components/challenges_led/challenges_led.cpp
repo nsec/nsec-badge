@@ -8,18 +8,25 @@
 */
 
 #include <stdio.h>
-#include "challenges_led.h"
+#include "argtable3/argtable3.h"
 #include "esp_console.h"
 #include "esp_log.h"
 
 #include "FastLED.h"
 #include "neopixel.h"
 
+#include "challenges_led.h"
+#include "common_led.h"
+
 #include "challenge_led1.h"
+#include "challenge_led2.h"
 #include "challenge_led3.h"
 
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
+
+CRGB *leds;
+uint16_t custom_delay = 0;
 
 void challenges_led_init() {
     NeoPixel::getInstance().stop();
@@ -32,30 +39,42 @@ void challenges_led_end() {
     NeoPixel::getInstance().start();
 }
 
-
 // TODO move this to updated cmd.cpp
 static const char *TAG = "challenges_led";
 
-void register_challenges_led(void)
-{
-    register_led1();
-    //register_led2();
-}
+static int challenge_led(int argc, char **argv) {
+    uint16_t select_challenge = 1;
+    if (argc >= 2) {
+        select_challenge = atoi(argv[1]);
+        if(strstr(argv[1], "65535"))
+            select_challenge--;
+    }
+    if (argc == 3) {
+        custom_delay = atoi(argv[2]);
+    }
 
-static int challenge_led1(int argc, char **argv) {
-    ESP_LOGI(TAG, "This is LED challenge 1!\n");
+    ESP_LOGI(TAG, "Running LED challenge %d! -  %dms\n", select_challenge, custom_delay);
+
     challenges_led_init();
-    challenge_led3_code();
+    if (select_challenge == 1)
+        challenge_led1_code(custom_delay);
+    else if (select_challenge == 2)
+        challenge_led2_code(custom_delay);
+    else if (select_challenge == 3)
+        challenge_led3_code(custom_delay);
+    else if (select_challenge == 65535)
+        ESP_LOGI(TAG, "Secret challenge");
     challenges_led_end();
     return 0;
 }
 
-void register_led1(void) {
+void register_challenges_led(void) {
     const esp_console_cmd_t cmd = {
-        .command = "challenge_led1",
-        .help = "Run the LED pattern for the challenge 1",
-        .hint = NULL,
-        .func = &challenge_led1,
+        .command = "challenge_led",
+        .help = "Run the LED pattern for the challenges 1,2,3",
+        .hint = "[1-3]",
+        .func = &challenge_led,
+        .argtable = NULL,        
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
 }

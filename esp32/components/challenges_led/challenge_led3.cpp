@@ -1,8 +1,7 @@
-#include "challenge_led3.h"
 #include "FastLED.h"
 #include "neopixel.h"
-
-#define DELAY 100
+#include "challenge_led3.h"
+#include "common_led.h"
 
 void led1_on(CRGB *leds) {
     leds[0] = CRGB::Green;
@@ -52,9 +51,12 @@ void led4_off(CRGB *leds) {
     FastLED.show();
 }
 
-void challenge_led3_code() {
+void challenge_led3_code(int _delay) {
     CRGB *leds;
     leds = NeoPixel::getInstance().getFastLeds();
+    int DELAY = 100;
+    if (_delay) DELAY = _delay;
+
 // idle state
 // SDA VOH
 led1_on(leds);
