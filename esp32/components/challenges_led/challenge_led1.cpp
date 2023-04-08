@@ -1,9 +1,8 @@
-#include "challenge_led1.h"
 #include "FastLED.h"
 #include "neopixel.h"
 #include "esp_random.h"
-
-#define DELAY 200
+#include "challenge_led1.h"
+#include "common_led.h"
 
 void led_on(CRGB *leds) {
     leds[0] = CRGB::Green;
@@ -19,19 +18,21 @@ void led_off(CRGB *leds) {
     FastLED.show();
 }
 
-int unimportant_random(int max) {
+int unimportant_random1(int max) {
     uint32_t rnd = esp_random();
     rnd ^= esp_random();
     return (rnd % max) + 1;
 }
 
-void challenge_led1_code() {
+void challenge_led1_code(int _delay) {
     CRGB *leds;
     leds = NeoPixel::getInstance().getFastLeds();
+    int DELAY = 200;
+    if (_delay) DELAY = _delay;
 
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -63,10 +64,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -98,10 +99,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -133,10 +134,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -168,10 +169,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -203,10 +204,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -238,10 +239,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -273,10 +274,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -308,10 +309,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -343,10 +344,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -378,10 +379,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -413,10 +414,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -448,10 +449,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -483,10 +484,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -518,10 +519,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -553,10 +554,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -588,10 +589,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -623,10 +624,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -658,10 +659,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -693,10 +694,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -728,10 +729,10 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -763,6 +764,6 @@ led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // idle state
 led_on(leds);
-vTaskDelay(DELAY * unimportant_random(10) / portTICK_PERIOD_MS);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 
 }

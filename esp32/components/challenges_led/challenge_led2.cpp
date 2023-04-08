@@ -1,10 +1,8 @@
-#include "challenge_led2.h"
 #include "FastLED.h"
 #include "neopixel.h"
 #include "esp_random.h"
-#define DELAY 60
-
-CRGB *leds;
+#include "challenge_led2.h"
+#include "common_led.h"
 
 void led1(bool b) {
     if (b) {
@@ -71,21 +69,24 @@ void led5(bool b) {
     FastLED.show();
 }
 
-int unimportant_random(int max) {
+int unimportant_random2(int max) {
     uint32_t rnd = esp_random();
     rnd ^= esp_random();
     return (rnd % max) + 1 + 2000;
 }
 
-void challenge_led2_code() {
+void challenge_led2_code(int _delay) {
     leds = NeoPixel::getInstance().getFastLeds();
+    int DELAY = 60;
+    if (_delay) DELAY = _delay;
+
 // idle state CKP=0
 led1(0);
 led2(1);
 led3(1);
 led4(1);
 led5(1);
-vTaskDelay(unimportant_random(2000) / portTICK_PERIOD_MS);
+vTaskDelay(unimportant_random2(2000) / portTICK_PERIOD_MS);
 // SCLK
 led1(1);
 // CS1 VOL
@@ -6177,6 +6178,6 @@ led2(1);
 led3(1);
 led4(1);
 led5(1);
-vTaskDelay(unimportant_random(2000) / portTICK_PERIOD_MS);
+vTaskDelay(unimportant_random2(2000) / portTICK_PERIOD_MS);
 
 }
