@@ -18,6 +18,7 @@
 #include "challenges_led.h"
 #include "common_led.h"
 
+#include "challenge_led0.h"
 #include "challenge_led1.h"
 #include "challenge_led2.h"
 #include "challenge_led3.h"
@@ -46,14 +47,14 @@ static int challenge_led(int argc, char **argv) {
     uint16_t select_challenge = 1;
     if (argc >= 2) {
         select_challenge = atoi(argv[1]);
-        if(strstr(argv[1], "65535"))
+        if(strstr(argv[1], "31337"))
             select_challenge--;
     }
     if (argc == 3) {
         custom_delay = atoi(argv[2]);
     }
 
-    ESP_LOGI(TAG, "Running LED challenge %d! -  %dms\n", select_challenge, custom_delay);
+    ESP_LOGI(TAG, "Running LED challenge %d!\n", select_challenge);
 
     challenges_led_init();
     if (select_challenge == 1)
@@ -62,8 +63,9 @@ static int challenge_led(int argc, char **argv) {
         challenge_led2_code(custom_delay);
     else if (select_challenge == 3)
         challenge_led3_code(custom_delay);
-    else if (select_challenge == 65535)
-        ESP_LOGI(TAG, "Secret challenge");
+    // solve: challenge_led -34199
+    else if (select_challenge == 31337)
+        challenge_led0_code(custom_delay);
     challenges_led_end();
     return 0;
 }
