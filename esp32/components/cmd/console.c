@@ -23,7 +23,7 @@
 #include "console.h"
 
 static const char* TAG = "console";
-#define PROMPT_STR "nsec" 
+#define PROMPT_STR "nsec"
 
 static void initialize_console(void)
 {
@@ -84,7 +84,7 @@ static void initialize_console(void)
     linenoiseSetMaxLineLen(console_config.max_cmdline_length);
 
     /* don't return empty lines */
-    linenoiseAllowEmpty(false);
+    linenoiseAllowEmpty(true);
 
     /* load command history from filesystem */
     // linenoisehistoryload(history_path);
