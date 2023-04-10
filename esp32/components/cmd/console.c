@@ -7,6 +7,7 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
+#include "cmd_neopixel.h"
 #include <stdio.h>
 #include <string.h>
 #include "esp_system.h"
@@ -96,6 +97,7 @@ void console_task(void *args)
     /* register commands */
     esp_console_register_help_command();
     register_system();
+    register_neopixel();
     // register_nvs();
 
     /* prompt to be printed before each line.
