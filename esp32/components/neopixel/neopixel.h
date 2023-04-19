@@ -7,7 +7,7 @@
 #include "freertos/task.h"
 #include <stdint.h>
 
-#define NUM_LEDS 15
+#define NUM_LEDS 21
 
 class NeoPixel
 {

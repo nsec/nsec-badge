@@ -9,6 +9,7 @@
 #include "esp_spiffs.h"
 #include "console.h"
 #include "neopixel.h"
+#include "badge/mesh/main.h"
 
 #define MOUNT_PATH "/spiffs"
 
@@ -47,5 +48,6 @@ extern "C" void app_main(void) {
     fflush(stdout);
 	NeoPixel::getInstance().init();
 	NeoPixel::getInstance().setColor(CRGB::Red);
+    BadgeMesh::getInstance().init();
 	xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
