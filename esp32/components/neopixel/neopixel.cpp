@@ -11,7 +11,6 @@
 #include "FastLED.h"
 #include "save.h"
 
-#define NUM_LEDS 21
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
 #define COLOR_ORDER GRB
