@@ -52,7 +52,7 @@ esp_err_t neopixel_set_received(esp_ble_mesh_model_t *model, esp_ble_mesh_msg_ct
     neopixel_set.high_priority = high_priority;
     memcpy(&neopixel_set.data, data, sizeof(neopixel_set.data));
 
-    ESP_LOGV(TAG, "%s from node=0x%04x rssi=%d", __func__, ctx->addr, ctx->recv_rssi);
+    ESP_LOGV(TAG, "%s from node=0x%04x rssi=%d for=%usec", __func__, ctx->addr, ctx->recv_rssi, data->time);
 
     NeoPixel::getInstance().setColor((int)data->color);
     NeoPixel::getInstance().setBrightness(data->brightness);
