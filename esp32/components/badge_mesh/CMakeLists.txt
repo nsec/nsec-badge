@@ -8,10 +8,11 @@ set(SOURCES
     "badge/mesh/ops/ping.cpp"
     "badge/mesh/ops/census.cpp"
     "badge/mesh/ops/info.cpp"
+    "badge/mesh/ops/neopixel.cpp"
 )
 
 idf_component_register(
     SRCS ${SOURCES}
     INCLUDE_DIRS "."
-    REQUIRES driver bt mbedtls console nvs_flash
+    REQUIRES driver bt mbedtls console nvs_flash neopixel
 )
