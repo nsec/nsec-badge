@@ -105,12 +105,14 @@ void console_task(void *args)
      */
     const char* prompt = LOG_COLOR_I PROMPT_STR "> " LOG_RESET_COLOR;
 
-    printf("\n"
-           "this is an example of esp-idf console component.\n"
-           "type 'help' to get the list of commands.\n"
-           "use up/down arrows to navigate through command history.\n"
-           "press tab when typing command name to auto-complete.\n"
-           "press enter or ctrl+c will terminate the console environment.\n");
+    printf(
+        LOG_COLOR(LOG_COLOR_BLUE) ":::.    :::.    ...    :::::::.. :::::::::::: ::   .:  .::::::..,::::::   .,-:::::   " LOG_COLOR(LOG_COLOR_RED) "     .:::.            .:::.  .::.    \n" \
+        LOG_COLOR(LOG_COLOR_BLUE) "`;;;;,  `;;; .;;;;;;;. ;;;;``;;;;;;;;;;;;'''',;;   ;;,;;;`    `;;;;'''' ,;;;'````'   " LOG_COLOR(LOG_COLOR_RED) "    ,;'``;.   ,;;,   ,;'``;.;'`';;,  \n" \
+        LOG_COLOR(LOG_COLOR_BLUE) "  [[[[[. '[[,[[     \\[[,[[[,/[[['     [[    ,[[[,,,[[['[==/[[[[,[[cccc  [[[         " LOG_COLOR(LOG_COLOR_RED) "     ''  ,[[',['  [n  ''  ,[['  .n[[  \n" \
+        LOG_COLOR(LOG_COLOR_BLUE) "  $$$ \"Y$c$$$$$,     $$$$$$$$$c       $$    \"$$$\"\"\"$$$  '''    $$$\"\"\"\"  $$$    " LOG_COLOR(LOG_COLOR_RED) "          .c$$P'  $$    $$ .c$$P'   ``\"$$$.\n" \
+        LOG_COLOR(LOG_COLOR_BLUE) "  888    Y88\"888,_ _,88P888b \"88bo,   88,    888   \"88o88b    dP888oo,__`88bo,__,o,  " LOG_COLOR(LOG_COLOR_RED) "   d88 _,oo,Y8,  ,8\"d88 _,oo, ,,o888\"\n" \
+        LOG_COLOR(LOG_COLOR_BLUE) "  MMM     YM  \"YMMMMMP\" MMMM   \"W\"    MMM    MMM    YMM \"YMmMY\" \"\"\"\"YUMMM \"YUMMMMMP\"  " LOG_COLOR(LOG_COLOR_RED) "  MMMUP*\"^^ \"YmmP  MMMUP*\"^^ YMMP\"  \n" LOG_RESET_COLOR);
+
 
     /* figure out if the terminal supports escape sequences */
     int probe_status = linenoiseProbe();
