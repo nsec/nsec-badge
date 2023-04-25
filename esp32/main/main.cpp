@@ -8,6 +8,7 @@
 #include "nvs_flash.h"
 #include "console.h"
 #include "neopixel.h"
+#include "save.h"
 #include "badge/mesh/main.h"
 
 static void initialize_nvs(void) {
@@ -24,8 +25,8 @@ extern "C" void app_main(void) {
     initialize_nvs();
     fflush(stdout);
 
-	NeoPixel::getInstance().init();
-	NeoPixel::getInstance().setColor(CRGB::Red);
+    Save::load_save();
+    NeoPixel::getInstance().init();
     BadgeMesh::getInstance().init();
 	xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
