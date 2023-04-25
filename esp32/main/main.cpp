@@ -22,14 +22,8 @@ static void initialize_nvs(void) {
 extern "C" void app_main(void) {
 
     initialize_nvs();
-
-    /* Print chip information */
-    uint32_t flash_size;
-    if(esp_flash_get_size(NULL, &flash_size) != ESP_OK) {
-        printf("Get flash size failed");
-        return;
-    }
     fflush(stdout);
+
 	NeoPixel::getInstance().init();
 	NeoPixel::getInstance().setColor(CRGB::Red);
     BadgeMesh::getInstance().init();
