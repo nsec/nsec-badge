@@ -12,6 +12,7 @@
 #include "access.h"
 
 #include "badge/mesh/network.h"
+#include "badge/mesh/config.h"
 
 static const char *TAG = "badge/mesh";
 
@@ -47,6 +48,8 @@ int mesh_device_auto_enter_network(badge_network_info_t *info)
         ESP_LOGE(TAG, "bt_mesh_provision() failed (err %d)", err);
         return err;
     }
+
+    mesh_load_sequence_number();
 
     /* Adds application key to device */
     sub = bt_mesh_subnet_get(info->net_idx);

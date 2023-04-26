@@ -1,10 +1,10 @@
 #include <esp_system.h>
 #include <esp_log.h>
 #include "esp_ble_mesh_networking_api.h"
+#include <sys/time.h>
 
 #include "badge/mesh/main.h"
 #include "badge/mesh/host.h"
-#include "badge/mesh/config.h"
 
 static const char *TAG = "badge/mesh";
 
@@ -15,7 +15,7 @@ void BadgeMesh::init()
     xTaskCreate((TaskFunction_t)&(BadgeMesh::task), TAG, 4096, this, 5, &BadgeMesh::_taskHandle);
 }
 
-esp_err_t BadgeMesh::clientSend(uint16_t dst_addr, uint32_t op, uint8_t *msg, unsigned int length, bool needsResponse)
+esp_err_t BadgeMesh::clientSend(uint16_t dst_addr, uint32_t op, uint8_t *msg, unsigned int length, bool needsResponse, uint8_t ttl)
 {
     esp_err_t err;
 	esp_ble_mesh_msg_ctx_t ctx = {
@@ -23,16 +23,23 @@ esp_err_t BadgeMesh::clientSend(uint16_t dst_addr, uint32_t op, uint8_t *msg, un
 		.app_idx = badge_network_info.app_idx,
 		.addr = dst_addr,
         .send_rel = 1,
-		.send_ttl = DEFAULT_TTL,
+		.send_ttl = ttl,
 	};
 
-	if (xSemaphoreTake(_bt_semaphore, (TickType_t)10) != pdTRUE) {
+	if (xSemaphoreTake(_bt_semaphore, (TickType_t)9999) != pdTRUE) {
         ESP_LOGE(TAG, "%s: Could not aquire semaphore", __func__);
         return ESP_FAIL;
     }
 
-    err = esp_ble_mesh_client_model_send_msg(cli_vnd_model, &ctx, op, length, msg, 10, needsResponse, ROLE_NODE);
+    err = esp_ble_mesh_client_model_send_msg(cli_vnd_model, &ctx, op, length, msg, 0, needsResponse, ROLE_NODE);
+    mesh_sequence_number_changed();
     xSemaphoreGive(_bt_semaphore);
+
+    if(err != ESP_OK) {
+        ESP_LOGE(TAG, "%s: Could not aquire semaphore", __func__);
+        return ESP_FAIL;
+    }
+
     return err;
 }
 
@@ -43,16 +50,23 @@ esp_err_t BadgeMesh::serverSend(uint16_t dst_addr, uint32_t op, uint8_t *msg, un
 		.net_idx = badge_network_info.net_idx,
 		.app_idx = badge_network_info.app_idx,
 		.addr = dst_addr,
+        .send_rel = 1,
 		.send_ttl = DEFAULT_TTL,
 	};
 
-	if (xSemaphoreTake(_bt_semaphore, (TickType_t)10) != pdTRUE) {
+	if (xSemaphoreTake(_bt_semaphore, (TickType_t)9999) != pdTRUE) {
         ESP_LOGE(TAG, "%s: Could not aquire semaphore", __func__);
         return ESP_FAIL;
     }
 
     err = esp_ble_mesh_server_model_send_msg(srv_vnd_model, &ctx, op, length, msg);
+    mesh_sequence_number_changed();
     xSemaphoreGive(_bt_semaphore);
+
+    if(err != ESP_OK) {
+        ESP_LOGE(TAG, "%s: Could not aquire semaphore", __func__);
+        return ESP_FAIL;
+    }
     return err;
 }
 
@@ -66,14 +80,11 @@ esp_err_t mesh_server_send(uint16_t dst_addr, uint32_t op, uint8_t *msg, unsigne
     return BadgeMesh::getInstance().serverSend(dst_addr, op, msg, length);
 }
 
-
 void BadgeMesh::taskHandler()
 {
     esp_err_t err;
 
     _bt_semaphore = xSemaphoreCreateMutex();
-
-    vTaskDelay(1500 / portTICK_PERIOD_MS);
 
     ESP_LOGV(TAG, "Initializing...");
 
@@ -108,9 +119,13 @@ void BadgeMesh::taskHandler()
         xSemaphoreGive(_bt_semaphore);
     }
 
-    while(true) {
+    vTaskDelay(500 / portTICK_PERIOD_MS);
 
-        vTaskDelay(30000 / portTICK_PERIOD_MS);
+    while(true) {
+        // periodically persist the most recent sequence number
+        mesh_sequence_number_changed();
+
+        vTaskDelay(10000 / portTICK_PERIOD_MS);
     }
 
     vTaskDelete(BadgeMesh::_taskHandle);
