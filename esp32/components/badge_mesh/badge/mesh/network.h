@@ -7,7 +7,7 @@ extern "C" {
 #endif
 
 #define BADGE_NAME_LEN 32
-#define BADGE_NAME_PREFIX "NSEC" /* for badges only */
+#define BADGE_NAME_PREFIX "P.A.D."
 
 /* unicast address must have highest bit unset, so the range goes to 0x7FFF */
 #define SCREEN_ADDRESS_RANGE 0x7F00

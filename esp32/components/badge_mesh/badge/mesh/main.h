@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "badge/mesh/network.h"
+#include "badge/mesh/config.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,6 +31,8 @@ class BadgeMesh
     static TaskHandle_t _taskHandle;
     SemaphoreHandle_t _bt_semaphore;
 
+    bool networkTimeValid;
+
   public:
     BadgeMesh(BadgeMesh const &) = delete;
     void operator=(BadgeMesh const &) = delete;
@@ -39,7 +42,7 @@ class BadgeMesh
         instance->taskHandler();
     }
     void taskHandler();
-    esp_err_t clientSend(uint16_t dst_addr, uint32_t op, uint8_t *msg, unsigned int length, bool needsResponse);
+    esp_err_t clientSend(uint16_t dst_addr, uint32_t op, uint8_t *msg, unsigned int length, bool needsResponse = false, uint8_t ttl = DEFAULT_TTL);
     esp_err_t serverSend(uint16_t dst_addr, uint32_t op, uint8_t *msg, unsigned int length);
 };
 
