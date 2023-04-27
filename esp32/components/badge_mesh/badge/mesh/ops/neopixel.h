@@ -15,7 +15,7 @@ extern "C" {
 #define OP_NEOPIXEL_SET                   0x30 /* must be unique */
 #define OP_VND_NEOPIXEL_SET               ESP_BLE_MESH_MODEL_OP_3(OP_NEOPIXEL_SET, NSEC_COMPANY_ID)
 
-#define NEOPIXEL_FLAG_HIGH_PRIORITY (0 << 1) // admin patterns have higher priority
+#define NEOPIXEL_FLAG_HIGH_PRIORITY (1 << 0) // admin patterns have higher priority
 
 typedef struct neopixel_set_data {
     uint16_t time;
