@@ -23,8 +23,18 @@ class NeoPixel
     {
     }
 
-
-    const uint8_t _unlocked_mode[10] = {2, 8, 23, 30, 43, 63, 67, 20, 37, 9};
+    const uint8_t _unlocked_mode[10] = {
+        FX_MODE_BREATH,
+        FX_MODE_RAINBOW,
+        FX_MODE_RANDOM_COLOR,
+        FX_MODE_CHASE_RAINBOW,
+        FX_MODE_RAIN,
+        FX_MODE_PRIDE_2015,
+        FX_MODE_COLORWAVES,
+        FX_MODE_SPARKLE,
+        FX_MODE_RUNNING_COLOR,
+        FX_MODE_RAINBOW_CYCLE
+    };
     CRGB leds[NUM_LEDS];
     uint8_t _brightness;
     uint16_t _mode;
@@ -40,8 +50,10 @@ class NeoPixel
 
     static void displayPatterns(void *pvParameters)
     {
-        while (NeoPixel::is_on) {
-            NeoPixel::_ws2812fx.service();
+        while (true) {
+            if(NeoPixel::is_on) {
+                NeoPixel::_ws2812fx.service();
+            }
             vTaskDelay(10 / portTICK_PERIOD_MS); /*10ms*/
         }
         vTaskDelete(NULL);

@@ -73,14 +73,10 @@ void NeoPixel::setPublicMode(uint8_t mode)
 
 void NeoPixel::setMode(uint8_t mode)
 {
-    if (NeoPixel::_displayTaskHandle) {
-        NeoPixel::is_on = false;
-    }
     NeoPixel::_ws2812fx.setMode(0, mode);
     NeoPixel::is_on = true;
-    xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 1024, NULL, 5,
-                &NeoPixel::_displayTaskHandle);
-
+    if(NeoPixel::_displayTaskHandle == NULL)
+        xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 1024, NULL, 5, &NeoPixel::_displayTaskHandle);
     _mode = mode;
 }
 
