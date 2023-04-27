@@ -39,8 +39,8 @@ void NeoPixel::start() {
     setBrightness(Save::save_data.neopixel_brightness);
     setPublicMode(Save::save_data.neopixel_mode);
 
+    NeoPixel::is_on = true;
     if(NeoPixel::_displayTaskHandle == NULL) {
-        NeoPixel::is_on = true;
         ESP_LOGV(TAG, "%s: creating neopixel task", __func__);
         xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 1024, NULL, 5, &NeoPixel::_displayTaskHandle);
     }
