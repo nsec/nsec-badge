@@ -21,6 +21,7 @@
 #include "cmd_system.h"
 #include "cmd_nvs.h"
 #include "console.h"
+#include "challenges_led.h"
 
 static const char* TAG = "console";
 #define PROMPT_STR "nsec"
@@ -99,6 +100,7 @@ void console_task(void *args)
     register_system();
     register_neopixel();
     // register_nvs();
+    register_challenges_led();
 
     /* prompt to be printed before each line.
      * this can be customized, made dynamic, etc.
