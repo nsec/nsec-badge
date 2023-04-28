@@ -40,7 +40,6 @@ void challenges_led_end() {
     NeoPixel::getInstance().start();
 }
 
-// TODO move this to updated cmd.cpp
 static const char *TAG = "challenges_led";
 
 static int challenge_led(int argc, char **argv) {
