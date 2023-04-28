@@ -23,4 +23,6 @@ idf_component_register(SRCS "${srcs}"
 # everything needs the ESP32 flag, not sure why this won't work
 # going to hack by adding the ESP32 define in the h file
 #target_compile_options(${COMPONENT_LIB} PRIVATE "-DESP32")
-target_compile_options(${COMPONENT_LIB} PRIVATE -Wno-register)
+target_compile_options(${COMPONENT_LIB} PUBLIC "-Wno-register")
+target_compile_options(${COMPONENT_LIB} PUBLIC "-Wno-volatile")
+target_compile_options(${COMPONENT_LIB} PUBLIC "-Wno-cpp")
