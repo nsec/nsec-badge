@@ -6,23 +6,10 @@
 #include "esp_chip_info.h"
 #include "esp_flash.h"
 #include "nvs_flash.h"
-#include "esp_spiffs.h"
 #include "console.h"
 #include "neopixel.h"
-
-#define MOUNT_PATH "/spiffs"
-
-static bool mount_spiffs() {
-    esp_vfs_spiffs_conf_t conf = {
-        .base_path = MOUNT_PATH,
-        .partition_label = NULL,
-        .max_files = 8,
-        .format_if_mount_failed = false
-    };
-
-    esp_err_t ret = esp_vfs_spiffs_register(&conf);
-    return ret == ESP_OK;
-}
+#include "save.h"
+#include "badge/mesh/main.h"
 
 static void initialize_nvs(void) {
     esp_err_t err = nvs_flash_init();
@@ -36,16 +23,10 @@ static void initialize_nvs(void) {
 extern "C" void app_main(void) {
 
     initialize_nvs();
-    mount_spiffs();
-
-    /* Print chip information */
-    uint32_t flash_size;
-    if(esp_flash_get_size(NULL, &flash_size) != ESP_OK) {
-        printf("Get flash size failed");
-        return;
-    }
     fflush(stdout);
-	NeoPixel::getInstance().init();
-	NeoPixel::getInstance().setColor(CRGB::Red);
+
+    Save::load_save();
+    NeoPixel::getInstance().init();
+    BadgeMesh::getInstance().init();
 	xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }

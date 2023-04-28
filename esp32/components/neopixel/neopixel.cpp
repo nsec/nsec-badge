@@ -2,6 +2,7 @@
 
 #include "esp_spi_flash.h"
 #include "esp_system.h"
+#include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <stdint.h>
@@ -11,19 +12,19 @@
 #include "FastLED.h"
 #include "save.h"
 
-#include "esp_log.h"
-
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
 #define COLOR_ORDER GRB
 
+static const char *TAG = "neopixel";
+
 WS2812FX NeoPixel::_ws2812fx;
-TaskHandle_t NeoPixel::_displayTaskHandle;
-bool NeoPixel::is_on;
+TaskHandle_t NeoPixel::_displayTaskHandle = NULL;
+bool NeoPixel::is_on = false;
 
 void NeoPixel::init()
 {
-    ESP_LOGI("NSEC", "this is NeoPixel::init in esp32/components/neopixel/neopixel.cpp");
+    ESP_LOGV(TAG, "%s: starting", __func__);
     FastLED.addLeds<LED_TYPE, DATA_PIN_1, COLOR_ORDER>(_leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(3, 1000);
     NeoPixel::_ws2812fx.init(NUM_LEDS, _leds, false);
@@ -34,24 +35,23 @@ void NeoPixel::init()
 }
 
 void NeoPixel::start() {
-    if (!NeoPixel::is_on && NeoPixel::_displayTaskHandle) {
-        vTaskResume(NeoPixel::_displayTaskHandle);
-    }
     setColor(Save::save_data.neopixel_color);
     setBrightness(Save::save_data.neopixel_brightness);
     setPublicMode(Save::save_data.neopixel_mode);
+
+    NeoPixel::is_on = true;
+    if(NeoPixel::_displayTaskHandle == NULL) {
+        ESP_LOGV(TAG, "%s: creating neopixel task", __func__);
+        xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 1024, NULL, 5, &NeoPixel::_displayTaskHandle);
+    }
 }
+
 void NeoPixel::stop()
 {
     NeoPixel::_ws2812fx.setBrightness(0);
     FastLED.setBrightness(0);
     vTaskDelay(100);
-    if (NeoPixel::_displayTaskHandle) {
-        ESP_LOGI("NSEC", "NeoPixel::is_on = false;");
-        NeoPixel::is_on = false;
-        vTaskSuspend(NeoPixel::_displayTaskHandle);
-    }
-    Save::save_data.neopixel_is_on = false;
+    NeoPixel::is_on = false;
 }
 
 void NeoPixel::setColor(int color)
@@ -82,14 +82,7 @@ void NeoPixel::setPublicMode(uint8_t mode)
 
 void NeoPixel::setMode(uint8_t mode)
 {
-    if (NeoPixel::_displayTaskHandle) {
-        NeoPixel::is_on = false;
-    }
     NeoPixel::_ws2812fx.setMode(0, mode);
-    NeoPixel::is_on = true;
-    xTaskCreate(&(NeoPixel::displayPatterns), "display_patterns", 1024, NULL, 5,
-                &NeoPixel::_displayTaskHandle);
-
     _mode = mode;
 }
 
