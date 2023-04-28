@@ -34,7 +34,26 @@ esp_err_t neopixel_set_received(esp_ble_mesh_model_t *model, esp_ble_mesh_msg_ct
     bool stronger_signal = ctx->recv_rssi > neopixel_set.recv_rssi;
     bool high_priority = data->flags & NEOPIXEL_FLAG_HIGH_PRIORITY;
     bool same_sender = neopixel_set.recv_from == ctx->addr;
-    bool should_obey = same_sender || time_elapsed || (stronger_signal && !neopixel_set.high_priority) || (high_priority && !neopixel_set.high_priority);
+    bool should_obey = false;
+
+    if (high_priority && !neopixel_set.high_priority) {
+        // this message is high priority, but the previous wasn't, give priority to higher priority message
+        should_obey = true;
+    } else if(!high_priority && neopixel_set.high_priority) {
+        /*
+            This message isn't high priority, but the previous was, switch to the new command
+            if the time is elapsed regardless of other conditions
+        */
+        should_obey = time_elapsed;
+    } else {
+        /*
+            This message and the previous one have the same priority, switch to new command only if:
+                - the previous command was from the same sender, or
+                - the minimum time has elapsed, or
+                - the new signal is stronger
+        */
+        should_obey = same_sender || time_elapsed || stronger_signal;
+    }
 
     ESP_LOGV(TAG, "%s: time_elapsed=%s stronger_signal=%s high_priority=%s (old %s) same_sender=%s should_obey=%s", __func__,
         time_elapsed ? "yes" : "no",
@@ -45,13 +64,6 @@ esp_err_t neopixel_set_received(esp_ble_mesh_model_t *model, esp_ble_mesh_msg_ct
         should_obey ? "yes" : "no"
     );
 
-    /*
-        As a way to tame the chaos, only switch mode if:
-            - the previous command was from the same sender, or
-            - the minimum time has elapsed, or
-            - the new signal is stronger and the current one isn't high priority, or
-            - the new command is high priority and the previous command wasn't.
-    */
     if(!should_obey) {
         ESP_LOGV(TAG, "%s: Ignoring neopixel_set command due to previous command", __func__);
 		return ESP_OK;
