@@ -66,8 +66,6 @@ void led5(bool b) {
         leds[13] = CRGB::Orange;
         leds[14] = CRGB::Orange;
     }
-    leds[15] = CRGB::Black;
-    leds[16] = CRGB::Black;
     FastLED.show();
 }
 
