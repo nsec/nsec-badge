@@ -1594,33 +1594,7 @@ led1(1);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'r' MSB
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'\x06' MSB
 // SCLK
 led1(1);
 // MISO VOL
@@ -1636,8 +1610,32 @@ led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // SCLK
 led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
 // MISO VOH
 led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
@@ -1715,7 +1713,579 @@ led2(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'r' miso: b'E'  (MSB)
+// mosi: b'\x06' miso: b'1'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'\x03' MSB
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'\x03' miso: b'4'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'p' MSB
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'p' miso: b'G'  (MSB)
 // SCLK
 led1(1);
 // MOSI VOL
@@ -1788,8 +2358,244 @@ led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // SCLK
 led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
 // MOSI VOH
 led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'g' MSB
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'g' miso: b'P'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
@@ -1816,8 +2622,1198 @@ led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // SCLK
 led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
 // MISO VOH
 led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'\x06' MSB
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'\x06' miso: b'1'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'p' MSB
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'p' miso: b'G'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'\x03' MSB
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'\x03' miso: b'4'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'\x00' MSB
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'\x00' miso: b'7'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
@@ -2178,6 +4174,876 @@ led1(1);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'q' MSB
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'q' miso: b'F'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'~' MSB
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'~' miso: b'I'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'z' MSB
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOH
+led4(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOL
+led5(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'^' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// mosi: b'z' miso: b'M'  (MSB)
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+led3(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS2 VOH
+led5(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// CS1 VOL
+led4(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// b'<' MSB
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+led2(1);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // b'a' MSB
 // SCLK
 led1(1);
@@ -2356,1742 +5222,6 @@ vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(1);
 // MISO VOH
 led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'\x0e' MSB
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'\x0e' miso: b'9'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'a' MSB
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'a' miso: b'V'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'|' MSB
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'|' miso: b'K'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'v' MSB
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'v' miso: b'A'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'u' MSB
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'u' miso: b'B'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'\x01' MSB
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'\x01' miso: b'6'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
@@ -4488,886 +5618,6 @@ led1(1);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'r' MSB
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'r' miso: b'E'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'm' MSB
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'm' miso: b'Z'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'z' MSB
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'z' miso: b'M'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // b'\x7f' MSB
 // SCLK
 led1(1);
@@ -5655,7 +5905,31 @@ led1(1);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'd' MSB
+// b'\x06' MSB
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // SCLK
 led1(1);
 // MISO VOL
@@ -5679,32 +5953,6 @@ vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(1);
 // MISO VOL
 led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
@@ -5775,296 +6023,7 @@ led2(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'd' miso: b'S'  (MSB)
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOH
-led5(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOL
-led4(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'<' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'\x0f' MSB
-// SCLK
-led1(1);
-// MISO VOL
-led3(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-led3(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS1 VOH
-led4(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// CS2 VOL
-led5(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// b'^' MSB
-// SCLK
-led1(1);
-// MOSI VOL
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOL
-led2(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// mosi: b'\x0f' miso: b'8'  (MSB)
+// mosi: b'\x06' miso: b'1'  (MSB)
 // SCLK
 led1(1);
 // MOSI VOL
@@ -6080,7 +6039,6 @@ vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // SCLK
 led1(1);
 // MISO VOL
-led3(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
@@ -6111,32 +6069,20 @@ led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // SCLK
 led1(1);
+// MOSI VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
 // MOSI VOH
 led2(1);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MISO VOH
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-led1(0);
-vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
-// SCLK
-led1(1);
-// MOSI VOH
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
@@ -6161,7 +6107,21 @@ led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 // SCLK
 led1(1);
+// MOSI VOL
+led2(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
 // MISO VOL
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+led1(0);
+vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
+// SCLK
+led1(1);
+// MISO VOH
+led3(1);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
 led1(0);
 vTaskDelay(DELAY/2 / portTICK_PERIOD_MS);
