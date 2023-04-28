@@ -211,11 +211,7 @@ vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'5' LSB
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'M' LSB
 led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
@@ -225,6 +221,10 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -281,111 +281,6 @@ vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'K' LSB
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity even bits
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'8' LSB
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity odd bits
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'O' LSB
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity odd bits
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // b'D' LSB
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -421,150 +316,10 @@ vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'J' LSB
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'4' LSB
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity odd bits
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'A' LSB
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity even bits
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'H' LSB
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity even bits
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'M' LSB
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity even bits
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'7' LSB
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -575,41 +330,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity odd bits
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'C' LSB
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -635,41 +355,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// even parity even bits
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// second stop bit
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// idle state
-led_on(leds);
-vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
-// start bit
-led_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'K' LSB
-led_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -736,10 +421,115 @@ vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
 // start bit
 led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
-// b'U' LSB
+// b'Z' LSB
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity even bits
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'Q' LSB
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity odd bits
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'O' LSB
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity odd bits
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'V' LSB
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
@@ -755,6 +545,216 @@ led_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // even parity even bits
 led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'O' LSB
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity odd bits
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'W' LSB
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity odd bits
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'W' LSB
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity odd bits
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'K' LSB
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity even bits
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'I' LSB
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity odd bits
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// second stop bit
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// idle state
+led_on(leds);
+vTaskDelay(DELAY * unimportant_random1(10) / portTICK_PERIOD_MS);
+// start bit
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// b'C' LSB
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+led_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+// even parity odd bits
+led_on(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 // stop bit
 led_on(leds);

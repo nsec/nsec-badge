@@ -726,7 +726,7 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led3_on(leds);
 led1_on(leds);
 
-// b'1' MSB
+// b'9' MSB
 // SDA VOL
 led1_off(leds);
 
@@ -771,101 +771,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led2_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'5' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
 // SDA VOH
 led1_on(leds);
 
@@ -879,17 +784,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
 // SDA VOL
 led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
@@ -1044,7 +938,1069 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led3_on(leds);
 led1_on(leds);
 
-// b'M' MSB
+// b'X' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'K' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'X' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'Z' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'5' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'O' MSB
 // SDA VOL
 led1_off(leds);
 
@@ -1102,6 +2058,484 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
 // SDA VOH
 led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'O' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'A' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
@@ -1283,7 +2717,268 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led3_on(leds);
 led1_on(leds);
 
-// b'8' MSB
+// b'7' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'O' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
 // SDA VOL
 led1_off(leds);
 
@@ -1339,8 +3034,225 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led2_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
 // SDA VOL
 led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'L' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
@@ -1522,7 +3434,485 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led3_on(leds);
 led1_on(leds);
 
-// b'W' MSB
+// b'L' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'G' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'V' MSB
 // SDA VOL
 led1_off(leds);
 
@@ -1600,8 +3990,8 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led2_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
-// SDA VOH
-led1_on(leds);
+// SDA VOL
+led1_off(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
@@ -2239,7 +4629,7 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led3_on(leds);
 led1_on(leds);
 
-// b'B' MSB
+// b'F' MSB
 // SDA VOL
 led1_off(leds);
 
@@ -2275,962 +4665,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
 // SDA VOL
 led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'U' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'S' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'N' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'V' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
@@ -3363,245 +4797,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
 // SDA VOL
 led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'C' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
@@ -3817,6 +5012,245 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led2_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'G' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
 // SDA VOH
 led1_on(leds);
 
@@ -3912,7 +5346,7 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led3_on(leds);
 led1_on(leds);
 
-// b'C' MSB
+// b'N' MSB
 // SDA VOL
 led1_off(leds);
 
@@ -3957,6 +5391,105 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led2_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
 // SDA VOL
 led1_off(leds);
 
@@ -3992,6 +5525,385 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
 // SDA VOH
 led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'6' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// stop bit
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// start bit
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// address frame
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// r/w bit send=0, receive=1
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// ACK succesful
+// SDA_IN VOL
+led3_off(leds);
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA_IN VOH
+led3_on(leds);
+led1_on(leds);
+
+// b'J' MSB
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOH
+led1_on(leds);
+
+// SCL VOH + sleep
+led2_on(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SCL VOL + sleep
+led2_off(leds);
+vTaskDelay(DELAY / portTICK_PERIOD_MS);
+
+// SDA VOL
+led1_off(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
@@ -4390,1201 +6302,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led3_on(leds);
 led1_on(leds);
 
-// b'I' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'N' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'E' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'7' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'F' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
 // b'H' MSB
 // SDA VOL
 led1_off(leds);
@@ -5729,245 +6446,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led2_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'F' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
 // SDA VOL
 led1_off(leds);
 
@@ -6063,7 +6541,7 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led3_on(leds);
 led1_on(leds);
 
-// b'I' MSB
+// b'M' MSB
 // SDA VOL
 led1_off(leds);
 
@@ -6119,8 +6597,8 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 led2_off(leds);
 vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
-// SDA VOL
-led1_off(leds);
+// SDA VOH
+led1_on(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
@@ -6382,484 +6860,6 @@ vTaskDelay(DELAY / portTICK_PERIOD_MS);
 
 // SDA VOL
 led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'R' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// stop bit
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// start bit
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// address frame
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// r/w bit send=0, receive=1
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// ACK succesful
-// SDA_IN VOL
-led3_off(leds);
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA_IN VOH
-led3_on(leds);
-led1_on(leds);
-
-// b'U' MSB
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOL
-led1_off(leds);
-
-// SCL VOH + sleep
-led2_on(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SCL VOL + sleep
-led2_off(leds);
-vTaskDelay(DELAY / portTICK_PERIOD_MS);
-
-// SDA VOH
-led1_on(leds);
 
 // SCL VOH + sleep
 led2_on(leds);
