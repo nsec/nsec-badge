@@ -33,10 +33,6 @@ void challenges_led_init() {
     NeoPixel::getInstance().stop();
     FastLED.clear();
     FastLED.setBrightness(125);
-    leds = NeoPixel::getInstance().getFastLeds();
-    for (int i=0; i < 20; i++) {
-        leds[i] = CRGB::White;
-    }
     FastLED.show();
 }
 
