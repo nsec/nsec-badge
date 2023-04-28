@@ -23,17 +23,52 @@ class NeoPixel
     {
     }
 
-    const uint8_t _unlocked_mode[10] = {
-        FX_MODE_BREATH,
-        FX_MODE_RAINBOW,
-        FX_MODE_RANDOM_COLOR,
-        FX_MODE_CHASE_RAINBOW,
-        FX_MODE_RAIN,
-        FX_MODE_PRIDE_2015,
-        FX_MODE_COLORWAVES,
-        FX_MODE_SPARKLE,
-        FX_MODE_RUNNING_COLOR,
-        FX_MODE_RAINBOW_CYCLE
+    const uint8_t _unlocked_mode[45] = {
+        FX_MODE_BREATH,              // 2
+        FX_MODE_COLOR_WIPE,          // 3
+        FX_MODE_RANDOM_COLOR,        // 5
+        FX_MODE_RAINBOW_CYCLE,       // 9
+        FX_MODE_FADE,                // 12
+        FX_MODE_THEATER_CHASE,       // 13
+        FX_MODE_RUNNING_LIGHTS,      // 15
+        FX_MODE_HYPER_SPARKLE,       // 22
+        FX_MODE_CHASE_RAINBOW,       // 30
+        FX_MODE_CHASE_RAINBOW_WHITE, // 33
+        FX_MODE_RUNNING_COLOR,       // 37
+        FX_MODE_LARSON_SCANNER,      // 40
+        FX_MODE_COMET,               // 41
+        FX_MODE_POLICE_ALL,          // 49
+        FX_MODE_TWO_AREAS,           // 51
+        FX_MODE_CIRCUS_COMBUSTUS,    // 52
+        FX_MODE_TRICOLOR_FADE,       // 56
+        FX_MODE_MULTI_COMET,         // 59
+        FX_MODE_OSCILLATE,           // 62
+        FX_MODE_PRIDE_2015,          // 63
+        FX_MODE_PALETTE,             // 65
+        FX_MODE_FIRE_2012,           // 66
+        FX_MODE_COLORWAVES,          // 67
+        FX_MODE_BPM,                 // 68
+        FX_MODE_NOISE16_1,           // 70
+        FX_MODE_NOISE16_2,           // 71
+        FX_MODE_NOISE16_3,           // 72
+        FX_MODE_NOISE16_4,           // 73
+        FX_MODE_LAKE,                // 75
+        FX_MODE_RAILWAY,             // 78
+        FX_MODE_TWINKLEFOX,          // 80
+        FX_MODE_SPOTS_FADE,          // 86
+        FX_MODE_GLITTER,             // 87
+        FX_MODE_STARBURST,           // 89
+        FX_MODE_EXPLODING_FIREWORKS, // 90
+        FX_MODE_BOUNCINGBALLS,       // 91
+        FX_MODE_SINELON,             // 92
+        FX_MODE_SINELON_RAINBOW,     // 94
+        FX_MODE_POPCORN,             // 95
+        FX_MODE_DRIP,                // 96
+        FX_MODE_PLASMA,              // 97
+        FX_MODE_PACIFICA,            // 101
+        FX_MODE_SINEWAVE,            // 108
+        FX_MODE_CHUNCHUN,            // 111
+        FX_MODE_DANCING_SHADOWS,     // 112
     };
     CRGB _leds[NUM_LEDS];
     uint8_t _brightness;
