@@ -32,7 +32,12 @@ uint16_t custom_delay = 0;
 void challenges_led_init() {
     NeoPixel::getInstance().stop();
     FastLED.clear();
-    FastLED.setBrightness(25);
+    FastLED.setBrightness(125);
+    leds = NeoPixel::getInstance().getFastLeds();
+    for (int i=0; i < 20; i++) {
+        leds[i] = CRGB::Black;
+    }
+    FastLED.show();
 }
 
 void challenges_led_end() {
