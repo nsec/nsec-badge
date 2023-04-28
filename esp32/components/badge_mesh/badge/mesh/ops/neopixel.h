@@ -16,6 +16,7 @@ extern "C" {
 #define OP_VND_NEOPIXEL_SET               ESP_BLE_MESH_MODEL_OP_3(OP_NEOPIXEL_SET, NSEC_COMPANY_ID)
 
 #define NEOPIXEL_FLAG_HIGH_PRIORITY (1 << 0) // admin patterns have higher priority
+#define NEOPIXEL_FLAG_UNLOCK_ALL_MODES (1 << 1) // unlock all the modes from underlying FX library, not just the ~10 exposed by default
 
 typedef struct neopixel_set_data {
     uint16_t time;

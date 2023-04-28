@@ -79,7 +79,13 @@ esp_err_t neopixel_set_received(esp_ble_mesh_model_t *model, esp_ble_mesh_msg_ct
 
     NeoPixel::getInstance().setColor((int)data->color);
     NeoPixel::getInstance().setBrightness(data->brightness);
-    NeoPixel::getInstance().setPublicMode(data->mode);
+
+    if(data->flags & NEOPIXEL_FLAG_UNLOCK_ALL_MODES) {
+        NeoPixel::getInstance().setMode(data->mode);
+    }
+    else {
+        NeoPixel::getInstance().setPublicMode(data->mode);
+    }
 
     return ESP_OK;
 }
