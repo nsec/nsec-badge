@@ -35,7 +35,7 @@ class NeoPixel
         FX_MODE_RUNNING_COLOR,
         FX_MODE_RAINBOW_CYCLE
     };
-    CRGB leds[NUM_LEDS];
+    CRGB _leds[NUM_LEDS];
     uint8_t _brightness;
     uint16_t _mode;
     uint16_t _public_mode;
@@ -69,4 +69,5 @@ class NeoPixel
     uint16_t getPublicMode();
     uint16_t getMode();
     int getColor();
+    CRGB* getFastLeds();
 };
