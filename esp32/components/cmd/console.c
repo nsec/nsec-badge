@@ -18,7 +18,6 @@
 #include "linenoise/linenoise.h"
 #include "argtable3/argtable3.h"
 #include "nvs.h"
-#include "cmd_system.h"
 #include "cmd_nvs.h"
 #include "console.h"
 #include "challenges_led.h"
@@ -97,7 +96,6 @@ void console_task(void *args)
 
     /* register commands */
     esp_console_register_help_command();
-    register_system();
     register_neopixel();
     // register_nvs();
     register_challenges_led();
