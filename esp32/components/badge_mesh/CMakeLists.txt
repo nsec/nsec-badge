@@ -9,6 +9,7 @@ set(SOURCES
     "badge/mesh/ops/census.cpp"
     "badge/mesh/ops/info.cpp"
     "badge/mesh/ops/neopixel.cpp"
+    "cmd_badge_mesh.cpp"
 )
 
 idf_component_register(
