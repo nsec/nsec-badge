@@ -21,6 +21,7 @@
 #include "cmd_nvs.h"
 #include "console.h"
 #include "challenges_led.h"
+#include "cmd_badge_mesh.h"
 
 static const char* TAG = "console";
 #define PROMPT_STR "nsec"
@@ -98,6 +99,7 @@ void console_task(void *args)
     esp_console_register_help_command();
     register_neopixel();
     // register_nvs();
+    register_badge_mesh();
     register_challenges_led();
 
     /* prompt to be printed before each line.
