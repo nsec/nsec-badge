@@ -105,7 +105,10 @@ static void mesh_host_task(void *param)
     ESP_LOGV(TAG, "BLE Host Task Started");
     /* This function will return only when nimble_port_stop() is executed */
     nimble_port_run();
-
+    // Prevent race condition
+    vTaskDelay(200 / portTICK_PERIOD_MS);
+    nimble_port_deinit();
+    vTaskDelay(100 / portTICK_PERIOD_MS);
     nimble_port_freertos_deinit();
 }
 
