@@ -73,7 +73,7 @@ static int challenge_led(int argc, char **argv) {
 void register_challenges_led(void) {
     const esp_console_cmd_t cmd = {
         .command = "challenge_led",
-        .help = "Run the LED pattern for the challenges 1,2,3",
+        .help = "Run the LED pattern for the challenges 1,2,3\n  int16 second param: ms delay",
         .hint = "[1-3]",
         .func = &challenge_led,
         .argtable = NULL,        
