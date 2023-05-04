@@ -8,6 +8,7 @@
 #include "badge/mesh/ops/census.h"
 #include "badge/mesh/ops/info.h"
 #include "badge/mesh/ops/neopixel.h"
+#include "badge/mesh/ops/realtimeled.h"
 
 static const char *TAG = "badge/mesh";
 
@@ -41,6 +42,7 @@ esp_ble_mesh_model_op_t vnd_srv_ops[] = {
     ESP_BLE_MESH_MODEL_OP(OP_VND_CENSUS_RESPONSE, sizeof(census_response_data_t)),
     ESP_BLE_MESH_MODEL_OP(OP_VND_INFO_REQUEST, 0),
     ESP_BLE_MESH_MODEL_OP(OP_VND_NEOPIXEL_SET, sizeof(neopixel_set_data_t)),
+    ESP_BLE_MESH_MODEL_OP(OP_VND_REALTIMELED, 0),
 	ESP_BLE_MESH_MODEL_OP_END,
 };
 
@@ -78,6 +80,7 @@ mesh_callback_t mesh_callbacks[] = {
     { .op = OP_VND_INFO_REQUEST, .cb = info_request_received },
     { .op = OP_VND_INFO_RESPONSE, .cb = info_response_received },
     { .op = OP_VND_NEOPIXEL_SET, .cb = neopixel_set_received },
+    { .op = OP_VND_REALTIMELED, .cb = realtimeled_received },
 
     { .op = 0, .cb = 0 }, // keep last
 };
