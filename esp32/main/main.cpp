@@ -27,6 +27,8 @@ extern "C" void app_main(void) {
 
     Save::load_save();
     NeoPixel::getInstance().init();
-    BadgeMesh::getInstance().init();
+    if (Save::save_data.bluetooth_enabled) {
+        BadgeMesh::getInstance().init();
+    }
 	xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
