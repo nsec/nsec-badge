@@ -62,8 +62,7 @@ esp_err_t realtimeled_received(esp_ble_mesh_model_t *model, esp_ble_mesh_msg_ctx
     } 
     
     if (rtled_is_running) {
-        CRGB *leds;
-        leds = NeoPixel::getInstance().getFastLeds();
+        CRGB *leds = NeoPixel::getInstance().getFastLeds();
         fill_solid(leds, NUM_LEDS, CRGB::Black);
         CRGB color = decodeColor(data->color);
         uint32_t _ledids = data->ledids;
