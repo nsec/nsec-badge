@@ -9,6 +9,7 @@ set(SOURCES
     "badge/mesh/ops/census.cpp"
     "badge/mesh/ops/info.cpp"
     "badge/mesh/ops/neopixel.cpp"
+    "badge/mesh/ops/realtimeled.cpp"
     "cmd_badge_mesh.cpp"
 )
 
