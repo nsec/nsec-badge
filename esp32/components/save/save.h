@@ -8,6 +8,7 @@ struct SaveData {
     uint8_t neopixel_mode;
     bool neopixel_is_on;
     int neopixel_color;
+    bool bluetooth_enabled;
 };
 
 class Save

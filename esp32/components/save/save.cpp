@@ -15,6 +15,7 @@ SaveData Save::save_data = {
     .neopixel_mode = 0,
     .neopixel_is_on = true,
     .neopixel_color = 0xff00ff,
+    .bluetooth_enabled = true,
 };
 
 esp_err_t Save::write_save()
