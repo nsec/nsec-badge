@@ -36,7 +36,7 @@ static int math_command(int argc, char **argv) {
 
     fflush(stdin);
     int success = 0;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 1024; i++) {
         
         int result = random_operation(1, 10); // Generate random operation with numbers between 1 and 10
         int user_result;
