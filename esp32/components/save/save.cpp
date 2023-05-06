@@ -11,28 +11,11 @@
 #define STORAGE_NAMESPACE "storage"
 
 SaveData Save::save_data = {
-    .buzzer_enable_music = false,
-    .buzzer_enable_music_id = 1,
-    .buzzer_enable_sfx = true,
-    .buzzer_enable_steps = true,
-    .chest_opened_island = false,
-    .chest_opened_konami = false,
-    .chest_opened_welcome = false,
-    .konami_done = false,
     .neopixel_brightness = 25,
     .neopixel_mode = 0,
     .neopixel_is_on = true,
     .neopixel_color = 0xff00ff,
-    .flag1 = false,
-    .flag2 = false,
-    .flag3 = false,
-    .flag4 = false,
-    .flag5 = false,
-    .flag6 = false,
-    .flag7 = false,
-    .flag8 = false,
-    .flag9 = false,
-    .flag10 = false,
+    .bluetooth_enabled = true,
 };
 
 esp_err_t Save::write_save()

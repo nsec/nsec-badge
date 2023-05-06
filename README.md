@@ -1,4 +1,4 @@
-NorthSec 2021 badge
+NorthSec 2023 badge
 ===================
 
 Brought to you by the Team badge of NorthSec.
@@ -6,43 +6,30 @@ Brought to you by the Team badge of NorthSec.
 ## Overview
 
 <p align="center">
-  <img src="hw/2021/badges.jpeg" height="320"> <img src="hw/2021/map.png" height="320"><br>
-  <i>Thou art most welcome to North Sectoria.</i>
+  <img src="hw/2023/badges.jpeg" height="320"> <br>
+  <i>TODO: image & caption.</i>
 </p>
-
-The theme of this edition of the badge is loosely based on the main theme of
-NorthSec 2021 CTF — the medieval kingdom of North Sectoria.  The interface it
-styled as a simple JRPG with a small number of CTF flags hidden in the game
-scene and various interfaces.
-
-If you wish to modify the scene layout, use an SVG editor to modify the
-[scene file](esp32/graphics/rpg.main.scene.svg) and rebuild the firmware.  The
-original scene was developed using Inkscape, so any other SVG editors are not
-officially supported.  The coordinate origin must be set to top-left corner of
-the canvas, so older Inkscape versions may or may not work (not tested.)
 
 ## Hardware
 
-The NorthSec 2021 badge is based on [ESP32 microcontroller](https://www.espressif.com/en/products/socs/esp32)
+The NorthSec 2023 badge is based on [ESP32 microcontroller](https://www.espressif.com/en/products/socs/esp32)
 which is used to drive several periphery devices:
 
- - 240px by 240px LCD display
  - WiFi interface
+ - BLE interface
  - [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel) RGB LEDs
- - six buttons
- - a buzzer
 
-The badge is powered through a micro-USB port or through an external battery
-that can supply between 3.7V and 6V.
+The badge is powered through a USB-C port or through an external battery that
+can supply between 3.7V and 6V.
 
 If you wish to hack your badge or create a new one based on the hardware. All
-the information [is available here](hw/2021/).
+the information [is available here](hw/2023/).
 
 ## Building the firmware
 
 The badge firmware is based on
-[ESP-IDF](https://www.espressif.com/en/products/sdks/esp-idf) v4.3-dev
-framework.  The exact commit is tracked as a submodule in `esp-idf`, and you
+[ESP-IDF](https://www.espressif.com/en/products/sdks/esp-idf) v5.0.1
+framework. The exact commit is tracked as a submodule in `esp-idf`, and you
 can install it with these commands:
 
 ```bash
@@ -50,9 +37,6 @@ git clone https://github.com/nsec/nsec-badge.git
 cd nsec-badge/
 git submodule update --init
 ./esp-idf/install.sh
-
-# You need to manually install the Pillow package.
-pip install Pillow
 ```
 
 The installation procedure for your OS may differ a little, please consult the
