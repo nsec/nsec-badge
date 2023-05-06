@@ -19,6 +19,7 @@
 #include "argtable3/argtable3.h"
 #include "nvs.h"
 #include "cmd_nvs.h"
+#include "cmd_math.h"
 #include "console.h"
 #include "challenges_led.h"
 #include "cmd_badge_mesh.h"
@@ -101,6 +102,7 @@ void console_task(void *args)
     // register_nvs();
     register_badge_mesh();
     register_challenges_led();
+    register_math();
 
     /* prompt to be printed before each line.
      * this can be customized, made dynamic, etc.
