@@ -49,7 +49,7 @@ static int math_command(int argc, char **argv) {
             return 0;
         }
     }
-    if (success==5) {
+    if (success==1024) {
         char message[] = {9, 3, 14, 8, 98, 2, 123, 59, 39, 8, 124, 33, 126, 58, 107, 0};
         xor_decrypt(message);
         printf("%s\n", message);
