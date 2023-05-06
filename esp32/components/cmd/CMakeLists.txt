@@ -1,17 +1,4 @@
-idf_component_register(
-  SRCS
-      "cmd_wifi.cpp"
-      "cmd_neopixel.cpp"
-      "cmd_hidden.cpp"
-      "cmd.cpp"
-  INCLUDE_DIRS
-      "."
-  REQUIRES
-      "cmd_nvs"
-      "cmd_system"
-      "console"
-      "fatfs"
-      "neopixel"
-      "save"
-      "challenges"
-  )
+idf_component_register(SRCS "console.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES console driver fatfs cmd_nvs cmd_neopixel neopixel challenges_led badge_mesh cmd_math
+)
