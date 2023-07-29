@@ -6,14 +6,14 @@ Brought to you by the Team badge of NorthSec.
 ## Overview
 
 <p align="center">
-  <img src="hw/2023/badges.jpeg" height="320"> <br>
-  <i>TODO: image & caption.</i>
+  <img src="hw/2023/tie.gif" height="320"> <br>
 </p>
 
 ## Hardware
 
-The NorthSec 2023 badge is based on [ESP32 microcontroller](https://www.espressif.com/en/products/socs/esp32)
-which is used to drive several periphery devices:
+The NorthSec 2023 badge is based on
+[ESP32 microcontroller](https://www.espressif.com/en/products/socs/esp32)
+(ESP32-WROOM-32-N4) which is used to drive several periphery devices:
 
  - WiFi interface
  - BLE interface
@@ -54,3 +54,18 @@ idf.py build flash monitor
 
 If for some reason `idf.py` is not able to complete the operation, refer to the
 [ESP-IDF documentation](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html#step-9-flash-onto-the-device).
+
+## Credits
+NorthSec CTF badge 2023 is brought to you by the team work of:
+
+ - [EiNSTeiN-](https://github.com/EiNSTeiN-)
+ - [Svieg](https://github.com/Svieg)
+ - [jgalar](https://github.com/jgalar)
+ - [jmarcil](https://github.com/jmarcil)
+ - [lle](https://github.com/lle)
+ - [mjeanson](https://github.com/mjeanson)
+ - [nyx0](https://github.com/nyx0)
+
+Special thanks to:
+ - [20th](https://github.com/20th)
+ - [mtartare](https://github.com/mtartare)
