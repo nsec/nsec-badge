@@ -1,0 +1,23 @@
+name: Compile ESP-IDF Sketches for v4.4
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/espidf-compile.yml"
+      - "examples/**"
+      - "src/**"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: esp-idf build
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.0.1
+        target: esp32s3
+        path: 'esp32'
