@@ -4,8 +4,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/espidf-compile.yml"
-      - "examples/**"
-      - "src/**"
+      - "esp32/**"
 jobs:
   build:
     runs-on: ubuntu-latest
