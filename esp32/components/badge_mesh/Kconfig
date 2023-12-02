@@ -1,9 +1,0 @@
-menu "Badge Mesh"
-
-    config BADGE_MESH_ADMIN_COMMANDS
-        bool "Enable serial console admin commands over the badge mesh"
-        default n
-        help
-            Only enable this option for admin devices. Gives extra level of control and debug options over mesh network.
-
-endmenu

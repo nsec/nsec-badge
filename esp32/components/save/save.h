@@ -9,6 +9,8 @@ struct SaveData {
     bool neopixel_is_on;
     int neopixel_color;
     bool bluetooth_enabled;
+    char wifi_ssid[32];
+    char wifi_password[32];
 };
 
 class Save
