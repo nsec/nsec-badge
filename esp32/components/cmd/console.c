@@ -7,7 +7,6 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
-#include "cmd_neopixel.h"
 #include <stdio.h>
 #include <string.h>
 #include "esp_system.h"
@@ -19,10 +18,7 @@
 #include "argtable3/argtable3.h"
 #include "nvs.h"
 #include "cmd_nvs.h"
-#include "cmd_math.h"
 #include "console.h"
-#include "challenges_led.h"
-#include "cmd_badge_mesh.h"
 
 static const char* TAG = "console";
 #define PROMPT_STR "nsec"
@@ -49,7 +45,7 @@ static void initialize_console(void)
             .data_bits = UART_DATA_8_BITS,
             .parity = UART_PARITY_DISABLE,
             .stop_bits = UART_STOP_BITS_1,
-            .source_clk = UART_SCLK_REF_TICK,
+            .source_clk = UART_SCLK_RTC,
     };
     /* install uart driver for interrupt-driven reads and writes */
     ESP_ERROR_CHECK( uart_driver_install(CONFIG_ESP_CONSOLE_UART_NUM,
@@ -98,11 +94,6 @@ void console_task(void *args)
 
     /* register commands */
     esp_console_register_help_command();
-    register_neopixel();
-    // register_nvs();
-    register_badge_mesh();
-    register_challenges_led();
-    register_math();
 
     /* prompt to be printed before each line.
      * this can be customized, made dynamic, etc.
