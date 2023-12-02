@@ -7,9 +7,7 @@
 #include "esp_flash.h"
 #include "nvs_flash.h"
 #include "console.h"
-#include "neopixel.h"
 #include "save.h"
-#include "badge/mesh/main.h"
 
 static void initialize_nvs(void) {
     esp_err_t err = nvs_flash_init();
@@ -26,9 +24,5 @@ extern "C" void app_main(void) {
     fflush(stdout);
 
     Save::load_save();
-    NeoPixel::getInstance().init();
-    if (Save::save_data.bluetooth_enabled) {
-        BadgeMesh::getInstance().init();
-    }
-	xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
+    xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
