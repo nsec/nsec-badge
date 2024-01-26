@@ -8,6 +8,7 @@
 #include "nvs_flash.h"
 #include "console.h"
 #include "save.h"
+#include "challenges_storage.h"
 
 static void initialize_nvs(void) {
     esp_err_t err = nvs_flash_init();
@@ -22,7 +23,8 @@ extern "C" void app_main(void) {
 
     initialize_nvs();
     fflush(stdout);
-
     Save::load_save();
+    challenges_storage_init();
+
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
