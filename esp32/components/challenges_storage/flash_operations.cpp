@@ -44,7 +44,7 @@ esp_flash_t* init_ext_flash() {
         .freq_mhz = 20,
     };
 
-    ESP_LOGI(TAG, "Initializing external SPI Flash with delay %dns and freq %dmhz", device_config.input_delay_ns, device_config.freq_mhz);
+    ESP_LOGI(TAG, "Initializing external SPI Flash at %dMHz", device_config.freq_mhz);
     ESP_LOGI(TAG, "Pin assignments:");
     ESP_LOGI(TAG, "MOSI: %2d   MISO: %2d   SCLK: %2d   CS: %2d",
         bus_config.mosi_io_num, bus_config.miso_io_num,
