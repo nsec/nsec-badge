@@ -32,7 +32,15 @@ static esp_flash_t* flash = NULL;
 static int64_t start_time = 0;
 
 void challenges_storage_init() {
-    
+    if (Save::save_data.raw_spi_mode) {
+        // Initialize the external SPI Device
+        init_ext_spi();
+        printf("Booted in RAW SPI mode\n");
+    } else {
+        // Initialize the external SPI Flash chip
+        flash = init_ext_flash();
+        printf("Booted in regular flash mode\n");
+    }
 }
 
 void challenges_storage_start() {

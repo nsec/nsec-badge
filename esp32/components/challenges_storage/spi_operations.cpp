@@ -1,10 +1,35 @@
 #include "driver/spi_master.h"
 #include "driver/spi_common.h"
 #include "esp_log.h"
+#include "storage_settings.h"
 
 static spi_device_handle_t spi_dev_handle = NULL;
 
 static const char *TAG = "spi_operations";
+
+void init_ext_spi(void) {
+    const spi_bus_config_t bus_config = {
+        .mosi_io_num = PIN_MOSI,
+        .miso_io_num = PIN_MISO,
+        .sclk_io_num = PIN_CLK,
+        .quadwp_io_num = PIN_WP,
+        .quadhd_io_num = PIN_HD,
+    };
+
+    ESP_ERROR_CHECK(spi_bus_initialize(HOST_ID, &bus_config, SPI_DMA_CHAN));
+
+    const spi_device_interface_config_t spi_config = {
+        .mode = 0,                        // SPI mode (CPOL = 0, CPHA = 0)
+        .clock_speed_hz = SPI_MASTER_FREQ_10M,
+        .spics_io_num = PIN_CS,           // Chip select GPIO pin number
+        .queue_size = 1,                  // Transaction queue size
+    };
+
+    ESP_ERROR_CHECK(spi_bus_add_device(HOST_ID, &spi_config, &spi_dev_handle));
+    if (spi_dev_handle == NULL) {
+        ESP_LOGI(TAG, "CRAP with spi_bus_add_device");
+    }
+}
 
 void full_duplex_spi_read(uint8_t cmd, unsigned int bytes_amount) {
     if (spi_dev_handle == NULL) {
