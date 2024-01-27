@@ -36,8 +36,11 @@ esp_flash_t* init_ext_flash() {
         // SPI_FLASH_QOUT,   ///< Data read using quad I/O
         // SPI_FLASH_QIO,    ///< Both address & data transferred using quad I/O
         .io_mode = SPI_FLASH_FASTRD,
-        //.input_delay_ns = Save::save_data.input_delay_ns,
-        .cs_id = 1337, //(chip_select == SPI3_IOMUX_PIN_NUM_CS || chip_select == SPI2_IOMUX_PIN_NUM_CS) ? 0 : 1337,
+
+        // Workaround to go with the patch https://github.com/nsec/nsec-badge-dev/commit/bc7d0ba8efd510505f9f0ae2035eb2fab3aa7a5e
+        // This might be needed only if you are using 2 SPI devices and/or when the PINs are not iomuxable
+        //.cs_id = 1337, 
+
         .freq_mhz = 20,
     };
 
