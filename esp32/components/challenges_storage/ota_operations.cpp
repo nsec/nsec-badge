@@ -94,6 +94,7 @@ void storage_write_to_ota(int ota, esp_flash_t* _flash) {
         return;
     }
 
+    // TODO blink SAO3_IO1 LED while writing to OTA partition
     for (size_t offset = 0; offset < size; offset += READSIZE) {
         // Copy data to buffer
         ESP_ERROR_CHECK(esp_flash_read(_flash, buffer, FLASH_DEST_ADDR + offset, READSIZE));

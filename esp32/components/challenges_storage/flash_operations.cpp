@@ -104,6 +104,7 @@ void flash_read_at(esp_flash_t* _flash, uint16_t custom_param, unsigned int addr
     free(buffer);
 }
 
+// TODO just compile that if admin mode (#ifdef, add to menuconfig)
 void flash_write_flag(esp_flash_t* _flash, unsigned int address) {
     const char* buffer = "FLAG-CTFFLASH24";
     ESP_ERROR_CHECK(esp_flash_write(_flash, buffer, address, strlen(buffer)));
