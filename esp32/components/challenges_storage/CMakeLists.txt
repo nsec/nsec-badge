@@ -1,3 +1,5 @@
+if(CONFIG_NSEC_BUILD_CTF_ADDON)
+
 idf_component_register(
     SRCS
         "challenges_storage.cpp"
@@ -7,3 +9,7 @@ idf_component_register(
     INCLUDE_DIRS "." "../save"
     REQUIRES console spi_flash driver main
 )
+
+endif()
+
+

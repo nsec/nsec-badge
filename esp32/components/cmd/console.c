@@ -20,7 +20,9 @@
 #include "cmd_nvs.h"
 #include "console.h"
 
-#include "challenges_storage.h"
+#if CONFIG_NSEC_BUILD_CTF_ADDON
+    #include "challenges_storage.h"
+#endif
 
 static const char* TAG = "console";
 #define PROMPT_STR "nsec"
@@ -96,8 +98,10 @@ void console_task(void *args)
 
     /* register commands */
     esp_console_register_help_command();
-    register_challenges_storage();
-    
+    #if CONFIG_NSEC_BUILD_CTF_ADDON
+        register_challenges_storage();
+    #endif
+
     /* prompt to be printed before each line.
      * this can be customized, made dynamic, etc.
      */
