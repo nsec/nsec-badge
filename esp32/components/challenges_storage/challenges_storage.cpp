@@ -82,7 +82,7 @@ static int challenge_storage(int argc, char **argv) {
     if (select_challenge == 4) {
         flash_read(flash, 128);
     } else if (select_challenge == 5) {
-        flash_write_flag(flash, 0x00);
+        flash_write_flag(flash, parse_address(argc, argv));
     } else if (select_challenge == 11) {
         storage_read_from_ota(1, flash);
     } else if (select_challenge == 12) {
