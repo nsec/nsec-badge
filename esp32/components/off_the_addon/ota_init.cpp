@@ -33,32 +33,9 @@ void ota_init() {
         gpio_set_level(ADDON_BLUE_LED, 1);
         flash = init_ext_flash();
         if (flash != NULL) {
+            // Use this to load the flash from OTA 0 at provisionning
             // storage_read_from_ota(0, flash);
             // return;
-
-            // Check if OTA partition already has the firmware
-            esp_partition_subtype_t subtype = NSEC_OTA_PARTITION;
-            const esp_partition_t *ota_partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
-            if (ota_partition != NULL) {
-                size_t size = ota_partition->size;
-                ESP_LOGI(TAG, "Found OTA partition %d! size: %d", NSEC_OTA_ID, size);
-                esp_app_desc_t desc;
-                esp_err_t err = esp_ota_get_partition_description(ota_partition, &desc);
-                if (err != ESP_OK) {
-                    ESP_LOGI(TAG, "No ota_%d partition firmware detected: %s (0x%x)", NSEC_OTA_ID, esp_err_to_name(err), err);
-                } else {
-                    ESP_LOGI(TAG, "OTA %d firmware project: %s", NSEC_OTA_ID, desc.project_name);
-                    ESP_LOGI(TAG, "OTA %d firmware version: %s", NSEC_OTA_ID, desc.version);
-                }
-                if (strcmp(desc.project_name, "nsec-ctf-addon") == 0) {
-                    ESP_LOGI(TAG, "OTA %d already populated with nsec-ctf-addon firmware, skipping OTA write", NSEC_OTA_ID);
-                    return;
-                }
-            } else {
-                ESP_LOGE(TAG, "Failed to find ota_%d partition. Most likely due to wrong firmware loaded.", NSEC_OTA_ID);
-                return;
-            }
-            ESP_LOGI(TAG, "Writing to OTA partition %d from external flash...", NSEC_OTA_ID);
             write_flash_to_ota(flash);
         }
     } else {
@@ -100,11 +77,11 @@ esp_flash_t* init_ext_flash() {
     };
 
     ESP_LOGI(TAG, "Initializing external SPI Flash at %dMHz", device_config.freq_mhz);
-    ESP_LOGI(TAG, "Pin assignments:");
+    /*ESP_LOGI(TAG, "Pin assignments:");
     ESP_LOGI(TAG, "MOSI: %2d   MISO: %2d   SCLK: %2d   CS: %2d",
         bus_config.mosi_io_num, bus_config.miso_io_num,
         bus_config.sclk_io_num, device_config.cs_io_num
-    );
+    );*/
 
     // Add device to the SPI bus
     esp_flash_t* ext_flash;
