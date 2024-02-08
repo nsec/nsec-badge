@@ -8,6 +8,10 @@
 #include "esp_partition.h"
 #include "esp_ota_ops.h"
 #include "rom/gpio.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/gpio.h"
+
 #include "ota_write.h"
 
 static const char *TAG = "ota_init";
@@ -15,18 +19,14 @@ static esp_flash_t* flash = NULL;
 
 spi_bus_config_t init_spi_bus(void);
 esp_flash_t* init_ext_flash(void);
-
-void check_ctf_addon() {
-
-}
+void blink_blueled_task(void *pvParameter);
 
 void ota_init() {
     gpio_pad_select_gpio(ADDON_DETECT);
     gpio_set_direction(ADDON_DETECT, GPIO_MODE_INPUT);
     gpio_set_pull_mode(ADDON_DETECT, GPIO_PULLUP_ONLY);
 
-    int lvl = gpio_get_level(ADDON_DETECT);
-    if (lvl == 0) {
+    if (gpio_get_level(ADDON_DETECT) == 0) {
         ESP_LOGI(TAG, "CTF Addon detected");
         gpio_pad_select_gpio(ADDON_BLUE_LED);
         gpio_set_direction(ADDON_BLUE_LED, GPIO_MODE_OUTPUT);
@@ -36,11 +36,37 @@ void ota_init() {
             // Use this to load the flash from OTA 0 at provisionning
             // storage_read_from_ota(0, flash);
             // return;
-            write_flash_to_ota(flash);
+            if(!write_flash_to_ota(flash)) {
+                int ms_delay = 500;
+                xTaskCreate(blink_blueled_task, "Blink blue LED task", 1024, &ms_delay, 2, NULL);
+            }
+        } else {
+            int ms_delay = 1000;
+            xTaskCreate(blink_blueled_task, "Blink blue LED task", 1024, &ms_delay, 2, NULL);
         }
     } else {
         ESP_LOGI(TAG, "CTF Addon not detected");
     }
+}
+
+void blink_blueled_task(void *pvParameter) {
+    int ms_delay = *(int*)pvParameter; 
+    if (ms_delay == 0) {
+        ms_delay = 100;
+    }
+    // make sure the addon is detected before we loop and blink the blue LED
+    if (gpio_get_level(ADDON_DETECT) == 0) {
+        while (1) {
+            gpio_set_level(ADDON_BLUE_LED, 0);
+            vTaskDelay(ms_delay / portTICK_PERIOD_MS);
+            gpio_set_level(ADDON_BLUE_LED, 1);
+            vTaskDelay(ms_delay / portTICK_PERIOD_MS);
+        }
+    }
+}
+
+void error_blink() {
+
 }
 
 spi_bus_config_t init_spi_bus(void) {

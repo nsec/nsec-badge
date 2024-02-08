@@ -14,7 +14,9 @@
 #define FLASH_DEST_ADDR 0x00000
 
 static const char *TAG = "ota_write";
-void write_flash_to_ota(esp_flash_t* _flash) {
+
+// returns true if OK and false if ERROR
+bool write_flash_to_ota(esp_flash_t* _flash) {
     // Check if OTA partition already has the firmware
     esp_partition_subtype_t subtype = NSEC_OTA_PARTITION;
     const esp_partition_t *ota_partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
@@ -30,11 +32,11 @@ void write_flash_to_ota(esp_flash_t* _flash) {
         }
         if (strcmp(desc.project_name, "nsec-ctf-addon") == 0) {
             ESP_LOGI(TAG, "OTA %d already populated with nsec-ctf-addon firmware, skipping OTA write", NSEC_OTA_ID);
-            return;
+            return true;
         }
     } else {
         ESP_LOGE(TAG, "Failed to find ota_%d partition. Most likely due to wrong firmware loaded.", NSEC_OTA_ID);
-        return;
+        return false;
     }
     ESP_LOGI(TAG, "Writing to OTA partition %d from external flash...", NSEC_OTA_ID);
 
@@ -44,14 +46,14 @@ void write_flash_to_ota(esp_flash_t* _flash) {
     esp_err_t err = esp_ota_begin(ota_partition, OTA_SIZE_UNKNOWN, &ota_handle);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "esp_ota_begin failed, error=%d", err);
-        return;
+        return false;
     }
 
     // Buffer for data
     uint8_t* buffer = (uint8_t*)malloc(READSIZE);
     if (buffer == NULL) {
         ESP_LOGE(TAG, "Failed to allocate memory for buffer!");
-        return;
+        return false;
     }
 
     int toggle = 0;
@@ -63,7 +65,7 @@ void write_flash_to_ota(esp_flash_t* _flash) {
         err = esp_ota_write(ota_handle, buffer, READSIZE);
         if (err != ESP_OK) {
             ESP_LOGE(TAG, "esp_ota_write failed, error=%d", err);
-            break;
+            return false;
         }
 
         memset(buffer, 0, READSIZE);
@@ -76,7 +78,7 @@ void write_flash_to_ota(esp_flash_t* _flash) {
     free(buffer);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "esp_ota_end failed, error=%d", err);
-        return;
+        return false;
     }
        
 
@@ -84,20 +86,22 @@ void write_flash_to_ota(esp_flash_t* _flash) {
     const esp_partition_t *partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, ota_partition->subtype, NULL);
     if (partition == NULL) {
         ESP_LOGE(TAG, "Failed to find OTA %d partition", NSEC_OTA_ID);
-        return;
+        return false;
     }
 
     ESP_LOGI(TAG, "Setting OTA %d as boot partition...", NSEC_OTA_ID);
     err = esp_ota_set_boot_partition(partition);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "esp_ota_set_boot_partition failed, error=%d", err);
-        return;
+        return false;
     }
 
     ESP_LOGI(TAG, "Restarting...");
+    fflush(stdout);
     vTaskDelay(pdMS_TO_TICKS(200));
     esp_restart();
 }
+
 
 
 void storage_read_from_ota(int ota, esp_flash_t* _flash) {
