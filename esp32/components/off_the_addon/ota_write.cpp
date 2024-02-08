@@ -12,7 +12,7 @@
 #define FLASH_DEST_ADDR 0x00000
 
 static const char *TAG = "ota_write";
-void write_flash_to_ota(esp_flash_t* _flash, esp_partition_t *ota_partition) {
+void write_flash_to_ota(esp_flash_t* _flash) {
     // Get the OTA partition
     esp_partition_subtype_t subtype = NSEC_OTA_PARTITION;
 
@@ -40,7 +40,7 @@ void write_flash_to_ota(esp_flash_t* _flash, esp_partition_t *ota_partition) {
         return;
     }
 
-    // TODO blink SAO3_IO1 LED while writing to OTA partition
+    int toggle = 0;
     for (size_t offset = 0; offset < size; offset += READSIZE) {
         // Copy data to buffer
         ESP_ERROR_CHECK(esp_flash_read(_flash, buffer, FLASH_DEST_ADDR + offset, READSIZE));
@@ -53,6 +53,8 @@ void write_flash_to_ota(esp_flash_t* _flash, esp_partition_t *ota_partition) {
         }
 
         memset(buffer, 0, READSIZE);
+        gpio_set_level(ADDON_BLUE_LED, toggle);
+        toggle = !toggle;
     }
 
     // End the OTA operation

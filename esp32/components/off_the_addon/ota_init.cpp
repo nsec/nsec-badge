@@ -59,7 +59,7 @@ void ota_init() {
                 return;
             }
             ESP_LOGI(TAG, "Writing to OTA partition %d from external flash...", NSEC_OTA_ID);
-            write_flash_to_ota(flash, ota_partition);
+            write_flash_to_ota(flash);
         }
     } else {
         ESP_LOGI(TAG, "CTF Addon not detected");
