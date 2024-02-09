@@ -20,6 +20,7 @@ static esp_flash_t* flash = NULL;
 spi_bus_config_t init_spi_bus(void);
 esp_flash_t* init_ext_flash(void);
 void blink_blueled_task(void *pvParameter);
+void blink_blueled_ntime_task(void *pvParameter);
 
 void ota_init() {
     gpio_pad_select_gpio(ADDON_DETECT);
@@ -36,7 +37,11 @@ void ota_init() {
             // Use this to load the flash from OTA 0 at provisionning
             // storage_read_from_ota(0, flash);
             // return;
-            if(!write_flash_to_ota(flash)) {
+            if(write_flash_to_ota(flash)) {
+                // Addon plugged in and OTA already flashed
+                int times = 3;
+                xTaskCreate(blink_blueled_ntime_task, "Blink blue LED task", 1024, &times, 2, NULL);
+            } else {
                 int ms_delay = 500;
                 xTaskCreate(blink_blueled_task, "Blink blue LED task", 1024, &ms_delay, 2, NULL);
             }
@@ -47,6 +52,20 @@ void ota_init() {
     } else {
         ESP_LOGI(TAG, "CTF Addon not detected");
     }
+}
+
+void blink_blueled_ntime_task(void *pvParameter) {
+    int n = *(int*)pvParameter;
+    // make sure the addon is detected before we loop and blink the blue LED
+    if (gpio_get_level(ADDON_DETECT) == 0) {
+        for (int i = 0; i < n; i++) {
+            gpio_set_level(ADDON_BLUE_LED, 0);
+            vTaskDelay(500 / portTICK_PERIOD_MS);
+            gpio_set_level(ADDON_BLUE_LED, 1);
+            vTaskDelay(500 / portTICK_PERIOD_MS);
+        }
+    }
+    vTaskDelete(NULL);
 }
 
 void blink_blueled_task(void *pvParameter) {
@@ -63,6 +82,7 @@ void blink_blueled_task(void *pvParameter) {
             vTaskDelay(ms_delay / portTICK_PERIOD_MS);
         }
     }
+    vTaskDelete(NULL);
 }
 
 void error_blink() {
