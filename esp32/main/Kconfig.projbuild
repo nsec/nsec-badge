@@ -1,10 +1,22 @@
 menu "NORTHSEC 2024"
-    config CONFIG_NSEC_BUILD_CTF_ADDON
-        bool "Include NorthSec CTF Addon in build"
-        default n
-        help
-            Set this when building firmware that is available during CTF.
-            If this options is enabled, storage challenges code will be loaded.
-            DO NOT ENABLE WHEN BUILDING THE CONFERENCE FIRMWARE
-endmenu
+    choice
 
+        prompt "Build selection"
+
+        config NSEC_BUILD_CONFERENCE_FIRMWARE
+            bool "Conference Firmware"
+            help
+                Set this when building the conference firmware.
+
+        config NSEC_BUILD_CTF_FIRMWARE
+            bool "NorthSec CTF Firmware"
+            help
+                Set this when building firmware distributed at the admin table during CTF.
+
+        config NSEC_BUILD_CTF_ADDON
+            bool "NorthSec CTF Addon"
+            help
+                Set this when building firmware for the CTF Addcon that is available during CTF.
+
+    endchoice
+endmenu
