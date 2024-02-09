@@ -1,27 +1,35 @@
-# Contribute to the badge!
+# Contribute to the 2024 badge!
 
 
 # Build
 ```
 idf.py menuconfig
 # In NORTHSEC 2024 menu option, choose the firmware to build
+# By default it will build the conference one as nsec-badge.bin
 idf.py build
 ```
+
 You can circle the 3 options to have the 3 firmware files in `build/` ready:
 - nsec-badge.bin (conference)
 - nsec-ctf.bin
 - nsec-ctf-addon.bin
 
+You can see which one is loaded when you boot the ESP32S3 with INFO logging enabled:
+```
+I (232) cpu_start: Application information:
+I (235) cpu_start: Project name:     nsec-badge
+I (240) cpu_start: App version:      nsec21-161-g85d5823-dirty
+```
+
 
 # Provisioning
-During test you can use `idf.py flash` to load any firmware selected with `idf.py menuconfig` into factory.
+During test you can use `idf.py flash` to load any last built firmware into factory.
 
-In production, for the initial conference firmware do `idf.py flash`. This will create the needed partitions.
+In production, for the initial conference firmware select "NorthSec Conference" in `idf.py menuconfig` and then do `idf.py flash`. This will also create the needed partitions for the CTF and Addon.
 
-At the CTF event admin table, `parttool.py write_partition --partition-name=ota_0 --input build\nsec-ctf.bin` to load the firmware into OTA slot 0. To make the badge boot into it after, use `otatool.py switch_ota_partition --slot 0` or inside the badge console there's a `firmware_select` command (that should be faster).
+At the CTF event admin table, `parttool.py write_partition --partition-name=ota_0 --input build\nsec-ctf.bin` to load the firmware into OTA slot 0. To make the badge boot into it after, use `otatool.py switch_ota_partition --slot 0`. Inside the badge console there's a `firmware_select` command that should be faster.
 
-The CTF Addon is self-provisionning when the badge is booted with the CTF Addon connected.
-
+The CTF Addon is self-provisionning when the badge is booted with the CTF Addon connected properly.
 
 # Code
 We have the following macro defined for code built exclusively for that firmware:
@@ -65,6 +73,21 @@ idf_component_register(SRCS "console.c"
 
 ```
 
+You can also use that last trick to load only some sources:
+```
+set(SOURCES
+    "file1.cpp"
+    "file2.cpp"
+)
+
+if(CONFIG_NSEC_BUILD_CTF)
+    list(APPEND SOURCES "file2.cpp")
+endif()
+
+idf_component_register(
+    SRCS ${SOURCES}
+)
+```
 
 # Testing
 ## CMakeLists
