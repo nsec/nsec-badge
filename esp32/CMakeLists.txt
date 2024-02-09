@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(nsec-badge)
+
+# These project names are used for firmware detection, don't change without refactor
+if(CONFIG_NSEC_BUILD_CTF)
+    project(nsec-ctf)
+elseif(CONFIG_NSEC_BUILD_ADDON)
+    project(nsec-ctf-addon)
+else() #default CONFIG_NSEC_BUILD_CONFERENCE
+    project(nsec-badge)
+endif()
