@@ -8,6 +8,7 @@
 #include "nvs_flash.h"
 #include "console.h"
 #include "save.h"
+#include "ota_init.h"
 
 static void initialize_nvs(void) {
     esp_err_t err = nvs_flash_init();
@@ -24,5 +25,8 @@ extern "C" void app_main(void) {
     fflush(stdout);
 
     Save::load_save();
+
+    ota_init();
+
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
