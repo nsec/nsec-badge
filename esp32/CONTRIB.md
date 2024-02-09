@@ -6,7 +6,6 @@
 idf.py menuconfig
 # In NORTHSEC 2024 menu option, choose the firmware to build
 idf.py build
-idf.py build #yes twice there's a bug right now TODO
 ```
 You can circle the 3 options to have the 3 firmware files in `build/` ready:
 - nsec-badge.bin (conference)
@@ -19,7 +18,7 @@ During test you can use `idf.py flash` to load any firmware selected with `idf.p
 
 In production, for the initial conference firmware do `idf.py flash`. This will create the needed partitions.
 
-At the CTF event admin table, `parttool.py write_partition --partition-name=ota_0 --input build\nsec-ctf.bin` to load the firmware into OTA slot 0. The badge should boot into it after. If not you can use `otatool.py switch_ota_partition --slot 0` or inside the badge console there's a `firmware_select` command.
+At the CTF event admin table, `parttool.py write_partition --partition-name=ota_0 --input build\nsec-ctf.bin` to load the firmware into OTA slot 0. To make the badge boot into it after, use `otatool.py switch_ota_partition --slot 0` or inside the badge console there's a `firmware_select` command (that should be faster).
 
 The CTF Addon is self-provisionning when the badge is booted with the CTF Addon connected.
 
