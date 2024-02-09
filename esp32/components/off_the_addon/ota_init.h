@@ -28,7 +28,23 @@
 */
 #define SPI_DMA_CHAN SPI_DMA_CH_AUTO
 
+#define NSEC_CONF_PARTITION ESP_PARTITION_SUBTYPE_APP_FACTORY
+
+#define NSEC_CTF_PARTITION ESP_PARTITION_SUBTYPE_APP_OTA_0
+
 #define NSEC_OTA_PARTITION ESP_PARTITION_SUBTYPE_APP_OTA_1
 #define NSEC_OTA_ID (NSEC_OTA_PARTITION - ESP_PARTITION_SUBTYPE_APP_OTA_MIN)
 
+
 void ota_init(void);
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void register_ota_cmd(void);
+
+#ifdef __cplusplus
+}
+#endif

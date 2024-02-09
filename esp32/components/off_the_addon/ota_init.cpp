@@ -11,8 +11,9 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
+#include "esp_console.h"
 
-#include "ota_write.h"
+#include "ota_actions.h"
 
 static const char *TAG = "ota_init";
 static esp_flash_t* flash = NULL;
@@ -51,6 +52,21 @@ void ota_init() {
         }
     } else {
         ESP_LOGI(TAG, "CTF Addon not detected");
+    }
+}
+
+void register_ota_cmd(void) {
+    std::string firmware_select_string = get_firmware_select_string();
+    if(firmware_select_string != "[conf]") {
+        // Will show the command only if we find more than the conf firmware
+        const esp_console_cmd_t cmd = {
+            .command = "firmware_select",
+            .help = "Select which firmware to run\n",
+            .hint = firmware_select_string.c_str(),
+            .func = &ota_cmd,
+            .argtable = NULL,        
+        };
+        ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
     }
 }
 

@@ -8,12 +8,97 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "ota_write.h"
+#include "ota_actions.h"
 
 #define READSIZE (4096 * 1)
 #define FLASH_DEST_ADDR 0x00000
 
-static const char *TAG = "ota_write";
+static const char *TAG = "ota_actions";
+
+std::string get_firmware_project_name(esp_partition_subtype_t subtype) {
+    const esp_partition_t *partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
+    if (partition == NULL) {
+        ESP_LOGE(TAG, "Failed to find subtype %d partition", subtype);
+        return std::string("");
+    }
+    esp_app_desc_t desc;
+    esp_err_t err = esp_ota_get_partition_description(partition, &desc);
+    if (err != ESP_OK) {
+        ESP_LOGD(TAG, "Failed to get partition description: %s (0x%x)", esp_err_to_name(err), err);
+        return std::string("");
+    }
+    ESP_LOGD(TAG, "Project name: %s", desc.project_name);
+    return std::string(desc.project_name);
+}
+
+std::string get_firmware_select_string() {
+    std::string return_string = "[";
+    std::string project_name;
+
+    if (get_firmware_project_name(NSEC_CONF_PARTITION) == "nsec-badge") {
+        return_string += "conf";
+    }
+
+    if (get_firmware_project_name(NSEC_CTF_PARTITION) == "nsec-ctf") {
+        return_string += "|ctf";
+    }
+ 
+    if (get_firmware_project_name(NSEC_OTA_PARTITION) == "nsec-ctf-addon") {
+        return_string += "|addon";
+    }
+ 
+    return return_string + "]";
+}
+
+bool boot_partition(esp_partition_subtype_t subtype) {
+    // Set the OTA boot partition
+    const esp_partition_t *partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
+    if (partition == NULL) {
+        ESP_LOGE(TAG, "Failed to find subtype %d partition", subtype);
+        return false;
+    }
+
+    ESP_LOGI(TAG, "Setting boot partition...");
+    
+    esp_err_t err = esp_ota_set_boot_partition(partition);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "esp_ota_set_boot_partition failed, error=%d", err);
+        return false;
+    }
+
+    ESP_LOGI(TAG, "Restarting...");
+    fflush(stdout);
+    vTaskDelay(pdMS_TO_TICKS(200));
+    esp_restart();
+}
+
+int ota_cmd(int argc, char **argv) {
+    if (argc != 2) {
+        printf("Usage: firmware_select %s\n", get_firmware_select_string().c_str());
+        return ESP_OK;
+    }
+    // get argv into a string
+    char* firmware = argv[1];
+    if (strcmp(firmware, "conf") == 0) {
+        ESP_LOGI(TAG, "Switching to conf firmware...");
+        if(!boot_partition(NSEC_CONF_PARTITION)) {
+            ESP_LOGE(TAG, "Failed to boot to conf firmware - this should not happen!");
+        }
+    } else if (strcmp(firmware, "ctf") == 0) {
+        ESP_LOGI(TAG, "Switching to ctf firmware...");
+        if(!boot_partition(NSEC_CTF_PARTITION)) {
+            ESP_LOGE(TAG, "Failed to boot to ctf firmware. You need to use this during the CTF after you go see the admin table to get flashed!");
+        }
+    } else if (strcmp(firmware, "addon") == 0) {
+        ESP_LOGI(TAG, "Switching to ctf addon firmware...");
+        if(!boot_partition(NSEC_OTA_PARTITION)) {
+            ESP_LOGE(TAG, "Failed to boot to ctf addon firmware. You need to insert the addon given to you during the CTF to get the firmware!");
+        }
+    } else {
+        printf("Usage: firmware_select %s\n", get_firmware_select_string().c_str());
+    }
+    return ESP_OK;
+}
 
 // returns true if OK and false if ERROR
 bool write_flash_to_ota(esp_flash_t* _flash) {
@@ -80,26 +165,9 @@ bool write_flash_to_ota(esp_flash_t* _flash) {
         ESP_LOGE(TAG, "esp_ota_end failed, error=%d", err);
         return false;
     }
-       
-
-    // Set the OTA boot partition
-    const esp_partition_t *partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, ota_partition->subtype, NULL);
-    if (partition == NULL) {
-        ESP_LOGE(TAG, "Failed to find OTA %d partition", NSEC_OTA_ID);
-        return false;
-    }
-
-    ESP_LOGI(TAG, "Setting OTA %d as boot partition...", NSEC_OTA_ID);
-    err = esp_ota_set_boot_partition(partition);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "esp_ota_set_boot_partition failed, error=%d", err);
-        return false;
-    }
-
-    ESP_LOGI(TAG, "Restarting...");
-    fflush(stdout);
-    vTaskDelay(pdMS_TO_TICKS(200));
-    esp_restart();
+    
+    // Set the OTA boot partition and restart
+    return boot_partition(ota_partition->subtype);
 }
 
 

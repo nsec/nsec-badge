@@ -20,6 +20,8 @@
 #include "cmd_nvs.h"
 #include "console.h"
 
+#include "ota_init.h"
+
 static const char* TAG = "console";
 #define PROMPT_STR "nsec"
 
@@ -94,6 +96,8 @@ void console_task(void *args)
 
     /* register commands */
     esp_console_register_help_command();
+
+    register_ota_cmd();
 
     /* prompt to be printed before each line.
      * this can be customized, made dynamic, etc.
