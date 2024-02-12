@@ -24,7 +24,7 @@ If there is only one firmware, the command is not available.
 - After flashing, it automagically reboots into the CTF Addon firmware.
 
 ### Blue light (`GPIO 7`) behavior
-- The blue light on the CTF Addon indicates that the add-on has been detected.
+- When the blue light on the CTF Addon is on, it means that the add-on has been detected.
 - When it's blinking very quickly, it means that the firmware is being copied.
 - When it's blinking at 500ms it means that it can't flash the firmware due to
   errors (see `ESP_LOGE` outputs); these shouldn't happen outside of
