@@ -13,41 +13,6 @@ Use these projects names on the firmware to be loaded:
 name. Without argument, the command shows available firmwares to boot.
 If there is only one firmware, the command is not available.
 
-## CTF Addon
-- When the CTF Addon is connected, the `GPIO 12` is grounded and the message
-  "CTF Addon detected" shows in the log.
-- During the boot sequence, `ota_1` partition is checked if the
-  "nsec-ctf-addon" is present.
-- If the firmware "nsec-ctf-addon" is not present in `ota_1`, it flashes the
-  firmware from the CTF Addon external flash.
-- Flashing is really quick, like less than 2 seconds!
-- After flashing, it automagically reboots into the CTF Addon firmware.
-
-### Blue light (`GPIO 7`) behavior
-- When the blue light on the CTF Addon is on, it means that the add-on has been detected.
-- When it's blinking very quickly, it means that the firmware is being copied.
-- When it's blinking at 500ms it means that it can't flash the firmware due to
-  errors (see `ESP_LOGE` outputs); these shouldn't happen outside of
-  provisioning testing.
-- When it's blinking at 1000ms it means that the flash is not detected but the
-  firmware was; this is prolly a hardware failure on the chip side.
-- When it's blinking 3 times and then stays on, it means that it won't flash
-  the firmware from its flash because there's already one present.
-
-### Update existing firmware
-- Disconnect the CTF Addon.
-- Execute `parttool.py erase_partition --partition-name=ota_1`.
-- Execute `idf.py flash monitor` if you want to reset the device to boot from
-  factory firmware.
-- Re-plug the add-on while the esp32s3 is on, then press the `RST` button.
-- Check the logs, upon successful behavior you should see `ota_init: CTF Addon
-  detected` and `ota_actions: Writing to OTA partition 1 from external
-  flash...` and also the blue light will blink very quickly during the copy.
-- The esp32s3 will reboot itself into `ota_1` after the CTF Addon firmware is
-  loaded from the flash.
-- Use the command `firmware_select addon` (available in all firmwares) to boot
-  into the CTF Addon firmware.
-
 ## Build
 You have to build 3 times to get 3 files as `project_name.bin` in the `build/`
 directory. Use `idf.py menuconfig` to select the firmware to build, it will be
@@ -70,6 +35,42 @@ If order to flash your firmware:
   load into ota 1 and validate it works.
 - Most likely https://github.com/nsec/ctf-addon-prov will take care of that
   alongside the crypto device and generation of flags.
+
+## CTF Addon details
+- When the CTF Addon is connected, the `GPIO 12` is grounded and the message
+  "CTF Addon detected" shows in the log.
+- During the boot sequence, `ota_1` partition is checked if the
+  "nsec-ctf-addon" is present.
+- If the firmware "nsec-ctf-addon" is not present in `ota_1`, it flashes the
+  firmware from the CTF Addon external flash.
+- Flashing is really quick, like less than 2 seconds!
+- After flashing, it automagically reboots into the CTF Addon firmware.
+
+### Blue light (`GPIO 7`) addon behavior
+- When the blue light on the CTF Addon is on, it means that the add-on has been detected.
+- When it's blinking very quickly, it means that the firmware is being copied.
+- When it's blinking at 500ms it means that it can't flash the firmware due to
+  errors (see `ESP_LOGE` outputs); these shouldn't happen outside of
+  provisioning testing.
+- When it's blinking at 1000ms it means that the flash is not detected but the
+  firmware was; this is prolly a hardware failure on the chip side.
+- When it's blinking 3 times and then stays on, it means that it won't flash
+  the firmware from its flash because there's already one present.
+
+### Update existing addon firmware
+- Disconnect the CTF Addon.
+- Execute `parttool.py erase_partition --partition-name=ota_1`.
+- Execute `idf.py flash monitor` if you want to reset the device to boot from
+  factory firmware.
+- Re-plug the add-on while the esp32s3 is on, then press the `RST` button.
+- Check the logs, upon successful behavior you should see `ota_init: CTF Addon
+  detected` and `ota_actions: Writing to OTA partition 1 from external
+  flash...` and also the blue light will blink very quickly during the copy.
+- The esp32s3 will reboot itself into `ota_1` after the CTF Addon firmware is
+  loaded from the flash.
+- Use the command `firmware_select addon` (available in all firmwares) to boot
+  into the CTF Addon firmware.
+  
 
 ## Common errors
 
