@@ -104,3 +104,11 @@ error: 'UART_SCLK_RTC' undeclared (first use in this function); did you mean 'UA
 ```
 This most likely means your target is esp32 and not esp32s3. Use `idf.py
 set-target esp32s3` and build again.
+
+```
+I (342) ota_init: CTF Addon not detected
+E (352) ota_actions: Failed to find subtype 16 partition
+E (352) ota_actions: Failed to find subtype 17 partition
+```
+This most likely mneans that you haven't flkashed a firmware with 2 OTA partition. CHeck in `idf.py menuconfig` under `Partition Table` if you see `Factory app, two OTA definitions`. Also make sure that the `Serial flasher config ` `Flash size` is at 8MB as the two often goes together.
+
