@@ -1,5 +1,14 @@
 # Usage and behavior
 
+* [Project names](#project-names)
+* [Loading firmware](#loading-firmware)
+* [Build](#build)
+* [Provisioning](#provisioning)
+* [CTF Addon details](#ctf-addon-details)
+   * [Blue light (GPIO 7) addon behavior](#blue-light-gpio-7-addon-behavior)
+   * [Update existing addon firmware](#update-existing-addon-firmware)
+* [Common errors](#common-errors)
+
 ## Project names
 Use these projects names on the firmware to be loaded:
 | project name | purpose | target partition | flashed when |
@@ -28,7 +37,7 @@ If order to flash your firmware:
 - Use `idf.py flash` for the conference firmware. This works like the default.
 - Use `parttool.py write_partition --partition-name=ota_0 --input
   build\nsec-ctf.bin` for the CTF.
-- No need to flash the CTF Addon, it will take care of it itself!
+- No need to flash the CTF Addon, it will take care of itself!
 - To load into the CTF Addon you need to use a test device, load the add-on
   firmware into `ota_0`, uncomment the line `storage_read_from_ota(0, flash);`,
   build, boot to load into external flash, uncomment the line, build, boot to
@@ -47,7 +56,8 @@ If order to flash your firmware:
 - After flashing, it automagically reboots into the CTF Addon firmware.
 
 ### Blue light (`GPIO 7`) addon behavior
-- When the blue light on the CTF Addon is on, it means that the add-on has been detected.
+- When the blue light on the CTF Addon is on, it means that the add-on has been
+  detected.
 - When it's blinking very quickly, it means that the firmware is being copied.
 - When it's blinking at 500ms it means that it can't flash the firmware due to
   errors (see `ESP_LOGE` outputs); these shouldn't happen outside of
@@ -70,7 +80,6 @@ If order to flash your firmware:
   loaded from the flash.
 - Use the command `firmware_select addon` (available in all firmwares) to boot
   into the CTF Addon firmware.
-  
 
 ## Common errors
 
@@ -110,5 +119,7 @@ I (342) ota_init: CTF Addon not detected
 E (352) ota_actions: Failed to find subtype 16 partition
 E (352) ota_actions: Failed to find subtype 17 partition
 ```
-This most likely mneans that you haven't flkashed a firmware with 2 OTA partition. CHeck in `idf.py menuconfig` under `Partition Table` if you see `Factory app, two OTA definitions`. Also make sure that the `Serial flasher config ` `Flash size` is at 8MB as the two often goes together.
-
+This most likely means that you haven't flashed a firmware with 2 OTA
+partitions. Check in `idf.py menuconfig` under `Partition Table` if you see
+`Factory app, two OTA definitions`. Also make sure that the `Serial flasher
+config ` `Flash size` is at 8MB as the two often goes together.
