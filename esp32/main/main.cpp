@@ -8,9 +8,12 @@
 #include "nvs_flash.h"
 #include "console.h"
 #include "save.h"
+#include "ota_init.h"
 
-#if CONFIG_NSEC_BUILD_CTF_ADDON
+
+#if CONFIG_NSEC_BUILD_ADDON
     #include "challenges_storage.h"
+    #include "crypto_atecc_init.h"
 #endif
 
 static void initialize_nvs(void) {
@@ -27,8 +30,9 @@ extern "C" void app_main(void) {
     initialize_nvs();
     fflush(stdout);
     Save::load_save();
-    #if CONFIG_NSEC_BUILD_CTF_ADDON
+    #if CONFIG_NSEC_BUILD_ADDON
         challenges_storage_init();
+        crypto_atecc_init();
     #endif
 
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);

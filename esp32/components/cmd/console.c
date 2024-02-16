@@ -20,8 +20,9 @@
 #include "cmd_nvs.h"
 #include "console.h"
 
-#if CONFIG_NSEC_BUILD_CTF_ADDON
+#if CONFIG_NSEC_BUILD_ADDON
     #include "challenges_storage.h"
+    #include "crypto_atecc_cmd.h"
 #endif
 
 static const char* TAG = "console";
@@ -98,8 +99,9 @@ void console_task(void *args)
 
     /* register commands */
     esp_console_register_help_command();
-    #if CONFIG_NSEC_BUILD_CTF_ADDON
+    #if CONFIG_NSEC_BUILD_ADDON
         register_challenges_storage();
+        register_crypto_atecc();
     #endif
 
     /* prompt to be printed before each line.

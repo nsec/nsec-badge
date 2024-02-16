@@ -1,0 +1,9 @@
+if(CONFIG_NSEC_BUILD_ADDON)
+    idf_component_register(
+        SRCS
+            "crypto_atecc_cmd.cpp"
+            "crypto_atecc_init.cpp"
+        INCLUDE_DIRS "." "../save"
+        REQUIRES console esp-cryptoauthlib
+    )
+endif()

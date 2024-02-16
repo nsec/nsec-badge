@@ -1,4 +1,4 @@
-if(CONFIG_NSEC_BUILD_CTF_ADDON)
+if(CONFIG_NSEC_BUILD_ADDON)
     idf_component_register(
         SRCS
             "challenges_storage.cpp"
