@@ -8,7 +8,8 @@ else()
     if(EXISTS "${CMAKE_SOURCE_DIR}/sdkconfig.defaults")
         file(STRINGS "${CMAKE_SOURCE_DIR}/sdkconfig.defaults" sdkconfig_contents)
     else()
-        # no sdkconfig files found in project, that is weird but let's support it
+        # no sdkconfig files found in project, that is weird but let's support
+        # it
         set(sdkconfig_contents "")
     endif()
 endif()
@@ -41,7 +42,8 @@ set(ENV{NSEC_BUILD_ADDON} ${CONFIG_NSEC_BUILD_ADDON})
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-# These project names are used for firmware detection, don't change without refactor
+# These project names are used for firmware detection, don't change without
+# refactor
 if(CONFIG_NSEC_BUILD_CTF)
     message(STATUS "Building for CONFIG_NSEC_BUILD_CTF")
     project(nsec-ctf)
@@ -52,4 +54,3 @@ else() #default CONFIG_NSEC_BUILD_CONFERENCE
     message(STATUS "Building for CONFIG_NSEC_BUILD_CONFERENCE")
     project(nsec-badge)
 endif()
-
