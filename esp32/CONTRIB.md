@@ -1,6 +1,5 @@
 # Contribute to the 2024 badge!
 
-
 # Build
 ```
 idf.py menuconfig
@@ -14,25 +13,34 @@ You can circle the 3 options to have the 3 firmware files in `build/` ready:
 - nsec-ctf.bin
 - nsec-ctf-addon.bin
 
-You can see which one is loaded when you boot the ESP32S3 with INFO logging enabled:
+You can see which one is loaded when you boot the ESP32S3 with INFO logging
+enabled:
 ```
 I (232) cpu_start: Application information:
 I (235) cpu_start: Project name:     nsec-badge
 I (240) cpu_start: App version:      nsec21-161-g85d5823-dirty
 ```
 
-
 # Provisioning
-During test you can use `idf.py flash` to load any last built firmware into factory.
+During test you can use `idf.py flash` to load any last built firmware into
+factory.
 
-In production, for the initial conference firmware select "NorthSec Conference" in `idf.py menuconfig` and then do `idf.py flash`. This will also create the needed partitions for the CTF and Addon.
+In production, for the initial conference firmware select "NorthSec Conference"
+in `idf.py menuconfig` and then do `idf.py flash`. This will also create the
+needed partitions for the CTF and Addon.
 
-At the CTF event admin table, `parttool.py write_partition --partition-name=ota_0 --input build\nsec-ctf.bin` to load the firmware into OTA slot 0. To make the badge boot into it after, use `otatool.py switch_ota_partition --slot 0`. Inside the badge console there's a `firmware_select` command that should be faster.
+At the CTF event admin table, `parttool.py write_partition
+--partition-name=ota_0 --input build\nsec-ctf.bin` to load the firmware into
+`OTA` slot `0`. To make the badge boot into it after, use `otatool.py
+switch_ota_partition --slot 0`. Inside the badge console there's a
+`firmware_select` command that should be faster.
 
-The CTF Addon is self-provisionning when the badge is booted with the CTF Addon connected properly.
+The CTF Addon is self-provisioning when the badge is booted with the CTF Addon
+connected properly.
 
 # Code
-We have the following macro defined for code built exclusively for that firmware:
+We have the following macro defined for code built exclusively for that
+firmware:
 - *CONFIG_NSEC_BUILD_CONFERENCE*
 - *CONFIG_NSEC_BUILD_CTF*
 - *CONFIG_NSEC_BUILD_ADDON*
@@ -45,7 +53,8 @@ In your C or C++ files, you can do it like that:
 #endif
 ```
 
-In your CMakeLists.txt files, you can choose to only build a component like that:
+In your `CMakeLists.txt` files, you can choose to only build a component like
+that:
 ```
 if(CONFIG_NSEC_BUILD_CTF)
     idf_component_register(
@@ -58,7 +67,7 @@ if(CONFIG_NSEC_BUILD_CTF)
 endif()
 ```
 
-If you do that, you'll need to conditionnaly load your component like that:
+If you do that, you'll need to conditionaly load your component like that:
 ```
 set(requires_components console)
 
@@ -70,7 +79,6 @@ idf_component_register(SRCS "console.c"
                     INCLUDE_DIRS "."
                     REQUIRES ${requires_components}
 )
-
 ```
 
 You can also use that last trick to load only some sources:
@@ -97,11 +105,13 @@ cd build
 cmake .. -G Ninja
 ```
 This is the step that `idf.py build` does when running CMake.
-If you are running for the first time and don't have a `sdkconfig` file, run `cmake .. -G Ninja` *twice*.
-
+If you are running for the first time and don't have a `sdkconfig` file, run
+`cmake .. -G Ninja` *twice*.
 
 # Common issues
 ## Wrong build target
-If you see `Building ESP-IDF components for target esp32` when building and get weird include errors,
-this means that you are on the wrong target. Sometimes even with the sdkconfig.defaults files stating it, it can be buggy.
+If you see `Building ESP-IDF components for target esp32` when building and get
+weird include errors,
+this means that you are on the wrong target. Sometimes even with the
+`sdkconfig.defaults` files stating it, it can be buggy.
 Simply run `idf.py set-target esp32s3` to rectify.
