@@ -35,7 +35,7 @@ void Wifi::init()
 {
     if(!wifi_config_saved()) {
         snprintf((char *)&Save::save_data.wifi_ssid, sizeof(Save::save_data.wifi_ssid), "PAD-%08lx", esp_random());
-        snprintf((char *)&Save::save_data.wifi_password, sizeof(Save::save_data.wifi_password), "%c%c%c%c%c%c%c%c%c%c%c%c"
+        snprintf((char *)&Save::save_data.wifi_password, sizeof(Save::save_data.wifi_password), "%c%c%c%c%c%c%c%c%c%c%c%c",
         RAND_CHR, RAND_CHR, RAND_CHR, RAND_CHR, RAND_CHR, RAND_CHR,
         RAND_CHR, RAND_CHR, RAND_CHR, RAND_CHR, RAND_CHR, RAND_CHR
         );
