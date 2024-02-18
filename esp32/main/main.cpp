@@ -9,6 +9,7 @@
 #include "console.h"
 #include "save.h"
 #include "ota_init.h"
+#include "wifi.h"
 
 static void initialize_nvs(void) {
     esp_err_t err = nvs_flash_init();
@@ -27,6 +28,8 @@ extern "C" void app_main(void) {
     Save::load_save();
 
     ota_init();
+
+    Wifi::getInstance().init();
 
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
