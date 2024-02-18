@@ -68,32 +68,6 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-// static void example_handler_on_sta_got_ip(void *arg, esp_event_base_t event_base,
-//                       int32_t event_id, void *event_data)
-// {
-//     ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
-//     printf("Got IPv4 event: Interface \"%s\" address: " IPSTR, esp_netif_get_desc(event->esp_netif), IP2STR(&event->ip_info.ip));
-// }
-
-// esp_err_t Wifi::wifiStaMode(void)
-// {
-//     wifi_config_t wifi_config = { };
-
-//      memcpy(wifi_config.sta.ssid, Save::save_data.wifi_ssid,
-//         sizeof(wifi_config.sta.ssid));
-//     memcpy(wifi_config.sta.password, Save::save_data.wifi_password,
-//                                sizeof(wifi_config.sta.password));
-
-//     ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_APSTA) );
-//     esp_wifi_set_default_wifi_sta_handlers();
-//     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &example_handler_on_sta_got_ip, NULL));
-//     ESP_ERROR_CHECK( esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
-//     ESP_ERROR_CHECK( esp_wifi_connect() );
-//     ESP_LOGE(TAG, "Wifi connected");
-
-//     return ESP_OK;
-// }
-
 static esp_err_t set_dhcps_dns(esp_netif_t *netif, uint32_t addr)
 {
     esp_netif_dns_info_t dns;
