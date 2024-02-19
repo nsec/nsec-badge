@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(EXTRA_COMPONENT_DIRS "./extra-components/")
 # Parse sdkconfig files because CMake doesn't have the variables yet
 if(EXISTS "${CMAKE_SOURCE_DIR}/sdkconfig")
     file(STRINGS "${CMAKE_SOURCE_DIR}/sdkconfig" sdkconfig_contents)
