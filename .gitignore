@@ -1,5 +1,20 @@
-sdkconfig
+# SPDX-FileCopyrightText: 2024 NorthSec
+#
+# SPDX-License-Identifier: MIT
+
+/.pio
+/.cache
+/compile_commands.json
+/*.plist
+/*.old
+/dependencies.lock
+/managed_components
+/sdkconfig.addon
+/sdkconfig.conference
+/sdkconfig.ctf
+
 xcuserdata
+
 # python
 __pycache__/
 *.py[cod]

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 NorthSec
+#
+# SPDX-License-Identifier: MIT
+
 if(CONFIG_NSEC_BUILD_CTF)
     idf_component_register(SRCS "modbus.cpp"
                 INCLUDE_DIRS "."

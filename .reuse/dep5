@@ -1,0 +1,5 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: hw/*
+Copyright: 2022-2024 NorthSec
+License: MIT

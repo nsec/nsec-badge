@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 NorthSec
+//
+// SPDX-License-Identifier: MIT
+
 #include <stdio.h>
 #include <inttypes.h>
 #include "sdkconfig.h"
@@ -13,7 +17,7 @@
 #include "wifi.h"
 #endif
 
-static void initialize_nvs(void) {
+static void initialize_nvs() {
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK( nvs_flash_erase() );
@@ -34,6 +38,6 @@ extern "C" void app_main(void) {
     #if CONFIG_NSEC_BUILD_CTF
         Wifi::getInstance().init();
     #endif
-    
-    xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
+
+    xTaskCreate(console_task, "console task", 4096, nullptr, 3, nullptr);
 }

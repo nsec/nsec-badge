@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 NorthSec
+//
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #ifdef __cplusplus

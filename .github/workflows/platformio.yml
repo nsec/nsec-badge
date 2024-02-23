@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2023 NorthSec
+#
+# SPDX-License-Identifier: MIT
+
+name: PlatformIO CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Build 'conference' firmware
+        run: make ENV=conference VERBOSE="-v"
+
+      - name: Build 'ctf' firmware
+        run: make ENV=ctf VERBOSE="-v"
+
+      - name: Build 'addon' firmware
+        run: make ENV=addon VERBOSE="-v"
