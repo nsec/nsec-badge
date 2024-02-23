@@ -55,6 +55,23 @@ idf.py build flash monitor
 If for some reason `idf.py` is not able to complete the operation, refer to the
 [ESP-IDF documentation](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html#step-9-flash-onto-the-device).
 
+## Debugging
+
+To read the logging statements output on the USB serial interface, it is
+possible to use `idf.py`'s `monitor` command.
+
+However, you can use your preferred terminal emulator by pointing it to the
+`/dev/ttyACM0` device. The badge is configured to output at 115'200 bauds,
+without parity, and with one stop bit per character.
+
+Note that electrically resetting the board using the hardware switch will
+cause the pseudo-terminal device to disappear, making it hard to read the
+logs emitted during boot.
+
+Pulsing the DTR signal (lowering it for 1 second) will cause the board to reset
+without affecting the pseudo-terminal device, allowing you to read early-boot
+messages. This is supported by most terminal emulators.
+
 ## Credits
 NorthSec CTF badge 2023 is brought to you by the team work of:
 
