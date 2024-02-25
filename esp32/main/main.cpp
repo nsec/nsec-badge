@@ -9,6 +9,9 @@
 #include "console.h"
 #include "save.h"
 #include "ota_init.h"
+#if CONFIG_NSEC_BUILD_CTF
+#include "wifi.h"
+#endif
 
 static void initialize_nvs(void) {
     esp_err_t err = nvs_flash_init();
@@ -28,5 +31,9 @@ extern "C" void app_main(void) {
 
     ota_init();
 
+    #if CONFIG_NSEC_BUILD_CTF
+        Wifi::getInstance().init();
+    #endif
+    
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }

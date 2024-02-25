@@ -39,6 +39,7 @@ set(ENV{NSEC_BUILD_CONFERENCE} ${CONFIG_NSEC_BUILD_CONFERENCE})
 set(ENV{NSEC_BUILD_CTF} ${CONFIG_NSEC_BUILD_CTF})
 set(ENV{NSEC_BUILD_ADDON} ${CONFIG_NSEC_BUILD_ADDON})
 
+set(EXTRA_COMPONENT_DIRS "./extra-components/")
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 # These project names are used for firmware detection, don't change without
