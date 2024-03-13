@@ -9,6 +9,9 @@
 #include "console.h"
 #include "save.h"
 #include "ota_init.h"
+#if CONFIG_NSEC_BUILD_CTF
+#include "wifi.h"
+#endif
 
 
 #if CONFIG_NSEC_BUILD_ADDON
@@ -35,5 +38,9 @@ extern "C" void app_main(void) {
         crypto_atecc_init();
     #endif
 
+    #if CONFIG_NSEC_BUILD_CTF
+        Wifi::getInstance().init();
+    #endif
+    
     xTaskCreate(console_task, "console task", 4096, NULL, 3, NULL);
 }
