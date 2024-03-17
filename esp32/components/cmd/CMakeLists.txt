@@ -1,5 +1,9 @@
 set(requires_components console driver fatfs cmd_nvs off_the_addon)
 
+if(CONFIG_NSEC_BUILD_ADDON)
+    list(APPEND requires_components challenges_storage)
+endif()
+
 if(CONFIG_NSEC_BUILD_CTF)
     list(APPEND requires_components modbus wifi)
 endif()

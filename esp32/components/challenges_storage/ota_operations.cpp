@@ -18,48 +18,6 @@ void challenge_storage1_code(int _delay) {
     if (_delay) DELAY = _delay;
 }
 
-void storage_read_from_ota(int ota, esp_flash_t* _flash) {
-    // Get the OTA partition
-    esp_partition_subtype_t subtype = ESP_PARTITION_SUBTYPE_APP_OTA_0;
-    if (ota == 1) {
-        subtype = ESP_PARTITION_SUBTYPE_APP_OTA_1;
-    } else if(ota != 0) {
-        ESP_LOGE(TAG, "Invalid OTA partition number: %d", ota);
-        return;
-    }
-
-    const esp_partition_t *ota_partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
-    if (ota_partition == NULL) {
-        ESP_LOGE(TAG, "Failed to get OTA partition!");
-        return;
-    }
-    size_t size = ota_partition->size;
-    ESP_LOGI(TAG, "Found OTA partition ota_%d! size: %d", ota, size);
-
-    // Buffer for data
-    uint8_t* buffer = (uint8_t*)malloc(READSIZE);
-    if (buffer == NULL) {
-        ESP_LOGE(TAG, "Failed to allocate memory for buffer!");
-        return;
-    }
-
-    // Read data from OTA partition
-    ESP_ERROR_CHECK(esp_partition_read(ota_partition, 0, buffer, READSIZE));
-
-    for (size_t offset = 0; offset < size; offset += READSIZE) {
-        // Read data from OTA partition
-        ESP_ERROR_CHECK(esp_partition_read(ota_partition, offset, buffer, READSIZE));
-
-        // Write data to flash
-        ESP_ERROR_CHECK(esp_flash_erase_region(_flash, FLASH_DEST_ADDR + offset, READSIZE));
-        ESP_ERROR_CHECK(esp_flash_write(_flash, buffer, FLASH_DEST_ADDR + offset, READSIZE));
-
-        memset(buffer, 0, READSIZE);
-    }
-    
-    free(buffer);
-}
-
 void storage_write_to_ota(int ota, esp_flash_t* _flash) {
     // Get the OTA partition
     esp_partition_subtype_t subtype = ESP_PARTITION_SUBTYPE_APP_OTA_0;

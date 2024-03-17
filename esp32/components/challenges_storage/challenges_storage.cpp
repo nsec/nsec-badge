@@ -20,6 +20,9 @@
 
 #include "save.h"
 
+#include "ota_init.h"
+#include "ota_actions.h"
+
 #include "challenges_storage.h"
 #include "ota_operations.h"
 #include "spi_operations.h"

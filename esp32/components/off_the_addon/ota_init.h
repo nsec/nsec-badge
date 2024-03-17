@@ -37,7 +37,7 @@
 
 
 void ota_init(void);
-
+esp_flash_t* init_ext_flash();
 
 #ifdef __cplusplus
 extern "C" {
