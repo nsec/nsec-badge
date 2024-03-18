@@ -7,7 +7,7 @@
 #ifndef NSEC_BUTTON_WATCHER_HPP
 #define NSEC_BUTTON_WATCHER_HPP
 
-#include "scheduling/scheduler.hpp"
+#include "scheduling/task.hpp"
 
 #include <stdint.h>
 
@@ -23,9 +23,11 @@ using new_button_event_notifier = void (*)(id id, event event);
  * Tracks the state of the badge's buttons to debounce and transform
  * the pin readings into UI button events.
  */
-class watcher : public nsec::scheduling::periodic_task
+class watcher : public nsec::scheduling::periodic_task<watcher>
 {
   public:
+    friend class periodic_task<watcher>;
+
     explicit watcher(new_button_event_notifier new_button_notifier) noexcept;
 
     // Deactivate copy and assignment.
@@ -39,7 +41,7 @@ class watcher : public nsec::scheduling::periodic_task
     void setup() noexcept;
 
   protected:
-    void run(scheduling::absolute_time_ms current_time_ms) noexcept override;
+    void tick(scheduling::absolute_time_ms current_time_ms) noexcept;
 
   private:
     class debouncer

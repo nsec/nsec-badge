@@ -8,7 +8,7 @@
 #define NSEC_NETWORK_HANDLER_HPP
 
 #include "network_messages.hpp"
-#include "scheduling/scheduler.hpp"
+#include "scheduling/task.hpp"
 #include "utils/callback.hpp"
 
 namespace nsec::communication
@@ -61,7 +61,7 @@ class SoftwareSerial
     }
 };
 
-class network_handler : public scheduling::periodic_task
+class network_handler : public scheduling::periodic_task<network_handler>
 {
   public:
     using disconnection_notifier = void (*)();
@@ -111,7 +111,7 @@ class network_handler : public scheduling::periodic_task
                                                const uint8_t *msg_payload);
 
   protected:
-    void run(scheduling::absolute_time_ms current_time_ms) noexcept override;
+    void tick(scheduling::absolute_time_ms current_time_ms) noexcept;
 
   private:
     enum class wire_protocol_state : uint8_t {

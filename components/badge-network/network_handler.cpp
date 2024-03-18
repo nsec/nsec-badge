@@ -150,7 +150,7 @@ ns::absolute_time_ms get_current_absolute_time()
 } /* namespace */
 
 nc::network_handler::network_handler() noexcept
-    : ns::periodic_task(
+    : ns::periodic_task<network_handler>(
           nsec::config::communication::network_handler_base_period_ms),
       _left_serial(nsec::config::communication::serial_rx_pin_left,
                    nsec::config::communication::serial_tx_pin_left, true),
@@ -920,7 +920,7 @@ void nc::network_handler::_run_wire_protocol(
     }
 }
 
-void nc::network_handler::run(ns::absolute_time_ms current_time_ms) noexcept
+void nc::network_handler::tick(ns::absolute_time_ms current_time_ms) noexcept
 {
     if (_check_connections() == check_connections_result::TOPOLOGY_CHANGED) {
         /*

@@ -161,12 +161,11 @@ class badge
         char current_message[32];
     };
 
-    class animation_task : public nsec::scheduling::periodic_task
+    class animation_task : public nsec::scheduling::periodic_task<animation_task>
     {
       public:
         explicit animation_task();
-        void run(nsec::scheduling::absolute_time_ms current_time_ms) noexcept
-            override;
+        void tick(nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
     };
 
     struct eeprom_config {

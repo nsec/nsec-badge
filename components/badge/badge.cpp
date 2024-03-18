@@ -119,7 +119,7 @@ void nr::badge::on_button_event(nsec::button::id button,
     }
 }
 
-void nr::badge::set_social_level(uint8_t new_level, bool save)
+void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
 {
     new_level =
         std::clamp(new_level, uint8_t(0), nsec::config::social::max_level);
@@ -367,10 +367,10 @@ void nr::badge::pairing_animator::reset() noexcept
 
 nr::badge::animation_task::animation_task() : periodic_task(250)
 {
-    nsec::g::the_scheduler.schedule_task(*this);
+    periodic_task::start();
 }
 
-void nr::badge::animation_task::run(
+void nr::badge::animation_task::tick(
     nsec::scheduling::absolute_time_ms current_time_ms) noexcept
 {
     nsec::g::the_badge.tick(current_time_ms);

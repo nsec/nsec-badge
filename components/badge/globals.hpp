@@ -6,14 +6,12 @@
 #define NSEC_GLOBALS_HPP
 
 #include "badge.hpp"
-#include "scheduling/scheduler.hpp"
+#include "scheduling/task.hpp"
 #include "utils/config.hpp"
 #include <cstdint>
 
 namespace nsec::g
 {
-extern scheduling::scheduler<config::scheduler::max_scheduled_task_count>
-    the_scheduler;
 extern runtime::badge the_badge;
 } // namespace nsec::g
 

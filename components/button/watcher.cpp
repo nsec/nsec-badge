@@ -23,10 +23,10 @@ int digitalRead(int pin_id)
 } // namespace
 
 nb::watcher::watcher(nb::new_button_event_notifier new_button_notifier) noexcept
-    : ns::periodic_task(nsec::config::button::polling_period_ms),
+    : ns::periodic_task<watcher>(nsec::config::button::polling_period_ms),
       _notify_new_event{new_button_notifier}
 {
-    ng::the_scheduler.schedule_task(*this);
+    start();
 }
 
 void nb::watcher::setup() noexcept
@@ -34,7 +34,7 @@ void nb::watcher::setup() noexcept
     // Setup button pins
 }
 
-void nb::watcher::run(
+void nb::watcher::tick(
     [[maybe_unused]] ns::absolute_time_ms current_time_ms) noexcept
 {
     const unsigned int btn_pins[] = {nbb::up,   nbb::right, nbb::down,
