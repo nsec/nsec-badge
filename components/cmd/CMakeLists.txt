@@ -9,7 +9,7 @@ if(CONFIG_NSEC_BUILD_CTF)
 endif()
 
 if(CONFIG_NSEC_BUILD_ADDON OR CONFIG_NSEC_BUILD_CTF)
-idf_component_register(SRCS "console.c"
+idf_component_register(SRCS "console.cpp"
                     INCLUDE_DIRS "."
                     REQUIRES ${requires_components}
 )
