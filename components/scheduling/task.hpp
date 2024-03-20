@@ -35,6 +35,10 @@ template <class UserTask> class periodic_task
      * not honored. If a task needs to be invoked at a precise time, use
      * a regular task and enqueue it manually by providing a relative time
      * as the deadline.
+     *
+     * Users must define a `tick` method that is periodically invoked by the
+     * scheduler.
+     *   void tick(nsec::scheduling::absolute_time_ms current_time_ms)
      */
     explicit periodic_task(relative_time_ms task_period_ms) noexcept
     {
@@ -72,11 +76,6 @@ template <class UserTask> class periodic_task
         if (result != pdPASS) {
             throw std::bad_alloc();
         }
-    }
-
-    // Periodic task tick.
-    void tick(scheduling::absolute_time_ms current_time_ms)
-    {
     }
 
   private:
