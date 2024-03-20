@@ -25,6 +25,11 @@ class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
         start();
     }
 
+    const char *name() const noexcept
+    {
+        return "dummy task";
+    }
+
   private:
     void tick(nsec::scheduling::absolute_time_ms current_time_ms
               [[maybe_unused]])

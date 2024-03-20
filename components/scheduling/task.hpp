@@ -35,6 +35,13 @@ template <class UserTask> class periodic_task
      * not honored. If a task needs to be invoked at a precise time, use
      * a regular task and enqueue it manually by providing a relative time
      * as the deadline.
+     *
+     * Users must define a `tick` method that is periodically invoked by the
+     * scheduler:
+     *   void tick(nsec::scheduling::absolute_time_ms current_time_ms);
+     *
+     * To set a custom task name, users must define a name() method:
+     *   const char *name() const noexcept;
      */
     explicit periodic_task(relative_time_ms task_period_ms) noexcept
     {
@@ -60,12 +67,17 @@ template <class UserTask> class periodic_task
         _period_ticks = new_period_ms / portTICK_PERIOD_MS;
     }
 
+    const char *name() const noexcept
+    {
+        return "Unnamed task";
+    }
+
   protected:
     // Call once derived task is fully initialized.
     void start()
     {
         const auto result = xTaskCreate(
-            _tick_and_wait, "NAME",
+            _tick_and_wait, name(),
             nsec::config::scheduling::default_stack_size_words, (void *)this,
             nsec::config::scheduling::default_task_priority, &_handle);
 
@@ -74,18 +86,13 @@ template <class UserTask> class periodic_task
         }
     }
 
-    // Periodic task tick.
-    void tick(scheduling::absolute_time_ms current_time_ms)
-    {
-    }
-
   private:
     static void _tick_and_wait(void *task_ptr)
     {
         auto &task = *static_cast<UserTask *>(task_ptr);
 
         while (true) {
-            task.tick(0);
+            task.tick(xTaskGetTickCount() * portTICK_PERIOD_MS);
             vTaskDelay(task._period_ticks);
         }
     }
