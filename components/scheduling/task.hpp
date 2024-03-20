@@ -16,6 +16,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include <utils/config.hpp>
+
 namespace nsec::scheduling
 {
 
@@ -62,8 +64,10 @@ template <class UserTask> class periodic_task
     // Call once derived task is fully initialized.
     void start()
     {
-        const auto result = xTaskCreate(_tick_and_wait, "NAME", 4096,
-                                        (void *)this, 3, &_handle);
+        const auto result = xTaskCreate(
+            _tick_and_wait, "NAME",
+            nsec::config::scheduling::default_stack_size_words, (void *)this,
+            nsec::config::scheduling::default_task_priority, &_handle);
 
         if (result != pdPASS) {
             throw std::bad_alloc();
