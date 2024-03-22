@@ -12,8 +12,8 @@ void init_ext_spi(void) {
         .mosi_io_num = PIN_MOSI,
         .miso_io_num = PIN_MISO,
         .sclk_io_num = PIN_CLK,
-        .quadwp_io_num = PIN_WP,
-        .quadhd_io_num = PIN_HD,
+        .quadwp_io_num = -1,
+        .quadhd_io_num = -1,
     };
 
     ESP_ERROR_CHECK(spi_bus_initialize(HOST_ID, &bus_config, SPI_DMA_CHAN));
@@ -53,7 +53,7 @@ void full_duplex_spi_read(uint8_t cmd, unsigned int bytes_amount) {
     spi_device_acquire_bus(spi_dev_handle, portMAX_DELAY);
     ESP_ERROR_CHECK(spi_device_transmit(spi_dev_handle, &trans));
     spi_device_release_bus(spi_dev_handle);
-    printf("TX cmd: 0x%02x\nrx: ", tx_data[0]);
+    printf("TX: 0x%02x\nRX: ", tx_data[0]);
     for (int i = 0; i < bytes_amount; i++) {
         printf("0x%02x ", rx_data[i]);
     }
@@ -76,28 +76,45 @@ void full_duplex_spi_readR1() {
     spi_device_acquire_bus(spi_dev_handle, portMAX_DELAY);
     ESP_ERROR_CHECK(spi_device_transmit(spi_dev_handle, &trans_r));
     spi_device_release_bus(spi_dev_handle);
-    printf("TX cmd: 0x%02x\nrx: 0x%02x\n", tx_data_r[0], rx_data_r[1]);
+    printf("TX: 0x%02x\nRX: 0x%02x\n", tx_data_r[0], rx_data_r[1]);
+}
+
+void full_duplex_spi_readR1R2R3() {
+    if (spi_dev_handle == NULL) {
+        ESP_LOGI(TAG, "Can't execute full_duplex_spi_read, spi_dev_handle is NULL.");
+        return;
+    }
+    spi_device_acquire_bus(spi_dev_handle, portMAX_DELAY);
+    for (int i = 1; i <= 3; i++) {
+        /* full duplex read of Status Register-i */
+        uint8_t tx_data_r[2];
+        if (i == 1) {
+            tx_data_r[0] = 0x05;
+        } else if (i == 2) {
+            tx_data_r[0] = 0x35;
+        } else {
+            tx_data_r[0] = 0x15;
+        }
+        tx_data_r[1] = 0x00;
+        uint8_t rx_data_r[2] = {0x00, 0x00};
+        spi_transaction_t trans_r = {
+            .length = 16,
+            .tx_buffer = tx_data_r,
+            .rx_buffer = rx_data_r
+        };
+        ESP_ERROR_CHECK(spi_device_transmit(spi_dev_handle, &trans_r));
+        printf("Status Register-%d : 0x%02x\n", i, rx_data_r[1]);
+    }
+    spi_device_release_bus(spi_dev_handle);
 }
 
 
-void full_duplex_spi_writeSR1(uint8_t val) {
+void full_duplex_spi_writeSRN(uint8_t val, int n) {
     if (spi_dev_handle == NULL) {
         ESP_LOGI(TAG, "Can't execute full_duplex_spi_writeSR, spi_dev_handle is NULL.");
         return;
     }
 
-    /* full duplex read of Status Register-2 */
-    uint8_t tx_data_r[2] = {0x35, 0x00};
-    uint8_t rx_data_r[2] = {0x00, 0x00};
-    spi_transaction_t trans_r = {
-        .length = 16,
-        .tx_buffer = tx_data_r,
-        .rx_buffer = rx_data_r
-    };
-    spi_device_acquire_bus(spi_dev_handle, portMAX_DELAY);
-    ESP_ERROR_CHECK(spi_device_transmit(spi_dev_handle, &trans_r));
-    spi_device_release_bus(spi_dev_handle);
-printf("I see that Register 2 is at %02x\n", rx_data_r[1]);
     /* full duplex write */
     unsigned int bytes_amount = 3;
     uint8_t tx_data[bytes_amount];
@@ -115,7 +132,7 @@ printf("I see that Register 2 is at %02x\n", rx_data_r[1]);
         .rx_buffer = rx_data
     };
     spi_device_acquire_bus(spi_dev_handle, portMAX_DELAY);
-    printf("TX cmd: 0x%02x  val:0x%02x\n", tx_data[0], tx_data[1]);
+    printf("TX: 0x%02x  RX: 0x%02x\n", tx_data[0], tx_data[1]);
     ESP_ERROR_CHECK(spi_device_transmit(spi_dev_handle, &trans_wren));
 
     // Send the Volatile SR Write Enable command
@@ -125,18 +142,24 @@ printf("I see that Register 2 is at %02x\n", rx_data_r[1]);
         .tx_buffer = tx_data,
         .rx_buffer = rx_data
     };
-    printf("TX cmd: 0x%02x  val:0x%02x\n", tx_data[0], tx_data[1]);
+    printf("TX: 0x%02x  RX: 0x%02x\n", tx_data[0], tx_data[1]);
     ESP_ERROR_CHECK(spi_device_transmit(spi_dev_handle, &trans_volsrwe));
 
-    tx_data[0] = 0x01;
+    if (n == 1) {
+        tx_data[0] = 0x01;
+    } else if (n == 2) {
+        tx_data[0] = 0x31;
+    } else {
+        tx_data[0] = 0x11;
+    }
+
     tx_data[1] = val;
-    tx_data[2] = 0x40; //rx_data_r[1]; // send the same value to Register 2
     spi_transaction_t trans = {
-        .length = 3 * 8,
+        .length = 2 * 8,
         .tx_buffer = tx_data,
         .rx_buffer = rx_data
     };
-    printf("TX cmd: 0x%02x  val:0x%02x\n", tx_data[0], tx_data[1]);
+    printf("TX: 0x%02x  RX: 0x%02x\n", tx_data[0], tx_data[1]);
     ESP_ERROR_CHECK(spi_device_transmit(spi_dev_handle, &trans));
     spi_device_release_bus(spi_dev_handle);
 

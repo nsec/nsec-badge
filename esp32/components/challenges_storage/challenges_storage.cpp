@@ -70,13 +70,27 @@ unsigned int parse_address(int argc, char **argv) {
     return address;
 }
 
+unsigned int parse_address_admin(int argc, char **argv) {
+    if (argc < 3) return 0;
+    unsigned int address = 0;
+    if(sscanf(argv[2], "%x", &address)) {
+        ESP_LOGI(TAG, "Parsed address: 0x%02x", address);
+    } else {
+        ESP_LOGI(TAG, "Invalid hexadecimal address format! Going with 0x00.");
+        address = 0x00;
+    }
+    return address;
+}
+
+
 static int challenge_storage(int argc, char **argv) {
     uint16_t select_challenge = 1;
 
-     if (flash == NULL) {
-        ESP_LOGE(TAG, "Can't execute challenge_storage, flash is NULL.");
-        return 0;
-    }
+    // since this is now hybrid mode with raw mode we can't exit when flash is NULL
+    //  if (flash == NULL) {
+    //     ESP_LOGE(TAG, "Can't execute challenge_storage, flash is NULL.");
+    //     return 0;
+    // }
     challenges_storage_start();
 
     if (argc >= 2) {
@@ -96,6 +110,9 @@ static int challenge_storage(int argc, char **argv) {
         erase_ota(0);
     } else if (select_challenge == 19) {
         ESP_ERROR_CHECK(esp_flash_erase_chip(flash));
+    } else if (select_challenge == 222) {
+        // write to SR2
+        full_duplex_spi_writeSRN(static_cast<uint8_t>(parse_address_admin(argc, argv)), 2);
     }
 
     challenges_storage_end();
@@ -112,6 +129,11 @@ static int raw_toggle(int argc, char **argv) {
     return 0;
 }
 
+static int raw_read_register123(int argc, char **argv) {
+    full_duplex_spi_readR1R2R3();
+    return 0;
+}
+
 static int raw_read_register1(int argc, char **argv) {
     full_duplex_spi_readR1();
     return 0;
@@ -122,7 +144,7 @@ static int raw_write_register1(int argc, char **argv) {
         printf("Usage: raw_write_register [value]\n");
         return 0;
     }
-    full_duplex_spi_writeSR1(static_cast<uint8_t>(parse_address(argc, argv)));
+    full_duplex_spi_writeSRN(static_cast<uint8_t>(parse_address(argc, argv)), 1);
     return 0;
 }
 
@@ -218,6 +240,7 @@ static int write_to_0x10(int argc, char **argv) {
 }
 
 void register_challenges_storage(void) {
+    
     const esp_console_cmd_t cmd = {
         .command = "storage",
         .help = "Run the storage challenge stuff\n",
@@ -226,60 +249,62 @@ void register_challenges_storage(void) {
         .argtable = NULL,        
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
-
+    
     const esp_console_cmd_t cmd2 = {
         .command = "raw_toggle",
-        .help = "Toggle RAW access to SPI Flash\n",
+        .help = "Toggle RAW access to SPI FLASH. This will reboot the device in the other mode.\n",
         .hint = "",
         .func = &raw_toggle,
         .argtable = NULL,        
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd2) );
 
-    const esp_console_cmd_t cmd3 = {
-        .command = "raw_read_register1",
-        .help = "Read registers from SPI Flash\n",
-        .hint = "",
-        .func = &raw_read_register1,
-        .argtable = NULL,        
-    };
+    if (Save::save_data.raw_spi_mode) {
+        const esp_console_cmd_t cmd3 = {
+            .command = "raw_read_registers",
+            .help = "Read registers from SPI FLASH\n",
+            .hint = "",
+            .func = &raw_read_register123,
+            .argtable = NULL,        
+        };
 
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd3) );
-    const esp_console_cmd_t cmd4 = {
-        .command = "raw_write_register1",
-        .help = "Write register to SPI Flash\n",
-        .hint = "[value]",
-        .func = &raw_write_register1,
-        .argtable = NULL,        
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd4) );
+        ESP_ERROR_CHECK( esp_console_cmd_register(&cmd3) );
+        const esp_console_cmd_t cmd4 = {
+            .command = "raw_write_register1",
+            .help = "Write register to SPI FLASH\n",
+            .hint = "[hex value]",
+            .func = &raw_write_register1,
+            .argtable = NULL,        
+        };
+        ESP_ERROR_CHECK( esp_console_cmd_register(&cmd4) );
+    } else {
+        const esp_console_cmd_t cmd5 = {
+            .command = "read_first_128",
+            .help = "Read first 128 bytes on the SPI FLASH, only if value of addr 0x10 is 0xAA\n",
+            .hint = "",
+            .func = &read_first_128,
+            .argtable = NULL,        
+        };
+        ESP_ERROR_CHECK( esp_console_cmd_register(&cmd5) );
 
-    const esp_console_cmd_t cmd5 = {
-        .command = "read_first_128",
-        .help = "Read first 128 bytes on the chip, only if value of addr 0x10 is 0xAA\n",
-        .hint = "",
-        .func = &read_first_128,
-        .argtable = NULL,        
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd5) );
+        const esp_console_cmd_t cmd6 = {
+            .command = "write_to_0x10",
+            .help = "Write 0xAA to addr 0x10 on the SPI FLASH\n",
+            .hint = "",
+            .func = &write_to_0x10,
+            .argtable = NULL,        
+        };
+        ESP_ERROR_CHECK( esp_console_cmd_register(&cmd6) );
 
-    const esp_console_cmd_t cmd6 = {
-        .command = "write_to_0x10",
-        .help = "Write 0xAA to addr 0x10\n",
-        .hint = "",
-        .func = &write_to_0x10,
-        .argtable = NULL,        
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd6) );
-
-    const esp_console_cmd_t cmd7 = {
-        .command = "read_later_128",
-        .help = "Read 128 bytes further in the chip, only if value of addr 0x10 is not 0xBB and value of addr 0x200010 is 0xAA\n",
-        .hint = "",
-        .func = &read_later_128,
-        .argtable = NULL,        
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd7) );
+        const esp_console_cmd_t cmd7 = {
+            .command = "read_later_128",
+            .help = "Read 128 bytes further in the SPI FLASH, only if value of addr 0x10 is not 0xBB and value of addr 0x200010 is 0xAA\n",
+            .hint = "",
+            .func = &read_later_128,
+            .argtable = NULL,        
+        };
+        ESP_ERROR_CHECK( esp_console_cmd_register(&cmd7) );
+    }
 
 }
 
