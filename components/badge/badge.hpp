@@ -8,7 +8,7 @@
 #define NSEC_RUNTIME_BADGE_HPP
 
 #include <badge-network/network_handler.hpp>
-#include <button/watcher.hpp>
+#include <badge-button/watcher.hpp>
 #include <cstdint>
 
 namespace nsec::runtime
