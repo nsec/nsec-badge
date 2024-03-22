@@ -23,8 +23,10 @@
 // Used for provisioning and testing
 #define CTF_ADDON_ADMIN_MODE 1
 
-#define DATA_PIN_1 33
-#define LED_TYPE WS2811
+// For flag2 challenge
+#define SECT_WRITE_PROTECTED 0x050000
+#define SECT_WRITABLE 0x080000
+#define FLAG_2_ADDR 0x020000
 
 static esp_flash_t* flash = NULL;
 static int64_t start_time = 0;
@@ -151,6 +153,15 @@ static int challenge_storage(int argc, char **argv) {
         esp_flash_erase_region(flash, 0x042000, 4096);
         ESP_ERROR_CHECK(esp_flash_write(flash, buffer_flag0, 0x042000, strlen(buffer_flag0)));
 
+        // TODO change CTF24 to random
+        const char* buffer_flag2 = "FLAG-NSECCTF24THISISSENCRYPTEDLATER";
+        printf("writing flag2...\n");
+        esp_flash_erase_region(flash, FLAG_2_ADDR, 4096);
+        ESP_ERROR_CHECK(esp_flash_write(flash, buffer_flag2, FLAG_2_ADDR, strlen(buffer_flag2)));
+        printf("erasing flag2 regions...\n");
+        esp_flash_erase_region(flash, SECT_WRITE_PROTECTED, 4096);
+        esp_flash_erase_region(flash, SECT_WRITABLE, 4096);
+        
         // The firmware needs to be available in NSEC_OTA_PARTITION (ota_1)
         esp_partition_subtype_t subtype = NSEC_OTA_PARTITION;
         const esp_partition_t *ota_partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
@@ -160,7 +171,7 @@ static int challenge_storage(int argc, char **argv) {
             printf("loading ota_1 data into flash...\n");
             storage_read_from_ota(1, flash);
         } else {
-            printf("The nsec-ctf-addon firmware needs to be available in ota_1\n");
+            printf("ERROR: The nsec-ctf-addon firmware needs to be available in ota_1!\n");
         }
 
         printf("Please swap to RAW mode with 'raw_toggle' and then run 'storage 222'.\n");
@@ -218,29 +229,30 @@ static int read_first_128(int argc, char **argv) {
 }
 
 // TODO maybe rename to read_flag2, add encryption for this flag
-static int read_later_128(int argc, char **argv) {
+static int read_another_128(int argc, char **argv) {
     uint8_t* buffer = (uint8_t*)malloc(1);
     if (buffer == NULL) {
         ESP_LOGE(TAG, "Failed to allocate memory for buffer!");
         return 1;
     }
-    uint32_t addr2 = 0x010010;
-    uint32_t sect2 = 0x010000;
-    uint32_t addr1 = 0x020010;
-    uint32_t sect1 = 0x020000;
-    if (flash->size == 1048576) {
+    // sect1 is the one that should be write protected
+    uint32_t addr1 = SECT_WRITE_PROTECTED + 0x48;
+    uint32_t sect1 = SECT_WRITE_PROTECTED;
+    
+    // sect2 is the one that should be writable
+    uint32_t addr2 = SECT_WRITABLE + 0x48;
+    uint32_t sect2 = SECT_WRITABLE;
+
+    /*if (flash->size == 1048576) {
         // W25Q80DV 8MBITS solve: 0x28
-    } else if (flash->size == 8388608) {
-        // W25Q64FV 64MBITS solve: 0x24
-        uint32_t addr2 = 0x010010;
-        uint32_t sect2 = 0x010000;
-        uint32_t addr1 = 0x020010;
-        uint32_t sect1 = 0x020000;
-    } else {
+    } else
+    */
+   // W25Q64JV 64MBITS
+    if (flash->size != 8388608) {
         printf("Unknown flash size! exiting...\n");
         return 1;
     }
-    
+
     uint8_t w[] = {0xBB};
     printf(LOG_COLOR(LOG_COLOR_BLUE) "Writing 0x%02X to 0x%06lX...\n", w[0], addr1);
     ESP_ERROR_CHECK(esp_flash_erase_region(flash, sect1, 4096));
@@ -258,14 +270,14 @@ static int read_later_128(int argc, char **argv) {
         if (buffer[0] == w[0]) {
             // Write at addr2 works, OK!
             printf("Looks like I can write at 0x%06lX, and that's what I want!\n" LOG_RESET_COLOR, addr2);
-            flash_read_at(flash, 128, 0x011000);
+            flash_read_at(flash, 128, FLAG_2_ADDR);
         } else {
-            printf("Can't write 0x%02X value at 0x%06lX! exiting...\n", w[0], addr2);
+            printf("Can't write 0x%02X value at 0x%06lX! Exiting.\n", w[0], addr2);
         }
         
     } else {
         w[0] = {0xAA};
-        printf("0x%06lX value is 0x%02X! erasing it...\n", addr1, buffer[0]);
+        printf("0x%06lX value is 0x%02X! Erasing it and exiting.\n", addr1, buffer[0]);
         ESP_ERROR_CHECK(esp_flash_erase_region(flash, sect1, 4096));
         //ESP_ERROR_CHECK(esp_flash_write(flash, w, addr1, 1));
     }
@@ -329,7 +341,7 @@ void register_challenges_storage(void) {
         ESP_ERROR_CHECK( esp_console_cmd_register(&cmd3) );
         const esp_console_cmd_t cmd4 = {
             .command = "raw_write_register1",
-            .help = "Write register to SPI FLASH\n",
+            .help = "Write register to SPI FLASH.\n",
             .hint = "[hex value]",
             .func = &raw_write_register1,
             .argtable = NULL,        
@@ -338,7 +350,7 @@ void register_challenges_storage(void) {
     } else {
         const esp_console_cmd_t cmd5 = {
             .command = "read_first_128",
-            .help = "Read first 128 bytes on SPI FLASH, only if value of addr 0x000048 is 0xAA\n",
+            .help = "Read first 128 bytes on SPI FLASH, only if value of addr 0x000048 is 0xAA.\n",
             .hint = "",
             .func = &read_first_128,
             .argtable = NULL,        
@@ -347,7 +359,7 @@ void register_challenges_storage(void) {
 
         const esp_console_cmd_t cmd6 = {
             .command = "write_to_0x48",
-            .help = "Write 0xAA to addr 0x000048 on SPI FLASH\n",
+            .help = "Write 0xAA to addr 0x000048 on SPI FLASH.\n",
             .hint = "",
             .func = &write_to_0x48,
             .argtable = NULL,        
@@ -355,10 +367,10 @@ void register_challenges_storage(void) {
         ESP_ERROR_CHECK( esp_console_cmd_register(&cmd6) );
 
         const esp_console_cmd_t cmd7 = {
-            .command = "read_later_128",
-            .help = "Read 128 bytes further in SPI FLASH, only if value of addr 0x000048 is not 0xBB and value of addr 0x200010 is 0xAA\n",
+            .command = "read_another_128",
+            .help = "Read 128 bytes somewhere further in SPI FLASH, only under some conditions.\n",
             .hint = "",
-            .func = &read_later_128,
+            .func = &read_another_128,
             .argtable = NULL,        
         };
         ESP_ERROR_CHECK( esp_console_cmd_register(&cmd7) );
