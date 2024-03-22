@@ -8,7 +8,7 @@
 
 
 #define READSIZE (4096 * 1)
-#define FLASH_DEST_ADDR 0x00000
+#define FLASH_DEST_ADDR 0x400000
 
 static const char *TAG = "ota_operations";
 

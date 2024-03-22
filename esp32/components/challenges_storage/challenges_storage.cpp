@@ -1,12 +1,4 @@
-/* Console example — various system commands
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
-
+// Code for the CTF Addon challenges 2024
 #include <stdio.h>
 #include <string.h>
 #include "argtable3/argtable3.h"
@@ -28,6 +20,9 @@
 #include "spi_operations.h"
 #include "flash_operations.h"
 
+// Used for provisioning and testing
+#define CTF_ADDON_ADMIN_MODE 1
+
 #define DATA_PIN_1 33
 #define LED_TYPE WS2811
 
@@ -46,17 +41,11 @@ void challenges_storage_init() {
     }
 }
 
-void challenges_storage_start() {
-    start_time = esp_timer_get_time();
-}
-
-void challenges_storage_end() {
-    int64_t end_time = esp_timer_get_time();
-    printf("Execution time: %.6f seconds\n", (double)(end_time - start_time) / 1000000.0);
-    start_time = 0;
-}
-
+#if CTF_ADDON_ADMIN_MODE
 static const char *TAG = "challenges_storage";
+#else
+static const char *TAG = "ctf_addon";
+#endif
 
 unsigned int parse_address(int argc, char **argv) {
     if (argc < 2) return 0;
@@ -68,6 +57,21 @@ unsigned int parse_address(int argc, char **argv) {
         address = 0x00;
     }
     return address;
+}
+
+#if CTF_ADDON_ADMIN_MODE
+
+#include "esp_partition.h"
+#include "esp_ota_ops.h"
+
+void challenges_storage_start() {
+    start_time = esp_timer_get_time();
+}
+
+void challenges_storage_end() {
+    int64_t end_time = esp_timer_get_time();
+    printf("Execution time: %.6f seconds\n", (double)(end_time - start_time) / 1000000.0);
+    start_time = 0;
 }
 
 unsigned int parse_address_admin(int argc, char **argv) {
@@ -82,9 +86,10 @@ unsigned int parse_address_admin(int argc, char **argv) {
     return address;
 }
 
-
 static int challenge_storage(int argc, char **argv) {
     uint16_t select_challenge = 1;
+
+    ESP_LOGI(TAG, "ADMIN MODE COMMAND LOADED! IF THIS IS IN PRODUCTION ITS A BIG PROBLEM!");
 
     // since this is now hybrid mode with raw mode we can't exit when flash is NULL
     //  if (flash == NULL) {
@@ -98,8 +103,6 @@ static int challenge_storage(int argc, char **argv) {
     }
     if (select_challenge == 4) {
         flash_read(flash, 128);
-    } else if (select_challenge == 5) {
-        flash_write_flag(flash, parse_address(argc, argv));
     } else if (select_challenge == 11) {
         storage_read_from_ota(1, flash);
     } else if (select_challenge == 12) {
@@ -111,14 +114,63 @@ static int challenge_storage(int argc, char **argv) {
     } else if (select_challenge == 19) {
         ESP_ERROR_CHECK(esp_flash_erase_chip(flash));
     } else if (select_challenge == 222) {
+        full_duplex_spi_writeSRN(0x9c, 1); // SRP=1, PROTECTED PORTION=ALL
+
         // write to SR2
-        full_duplex_spi_writeSRN(static_cast<uint8_t>(parse_address_admin(argc, argv)), 2);
+        //full_duplex_spi_writeSRN(static_cast<uint8_t>(parse_address_admin(argc, argv)), 2);
+    } else if (select_challenge == 111) {
+        printf("auto provisioning of the flash chip and tests...\n");
+
+        // fresh chips should be already erased
+        // TODO comment to save time with provision the 150 addons!
+        //esp_flash_erase_chip(flash); 
+
+        // TODO change CTF24 to random
+        const char* buffer_flag1 = "FLAG-NSECCTF24FLASHADDON";
+        printf("writing flag1...\n");
+        esp_flash_erase_region(flash, 0x000000, 4096);
+        ESP_ERROR_CHECK(esp_flash_write(flash, buffer_flag1, 0x000000, strlen(buffer_flag1)));
+
+        char* read_buffer = (char*)malloc(strlen(buffer_flag1));
+        if (read_buffer == NULL) {
+            ESP_LOGE(TAG, "Failed to allocate memory for read_buffer!");
+            return 1;
+        }
+        ESP_ERROR_CHECK(esp_flash_read(flash, read_buffer, 0x000000, strlen(buffer_flag1)));
+        if (strncmp(read_buffer, buffer_flag1, strlen(buffer_flag1)) == 0) {
+            printf("flag1 is OK!\n");
+        } else {
+            printf("flag1 isn't written properly.. bailing out!\n");
+            return 1;
+        }
+        free(read_buffer);
+        
+        // TODO change CTF24 to random
+        const char* buffer_flag0 = "FLAG-NSECCTF24DUMPFLASH";
+        printf("writing flag0...\n");
+        esp_flash_erase_region(flash, 0x042000, 4096);
+        ESP_ERROR_CHECK(esp_flash_write(flash, buffer_flag0, 0x042000, strlen(buffer_flag0)));
+
+        // The firmware needs to be available in NSEC_OTA_PARTITION (ota_1)
+        esp_partition_subtype_t subtype = NSEC_OTA_PARTITION;
+        const esp_partition_t *ota_partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
+        esp_app_desc_t desc;
+        esp_err_t err = esp_ota_get_partition_description(ota_partition, &desc);
+        if (strcmp(desc.project_name, "nsec-ctf-addon") == 0) {
+            printf("loading ota_1 data into flash...\n");
+            storage_read_from_ota(1, flash);
+        } else {
+            printf("The nsec-ctf-addon firmware needs to be available in ota_1\n");
+        }
+
+        printf("Please swap to RAW mode with 'raw_toggle' and then run 'storage 222'.\n");
     }
 
     challenges_storage_end();
 
     return 0;
 }
+#endif
 
 static int raw_toggle(int argc, char **argv) {
     Save::save_data.raw_spi_mode = !Save::save_data.raw_spi_mode;
@@ -155,17 +207,17 @@ static int read_first_128(int argc, char **argv) {
         ESP_LOGE(TAG, "Failed to allocate memory for buffer!");
         return 1;
     }
-    ESP_ERROR_CHECK(esp_flash_read(flash, buffer, 0x010, 1));
+    ESP_ERROR_CHECK(esp_flash_read(flash, buffer, 0x000048, 1));
     if (buffer[0] == 0xAA) {
         flash_read(flash, 128);
     } else {
-        printf("0x010 value is not 0xAA! exiting...\n");
+        printf("0x000048 value is not 0xAA! exiting...\n");
     }
     free(buffer);
     return 0;
 }
 
-// TODO maybe rename to read_flag2
+// TODO maybe rename to read_flag2, add encryption for this flag
 static int read_later_128(int argc, char **argv) {
     uint8_t* buffer = (uint8_t*)malloc(1);
     if (buffer == NULL) {
@@ -223,17 +275,17 @@ static int read_later_128(int argc, char **argv) {
 }
 
 
-static int write_to_0x10(int argc, char **argv) {
+static int write_to_0x48(int argc, char **argv) {
     uint8_t w[] = {0xAA};
-    printf("Writing 0xAA to 0x010...\n");
-    ESP_ERROR_CHECK(esp_flash_write(flash, w, 0x010, 1));
+    printf("Writing 0xAA to 0x000048...\n");
+    ESP_ERROR_CHECK(esp_flash_write(flash, w, 0x000048, 1));
     uint8_t* buffer = (uint8_t*)malloc(128);
     if (buffer == NULL) {
         ESP_LOGE(TAG, "Failed to allocate memory for buffer!");
         return 1;
     }
-    ESP_ERROR_CHECK(esp_flash_read(flash, buffer, 0x010, 1));
-    printf("0x010 value is: %02X\n", buffer[0]);
+    ESP_ERROR_CHECK(esp_flash_read(flash, buffer, 0x000048, 1));
+    printf("0x000048 value is: %02X\n", buffer[0]);
 
     free(buffer);
     return 0;
@@ -241,6 +293,7 @@ static int write_to_0x10(int argc, char **argv) {
 
 void register_challenges_storage(void) {
     
+    #if CTF_ADDON_ADMIN_MODE
     const esp_console_cmd_t cmd = {
         .command = "storage",
         .help = "Run the storage challenge stuff\n",
@@ -249,14 +302,19 @@ void register_challenges_storage(void) {
         .argtable = NULL,        
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+    #endif
     
-    const esp_console_cmd_t cmd2 = {
+    esp_console_cmd_t cmd2 = {
         .command = "raw_toggle",
-        .help = "Toggle RAW access to SPI FLASH. This will reboot the device in the other mode.\n",
         .hint = "",
         .func = &raw_toggle,
         .argtable = NULL,        
     };
+    if (Save::save_data.raw_spi_mode) {
+        cmd2.help = "Toggle regular access to SPI FLASH. This will reboot the device in the regular flash mode.\n";
+    } else {
+        cmd2.help = "Toggle RAW access to SPI FLASH. This will reboot the device in RAW SPI mode.\n";
+    }
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd2) );
 
     if (Save::save_data.raw_spi_mode) {
@@ -280,7 +338,7 @@ void register_challenges_storage(void) {
     } else {
         const esp_console_cmd_t cmd5 = {
             .command = "read_first_128",
-            .help = "Read first 128 bytes on the SPI FLASH, only if value of addr 0x10 is 0xAA\n",
+            .help = "Read first 128 bytes on SPI FLASH, only if value of addr 0x000048 is 0xAA\n",
             .hint = "",
             .func = &read_first_128,
             .argtable = NULL,        
@@ -288,17 +346,17 @@ void register_challenges_storage(void) {
         ESP_ERROR_CHECK( esp_console_cmd_register(&cmd5) );
 
         const esp_console_cmd_t cmd6 = {
-            .command = "write_to_0x10",
-            .help = "Write 0xAA to addr 0x10 on the SPI FLASH\n",
+            .command = "write_to_0x48",
+            .help = "Write 0xAA to addr 0x000048 on SPI FLASH\n",
             .hint = "",
-            .func = &write_to_0x10,
+            .func = &write_to_0x48,
             .argtable = NULL,        
         };
         ESP_ERROR_CHECK( esp_console_cmd_register(&cmd6) );
 
         const esp_console_cmd_t cmd7 = {
             .command = "read_later_128",
-            .help = "Read 128 bytes further in the SPI FLASH, only if value of addr 0x10 is not 0xBB and value of addr 0x200010 is 0xAA\n",
+            .help = "Read 128 bytes further in SPI FLASH, only if value of addr 0x000048 is not 0xBB and value of addr 0x200010 is 0xAA\n",
             .hint = "",
             .func = &read_later_128,
             .argtable = NULL,        
