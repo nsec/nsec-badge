@@ -5,7 +5,7 @@
  */
 
 #include <badge/globals.hpp>
-#include <button/watcher.hpp>
+#include <badge-button/watcher.hpp>
 #include <utils/board.hpp>
 #include <utils/config.hpp>
 
