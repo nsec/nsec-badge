@@ -7,7 +7,8 @@ set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 set(CONFIG_NSEC_BUILD_ADDON $ENV{CONFIG_NSEC_BUILD_ADDON} CACHE INTERNAL "")
 
 if(CONFIG_NSEC_BUILD_CONFERENCE)
-        idf_component_register(SRCS "network_handler.cpp"
-                        INCLUDE_DIRS "." "../"
+        idf_component_register(SRCS "network_handler.cpp" "uart_interface.cpp"
+                        INCLUDE_DIRS "." "../" "../../.pio/libdeps/conference/fmt/include"
+                        REQUIRES driver
         )
 endif()

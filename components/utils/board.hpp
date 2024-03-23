@@ -5,9 +5,9 @@
 #ifndef NSEC_BOARD_HPP
 #define NSEC_BOARD_HPP
 
-namespace nsec
-{
-namespace board
+#include <driver/uart.h>
+
+namespace nsec::board
 {
 
 /*
@@ -47,26 +47,27 @@ namespace serial
 {
 namespace dev
 {
-constexpr unsigned int txd = 43;
-constexpr unsigned int rxd = 44;
+constexpr unsigned int tx_pin = 43;
+constexpr unsigned int rx_pin = 44;
 } // namespace dev
-
-namespace right
-{
-constexpr unsigned int txd = 17;
-constexpr unsigned int rxd = 18;
-constexpr unsigned int signal = 12;
-} // namespace right
 
 namespace left
 {
-constexpr unsigned int txd = 15;
-constexpr unsigned int rxd = 16;
-constexpr unsigned int signal = 11;
+constexpr auto uart_device = UART_NUM_1;
+constexpr unsigned int tx_pin = 15;
+constexpr unsigned int rx_pin = 16;
+constexpr unsigned int signal_pin = 11;
 } // namespace left
+
+namespace right
+{
+constexpr auto uart_device = UART_NUM_2;
+constexpr unsigned int tx_pin = 17;
+constexpr unsigned int rx_pin = 18;
+constexpr unsigned int signal_pin = 12;
+} // namespace right
 
 } // namespace serial
 
-} // namespace board
-} // namespace nsec
+} // namespace nsec::board
 #endif /* NSEC_BOARD_HPP */

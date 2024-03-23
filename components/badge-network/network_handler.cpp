@@ -1,23 +1,24 @@
 /*
  * SPDX-License-Identifier: MIT
  *
- * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * Copyright 2023-2024 Jérémie Galarneau <jeremie.galarneau@gmail.com>
  */
 
 #include "network_handler.hpp"
 #include "scheduling/time.hpp"
 #include "utils/config.hpp"
+#include <array>
 #include <cstdint>
 
 #include <badge/globals.hpp>
+#include <utils/board.hpp>
 
 #include <cstring>
+#include <driver/gpio.h>
 
 namespace ns = nsec::scheduling;
 namespace nc = nsec::communication;
 
-namespace
-{
 enum class wire_msg_type : std::uint8_t {
     // Reserved.
     NONE = 0,
@@ -31,7 +32,180 @@ enum class wire_msg_type : std::uint8_t {
     // Application messages (forwarded to the application layer)
     // ...
 };
-}
+
+// Wire message type formatter
+template <> struct fmt::formatter<wire_msg_type> : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(wire_msg_type wire_msg_type, FormatContext &ctx)
+    {
+        string_view name = "unknown";
+        switch (wire_msg_type) {
+        case wire_msg_type::NONE:
+            name = "none";
+            break;
+        case wire_msg_type::MONITOR:
+            name = "monitor";
+            break;
+        case wire_msg_type::RESET:
+            name = "reset";
+            break;
+        case wire_msg_type::ANNOUNCE:
+            name = "announce";
+            break;
+        case wire_msg_type::ANNOUNCE_REPLY:
+            name = "announce_reply";
+            break;
+        case wire_msg_type::OK:
+            name = "ok";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
+
+// Link position formatter
+template <>
+struct fmt::formatter<nc::network_handler::link_position>
+    : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(nc::network_handler::link_position position, FormatContext &ctx)
+    {
+        string_view name = "unknown";
+
+        switch (position) {
+        case nc::network_handler::link_position::LEFT_MOST:
+            name = "left-most";
+            break;
+        case nc::network_handler::link_position::RIGHT_MOST:
+            name = "right-most";
+            break;
+        case nc::network_handler::link_position::MIDDLE:
+            name = "middle";
+            break;
+        case nc::network_handler::link_position::UNKNOWN:
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
+
+// Wire protocol state formatter
+template <>
+struct fmt::formatter<nc::network_handler::wire_protocol_state>
+    : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(nc::network_handler::wire_protocol_state state,
+                FormatContext &ctx)
+    {
+        string_view name = "unknown";
+
+        switch (state) {
+        case nc::network_handler::wire_protocol_state::UNCONNECTED:
+            name = "UNCONNECTED";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            WAIT_TO_INITIATE_DISCOVERY:
+            name = "WAIT_TO_INITIATE_DISCOVERY";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_RECEIVE_ANNOUNCE:
+            name = "DISCOVERY_RECEIVE_ANNOUNCE";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE:
+            name = "DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE";
+            break;
+        case nc::network_handler::wire_protocol_state::DISCOVERY_SEND_ANNOUNCE:
+            name = "DISCOVERY_SEND_ANNOUNCE";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_CONFIRM_ANNOUNCE:
+            name = "DISCOVERY_CONFIRM_ANNOUNCE";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE:
+            name = "DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE:
+            name = "DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_RECEIVE_ANNOUNCE_REPLY:
+            name = "DISCOVERY_RECEIVE_ANNOUNCE_REPLY";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE_REPLY:
+            name = "DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE_REPLY";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_SEND_ANNOUNCE_REPLY:
+            name = "DISCOVERY_SEND_ANNOUNCE_REPLY";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_CONFIRM_ANNOUNCE_REPLY:
+            name = "DISCOVERY_CONFIRM_ANNOUNCE_REPLY";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE_REPLY:
+            name = "DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE_REPLY";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE_REPLY:
+            name = "DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE_REPLY";
+            break;
+        case nc::network_handler::wire_protocol_state::RUNNING_RECEIVE_MESSAGE:
+            name = "RUNNING_RECEIVE_MESSAGE";
+            break;
+        case nc::network_handler::wire_protocol_state::RUNNING_SEND_APP_MESSAGE:
+            name = "RUNNING_SEND_APP_MESSAGE";
+            break;
+        case nc::network_handler::wire_protocol_state::
+            RUNNING_CONFIRM_APP_MESSAGE:
+            name = "RUNNING_CONFIRM_APP_MESSAGE";
+            break;
+        case nc::network_handler::wire_protocol_state::RUNNING_SEND_MONITOR:
+            name = "RUNNING_SEND_MONITOR";
+            break;
+        case nc::network_handler::wire_protocol_state::RUNNING_CONFIRM_MONITOR:
+            name = "RUNNING_CONFIRM_MONITOR";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
+
+// Peer relative position formatter
+template <>
+struct fmt::formatter<nc::peer_relative_position>
+    : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(nc::peer_relative_position state, FormatContext &ctx)
+    {
+        string_view name = "unknown";
+
+        switch (state) {
+        case nc::peer_relative_position::LEFT:
+            name = "left";
+            break;
+        case nc::peer_relative_position::RIGHT:
+            name = "right";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
 
 namespace
 {
@@ -102,23 +276,40 @@ class fletcher16_checksumer
     std::uint8_t _sum_high = 0;
 };
 
-void send_wire_magic(nc::SoftwareSerial &serial) noexcept
+void send_wire_magic(nc::uart_interface &serial) noexcept
 {
-    serial.write(wire_protocol_magic_1);
-    serial.write(wire_protocol_magic_2);
+    const std::array<std::uint8_t, 2> protocol_magic = {wire_protocol_magic_1,
+                                                        wire_protocol_magic_2};
+
+    serial.send(protocol_magic.data(), protocol_magic.size());
 }
 
-void send_wire_header(nc::SoftwareSerial &serial, std::uint8_t msg_type,
+template <typename MsgType>
+void log_sent_msg_type(const nsec::logging::logger &logger, MsgType msg_type)
+{
+    logger.debug("Sending message: type={}", msg_type);
+}
+
+void send_wire_header(const nsec::logging::logger &logger,
+                      nc::uart_interface &serial, std::uint8_t msg_type,
                       std::uint16_t checksum) noexcept
 {
     const wire_msg_header header = {.type = msg_type, .checksum = checksum};
 
+    if (msg_type <
+        nsec::config::communication::application_message_type_range_begin) {
+        log_sent_msg_type(logger, wire_msg_type(msg_type));
+    } else {
+        log_sent_msg_type(logger, int(msg_type));
+    }
+
     send_wire_magic(serial);
-    serial.write(reinterpret_cast<const std::uint8_t *>(&header),
-                 sizeof(header));
+    serial.send(reinterpret_cast<const std::uint8_t *>(&header),
+                sizeof(header));
 }
 
-void send_wire_msg(nc::SoftwareSerial &serial, std::uint8_t msg_type,
+void send_wire_msg(const nsec::logging::logger &logger,
+                   nc::uart_interface &serial, std::uint8_t msg_type,
                    const std::uint8_t *msg = nullptr,
                    std::uint8_t msg_payload_size = 0) noexcept
 {
@@ -129,61 +320,71 @@ void send_wire_msg(nc::SoftwareSerial &serial, std::uint8_t msg_type,
         checksummer.push(msg[i]);
     }
 
-    send_wire_header(serial, msg_type, checksummer.checksum());
-    serial.write(msg, msg_payload_size);
+    send_wire_header(logger, serial, msg_type, checksummer.checksum());
+    serial.send(msg, msg_payload_size);
 }
 
-void send_wire_reset_msg(nc::SoftwareSerial &serial) noexcept
+void _send_wire_reset_msg(const nsec::logging::logger &logger,
+                          nc::uart_interface &serial) noexcept
 {
-    send_wire_msg(serial, std::uint8_t(wire_msg_type::RESET));
+    send_wire_msg(logger, serial, std::uint8_t(wire_msg_type::RESET));
 }
 
-void send_wire_ok_msg(nc::SoftwareSerial &serial) noexcept
+void send_wire_ok_msg(const nsec::logging::logger &logger,
+                      nc::uart_interface &serial) noexcept
 {
-    send_wire_msg(serial, std::uint8_t(wire_msg_type::OK));
+    send_wire_msg(logger, serial, std::uint8_t(wire_msg_type::OK));
 }
 
 ns::absolute_time_ms get_current_absolute_time()
 {
-    return 0;
+    return xTaskGetTickCount() * portTICK_PERIOD_MS;
 }
 } /* namespace */
 
 nc::network_handler::network_handler() noexcept
     : ns::periodic_task<network_handler>(
           nsec::config::communication::network_handler_base_period_ms),
-      _left_serial(nsec::config::communication::serial_rx_pin_left,
-                   nsec::config::communication::serial_tx_pin_left, true),
-      _right_serial(nsec::config::communication::serial_rx_pin_right,
-                    nsec::config::communication::serial_tx_pin_right, true),
+      _left_serial(nsec::board::serial::left::uart_device,
+                   nsec::board::serial::left::rx_pin,
+                   nsec::board::serial::left::tx_pin,
+                   nsec::config::communication::badge_serial_speed, true),
+      _right_serial(nsec::board::serial::right::uart_device,
+                    nsec::board::serial::right::rx_pin,
+                    nsec::board::serial::right::tx_pin,
+                    nsec::config::communication::badge_serial_speed, true),
       _is_left_connected{false}, _is_right_connected{false},
       _current_wire_protocol_state{
-          std::uint8_t(wire_protocol_state::UNCONNECTED)}
+          std::uint8_t(wire_protocol_state::UNCONNECTED)},
+      _logger("Network handler")
 {
     _reset();
-    // FIXME Start task
-    // ng::the_scheduler.schedule_task(*this);
+    _setup();
+    start();
 }
 
-void nc::network_handler::setup() noexcept
+void nc::network_handler::_setup() noexcept
 {
-    // Init badge ports to sense connecting badges
-    // TODO
+    _logger.debug("Setting up GPIOs for connection detection");
 
-    // Initialize serial devices
-    _left_serial.begin(nsec::config::communication::software_serial_speed);
-    _right_serial.begin(nsec::config::communication::software_serial_speed);
+    // Init badge ports to sense connecting badges
+    gpio_set_direction(gpio_num_t(nsec::board::serial::left::signal_pin),
+                       GPIO_MODE_INPUT);
+    gpio_pullup_en(gpio_num_t(nsec::board::serial::right::signal_pin));
+
+    gpio_set_direction(gpio_num_t(nsec::board::serial::right::signal_pin),
+                       GPIO_MODE_INPUT);
+    gpio_pullup_en(gpio_num_t(nsec::board::serial::left::signal_pin));
 }
 
 bool nc::network_handler::_sense_is_left_connected() const noexcept
 {
-    // We hope/assume that we'll see the other side's TX pin low when idle.
-    return false;
+    return !gpio_get_level(gpio_num_t(nsec::board::serial::left::signal_pin));
 }
 
 bool nc::network_handler::_sense_is_right_connected() const noexcept
 {
-    return false;
+    return !gpio_get_level(gpio_num_t(nsec::board::serial::right::signal_pin));
 }
 
 nc::network_handler::link_position
@@ -209,6 +410,8 @@ void nc::network_handler::_detect_and_set_position() noexcept
                                           [0b10] = link_position::RIGHT_MOST,
                                           [0b11] = link_position::MIDDLE};
 
+    _logger.info("Link position detected as \"{}\"",
+                 new_position[connection_mask]);
     _position(new_position[connection_mask]);
 }
 
@@ -223,10 +426,14 @@ nc::network_handler::_check_connections() noexcept
     const bool right_state_changed = right_is_connected != right_was_connected;
     const bool topology_changed = left_state_changed || right_state_changed;
 
+    _logger.debug("Connection check result: left={}, right={}",
+                  left_is_connected ? "connected" : "disconnected",
+                  right_is_connected ? "connected" : "disconnected");
+
     if (!topology_changed) {
         return check_connections_result::NO_CHANGE;
     } else {
-        nc::SoftwareSerial *destination_serial;
+        nc::uart_interface *destination_serial;
         switch (position()) {
         case link_position::LEFT_MOST:
             destination_serial = &_right_serial;
@@ -242,7 +449,7 @@ nc::network_handler::_check_connections() noexcept
             destination_serial) {
             // Bypass the "send" state machine since this is just a hint to
             // speed up recovery.
-            send_wire_reset_msg(*destination_serial);
+            _send_wire_reset_msg(_logger, *destination_serial);
         }
     }
 
@@ -283,13 +490,13 @@ nc::peer_relative_position nc::network_handler::_listening_side() const noexcept
 
 void nc::network_handler::_listening_side(peer_relative_position side) noexcept
 {
+    _logger.debug("Listening side set: listening_side={}", side);
+
     _current_listening_side = std::uint8_t(side);
     switch (_listening_side()) {
     case peer_relative_position::LEFT:
-        _left_serial.listen();
         break;
     case peer_relative_position::RIGHT:
-        _right_serial.listen();
         break;
     }
 }
@@ -328,6 +535,10 @@ void nc::network_handler::_wire_protocol_state(
     const auto previous_protocol_state =
         wire_protocol_state(_current_wire_protocol_state);
 
+    _logger.debug(
+        "Transitioning protocol state: previous_state={}, new_state={}",
+        previous_protocol_state, state);
+
     _current_wire_protocol_state = std::uint8_t(state);
     _ticks_in_wire_state = 0;
     // Reset timeout timestamp.
@@ -350,8 +561,8 @@ void nc::network_handler::_wire_protocol_state(
         _clear_pending_outgoing_app_message();
 
         /* Empty the serial buffers by switching listening side. */
-        _right_serial.listen();
-        _left_serial.listen();
+        _right_serial.reset();
+        _left_serial.reset();
     }
 
     if (!_is_wire_protocol_in_a_running_state(previous_protocol_state) &&
@@ -470,25 +681,25 @@ void nc::network_handler::_clear_pending_outgoing_app_message() noexcept
     _current_pending_outgoing_app_message_type = 0;
 }
 
-nc::SoftwareSerial &nc::network_handler::_listening_side_serial() noexcept
+nc::uart_interface &nc::network_handler::_listening_side_serial() noexcept
 {
     return _listening_side() == peer_relative_position::LEFT ? _left_serial
                                                              : _right_serial;
 }
 
 nc::network_handler::handle_reception_result
-nc::network_handler::_handle_reception(nc::SoftwareSerial &serial,
+nc::network_handler::_handle_reception(nc::uart_interface &serial,
                                        std::uint8_t &message_type,
                                        std::uint8_t *message_payload) noexcept
 {
     bool saw_data = false;
 
-    while (serial.available()) {
+    while (serial.available_data_size()) {
         saw_data = true;
 
         switch (_message_reception_state()) {
         case message_reception_state::RECEIVE_MAGIC_BYTE_1: {
-            const auto front_byte = std::uint8_t(serial.read());
+            const auto front_byte = std::uint8_t(serial.receive());
             if (front_byte != wire_protocol_magic_1) {
                 break;
             }
@@ -498,7 +709,7 @@ nc::network_handler::_handle_reception(nc::SoftwareSerial &serial,
             break;
         }
         case message_reception_state::RECEIVE_MAGIC_BYTE_2: {
-            const auto front_byte = std::uint8_t(serial.read());
+            const auto front_byte = std::uint8_t(serial.receive());
 
             if (front_byte != wire_protocol_magic_2) {
                 break;
@@ -508,7 +719,7 @@ nc::network_handler::_handle_reception(nc::SoftwareSerial &serial,
             break;
         }
         case message_reception_state::RECEIVE_HEADER: {
-            if (serial.available() < int(sizeof(wire_msg_header))) {
+            if (serial.available_data_size() < int(sizeof(wire_msg_header))) {
                 return handle_reception_result::INCOMPLETE;
             }
 
@@ -528,7 +739,7 @@ nc::network_handler::_handle_reception(nc::SoftwareSerial &serial,
             break;
         }
         case message_reception_state::RECEIVE_PAYLOAD: {
-            if (serial.available() < _payload_bytes_to_receive) {
+            if (serial.available_data_size() < _payload_bytes_to_receive) {
                 return handle_reception_result::INCOMPLETE;
             }
 
@@ -536,9 +747,9 @@ nc::network_handler::_handle_reception(nc::SoftwareSerial &serial,
             _message_reception_state(
                 message_reception_state::RECEIVE_MAGIC_BYTE_1);
 
-            message_type = std::uint8_t(serial.read());
-            const std::uint16_t checksum = std::uint16_t(serial.read()) |
-                                           std::uint16_t(serial.read()) << 8;
+            message_type = std::uint8_t(serial.receive());
+            const std::uint16_t checksum = std::uint16_t(serial.receive()) |
+                                           std::uint16_t(serial.receive()) << 8;
             const auto payload_size = wire_msg_payload_size(message_type);
 
             if (payload_size != 0 && !message_payload) {
@@ -547,7 +758,7 @@ nc::network_handler::_handle_reception(nc::SoftwareSerial &serial,
             }
 
             if (payload_size != 0) {
-                serial.readBytes(message_payload, payload_size);
+                serial.receive(message_payload, payload_size);
             }
 
             // Validate checksum.
@@ -583,7 +794,7 @@ nc::network_handler::_handle_transmission(
 
         // Listen before send since the other side can reply OK immediately.
         _listening_side(_outgoing_message_direction());
-        send_wire_msg(sending_serial, _current_message_being_sent_type,
+        send_wire_msg(_logger, sending_serial, _current_message_being_sent_type,
                       _current_message_being_sent,
                       _current_message_being_sent_size);
         _last_transmission_time_ms = current_time_ms;
@@ -681,15 +892,18 @@ void nc::network_handler::_run_wire_protocol(
             nsec::config::communication::network_handler_timeout_ms &&
         _wire_protocol_state() != wire_protocol_state ::UNCONNECTED) {
         // No activity for a while... reset.
+        _logger.warn("Network activity timeout: went {}ms without activity",
+                     _last_message_received_time_ms - current_time_ms);
         _reset();
         return;
     }
 
-    std::uint8_t message_type =
-        4; // FIXME: Set to reset as a temporary build fix.
+    std::uint8_t message_type;
     std::uint8_t
         message_payload[nsec::config::communication::protocol_max_message_size -
                         sizeof(wire_msg_header)];
+
+    _logger.debug("Running wire protocol: state={}", _wire_protocol_state());
 
     if (_is_wire_protocol_in_a_reception_state(_wire_protocol_state())) {
         const auto receive_result = _handle_reception(
@@ -704,7 +918,7 @@ void nc::network_handler::_run_wire_protocol(
         }
 
         _last_message_received_time_ms = current_time_ms;
-        send_wire_ok_msg(_listening_side_serial());
+        send_wire_ok_msg(_logger, _listening_side_serial());
 
         if (wire_msg_type(message_type) == wire_msg_type::RESET) {
             _reset();
@@ -927,6 +1141,7 @@ void nc::network_handler::tick(ns::absolute_time_ms current_time_ms) noexcept
          * The protocol state has been reset. Resume on the next tick
          * to allow our peers enough time to detect the change.
          */
+        _logger.info("Topology change detected");
         return;
     }
 

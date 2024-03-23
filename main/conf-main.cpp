@@ -15,6 +15,11 @@
 #include <iostream>
 
 #include <scheduling/task.hpp>
+#include <badge/badge.hpp>
+#include <badge/globals.hpp>
+
+nsec::runtime::badge nsec::g::the_badge;
+
 
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 {
@@ -41,7 +46,7 @@ class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 
 extern "C" void app_main(void)
 {
-    const dummy_task the_task;
+    //const dummy_task the_task;
 
 	buttons_init();
 	xTaskCreate(buttons_task, "buttons_task", 4096, NULL, 10, NULL);

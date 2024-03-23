@@ -72,7 +72,6 @@ void nr::badge::factory_reset()
 void nr::badge::setup()
 {
     _button_watcher.setup();
-    _network_handler.setup();
 
     load_config();
 }

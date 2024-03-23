@@ -9,7 +9,9 @@
 
 #include "network_messages.hpp"
 #include "scheduling/task.hpp"
+#include "uart_interface.hpp"
 #include "utils/callback.hpp"
+#include "utils/logging.hpp"
 
 namespace nsec::communication
 {
@@ -21,49 +23,37 @@ enum class peer_relative_position : uint8_t {
 
 using peer_id_t = uint8_t;
 
-// FIXME: Stubbed to build, based on the Arduino interface of the same name
-class SoftwareSerial
-{
-  public:
-    SoftwareSerial(unsigned int rx_pin, unsigned int tx_pin,
-                   bool inverted_logic)
-    {
-    }
-
-    void begin(unsigned int baud_rate)
-    {
-    }
-    void listen()
-    {
-    }
-    std::size_t write(std::uint8_t data_byte)
-    {
-        return 0;
-    }
-    std::size_t write(const std::uint8_t *data_bytes, std::size_t length)
-    {
-        return 0;
-    }
-    std::size_t available() const
-    {
-        return 0;
-    }
-    std::uint8_t read()
-    {
-        return std::uint8_t(0);
-    }
-    std::uint8_t peek() const
-    {
-        return std::uint8_t(0);
-    }
-    void readBytes(std::uint8_t *out_payload, std::size_t length)
-    {
-    }
-};
-
 class network_handler : public scheduling::periodic_task<network_handler>
 {
+    friend class periodic_task<network_handler>;
+
   public:
+    enum class wire_protocol_state : uint8_t {
+        UNCONNECTED,
+        /* Wait for boards to listen before left-most node initiates the
+           discovery. */
+        WAIT_TO_INITIATE_DISCOVERY,
+        /* Discover left neighbours. */
+        DISCOVERY_RECEIVE_ANNOUNCE,
+        DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE,
+        DISCOVERY_SEND_ANNOUNCE,
+        DISCOVERY_CONFIRM_ANNOUNCE,
+        DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE,
+        DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE,
+        DISCOVERY_RECEIVE_ANNOUNCE_REPLY,
+        DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE_REPLY,
+        DISCOVERY_SEND_ANNOUNCE_REPLY,
+        DISCOVERY_CONFIRM_ANNOUNCE_REPLY,
+        DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE_REPLY,
+        DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE_REPLY,
+        /* Waiting for application and protocol (MONITOR and RESET) messages. */
+        RUNNING_RECEIVE_MESSAGE,
+        RUNNING_SEND_APP_MESSAGE,
+        RUNNING_CONFIRM_APP_MESSAGE,
+        RUNNING_SEND_MONITOR,
+        RUNNING_CONFIRM_MONITOR
+    };
+
     using disconnection_notifier = void (*)();
     using pairing_begin_notifier = void (*)();
     // void (our_peer_id, peer count)
@@ -84,8 +74,6 @@ class network_handler : public scheduling::periodic_task<network_handler>
     network_handler &operator=(const network_handler &) = delete;
     network_handler &operator=(network_handler &&) = delete;
     ~network_handler() = default;
-
-    void setup() noexcept;
 
     peer_id_t peer_id() const noexcept
     {
@@ -114,32 +102,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
     void tick(scheduling::absolute_time_ms current_time_ms) noexcept;
 
   private:
-    enum class wire_protocol_state : uint8_t {
-        UNCONNECTED,
-        /* Wait for boards to listen before left-most node initiates the
-           discovery. */
-        WAIT_TO_INITIATE_DISCOVERY,
-        /* Discover left neighbours. */
-        DISCOVERY_RECEIVE_ANNOUNCE,
-        DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE,
-        DISCOVERY_SEND_ANNOUNCE,
-        DISCOVERY_CONFIRM_ANNOUNCE,
-        DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE,
-        DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE,
-        DISCOVERY_RECEIVE_ANNOUNCE_REPLY,
-        DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE_REPLY,
-        DISCOVERY_SEND_ANNOUNCE_REPLY,
-        DISCOVERY_CONFIRM_ANNOUNCE_REPLY,
-        DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE_REPLY,
-        DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE_REPLY,
-        /* Waiting for application and protocol (MONITOR and RESET) messages. */
-        RUNNING_RECEIVE_MESSAGE,
-        RUNNING_SEND_APP_MESSAGE,
-        RUNNING_CONFIRM_APP_MESSAGE,
-        RUNNING_SEND_MONITOR,
-        RUNNING_CONFIRM_MONITOR
 
-    };
     enum class message_reception_state : uint8_t {
         RECEIVE_MAGIC_BYTE_1,
         RECEIVE_MAGIC_BYTE_2,
@@ -153,6 +116,8 @@ class network_handler : public scheduling::periodic_task<network_handler>
         WAIT_CONFIRMATION,
     };
 
+    void _setup() noexcept;
+
     void _position(link_position new_role) noexcept;
 
     wire_protocol_state _wire_protocol_state() const noexcept;
@@ -163,7 +128,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
     void _reverse_wave_front_direction() noexcept;
 
     peer_relative_position _listening_side() const noexcept;
-    SoftwareSerial &_listening_side_serial() noexcept;
+    uart_interface &_listening_side_serial() noexcept;
     void _listening_side(peer_relative_position side) noexcept;
     void _reverse_listening_side() noexcept;
 
@@ -211,7 +176,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
         CORRUPTED,
     };
     handle_reception_result
-    _handle_reception(SoftwareSerial &, uint8_t &message_type,
+    _handle_reception(uart_interface &, uint8_t &message_type,
                       uint8_t *message_payload) noexcept;
 
     enum class handle_transmission_result : uint8_t {
@@ -231,8 +196,8 @@ class network_handler : public scheduling::periodic_task<network_handler>
     static void
     _log_message_transmission_state(message_transmission_state state) noexcept;
 
-    SoftwareSerial _left_serial;
-    SoftwareSerial _right_serial;
+    uart_interface _left_serial;
+    uart_interface _right_serial;
     nsec::scheduling::absolute_time_ms _last_message_received_time_ms;
 
     uint8_t _is_left_connected : 1;
@@ -281,6 +246,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
     nsec::scheduling::absolute_time_ms _last_transmission_time_ms;
     uint8_t _current_message_being_sent
         [nsec::config::communication::protocol_max_message_size];
+    nsec::logging::logger _logger;
 };
 } // namespace nsec::communication
 

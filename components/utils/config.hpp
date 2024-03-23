@@ -74,23 +74,21 @@ namespace nsec::config::communication
 {
 // Size reserved for protocol messages
 constexpr size_t protocol_max_message_size = 16;
-constexpr unsigned int software_serial_speed = 38400;
+constexpr unsigned int badge_serial_speed = 38400;
+constexpr bool invert_uart = true;
+
 /*
  * Applications may define messages >= application_message_type_range_begin.
  * IDs under this range are reserved by the wire protocol.
  */
 constexpr uint8_t application_message_type_range_begin = 10;
 
-constexpr unsigned int connection_sense_pin_left = 0;
-constexpr unsigned int connection_sense_pin_right = 0;
-
-constexpr unsigned int serial_rx_pin_left = 0;
-constexpr unsigned int serial_tx_pin_left = 0;
-constexpr unsigned int serial_rx_pin_right = 0;
-constexpr unsigned int serial_tx_pin_right = 0;
+constexpr auto rx_buffer_size = 1024;
+constexpr auto tx_buffer_size = 1024;
+constexpr auto uart_queue_length = 16;
 
 constexpr nsec::scheduling::relative_time_ms network_handler_base_period_ms =
-    60;
+    1000;
 constexpr nsec::scheduling::relative_time_ms network_handler_timeout_ms = 10000;
 constexpr nsec::scheduling::relative_time_ms
     network_handler_retransmit_timeout_ms = 6 * network_handler_base_period_ms;
