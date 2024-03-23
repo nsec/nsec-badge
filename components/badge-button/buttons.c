@@ -35,6 +35,10 @@
 #include <iot_button.h>
 #include <sdkconfig.h>
 
+/* Local debugging options. */
+//#define DEBUG_BUTTON_MAPPED
+//#define DEBUG_BUTTON_UNMAPPED
+
 /* Buttons */
 #define GPIO_BTN_UP     (35)
 #define GPIO_BTN_DOWN   (36)
@@ -161,6 +165,10 @@ static void button_cb_process( badge_button_t button, void *data)
     {
         case BUTTON_SINGLE_CLICK:
         case BUTTON_LONG_PRESS_UP:
+            #ifdef DEBUG_BUTTON_MAPPED
+            ESP_LOGI(TAG, "%s: %s", button_label_table[button],
+                                    button_event_table[(button_event_t)data]);
+            #endif
             if(cb_button_event != NULL)
             {
                 cb_button_event( button, button_event_mapping[(button_event_t)data]);
@@ -168,6 +176,10 @@ static void button_cb_process( badge_button_t button, void *data)
             break;
         
         default:
+            #ifdef DEBUG_BUTTON_UNMAPPED
+            ESP_LOGI(TAG, "%s: %s", button_label_table[button],
+                                    button_event_table[(button_event_t)data]);
+            #endif
             break;
     }            
 }
