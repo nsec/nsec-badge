@@ -38,6 +38,7 @@
 /* Local debugging options. */
 //#define DEBUG_BUTTON_MAPPED
 //#define DEBUG_BUTTON_UNMAPPED
+//#define DEBUG_BUTTON_CALLBACK
 
 /* Buttons */
 #define GPIO_BTN_UP     (35)
@@ -78,6 +79,13 @@ const char *button_label_table[] = {
     "OK",
     "CANCEL"
 };
+
+#ifdef DEBUG_BUTTON_CALLBACK
+const char *badge_button_event_table[] = {
+    "SINGLE_CLICK",
+    "LONG_PRESS"
+};
+#endif
 
 /* Mapping IOT buttons event to badge buttons event.
  * - Ignored events are mapped to "BADGE_BUTTON_TOTAL_COUNT".
@@ -184,6 +192,17 @@ static void button_cb_process( badge_button_t button, void *data)
     }            
 }
 
+#ifdef DEBUG_BUTTON_CALLBACK
+static void badge_button_event_cb_process( badge_button_t button,
+                                           badge_button_event_t event
+                                         )
+{
+    /* Log button event on serial console. */
+    ESP_LOGI( "BUTTON EVENT", "%s: %s", button_label_table[button],
+                                        badge_button_event_table[event]);
+}
+#endif
+
 /******************************************************************************
  * Description: Badge buttons initialization.
  *
@@ -234,6 +253,10 @@ static void button_cb_process( badge_button_t button, void *data)
                                 cb_button_functions[i],
                                 (void *)BUTTON_LONG_PRESS_UP);
     }
+
+    #ifdef DEBUG_BUTTON_CALLBACK
+    buttons_register_ca(badge_button_event_cb_process);
+    #endif
 }
 
 /******************************************************************************
