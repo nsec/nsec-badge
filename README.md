@@ -81,7 +81,7 @@ pio run -t upload -e addon
 ## Debugging
 
 To read the logging statements output on the USB serial interface, it is
-possible to use `idf.py`'s `monitor` command.
+possible to use `pio device monitor` or `idf.py`'s `monitor` command.
 
 However, you can use your preferred terminal emulator by pointing it to the
 `/dev/ttyACM0` device. The badge is configured to output at 115'200 bauds,
