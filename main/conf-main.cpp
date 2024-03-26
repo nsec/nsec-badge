@@ -14,6 +14,7 @@
 
 #include <iostream>
 
+#include <badge/globals.hpp>
 #include <scheduling/task.hpp>
 #include <badge/badge.hpp>
 #include <badge/globals.hpp>
@@ -52,6 +53,8 @@ extern "C" void app_main(void)
 	buttons_init();
 	xTaskCreate(buttons_task, "buttons_task", 4096, NULL, 10, NULL);
 	
+    nsec::g::the_badge.setup();
+
     while (true) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
