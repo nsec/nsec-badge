@@ -15,7 +15,7 @@ namespace nsec::board
  */
 namespace led
 {
-constexpr unsigned int dbg = 13;
+constexpr unsigned int dbg_pin = 13;
 } // namespace led
 
 namespace button

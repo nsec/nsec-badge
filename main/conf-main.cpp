@@ -21,6 +21,7 @@
 nsec::runtime::badge nsec::g::the_badge;
 
 
+
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 {
     friend class periodic_task<dummy_task>;

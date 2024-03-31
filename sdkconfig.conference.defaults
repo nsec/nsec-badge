@@ -4,3 +4,4 @@
 # Defaults specific to the Conference firmware
 #
 CONFIG_COMPILER_CXX_EXCEPTIONS=y
+CONFIG_RMT_ISR_IRAM_SAFE=y

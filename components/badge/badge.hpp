@@ -9,6 +9,7 @@
 
 #include <badge-network/network_handler.hpp>
 #include <badge-button/watcher.hpp>
+#include <badge-led-strip/strip_animator.hpp>
 #include <cstdint>
 
 namespace nsec::runtime
@@ -217,6 +218,8 @@ class badge
     network_id_exchanger _id_exchanger;
     pairing_animator _pairing_animator;
     pairing_completed_animator _pairing_completed_animator;
+
+    nsec::led::strip_animator _strip_animator;
 
     // animation timer
     animation_task _timer;
