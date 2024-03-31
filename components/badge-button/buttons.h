@@ -24,7 +24,8 @@ typedef enum {
 typedef enum {
     BADGE_BUTTON_SINGLE_CLICK = 0,
     BADGE_BUTTON_LONG_PRESS,
-    BADGE_BUTTON_TOTAL_COUNT
+    BADGE_BUTTON_TOTAL_COUNT,
+    BADGE_BUTTON_NO_EVENT = BADGE_BUTTON_TOTAL_COUNT
 } badge_button_event_t;
 
 /* Task callback definition. */
