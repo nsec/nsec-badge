@@ -21,6 +21,9 @@
 #include "console.h"
 
 #include "ota_init.h"
+#if CONFIG_NSEC_BUILD_CTF
+#include "wifi.h"
+#endif
 
 static const char* TAG = "console";
 #define PROMPT_STR "nsec"
@@ -59,8 +62,8 @@ static void initialize_console(void)
 
     /* initialize the console */
     esp_console_config_t console_config = {
-            .max_cmdline_args = 8,
             .max_cmdline_length = 256,
+            .max_cmdline_args = 8,
 #if config_log_colors
             .hint_color = atoi(log_color_cyan)
 #endif
