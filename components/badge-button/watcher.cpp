@@ -8,9 +8,30 @@
 #include <badge-button/watcher.hpp>
 #include <utils/board.hpp>
 #include <utils/config.hpp>
+#include <esp_log.h>
 #include "buttons.h"
 
+/* Local debugging options. */
+//#define DEBUG_WATCHER_BUTTON_CALLBACK
+//#define DEBUG_WATCHER_TASK_BUTTON_CALLBACK
+
 static badge_button_event_t watcher_event[BUTTON_TOTAL_COUNT];
+
+#if defined(DEBUG_WATCHER_BUTTON_CALLBACK) || defined(DEBUG_WATCHER_TASK_BUTTON_CALLBACK)
+const char *watcher_button_label_table[] = {
+    "UP",
+    "DOWN",
+    "LEFT",    
+    "RIGHT",
+    "OK",
+    "CANCEL"
+};
+
+const char *watcher_button_event_table[] = {
+    "SINGLE_CLICK",
+    "LONG_PRESS"
+};
+#endif
 
 static void badge_button_event_cb_process( badge_button_t button,
                                            badge_button_event_t event
@@ -18,6 +39,14 @@ static void badge_button_event_cb_process( badge_button_t button,
 {
     // Store the received event.
     watcher_event[(int)button] = event;
+
+    #ifdef DEBUG_WATCHER_BUTTON_CALLBACK
+    /* Log button event on serial console. */
+    ESP_LOGI( "WATCHER BUTTON EVENT", "%s: %s\n",
+              watcher_button_label_table[button],
+              watcher_button_event_table[event]
+            );
+    #endif
 }
 
 namespace nb = nsec::button;
@@ -58,6 +87,14 @@ void nb::watcher::tick(
             _notify_new_event( static_cast<id>(i),
                                static_cast<event>(new_event)
                               );
+
+            #ifdef DEBUG_WATCHER_TASK_BUTTON_CALLBACK
+            /* Log button event on serial console. */
+            ESP_LOGI( "WATCHER TASK BUTTON EVENT", "%s: %s\n",
+                      watcher_button_label_table[i],
+                      watcher_button_event_table[(int)new_event]
+                    );
+            #endif
         }
     }
 }
