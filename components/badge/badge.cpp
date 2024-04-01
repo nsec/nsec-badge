@@ -8,8 +8,28 @@
 #include "badge-network/network_messages.hpp"
 #include <badge/globals.hpp>
 
+#include <esp_log.h>
 #include <algorithm>
 #include <cstring>
+
+/* Local debugging options. */
+//#define DEBUG_BADGE_BUTTON_CALLBACK
+
+#ifdef DEBUG_BADGE_BUTTON_CALLBACK
+const char *badge_button_label_table[] = {
+    "UP",
+    "DOWN",
+    "LEFT",    
+    "RIGHT",
+    "OK",
+    "CANCEL"
+};
+
+const char *badge_button_event_table[] = {
+    "SINGLE_CLICK",
+    "LONG_PRESS"
+};
+#endif
 
 namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
@@ -97,6 +117,14 @@ void nr::badge::on_button_event(nsec::button::id button,
         return;
     }
 
+    #ifdef DEBUG_BADGE_BUTTON_CALLBACK
+    /* Log button event on serial console. */
+    ESP_LOGI( "BADGE BUTTON EVENT", "%s: %s\n",
+              badge_button_label_table[(int)button],
+              badge_button_event_table[(int)event]
+            );
+    #endif
+    
     /*
      * After a focus change, don't spam the newly focused screen with
      * repeat events of the button. We want to let the user the time to react,
