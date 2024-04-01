@@ -102,13 +102,13 @@ void nr::badge::on_button_event(nsec::button::id button,
      * repeat events of the button. We want to let the user the time to react,
      * take their meaty appendage off the button, and initiate new interactions.
      */
-    if (event != nsec::button::event::DOWN_REPEAT) {
+    if (event != nsec::button::event::SINGLE_CLICK) {
         _button_had_non_repeat_event_since_screen_focus_change |=
             1 << button_mask_position;
     }
 
     const auto filter_out_button_event =
-        event == nsec::button::event::DOWN_REPEAT &&
+        event == nsec::button::event::SINGLE_CLICK &&
         !(_button_had_non_repeat_event_since_screen_focus_change &
           (1 << button_mask_position));
 
