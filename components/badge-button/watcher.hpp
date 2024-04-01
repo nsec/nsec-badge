@@ -14,7 +14,7 @@
 namespace nsec::button
 {
 
-enum class id { UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3, OK = 4, CANCEL = 5 };
+enum class id { UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3, OK = 4, CANCEL = 5 };
 enum class event { UP, DOWN, DOWN_REPEAT };
 
 using new_button_event_notifier = void (*)(id id, event event);
