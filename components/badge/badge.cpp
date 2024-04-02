@@ -8,6 +8,7 @@
 #include "badge-network/network_messages.hpp"
 #include "utils/lock.hpp"
 #include <badge/globals.hpp>
+#include "badge-led-strip/strip_animator.hpp"
 
 #include <algorithm>
 #include <cstring>
@@ -202,6 +203,9 @@ void nr::badge::on_button_event(nsec::button::id button,
     if (!filter_out_button_event) {
         // FIXME Forward button to focused mode
     }
+
+    // Send the received event to the scrolling LEDs function.
+    nsec::g::the_badge.scroll_leds(button, event);
 }
 
 void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
@@ -754,4 +758,20 @@ void nr::badge::cycle_selected_animation(
         _selected_animation + int8_t(direction), 0, _social_level - 1);
 
     _set_selected_animation(selected_animation, true);
+
+    // Set the LEDs pattern.
+    nsec::g::the_badge._strip_animator.set_idle_animation(selected_animation);
+}
+
+void nr::badge::scroll_leds(nsec::button::id id, nsec::button::event event) noexcept
+{
+    // Only process "SINGLE_CLICK" event.
+    if (event == nsec::button::event::SINGLE_CLICK) {
+        if ((id == nsec::button::id::LEFT) || (id == nsec::button::id::RIGHT)) {
+            nsec::g::the_badge.cycle_selected_animation(
+            id == nsec::button::id::LEFT ?
+                  nsec::runtime::badge::cycle_animation_direction::PREVIOUS :
+                  nsec::runtime::badge::cycle_animation_direction::NEXT);
+        }
+    }
 }

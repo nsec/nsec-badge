@@ -51,6 +51,7 @@ class badge
 
     enum cycle_animation_direction : int8_t { PREVIOUS = -1, NEXT = 1 };
     void cycle_selected_animation(cycle_animation_direction direction) noexcept;
+    void scroll_leds(button::id id, button::event event) noexcept;
 
     /*
      * Once the network layer has established a connection, "on pairing end" is
