@@ -427,9 +427,12 @@ nc::network_handler::_check_connections() noexcept
     const bool right_state_changed = right_is_connected != right_was_connected;
     const bool topology_changed = left_state_changed || right_state_changed;
 
-    _logger.debug("Connection check result: left={}, right={}",
-                  left_is_connected ? "connected" : "disconnected",
-                  right_is_connected ? "connected" : "disconnected");
+    /* Only log when state change. */
+    if(left_state_changed || right_state_changed) {
+        _logger.debug("Connection check result: left={}, right={}",
+                      left_is_connected ? "connected" : "disconnected",
+                      right_is_connected ? "connected" : "disconnected");
+    }
 
     if (!topology_changed) {
         return check_connections_result::NO_CHANGE;
