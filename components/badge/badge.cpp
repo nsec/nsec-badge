@@ -16,8 +16,9 @@
 
 /* Local debugging options. */
 // #define DEBUG_BADGE_BUTTON_CALLBACK
+// #define DEBUG_SWITCH_LEDS_PATTERN
 
-#ifdef DEBUG_BADGE_BUTTON_CALLBACK
+#if defined(DEBUG_BADGE_BUTTON_CALLBACK) || defined(DEBUG_SWITCH_LEDS_PATTERN)
 const char *badge_button_label_table[] = {"UP",    "DOWN", "LEFT",
                                           "RIGHT", "OK",   "CANCEL"};
 
@@ -765,6 +766,10 @@ void nr::badge::cycle_selected_animation(
 
 void nr::badge::scroll_leds(nsec::button::id id, nsec::button::event event) noexcept
 {
+    #ifdef DEBUG_SWITCH_LEDS_PATTERN
+    uint8_t previous_level = _selected_animation;
+    #endif
+
     // Only process "SINGLE_CLICK" event.
     if (event == nsec::button::event::SINGLE_CLICK) {
         if ((id == nsec::button::id::LEFT) || (id == nsec::button::id::RIGHT)) {
@@ -772,6 +777,12 @@ void nr::badge::scroll_leds(nsec::button::id id, nsec::button::event event) noex
             id == nsec::button::id::LEFT ?
                   nsec::runtime::badge::cycle_animation_direction::PREVIOUS :
                   nsec::runtime::badge::cycle_animation_direction::NEXT);
+
+                #ifdef DEBUG_SWITCH_LEDS_PATTERN
+                ESP_LOGI( "SCROLL LEDS", "Level %u - Previous/Current %u/%u - %s\n",
+                          nsec::g::the_badge.level(), previous_level,
+                          _selected_animation, badge_button_label_table[(int)id]);
+                #endif
         }
     }
 }
