@@ -50,12 +50,14 @@ static void initialize_console(void)
             .data_bits = UART_DATA_8_BITS,
             .parity = UART_PARITY_DISABLE,
             .stop_bits = UART_STOP_BITS_1,
+	    .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+	    .rx_flow_ctrl_thresh = 0,
             .source_clk = UART_SCLK_RTC,
     };
     /* install uart driver for interrupt-driven reads and writes */
-    ESP_ERROR_CHECK( uart_driver_install(CONFIG_ESP_CONSOLE_UART_NUM,
+    ESP_ERROR_CHECK( uart_driver_install((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM,
             256, 0, 0, NULL, 0) );
-    ESP_ERROR_CHECK( uart_param_config(CONFIG_ESP_CONSOLE_UART_NUM, &uart_config) );
+    ESP_ERROR_CHECK( uart_param_config((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM, &uart_config) );
 
     /* tell vfs to use uart driver */
     esp_vfs_dev_uart_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
@@ -65,8 +67,11 @@ static void initialize_console(void)
             .max_cmdline_length = 256,
             .max_cmdline_args = 8,
 #if config_log_colors
-            .hint_color = atoi(log_color_cyan)
+            .hint_color = atoi(log_color_cyan),
+#else
+            .hint_color = 0,
 #endif
+	    .hint_bold = 0,
     };
     ESP_ERROR_CHECK( esp_console_init(&console_config) );
 
