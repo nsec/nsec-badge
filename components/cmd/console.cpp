@@ -11,6 +11,7 @@
 #include "cmd_sys.h"
 #if CONFIG_NSEC_BUILD_CTF
 #include "wifi.h"
+#include "reaction_time.h"
 #endif
 #if CONFIG_NSEC_BUILD_ADDON
 #include "challenges_storage.h"
@@ -19,6 +20,20 @@
 
 static const char* TAG = "console";
 #define PROMPT_STR LOG_RESET_COLOR "nsec"
+
+void register_commands() {
+    esp_console_register_help_command();
+    console_register_cmd_sys();
+    register_ota_cmd();
+#if CONFIG_NSEC_BUILD_CTF
+    register_wifi_cmd();
+    register_reaction_time_cmd();
+#endif
+#if CONFIG_NSEC_BUILD_ADDON
+    register_challenges_storage();
+    register_crypto_atecc();
+#endif
+}
 
 extern "C" void console_init()
 {
@@ -32,18 +47,7 @@ extern "C" void console_init()
     repl_config.prompt = PROMPT_STR ">";
     repl_config.max_cmdline_length = 80;
 
-    /* Register commands */
-    esp_console_register_help_command();
-    register_ota_cmd();
-    console_register_cmd_sys();
-#if CONFIG_NSEC_BUILD_CTF
-    // CTF-only commands
-    register_wifi_cmd();
-#endif
-#if CONFIG_NSEC_BUILD_ADDON
-    register_challenges_storage();
-    register_crypto_atecc();
-#endif
+    register_commands();
 
 #if defined(CONFIG_ESP_CONSOLE_UART_DEFAULT) || defined(CONFIG_ESP_CONSOLE_UART_CUSTOM)
     esp_console_dev_uart_config_t hw_config = ESP_CONSOLE_DEV_UART_CONFIG_DEFAULT();

@@ -6,13 +6,10 @@ set(CONFIG_NSEC_BUILD_CONFERENCE $ENV{CONFIG_NSEC_BUILD_CONFERENCE} CACHE INTERN
 set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 set(CONFIG_NSEC_BUILD_ADDON $ENV{CONFIG_NSEC_BUILD_ADDON} CACHE INTERNAL "")
 
-set(requires_components console driver cmd_nvs off_the_addon cmd_sys)
-
 if(CONFIG_NSEC_BUILD_CTF)
-    list(APPEND requires_components modbus wifi reaction_time)
+    idf_component_register(
+        SRCS "reaction_time.c"
+        INCLUDE_DIRS "."
+        REQUIRES console
+    )
 endif()
-
-idf_component_register(SRCS "console.cpp"
-                    INCLUDE_DIRS "."
-                    REQUIRES ${requires_components}
-)
