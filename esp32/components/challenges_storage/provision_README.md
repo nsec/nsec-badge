@@ -9,6 +9,8 @@ parttool.py write_partition --partition-name=ota_1 --input build\nsec-ctf-addon.
 change to `#define CTF_ADDON_ADMIN_MODE 1`
 
 ```idf.py build flash monitor
+crypto 999
+# continue if no FAIL
 storage 111
 raw_toggle
 storage 222

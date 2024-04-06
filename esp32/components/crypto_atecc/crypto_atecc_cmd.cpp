@@ -74,7 +74,7 @@ static int crypto_atecc(int argc, char **argv) {
             }
         }
     } else if (_select == 2) {
-        // crypto 2 2 
+        // crypto 2 9 abc 
         uint8_t digest[ATCA_SHA_DIGEST_SIZE];
         memset(digest, 0, sizeof(digest));
         const char* dataToHash = NULL;
@@ -170,6 +170,52 @@ static int crypto_atecc(int argc, char **argv) {
         print_16(plaintext);
         printf("ciphertext:\n");
         print_16(ciphertext);
+    } else if (_select == 999) {
+        printf("validating crypto chip...\n");
+        bool is_locked = false;
+        atcab_is_config_locked(&is_locked);
+        if (!is_locked) {
+            printf("FAIL: global config zone is not locked!\n");
+            return 0;
+        } else {
+            printf("GOOD: global config zone is locked\n");
+        }
+        atcab_is_slot_locked(9, &is_locked);
+        if (!is_locked) {
+            printf("FAIL: slot 9 for HMAC is not locked!\n");
+            return 0;
+        } else {
+            printf("GOOD: slot 9 for HMAC is locked\n");
+        }
+        atcab_is_slot_locked(2, &is_locked);
+        if (!is_locked) { // TODO do we want this one locked or not?
+            printf("GOOD: slot 2 for PrivWrite is not locked!\n");
+        } else {
+            printf("FAIL: slot 2 for PrivWrite is locked\n");
+            return 0;
+        }
+        // TODO do we need to check slot 1 and slot 2 too?
+
+        uint8_t digest[ATCA_SHA_DIGEST_SIZE];
+        memset(digest, 0, sizeof(digest));
+        const char* dataToHash = "abc";
+        int ret = 0;
+        uint8_t start[3] = { 0xca, 0xe9, 0x32 }; // should be the start of the good hash
+        ret = atcab_sha_hmac(reinterpret_cast<const uint8_t*>(dataToHash), strlen(dataToHash), 9, digest, SHA_MODE_TARGET_OUT_ONLY);
+        if (ret == ATCA_SUCCESS) {
+            if (start[0] == digest[0] && start[1] == digest[1] && start[2] == digest[2]) {
+                printf("GOOD: HMAC(9, abc) is correct:\n");
+                print_digest(digest, sizeof(digest));
+            } else {
+                printf("FAIL: HMAC(9, abc) is not correct:\n");
+                print_digest(digest, sizeof(digest));
+                return 0;
+            }
+        } else {
+            ESP_LOGE(TAG, "FAIL: err atcab_sha_hmac ret: %02x", ret);
+            return 0;
+        }
+
     } else if (_select == 9) {
         bool is_locked = false;
         atcab_is_slot_locked(custom_param, &is_locked);
@@ -297,12 +343,8 @@ static int crypto_atecc(int argc, char **argv) {
             print_digest(readslot, ATCA_BLOCK_SIZE);
         }
     } else if (_select == 20) {
-        if (custom_param == 999) {
-            custom_param = 9;
-        } else if (custom_param == 444) {
-            custom_param = 4;
-        } else {
-            printf("this is sensible function, please use 444 or 999 as param\n");
+        if (custom_param2 != 999) {
+            printf("this is sensible function, please use 999 as param 2\n");
             return 0;
         }
         ret = atcab_lock_data_slot(custom_param);

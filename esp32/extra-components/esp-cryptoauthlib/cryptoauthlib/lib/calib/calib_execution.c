@@ -466,8 +466,8 @@ ATCA_STATUS calib_execute_command(ATCAPacket* packet, ATCADevice device)
     uint32_t max_delay_count;
     uint16_t rxsize;
     uint8_t device_address = atcab_get_device_address(device);
-    printf("device_address: 0x%02x\tpacket->opcode: 0x%02x\t", device_address, packet->opcode);
-    printf("packet->param1: %02x\tpacket->param2: %04x\n", packet->param1, packet->param2);
+    //printf("device_address: 0x%02x\tpacket->opcode: 0x%02x\t", device_address, packet->opcode);
+    //printf("packet->param1: %02x\tpacket->param2: %04x\n", packet->param1, packet->param2);
     int retries = 1;
 
     do
