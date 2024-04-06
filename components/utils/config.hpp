@@ -8,6 +8,7 @@
 #define NSEC_CONFIG_HPP
 
 #include "scheduling/time.hpp"
+#include "utils/logging.hpp"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -99,5 +100,10 @@ namespace nsec::config::badge
 {
 constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 1000;
 } // namespace nsec::config::badge
+
+namespace nsec::config::logging
+{
+constexpr auto uart_interface_level = nsec::logging::logger::severity::INFO;
+}
 
 #endif // NSEC_CONFIG_HPP

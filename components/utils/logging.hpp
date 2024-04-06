@@ -8,6 +8,7 @@
 #define NSEC_LOGGING_HPP
 
 #include <fmt/format.h>
+#include <freertos/FreeRTOS.h>
 #include <iostream>
 #include <string_view>
 
@@ -26,8 +27,9 @@ class logger
         ERROR,
     };
 
-    explicit logger(std::string_view subsystem_name)
-        : _subsystem_name(subsystem_name)
+    explicit logger(std::string_view subsystem_name,
+                    severity minimal_level = severity::DEBUG)
+        : _subsystem_name(subsystem_name), _minimal_level(minimal_level)
     {
     }
 
@@ -35,8 +37,12 @@ class logger
     void log(severity severity_level, fmt::format_string<Args...> format,
              Args &&...args) const
     {
-        fmt::print("[{}:{}] {}\n", _subsystem_name,
-                   _severity_name(severity_level),
+        if (severity_level < _minimal_level) {
+            return;
+        }
+
+        fmt::print("[{}:{} {}] {}\n", _subsystem_name,
+                   _severity_name(severity_level), xPortGetCoreID(),
                    fmt::format(format, std::forward<Args>(args)...));
     }
 
@@ -66,6 +72,7 @@ class logger
 
   private:
     const std::string_view _subsystem_name;
+    const severity _minimal_level;
 
     static std::string_view _severity_name(severity severity_level)
     {
@@ -79,8 +86,9 @@ class logger
         case severity::ERROR:
             return "error";
         default:
-            NSEC_THROW_ERROR(fmt::format(
-                "Invalid logging severity level: level={}", int(severity_level)));
+            NSEC_THROW_ERROR(
+                fmt::format("Invalid logging severity level: level={}",
+                            int(severity_level)));
         }
     }
 };

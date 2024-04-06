@@ -8,32 +8,51 @@
 #include "badge-network/network_messages.hpp"
 #include <badge/globals.hpp>
 
-#include <esp_log.h>
 #include <algorithm>
 #include <cstring>
+#include <esp_log.h>
 
 /* Local debugging options. */
-//#define DEBUG_BADGE_BUTTON_CALLBACK
+// #define DEBUG_BADGE_BUTTON_CALLBACK
 
 #ifdef DEBUG_BADGE_BUTTON_CALLBACK
-const char *badge_button_label_table[] = {
-    "UP",
-    "DOWN",
-    "LEFT",    
-    "RIGHT",
-    "OK",
-    "CANCEL"
-};
+const char *badge_button_label_table[] = {"UP",    "DOWN", "LEFT",
+                                          "RIGHT", "OK",   "CANCEL"};
 
-const char *badge_button_event_table[] = {
-    "SINGLE_CLICK",
-    "LONG_PRESS"
-};
+const char *badge_button_event_table[] = {"SINGLE_CLICK", "LONG_PRESS"};
 #endif
 
 namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
 namespace nb = nsec::button;
+
+// Wire message type formatter
+template <>
+struct fmt::formatter<nc::message::type> : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(nc::message::type msg_type, FormatContext &ctx)
+    {
+        string_view name = "unknown";
+        switch (msg_type) {
+        case nc::message::type::ANNOUNCE_BADGE_ID:
+            name = "ANNOUNCE_BADGE_ID";
+            break;
+        case nc::message::type::PAIRING_ANIMATION_PART_1_DONE:
+            name = "PAIRING_ANIMATION_PART_1_DONE";
+            break;
+        case nc::message::type::PAIRING_ANIMATION_PART_2_DONE:
+            name = "PAIRING_ANIMATION_PART_2_DONE";
+            break;
+        case nc::message::type::PAIRING_ANIMATION_DONE:
+            name = "PAIRING_ANIMATION_DONE";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
 
 namespace
 {
@@ -45,12 +64,13 @@ nr::badge::badge()
       _button_watcher([](nsec::button::id id, nsec::button::event event) {
           nsec::g::the_badge.on_button_event(id, event);
       }),
-      _network_handler()
+      _network_handler(), _logger("badge")
 {
     _network_app_state(network_app_state::UNCONNECTED);
     _id_exchanger.reset();
     set_social_level(nsec::config::social::initial_level, false);
     _set_selected_animation(0, false);
+    _setup();
 }
 
 void nr::badge::load_config()
@@ -89,7 +109,7 @@ void nr::badge::factory_reset()
     so_looooong();
 }
 
-void nr::badge::setup()
+void nr::badge::_setup()
 {
     _button_watcher.setup();
 
@@ -117,14 +137,13 @@ void nr::badge::on_button_event(nsec::button::id button,
         return;
     }
 
-    #ifdef DEBUG_BADGE_BUTTON_CALLBACK
+#ifdef DEBUG_BADGE_BUTTON_CALLBACK
     /* Log button event on serial console. */
-    ESP_LOGI( "BADGE BUTTON EVENT", "%s: %s\n",
-              badge_button_label_table[(int)button],
-              badge_button_event_table[(int)event]
-            );
-    #endif
-    
+    ESP_LOGI("BADGE BUTTON EVENT", "%s: %s\n",
+             badge_button_label_table[(int)button],
+             badge_button_event_table[(int)event]);
+#endif
+
     /*
      * After a focus change, don't spam the newly focused screen with
      * repeat events of the button. We want to let the user the time to react,
@@ -159,11 +178,13 @@ void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
 
 void nr::badge::on_disconnection() noexcept
 {
+    _logger.info("Badge network disconnected");
     _network_app_state(network_app_state::UNCONNECTED);
 }
 
 void nr::badge::on_pairing_begin() noexcept
 {
+    _logger.info("Pairing begin event");
 }
 
 void nr::badge::on_pairing_end(nc::peer_id_t our_peer_id,
@@ -176,6 +197,8 @@ nc::network_handler::application_message_action
 nr::badge::on_message_received(communication::message::type message_type,
                                const uint8_t *message) noexcept
 {
+    _logger.debug("Received message: type={}", message_type);
+
     if (_network_app_state() == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.new_message(*this, message_type, message);
     } else if (_network_app_state() == network_app_state::ANIMATE_PAIRING) {
@@ -187,6 +210,8 @@ nr::badge::on_message_received(communication::message::type message_type,
 
 void nr::badge::on_app_message_sent() noexcept
 {
+    _logger.info("Message sent event");
+
     if (_network_app_state() == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.message_sent(*this);
     }
@@ -232,11 +257,13 @@ nr::badge::badge_discovered_result
 nr::badge::on_badge_discovered(const uint8_t *id) noexcept
 {
     // FIXME How do we want to derive a unique badge ID?
+    _logger.info("Badge discovered event");
     return badge_discovered_result::NEW;
 }
 
 void nr::badge::on_badge_discovery_completed() noexcept
 {
+    _logger.info("Badge discovery completed");
     _badges_discovered_last_exchange = _id_exchanger.new_badges_discovered();
     _network_app_state(network_app_state::ANIMATE_PAIRING_COMPLETED);
 }
@@ -356,7 +383,7 @@ void nr::badge::network_id_exchanger::reset() noexcept
     _done_after_sending_ours = false;
 }
 
-nr::badge::pairing_animator::pairing_animator()
+nr::badge::pairing_animator::pairing_animator() : _logger("pairing_animator")
 {
     _animation_state(animation_state::DONE);
 }

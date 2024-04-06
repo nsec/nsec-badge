@@ -40,7 +40,8 @@ nc::uart_interface::uart_interface(uart_port_t hw_uart_id,
                                    unsigned int rx_pin_id,
                                    unsigned int tx_pin_id,
                                    unsigned int baud_rate, bool inverted_logic)
-    : _hw_uart_id(hw_uart_id), _logger("uart_interface"),
+    : _hw_uart_id(hw_uart_id),
+      _logger("uart_interface", nsec::config::logging::uart_interface_level),
       _available_data_size(0)
 {
     // Match the defaults of last year's badge (AVR SoftwareSerial).

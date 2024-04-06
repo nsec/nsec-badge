@@ -463,7 +463,7 @@ nc::network_handler::_check_connections() noexcept
 
 void nc::network_handler::_position(link_position new_position) noexcept
 {
-    _current_position = std::uint8_t(new_position);
+    _current_position = new_position;
     switch (position()) {
     case link_position::UNKNOWN:
         break;
@@ -492,7 +492,7 @@ void nc::network_handler::_listening_side(peer_relative_position side) noexcept
 {
     _logger.debug("Listening side set: listening_side={}", side);
 
-    _current_listening_side = std::uint8_t(side);
+    _current_listening_side = side;
     switch (_listening_side()) {
     case peer_relative_position::LEFT:
         break;
@@ -539,7 +539,7 @@ void nc::network_handler::_wire_protocol_state(
         "Transitioning protocol state: previous_state={}, new_state={}",
         previous_protocol_state, state);
 
-    _current_wire_protocol_state = std::uint8_t(state);
+    _current_wire_protocol_state = state;
     _ticks_in_wire_state = 0;
     // Reset timeout timestamp.
     _last_message_received_time_ms = get_current_absolute_time();
@@ -581,7 +581,7 @@ nc::network_handler::_wave_front_direction() const noexcept
 void nc::network_handler::_wave_front_direction(
     peer_relative_position new_direction) noexcept
 {
-    _current_wave_front_direction = std::uint8_t(new_direction);
+    _current_wave_front_direction = new_direction;
 }
 
 nc::network_handler::message_reception_state
@@ -593,7 +593,7 @@ nc::network_handler::_message_reception_state() const noexcept
 void nc::network_handler::_message_reception_state(
     message_reception_state new_state) noexcept
 {
-    _current_message_reception_state = std::uint8_t(new_state);
+    _current_message_reception_state = new_state;
 }
 
 nc::network_handler::message_transmission_state
@@ -605,7 +605,7 @@ nc::network_handler::_message_transmission_state() const noexcept
 void nc::network_handler::_message_transmission_state(
     message_transmission_state new_state) noexcept
 {
-    _current_message_transmission_state = std::uint8_t(new_state);
+    _current_message_transmission_state = new_state;
 }
 
 nc::peer_relative_position
@@ -617,7 +617,7 @@ nc::network_handler::_outgoing_message_direction() const noexcept
 void nc::network_handler::_outgoing_message_direction(
     peer_relative_position direction) noexcept
 {
-    _current_message_being_sent_direction = std::uint8_t(direction);
+    _current_message_being_sent_direction = direction;
 }
 
 std::uint8_t nc::network_handler::_outgoing_message_size() const noexcept
@@ -754,6 +754,8 @@ nc::network_handler::_handle_reception(nc::uart_interface &serial,
 
             if (payload_size != 0 && !message_payload) {
                 // Caller doesn't expect a payload.
+                _logger.error("Corrupted message detected: payload received "
+                              "but the caller doesn't expect a message");
                 return handle_reception_result::CORRUPTED;
             }
 
@@ -768,9 +770,14 @@ nc::network_handler::_handle_reception(nc::uart_interface &serial,
                 checksummer.push(message_payload[i]);
             }
 
-            return checksum == checksummer.checksum()
-                       ? handle_reception_result::COMPLETE
-                       : handle_reception_result::CORRUPTED;
+            if (checksum != checksummer.checksum()) {
+                _logger.error("Corrupted message detected: message checksum "
+                              "doesn't match expected={}, got={}",
+                              checksum, checksummer.checksum());
+                return handle_reception_result::CORRUPTED;
+            } else {
+                return handle_reception_result::COMPLETE;
+            }
         }
         }
     }
@@ -793,6 +800,8 @@ nc::network_handler::_handle_transmission(
                 : _right_serial;
 
         // Listen before send since the other side can reply OK immediately.
+        _logger.debug("Attempting to send message: type={}",
+                      _current_message_being_sent_type);
         _listening_side(_outgoing_message_direction());
         send_wire_msg(_logger, sending_serial, _current_message_being_sent_type,
                       _current_message_being_sent,
@@ -809,14 +818,11 @@ nc::network_handler::_handle_transmission(
                 ? _left_serial
                 : _right_serial;
 
+        _logger.debug("Waiting for confirmation");
         const auto receive_result =
             _handle_reception(listening_serial, new_message_type, nullptr);
 
         switch (receive_result) {
-        case handle_reception_result::COMPLETE: {
-            _clear_outgoing_message();
-            return handle_transmission_result::COMPLETE;
-        }
         case handle_reception_result::NO_DATA:
             if (current_time_ms - _last_transmission_time_ms >=
                 nsec::config::communication::
@@ -828,7 +834,9 @@ nc::network_handler::_handle_transmission(
             }
 
             break;
+        case handle_reception_result::COMPLETE:
         default:
+            _logger.debug("Received \"ok\" in response to sent message");
             // Assume the message was "OK".
             _clear_outgoing_message();
             return handle_transmission_result::COMPLETE;
@@ -864,7 +872,7 @@ nc::network_handler::enqueue_app_message(peer_relative_position direction,
         return enqueue_message_result::UNCONNECTED;
     }
 
-    _current_pending_outgoing_app_message_direction = std::uint8_t(direction);
+    _current_pending_outgoing_app_message_direction = direction;
     _current_pending_outgoing_app_message_size = payload_size;
     _current_pending_outgoing_app_message_type = msg_type;
     memcpy(_current_pending_outgoing_app_message_payload, msg_payload,
@@ -918,6 +926,7 @@ void nc::network_handler::_run_wire_protocol(
         }
 
         _last_message_received_time_ms = current_time_ms;
+        _logger.debug("Received message: type={}", wire_msg_type(message_type));
         send_wire_ok_msg(_logger, _listening_side_serial());
 
         if (wire_msg_type(message_type) == wire_msg_type::RESET) {

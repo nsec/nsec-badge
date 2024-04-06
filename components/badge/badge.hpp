@@ -7,10 +7,11 @@
 #ifndef NSEC_RUNTIME_BADGE_HPP
 #define NSEC_RUNTIME_BADGE_HPP
 
-#include <badge-network/network_handler.hpp>
 #include <badge-button/watcher.hpp>
 #include <badge-led-strip/strip_animator.hpp>
+#include <badge-network/network_handler.hpp>
 #include <cstdint>
+#include <utils/logging.hpp>
 
 namespace nsec::runtime
 {
@@ -29,9 +30,6 @@ class badge
     badge &operator=(const badge &) = delete;
     badge &operator=(badge &&) = delete;
     ~badge() = default;
-
-    // Setup hardware.
-    void setup();
 
     void relase_focus_current_screen() noexcept;
     void on_splash_complete() noexcept;
@@ -66,7 +64,9 @@ class badge
     class network_id_exchanger
     {
       public:
-        network_id_exchanger() = default;
+        network_id_exchanger() : _logger("network_id_exchanger")
+        {
+        }
 
         network_id_exchanger(const network_id_exchanger &) = delete;
         network_id_exchanger(network_id_exchanger &&) = delete;
@@ -91,6 +91,7 @@ class badge
         bool _send_ours_on_next_send_complete : 1;
         uint8_t _direction : 1;
         bool _done_after_sending_ours : 1;
+        nsec::logging::logger _logger;
     };
 
     class pairing_animator
@@ -128,12 +129,15 @@ class badge
 
         uint8_t _current_state : 3;
         uint8_t _state_counter : 5;
+        nsec::logging::logger _logger;
     };
 
     class pairing_completed_animator
     {
       public:
-        pairing_completed_animator() = default;
+        pairing_completed_animator() : _logger("pairing_completed_animator")
+        {
+        }
 
         pairing_completed_animator(const pairing_completed_animator &) = delete;
         pairing_completed_animator(pairing_completed_animator &&) = delete;
@@ -160,9 +164,11 @@ class badge
         uint8_t _current_state : 3;
         uint8_t _state_counter : 5;
         char current_message[32];
+        nsec::logging::logger _logger;
     };
 
-    class animation_task : public nsec::scheduling::periodic_task<animation_task>
+    class animation_task
+        : public nsec::scheduling::periodic_task<animation_task>
     {
       public:
         explicit animation_task();
@@ -199,6 +205,8 @@ class badge
     _compute_new_social_level(uint8_t current_social_level,
                               uint8_t new_badges_discovered_count) noexcept;
     void _set_selected_animation(uint8_t animation_id, bool save) noexcept;
+    // Setup hardware.
+    void _setup();
 
     uint8_t _social_level;
     uint8_t _selected_animation;
@@ -223,6 +231,8 @@ class badge
 
     // animation timer
     animation_task _timer;
+
+    nsec::logging::logger _logger;
 };
 } // namespace nsec::runtime
 

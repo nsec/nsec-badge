@@ -16,19 +16,19 @@
 namespace nsec::communication
 {
 
-enum class peer_relative_position : uint8_t {
+enum class peer_relative_position : std::uint8_t {
     LEFT,
     RIGHT,
 };
 
-using peer_id_t = uint8_t;
+using peer_id_t = std::uint8_t;
 
 class network_handler : public scheduling::periodic_task<network_handler>
 {
     friend class periodic_task<network_handler>;
 
   public:
-    enum class wire_protocol_state : uint8_t {
+    enum class wire_protocol_state : std::uint8_t {
         UNCONNECTED,
         /* Wait for boards to listen before left-most node initiates the
            discovery. */
@@ -57,13 +57,13 @@ class network_handler : public scheduling::periodic_task<network_handler>
     using disconnection_notifier = void (*)();
     using pairing_begin_notifier = void (*)();
     // void (our_peer_id, peer count)
-    using pairing_end_notifier = void (*)(peer_id_t, uint8_t);
+    using pairing_end_notifier = void (*)(peer_id_t, std::uint8_t);
 
-    enum class application_message_action : uint8_t { OK, ERROR };
+    enum class application_message_action : std::uint8_t { OK, ERROR };
     // application_message_action (relative_position_of_peer, message_type,
     // message_payload)
     using message_received_notifier = application_message_action (*)(
-        nsec::communication::message::type, const uint8_t *);
+        nsec::communication::message::type, const std::uint8_t *);
     using message_sent_notifier = void (*)();
 
     network_handler() noexcept;
@@ -80,12 +80,12 @@ class network_handler : public scheduling::periodic_task<network_handler>
         return _peer_id;
     }
 
-    uint8_t peer_count() const noexcept
+    std::uint8_t peer_count() const noexcept
     {
         return _peer_count;
     }
 
-    enum class link_position : uint8_t {
+    enum class link_position : std::uint8_t {
         UNKNOWN = 0b00,
         LEFT_MOST = 0b01,
         RIGHT_MOST = 0b10,
@@ -93,23 +93,26 @@ class network_handler : public scheduling::periodic_task<network_handler>
     };
     link_position position() const noexcept;
 
-    enum class enqueue_message_result : uint8_t { QUEUED, UNCONNECTED, FULL };
+    enum class enqueue_message_result : std::uint8_t {
+        QUEUED,
+        UNCONNECTED,
+        FULL
+    };
     enqueue_message_result enqueue_app_message(peer_relative_position direction,
-                                               uint8_t msg_type,
-                                               const uint8_t *msg_payload);
+                                               std::uint8_t msg_type,
+                                               const std::uint8_t *msg_payload);
 
   protected:
     void tick(scheduling::absolute_time_ms current_time_ms) noexcept;
 
   private:
-
-    enum class message_reception_state : uint8_t {
+    enum class message_reception_state : std::uint8_t {
         RECEIVE_MAGIC_BYTE_1,
         RECEIVE_MAGIC_BYTE_2,
         RECEIVE_HEADER,
         RECEIVE_PAYLOAD,
     };
-    enum class message_transmission_state : uint8_t {
+    enum class message_transmission_state : std::uint8_t {
         NONE,
         ATTEMPT_SEND,
         // On timeout, retransmit until timeout
@@ -141,21 +144,21 @@ class network_handler : public scheduling::periodic_task<network_handler>
     _message_transmission_state(message_transmission_state new_state) noexcept;
     peer_relative_position _outgoing_message_direction() const noexcept;
     void _outgoing_message_direction(peer_relative_position) noexcept;
-    uint8_t _outgoing_message_size() const noexcept;
+    std::uint8_t _outgoing_message_size() const noexcept;
     void _clear_outgoing_message() noexcept;
-    void
-    _set_outgoing_message(nsec::scheduling::absolute_time_ms current_time_ms,
-                          uint8_t message_type,
-                          const uint8_t *message_payload = nullptr) noexcept;
+    void _set_outgoing_message(
+        nsec::scheduling::absolute_time_ms current_time_ms,
+        std::uint8_t message_type,
+        const std::uint8_t *message_payload = nullptr) noexcept;
 
     // Message transmission request from an application.
     peer_relative_position
     _pending_outgoing_app_message_direction() const noexcept;
-    uint8_t _pending_outgoing_app_message_size() const noexcept;
+    std::uint8_t _pending_outgoing_app_message_size() const noexcept;
     bool _has_pending_outgoing_app_message() const noexcept;
     void _clear_pending_outgoing_app_message() noexcept;
 
-    enum class check_connections_result : uint8_t {
+    enum class check_connections_result : std::uint8_t {
         NO_CHANGE,
         TOPOLOGY_CHANGED,
     };
@@ -169,17 +172,17 @@ class network_handler : public scheduling::periodic_task<network_handler>
     bool _sense_is_left_connected() const noexcept;
     bool _sense_is_right_connected() const noexcept;
 
-    enum class handle_reception_result : uint8_t {
+    enum class handle_reception_result : std::uint8_t {
         NO_DATA,
         INCOMPLETE,
         COMPLETE,
         CORRUPTED,
     };
     handle_reception_result
-    _handle_reception(uart_interface &, uint8_t &message_type,
-                      uint8_t *message_payload) noexcept;
+    _handle_reception(uart_interface &, std::uint8_t &message_type,
+                      std::uint8_t *message_payload) noexcept;
 
-    enum class handle_transmission_result : uint8_t {
+    enum class handle_transmission_result : std::uint8_t {
         COMPLETE,
         INCOMPLETE,
     };
@@ -200,51 +203,48 @@ class network_handler : public scheduling::periodic_task<network_handler>
     uart_interface _right_serial;
     nsec::scheduling::absolute_time_ms _last_message_received_time_ms;
 
-    uint8_t _is_left_connected : 1;
-    uint8_t _is_right_connected : 1;
+    bool _is_left_connected;
+    bool _is_right_connected;
 
     // Storage for a link_position enum
-    uint8_t _current_position : 2;
+    link_position _current_position;
     // Storage for a wire_protocol_state enum
-    uint8_t _current_wire_protocol_state : 5;
+    wire_protocol_state _current_wire_protocol_state;
     // Storage for a peer_relative_location enum. Indicates the direction of the
     // wave front by the time we get the next message.
-    uint8_t _current_wave_front_direction : 1;
+    peer_relative_position _current_wave_front_direction;
     // Number of ticks in the current wire protocol states (used by states that
     // need to wait).
-    uint8_t _ticks_in_wire_state : 2;
-    // Storage for a peer_relative_location enum
-    uint8_t _current_listening_side : 1;
+    std::uint8_t _ticks_in_wire_state;
+
+    peer_relative_position _current_listening_side;
 
     // This node's unique id in the network.
-    peer_id_t _peer_id : 5;
+    peer_id_t _peer_id;
     // Number of peers in the network (including this node).
-    uint8_t _peer_count : 5;
+    std::uint8_t _peer_count;
 
-    // Storage for a message_reception_state enum
-    uint8_t _current_message_reception_state : 3;
+    message_reception_state _current_message_reception_state;
     // Number of bytes left to receive for the current message
-    uint8_t _payload_bytes_to_receive : 5;
+    std::uint8_t _payload_bytes_to_receive;
 
-    // Storage for a message_transmission_state enum
-    uint8_t _current_message_transmission_state : 2;
-    uint8_t _current_message_being_sent_size : 5;
-    // Storage for a peer_relative_location enum
-    uint8_t _current_message_being_sent_direction : 1;
-    uint8_t _current_message_being_sent_type : 5;
+    message_transmission_state _current_message_transmission_state;
+    std::uint8_t _current_message_being_sent_size;
+
+    peer_relative_position _current_message_being_sent_direction;
+    std::uint8_t _current_message_being_sent_type;
 
     // App-level enqueued message
-    // Storage for a peer_relative_location enum
-    uint8_t _current_pending_outgoing_app_message_direction : 1;
-    uint8_t _current_pending_outgoing_app_message_size : 5;
+    peer_relative_position _current_pending_outgoing_app_message_direction;
+    std::uint8_t _current_pending_outgoing_app_message_size;
     // Enqueued outgoing application message type and payload.
-    uint8_t _current_pending_outgoing_app_message_type : 5;
-    uint8_t _current_pending_outgoing_app_message_payload
+    std::uint8_t _current_pending_outgoing_app_message_type;
+    std::uint8_t _current_pending_outgoing_app_message_payload
         [nsec::config::communication::protocol_max_message_size];
 
     // Message currently being sent and potentially retransmitted.
     nsec::scheduling::absolute_time_ms _last_transmission_time_ms;
-    uint8_t _current_message_being_sent
+    std::uint8_t _current_message_being_sent
         [nsec::config::communication::protocol_max_message_size];
     nsec::logging::logger _logger;
 };
