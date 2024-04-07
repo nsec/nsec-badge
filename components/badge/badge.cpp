@@ -25,6 +25,8 @@ const char *badge_button_event_table[] = {"SINGLE_CLICK", "LONG_PRESS"};
 namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
 namespace nb = nsec::button;
+namespace nl = nsec::led;
+
 
 // Wire message type formatter
 template <>
@@ -536,6 +538,13 @@ void nr::badge::tick(
 void nr::badge::pairing_completed_animator::start(nr::badge &badge) noexcept
 {
     badge._timer.period_ms(1000);
+    badge._strip_animator.set_pairing_completed_animation(
+        badge._badges_discovered_last_exchange > 0
+            ? nl::strip_animator::pairing_completed_animation_type::
+                  HAPPY_CLOWN_BARF
+            : nl::strip_animator::pairing_completed_animation_type::
+                  NO_NEW_FRIENDS);
+    memset(current_message, 0, sizeof(current_message));
 }
 
 void nr::badge::pairing_completed_animator::reset() noexcept
@@ -555,6 +564,18 @@ void nr::badge::pairing_completed_animator::tick(
             animation_state::SHOW_PAIRING_COMPLETE_MESSAGE) {
             _animation_state(animation_state::SHOW_NEW_LEVEL);
             memset(current_message, 0, sizeof(current_message));
+
+            const auto new_level = _compute_new_social_level(
+                badge._social_level, badge._badges_discovered_last_exchange);
+
+            badge._strip_animator.set_show_level_animation(
+                badge._badges_discovered_last_exchange > 0
+                    ? nl::strip_animator::pairing_completed_animation_type::
+                          HAPPY_CLOWN_BARF
+                    : nl::strip_animator::pairing_completed_animation_type::
+                          NO_NEW_FRIENDS,
+                new_level, false);
+
         } else {
             badge.apply_score_change(badge._badges_discovered_last_exchange);
             badge._network_app_state(network_app_state::IDLE);
