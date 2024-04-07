@@ -53,6 +53,7 @@ class badge
     void cycle_selected_animation(cycle_animation_direction direction) noexcept;
     void update_leds(button::id id, button::event event) noexcept;
     void scroll_leds(button::id id, button::event event) noexcept;
+    void idle_social_level_and_health(uint8_t state) noexcept;
 
     /*
      * Once the network layer has established a connection, "on pairing end" is
@@ -250,6 +251,8 @@ class badge
     // Mask to prevent repeats after a screen transition, one bit per button.
     uint8_t _button_had_non_repeat_event_since_screen_focus_change;
     char _user_name[nsec::config::user::name_max_length];
+    uint8_t idle_led_next_state = 0;
+    uint16_t idle_led_processing = 0;
 
     button::watcher _button_watcher;
 

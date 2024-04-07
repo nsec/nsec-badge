@@ -18,12 +18,29 @@
 // #define DEBUG_BADGE_BUTTON_CALLBACK
 // #define DEBUG_SWITCH_LEDS_PATTERN
 
+// Define the diffrent idle health display state.
+#define IDLE_HEALTH_DISPLAY_SOCIAL_LEVEL          0
+#define IDLE_HEALTH_DISPLAY_HEALTH_METER          1
+#define IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN 2
+#define IDLE_HEALTH_DISPLAY_IDLE                  3
+
 #if defined(DEBUG_BADGE_BUTTON_CALLBACK) || defined(DEBUG_SWITCH_LEDS_PATTERN)
 const char *badge_button_label_table[] = {"UP",    "DOWN", "LEFT",
                                           "RIGHT", "OK",   "CANCEL"};
 
 const char *badge_button_event_table[] = {"SINGLE_CLICK", "LONG_PRESS"};
 #endif
+
+// Mapping of the social level to the health level
+// - The social level range is 0 to 200.
+// - The health range is 1 to 16.
+// - Table field for health mapping is the
+//   "Social Level Upper Boundary".
+const uint8_t health_mapping[] = {
+    1,
+    1, 3, 6, 11, 17, 25, 34, 44,
+    57, 71, 88, 106, 127, 149, 174, 200
+};
 
 namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
@@ -644,6 +661,16 @@ void nr::badge::tick(ns::absolute_time_ms current_time_ms) noexcept
     default:
         break;
     }
+
+    if( idle_led_processing != 0 ) {
+        // Increment "IDLE" LED processing counter.
+        idle_led_processing--;
+
+        // Verify if counter reach 0.
+        if( idle_led_processing == 0 ) {
+            nsec::g::the_badge.idle_social_level_and_health(idle_led_next_state);
+        }
+    }
 }
 
 void nr::badge::pairing_completed_animator::start(nr::badge &badge) noexcept
@@ -772,13 +799,21 @@ void nr::badge::update_leds(nsec::button::id id, nsec::button::event event) noex
             case nsec::button::id::LEFT:
             case nsec::button::id::RIGHT:
                 // Reset the idle health LEDs process.
-                idle_led_next_state = 0;
+                idle_led_next_state = IDLE_HEALTH_DISPLAY_IDLE;
                 idle_led_processing = 0;
 
                 nsec::g::the_badge.scroll_leds(id, event);
                 break;
 
+            case nsec::button::id::DOWN:
+                nsec::g::the_badge.idle_social_level_and_health(
+                                   IDLE_HEALTH_DISPLAY_SOCIAL_LEVEL);
+                break;
+
             default:
+                // Reset the idle health LEDs process.
+                idle_led_next_state = IDLE_HEALTH_DISPLAY_IDLE;
+                idle_led_processing = 0;
                 break;
         }
     }
@@ -801,4 +836,64 @@ void nr::badge::scroll_leds(nsec::button::id id, nsec::button::event event) noex
               nsec::g::the_badge.level(), previous_level,
               _selected_animation, badge_button_label_table[(int)id]);
     #endif
+}
+
+void nr::badge::idle_social_level_and_health(uint8_t state) noexcept
+{
+    uint8_t selected_health = 1;
+    uint8_t current_level = nsec::g::the_badge.level();
+
+    // Process the different state.
+    switch(state)
+    {
+        case IDLE_HEALTH_DISPLAY_SOCIAL_LEVEL:
+            // Display the social level on the LEDs.
+            nsec::g::the_badge._strip_animator.set_show_level_animation(
+                nsec::led::strip_animator::pairing_completed_animation_type::NO_NEW_FRIENDS,
+                current_level, false);
+
+            // Setup the next state & the delay before the next state (3 seconds)
+            idle_led_next_state = IDLE_HEALTH_DISPLAY_HEALTH_METER;
+            idle_led_processing = 12;
+            break;
+
+        case IDLE_HEALTH_DISPLAY_HEALTH_METER:
+            // Retreive the health level for the social level.
+            // - Social Level 0 is processed outside the for loop.
+            if(current_level == 0) {
+                selected_health = 1;
+            } else {
+                for(unsigned int i = 16; ; i--) {
+                    if(current_level >= health_mapping[i]) {
+                        selected_health = (uint8_t)i;
+                        break;
+                    }
+                }
+            }
+
+            // Display the Health level on the LEDs.
+            nsec::g::the_badge._strip_animator
+                .set_red_to_green_led_progress_bar(selected_health);
+
+            // Setup the next state & the delay before the next state (3 seconds)
+            idle_led_next_state = IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN;
+            idle_led_processing = 20;
+            break;
+
+        case IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN:
+            // Restore the LEDs pattern.
+            nsec::g::the_badge._strip_animator
+                .set_idle_animation(_selected_animation);
+
+             // Reset the idle health LEDs process.
+            idle_led_next_state = IDLE_HEALTH_DISPLAY_IDLE;
+            idle_led_processing = 0;
+            break;
+
+        default:
+            // Reset the idle health LEDs process.
+            idle_led_next_state = IDLE_HEALTH_DISPLAY_IDLE;
+            idle_led_processing = 0;
+            break;
+    }
 }
