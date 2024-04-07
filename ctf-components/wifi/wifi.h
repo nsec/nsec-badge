@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include "esp_wifi.h"
+#include "esp_console.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,6 +52,8 @@ class Wifi
     const char *getPassword() { return (const char *)&_config.ap.password; }
     esp_netif_t* getNetif() {return _netif_ap;}
 };
+
+void register_wifi_cmd(void);
 
 #ifdef __cplusplus
 }

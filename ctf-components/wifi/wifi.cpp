@@ -31,6 +31,35 @@ static bool wifi_config_saved()
     return strlen(Save::save_data.wifi_ssid) && strlen(Save::save_data.wifi_password);
 }
 
+int wifi_cmd(int argc, char **argv) {
+
+    if(Wifi::getInstance().isEnabled()) {
+        printf("Wifi is already enabled");
+        Wifi::getInstance().disable();
+    }
+    else if (wifi_config_saved()) {
+        printf("Wifi config was already generated, enabling wifi");
+        Wifi::getInstance().enable();
+    }
+    else {
+        printf("Wifi is getting initiliazed");
+        Wifi::getInstance().init();
+    }
+    return ESP_OK;
+}
+
+void register_wifi_cmd(void) {
+        const esp_console_cmd_t cmd = {
+            .command = "wifi",
+            .help = "Toggle wifi feature\n",
+            .hint = "",
+            .func = &wifi_cmd,
+            .argtable = NULL,
+        };
+        ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+    }
+
+
 void Wifi::init()
 {
     if(!wifi_config_saved()) {
@@ -42,7 +71,7 @@ void Wifi::init()
     }
 
     char ssid_log[1024];
-    sprintf(ssid_log, "SSID: %s, Password: %s\n", Save::save_data.wifi_ssid, Save::save_data.wifi_password);
+    sprintf(ssid_log, "\n\n ##### SSID: %s, Password: %s ###### \n\n", Save::save_data.wifi_ssid, Save::save_data.wifi_password);
     printf(ssid_log);
     _enabled = false;
     _state = State::Disabled;

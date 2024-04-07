@@ -26,11 +26,8 @@ static void initialize_nvs() {
 extern "C" void app_main(void) {
 
     initialize_nvs();
-    fflush(stdout);
 
     Save::load_save();
-
-    ota_init();
 
     /* Wait a few seconds before enabling the console. */
     vTaskDelay(2000 / portTICK_PERIOD_MS);
