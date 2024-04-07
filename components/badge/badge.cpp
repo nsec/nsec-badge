@@ -205,8 +205,8 @@ void nr::badge::on_button_event(nsec::button::id button,
         // FIXME Forward button to focused mode
     }
 
-    // Send the received event to the scrolling LEDs function.
-    nsec::g::the_badge.scroll_leds(button, event);
+    // Send the received event to the LEDs function.
+    nsec::g::the_badge.update_leds(button, event);
 }
 
 void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
@@ -764,25 +764,41 @@ void nr::badge::cycle_selected_animation(
     nsec::g::the_badge._strip_animator.set_idle_animation(selected_animation);
 }
 
+void nr::badge::update_leds(nsec::button::id id, nsec::button::event event) noexcept
+{
+    // Process "SINGLE_CLICK" event.
+    if (event == nsec::button::event::SINGLE_CLICK) {
+        switch(id) {
+            case nsec::button::id::LEFT:
+            case nsec::button::id::RIGHT:
+                // Reset the idle health LEDs process.
+                idle_led_next_state = 0;
+                idle_led_processing = 0;
+
+                nsec::g::the_badge.scroll_leds(id, event);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
 void nr::badge::scroll_leds(nsec::button::id id, nsec::button::event event) noexcept
 {
     #ifdef DEBUG_SWITCH_LEDS_PATTERN
     uint8_t previous_level = _selected_animation;
     #endif
 
-    // Only process "SINGLE_CLICK" event.
-    if (event == nsec::button::event::SINGLE_CLICK) {
-        if ((id == nsec::button::id::LEFT) || (id == nsec::button::id::RIGHT)) {
-            nsec::g::the_badge.cycle_selected_animation(
-            id == nsec::button::id::LEFT ?
-                  nsec::runtime::badge::cycle_animation_direction::PREVIOUS :
-                  nsec::runtime::badge::cycle_animation_direction::NEXT);
+    // Process the "LEFT"/"RIGHT" "SINGLE_CLICK" event.
+    nsec::g::the_badge.cycle_selected_animation(
+        id == nsec::button::id::LEFT ?
+              nsec::runtime::badge::cycle_animation_direction::PREVIOUS :
+              nsec::runtime::badge::cycle_animation_direction::NEXT);
 
-                #ifdef DEBUG_SWITCH_LEDS_PATTERN
-                ESP_LOGI( "SCROLL LEDS", "Level %u - Previous/Current %u/%u - %s\n",
-                          nsec::g::the_badge.level(), previous_level,
-                          _selected_animation, badge_button_label_table[(int)id]);
-                #endif
-        }
-    }
+    #ifdef DEBUG_SWITCH_LEDS_PATTERN
+    ESP_LOGI( "SCROLL LEDS", "Level %u - Previous/Current %u/%u - %s\n",
+              nsec::g::the_badge.level(), previous_level,
+              _selected_animation, badge_button_label_table[(int)id]);
+    #endif
 }
