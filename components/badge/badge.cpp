@@ -855,6 +855,11 @@ void nr::badge::idle_social_level_and_health(uint8_t state) noexcept
             // Setup the next state & the delay before the next state (3 seconds)
             idle_led_next_state = IDLE_HEALTH_DISPLAY_HEALTH_METER;
             idle_led_processing = 12;
+
+            #ifdef DEBUG_SWITCH_LEDS_PATTERN
+            ESP_LOGI( "SOCIAL LEVEL", "Level %u  - %s\n",
+                      current_level, "DOWN");
+            #endif
             break;
 
         case IDLE_HEALTH_DISPLAY_HEALTH_METER:
@@ -878,6 +883,11 @@ void nr::badge::idle_social_level_and_health(uint8_t state) noexcept
             // Setup the next state & the delay before the next state (3 seconds)
             idle_led_next_state = IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN;
             idle_led_processing = 20;
+
+            #ifdef DEBUG_SWITCH_LEDS_PATTERN
+            ESP_LOGI( "LIFE HEALTH", "Level/health %u/%u\n",
+                      current_level, selected_health);
+            #endif
             break;
 
         case IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN:
