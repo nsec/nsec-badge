@@ -412,6 +412,7 @@ void nr::badge::pairing_animator::start(nr::badge &badge) noexcept
 
     badge._timer.period_ms(
         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms);
+    nsec::g::the_badge._strip_animator.set_red_to_green_led_progress_bar(0);
 }
 
 void nr::badge::pairing_animator::reset() noexcept
@@ -450,6 +451,8 @@ void nr::badge::pairing_animator::tick(
     case animation_state::WAIT_DONE:
         break;
     case animation_state::LIGHT_UP_UPPER_BAR:
+        nsec::g::the_badge._strip_animator.set_red_to_green_led_progress_bar(
+            _state_counter);
         if (_state_counter < 8) {
             _state_counter++;
         } else if (nsec::g::the_badge._network_handler.position() ==
@@ -465,6 +468,9 @@ void nr::badge::pairing_animator::tick(
 
         break;
     case animation_state::LIGHT_UP_LOWER_BAR:
+        nsec::g::the_badge._strip_animator.set_red_to_green_led_progress_bar(
+            _state_counter + 8);
+
         if (_state_counter < 8) {
             _state_counter++;
         } else if (nsec::g::the_badge._network_handler.position() ==
