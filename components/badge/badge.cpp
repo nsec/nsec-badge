@@ -849,7 +849,7 @@ void nr::badge::idle_social_level_and_health(uint8_t state) noexcept
         case IDLE_HEALTH_DISPLAY_SOCIAL_LEVEL:
             // Display the social level on the LEDs.
             nsec::g::the_badge._strip_animator.set_show_level_animation(
-                nsec::led::strip_animator::pairing_completed_animation_type::NO_NEW_FRIENDS,
+                nsec::led::strip_animator::pairing_completed_animation_type::IDLE_SOCIAL_LEVEL,
                 current_level, false);
 
             // Setup the next state & the delay before the next state (3 seconds)
@@ -878,7 +878,7 @@ void nr::badge::idle_social_level_and_health(uint8_t state) noexcept
 
             // Display the Health level on the LEDs.
             nsec::g::the_badge._strip_animator
-                .set_red_to_green_led_progress_bar(selected_health);
+                .set_health_meter_bar(selected_health);
 
             // Setup the next state & the delay before the next state (3 seconds)
             idle_led_next_state = IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN;
