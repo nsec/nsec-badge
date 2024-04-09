@@ -854,7 +854,7 @@ void nr::badge::idle_social_level_and_health(uint8_t state) noexcept
 
             // Setup the next state & the delay before the next state (3 seconds)
             idle_led_next_state = IDLE_HEALTH_DISPLAY_HEALTH_METER;
-            idle_led_processing = 12;
+            idle_led_processing = 16;
 
             #ifdef DEBUG_SWITCH_LEDS_PATTERN
             ESP_LOGI( "SOCIAL LEVEL", "Level %u  - %s\n",
