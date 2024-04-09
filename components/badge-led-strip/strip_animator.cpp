@@ -79,6 +79,16 @@ const nl::strip_animator::keyframe
              3},
 };
 
+const nl::strip_animator::keyframe health_meter_bar_keyframe_template[] = {
+        // red
+        {{125, 20, 0}, 0},
+        // green <- beginning of loop
+        {{0, 255, 0}, 750},
+        // dimmed green to green loop
+        {{15, 120, 15}, 1500},
+        {{0, 255, 0}, 2250},
+};
+
 const nl::strip_animator::keyframe happy_clown_barf_keyframes[] = {
     {{0, 0, 0}, 0},         {{161, 255, 181}, 100}, {{255, 128, 140}, 200},
     {{255, 188, 110}, 300}, {{255, 255, 110}, 400}, {{110, 192, 255}, 500},
@@ -90,6 +100,13 @@ const nl::strip_animator::keyframe no_new_friends_keyframes[] = {
     {{255, 0, 0}, 200},
     {{0, 0, 0}, 400},
     {{255, 0, 0}, 600},
+};
+
+const nl::strip_animator::keyframe idle_social_level_keyframes[] = {
+    {{0, 0, 0}, 0},
+    {{0, 0, 255}, 500},
+    {{0, 0, 127}, 1000},
+    {{0, 0, 255}, 1500},
 };
 
 namespace shooting_star
@@ -923,6 +940,29 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
     }
 }
 
+void nl::strip_animator::set_health_meter_bar(uint8_t led_count) noexcept
+{
+    period_ms(40);
+
+    // Setup animation parameters.
+    _current_animation_type = animation_type::KEYFRAMED;
+    _config.keyframed._animation = keyframed_animation::PROGRESS_BAR;
+    _config.keyframed.active = 0;
+    _config.keyframed.keyframe_count = ARRAY_LENGTH(
+        keyframes::health_meter_bar_keyframe_template);
+    _config.keyframed.keyframes =
+        keyframes::health_meter_bar_keyframe_template;
+    _config.keyframed.loop_point_index = 1;
+    _config.keyframed.brightness = 120;
+
+    // Clear its state.
+    _reset_keyframed_animation_state();
+
+    for (uint8_t i = 0; i < led_count; i++) {
+        _config.keyframed.active |= (1 << i);
+    }
+}
+
 void nl::strip_animator::set_pairing_completed_animation(
     nl::strip_animator::pairing_completed_animation_type
         animation_type) noexcept
@@ -954,9 +994,12 @@ void nl::strip_animator::set_show_level_animation(
         keyframes = keyframes::happy_clown_barf_keyframes;
         // Apply a slight offset between LEDs to achieve a "sparkle" effect.
         cycle_offset = 10;
-    } else {
+    } else if (animation_type == pairing_completed_animation_type::NO_NEW_FRIENDS)  {
         keyframe_count = ARRAY_LENGTH(keyframes::no_new_friends_keyframes);
         keyframes = keyframes::no_new_friends_keyframes;
+    } else {
+        keyframe_count = ARRAY_LENGTH(keyframes::idle_social_level_keyframes);
+        keyframes = keyframes::idle_social_level_keyframes;
     }
 
     if (set_lower_bar_on) {
