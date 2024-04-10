@@ -51,6 +51,78 @@ class badge
 
     enum cycle_animation_direction : int8_t { PREVIOUS = -1, NEXT = 1 };
     void cycle_selected_animation(cycle_animation_direction direction) noexcept;
+    class pairing_animator
+    {
+      public:
+        enum class animation_state : uint8_t {
+            WAIT_MESSAGE_ANIMATION_PART_1,
+            LIGHT_UP_UPPER_BAR,
+            LIGHT_UP_LOWER_BAR,
+            WAIT_MESSAGE_ANIMATION_PART_2,
+            WAIT_DONE,
+            DONE,
+        };
+
+        pairing_animator();
+
+        pairing_animator(const pairing_animator &) = delete;
+        pairing_animator(pairing_animator &&) = delete;
+        pairing_animator &operator=(const pairing_animator &) = delete;
+        pairing_animator &operator=(pairing_animator &&) = delete;
+        ~pairing_animator() = default;
+
+        void start(badge &) noexcept;
+        void new_message(badge &badge,
+                         nsec::communication::message::type msg_type,
+                         const uint8_t *payload) noexcept;
+        void message_sent(badge &badge) noexcept;
+        void reset() noexcept;
+
+        void tick(nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
+
+      private:
+        void _animation_state(animation_state) noexcept;
+        animation_state _animation_state() const noexcept;
+
+        animation_state _current_state;
+        uint8_t _state_counter;
+        nsec::logging::logger _logger;
+    };
+
+    class pairing_completed_animator
+    {
+      public:
+        pairing_completed_animator() : _logger("pairing_completed_animator")
+        {
+        }
+
+        pairing_completed_animator(const pairing_completed_animator &) = delete;
+        pairing_completed_animator(pairing_completed_animator &&) = delete;
+        pairing_completed_animator &
+        operator=(const pairing_completed_animator &) = delete;
+        pairing_completed_animator &
+        operator=(pairing_completed_animator &&) = delete;
+        ~pairing_completed_animator() = default;
+
+        void start(badge &) noexcept;
+        void reset() noexcept;
+        void tick(badge &,
+                  nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
+
+      private:
+        enum class animation_state : uint8_t {
+            SHOW_PAIRING_COMPLETE_MESSAGE,
+            SHOW_NEW_LEVEL,
+        };
+
+        void _animation_state(animation_state) noexcept;
+        animation_state _animation_state() const noexcept;
+
+        uint8_t _current_state : 3;
+        uint8_t _state_counter : 5;
+        char current_message[32];
+        nsec::logging::logger _logger;
+    };
 
   private:
     enum class network_app_state : uint8_t {
@@ -90,79 +162,6 @@ class badge
         bool _send_ours_on_next_send_complete : 1;
         uint8_t _direction : 1;
         bool _done_after_sending_ours : 1;
-        nsec::logging::logger _logger;
-    };
-
-    class pairing_animator
-    {
-      public:
-        pairing_animator();
-
-        pairing_animator(const pairing_animator &) = delete;
-        pairing_animator(pairing_animator &&) = delete;
-        pairing_animator &operator=(const pairing_animator &) = delete;
-        pairing_animator &operator=(pairing_animator &&) = delete;
-        ~pairing_animator() = default;
-
-        void start(badge &) noexcept;
-        void new_message(badge &badge,
-                         nsec::communication::message::type msg_type,
-                         const uint8_t *payload) noexcept;
-        void message_sent(badge &badge) noexcept;
-        void reset() noexcept;
-
-        void tick(nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
-
-      private:
-        enum class animation_state : uint8_t {
-            WAIT_MESSAGE_ANIMATION_PART_1,
-            LIGHT_UP_UPPER_BAR,
-            LIGHT_UP_LOWER_BAR,
-            WAIT_MESSAGE_ANIMATION_PART_2,
-            WAIT_DONE,
-            DONE,
-        };
-
-        void _animation_state(animation_state) noexcept;
-        animation_state _animation_state() const noexcept;
-
-        uint8_t _current_state : 3;
-        uint8_t _state_counter : 5;
-        nsec::logging::logger _logger;
-    };
-
-    class pairing_completed_animator
-    {
-      public:
-        pairing_completed_animator() : _logger("pairing_completed_animator")
-        {
-        }
-
-        pairing_completed_animator(const pairing_completed_animator &) = delete;
-        pairing_completed_animator(pairing_completed_animator &&) = delete;
-        pairing_completed_animator &
-        operator=(const pairing_completed_animator &) = delete;
-        pairing_completed_animator &
-        operator=(pairing_completed_animator &&) = delete;
-        ~pairing_completed_animator() = default;
-
-        void start(badge &) noexcept;
-        void reset() noexcept;
-        void tick(badge &,
-                  nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
-
-      private:
-        enum class animation_state : uint8_t {
-            SHOW_PAIRING_COMPLETE_MESSAGE,
-            SHOW_NEW_LEVEL,
-        };
-
-        void _animation_state(animation_state) noexcept;
-        animation_state _animation_state() const noexcept;
-
-        uint8_t _current_state : 3;
-        uint8_t _state_counter : 5;
-        char current_message[32];
         nsec::logging::logger _logger;
     };
 

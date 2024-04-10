@@ -288,6 +288,8 @@ void nr::badge::network_id_exchanger::start(nr::badge &badge) noexcept
     // Left-most peer initiates the exchange.
     nc::message::announce_badge_id msg = {.peer_id = our_id};
 
+    _logger.debug("Enqueueing message: type={}",
+                  nc::message::type::ANNOUNCE_BADGE_ID);
     badge._network_handler.enqueue_app_message(
         nc::peer_relative_position::RIGHT,
         uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
@@ -302,6 +304,8 @@ void nr::badge::network_id_exchanger::new_message(
         return;
     }
 
+    _logger.info("Handling ANNOUNCE_BADGE_ID message in "
+                 "network_id_exchanger::new_message");
     const auto *announce_badge_id =
         reinterpret_cast<const nc::message::announce_badge_id *>(payload);
 
@@ -331,6 +335,8 @@ void nr::badge::network_id_exchanger::new_message(
                 .peer_id = badge._network_handler.peer_id()};
             // FIXME Set unique ID.
 
+            _logger.debug("Enqueueing message: type={}",
+                          nc::message::type::ANNOUNCE_BADGE_ID);
             badge._network_handler.enqueue_app_message(
                 nc::peer_relative_position(_direction),
                 uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
@@ -350,6 +356,7 @@ void nr::badge::network_id_exchanger::new_message(
         }
 
         // Forward messages from other badges.
+        _logger.debug("Forwarding message from other badge: type={}", msg_type);
         badge._network_handler.enqueue_app_message(
             msg_origin_peer_id < our_peer_id ? nc::peer_relative_position::RIGHT
                                              : nc::peer_relative_position::LEFT,
@@ -363,6 +370,8 @@ void nr::badge::network_id_exchanger::new_message(
 
 void nr::badge::network_id_exchanger::message_sent(nr::badge &badge) noexcept
 {
+    _logger.debug("Message sent");
+
     if (!_send_ours_on_next_send_complete) {
         return;
     }
@@ -371,6 +380,8 @@ void nr::badge::network_id_exchanger::message_sent(nr::badge &badge) noexcept
                                               badge._network_handler.peer_id()};
     // FIXME Set unique ID.
 
+    _logger.debug("Enqueueing message: type={}",
+                  nc::message::type::ANNOUNCE_BADGE_ID);
     badge._network_handler.enqueue_app_message(
         nc::peer_relative_position(_direction),
         uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
@@ -396,10 +407,51 @@ nr::badge::pairing_animator::pairing_animator() : _logger("pairing_animator")
     _animation_state(animation_state::DONE);
 }
 
+// Animation state formatter
+template <>
+struct fmt::formatter<nr::badge::pairing_animator::animation_state>
+    : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(nr::badge::pairing_animator::animation_state animation_state,
+                FormatContext &ctx)
+    {
+        string_view name = "unknown";
+        switch (animation_state) {
+        case nr::badge::pairing_animator::animation_state::
+            WAIT_MESSAGE_ANIMATION_PART_1:
+            name = "WAIT_MESSAGE_ANIMATION_PART_1";
+            break;
+        case nr::badge::pairing_animator::animation_state::LIGHT_UP_UPPER_BAR:
+            name = "LIGHT_UP_UPPER_BAR";
+            break;
+        case nr::badge::pairing_animator::animation_state::LIGHT_UP_LOWER_BAR:
+            name = "LIGHT_UP_LOWER_BAR";
+            break;
+        case nr::badge::pairing_animator::animation_state::
+            WAIT_MESSAGE_ANIMATION_PART_2:
+            name = "WAIT_MESSAGE_ANIMATION_PART_2";
+            break;
+        case nr::badge::pairing_animator::animation_state::WAIT_DONE:
+            name = "WAIT_DONE";
+            break;
+        case nr::badge::pairing_animator::animation_state::DONE:
+            name = "DONE";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
+
 void nr::badge::pairing_animator::_animation_state(
     animation_state new_state) noexcept
 {
-    _current_state = uint8_t(new_state);
+    _logger.info(
+        "Transitionning animation state: previous_state={}, new_state={}",
+        _current_state, new_state);
+    _current_state = new_state;
     _state_counter = 0;
 }
 
@@ -436,7 +488,6 @@ nr::badge::animation_task::animation_task() : periodic_task(250)
 void nr::badge::animation_task::tick(
     ns::absolute_time_ms current_time_ms) noexcept
 {
-    nsync::lock_guard lock(_public_access_semaphore);
     nsec::g::the_badge.tick(current_time_ms);
 }
 
@@ -468,6 +519,8 @@ void nr::badge::pairing_animator::tick(
                    nc::network_handler::link_position::RIGHT_MOST) {
             _animation_state(animation_state::LIGHT_UP_LOWER_BAR);
         } else {
+            _logger.debug("Enqueueing message: type={}",
+                          nc::message::type::PAIRING_ANIMATION_PART_1_DONE);
             nsec::g::the_badge._network_handler.enqueue_app_message(
                 nc::peer_relative_position::RIGHT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_PART_1_DONE),
@@ -484,12 +537,16 @@ void nr::badge::pairing_animator::tick(
             _state_counter++;
         } else if (nsec::g::the_badge._network_handler.position() ==
                    nc::network_handler::link_position::LEFT_MOST) {
+            _logger.debug("Enqueueing message: type={}",
+                          nc::message::type::PAIRING_ANIMATION_DONE);
             nsec::g::the_badge._network_handler.enqueue_app_message(
                 nc::peer_relative_position::RIGHT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_DONE), nullptr);
 
             _animation_state(animation_state::DONE);
         } else {
+            _logger.debug("Enqueueing message: type={}",
+                          nc::message::type::PAIRING_ANIMATION_PART_2_DONE);
             nsec::g::the_badge._network_handler.enqueue_app_message(
                 nc::peer_relative_position::LEFT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_PART_2_DONE),
@@ -515,6 +572,9 @@ void nr::badge::pairing_animator::new_message(nr::badge &badge,
     case nc::message::type::PAIRING_ANIMATION_DONE:
         if (nsec::g::the_badge._network_handler.position() !=
             nc::network_handler::link_position::RIGHT_MOST) {
+            _logger.debug("Enqueueing message: type={}",
+                          nc::message::type::PAIRING_ANIMATION_DONE);
+
             nsec::g::the_badge._network_handler.enqueue_app_message(
                 nc::peer_relative_position::RIGHT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_DONE), nullptr);
@@ -529,6 +589,8 @@ void nr::badge::pairing_animator::new_message(nr::badge &badge,
 
 void nr::badge::tick(ns::absolute_time_ms current_time_ms) noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
+
     switch (_network_app_state()) {
     case network_app_state::ANIMATE_PAIRING:
         _pairing_animator.tick(current_time_ms);

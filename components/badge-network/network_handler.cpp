@@ -857,6 +857,8 @@ nc::network_handler::enqueue_app_message(peer_relative_position direction,
 {
     const auto payload_size = wire_msg_payload_size(msg_type);
 
+    _logger.debug("Enqueuing application message: msg_type={}", msg_type);
+
     if (_has_pending_outgoing_app_message() ||
         payload_size > sizeof(_current_pending_outgoing_app_message_payload)) {
         return enqueue_message_result::FULL;
