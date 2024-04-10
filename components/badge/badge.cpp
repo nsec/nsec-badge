@@ -6,6 +6,7 @@
 
 #include "badge.hpp"
 #include "badge-network/network_messages.hpp"
+#include "utils/lock.hpp"
 #include <badge/globals.hpp>
 
 #include <algorithm>
@@ -26,7 +27,8 @@ namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
 namespace nb = nsec::button;
 namespace nl = nsec::led;
-
+namespace ns = nsec::scheduling;
+namespace nsync = nsec::synchro;
 
 // Wire message type formatter
 template <>
@@ -68,6 +70,7 @@ nr::badge::badge()
       }),
       _network_handler(), _logger("badge")
 {
+    _public_access_semaphore = xSemaphoreCreateMutex();
     _network_app_state(network_app_state::UNCONNECTED);
     _id_exchanger.reset();
     set_social_level(nsec::config::social::initial_level, false);
@@ -120,11 +123,13 @@ void nr::badge::_setup()
 
 uint8_t nr::badge::level() const noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     return _social_level;
 }
 
 bool nr::badge::is_connected() const noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     return _network_app_state() != network_app_state::UNCONNECTED;
 }
 
@@ -180,18 +185,21 @@ void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
 
 void nr::badge::on_disconnection() noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     _logger.info("Badge network disconnected");
     _network_app_state(network_app_state::UNCONNECTED);
 }
 
 void nr::badge::on_pairing_begin() noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     _logger.info("Pairing begin event");
 }
 
 void nr::badge::on_pairing_end(nc::peer_id_t our_peer_id,
                                uint8_t peer_count) noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     _network_app_state(network_app_state::ANIMATE_PAIRING);
 }
 
@@ -199,6 +207,7 @@ nc::network_handler::application_message_action
 nr::badge::on_message_received(communication::message::type message_type,
                                const uint8_t *message) noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     _logger.debug("Received message: type={}", message_type);
 
     if (_network_app_state() == network_app_state::EXCHANGING_IDS) {
@@ -212,15 +221,12 @@ nr::badge::on_message_received(communication::message::type message_type,
 
 void nr::badge::on_app_message_sent() noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     _logger.info("Message sent event");
 
     if (_network_app_state() == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.message_sent(*this);
     }
-}
-
-void nr::badge::on_splash_complete() noexcept
-{
 }
 
 nr::badge::network_app_state nr::badge::_network_app_state() const noexcept
@@ -428,13 +434,14 @@ nr::badge::animation_task::animation_task() : periodic_task(250)
 }
 
 void nr::badge::animation_task::tick(
-    nsec::scheduling::absolute_time_ms current_time_ms) noexcept
+    ns::absolute_time_ms current_time_ms) noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     nsec::g::the_badge.tick(current_time_ms);
 }
 
 void nr::badge::pairing_animator::tick(
-    nsec::scheduling::absolute_time_ms current_time_ms) noexcept
+    ns::absolute_time_ms current_time_ms) noexcept
 {
     switch (_animation_state()) {
     case animation_state::DONE:
@@ -520,8 +527,7 @@ void nr::badge::pairing_animator::new_message(nr::badge &badge,
     }
 }
 
-void nr::badge::tick(
-    nsec::scheduling::absolute_time_ms current_time_ms) noexcept
+void nr::badge::tick(ns::absolute_time_ms current_time_ms) noexcept
 {
     switch (_network_app_state()) {
     case network_app_state::ANIMATE_PAIRING:
@@ -554,8 +560,7 @@ void nr::badge::pairing_completed_animator::reset() noexcept
 }
 
 void nr::badge::pairing_completed_animator::tick(
-    nr::badge &badge,
-    nsec::scheduling::absolute_time_ms current_time_ms) noexcept
+    nr::badge &badge, ns::absolute_time_ms current_time_ms) noexcept
 {
     _state_counter++;
     if (_state_counter == 8) {
@@ -597,15 +602,13 @@ nr::badge::pairing_completed_animator::_animation_state() const noexcept
 
 void nr::badge::apply_score_change(uint8_t new_badges_discovered_count) noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
+
     // Saves to configuration
     set_social_level(
         _compute_new_social_level(_social_level, new_badges_discovered_count),
         true);
     _set_selected_animation(_social_level, true);
-}
-
-void nr::badge::show_badge_info() noexcept
-{
 }
 
 uint8_t nr::badge::_compute_new_social_level(
@@ -639,6 +642,7 @@ void nr::badge::_set_selected_animation(uint8_t animation_id,
 void nr::badge::cycle_selected_animation(
     nr::badge::cycle_animation_direction direction) noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     const auto selected_animation = std::clamp(
         _selected_animation + int8_t(direction), 0, _social_level - 1);
 

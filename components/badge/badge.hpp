@@ -7,6 +7,8 @@
 #ifndef NSEC_RUNTIME_BADGE_HPP
 #define NSEC_RUNTIME_BADGE_HPP
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 #include <badge-button/watcher.hpp>
 #include <badge-led-strip/strip_animator.hpp>
 #include <badge-network/network_handler.hpp>
@@ -31,8 +33,6 @@ class badge
     badge &operator=(badge &&) = delete;
     ~badge() = default;
 
-    void relase_focus_current_screen() noexcept;
-    void on_splash_complete() noexcept;
     std::uint8_t level() const noexcept;
     bool is_connected() const noexcept;
 
@@ -46,7 +46,6 @@ class badge
     void on_app_message_sent() noexcept;
 
     void apply_score_change(uint8_t new_badges_discovered_count) noexcept;
-    void show_badge_info() noexcept;
 
     void tick(nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
 
@@ -208,6 +207,7 @@ class badge
     // Setup hardware.
     void _setup();
 
+    mutable SemaphoreHandle_t _public_access_semaphore;
     uint8_t _social_level;
     uint8_t _selected_animation;
     // Storage for network_app_state
