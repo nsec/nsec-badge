@@ -10,6 +10,8 @@
 #include "esp_log.h"
 #include "esp_random.h"
 
+#include "badge_png.h"
+
 static const char *LOG_TAG = "reaction_time";
 
 static void flush_write(void)
