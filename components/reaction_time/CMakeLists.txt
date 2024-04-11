@@ -10,6 +10,6 @@ if(CONFIG_NSEC_BUILD_CTF)
     idf_component_register(
         SRCS "reaction_time.c"
         INCLUDE_DIRS "."
-        REQUIRES console
+        REQUIRES console nvs_flash
     )
 endif()

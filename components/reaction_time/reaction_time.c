@@ -6,9 +6,11 @@
 #include <stdio_ext.h>
 #endif
 
+#include "argtable3/argtable3.h"
 #include "esp_console.h"
 #include "esp_log.h"
 #include "esp_random.h"
+#include "nvs_flash.h"
 
 #include "badge_png.h"
 
@@ -74,7 +76,54 @@ int probe_graphics(void)
     return 0;
 }
 
-int rt_cmd()
+const char *NVS_NAMESPACE = "storage";
+const char *NVS_LEVEL_KEY = "rt_lvl";
+
+esp_err_t write_level(uint8_t level)
+{
+    nvs_handle_t nvs;
+    esp_err_t err;
+
+    err = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs);
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    err = nvs_set_u8(nvs, NVS_LEVEL_KEY, level);
+    if (err != ESP_OK) {
+        goto close;
+    }
+
+    err = nvs_commit(nvs);
+
+close:
+    nvs_close(nvs);
+    return err;
+}
+
+esp_err_t read_level(uint8_t *level)
+{
+    nvs_handle_t nvs;
+    esp_err_t err;
+
+    err = nvs_open(NVS_NAMESPACE, NVS_READONLY, &nvs);
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    err = nvs_get_u8(nvs, NVS_LEVEL_KEY, level);
+
+close:
+    nvs_close(nvs);
+    return err;
+}
+
+struct {
+    struct arg_int *level;
+    struct arg_end *end;
+} rt_cmd_args;
+
+int rt_cmd(int argc, char **argv)
 {
     int probe_result = probe_graphics();
     if (probe_result == -1) {
@@ -87,17 +136,49 @@ int rt_cmd()
         return ESP_FAIL;
     }
 
-    ESP_LOGI(LOG_TAG, "Graphics protocol supported");
+    /* Reading maximum level achieved from storage */
+    uint8_t max_level = 1;
+    esp_err_t err = read_level(&max_level);
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
+        ESP_LOGW(LOG_TAG, "Failed reading level from storage: %s",
+                 esp_err_to_name(err));
+    }
+
+    /* Parsing and validating level selection */
+    int *level = rt_cmd_args.level->ival;
+    *level = max_level;
+
+    int nerrors = arg_parse(argc, argv, (void **)&rt_cmd_args);
+    if (nerrors != 0) {
+        arg_print_errors(stderr, rt_cmd_args.end, argv[0]);
+        return ESP_OK;
+    }
+    if (*level < 1 || *level > 3) {
+        fprintf(stderr, "%s: invalid value \"%d\" to option -l|--level=<1-3>\n",
+                argv[0], *level);
+        return ESP_OK;
+    }
+
+    if (*level > max_level) {
+        *level = max_level;
+        ESP_LOGW(LOG_TAG, "Capped to highest level unlocked: %d", max_level);
+    }
 
     return ESP_OK;
 }
 
 void register_reaction_time_cmd(void)
 {
+    rt_cmd_args.level = arg_int0("l", "level", "<1-3>", "challenge level");
+    rt_cmd_args.end = arg_end(1);
+
     const esp_console_cmd_t cmd = {
         .command = "reaction_time",
         .help = "Can you react as fast as a neutrophil?",
+        .hint = NULL,
         .func = &rt_cmd,
+        .argtable = &rt_cmd_args,
     };
+
     ESP_ERROR_CHECK(esp_console_cmd_register(&cmd));
 }
