@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2024 NorthSec
+#
+# SPDX-License-Identifier: MIT
+
+# Name,   Type, SubType, Offset,  Size, Flags
+
+# Partition table is at offset 0x8000 and is 0x1000 bytes
+# First usable offset is 0x9000
+
+# Non-Volatile Storage, 16kB
+nvs,      data, nvs,     0x9000,  0x4000,
+
+# OTA configuration, must be "0x2000" bytes
+otadata,  data, ota,     0xd000,  0x2000,
+
+# PHY initialisation data, not used currently, 4kB
+phy_init, data, phy,     0xf000,  0x1000,
+
+# Factory partition for the "conference" firmware
+factory,  app,  factory, 0x10000,  1M,
+
+# First OTA partition for the "ctf" firmware
+ota_0,    app,  ota_0,   0x110000, 1M,
+
+# Second OTA partition for the "addon" firmware
+ota_1,    app,  ota_1,   0x210000, 2M,
