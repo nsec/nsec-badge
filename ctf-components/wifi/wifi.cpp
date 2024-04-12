@@ -34,15 +34,15 @@ static bool wifi_config_saved()
 int wifi_cmd(int argc, char **argv) {
 
     if(Wifi::getInstance().isEnabled()) {
-        printf("Wifi is already enabled");
+        printf("Disabling wifi\n");
         Wifi::getInstance().disable();
     }
     else if (wifi_config_saved()) {
-        printf("Wifi config was already generated, enabling wifi");
-        Wifi::getInstance().enable();
+        printf("Wifi config was already generated, enabling wifi\n");
+        Wifi::getInstance().init();
     }
     else {
-        printf("Wifi is getting initiliazed");
+        printf("Wifi is getting initiliazed\n");
         Wifi::getInstance().init();
     }
     return ESP_OK;
@@ -70,9 +70,6 @@ void Wifi::init()
         );
     }
 
-    char ssid_log[1024];
-    sprintf(ssid_log, "\n\n ##### SSID: %s, Password: %s ###### \n\n", Save::save_data.wifi_ssid, Save::save_data.wifi_password);
-    printf(ssid_log);
     _enabled = false;
     _state = State::Disabled;
 
@@ -120,6 +117,11 @@ esp_err_t Wifi::enable()
 
     strcpy((char *)&_config.ap.ssid, Save::save_data.wifi_ssid);
     strcpy((char *)&_config.ap.password, Save::save_data.wifi_password);
+
+    char ssid_log[1024];
+    sprintf(ssid_log, "\n\n ##### SSID: %s, Password: %s ###### \n\n",
+        (char *)&_config.ap.ssid, (char *)&_config.ap.password);
+    printf(ssid_log);
 
     _config.ap.ssid_len = strlen((char *)&_config.ap.ssid);
     _config.ap.channel = 0;
@@ -178,9 +180,9 @@ esp_err_t Wifi::enable()
 
     _netif_ap = esp_netif_create_default_wifi_ap();
     assert(_netif_ap);
+    Wifi::getInstance().setNetif(_netif_ap);
 
     set_dhcps_dns(_netif_ap, ESP_IP4TOADDR( 8, 8, 8, 8 ));
-    ip_napt_enable(subnet_ip.ip.addr, 1);
 
     ret = esp_wifi_start();
     if(ret != ESP_OK) {
@@ -225,6 +227,11 @@ esp_err_t Wifi::disable()
     }
 
     ret = esp_wifi_deinit();
+
+    // https://github.com/espressif/esp-idf/issues/4411#issuecomment-559377900
+    esp_netif_destroy(Wifi::getInstance().getNetif());
+    Wifi::getInstance().setNetif(nullptr);
+
     if(ret != ESP_OK) {
         ESP_LOGE(TAG, "%s: Could not deinit wifi (%s)", __func__, esp_err_to_name(ret));
     }
