@@ -356,7 +356,7 @@ nc::network_handler::network_handler() noexcept
       _is_left_connected{false}, _is_right_connected{false},
       _current_wire_protocol_state{
           std::uint8_t(wire_protocol_state::UNCONNECTED)},
-      _logger("Network handler")
+      _logger("Network handler", nsec::config::logging::network_handler_level)
 {
     _reset();
     _setup();

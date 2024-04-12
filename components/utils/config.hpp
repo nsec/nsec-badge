@@ -104,6 +104,7 @@ constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 1000;
 namespace nsec::config::logging
 {
 constexpr auto uart_interface_level = nsec::logging::logger::severity::INFO;
+constexpr auto network_handler_level = nsec::logging::logger::severity::INFO;
 }
 
 #endif // NSEC_CONFIG_HPP

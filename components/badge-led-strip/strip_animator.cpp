@@ -646,7 +646,8 @@ color_cycle_parameters_from_flash(const color_cycle_parameters *params)
 nl::strip_animator::strip_animator() noexcept
     : ns::periodic_task<strip_animator>(
           100) /* Set by the various animations. */,
-      _pixels(nsec::board::neopixel::count, nsec::board::neopixel::ctrl_pin, 0)
+      _pixels(nsec::board::neopixel::count, nsec::board::neopixel::ctrl_pin, 0),
+      _logger("Strip animator")
 {
     _setup();
     set_idle_animation(0);
@@ -716,23 +717,32 @@ void nl::strip_animator::_keyframe_animation_tick(
     }
 
     for (unsigned int i = 0; i < nsec::board::neopixel::count; i++) {
-        const auto origin_keyframe_index =
-            _get_keyframe_index(_state.keyframed.origin_keyframe_index, i);
-        const auto destination_keyframe_index =
-            _get_keyframe_index(_state.keyframed.destination_keyframe_index, i);
 
-        const auto origin_keyframe = keyframe_from_flash(
-            &_config.keyframed.keyframes[origin_keyframe_index]);
         const bool led_animation_is_active =
             (_config.keyframed.active >> i) & 1;
 
         if (!led_animation_is_active) {
             // Inactive, repeat the origin keyframe.
+            _set_keyframe_index(_state.keyframed.origin_keyframe_index, i, 0);
+            _set_keyframe_index(_state.keyframed.destination_keyframe_index, i,
+                                0);
+            const auto origin_keyframe_index =
+                _get_keyframe_index(_state.keyframed.origin_keyframe_index, i);
+            const auto origin_keyframe = keyframe_from_flash(
+                &_config.keyframed.keyframes[origin_keyframe_index]);
+
             _pixels.setPixelColor(i, origin_keyframe.color.r(),
                                   origin_keyframe.color.g(),
                                   origin_keyframe.color.b());
             continue;
         }
+
+        const auto origin_keyframe_index =
+            _get_keyframe_index(_state.keyframed.origin_keyframe_index, i);
+        const auto destination_keyframe_index =
+            _get_keyframe_index(_state.keyframed.destination_keyframe_index, i);
+        const auto origin_keyframe = keyframe_from_flash(
+            &_config.keyframed.keyframes[origin_keyframe_index]);
 
         const auto time_since_animation_start =
             _state.keyframed.ticks_since_start_of_animation[i] * period_ms();
@@ -753,9 +763,7 @@ void nl::strip_animator::_keyframe_animation_tick(
                         uint16_t(time_since_animation_start));
         // new_color.log(F("interpolated color: "));
 
-        _pixels.setPixelColor(i, new_color.r(),
-                              new_color.g(),
-                              new_color.b());
+        _pixels.setPixelColor(i, new_color.r(), new_color.g(), new_color.b());
 
         // Advance keyframes if needed.
         if (time_since_animation_start < destination_keyframe.time) {
@@ -817,6 +825,8 @@ nl::strip_animator::_color(uint8_t led_id) const noexcept
 
 void nl::strip_animator::set_idle_animation(uint8_t id) noexcept
 {
+    _logger.info("Idle animation set: id={}", id);
+
     /*
      * This looks pretty bad, but the goal is to alternate between animations
      * of each type as 'id' increases.
@@ -887,13 +897,14 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
         _current_animation_type == animation_type::KEYFRAMED &&
         _config.keyframed._animation == keyframed_animation::PROGRESS_BAR;
 
+    _logger.info("Progress bar updated: active_led_count={}", active_led_count);
+
     if (!is_current_animation) {
         period_ms(40);
 
         // Setup animation parameters.
         _current_animation_type = animation_type::KEYFRAMED;
         _config.keyframed._animation = keyframed_animation::PROGRESS_BAR;
-        _config.keyframed.active = 0;
         _config.keyframed.keyframe_count = ARRAY_LENGTH(
             keyframes::red_to_green_progress_bar_keyframe_template);
         _config.keyframed.keyframes =
@@ -905,8 +916,10 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
         _reset_keyframed_animation_state();
     }
 
-    for (uint8_t i = 0; i < active_led_count; i++) {
-        _config.keyframed.active |= (1 << i);
+    _config.keyframed.active = 0;
+    for (uint8_t i = 0; i < 16; i++) {
+        // Inactive LEDs will repeat the origin keyframe (solid red)
+        _config.keyframed.active |= ((i < active_led_count) << i);
     }
 }
 

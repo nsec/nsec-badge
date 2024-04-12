@@ -193,13 +193,18 @@ void nr::badge::on_disconnection() noexcept
 void nr::badge::on_pairing_begin() noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
-    _logger.info("Pairing begin event");
+    _logger.info("Network layer pairing begin event");
 }
 
 void nr::badge::on_pairing_end(nc::peer_id_t our_peer_id,
                                uint8_t peer_count) noexcept
 {
+    // The network is up: the application layer takes over to perform the
+    // pairing animations.
     nsync::lock_guard lock(_public_access_semaphore);
+
+    _logger.info("Network layer pairing end event: peer_id={}",
+                 _network_handler.peer_id());
     _network_app_state(network_app_state::ANIMATE_PAIRING);
 }
 
@@ -463,6 +468,8 @@ nr::badge::pairing_animator::_animation_state() const noexcept
 
 void nr::badge::pairing_animator::start(nr::badge &badge) noexcept
 {
+    _logger.info("Starting animation");
+
     if (badge._network_handler.position() ==
         nc::network_handler::link_position::LEFT_MOST) {
         _animation_state(animation_state::LIGHT_UP_UPPER_BAR);
@@ -480,8 +487,10 @@ void nr::badge::pairing_animator::reset() noexcept
     _animation_state(animation_state::DONE);
 }
 
-nr::badge::animation_task::animation_task() : periodic_task(250)
+nr::badge::animation_task::animation_task()
+    : periodic_task(250), _logger("Animation task")
 {
+    _logger.info("Starting task");
     periodic_task::start();
 }
 
@@ -605,6 +614,8 @@ void nr::badge::tick(ns::absolute_time_ms current_time_ms) noexcept
 
 void nr::badge::pairing_completed_animator::start(nr::badge &badge) noexcept
 {
+    _logger.info("Starting animation");
+
     badge._timer.period_ms(1000);
     badge._strip_animator.set_pairing_completed_animation(
         badge._badges_discovered_last_exchange > 0

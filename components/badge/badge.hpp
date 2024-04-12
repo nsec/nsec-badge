@@ -171,6 +171,9 @@ class badge
       public:
         explicit animation_task();
         void tick(nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
+
+      private:
+        nsec::logging::logger _logger;
     };
 
     struct eeprom_config {

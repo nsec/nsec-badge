@@ -151,11 +151,6 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
             _leds[pixel_id] = new_color;
         }
 
-        std::uint8_t gamma8(std::uint8_t value)
-        {
-            return value;
-        }
-
         void show()
         {
             const auto ret = _leds.show();
@@ -223,6 +218,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
             uint8_t ticks_since_start_of_animation[16];
         } keyframed;
     } _state;
+    nsec::logging::logger _logger;
 
     uint8_t _get_keyframe_index(const indice_storage_element *indices,
                                 uint8_t led_id) const noexcept;
