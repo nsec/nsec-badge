@@ -51,6 +51,7 @@ class Wifi
     const char *getSSID() { return (const char *)&_config.ap.ssid; }
     const char *getPassword() { return (const char *)&_config.ap.password; }
     esp_netif_t* getNetif() {return _netif_ap;}
+    void setNetif(esp_netif_t* netif) {_netif_ap = netif;}
 };
 
 void register_wifi_cmd(void);
