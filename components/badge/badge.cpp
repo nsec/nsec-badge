@@ -58,6 +58,38 @@ struct fmt::formatter<nc::message::type> : fmt::formatter<std::string> {
     }
 };
 
+// Network app state formatter
+template <>
+struct fmt::formatter<nr::badge::network_app_state>
+    : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(nr::badge::network_app_state app_state, FormatContext &ctx)
+    {
+        string_view name = "unknown";
+        switch (app_state) {
+        case nr::badge::network_app_state::UNCONNECTED:
+            name = "UNCONNECTED";
+            break;
+        case nr::badge::network_app_state::EXCHANGING_IDS:
+            name = "EXCHANGING_IDS";
+            break;
+        case nr::badge::network_app_state::ANIMATE_PAIRING:
+            name = "ANIMATE_PAIRING";
+            break;
+        case nr::badge::network_app_state::ANIMATE_PAIRING_COMPLETED:
+            name = "ANIMATE_PAIRING_COMPLETED";
+            break;
+        case nr::badge::network_app_state::IDLE:
+            name = "IDLE";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
+
 namespace
 {
 constexpr uint16_t config_version_magic = 0xBAD8;
@@ -71,7 +103,7 @@ nr::badge::badge()
       _network_handler(), _logger("badge")
 {
     _public_access_semaphore = xSemaphoreCreateMutex();
-    _network_app_state(network_app_state::UNCONNECTED);
+    _set_network_app_state(network_app_state::UNCONNECTED);
     _id_exchanger.reset();
     set_social_level(nsec::config::social::initial_level, false);
     _set_selected_animation(0, false);
@@ -130,7 +162,7 @@ uint8_t nr::badge::level() const noexcept
 bool nr::badge::is_connected() const noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
-    return _network_app_state() != network_app_state::UNCONNECTED;
+    return _current_network_app_state != network_app_state::UNCONNECTED;
 }
 
 void nr::badge::on_button_event(nsec::button::id button,
@@ -138,8 +170,8 @@ void nr::badge::on_button_event(nsec::button::id button,
 {
     const auto button_mask_position = static_cast<unsigned int>(button);
 
-    if (_network_app_state() != network_app_state::UNCONNECTED &&
-        _network_app_state() != network_app_state::IDLE) {
+    if (_current_network_app_state != network_app_state::UNCONNECTED &&
+        _current_network_app_state != network_app_state::IDLE) {
         // Don't allow button press during "modal" states.
         return;
     }
@@ -187,7 +219,7 @@ void nr::badge::on_disconnection() noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
     _logger.info("Badge network disconnected");
-    _network_app_state(network_app_state::UNCONNECTED);
+    _set_network_app_state(network_app_state::UNCONNECTED);
 }
 
 void nr::badge::on_pairing_begin() noexcept
@@ -205,7 +237,7 @@ void nr::badge::on_pairing_end(nc::peer_id_t our_peer_id,
 
     _logger.info("Network layer pairing end event: peer_id={}",
                  _network_handler.peer_id());
-    _network_app_state(network_app_state::ANIMATE_PAIRING);
+    _set_network_app_state(network_app_state::ANIMATE_PAIRING);
 }
 
 nc::network_handler::application_message_action
@@ -215,9 +247,10 @@ nr::badge::on_message_received(communication::message::type message_type,
     nsync::lock_guard lock(_public_access_semaphore);
     _logger.debug("Received message: type={}", message_type);
 
-    if (_network_app_state() == network_app_state::EXCHANGING_IDS) {
+    if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.new_message(*this, message_type, message);
-    } else if (_network_app_state() == network_app_state::ANIMATE_PAIRING) {
+    } else if (_current_network_app_state ==
+               network_app_state::ANIMATE_PAIRING) {
         _pairing_animator.new_message(*this, message_type, message);
     }
 
@@ -227,35 +260,29 @@ nr::badge::on_message_received(communication::message::type message_type,
 void nr::badge::on_app_message_sent() noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
-    _logger.info("Message sent event");
 
-    if (_network_app_state() == network_app_state::EXCHANGING_IDS) {
+    if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.message_sent(*this);
     }
 }
 
-nr::badge::network_app_state nr::badge::_network_app_state() const noexcept
-{
-    return network_app_state(_current_network_app_state);
-}
-
-void nr::badge::_network_app_state(
+void nr::badge::_set_network_app_state(
     nr::badge::network_app_state new_state) noexcept
 {
+    _logger.info("Network application state changed: previous={}, new={}",
+                 _current_network_app_state, new_state);
+
     _id_exchanger.reset();
     _pairing_animator.reset();
     _pairing_completed_animator.reset();
 
-    _current_network_app_state = uint8_t(new_state);
+    _current_network_app_state = new_state;
     switch (new_state) {
     case network_app_state::ANIMATE_PAIRING:
+        _pairing_animator.start(*this);
+        break;
     case network_app_state::EXCHANGING_IDS:
-        if (new_state == network_app_state::ANIMATE_PAIRING) {
-            _pairing_animator.start(*this);
-        } else {
-            _id_exchanger.start(*this);
-        }
-
+        _id_exchanger.start(*this);
         break;
     case network_app_state::ANIMATE_PAIRING_COMPLETED:
         _pairing_completed_animator.start(*this);
@@ -278,7 +305,7 @@ void nr::badge::on_badge_discovery_completed() noexcept
 {
     _logger.info("Badge discovery completed");
     _badges_discovered_last_exchange = _id_exchanger.new_badges_discovered();
-    _network_app_state(network_app_state::ANIMATE_PAIRING_COMPLETED);
+    _set_network_app_state(network_app_state::ANIMATE_PAIRING_COMPLETED);
 }
 
 void nr::badge::network_id_exchanger::start(nr::badge &badge) noexcept
@@ -306,6 +333,7 @@ void nr::badge::network_id_exchanger::new_message(
     const uint8_t *payload) noexcept
 {
     if (msg_type != nc::message::type::ANNOUNCE_BADGE_ID) {
+        _logger.debug("Ignoring message: type={}", msg_type);
         return;
     }
 
@@ -511,7 +539,7 @@ void nr::badge::pairing_animator::tick(
             // Left-most badge waits for the neighbor to transition states.
             _state_counter++;
         } else {
-            nsec::g::the_badge._network_app_state(
+            nsec::g::the_badge._set_network_app_state(
                 nr::badge::network_app_state::EXCHANGING_IDS);
         }
         break;
@@ -600,7 +628,7 @@ void nr::badge::tick(ns::absolute_time_ms current_time_ms) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
 
-    switch (_network_app_state()) {
+    switch (_current_network_app_state) {
     case network_app_state::ANIMATE_PAIRING:
         _pairing_animator.tick(current_time_ms);
         break;
@@ -656,7 +684,7 @@ void nr::badge::pairing_completed_animator::tick(
 
         } else {
             badge.apply_score_change(badge._badges_discovered_last_exchange);
-            badge._network_app_state(network_app_state::IDLE);
+            badge._set_network_app_state(network_app_state::IDLE);
         }
     }
 }

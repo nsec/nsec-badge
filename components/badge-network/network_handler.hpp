@@ -28,6 +28,99 @@ class network_handler : public scheduling::periodic_task<network_handler>
     friend class periodic_task<network_handler>;
 
   public:
+    /*
+     * The network handler implements a minimal network stack between badges.
+     *
+     * The network protocol (wire protocol) defines the concept of a wave
+     * front direction: it is the direction in which the messages are currently
+     * flowing along the chain of badges.
+     *
+     * When the network connections are established, the badges can broadcast
+     * on a turn-by-turn basis. The wave front directions reverses when it
+     * reaches the bounds of the chain of badges.
+     *
+     * When a badge broadcasts, it sends its message(s) and ends its
+     * transmission by sending a "MONITOR" message. When a badge receives a
+     * "MONITOR" message, it knows it can now safely broadcast to the next
+     * badge: the badge to its right if it received "MONITOR" from the left, or
+     * the badge to its left if it received "MONITOR" from the right.
+     *
+     * In order to detect transmission errors and truncated messages, all
+     * messages are prefixed with a header that contains:
+     *   - a 16-bit "magic" number,
+     *   - an 8-bit message type identifier.
+     *
+     * Discovery
+     * ---------
+     *
+     * The network protocol always starts in a "DISCOVERY" state.
+     *
+     * Given the state of the connections, a badge can know if it is:
+     *   - the left-most badge (its connected to a badge on its right),
+     *   - the right-most badge (its connected to a badge on its left),
+     *   - in the middle (its connected on both sides).
+     *
+     * The pairing process involves three message types:
+     *   - ANNOUNCE (contains the peer id of the badge announcing itself),
+     *   - ANNOUNCE_REPLY (contains the count of peers in the network as
+     *     determined by the right-most badge),
+     *   - MONITOR (indicates the end of a transmission).
+     *
+     * The left-most badge has the responsability of starting the pairing
+     * process. It sends an "ANNOUNCE" message to the right, declaring itself
+     * as peer 0, followed by a "MONITOR" message.
+     *
+     * The next badge receives the "ANNOUNCE" message, seeing that its left
+     * neighbor has `peer_id = 0`: it can deduce that it, itself, has
+     * `peer_id = 1`. When it receives the "MONITOR" message, it knows it is
+     * its turn to send its own "ANNOUNCE" message to the right (if it has a
+     * neighbor to the right), followed by a "MONITOR" message.
+     *
+     * Supposing the next badge is the right-most badge in the chain, it
+     * receives an "ANNOUNCE" message with `peer_id = 1`, assigns itself
+     * `peer_id = 2`, and receives the "MONITOR" message.
+     *
+     * As it is the right-most badge, it will reverse the flow of messages from
+     * left-to-right to right-to-left and send an "ANNOUNCE_REPLY" message. The
+     * right-most badge, knowing it is the third peer, can deduce that there
+     * are 3 badges in the network.
+     *
+     * The badges will forward the "ANNOUNCE_REPLY" message along the chain
+     * until it reaches the left-most badge. As the badges receive
+     * "ANNOUNCE_REPLY", they enter the protocol's "RUNNING" state.
+     *
+     * Running
+     * -------
+     *
+     * While the network protocol is in the "RUNNING" state, badges propagate a
+     * "MONITOR" message along the chain. When a badge received a "MONITOR"
+     * message, it is its chance to broadcast.
+     *
+     * If a message was enqueued by the application layer, it is sent, followed
+     * by a "MONITOR" message. The application layer has the responsability of
+     * deciding if a message must be forwarded or swallowed.
+     *
+     * Reset
+     * -----
+     *
+     * On every tick of the networking task, the badges "sense" the state of
+     * their physical connections. If they detect a change (a new connection,
+     * or a connection lost), they send a "RESET" message along the current
+     * wave front without waiting for their turn.
+     *
+     * This allows a fast reset of the protocol, returning to the "DISCOVERY"
+     * state. The networking task also uses a timeout to reset the protocol
+     * state if it receives no activity for a long time.
+     *
+     * Retransmission
+     * -----
+     *
+     * The protocol has built-in support for retransmissions since messages
+     * can be corrupted during their transmission. Following the reception of
+     * a properly formatted message, a badge replies with an "OK" message. This
+     * allows the emitter to retransmit or "reset" the connection after a set
+     * timeout period elapses.
+     */
     enum class wire_protocol_state : std::uint8_t {
         UNCONNECTED,
         /* Wait for boards to listen before left-most node initiates the
@@ -123,8 +216,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
 
     void _position(link_position new_role) noexcept;
 
-    wire_protocol_state _wire_protocol_state() const noexcept;
-    void _wire_protocol_state(wire_protocol_state state) noexcept;
+    void _set_wire_protocol_state(wire_protocol_state state) noexcept;
 
     peer_relative_position _wave_front_direction() const noexcept;
     void _wave_front_direction(peer_relative_position) noexcept;

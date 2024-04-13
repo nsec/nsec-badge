@@ -51,6 +51,15 @@ class badge
 
     enum cycle_animation_direction : int8_t { PREVIOUS = -1, NEXT = 1 };
     void cycle_selected_animation(cycle_animation_direction direction) noexcept;
+
+    enum class network_app_state : uint8_t {
+        UNCONNECTED,
+        EXCHANGING_IDS,
+        ANIMATE_PAIRING,
+        ANIMATE_PAIRING_COMPLETED,
+        IDLE,
+    };
+
     class pairing_animator
     {
       public:
@@ -125,13 +134,6 @@ class badge
     };
 
   private:
-    enum class network_app_state : uint8_t {
-        UNCONNECTED,
-        EXCHANGING_IDS,
-        ANIMATE_PAIRING,
-        ANIMATE_PAIRING_COMPLETED,
-        IDLE,
-    };
     class network_id_exchanger
     {
       public:
@@ -197,8 +199,7 @@ class badge
     badge_discovered_result on_badge_discovered(const uint8_t *id) noexcept;
     void on_badge_discovery_completed() noexcept;
 
-    network_app_state _network_app_state() const noexcept;
-    void _network_app_state(network_app_state) noexcept;
+    void _set_network_app_state(network_app_state) noexcept;
 
     void _set_user_name_scroll_screen() noexcept;
 
@@ -212,9 +213,9 @@ class badge
     mutable SemaphoreHandle_t _public_access_semaphore;
     uint8_t _social_level;
     uint8_t _selected_animation;
-    // Storage for network_app_state
-    uint8_t _current_network_app_state : 4;
-    uint8_t _badges_discovered_last_exchange : 5;
+
+    network_app_state _current_network_app_state;
+    unsigned int _badges_discovered_last_exchange;
     bool _is_user_name_set : 1;
     bool _is_expecting_factory_reset : 1;
     // Mask to prevent repeats after a screen transition, one bit per button.

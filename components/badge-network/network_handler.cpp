@@ -396,7 +396,7 @@ nc::network_handler::position() const noexcept
 void nc::network_handler::_reset() noexcept
 {
     _position(link_position::UNKNOWN);
-    _wire_protocol_state(wire_protocol_state::UNCONNECTED);
+    _set_wire_protocol_state(wire_protocol_state::UNCONNECTED);
     _is_left_connected = false;
     _is_right_connected = false;
 }
@@ -445,7 +445,7 @@ nc::network_handler::_check_connections() noexcept
             destination_serial = nullptr;
         }
 
-        if (_wire_protocol_state() != wire_protocol_state::UNCONNECTED &&
+        if (_current_wire_protocol_state != wire_protocol_state::UNCONNECTED &&
             destination_serial) {
             // Bypass the "send" state machine since this is just a hint to
             // speed up recovery.
@@ -471,14 +471,16 @@ void nc::network_handler::_position(link_position new_position) noexcept
         _listening_side(peer_relative_position::RIGHT);
         // We are peer 0 (i.e. the left-most node) and will
         // initiate the discovery.
-        _wire_protocol_state(wire_protocol_state::WAIT_TO_INITIATE_DISCOVERY);
+        _set_wire_protocol_state(
+            wire_protocol_state::WAIT_TO_INITIATE_DISCOVERY);
         _peer_id = 0;
         break;
     case link_position::RIGHT_MOST:
     case link_position::MIDDLE:
         // A peer on our left will initiate the discovery: wait for the message.
         _listening_side(peer_relative_position::LEFT);
-        _wire_protocol_state(wire_protocol_state::DISCOVERY_RECEIVE_ANNOUNCE);
+        _set_wire_protocol_state(
+            wire_protocol_state::DISCOVERY_RECEIVE_ANNOUNCE);
         break;
     }
 }
@@ -516,12 +518,6 @@ void nc::network_handler::_reverse_wave_front_direction() noexcept
                               : peer_relative_position::LEFT);
 }
 
-nc::network_handler::wire_protocol_state
-nc::network_handler::_wire_protocol_state() const noexcept
-{
-    return wire_protocol_state(_current_wire_protocol_state);
-}
-
 bool nc::network_handler::_is_wire_protocol_in_a_running_state(
     wire_protocol_state state) noexcept
 {
@@ -529,7 +525,7 @@ bool nc::network_handler::_is_wire_protocol_in_a_running_state(
            state <= wire_protocol_state::RUNNING_CONFIRM_MONITOR;
 }
 
-void nc::network_handler::_wire_protocol_state(
+void nc::network_handler::_set_wire_protocol_state(
     wire_protocol_state state) noexcept
 {
     const auto previous_protocol_state =
@@ -900,7 +896,7 @@ void nc::network_handler::_run_wire_protocol(
     if (_last_message_received_time_ms < current_time_ms &&
         (current_time_ms - _last_message_received_time_ms) >
             nsec::config::communication::network_handler_timeout_ms &&
-        _wire_protocol_state() != wire_protocol_state ::UNCONNECTED) {
+        _current_wire_protocol_state != wire_protocol_state ::UNCONNECTED) {
         // No activity for a while... reset.
         _logger.warn("Network activity timeout: went {}ms without activity",
                      _last_message_received_time_ms - current_time_ms);
@@ -913,9 +909,10 @@ void nc::network_handler::_run_wire_protocol(
         message_payload[nsec::config::communication::protocol_max_message_size -
                         sizeof(wire_msg_header)];
 
-    _logger.debug("Running wire protocol: state={}", _wire_protocol_state());
+    _logger.debug("Running wire protocol: state={}",
+                  _current_wire_protocol_state);
 
-    if (_is_wire_protocol_in_a_reception_state(_wire_protocol_state())) {
+    if (_is_wire_protocol_in_a_reception_state(_current_wire_protocol_state)) {
         const auto receive_result = _handle_reception(
             _listening_side_serial(), message_type, message_payload);
 
@@ -944,7 +941,7 @@ void nc::network_handler::_run_wire_protocol(
         }
     }
 
-    switch (_wire_protocol_state()) {
+    switch (_current_wire_protocol_state) {
     case wire_protocol_state::UNCONNECTED:
         // Nothing to do.
         break;
@@ -954,7 +951,8 @@ void nc::network_handler::_run_wire_protocol(
          * Wait for the other boards to setup and expect our messages.
          */
         if (_ticks_in_wire_state++ == 3) {
-            _wire_protocol_state(wire_protocol_state::DISCOVERY_SEND_ANNOUNCE);
+            _set_wire_protocol_state(
+                wire_protocol_state::DISCOVERY_SEND_ANNOUNCE);
         }
 
         break;
@@ -979,7 +977,7 @@ void nc::network_handler::_run_wire_protocol(
          * when ANNOUNCE_REPLY is received.
          */
         _peer_count = _peer_id + 1;
-        _wire_protocol_state(
+        _set_wire_protocol_state(
             wire_protocol_state::DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE);
         break;
     }
@@ -993,10 +991,11 @@ void nc::network_handler::_run_wire_protocol(
         // It is our turn to transmit.
         if (position() == link_position::MIDDLE) {
             // Announce ourselves to the right-side neighbor.
-            _wire_protocol_state(wire_protocol_state::DISCOVERY_SEND_ANNOUNCE);
+            _set_wire_protocol_state(
+                wire_protocol_state::DISCOVERY_SEND_ANNOUNCE);
         } else {
             // We are the right-most node, initiate the announce reply.
-            _wire_protocol_state(
+            _set_wire_protocol_state(
                 wire_protocol_state::DISCOVERY_SEND_ANNOUNCE_REPLY);
         }
 
@@ -1008,18 +1007,19 @@ void nc::network_handler::_run_wire_protocol(
         _set_outgoing_message(
             current_time_ms, std::uint8_t(wire_msg_type::ANNOUNCE),
             reinterpret_cast<const std::uint8_t *>(&our_annouce_msg));
-        _wire_protocol_state(wire_protocol_state::DISCOVERY_CONFIRM_ANNOUNCE);
+        _set_wire_protocol_state(
+            wire_protocol_state::DISCOVERY_CONFIRM_ANNOUNCE);
         break;
     }
     case wire_protocol_state::DISCOVERY_CONFIRM_ANNOUNCE:
-        _wire_protocol_state(
+        _set_wire_protocol_state(
             wire_protocol_state::DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE);
         break;
     case wire_protocol_state::DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE:
         // Not reachable by the right-most node.
         _set_outgoing_message(current_time_ms,
                               std::uint8_t(wire_msg_type::MONITOR));
-        _wire_protocol_state(
+        _set_wire_protocol_state(
             wire_protocol_state::DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE);
         break;
     case wire_protocol_state::DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE:
@@ -1027,7 +1027,7 @@ void nc::network_handler::_run_wire_protocol(
 
         // Next message (ANNOUNCE_REPLY) will come from our right neighbor.
         _listening_side(peer_relative_position::RIGHT);
-        _wire_protocol_state(
+        _set_wire_protocol_state(
             wire_protocol_state::DISCOVERY_RECEIVE_ANNOUNCE_REPLY);
         break;
     case wire_protocol_state::DISCOVERY_RECEIVE_ANNOUNCE_REPLY: {
@@ -1036,7 +1036,7 @@ void nc::network_handler::_run_wire_protocol(
             reinterpret_cast<const wire_msg_announce_reply *>(message_payload);
 
         _peer_count = announce_reply_msg->peer_count;
-        _wire_protocol_state(
+        _set_wire_protocol_state(
             wire_protocol_state::
                 DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE_REPLY);
         break;
@@ -1049,12 +1049,13 @@ void nc::network_handler::_run_wire_protocol(
         }
 
         if (position() == link_position::MIDDLE) {
-            _wire_protocol_state(
+            _set_wire_protocol_state(
                 wire_protocol_state::DISCOVERY_SEND_ANNOUNCE_REPLY);
         } else {
             // We are the left-most node.
             _wave_front_direction(peer_relative_position::RIGHT);
-            _wire_protocol_state(wire_protocol_state::RUNNING_SEND_APP_MESSAGE);
+            _set_wire_protocol_state(
+                wire_protocol_state::RUNNING_SEND_APP_MESSAGE);
         }
 
         break;
@@ -1066,18 +1067,18 @@ void nc::network_handler::_run_wire_protocol(
             current_time_ms, std::uint8_t(wire_msg_type::ANNOUNCE_REPLY),
             reinterpret_cast<const std::uint8_t *>(&announce_reply_msg));
 
-        _wire_protocol_state(
+        _set_wire_protocol_state(
             wire_protocol_state::DISCOVERY_CONFIRM_ANNOUNCE_REPLY);
         break;
     }
     case wire_protocol_state::DISCOVERY_CONFIRM_ANNOUNCE_REPLY:
-        _wire_protocol_state(
+        _set_wire_protocol_state(
             wire_protocol_state::DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE_REPLY);
         break;
     case wire_protocol_state::DISCOVERY_SEND_MONITOR_AFTER_ANNOUNCE_REPLY:
         _set_outgoing_message(current_time_ms,
                               std::uint8_t(wire_msg_type::MONITOR));
-        _wire_protocol_state(
+        _set_wire_protocol_state(
             wire_protocol_state::
                 DISCOVERY_CONFIRM_MONITOR_AFTER_ANNOUNCE_REPLY);
         break;
@@ -1085,7 +1086,7 @@ void nc::network_handler::_run_wire_protocol(
         // Next message will come from the left.
         _listening_side(peer_relative_position::LEFT);
         _wave_front_direction(peer_relative_position::RIGHT);
-        _wire_protocol_state(wire_protocol_state::RUNNING_RECEIVE_MESSAGE);
+        _set_wire_protocol_state(wire_protocol_state::RUNNING_RECEIVE_MESSAGE);
         break;
     case wire_protocol_state::RUNNING_RECEIVE_MESSAGE: {
         if (message_type >=
@@ -1094,7 +1095,8 @@ void nc::network_handler::_run_wire_protocol(
             nsec::g::the_badge.on_message_received(
                 nc::message::type(message_type), message_payload);
         } else if (wire_msg_type(message_type) == wire_msg_type::MONITOR) {
-            _wire_protocol_state(wire_protocol_state::RUNNING_SEND_APP_MESSAGE);
+            _set_wire_protocol_state(
+                wire_protocol_state::RUNNING_SEND_APP_MESSAGE);
         } else {
             // Unexpected message or a reset message.
             _reset();
@@ -1117,30 +1119,30 @@ void nc::network_handler::_run_wire_protocol(
                 current_time_ms, _current_pending_outgoing_app_message_type,
                 _current_pending_outgoing_app_message_payload);
             _clear_pending_outgoing_app_message();
-            _wire_protocol_state(
+            _set_wire_protocol_state(
                 wire_protocol_state::RUNNING_CONFIRM_APP_MESSAGE);
         } else {
             // Nothing sent, skip the confirmation step.
-            _wire_protocol_state(wire_protocol_state::RUNNING_SEND_MONITOR);
+            _set_wire_protocol_state(wire_protocol_state::RUNNING_SEND_MONITOR);
         }
 
         break;
     }
     case wire_protocol_state::RUNNING_CONFIRM_APP_MESSAGE:
         nsec::g::the_badge.on_app_message_sent();
-        _wire_protocol_state(wire_protocol_state::RUNNING_SEND_MONITOR);
+        _set_wire_protocol_state(wire_protocol_state::RUNNING_SEND_MONITOR);
         break;
     case wire_protocol_state::RUNNING_SEND_MONITOR:
         _set_outgoing_message(current_time_ms,
                               std::uint8_t(wire_msg_type::MONITOR));
-        _wire_protocol_state(wire_protocol_state::RUNNING_CONFIRM_MONITOR);
+        _set_wire_protocol_state(wire_protocol_state::RUNNING_CONFIRM_MONITOR);
         break;
     case wire_protocol_state::RUNNING_CONFIRM_MONITOR:
         if (position() == link_position::MIDDLE) {
             _reverse_wave_front_direction();
         }
 
-        _wire_protocol_state(wire_protocol_state::RUNNING_RECEIVE_MESSAGE);
+        _set_wire_protocol_state(wire_protocol_state::RUNNING_RECEIVE_MESSAGE);
         break;
     }
 }
@@ -1156,7 +1158,7 @@ void nc::network_handler::tick(ns::absolute_time_ms current_time_ms) noexcept
         return;
     }
 
-    if (_wire_protocol_state() == wire_protocol_state::UNCONNECTED) {
+    if (_current_wire_protocol_state == wire_protocol_state::UNCONNECTED) {
         return;
     }
 
