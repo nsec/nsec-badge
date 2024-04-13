@@ -52,6 +52,33 @@ class badge
     enum cycle_animation_direction : int8_t { PREVIOUS = -1, NEXT = 1 };
     void cycle_selected_animation(cycle_animation_direction direction) noexcept;
 
+    /*
+     * Once the network layer has established a connection, "on pairing end" is
+     * invoked. This is when the badges start animating the user-visible
+     * "pairing" animations and exchanging IDs.
+     *
+     * When this occurs, the application network layer transitions from
+     * the UNCONNECTED to the ANIMATE_PAIRING state.
+     *
+     * During the ANIMATE_PAIRING state, the "pairing_animator" takes over the
+     * actions of the badge. It drives the progress bar forward and sends
+     * the PAIRING_ANIMATION_PART_1_DONE once it has lit up the top row of LEDs.
+     * It then waits to receive the PAIRING_ANIMATION_PART_2_DONE from its
+     * right-side peer.
+     *
+     * When it receives PAIRING_ANIMATION_PART_2_DONE (or if it is the
+     * right-most peer), it starts animating the bottom row of LEDs. Once the
+     * bottom-row LED animation has completed, it forwards the
+     * PAIRING_ANIMATION_PART_2_DONE message to its left-side peer. It then
+     * enters the EXCHANGING_IDS state.
+     *
+     * In the EXCHANGING_IDS, the network_id_exchanger takes over the control
+     * of the badge. The left-most badge starts the exchange by sending an
+     * ANNOUNCE_BADGE_ID message. This message contains the badge's peer_id (in
+     * the current badge chain) and it's unique ID.
+     * 
+     * This message is forwarded to the right by the various badges in the chain.
+     */
     enum class network_app_state : uint8_t {
         UNCONNECTED,
         EXCHANGING_IDS,

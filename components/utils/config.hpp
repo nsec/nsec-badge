@@ -89,7 +89,7 @@ constexpr auto tx_buffer_size = 1024;
 constexpr auto uart_queue_length = 16;
 
 constexpr nsec::scheduling::relative_time_ms network_handler_base_period_ms =
-    1000;
+    50;
 constexpr nsec::scheduling::relative_time_ms network_handler_timeout_ms = 10000;
 constexpr nsec::scheduling::relative_time_ms
     network_handler_retransmit_timeout_ms = 6 * network_handler_base_period_ms;
@@ -98,7 +98,7 @@ constexpr nsec::scheduling::relative_time_ms
 
 namespace nsec::config::badge
 {
-constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 1000;
+constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 200;
 } // namespace nsec::config::badge
 
 namespace nsec::config::logging

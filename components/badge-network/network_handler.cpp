@@ -9,6 +9,7 @@
 #include "utils/config.hpp"
 #include <array>
 #include <cstdint>
+#include <utility>
 
 #include <badge/globals.hpp>
 #include <utils/board.hpp>
@@ -645,8 +646,7 @@ void nc::network_handler::_set_outgoing_message(
         _outgoing_message_direction(_wave_front_direction());
         break;
     default:
-        // Unreachable.
-        return;
+        __builtin_unreachable();
     }
 
     _current_message_being_sent_type = message_type;
@@ -832,8 +832,8 @@ nc::network_handler::_handle_transmission(
             break;
         case handle_reception_result::COMPLETE:
         default:
-            _logger.debug("Received \"ok\" in response to sent message");
             // Assume the message was "OK".
+            _logger.debug("Received \"ok\" in response to sent message");
             _clear_outgoing_message();
             return handle_transmission_result::COMPLETE;
             break;
@@ -857,15 +857,24 @@ nc::network_handler::enqueue_app_message(peer_relative_position direction,
 
     if (_has_pending_outgoing_app_message() ||
         payload_size > sizeof(_current_pending_outgoing_app_message_payload)) {
+        _logger.error(
+            "Failed to enqueue message: outgoing queue is full, "
+            "pending_msg_type={}, payload_size={}, max_payload_size={}",
+            _current_pending_outgoing_app_message_type, payload_size,
+            sizeof(_current_pending_outgoing_app_message_payload));
         return enqueue_message_result::FULL;
     }
 
     if (position() == link_position::LEFT_MOST &&
         direction == peer_relative_position::LEFT) {
+        _logger.error("Failed to enqueue message: attempted to send a message "
+                      "out of bounds");
         _reset();
         return enqueue_message_result::UNCONNECTED;
     } else if (position() == link_position::RIGHT_MOST &&
                direction == peer_relative_position::RIGHT) {
+        _logger.error("Failed to enqueue message: attempted to send a message "
+                      "out of bounds");
         _reset();
         return enqueue_message_result::UNCONNECTED;
     }
@@ -875,6 +884,9 @@ nc::network_handler::enqueue_app_message(peer_relative_position direction,
     _current_pending_outgoing_app_message_type = msg_type;
     memcpy(_current_pending_outgoing_app_message_payload, msg_payload,
            payload_size);
+    _logger.info("Enqueued application message: direction={}, msg_type={}, "
+                 "payload_size={}",
+                 direction, msg_type, payload_size);
     return enqueue_message_result::QUEUED;
 }
 
@@ -909,8 +921,8 @@ void nc::network_handler::_run_wire_protocol(
         message_payload[nsec::config::communication::protocol_max_message_size -
                         sizeof(wire_msg_header)];
 
-    _logger.debug("Running wire protocol: state={}",
-                  _current_wire_protocol_state);
+    _logger.info("Running wire protocol: state={}",
+                 _current_wire_protocol_state);
 
     if (_is_wire_protocol_in_a_reception_state(_current_wire_protocol_state)) {
         const auto receive_result = _handle_reception(
@@ -925,7 +937,7 @@ void nc::network_handler::_run_wire_protocol(
         }
 
         _last_message_received_time_ms = current_time_ms;
-        _logger.debug("Received message: type={}", wire_msg_type(message_type));
+        _logger.info("Received message: type={}", wire_msg_type(message_type));
         send_wire_ok_msg(_logger, _listening_side_serial());
 
         if (wire_msg_type(message_type) == wire_msg_type::RESET) {

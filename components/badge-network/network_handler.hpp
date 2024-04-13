@@ -56,9 +56,9 @@ class network_handler : public scheduling::periodic_task<network_handler>
      * The network protocol always starts in a "DISCOVERY" state.
      *
      * Given the state of the connections, a badge can know if it is:
-     *   - the left-most badge (its connected to a badge on its right),
-     *   - the right-most badge (its connected to a badge on its left),
-     *   - in the middle (its connected on both sides).
+     *   - the left-most badge (it's connected to a badge on its right),
+     *   - the right-most badge (it's connected to a badge on its left),
+     *   - in the middle (it's connected on both sides).
      *
      * The pairing process involves three message types:
      *   - ANNOUNCE (contains the peer id of the badge announcing itself),

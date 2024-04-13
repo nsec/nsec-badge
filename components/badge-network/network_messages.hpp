@@ -23,7 +23,7 @@ enum class type : uint8_t {
 
 struct announce_badge_id {
     std::uint8_t peer_id;
-    std::uint8_t board_unique_id[16];
+    std::uint8_t board_unique_id[10];
 } __attribute__((packed));
 
 } // namespace nsec::communication::message

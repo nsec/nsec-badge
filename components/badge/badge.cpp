@@ -235,8 +235,8 @@ void nr::badge::on_pairing_end(nc::peer_id_t our_peer_id,
     // pairing animations.
     nsync::lock_guard lock(_public_access_semaphore);
 
-    _logger.info("Network layer pairing end event: peer_id={}",
-                 _network_handler.peer_id());
+    _logger.info("Network layer pairing end event: peer_id={}, peer_count={}",
+                 _network_handler.peer_id(), peer_count);
     _set_network_app_state(network_app_state::ANIMATE_PAIRING);
 }
 
@@ -310,6 +310,8 @@ void nr::badge::on_badge_discovery_completed() noexcept
 
 void nr::badge::network_id_exchanger::start(nr::badge &badge) noexcept
 {
+    _logger.info("Starting");
+
     const auto our_id = badge._network_handler.peer_id();
 
     if (our_id != 0) {
@@ -644,7 +646,7 @@ void nr::badge::pairing_completed_animator::start(nr::badge &badge) noexcept
 {
     _logger.info("Starting animation");
 
-    badge._timer.period_ms(1000);
+    badge._timer.period_ms(100);
     badge._strip_animator.set_pairing_completed_animation(
         badge._badges_discovered_last_exchange > 0
             ? nl::strip_animator::pairing_completed_animation_type::
