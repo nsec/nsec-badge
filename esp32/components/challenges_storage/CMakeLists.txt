@@ -5,6 +5,6 @@ if(CONFIG_NSEC_BUILD_ADDON)
             "flash_operations.cpp"
             "spi_operations.cpp"
         INCLUDE_DIRS "." "../save"
-        REQUIRES console spi_flash driver main
+        REQUIRES console spi_flash driver main esp_rom
     )
 endif()

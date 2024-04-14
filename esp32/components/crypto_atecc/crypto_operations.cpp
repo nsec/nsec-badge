@@ -33,6 +33,15 @@ void print_bin2hex(uint8_t* data, size_t size) {
     }
 }
 
+void print_16str(uint8_t* data) {
+    for (int i = 0; i < 2; i++) {
+        for(int j = 0; j < 8; j++) {
+            printf("%c", data[i * 8 + j]);
+        }
+    }
+    printf("\n");
+}
+
 void encrypt_flag(uint8_t flag[16], uint8_t (&encrypted_flag)[16]) {
     ATCA_STATUS ret = atcab_aes_encrypt(SLOT_HMAC, 0, flag, encrypted_flag);
     if (ret != ATCA_SUCCESS) {

@@ -34,8 +34,8 @@ extern "C" void app_main(void) {
     fflush(stdout);
     Save::load_save();
     #if CONFIG_NSEC_BUILD_ADDON
-        challenges_storage_init();
         crypto_atecc_init();
+        challenges_storage_init();
     #endif
 
     #if CONFIG_NSEC_BUILD_CTF

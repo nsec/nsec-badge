@@ -11,11 +11,11 @@ void crypto_atecc_init() {
     cfg_ateccx08a_i2c_default.atcai2c.address = 0xC0;
     cfg_ateccx08a_i2c_default.rx_retries = 1;
     ret = atcab_init(&cfg_ateccx08a_i2c_default);
-    if (ret != ATCA_SUCCESS) {
-        ESP_LOGI(TAG, "ATECC CUSTOM not detected on 0xC0, trying TNGTLS on 0x6A...");
-        cfg_ateccx08a_i2c_default.atcai2c.address = 0x6A;
-        ret = atcab_init(&cfg_ateccx08a_i2c_default);
-    }
+    // if (ret != ATCA_SUCCESS) {
+    //     ESP_LOGI(TAG, "ATECC CUSTOM not detected on 0xC0, trying TNGTLS on 0x6A...");
+    //     cfg_ateccx08a_i2c_default.atcai2c.address = 0x6A;
+    //     ret = atcab_init(&cfg_ateccx08a_i2c_default);
+    // }
     if (ret != ATCA_SUCCESS) {
         ESP_LOGE(TAG, "Fail! atcab_init returned %02x", ret);
     } else {

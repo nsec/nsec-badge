@@ -9,6 +9,8 @@
 #include "esp_timer.h"
 #include "esp_flash.h"
 #include "driver/spi_master.h"
+#include "rom/gpio.h"
+#include "driver/gpio.h"
 
 #include "save.h"
 
@@ -40,6 +42,29 @@ void challenges_storage_init() {
         // Initialize the external SPI Flash chip
         flash = init_ext_flash();
         printf("Booted in regular flash mode\n");
+        gpio_pad_select_gpio(ADDON_DETECT);
+        gpio_set_direction(ADDON_DETECT, GPIO_MODE_INPUT);
+        gpio_set_pull_mode(ADDON_DETECT, GPIO_PULLUP_ONLY);
+        if (flash != NULL && gpio_get_level(ADDON_DETECT) == 0) {
+            uint64_t out_id = 0;
+            if (esp_flash_read_unique_chip_id(flash, &out_id) == ESP_OK) {
+                uint8_t serial_number[ATCA_SERIAL_NUM_SIZE];
+                if (atcab_read_serial_number(serial_number) == ATCA_SUCCESS) {
+                    gpio_pad_select_gpio(ADDON_BLUE_LED);
+                    gpio_set_direction(ADDON_BLUE_LED, GPIO_MODE_OUTPUT);
+                    gpio_set_level(ADDON_BLUE_LED, 1);
+                    uint8_t cipher[16];
+                    char* read_buffer2 = (char*)malloc(sizeof(cipher));
+                    ESP_ERROR_CHECK(esp_flash_read(flash, read_buffer2, FLAG_PLUG_ME_ADDR, sizeof(cipher)));
+                    memcpy(cipher, read_buffer2, sizeof(cipher));
+                    free(read_buffer2);
+
+                    uint8_t decrypted_flag2[16] = {0x00};
+                    decrypt_flag(cipher, decrypted_flag2);
+                    print_16str(decrypted_flag2);
+                }
+            }
+        }
     }
 }
 
@@ -115,9 +140,11 @@ unsigned int write_encrypted_flag(char * flag_name, char * flag_value, esp_flash
     ESP_ERROR_CHECK(esp_flash_read(flash, read_buffer2, addr, sizeof(cipher)));
     memcpy(cipher, read_buffer2, sizeof(cipher));
     free(read_buffer2);
+    printf("cipher: ");
+    print_bin2hex(cipher, 16);
 
     uint8_t decrypted_flag2[16] = {0x00};
-    decrypt_flag(encrypted_flag2, decrypted_flag2);
+    decrypt_flag(cipher, decrypted_flag2);
     printf("decrypted %s: ", flag_name);
     print_bin2hex(decrypted_flag2, 16);
 
@@ -254,8 +281,9 @@ static int raw_write_register1(int argc, char **argv) {
     return 0;
 }
 
-// TODO maybe rename to read_flag
 static int read_first_128(int argc, char **argv) {
+    if (flash == NULL) { ESP_LOGE(TAG, "FLASH NOT DETECTED. Can't execute command."); return 0; }
+
     uint8_t* buffer = (uint8_t*)malloc(1);
     if (buffer == NULL) {
         ESP_LOGE(TAG, "Failed to allocate memory for buffer!");
@@ -271,8 +299,9 @@ static int read_first_128(int argc, char **argv) {
     return 0;
 }
 
-// TODO maybe rename to read_flag2, add encryption for this flag
 static int read_another_128(int argc, char **argv) {
+    if (flash == NULL) { ESP_LOGE(TAG, "FLASH NOT DETECTED. Can't execute command."); return 0; }
+
     uint8_t* buffer = (uint8_t*)malloc(1);
     if (buffer == NULL) {
         ESP_LOGE(TAG, "Failed to allocate memory for buffer!");
@@ -332,6 +361,8 @@ static int read_another_128(int argc, char **argv) {
 
 
 static int write_to_0x48(int argc, char **argv) {
+    if (flash == NULL) { ESP_LOGE(TAG, "FLASH NOT DETECTED. Can't execute command."); return 0; }
+
     uint8_t w[] = {0xAA};
     printf("Writing 0xAA to 0x000048...\n");
     ESP_ERROR_CHECK(esp_flash_write(flash, w, 0x000048, 1));
