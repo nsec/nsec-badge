@@ -1,4 +1,4 @@
-#include "cryptoauthlib.h"
+#include "crypto_operations.h"
 
 // Slot to configure for SHA-HMAC access and Write key to
 #define SLOT_HMAC 9
@@ -15,20 +15,31 @@ void print_16(uint8_t* data) {
     }
 }
 
+void print_bin2hex(uint8_t* data, size_t size) {
+    char hex_str[size*3+1];
+    size_t hex_size = sizeof(hex_str);
+    ATCA_STATUS ret = atcab_bin2hex(data, size, hex_str, &hex_size);
+    if (ret != ATCA_SUCCESS) {
+        printf("Error converting binary data to hex: %02x\n", ret);
+    } else {
+        int i, j;
+        for (i = j = 0; hex_str[i]; ++i) {
+            if (hex_str[i] != ' ') {
+                hex_str[j++] = hex_str[i];
+            }
+        }
+        hex_str[j] = '\0';
+        printf("%s\n", hex_str);
+    }
+}
+
 void encrypt_flag(uint8_t flag[16], uint8_t (&encrypted_flag)[16]) {
     ATCA_STATUS ret = atcab_aes_encrypt(SLOT_HMAC, 0, flag, encrypted_flag);
     if (ret != ATCA_SUCCESS) {
         printf("Error encrypting flag: %02x\n", ret);
         return;
     }
-    char hex_str[sizeof(encrypted_flag)*3+1];
-    size_t hex_size = sizeof(hex_str);
-    ret = atcab_bin2hex(encrypted_flag, 16, hex_str, &hex_size);
-    if (ret != ATCA_SUCCESS) {
-        printf("Error converting binary data to hex: %02x\n", ret);
-    } else {
-        printf("Encryptdflag: %s\n", hex_str);
-    }
+    print_bin2hex(encrypted_flag, 16);
 }
 
 void decrypt_flag(uint8_t encrypted_flag[16], uint8_t (&flag)[16])  {
@@ -36,14 +47,7 @@ void decrypt_flag(uint8_t encrypted_flag[16], uint8_t (&flag)[16])  {
     if (ret != ATCA_SUCCESS) {
         printf("Error decrypting flag: %02x\n", ret);
     }
-    char hex_str[sizeof(flag)*3+1];
-    size_t hex_size = sizeof(hex_str);
-    ret = atcab_bin2hex(flag, 16, hex_str, &hex_size);
-    if (ret != ATCA_SUCCESS) {
-        printf("Error converting binary data to hex: %02x\n", ret);
-    } else {
-        printf("Decryptdflag: %s\n", hex_str);
-    }
+    print_bin2hex(flag, 16);
 }
 
 void print_config(atecc608_config_t * pConfig, uint16_t custom_param) {

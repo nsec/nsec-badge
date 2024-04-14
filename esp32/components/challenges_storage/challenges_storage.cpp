@@ -19,9 +19,7 @@
 #include "ota_operations.h"
 #include "spi_operations.h"
 #include "flash_operations.h"
-
-// Used for provisioning and testing
-#define CTF_ADDON_ADMIN_MODE 1
+#include "crypto_operations.h"
 
 // For flag2 challenge
 #define SECT_WRITE_PROTECTED 0x050000
@@ -128,7 +126,7 @@ static int challenge_storage(int argc, char **argv) {
         //esp_flash_erase_chip(flash); 
 
         // TODO change CTF24 to random
-        const char* buffer_flag1 = "FLAG-NSECCTF24FLASHADDON";
+        const char* buffer_flag1 = "FLAG-63QWJK4DCE3";
         printf("writing flag1...\n");
         esp_flash_erase_region(flash, 0x000000, 4096);
         ESP_ERROR_CHECK(esp_flash_write(flash, buffer_flag1, 0x000000, strlen(buffer_flag1)));
@@ -146,22 +144,47 @@ static int challenge_storage(int argc, char **argv) {
             return 1;
         }
         free(read_buffer);
-        
-        // TODO change CTF24 to random
+
         const char* buffer_flag0 = "FLAG-NSECCTF24DUMPFLASH";
         printf("writing flag0...\n");
         esp_flash_erase_region(flash, 0x042000, 4096);
         ESP_ERROR_CHECK(esp_flash_write(flash, buffer_flag0, 0x042000, strlen(buffer_flag0)));
 
-        // TODO change CTF24 to random
-        const char* buffer_flag2 = "FLAG-NSECCTF24THISISSENCRYPTEDLATER";
-        printf("writing flag2...\n");
+        printf("encrypting flag2...\n");
+        uint8_t plaintext_flag2[17] = "FLAG-C9K3NI1UOVP";
+        uint8_t encrypted_flag2[16] = {0x00};
+        encrypt_flag(plaintext_flag2, encrypted_flag2);
+
+        printf("writing encrypted flag2...\n");
         esp_flash_erase_region(flash, FLAG_2_ADDR, 4096);
-        ESP_ERROR_CHECK(esp_flash_write(flash, buffer_flag2, FLAG_2_ADDR, strlen(buffer_flag2)));
+        char* encrypted_flag2_str = (char*)malloc(sizeof(encrypted_flag2) + 1); // +1 for the null terminator
+        if (encrypted_flag2_str == NULL) {
+            printf("Failed to allocate memory for encrypted_flag2_str.\n");
+            return 1;
+        }
+        memcpy(encrypted_flag2_str, encrypted_flag2, sizeof(encrypted_flag2));
+        encrypted_flag2_str[sizeof(encrypted_flag2)] = '\0';
+        ESP_ERROR_CHECK(esp_flash_write(flash, encrypted_flag2_str, FLAG_2_ADDR, strlen(encrypted_flag2_str)));
+        free(encrypted_flag2_str);
         printf("erasing flag2 regions...\n");
         esp_flash_erase_region(flash, SECT_WRITE_PROTECTED, 4096);
         esp_flash_erase_region(flash, SECT_WRITABLE, 4096);
-        
+
+        uint8_t cipher[16];
+        char* read_buffer2 = (char*)malloc(sizeof(cipher));
+        ESP_ERROR_CHECK(esp_flash_read(flash, read_buffer2, FLAG_2_ADDR, sizeof(cipher)));
+        memcpy(cipher, read_buffer2, sizeof(cipher));
+        free(read_buffer2);
+
+        uint8_t decrypted_flag2[16] = {0x00};
+        decrypt_flag(encrypted_flag2, decrypted_flag2);
+        if (memcmp(plaintext_flag2, decrypted_flag2, sizeof(decrypted_flag2)) == 0) {
+            printf("flag2 is OK!\n");
+        } else {
+            printf("flag2 isn't written or encrypted properly.. bailing out!\n");
+            return 1;
+        }
+
         // The firmware needs to be available in NSEC_OTA_PARTITION (ota_1)
         esp_partition_subtype_t subtype = NSEC_OTA_PARTITION;
         const esp_partition_t *ota_partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
@@ -271,6 +294,7 @@ static int read_another_128(int argc, char **argv) {
             // Write at addr2 works, OK!
             printf("Looks like I can write at 0x%06lX, and that's what I want!\n" LOG_RESET_COLOR, addr2);
             flash_read_at(flash, 128, FLAG_2_ADDR);
+            printf("Looks like content there is symmetrically encrypted.\n");
         } else {
             printf("Can't write 0x%02X value at 0x%06lX! Exiting.\n", w[0], addr2);
         }

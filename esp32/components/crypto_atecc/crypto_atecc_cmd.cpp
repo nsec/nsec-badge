@@ -472,6 +472,26 @@ int print_slotnkeyconfig(int argc, char **argv) {
     return 0;
 }
 
+int symmetric_decrypt(int argc, char **argv) {
+    if (argc >= 2) {
+        uint8_t cipher[16];
+        char* hex_str = argv[1];
+        size_t hex_size = strlen(hex_str);
+        if (hex_size != 32) {
+            printf("Error! hex string should be 32 characters\n");
+            return 0;
+        }
+        for (int i = 0; i < 16; i++) {
+            sscanf(hex_str + 2*i, "%2hhx", &cipher[i]);
+        }
+        uint8_t plaintext[16];
+        decrypt_flag(cipher, plaintext);
+    } else {
+        printf("Error! hex string is required as first parameter\n");
+    }
+    return 0;
+}
+
 void register_crypto_atecc(void) {
     #if CTF_ADDON_ADMIN_MODE
     const esp_console_cmd_t cmd = {
@@ -492,6 +512,15 @@ void register_crypto_atecc(void) {
         .argtable = NULL,        
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd2) );
+
+    const esp_console_cmd_t cmd3 = {
+        .command = "symmetric_decrypt",
+        .help = "[ATECC608B] read hex and decrypt symmetrically 16 bytes\n",
+        .hint = "[hex chars]",
+        .func = &symmetric_decrypt,
+        .argtable = NULL,        
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd3) );
 
 }
 
