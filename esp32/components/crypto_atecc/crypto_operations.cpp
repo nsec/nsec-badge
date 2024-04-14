@@ -39,7 +39,6 @@ void encrypt_flag(uint8_t flag[16], uint8_t (&encrypted_flag)[16]) {
         printf("Error encrypting flag: %02x\n", ret);
         return;
     }
-    print_bin2hex(encrypted_flag, 16);
 }
 
 void decrypt_flag(uint8_t encrypted_flag[16], uint8_t (&flag)[16])  {
@@ -47,7 +46,6 @@ void decrypt_flag(uint8_t encrypted_flag[16], uint8_t (&flag)[16])  {
     if (ret != ATCA_SUCCESS) {
         printf("Error decrypting flag: %02x\n", ret);
     }
-    print_bin2hex(flag, 16);
 }
 
 void print_config(atecc608_config_t * pConfig, uint16_t custom_param) {

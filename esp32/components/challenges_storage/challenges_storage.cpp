@@ -16,7 +16,6 @@
 #include "ota_actions.h"
 
 #include "challenges_storage.h"
-#include "ota_operations.h"
 #include "spi_operations.h"
 #include "flash_operations.h"
 #include "crypto_operations.h"
@@ -25,6 +24,9 @@
 #define SECT_WRITE_PROTECTED 0x050000
 #define SECT_WRITABLE 0x080000
 #define FLAG_2_ADDR 0x020000
+
+// For when the add on is plugged in
+#define FLAG_PLUG_ME_ADDR 0x022000
 
 static esp_flash_t* flash = NULL;
 static int64_t start_time = 0;
@@ -86,6 +88,48 @@ unsigned int parse_address_admin(int argc, char **argv) {
     return address;
 }
 
+unsigned int write_encrypted_flag(char * flag_name, char * flag_value, esp_flash_t* flash, uint32_t addr) {
+    printf("encrypting %s...\n", flag_name);
+    uint8_t plaintext_flag2[16];
+    memcpy(plaintext_flag2, flag_value, 16);
+
+    uint8_t encrypted_flag2[16] = {0x00};
+    encrypt_flag(plaintext_flag2, encrypted_flag2);
+    printf("encrypted %s: ", flag_name);
+    print_bin2hex(encrypted_flag2, 16);
+
+    printf("writing encrypted %s...\n", flag_name);
+    esp_flash_erase_region(flash, addr, 4096);
+    char* encrypted_flag2_str = (char*)malloc(sizeof(encrypted_flag2) + 1); // +1 for the null terminator
+    if (encrypted_flag2_str == NULL) {
+        printf("Failed to allocate memory for encrypted %s str.\n", flag_name);
+        return 1;
+    }
+    memcpy(encrypted_flag2_str, encrypted_flag2, sizeof(encrypted_flag2));
+    encrypted_flag2_str[sizeof(encrypted_flag2)] = '\0';
+    ESP_ERROR_CHECK(esp_flash_write(flash, encrypted_flag2_str, addr, strlen(encrypted_flag2_str)));
+    free(encrypted_flag2_str);
+
+    uint8_t cipher[16];
+    char* read_buffer2 = (char*)malloc(sizeof(cipher));
+    ESP_ERROR_CHECK(esp_flash_read(flash, read_buffer2, addr, sizeof(cipher)));
+    memcpy(cipher, read_buffer2, sizeof(cipher));
+    free(read_buffer2);
+
+    uint8_t decrypted_flag2[16] = {0x00};
+    decrypt_flag(encrypted_flag2, decrypted_flag2);
+    printf("decrypted %s: ", flag_name);
+    print_bin2hex(decrypted_flag2, 16);
+
+    if (memcmp(plaintext_flag2, decrypted_flag2, sizeof(decrypted_flag2)) == 0) {
+        printf("%s is OK!\n", flag_name);
+    } else {
+        printf("%s isn't written or encrypted properly.. bailing out!\n", flag_name);
+        return 1;
+    }
+    return 0;
+}
+
 static int challenge_storage(int argc, char **argv) {
     uint16_t select_challenge = 1;
 
@@ -106,7 +150,7 @@ static int challenge_storage(int argc, char **argv) {
     } else if (select_challenge == 11) {
         storage_read_from_ota(1, flash);
     } else if (select_challenge == 12) {
-        storage_write_to_ota(0, flash);
+        write_flash_to_ota(flash);
     } else if (select_challenge == 13) {
         ESP_ERROR_CHECK(esp_flash_erase_region(flash, 0x00000, 4096));
     } else if (select_challenge == 17) {
@@ -125,7 +169,6 @@ static int challenge_storage(int argc, char **argv) {
         // TODO comment to save time with provision the 150 addons!
         //esp_flash_erase_chip(flash); 
 
-        // TODO change CTF24 to random
         const char* buffer_flag1 = "FLAG-63QWJK4DCE3";
         printf("writing flag1...\n");
         esp_flash_erase_region(flash, 0x000000, 4096);
@@ -150,38 +193,15 @@ static int challenge_storage(int argc, char **argv) {
         esp_flash_erase_region(flash, 0x042000, 4096);
         ESP_ERROR_CHECK(esp_flash_write(flash, buffer_flag0, 0x042000, strlen(buffer_flag0)));
 
-        printf("encrypting flag2...\n");
-        uint8_t plaintext_flag2[17] = "FLAG-C9K3NI1UOVP";
-        uint8_t encrypted_flag2[16] = {0x00};
-        encrypt_flag(plaintext_flag2, encrypted_flag2);
-
-        printf("writing encrypted flag2...\n");
-        esp_flash_erase_region(flash, FLAG_2_ADDR, 4096);
-        char* encrypted_flag2_str = (char*)malloc(sizeof(encrypted_flag2) + 1); // +1 for the null terminator
-        if (encrypted_flag2_str == NULL) {
-            printf("Failed to allocate memory for encrypted_flag2_str.\n");
+        if (write_encrypted_flag("FLAG2", "FLAG-C9K3NI1UOVP", flash, FLAG_2_ADDR) == 1) {
             return 1;
         }
-        memcpy(encrypted_flag2_str, encrypted_flag2, sizeof(encrypted_flag2));
-        encrypted_flag2_str[sizeof(encrypted_flag2)] = '\0';
-        ESP_ERROR_CHECK(esp_flash_write(flash, encrypted_flag2_str, FLAG_2_ADDR, strlen(encrypted_flag2_str)));
-        free(encrypted_flag2_str);
-        printf("erasing flag2 regions...\n");
+
+        printf("erasing FLAG2 regions...\n");
         esp_flash_erase_region(flash, SECT_WRITE_PROTECTED, 4096);
         esp_flash_erase_region(flash, SECT_WRITABLE, 4096);
 
-        uint8_t cipher[16];
-        char* read_buffer2 = (char*)malloc(sizeof(cipher));
-        ESP_ERROR_CHECK(esp_flash_read(flash, read_buffer2, FLAG_2_ADDR, sizeof(cipher)));
-        memcpy(cipher, read_buffer2, sizeof(cipher));
-        free(read_buffer2);
-
-        uint8_t decrypted_flag2[16] = {0x00};
-        decrypt_flag(encrypted_flag2, decrypted_flag2);
-        if (memcmp(plaintext_flag2, decrypted_flag2, sizeof(decrypted_flag2)) == 0) {
-            printf("flag2 is OK!\n");
-        } else {
-            printf("flag2 isn't written or encrypted properly.. bailing out!\n");
+        if (write_encrypted_flag("FLAG_PLUG_ME", "FLAG-PWT4RB47KVA", flash, FLAG_PLUG_ME_ADDR) == 1) {
             return 1;
         }
 

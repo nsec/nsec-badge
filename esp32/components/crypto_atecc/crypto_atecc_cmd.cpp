@@ -22,9 +22,6 @@
 
 #include "save.h"
 
-// Used for provisioning and testing
-#define CTF_ADDON_ADMIN_MODE 1
-
 static const char *TAG = "crypto_atecc";
 static void print_public_key(uint8_t *pubkey);
 static void print_digest(uint8_t* digest, size_t size);
@@ -486,6 +483,7 @@ int symmetric_decrypt(int argc, char **argv) {
         }
         uint8_t plaintext[16];
         decrypt_flag(cipher, plaintext);
+        print_bin2hex(plaintext, 16);
     } else {
         printf("Error! hex string is required as first parameter\n");
     }

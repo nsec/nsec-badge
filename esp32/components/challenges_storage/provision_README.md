@@ -1,4 +1,4 @@
-from an esp32 folder where 'nsec-ctf-addon' firmware is ready to be built with `#define CTF_ADDON_ADMIN_MODE 0`
+from an esp32 folder where 'nsec-ctf-addon' firmware is ready to be built with `add_definitions(-DCTF_ADDON_ADMIN_MODE)` commented out in top CMakelists.txt
 
 ```idf.py build
 
@@ -6,7 +6,7 @@ parttool.py write_partition --partition-name=ota_1 --input build\nsec-ctf-addon.
 
 ```
 
-change to `#define CTF_ADDON_ADMIN_MODE 1`
+remove comment to define `add_definitions(-DCTF_ADDON_ADMIN_MODE)` in top CMakelists.txt
 
 ```idf.py build flash monitor
 crypto 999

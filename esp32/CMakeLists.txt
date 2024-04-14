@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
+add_definitions(-DCTF_ADDON_ADMIN_MODE)
+
 # Parse sdkconfig files because CMake doesn't have the variables yet
 if(EXISTS "${CMAKE_SOURCE_DIR}/sdkconfig")
     file(STRINGS "${CMAKE_SOURCE_DIR}/sdkconfig" sdkconfig_contents)
@@ -54,3 +56,4 @@ else() #default CONFIG_NSEC_BUILD_CONFERENCE
     message(STATUS "Building for CONFIG_NSEC_BUILD_CONFERENCE")
     project(nsec-badge)
 endif()
+
