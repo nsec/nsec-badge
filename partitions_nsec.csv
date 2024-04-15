@@ -23,4 +23,4 @@ factory,  app,  factory, 0x10000,  1M,
 ota_0,    app,  ota_0,   0x110000, 1M,
 
 # Second OTA partition for the "addon" firmware
-ota_1,    app,  ota_1,   0x210000, 2M,
+ota_1,    app,  ota_1,   0x210000, 1M,
