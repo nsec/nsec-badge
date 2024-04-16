@@ -80,6 +80,14 @@ int probe_graphics(void)
     return 0;
 }
 
+button_t get_random_button(button_t last_button)
+{
+    button_t new_button;
+    do {
+        new_button = esp_random() % BUTTON_COUNT;
+    } while (new_button == last_button);
+    return new_button;
+}
 
 esp_err_t write_level(uint8_t level)
 {
