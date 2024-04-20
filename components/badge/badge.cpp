@@ -628,8 +628,6 @@ void nr::badge::pairing_animator::new_message(nr::badge &badge,
 
 void nr::badge::tick(ns::absolute_time_ms current_time_ms) noexcept
 {
-    nsync::lock_guard lock(_public_access_semaphore);
-
     switch (_current_network_app_state) {
     case network_app_state::ANIMATE_PAIRING:
         _pairing_animator.tick(current_time_ms);
