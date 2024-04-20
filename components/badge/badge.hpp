@@ -154,8 +154,8 @@ class badge
         void _animation_state(animation_state) noexcept;
         animation_state _animation_state() const noexcept;
 
-        uint8_t _current_state : 3;
-        uint8_t _state_counter : 5;
+        animation_state _current_state;
+        uint8_t _state_counter;
         char current_message[32];
         nsec::logging::logger _logger;
     };

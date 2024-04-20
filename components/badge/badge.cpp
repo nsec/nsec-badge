@@ -692,23 +692,27 @@ void nr::badge::pairing_completed_animator::tick(
 void nr::badge::pairing_completed_animator::_animation_state(
     nr::badge::pairing_completed_animator::animation_state new_state) noexcept
 {
-    _current_state = uint8_t(new_state);
+    _current_state = new_state;
 }
 
 nr::badge::pairing_completed_animator::animation_state
 nr::badge::pairing_completed_animator::_animation_state() const noexcept
 {
-    return animation_state(_current_state);
+    return _current_state;
 }
 
 void nr::badge::apply_score_change(uint8_t new_badges_discovered_count) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
 
+    const auto new_social_level =
+        _compute_new_social_level(_social_level, new_badges_discovered_count);
+    _logger.info("Applying score change: new_badges_discovered_count={}, "
+                 "new_social_level={}",
+                 new_badges_discovered_count, new_social_level);
+
     // Saves to configuration
-    set_social_level(
-        _compute_new_social_level(_social_level, new_badges_discovered_count),
-        true);
+    set_social_level(new_social_level, true);
     _set_selected_animation(_social_level, true);
 }
 
@@ -734,6 +738,7 @@ void nr::badge::_set_selected_animation(uint8_t animation_id,
                                         bool save_to_config) noexcept
 {
     _selected_animation = animation_id;
+    _strip_animator.set_idle_animation(animation_id);
 
     if (save_to_config) {
         save_config();
