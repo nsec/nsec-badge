@@ -105,6 +105,7 @@ NorthSec CTF badge 2024 is brought to you by the team work of:
  - [lle](https://github.com/lle)
  - [mjeanson](https://github.com/mjeanson)
  - [nyx0](https://github.com/nyx0)
+ - [sylemieux](https://github.com/sylemieux)
 
 Special thanks to:
  - [20th](https://github.com/20th)
