@@ -719,11 +719,7 @@ nc::network_handler::_handle_reception(nc::uart_interface &serial,
                 return handle_reception_result::INCOMPLETE;
             }
 
-            const wire_msg_header header = {.type =
-                                                std::uint8_t(serial.peek())};
-
-            const auto msg_type = header.type;
-
+            const auto msg_type = serial.peek();
             const auto msg_payload_size = wire_msg_payload_size(msg_type);
             _message_reception_state(message_reception_state::RECEIVE_PAYLOAD);
             /*
@@ -731,7 +727,8 @@ nc::network_handler::_handle_reception(nc::uart_interface &serial,
              * us to dispatch the message, and the checksym, which will allow us
              * to validate the message.
              */
-            _payload_bytes_to_receive = msg_payload_size + sizeof(header);
+            _payload_bytes_to_receive =
+                msg_payload_size + sizeof(wire_msg_header);
             break;
         }
         case message_reception_state::RECEIVE_PAYLOAD: {
