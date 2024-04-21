@@ -25,7 +25,7 @@ void flush_write(void)
     fsync(fileno(stdout));
 }
 
-int probe_graphics(void)
+int graphics_probe(void)
 {
     /* Switch to non-blocking mode */
     int stdin_fileno = fileno(stdin);
@@ -137,14 +137,15 @@ int rt_cmd(int argc, char **argv)
     const char *progname = argv[0];
 
     /* Probing for graphics protocol support */
-    int probe_result = probe_graphics();
+    int probe_result = graphics_probe();
     if (probe_result == -1) {
         int errnum = errno;
         ESP_LOGE(progname, "Failed querying for graphics protocol support: %s",
                  strerror(errnum));
         return ESP_OK;
     } else if (probe_result == -2) {
-        ESP_LOGE(progname, "Graphics protocol not supported");
+        // ESP_LOGE(progname, "Graphics protocol not supported");
+        ESP_LOGI("trivia_time", "What are ASCII Escape Codes?");
         return ESP_OK;
     }
 
