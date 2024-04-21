@@ -78,6 +78,14 @@ pio run -t upload -e ctf
 pio run -t upload -e addon
 ```
 
+if multiple badges are connected, you can select which badge will be flash
+with the "--upload-port [port name]" option:
+
+```bash
+# Conference firmware
+pio run -t upload -e conference --upload-port [port name]
+```
+
 ## Debugging
 
 To read the logging statements output on the USB serial interface, it is
