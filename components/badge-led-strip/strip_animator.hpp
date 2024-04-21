@@ -155,7 +155,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         {
             const auto ret = _leds.show();
             if (ret != ESP_OK) {
-                _logger.error("Faoled to show LEDs");
+                _logger.error("Failed to show LEDs");
             }
         }
 
