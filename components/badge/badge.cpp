@@ -112,8 +112,7 @@ constexpr uint16_t config_version_magic = 0xBAD8;
 } // anonymous namespace
 
 nr::badge::badge()
-    : _is_user_name_set{false}, _user_name{""},
-      _button_watcher([](nsec::button::id id, nsec::button::event event) {
+    : _button_watcher([](nsec::button::id id, nsec::button::event event) {
           nsec::g::the_badge.on_button_event(id, event);
       }),
       _network_handler(), _logger("badge")
@@ -132,11 +131,6 @@ void nr::badge::load_config()
     eeprom_config config{};
 
     set_social_level(config.social_level, false);
-    if (config.is_name_set) {
-        std::memcpy(_user_name, config.name, sizeof(_user_name));
-        _is_user_name_set = config.is_name_set;
-    }
-
     _set_selected_animation(config.favorite_animation_id, false);
 }
 
@@ -145,10 +139,8 @@ void nr::badge::save_config() const
     eeprom_config config;
     config.version_magic = config_version_magic;
     config.favorite_animation_id = _selected_animation;
-    config.is_name_set = _is_user_name_set;
     config.social_level = _social_level;
 
-    std::memcpy(config.name, _user_name, sizeof(config.name));
     // FIXME Save config
 }
 

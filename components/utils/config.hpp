@@ -27,11 +27,6 @@ constexpr uint8_t max_level = 200;
 constexpr uint8_t multiple_badges_discovered_simultaneously_multiplier = 2;
 } // namespace nsec::config::social
 
-namespace nsec::config::user
-{
-constexpr uint8_t name_max_length = 32;
-}
-
 namespace nsec::config::splash
 {
 constexpr nsec::scheduling::relative_time_ms splash_screen_wait_time_ms = 2000;

@@ -212,9 +212,7 @@ class badge
     struct eeprom_config {
         uint16_t version_magic;
         uint8_t favorite_animation_id;
-        bool is_name_set;
         uint8_t social_level;
-        char name[nsec::config::user::name_max_length];
     };
 
     void load_config();
@@ -247,11 +245,9 @@ class badge
 
     network_app_state _current_network_app_state;
     unsigned int _badges_discovered_last_exchange;
-    bool _is_user_name_set : 1;
     bool _is_expecting_factory_reset : 1;
     // Mask to prevent repeats after a screen transition, one bit per button.
     uint8_t _button_had_non_repeat_event_since_screen_focus_change;
-    char _user_name[nsec::config::user::name_max_length];
     uint8_t idle_led_next_state = 0;
     uint16_t idle_led_processing = 0;
 
