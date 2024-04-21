@@ -146,9 +146,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         void setPixelColor(std::uint8_t pixel_id, std::uint8_t r,
                            std::uint8_t g, std::uint8_t b)
         {
-            Rgb new_color(r, g, b);
-            new_color.linearize();
-            _leds[pixel_id] = new_color;
+            _leds[pixel_id] = Rgb(r, g, b);
         }
 
         void show()
