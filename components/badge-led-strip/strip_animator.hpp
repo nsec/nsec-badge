@@ -167,7 +167,6 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         }
 
       private:
-        std::uint8_t _pixies[32 * 8];
         SmartLed _leds;
         nsec::logging::logger _logger;
     };
