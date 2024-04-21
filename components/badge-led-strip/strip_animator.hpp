@@ -129,14 +129,14 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
     led_color _color(uint8_t led_id) const noexcept;
     void _reset_keyframed_animation_state() noexcept;
 
-    class NeoStub
+    class neopixel_controller
     {
       public:
-        NeoStub(unsigned int count, unsigned ctrl_pin, int flags)
+        neopixel_controller(unsigned int count, unsigned ctrl_pin, int flags)
             : _leds(LED_WS2812B, nsec::board::neopixel::count,
                     nsec::board::neopixel::ctrl_pin, 0, DoubleBuffer),
-              _logger("NeoStub"){};
-        ~NeoStub() = default;
+              _logger("neopixel_controller"){};
+        ~neopixel_controller() = default;
 
         void setBrightness(std::uint8_t brightness)
         {
@@ -172,7 +172,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         nsec::logging::logger _logger;
     };
 
-    NeoStub _pixels;
+    neopixel_controller _pixels;
     animation_type _current_animation_type;
 
     // Keyframe indices of 4-bits each, use helpers to access.
