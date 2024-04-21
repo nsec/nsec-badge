@@ -289,6 +289,7 @@ void nr::badge::_set_network_app_state(
         break;
     case network_app_state::IDLE:
     case network_app_state::UNCONNECTED:
+        _strip_animator.set_idle_animation(_social_level);
         break;
     }
 }
