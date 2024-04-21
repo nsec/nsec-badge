@@ -79,8 +79,9 @@ class badge
      * of the badge. The left-most badge starts the exchange by sending an
      * ANNOUNCE_BADGE_ID message. This message contains the badge's peer_id (in
      * the current badge chain) and it's unique ID.
-     * 
-     * This message is forwarded to the right by the various badges in the chain.
+     *
+     * This message is forwarded to the right by the various badges in the
+     * chain.
      */
     enum class network_app_state : uint8_t {
         UNCONNECTED,

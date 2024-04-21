@@ -80,13 +80,13 @@ const nl::strip_animator::keyframe
 };
 
 const nl::strip_animator::keyframe health_meter_bar_keyframe_template[] = {
-        // red
-        {{125, 20, 0}, 0},
-        // green <- beginning of loop
-        {{0, 255, 0}, 750},
-        // dimmed green to green loop
-        {{15, 120, 15}, 1500},
-        {{0, 255, 0}, 2250},
+    // red
+    {{125, 20, 0}, 0},
+    // green <- beginning of loop
+    {{0, 255, 0}, 750},
+    // dimmed green to green loop
+    {{15, 120, 15}, 1500},
+    {{0, 255, 0}, 2250},
 };
 
 const nl::strip_animator::keyframe happy_clown_barf_keyframes[] = {
@@ -948,10 +948,9 @@ void nl::strip_animator::set_health_meter_bar(uint8_t led_count) noexcept
     _current_animation_type = animation_type::KEYFRAMED;
     _config.keyframed._animation = keyframed_animation::PROGRESS_BAR;
     _config.keyframed.active = 0;
-    _config.keyframed.keyframe_count = ARRAY_LENGTH(
-        keyframes::health_meter_bar_keyframe_template);
-    _config.keyframed.keyframes =
-        keyframes::health_meter_bar_keyframe_template;
+    _config.keyframed.keyframe_count =
+        ARRAY_LENGTH(keyframes::health_meter_bar_keyframe_template);
+    _config.keyframed.keyframes = keyframes::health_meter_bar_keyframe_template;
     _config.keyframed.loop_point_index = 1;
     _config.keyframed.brightness = 120;
 
@@ -994,7 +993,8 @@ void nl::strip_animator::set_show_level_animation(
         keyframes = keyframes::happy_clown_barf_keyframes;
         // Apply a slight offset between LEDs to achieve a "sparkle" effect.
         cycle_offset = 10;
-    } else if (animation_type == pairing_completed_animation_type::NO_NEW_FRIENDS)  {
+    } else if (animation_type ==
+               pairing_completed_animation_type::NO_NEW_FRIENDS) {
         keyframe_count = ARRAY_LENGTH(keyframes::no_new_friends_keyframes);
         keyframes = keyframes::no_new_friends_keyframes;
     } else {

@@ -428,7 +428,7 @@ nc::network_handler::_check_connections() noexcept
     const bool topology_changed = left_state_changed || right_state_changed;
 
     /* Only log when state change. */
-    if(left_state_changed || right_state_changed) {
+    if (left_state_changed || right_state_changed) {
         _logger.debug("Connection check result: left={}, right={}",
                       left_is_connected ? "connected" : "disconnected",
                       right_is_connected ? "connected" : "disconnected");
