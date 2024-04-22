@@ -53,15 +53,7 @@ void challenges_storage_init() {
                     gpio_pad_select_gpio(ADDON_BLUE_LED);
                     gpio_set_direction(ADDON_BLUE_LED, GPIO_MODE_OUTPUT);
                     gpio_set_level(ADDON_BLUE_LED, 1);
-                    uint8_t cipher[16];
-                    char* read_buffer2 = (char*)malloc(sizeof(cipher));
-                    ESP_ERROR_CHECK(esp_flash_read(flash, read_buffer2, FLAG_PLUG_ME_ADDR, sizeof(cipher)));
-                    memcpy(cipher, read_buffer2, sizeof(cipher));
-                    free(read_buffer2);
-
-                    uint8_t decrypted_flag2[16] = {0x00};
-                    decrypt_flag(cipher, decrypted_flag2);
-                    print_16str(decrypted_flag2);
+                    print_cryptd_flag(flash, FLAG_PLUG_ME_ADDR);
                 }
             }
         }
@@ -326,7 +318,7 @@ static int read_another_128(int argc, char **argv) {
     }
 
     uint8_t w[] = {0xBB};
-    printf(LOG_COLOR(LOG_COLOR_BLUE) "Writing 0x%02X to 0x%06lX...\n", w[0], addr1);
+    printf("Writing 0x%02X to 0x%06lX...\n", w[0], addr1);
     ESP_ERROR_CHECK(esp_flash_erase_region(flash, sect1, 4096));
     ESP_ERROR_CHECK(esp_flash_write(flash, w, addr1, 1));
 
@@ -343,14 +335,16 @@ static int read_another_128(int argc, char **argv) {
             // Write at addr2 works, OK!
             printf("Looks like I can write at 0x%06lX, and that's what I want!\n" LOG_RESET_COLOR, addr2);
             flash_read_at(flash, 128, FLAG_2_ADDR);
-            printf("Looks like content there is symmetrically encrypted.\n");
+            printf("Looks like content there is encrypted... trying to decrypt...\n");
+            print_cryptd_flag(flash, FLAG_2_ADDR);
+            printf("Automatic decrypt successful!\n");
         } else {
-            printf("Can't write 0x%02X value at 0x%06lX! Exiting.\n", w[0], addr2);
+            printf("Can't write 0x%02X value at 0x%06lX! I should be able to write there. exiting...\n", w[0], addr2);
         }
         
     } else {
         w[0] = {0xAA};
-        printf("0x%06lX value is 0x%02X! Erasing it and exiting.\n", addr1, buffer[0]);
+        printf("0x%06lX value is 0x%02X! I shouldn't be able to write here.\nErasing 0x%06lX... exiting...\n", addr1, buffer[0], addr1);
         ESP_ERROR_CHECK(esp_flash_erase_region(flash, sect1, 4096));
         //ESP_ERROR_CHECK(esp_flash_write(flash, w, addr1, 1));
     }
@@ -434,7 +428,7 @@ void register_challenges_storage(void) {
 
         const esp_console_cmd_t cmd6 = {
             .command = "write_to_0x48",
-            .help = "Write 0xAA to addr 0x000048 on SPI FLASH.\n",
+            .help = "Attempt to write 0xAA to addr 0x000048 on SPI FLASH. Print out the value after.\n",
             .hint = "",
             .func = &write_to_0x48,
             .argtable = NULL,        

@@ -469,6 +469,7 @@ int print_slotnkeyconfig(int argc, char **argv) {
     return 0;
 }
 
+#if CTF_ADDON_ADMIN_MODE
 int symmetric_decrypt(int argc, char **argv) {
     if (argc >= 2) {
         uint8_t cipher[16];
@@ -489,8 +490,13 @@ int symmetric_decrypt(int argc, char **argv) {
     }
     return 0;
 }
+#endif
 
 void register_crypto_atecc(void) {
+    if (Save::save_data.raw_spi_mode) {
+        //ESP_LOGI(TAG, "crypto_atecc is disabled in raw spi mode");
+        return;
+    }
     #if CTF_ADDON_ADMIN_MODE
     const esp_console_cmd_t cmd = {
         .command = "crypto",
@@ -500,6 +506,15 @@ void register_crypto_atecc(void) {
         .argtable = NULL,        
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+
+    const esp_console_cmd_t cmd3 = {
+        .command = "admin_symmetric_decrypt",
+        .help = "[ATECC608B] read hex and decrypt symmetrically 16 bytes\n",
+        .hint = "[hex chars]",
+        .func = &symmetric_decrypt,
+        .argtable = NULL,        
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd3) );
     #endif
 
     const esp_console_cmd_t cmd2 = {
@@ -511,14 +526,7 @@ void register_crypto_atecc(void) {
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd2) );
 
-    const esp_console_cmd_t cmd3 = {
-        .command = "symmetric_decrypt",
-        .help = "[ATECC608B] read hex and decrypt symmetrically 16 bytes\n",
-        .hint = "[hex chars]",
-        .func = &symmetric_decrypt,
-        .argtable = NULL,        
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd3) );
+
 
 }
 

@@ -6,6 +6,7 @@
 #include "esp_log.h"
 #include "storage_settings.h"
 #include "save.h"
+#include "crypto_operations.h"
 
 static const char *TAG = "flash_operations";
 
@@ -42,3 +43,15 @@ void flash_read_at(esp_flash_t* _flash, uint16_t custom_param, unsigned int addr
     fflush(stdout);
     free(buffer);
 }
+
+void print_cryptd_flag(esp_flash_t* _flash, uint32_t flag_addr) {
+    uint8_t cipher[16];
+    char* read_buffer2 = (char*)malloc(sizeof(cipher));
+    ESP_ERROR_CHECK(esp_flash_read(_flash, read_buffer2, flag_addr, sizeof(cipher)));
+    memcpy(cipher, read_buffer2, sizeof(cipher));
+    free(read_buffer2);
+    uint8_t decrypted_flag2[16] = {0x00};
+    decrypt_flag(cipher, decrypted_flag2);
+    print_16str(decrypted_flag2);
+}
+
