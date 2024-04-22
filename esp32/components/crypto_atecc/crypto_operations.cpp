@@ -57,6 +57,18 @@ void decrypt_flag(uint8_t encrypted_flag[16], uint8_t (&flag)[16])  {
     }
 }
 
+void print_n_hmac(const char* dataToHash, int n) {
+    uint8_t digest[ATCA_SHA_DIGEST_SIZE];
+    memset(digest, 0, sizeof(digest));
+    int ret = 0;
+    ret = atcab_sha_hmac(reinterpret_cast<const uint8_t*>(dataToHash), strlen(dataToHash), SLOT_HMAC, digest, SHA_MODE_TARGET_OUT_ONLY);
+    if (ret == ATCA_SUCCESS) {
+        print_bin2hex(digest, sizeof(digest) / n);
+    } else {
+        printf("Unexpected hmac error: %02x\n", ret);
+    }
+}
+
 void print_config(atecc608_config_t * pConfig, uint16_t custom_param) {
 
 // pConfig
