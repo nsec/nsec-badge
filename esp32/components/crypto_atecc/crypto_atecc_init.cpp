@@ -49,9 +49,8 @@ void crypto_atecc_init() {
                         ESP_LOGI(TAG, "Serial Number: 0x%02X%02X%02X%02X%02X%02X%02X%02X%02X", serial_number[0], serial_number[1], serial_number[2], serial_number[3], serial_number[4], serial_number[5], serial_number[6], serial_number[7], serial_number[8]);
                         char dataToHash[21];
                         sprintf(dataToHash, "%02X%02XWCEYGUSU1SB6LSF6", revision[2], revision[3]);
-                        dataToHash[20] = '\0';
                         printf("FLAG-");
-                        print_n_hmac(dataToHash, 4);
+                        print_n_hmac(dataToHash, SLOT_AESHMAC, 4);
                     }
                 }
                 }

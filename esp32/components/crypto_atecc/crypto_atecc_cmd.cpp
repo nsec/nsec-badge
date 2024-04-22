@@ -104,38 +104,6 @@ static int crypto_atecc(int argc, char **argv) {
             printf("\n");
             }
         }
-    } else if (_select == 2) {
-        // crypto 2 9 abc 
-        uint8_t digest[ATCA_SHA_DIGEST_SIZE];
-        memset(digest, 0, sizeof(digest));
-        const char* dataToHash = NULL;
-        if (argc == 4) {
-            dataToHash = argv[3];
-        } else {
-            // TODO why [5,7-15] ???
-            // Bits 0:3 only are used to select a slot but all 16 bits are used in the HMAC message
-            ESP_LOGE(TAG, "err needs 3 params crypto 2 [5,7-15] text");
-            return 0;
-        }
-        int ret = 0;
-        // key with all 1s: { 0x08, 0x5b, 0xf5 }
-
-        //uint8_t start[3] = { 0x61, 0x06, 0x75 }; // private key
-        //for (int i=65534; i > custom_param; i--) {
-            ret = atcab_sha_hmac(reinterpret_cast<const uint8_t*>(dataToHash), strlen(dataToHash), custom_param, digest, SHA_MODE_TARGET_OUT_ONLY);
-
-            //ESP_LOGI(TAG, "atcab_sha_hmac: %02x%02x%02x == %02x%02x%02x ???", start[0], start[1], start[2], digest[0], digest[1], digest[2]);
-            if (ret == ATCA_SUCCESS) {
-                //if (start[0] == digest[0] && start[1] == digest[1] && start[2] == digest[2]) {
-                    ESP_LOGI(TAG, "atcab_sha_hmac[%d]: %02x%02x%02x%02x...", custom_param, digest[0], digest[1], digest[2], digest[3]);
-                    print_digest(digest, sizeof(digest));
-                    //break;
-                //}
-            } else {
-                ESP_LOGE(TAG, "err atcab_sha_hmac ret: %02x", ret);
-            }
-            //memset(digest, 0, sizeof(digest));
-        //}
     } else if (_select == 3) {
         uint8_t digest[ATCA_SHA_DIGEST_SIZE];
         memset(digest, 0, sizeof(digest));
@@ -156,17 +124,6 @@ static int crypto_atecc(int argc, char **argv) {
         for (int i=0; i<32; challenge[i++] = 0x64);
         if (atcab_mac(MAC_MODE_CHALLENGE, custom_param, challenge, digest) == ATCA_SUCCESS)
             print_digest(digest, sizeof(digest));
-
-    } else if (_select == 4) {
-        uint8_t rand_out;
-        atcab_random(&rand_out);
-        ESP_LOGI(TAG, "Today lucky number is: %d", rand_out);
-    } else if (_select == 5) {
-        uint8_t zone_data[32];
-        //                       0 ATCA_ZONE_CONFIG  1 ATCA_ZONE_OTP  2 ATCA_ZONE_DATA 
-        if (atcab_read_bytes_zone(custom_param, custom_param2, custom_param3, zone_data, 32) == ATCA_SUCCESS) {
-            print_32(zone_data);
-        }
     } else if (_select == 6) {
         uint8_t num_in[20];
         for (int i=0; i<20; num_in[i++] = 0x42);
@@ -293,51 +250,6 @@ static int crypto_atecc(int argc, char **argv) {
             if (ret != ATCA_SUCCESS) printf("Failed atcab_is_private with error: 0x%02X\n", ret);
             printf("atcab_is_private(%d): %s\n", i, is_locked ? "true" : "false");
         }
-    } else if (_select == 14) {
-        uint8_t config_zone[ATCA_ECC_CONFIG_SIZE];
-        if (atcab_read_config_zone(config_zone) == ATCA_SUCCESS) {
-            // for (int i = 0; i < 16; i++) {
-            //     for(int j = 0; j < 8; j++) {
-            //         printf("%02x ", config_zone[i * 8 + j]);
-            //     }
-            //     printf("\n");
-            //     }
-        }
-        atecc608_config_t * pConfig = (atecc608_config_t*)config_zone;
-        //ESP_LOGI(TAG, "pConfig->i2c_addr: %02x", pConfig->I2C_Address);
-        print_config(pConfig, custom_param);
-    } else if (_select == 15) {
-        bool is_zone_locked = false;
-        if (ATCA_SUCCESS != (ret = atcab_is_locked(LOCK_ZONE_CONFIG, &is_zone_locked))) {
-            ESP_LOGE(TAG, " failed\n  ! atcab_is_locked returned %02x", ret);
-        }
-        if (is_zone_locked) {
-            ESP_LOGI(TAG, "Config zone is already locked");
-        } else {
-            ESP_LOGI(TAG, "Config zone is not locked");
-        }
-        if (custom_param != 666) {
-            printf("this is sensible function, please use 666 as param\n");
-            return 0;
-        }
-        ret = atcab_lock_config_zone();
-        if (ret != ATCA_SUCCESS) {
-            ESP_LOGE(TAG, "error in locking config zone, ret = %02x", ret);
-        } else {
-            ESP_LOGI(TAG, "Config zone is now locked.");
-        }
-    } else if (_select == 16) {
-        // * \param[in]  mode      Selects which mode to be used for info command.
-        //  * \param[in]  param2    Selects the particular fields for the mode.
-        //  * \param[out] out_data  Response from info command (4 bytes). Can be set to
-        //  *                       NULL if not required.
-        uint8_t info[4];
-        // Returns a value of one if an ECC private or public key stored in the key slot specified by param
-        // is valid and zero if the key is not valid. For public keys in slots where PubInfo is zero, the
-        // information returned by this command is not useful. This information is not meaningful for slots
-        // in which KeyType does not indicate a supported ECC curve.
-        atcab_info_base(0x01, custom_param, info);
-        printf("atcab_info_base: %02x%02x%02x%02x\n", info[0], info[1], info[2], info[3]);
     } else if (_select == 17) {
         uint8_t private_key[ATCA_PRIV_KEY_SIZE] = { 0x77, 0xd5, 0x96, 0xe7, 0xe8, 0xda, 0xf6, 0xbe, 0x19, 0xce, 0x30, 0x03, 0x78, 0x06, 0x9e, 0xd8, 0x9c, 0x5f, 0xdd, 0xc5, 0xfd, 0xdd, 0x5a, 0x9a, 0x5c, 0x06, 0x99, 0xa0, 0x64, 0x82, 0x69, 0xd6 };
         ret = atcab_write_zone(ATCA_ZONE_DATA, custom_param, 0, 0, private_key, ATCA_BLOCK_SIZE);
@@ -447,6 +359,24 @@ static int crypto_atecc(int argc, char **argv) {
         } else {
             printf("ERROR: flag is not decrypted correctly\n");
         }
+    } else if (_select == 55) {
+        // use atcab_ecdh to get the key
+        uint8_t pubkey[ATCA_PUB_KEY_SIZE];
+        /* {
+            0xb2, 0xbe, 0x34, 0x5a, 0xd7, 0x89, 0x93, 0x83,
+            0xa9, 0xaa, 0xb4, 0xfb, 0x96, 0x8b, 0x1c, 0x78,
+            0x35, 0xcb, 0x2c, 0xd4, 0x2c, 0x7e, 0x97, 0xc2,
+            0x6f, 0x85, 0xdf, 0x8e, 0x20, 0x1f, 0x3b, 0xe8,
+            0xa8, 0x29, 0x83, 0xf0, 0xa1, 0x1d, 0x6f, 0xf3,
+            0x1d, 0x66, 0xce, 0x99, 0x32, 0x46, 0x6f, 0x0f,
+            0x2c, 0xca, 0x21, 0xef, 0x96, 0xbe, 0xc9, 0xce,
+            0x23, 0x5b, 0x3d, 0x87, 0xb0, 0xf8, 0xfa, 0x9e
+        }; */
+        uint8_t shared_secret[ATCA_SHA_DIGEST_SIZE];
+        atcab_read_pubkey(13, pubkey);
+        atcab_ecdh(2, pubkey, shared_secret);
+        
+        print_digest(shared_secret, sizeof(shared_secret));
     }
     return 0;
 }
@@ -483,8 +413,8 @@ int print_slotnkeyconfig(int argc, char **argv) {
     if (argc >= 2) {
         slot_id = atoi(argv[1]);
     }
-    if (slot_id > 9) {
-        printf("Error! slot id should be [1-9]\n");
+    if (slot_id > 15) {
+        printf("Error! slot id should be [0-15]\n");
         return 0;
     }
     uint8_t config_zone[ATCA_ECC_CONFIG_SIZE];
@@ -494,6 +424,66 @@ int print_slotnkeyconfig(int argc, char **argv) {
     }
     return 0;
 }
+
+int print_public_key(int argc, char **argv) {
+    uint16_t slot_id = 0;
+    if (argc >= 2) {
+        slot_id = atoi(argv[1]);
+    }
+    if (slot_id > 4) {
+        printf("Error! slot id should be [0-4]\n");
+        return 0;
+    }
+    uint8_t pubkey[ATCA_PUB_KEY_SIZE];
+    if (atcab_get_pubkey(slot_id, pubkey) == ATCA_SUCCESS) {
+        print_public_key(pubkey);
+    } else {
+        printf("Error! Failed to read public key.\n");
+    }
+    return 0;
+}
+
+int print_read_zone(int argc, char **argv) {
+    uint16_t slot_id = 0;
+    uint16_t block_id = 0;
+    if (argc >= 2) {
+        slot_id = atoi(argv[1]);
+    }
+    if (argc >= 3) {
+        block_id = atoi(argv[2]);
+    }
+    if (slot_id > 15) {
+        printf("Error! slot id should be [0-15]\n");
+        return 0;
+    }
+    uint8_t readslot[ATCA_BLOCK_SIZE] = {0};
+    //int ret = atcab_read_bytes_zone(ATCA_ZONE_DATA, slot_id, 0, readslot, sizeof(readslot));
+    int ret = atcab_read_zone(ATCA_ZONE_DATA, slot_id, block_id, 0, readslot, sizeof(readslot));
+    if (ret != ATCA_SUCCESS) {
+        printf("Error! Failed to read with error: 0x%02X\n", ret);
+    } else {
+        printf("Data read successfully from slot %d: ", slot_id);
+        print_digest(readslot, ATCA_BLOCK_SIZE);
+    }
+    return 0;
+}
+
+int hmac_random(int argc, char **argv) {
+    uint8_t rand_num[32];
+    atcab_random(rand_num);
+
+    char dataToHash[3*4 + 1];
+    sprintf(dataToHash, "%d%d%d%d", rand_num[0], rand_num[1], rand_num[2], rand_num[3]);
+
+    printf("Performing HMAC of random number as string %s with SLOT ID %d...\n", dataToHash, SLOT_HMAC);
+
+    printf("First 32 chars result: ");
+    print_n_hmac(dataToHash, SLOT_HMAC, 2);
+
+    printf("Can you generate a HMAC of 138160109146 using SLOT ID %d?\nThe first uppercased 32 chars of that appended to FLAG- would be useful.\n", SLOT_HMAC);
+    return 0;
+}
+
 
 #if CTF_ADDON_ADMIN_MODE
 int symmetric_decrypt(int argc, char **argv) {
@@ -529,7 +519,7 @@ void register_crypto_atecc(void) {
         .help = "Run the crypto test\n",
         .hint = "[1-30]",
         .func = &crypto_atecc,
-        .argtable = NULL,        
+        .argtable = NULL,
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
 
@@ -538,7 +528,7 @@ void register_crypto_atecc(void) {
         .help = "[ATECC608B] read hex and decrypt symmetrically 16 bytes\n",
         .hint = "[hex chars]",
         .func = &symmetric_decrypt,
-        .argtable = NULL,        
+        .argtable = NULL,
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd3) );
     #endif
@@ -546,13 +536,38 @@ void register_crypto_atecc(void) {
     const esp_console_cmd_t cmd2 = {
         .command = "crypto_print_config",
         .help = "[ATECC608B] Print the slot and key config for a given slot\n",
-        .hint = "[0-9]",
+        .hint = "[0-15]",
         .func = &print_slotnkeyconfig,
-        .argtable = NULL,        
+        .argtable = NULL,
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd2) );
 
+    const esp_console_cmd_t cmd4 = {
+        .command = "crypto_print_pubkey",
+        .help = "[ATECC608B] Print the public key for a given slot\n",
+        .hint = "[0-4]",
+        .func = &print_public_key,
+        .argtable = NULL,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd4) );
 
+    const esp_console_cmd_t cmd5 = {
+        .command = "crypto_read_zone",
+        .help = "[ATECC608B] Read 32 bytes from data zone with optional block index as third arg.\n",
+        .hint = "[0-15] [0-12]",
+        .func = &print_read_zone,
+        .argtable = NULL,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd5) );
+
+    const esp_console_cmd_t cmd6 = {
+        .command = "crypto_hmac_rnd",
+        .help = "[ATECC608B] HMAC a pseudo random number using key in slot 9.\n",
+        .hint = "",
+        .func = &hmac_random,
+        .argtable = NULL,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd6) );    
 
 }
 
