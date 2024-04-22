@@ -28,6 +28,38 @@ static void print_digest(uint8_t* digest, size_t size);
 static void print_32(uint8_t* data);
 static void print_64(uint8_t* data);
 
+#if CTF_ADDON_ADMIN_MODE
+
+int test_hmac_slot(int slotid) {
+    uint8_t digest[ATCA_SHA_DIGEST_SIZE];
+    memset(digest, 0, sizeof(digest));
+    const char* dataToHash = "abc";
+    int ret = 0;
+    // for slot 9
+    uint8_t start[3] = { 0xca, 0xe9, 0x32 }; // should be the start of the good hash
+    if (slotid == 5) {
+        // for slot 5
+        start[0] = 0x78;
+        start[1] = 0x77;
+        start[2] = 0x08;
+    }
+
+    ret = atcab_sha_hmac(reinterpret_cast<const uint8_t*>(dataToHash), strlen(dataToHash), slotid, digest, SHA_MODE_TARGET_OUT_ONLY);
+    if (ret == ATCA_SUCCESS) {
+        if (start[0] == digest[0] && start[1] == digest[1] && start[2] == digest[2]) {
+            printf("GOOD: HMAC(%d, abc) is correct:\n", slotid);
+            print_digest(digest, sizeof(digest));
+        } else {
+            printf("FAIL: HMAC(%d, abc) is not correct:\n", slotid);
+            print_digest(digest, sizeof(digest));
+            return 0;
+        }
+    } else {
+        ESP_LOGE(TAG, "FAIL: err atcab_sha_hmac[slotid:%d] ret: %02x", slotid, ret);
+        return 0;
+    }
+    return 1;
+}
 static int crypto_atecc(int argc, char **argv) {
     uint16_t _select = 1;
 
@@ -186,6 +218,13 @@ static int crypto_atecc(int argc, char **argv) {
         } else {
             printf("GOOD: slot 9 for HMAC is locked\n");
         }
+        atcab_is_slot_locked(5, &is_locked);
+        if (!is_locked) {
+            printf("FAIL: slot 5 for AESHMAC is not locked!\n");
+            return 0;
+        } else {
+            printf("GOOD: slot 5 for AESHMAC is locked\n");
+        }
         atcab_is_slot_locked(2, &is_locked);
         if (!is_locked) { // TODO do we want this one locked or not?
             printf("NEUTRAL: slot 2 for PrivWrite is not locked!\n");
@@ -193,25 +232,11 @@ static int crypto_atecc(int argc, char **argv) {
             printf("NEUTRAL: slot 2 for PrivWrite is locked\n");
             //return 0;
         }
-        // TODO do we need to check slot 1 and slot 2 too?
 
-        uint8_t digest[ATCA_SHA_DIGEST_SIZE];
-        memset(digest, 0, sizeof(digest));
-        const char* dataToHash = "abc";
-        int ret = 0;
-        uint8_t start[3] = { 0xca, 0xe9, 0x32 }; // should be the start of the good hash
-        ret = atcab_sha_hmac(reinterpret_cast<const uint8_t*>(dataToHash), strlen(dataToHash), 9, digest, SHA_MODE_TARGET_OUT_ONLY);
-        if (ret == ATCA_SUCCESS) {
-            if (start[0] == digest[0] && start[1] == digest[1] && start[2] == digest[2]) {
-                printf("GOOD: HMAC(9, abc) is correct:\n");
-                print_digest(digest, sizeof(digest));
-            } else {
-                printf("FAIL: HMAC(9, abc) is not correct:\n");
-                print_digest(digest, sizeof(digest));
-                return 0;
-            }
-        } else {
-            ESP_LOGE(TAG, "FAIL: err atcab_sha_hmac ret: %02x", ret);
+        if (test_hmac_slot(9) == 0) {
+            return 0;
+        }
+        if (test_hmac_slot(5) == 0) {
             return 0;
         }
 
@@ -426,6 +451,7 @@ static int crypto_atecc(int argc, char **argv) {
     return 0;
 }
 
+#endif
 
 static void print_32(uint8_t* data) {
         for (int i = 0; i < 4; i++) {

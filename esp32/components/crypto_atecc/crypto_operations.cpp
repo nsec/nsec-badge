@@ -3,6 +3,9 @@
 // Slot to configure for SHA-HMAC access and Write key to
 #define SLOT_HMAC 9
 
+// Slot to configure for AES-HMAC access and Write key to
+#define SLOT_AESHMAC 5
+
 // Slot to store PrivWrite key
 #define SLOT_PRIVWRITE 2
 
@@ -43,7 +46,7 @@ void print_16str(uint8_t* data) {
 }
 
 void encrypt_flag(uint8_t flag[16], uint8_t (&encrypted_flag)[16]) {
-    ATCA_STATUS ret = atcab_aes_encrypt(SLOT_HMAC, 0, flag, encrypted_flag);
+    ATCA_STATUS ret = atcab_aes_encrypt(SLOT_AESHMAC, 0, flag, encrypted_flag);
     if (ret != ATCA_SUCCESS) {
         printf("Error encrypting flag: %02x\n", ret);
         return;
@@ -51,7 +54,7 @@ void encrypt_flag(uint8_t flag[16], uint8_t (&encrypted_flag)[16]) {
 }
 
 void decrypt_flag(uint8_t encrypted_flag[16], uint8_t (&flag)[16])  {
-    ATCA_STATUS ret = atcab_aes_decrypt(SLOT_HMAC, 0, encrypted_flag, flag);
+    ATCA_STATUS ret = atcab_aes_decrypt(SLOT_AESHMAC, 0, encrypted_flag, flag);
     if (ret != ATCA_SUCCESS) {
         printf("Error decrypting flag: %02x\n", ret);
     }
@@ -61,7 +64,7 @@ void print_n_hmac(const char* dataToHash, int n) {
     uint8_t digest[ATCA_SHA_DIGEST_SIZE];
     memset(digest, 0, sizeof(digest));
     int ret = 0;
-    ret = atcab_sha_hmac(reinterpret_cast<const uint8_t*>(dataToHash), strlen(dataToHash), SLOT_HMAC, digest, SHA_MODE_TARGET_OUT_ONLY);
+    ret = atcab_sha_hmac(reinterpret_cast<const uint8_t*>(dataToHash), strlen(dataToHash), SLOT_AESHMAC, digest, SHA_MODE_TARGET_OUT_ONLY);
     if (ret == ATCA_SUCCESS) {
         print_bin2hex(digest, sizeof(digest) / n);
     } else {
