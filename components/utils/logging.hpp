@@ -28,7 +28,7 @@ class logger
     };
 
     explicit logger(std::string_view subsystem_name,
-                    severity minimal_level = severity::DEBUG)
+                    severity minimal_level = severity::ERROR)
         : _subsystem_name(subsystem_name), _minimal_level(minimal_level)
     {
     }
