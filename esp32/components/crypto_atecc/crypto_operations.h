@@ -11,6 +11,9 @@
 // Slot to store PrivWrite key
 #define SLOT_PRIVWRITE 2
 
+// Slot to store external private key to be loaded by the user
+#define SLOT_EXT_PUBKEY 13
+
 
 void print_16(uint8_t* data);
 void print_16str(uint8_t* data);

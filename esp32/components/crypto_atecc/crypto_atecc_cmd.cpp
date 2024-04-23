@@ -73,16 +73,6 @@ static int crypto_atecc(int argc, char **argv) {
         custom_param = atoi(argv[2]);
     }
 
-    uint16_t custom_param2 = 0;
-    if (argc >= 4) {
-        custom_param2 = atoi(argv[3]);
-    }
-
-    uint16_t custom_param3 = 0;
-    if (argc >= 5) {
-        custom_param3 = atoi(argv[4]);
-    }
-
     int ret = 0;
     uint8_t pubkey[ATCA_PUB_KEY_SIZE];
 
@@ -197,12 +187,6 @@ static int crypto_atecc(int argc, char **argv) {
             return 0;
         }
 
-    } else if (_select == 9) {
-        bool is_locked = false;
-        atcab_is_slot_locked(custom_param, &is_locked);
-        printf("atcab_is_slot_locked: %s\n", is_locked ? "true" : "false");
-        atcab_is_config_locked(&is_locked);
-        printf("atcab_is_config_locked: %s\n", is_locked ? "true" : "false");
     } else if (_select == 10) {
         uint8_t public_key[ATCA_PUB_KEY_SIZE];
         if (custom_param == 0)
@@ -220,36 +204,6 @@ static int crypto_atecc(int argc, char **argv) {
         printf("atcab_counter_read %d: %lu\n", custom_param, counter_value);
         atcab_counter_increment(custom_param, &counter_value);
         printf("++atcab_counter_read %d: %lu\n", custom_param, counter_value);
-    } else if (_select == 12) {
-        // if (custom_param > 2 || custom_param < 0) {
-        //     printf("err: param should be [1-3]\n");
-        //     return 0;
-        // }
-        uint8_t private_key[ATCA_PRIV_KEY_SIZE + 4] = { 0x00, 0x00, 0x00, 0x00, 0x77, 0xd5, 0x96, 0xe7, 0xe8, 0xda, 0xf6, 0xbe, 0x19, 0xce, 0x30, 0x03, 0x78, 0x06, 0x9e, 0xd8, 0x9c, 0x5f, 0xdd, 0xc5, 0xfd, 0xdd, 0x5a, 0x9a, 0x5c, 0x06, 0x99, 0xa0, 0x64, 0x82, 0x69, 0xd6 };
-        /*
-        uint8_t host_nonce[NONCE_NUMIN_SIZE];
-        memset(host_nonce, 0, sizeof(host_nonce));
-        for(int i=0; i<NONCE_NUMIN_SIZE; host_nonce[i++] = 0xAB);
-        */
-
-        ret = atcab_priv_write(custom_param, private_key, 0, NULL, {0});
-        if (ret != ATCA_SUCCESS) {
-            printf("Failed to write private key with error: 0x%02X\n", ret);
-        } else {
-            printf("Private key written successfully.\n");
-        }
-    } else if (_select == 13) {
-        bool is_locked = false;
-        ret = atcab_is_data_locked(&is_locked);
-        printf("atcab_is_data_locked: %s\n", is_locked ? "true" : "false");
-        for(int i=0; i<16; i++) {
-            ret = atcab_is_slot_locked(i, &is_locked);
-            if (ret != ATCA_SUCCESS) printf("Failed atcab_is_slot_locked with error: 0x%02X\n", ret);
-            printf("atcab_is_slot_locked(%d): %s\n", i, is_locked ? "true" : "false");
-            ret = atcab_is_private(i, &is_locked);
-            if (ret != ATCA_SUCCESS) printf("Failed atcab_is_private with error: 0x%02X\n", ret);
-            printf("atcab_is_private(%d): %s\n", i, is_locked ? "true" : "false");
-        }
     } else if (_select == 17) {
         uint8_t private_key[ATCA_PRIV_KEY_SIZE] = { 0x77, 0xd5, 0x96, 0xe7, 0xe8, 0xda, 0xf6, 0xbe, 0x19, 0xce, 0x30, 0x03, 0x78, 0x06, 0x9e, 0xd8, 0x9c, 0x5f, 0xdd, 0xc5, 0xfd, 0xdd, 0x5a, 0x9a, 0x5c, 0x06, 0x99, 0xa0, 0x64, 0x82, 0x69, 0xd6 };
         ret = atcab_write_zone(ATCA_ZONE_DATA, custom_param, 0, 0, private_key, ATCA_BLOCK_SIZE);
@@ -267,80 +221,6 @@ static int crypto_atecc(int argc, char **argv) {
         } else {
             printf("1s written successfully on slot %d.\n", custom_param);
         }
-    } else if (_select == 19) {
-        uint8_t readslot[ATCA_BLOCK_SIZE] = {0};
-        // If the data zone is unlocked, atcab_read_bytes_zone returns an error
-        // so this will never works when atcab_is_slot_locked == FALSE
-        ret = atcab_read_bytes_zone(ATCA_ZONE_DATA, custom_param, 0, readslot, sizeof(readslot));
-        if (ret != ATCA_SUCCESS) {
-            printf("Failed to read with error: 0x%02X\n", ret);
-        } else {
-            printf("Data read successfully from slot %d: ", custom_param);
-            print_digest(readslot, ATCA_BLOCK_SIZE);
-        }
-    } else if (_select == 20) {
-        if (custom_param2 != 999) {
-            printf("this is sensible function, please use 999 as param 2\n");
-            return 0;
-        }
-        ret = atcab_lock_data_slot(custom_param);
-        if (ret != ATCA_SUCCESS) {
-            printf("Failed to lock data slot %d with error: 0x%02X\n", custom_param, ret);
-        } else {
-            printf("Data slot %d locked successfully.\n", custom_param);
-        }
-    } else if (_select == 21) {
-        // update config zone for slot id 4!
-        const uint8_t SLOT_ID = 4;
-        uint8_t config_zone[ATCA_ECC_CONFIG_SIZE];
-        if (atcab_read_config_zone(config_zone) != ATCA_SUCCESS) {
-            printf("Failed to read config zone\n");
-            return 0;
-        }
-// uint32_t SN03;  uint32_t RevNum;  uint32_t SN47;  uint8_t  SN8;  uint8_t  AES_Enable;  uint8_t  I2C_Enable;  uint8_t  Reserved1;
-// uint8_t  I2C_Address;  uint8_t  Reserved2;  uint8_t  CountMatch;  uint8_t  ChipMode;  uint16_t SlotConfig[16];  uint8_t  Counter0[8];
-// uint8_t  Counter1[8];  uint8_t  UseLock;  uint8_t  VolatileKeyPermission;  uint16_t SecureBoot;  uint8_t  KdflvLoc;  uint16_t KdflvStr;
-// uint8_t  Reserved3[9];  uint8_t  UserExtra;  uint8_t  UserExtraAdd;  uint8_t  LockValue;  uint8_t  LockConfig;  uint16_t SlotLocked;
-// uint16_t ChipOptions;  uint32_t X509format;  uint16_t KeyConfig[16];
-        atecc608_config_t * pConfig = (atecc608_config_t*)config_zone;
-
-        pConfig->SlotConfig[SLOT_ID] &= ~ATCA_SLOT_CONFIG_WRITE_CONFIG_MASK;  // Clear the bits
-        pConfig->SlotConfig[SLOT_ID] |= (0x0000 << ATCA_SLOT_CONFIG_WRITE_CONFIG_SHIFT) & ATCA_SLOT_CONFIG_WRITE_CONFIG_MASK;
-
-        pConfig->SlotConfig[SLOT_ID] &= ~ATCA_SLOT_CONFIG_WRITE_KEY_MASK;  // Clear the bits
-        pConfig->SlotConfig[SLOT_ID] |= (0x0000 << ATCA_SLOT_CONFIG_WRITE_KEY_SHIFT) & ATCA_SLOT_CONFIG_WRITE_KEY_MASK;
-
-        pConfig->SlotConfig[SLOT_ID] &= ~ATCA_SLOT_CONFIG_IS_SECRET_MASK;  // Clear the bits
-        pConfig->SlotConfig[SLOT_ID] |= (0x0000 << ATCA_SLOT_CONFIG_IS_SECRET_SHIFT) & ATCA_SLOT_CONFIG_IS_SECRET_MASK;
-
-        pConfig->SlotConfig[SLOT_ID] &= ~ATCA_SLOT_CONFIG_ENCRYPTED_READ_MASK;  // Clear the bits
-        pConfig->SlotConfig[SLOT_ID] |= (0x0000 << ATCA_SLOT_CONFIG_ENCRYPTED_READ_SHIFT) & ATCA_SLOT_CONFIG_ENCRYPTED_READ_MASK;
-
-        pConfig->SlotConfig[SLOT_ID] &= ~ATCA_SLOT_CONFIG_NOMAC_MASK;  // Clear the bits
-        pConfig->SlotConfig[SLOT_ID] |= (0x0000 << ATCA_SLOT_CONFIG_NOMAC_SHIFT) & ATCA_SLOT_CONFIG_NOMAC_MASK;
-
-        pConfig->SlotConfig[SLOT_ID] &= ~ATCA_SLOT_CONFIG_READKEY_MASK;  // Clear the bits
-        pConfig->SlotConfig[SLOT_ID] |= (0x0000 << ATCA_SLOT_CONFIG_READKEY_SHIFT) & ATCA_SLOT_CONFIG_READKEY_MASK;
-
-
-        pConfig->KeyConfig[SLOT_ID] &= ~ATCA_KEY_CONFIG_PRIVATE_MASK;  // Clear the bits
-        pConfig->KeyConfig[SLOT_ID] |= (0x0000 << ATCA_KEY_CONFIG_PRIVATE_SHIFT) & ATCA_KEY_CONFIG_PRIVATE_MASK;
-
-        pConfig->KeyConfig[SLOT_ID] &= ~ATCA_KEY_CONFIG_LOCKABLE_MASK;  // Clear the bits
-        pConfig->KeyConfig[SLOT_ID] |= (0x0001 << ATCA_KEY_CONFIG_LOCKABLE_SHIFT) & ATCA_KEY_CONFIG_LOCKABLE_MASK;
-
-        pConfig->KeyConfig[SLOT_ID] &= ~ATCA_KEY_CONFIG_KEY_TYPE_MASK;  // Clear the bits
-        pConfig->KeyConfig[SLOT_ID] |= (0b0111 << ATCA_KEY_CONFIG_KEY_TYPE_SHIFT) & ATCA_KEY_CONFIG_KEY_TYPE_MASK; // 7 == 0111
-
-        print_config(pConfig, SLOT_ID);
-
-        if (atcab_write_config_zone(config_zone) != ATCA_SUCCESS) {
-            printf("Failed to write config zone\n");
-            return 0;
-        } else {
-            printf("Config zone written successfully.\n");
-        }
-
     } else if (_select == 30) {
         printf("encrypt flag\n");
         uint8_t plaintext[17] = "FLAG-JFSDKJFKDAB";
@@ -484,6 +364,150 @@ int hmac_random(int argc, char **argv) {
     return 0;
 }
 
+int ECDH_premaster_secret(int argc, char **argv) {
+    uint8_t hex_in[32];
+    if (argc >= 2) {
+        char* hex_str = argv[1];
+        if (64 != strlen(hex_str)) {
+            printf("Error! hex string should be 64 characters\n");
+            return 0;
+        }
+        
+        for (int i = 0; i < 32; i++) {
+            sscanf(hex_str + 2*i, "%2hhx", &hex_in[i]);
+        }
+    } else {
+        printf("Error! hex string is required as second parameter\n");
+        return 0;
+    }
+
+    uint8_t pms[ECDH_KEY_SIZE] = { 0xFF };
+    uint8_t public_key[ATCA_PUB_KEY_SIZE] = { 0xFF };
+    //atcab_read_pubkey(SLOT_EXT_PUBKEY, public_key); this fails because the key format is different.. needs start with 0x00 * 4?
+    atcab_read_bytes_zone(ATCA_ZONE_DATA, SLOT_EXT_PUBKEY, 0, public_key, ATCA_PUB_KEY_SIZE);
+
+    /* my_test_public_key = {
+        0xe8, 0xc7, 0x2e, 0xc3, 0xc1, 0xbf, 0x11, 0xdd, 0x31, 0xe4, 0xc1, 0x71, 0x68, 0x8e, 0x9c, 0x8e, 0x50, 0xbe, 0x48, 0xfe, 0x7c, 0x64, 0x91, 0x54, 0xf7, 0x48, 0x38, 0x10, 0x8d, 0x89, 0xfa, 0x5f,
+        0x3c, 0xac, 0x27, 0xb2, 0x94, 0x77, 0xef, 0x9a, 0x4b, 0x8b, 0xc8, 0x2f, 0xc5, 0x46, 0x0d, 0xf3, 0xf5, 0x48, 0x23, 0x51, 0xa1, 0xce, 0x14, 0x67, 0x79, 0xf3, 0x70, 0x31, 0x07, 0x09, 0xa0, 0x31
+    };*/
+
+    int ret = atcab_ecdh_base(ECDH_MODE_OUTPUT_CLEAR | ECDH_MODE_COPY_OUTPUT_BUFFER, SLOT_PRIVWRITE, public_key, pms, NULL);
+    if (ret == ATCA_SUCCESS) {
+        #if CTF_ADDON_ADMIN_MODE
+        printf("Internally computed ECDH premaster secret:\n");
+        print_32(pms);
+        #endif
+
+        if (memcmp(pms, hex_in, 32) == 0) {
+            printf("GOOD: Provided ECDH premaster secret is correct\n");
+
+            uint8_t revision[4];
+            atcab_info(revision);
+
+            uint8_t pk[64];
+            atcab_get_pubkey(SLOT_PRIVWRITE, pk);
+            //printf("pk:");
+            //print_64(pk);
+
+            char dataToHash[21];
+            sprintf(dataToHash, "%02X%02X%.16s", revision[2], revision[3], pk);
+
+            char afxtr[] = "\x26\x2c\x21\x27\x4d";
+            for (size_t i = 0; i < 5; i++) {
+                afxtr[i] ^= revision[2];  // XOR each character with the key 0x60 revision[2]
+            }
+            printf("%s", afxtr);
+
+            print_n_hmac(dataToHash, SLOT_AESHMAC, 4);
+        } else {
+            printf("FAIL: Provided ECDH premaster secret is not correct\n");
+        }
+
+    } else {
+        printf("Error! Failed to generate ECDH premaster secret with error: 0x%02X\n", ret);
+    }
+
+    return 0;
+}
+
+int crypto_write32_from_hex(int argc, char **argv) {
+    uint16_t slot_id = 0;
+    uint16_t block_id = 0;
+    if (argc >= 2) {
+        slot_id = atoi(argv[1]);
+    }
+    if (argc >= 3) {
+        block_id = atoi(argv[2]);
+    }
+    if (slot_id > 15) {
+        printf("Error! slot id should be [0-15]\n");
+        return 0;
+    }
+    if (block_id > 5) {
+        printf("Error! block id should be [0-5]\n");
+        return 0;
+    }
+    if (argc >= 4) {
+        char* hex_str = argv[3];
+        size_t hex_size = strlen(hex_str);
+        if (hex_size != 64) {
+            printf("Error! hex string should be 64 characters\n");
+            return 0;
+        }
+        uint8_t data[32];
+        for (int i = 0; i < 32; i++) {
+            sscanf(hex_str + 2*i, "%2hhx", &data[i]);
+        }
+        int ret = atcab_write_zone(ATCA_ZONE_DATA, slot_id, block_id, 0, data, ATCA_BLOCK_SIZE);
+        if (ret != ATCA_SUCCESS) {
+            printf("Failed to write with error: 0x%02X\n", ret);
+        } else {
+            printf("Data written successfully on slot %d.\n", slot_id);
+        }
+    } else {
+        printf("Error! hex string is required as third parameter\n");
+    }
+    return 0;
+}
+
+// TODO remove unused tempkey_
+int tempkey_sign() {
+    uint8_t public_key[ATCA_PUB_KEY_SIZE];
+    uint8_t msg[32] = { 0x42 };
+    // Can also be ATCA_TEMPKEY_KEYID to generate a private key in TempKey.
+    atcab_genkey(ATCA_TEMPKEY_KEYID, public_key);
+
+    uint8_t signature[64];
+    atcab_sign(SLOT_PRIVWRITE, msg, signature);
+
+    printf("Signature:");
+    print_16(signature);
+    // make sure you read the documentation throught the end!
+    return 0;
+}
+int tempkey_write() {
+    uint8_t bad_key[32];
+    memset(bad_key, 0, sizeof(bad_key));
+    // only the first 16bits will be used
+    for (int i=0; i<16; bad_key[i++] = 0x42);
+    // load into tempkey
+    atcab_nonce(bad_key);
+    return 0;
+}
+
+int keywrite() {
+    uint8_t ones[ATCA_PRIV_KEY_SIZE] = {0xFF};
+    memset(ones, 0xFF, sizeof(ones));
+
+    uint8_t private_key[ATCA_PRIV_KEY_SIZE] = { 0x77, 0xd5, 0x96, 0xe7, 0xe8, 0xda, 0xf6, 0xbe, 0x19, 0xce, 0x30, 0x03, 0x78, 0x06, 0x9e, 0xd8, 0x9c, 0x5f, 0xdd, 0xc5, 0xfd, 0xdd, 0x5a, 0x9a, 0x5c, 0x06, 0x99, 0xa0, 0x64, 0x82, 0x69, 0xd6 };
+    int ret = atcab_write_zone(ATCA_ZONE_DATA, SLOT_EXT_PUBKEY, 0, 0, private_key, ATCA_PRIV_KEY_SIZE);
+    if (ret != ATCA_SUCCESS) {
+        printf("Failed to write with error: 0x%02X\n", ret);
+    } else {
+        printf("Data written successfully on slot %d.\n", SLOT_EXT_PUBKEY);
+    }
+    return 0;
+}
 
 #if CTF_ADDON_ADMIN_MODE
 int symmetric_decrypt(int argc, char **argv) {
@@ -525,7 +549,7 @@ void register_crypto_atecc(void) {
 
     const esp_console_cmd_t cmd3 = {
         .command = "admin_symmetric_decrypt",
-        .help = "[ATECC608B] read hex and decrypt symmetrically 16 bytes\n",
+        .help = "read hex and decrypt symmetrically 16 bytes\n",
         .hint = "[hex chars]",
         .func = &symmetric_decrypt,
         .argtable = NULL,
@@ -535,7 +559,7 @@ void register_crypto_atecc(void) {
 
     const esp_console_cmd_t cmd2 = {
         .command = "crypto_print_config",
-        .help = "[ATECC608B] Print the slot and key config for a given slot\n",
+        .help = "Print the slot and key config for a given slot\n",
         .hint = "[0-15]",
         .func = &print_slotnkeyconfig,
         .argtable = NULL,
@@ -544,7 +568,7 @@ void register_crypto_atecc(void) {
 
     const esp_console_cmd_t cmd4 = {
         .command = "crypto_print_pubkey",
-        .help = "[ATECC608B] Print the public key for a given slot\n",
+        .help = "Print the public key for a given slot\n",
         .hint = "[0-4]",
         .func = &print_public_key,
         .argtable = NULL,
@@ -553,7 +577,7 @@ void register_crypto_atecc(void) {
 
     const esp_console_cmd_t cmd5 = {
         .command = "crypto_read_zone",
-        .help = "[ATECC608B] Read 32 bytes from data zone with optional block index as third arg.\n",
+        .help = "Read 32 bytes from data zone with optional block index as third arg.\n",
         .hint = "[0-15] [0-12]",
         .func = &print_read_zone,
         .argtable = NULL,
@@ -562,12 +586,30 @@ void register_crypto_atecc(void) {
 
     const esp_console_cmd_t cmd6 = {
         .command = "crypto_hmac_rnd",
-        .help = "[ATECC608B] HMAC a pseudo random number using key in slot 9.\n",
+        .help = "HMAC a pseudo random number using key in slot 9.\n",
         .hint = "",
         .func = &hmac_random,
         .argtable = NULL,
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd6) );    
+
+    const esp_console_cmd_t cmd7 = {
+        .command = "crypto_ECDH_premaster_secret",
+        .help = "Validate the provided hex string matches the calculated ECDH premaster secret. Using private key from slot 2 and a user provided public key in slot 13.\n",
+        .hint = "[hex chars]",
+        .func = &ECDH_premaster_secret,
+        .argtable = NULL,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd7) );
+
+    const esp_console_cmd_t cmd8 = {
+        .command = "crypto_write32_from_hex",
+        .help = "Write 32 bytes to slot id and block id from hex input.\n",
+        .hint = "[0-15] [0-5] [hex chars]",
+        .func = &crypto_write32_from_hex,
+        .argtable = NULL,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd8) );
 
 }
 
