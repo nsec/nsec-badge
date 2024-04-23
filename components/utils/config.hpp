@@ -97,9 +97,9 @@ constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 1000;
 
 namespace nsec::config::logging
 {
-constexpr auto uart_interface_level = nsec::logging::logger::severity::INFO;
-constexpr auto network_handler_level = nsec::logging::logger::severity::INFO;
-constexpr auto button_watcher_level = nsec::logging::logger::severity::INFO;
+constexpr auto uart_interface_level = nsec::logging::logger::severity::ERROR;
+constexpr auto network_handler_level = nsec::logging::logger::severity::ERROR;
+constexpr auto button_watcher_level = nsec::logging::logger::severity::ERROR;
 } // namespace nsec::config::logging
 
 namespace nsec::config::persistence
