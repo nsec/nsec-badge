@@ -60,6 +60,75 @@ int test_hmac_slot(int slotid) {
     }
     return 1;
 }
+
+int generate_bad_flag() {
+    uint8_t bad_nonce[32];
+    memset(bad_nonce, 0x42, sizeof(bad_nonce));
+    atcab_nonce(bad_nonce);
+    printf("bad nonce value: \n");
+    print_bin2hex(bad_nonce, 32);
+
+    printf("value to write to data slot #8 block #0: \n");
+    uint8_t data[32] = { 0x00, 0x42, 0x65, 0x20, 0x73, 0x74, 0x72, 0x6f, 0x6e, 0x67, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x72, 0x65, 0x61, 0x64, 0x20, 0x64, 0x61, 0x74, 0x61, 0x73, 0x68, 0x65, 0x65, 0x74, 0x73, 0x20, 0x61 };
+    print_bin2hex(data, 32);
+    int ret = atcab_write_zone(ATCA_ZONE_DATA, 8, 0, 0, data, ATCA_BLOCK_SIZE);
+    if (ret != ATCA_SUCCESS) {
+        printf("Failed to write with error: 0x%02X\n", ret);
+        return 0;
+    } else {
+        printf("Data written successfully on slot %d block %d.\n", 8, 0);
+    }
+    
+
+    uint8_t data2[32] = { 0x6e, 0x64, 0x20, 0x63, 0x6f, 0x64, 0x65, 0x2e, 0x20, 0x20, 0x54, 0x68, 0x69, 0x6e, 0x6b, 0x20, 0x61, 0x62, 0x6f, 0x75, 0x74, 0x20, 0x68, 0x6f, 0x77, 0x20, 0x54, 0x65, 0x6d, 0x70, 0x4b, 0x65 };
+    ret = atcab_write_zone(ATCA_ZONE_DATA, 8, 1, 0, data2, ATCA_BLOCK_SIZE);
+    if (ret != ATCA_SUCCESS) {
+        printf("Failed to write with error: 0x%02X\n", ret);
+        return 0;
+    } else {
+        printf("Data written successfully on slot %d block %d.\n", 8, 1);
+    }
+
+    uint8_t data3[32] = { 0x79, 0x20, 0x77, 0x61, 0x73, 0x20, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x20, 0x66, 0x6f, 0x72, 0x20, 0x63, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x5f, 0x62, 0x61, 0x64, 0x2e, 0x00, 0x00, 0x00 };
+    ret = atcab_write_zone(ATCA_ZONE_DATA, 8, 2, 0, data3, ATCA_BLOCK_SIZE);
+    if (ret != ATCA_SUCCESS) {
+        printf("Failed to write with error: 0x%02X\n", ret);
+        return 0;
+    } else {
+        printf("Data written successfully on slot %d block %d.\n", 8, 2);
+    }
+
+    // #define GENDIG_ZONE_DATA     Use KeyID to specify a slot in the Data zone or a transport key in the hardware array.
+    ret = atcab_gendig(GENDIG_ZONE_DATA, 8, NULL, 0);
+    if (ret != ATCA_SUCCESS) {
+        printf("Failed to atcab_gendig with error: 0x%02X\n", ret);
+        return 0;
+    } else {
+        printf("atcab_gendig successful on slot %d.\n", 8);
+    }
+
+    /* created TempKey is as follows:
+        32 bytes Slot<KeyID> 0xff*32
+        1 byte Opcode (GenDig: 0x15)
+        1 byte Param1 (GENDIG_ZONE_DATA: 0x02)
+        2 bytes Param2 (keyid: 0x08)
+        1 byte SN<8> serial_number[8]
+        2 bytes SN<0:1> serial_number[0] serial_number[1]
+        25 bytes Zeros 0x0 * 25
+        32 bytes TempKey.value 0x42*32
+        python: bytes([0xff]*32 + [0x15, 0x02, 0x08, 0x00, 0xee, 0x01, 0x23] + [0x00]*25 + [0x42]*32)
+        The serial number for each device is unique and stored in bytes [0:3, 8:12].
+        Bytes [0:1] are 0x01 0x23 and byte [8] is 0x01. All other bytes are unique.
+    */
+    uint8_t plaintext[17] = "FLAG-SAQR9KRHN4Z";
+    uint8_t ciphertext[16];
+    atcab_aes_encrypt(ATCA_TEMPKEY_KEYID, 0, plaintext, ciphertext);
+    printf("encrypted flag cipher: ");
+    print_bin2hex(ciphertext, 16);
+
+    return 1;
+}
+
 static int crypto_atecc(int argc, char **argv) {
     uint16_t _select = 1;
 
@@ -197,6 +266,13 @@ static int crypto_atecc(int argc, char **argv) {
         } else {
             printf("Data written successfully on slot %d block %d.\n", 8, 8);
         }
+
+        if (generate_bad_flag() == 0) {
+            printf("Error: something went wrong with generate_bad_flag\n");
+            return 0;
+        }
+
+        printf("Successfully completed crypto loadings!\n");
 
     } else if (_select == 10) {
         uint8_t public_key[ATCA_PUB_KEY_SIZE];
@@ -494,44 +570,29 @@ int crypto_write32_from_hex(int argc, char **argv) {
     return 0;
 }
 
-// TODO remove unused tempkey_
-int tempkey_sign() {
-    uint8_t public_key[ATCA_PUB_KEY_SIZE];
-    uint8_t msg[32] = { 0x42 };
-    // Can also be ATCA_TEMPKEY_KEYID to generate a private key in TempKey.
-    atcab_genkey(ATCA_TEMPKEY_KEYID, public_key);
+int crypto_bad_key(int argc, char **argv) {
 
-    uint8_t signature[64];
-    atcab_sign(SLOT_PRIVWRITE, msg, signature);
+    printf(
+        "The flag was encrypted with the following order of ATECC608B commands:\n"
+        "  1. Nonce: A bad nonce was generated to \"initialize TempKey to a specified value\".\n"
+        "  2. Write: Data slot #8 block #0 was written with a certain value.\n"
+        "  3. GenDig: Data slot #8 was used as GENDIG_ZONE_DATA to \"performs a SHA256 hash on the source data indicated by zone with the contents of TempKey\".\n"
+        "  4. AES: The encrypted flag cipher was generated with the AES algorithm using the value of TempKey after the execution of the previous steps.\n"
+    );
+    uint8_t bad_nonce[32];
+    memset(bad_nonce, 0x42, sizeof(bad_nonce));
+    printf("bad nonce value used: \n");
+    print_bin2hex(bad_nonce, 32);
 
-    printf("Signature:");
-    print_16(signature);
-    // make sure you read the documentation throught the end!
+    printf("value that was written to data slot #8 block #0: \n");
+    uint8_t data[32] = { 0x00, 0x42, 0x65, 0x20, 0x73, 0x74, 0x72, 0x6f, 0x6e, 0x67, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x72, 0x65, 0x61, 0x64, 0x20, 0x64, 0x61, 0x74, 0x61, 0x73, 0x68, 0x65, 0x65, 0x74, 0x73, 0x20, 0x61 };
+    print_bin2hex(data, 32);
+
+    printf("resulting encrypted flag cipher: 40878CBD30C22E590EFB1C9448A3B3AA\nCan you reproduce and decrypt the cipher?");
+
     return 0;
 }
-int tempkey_write() {
-    uint8_t bad_key[32];
-    memset(bad_key, 0, sizeof(bad_key));
-    // only the first 16bits will be used
-    for (int i=0; i<16; bad_key[i++] = 0x42);
-    // load into tempkey
-    atcab_nonce(bad_key);
-    return 0;
-}
 
-int keywrite() {
-    uint8_t ones[ATCA_PRIV_KEY_SIZE] = {0xFF};
-    memset(ones, 0xFF, sizeof(ones));
-
-    uint8_t private_key[ATCA_PRIV_KEY_SIZE] = { 0x77, 0xd5, 0x96, 0xe7, 0xe8, 0xda, 0xf6, 0xbe, 0x19, 0xce, 0x30, 0x03, 0x78, 0x06, 0x9e, 0xd8, 0x9c, 0x5f, 0xdd, 0xc5, 0xfd, 0xdd, 0x5a, 0x9a, 0x5c, 0x06, 0x99, 0xa0, 0x64, 0x82, 0x69, 0xd6 };
-    int ret = atcab_write_zone(ATCA_ZONE_DATA, SLOT_EXT_PUBKEY, 0, 0, private_key, ATCA_PRIV_KEY_SIZE);
-    if (ret != ATCA_SUCCESS) {
-        printf("Failed to write with error: 0x%02X\n", ret);
-    } else {
-        printf("Data written successfully on slot %d.\n", SLOT_EXT_PUBKEY);
-    }
-    return 0;
-}
 
 #if CTF_ADDON_ADMIN_MODE
 int symmetric_decrypt(int argc, char **argv) {
@@ -634,6 +695,15 @@ void register_crypto_atecc(void) {
         .argtable = NULL,
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd8) );
+
+    const esp_console_cmd_t cmd9 = {
+        .command = "crypto_bad",
+        .help = "Print documentation of bad nonce initialized with 0x42s.\n",
+        .hint = "",
+        .func = &crypto_bad_key,
+        .argtable = NULL,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd9) );
 
 }
 
