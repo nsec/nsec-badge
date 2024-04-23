@@ -14,19 +14,6 @@
 #include <array>
 #include <cstring>
 
-/* Local debugging options. */
-// #define DEBUG_BADGE_BUTTON_CALLBACK
-// #define DEBUG_SWITCH_LEDS_PATTERN
-
-#if defined(DEBUG_BADGE_BUTTON_CALLBACK) || defined(DEBUG_SWITCH_LEDS_PATTERN)
-#include <esp_log.h>
-
-const char *badge_button_label_table[] = {"UP",    "DOWN", "LEFT",
-                                          "RIGHT", "OK",   "CANCEL"};
-
-const char *badge_button_event_table[] = {"SINGLE_CLICK", "LONG_PRESS"};
-#endif
-
 namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
 namespace nb = nsec::button;
@@ -128,6 +115,60 @@ struct fmt::formatter<nr::badge::pairing_completed_animator::animation_state>
     }
 };
 
+// button id formatter
+template <> struct fmt::formatter<nb::id> : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(nb::id button_id, FormatContext &ctx)
+    {
+        string_view name = "unknown";
+        switch (button_id) {
+        case nb::id::UP:
+            name = "UP";
+            break;
+        case nb::id::DOWN:
+            name = "DOWN";
+            break;
+        case nb::id::LEFT:
+            name = "LEFT";
+            break;
+        case nb::id::RIGHT:
+            name = "RIGHT";
+            break;
+        case nb::id::OK:
+            name = "OK";
+            break;
+        case nb::id::CANCEL:
+            name = "CANCEL";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
+
+// button event formatter
+template <> struct fmt::formatter<nb::event> : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(nb::event button_event, FormatContext &ctx)
+    {
+        string_view name = "unknown";
+        switch (button_event) {
+        case nb::event::SINGLE_CLICK:
+            name = "SINGLE_CLICK";
+            break;
+        case nb::event::LONG_PRESS:
+            name = "LONG_PRESS";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
+
 namespace
 {
 constexpr uint16_t config_version_magic = 0xBAD8;
@@ -206,12 +247,7 @@ void nr::badge::on_button_event(nsec::button::id button,
         return;
     }
 
-#ifdef DEBUG_BADGE_BUTTON_CALLBACK
-    /* Log button event on serial console. */
-    ESP_LOGI("BADGE BUTTON EVENT", "%s: %s\n",
-             badge_button_label_table[(int)button],
-             badge_button_event_table[(int)event]);
-#endif
+    _logger.info("Button event: button={}, event={}", button, event);
 
     /*
      * After a focus change, don't spam the newly focused screen with
@@ -841,13 +877,20 @@ void nr::badge::_cycle_selected_animation(
     nr::badge::cycle_animation_direction direction) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
-    const auto selected_animation = std::clamp(
+    const auto original_animation_id = _selected_animation;
+
+    const auto new_selected_animation = std::clamp(
         _selected_animation + int8_t(direction), 0, _social_level - 1);
 
-    _set_selected_animation(selected_animation, true);
+    _logger.info("Cycling selected animation: direction={}, "
+                 "original_animation_id={}, new_animation_id={}",
+                 direction, original_animation_id, new_selected_animation);
+
+    _set_selected_animation(new_selected_animation, true);
 
     // Set the LEDs pattern.
-    nsec::g::the_badge._strip_animator.set_idle_animation(selected_animation);
+    nsec::g::the_badge._strip_animator.set_idle_animation(
+        new_selected_animation);
 }
 
 void nr::badge::_update_leds(nsec::button::id id,
@@ -874,19 +917,9 @@ void nr::badge::_update_leds(nsec::button::id id,
 void nr::badge::_scroll_leds(nsec::button::id id,
                              nsec::button::event event) noexcept
 {
-#ifdef DEBUG_SWITCH_LEDS_PATTERN
-    uint8_t previous_level = _selected_animation;
-#endif
-
     // Process the "LEFT"/"RIGHT" "SINGLE_CLICK" event.
     nsec::g::the_badge._cycle_selected_animation(
         id == nsec::button::id::LEFT
             ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
             : nsec::runtime::badge::cycle_animation_direction::NEXT);
-
-#ifdef DEBUG_SWITCH_LEDS_PATTERN
-    ESP_LOGI("SCROLL LEDS", "Level %u - Previous/Current %u/%u - %s\n",
-             nsec::g::the_badge.level(), previous_level, _selected_animation,
-             badge_button_label_table[(int)id]);
-#endif
 }
