@@ -187,6 +187,17 @@ static int crypto_atecc(int argc, char **argv) {
             return 0;
         }
 
+        printf("All validations passed!, adding keys...\n");
+
+        uint8_t data[32] = { 0x46, 0x4c, 0x41, 0x47, 0x2d, 0x51, 0x4b, 0x41, 0x4e, 0x44, 0x43, 0x4e, 0x44, 0x32, 0x58, 0x54 };
+        int ret = atcab_write_zone(ATCA_ZONE_DATA, 8, 8, 0, data, ATCA_BLOCK_SIZE);
+        if (ret != ATCA_SUCCESS) {
+            printf("Failed to write with error: 0x%02X\n", ret);
+            return 0;
+        } else {
+            printf("Data written successfully on slot %d block %d.\n", 8, 8);
+        }
+
     } else if (_select == 10) {
         uint8_t public_key[ATCA_PUB_KEY_SIZE];
         if (custom_param == 0)
@@ -336,8 +347,21 @@ int print_read_zone(int argc, char **argv) {
         printf("Error! slot id should be [0-15]\n");
         return 0;
     }
+    if (slot_id == 8 and block_id == 8) {
+        uint8_t readslot[ATCA_BLOCK_SIZE] = {0};
+        int ret = atcab_read_zone(ATCA_ZONE_DATA, 8, 5, 0, readslot, sizeof(readslot));
+        if (ret != ATCA_SUCCESS) {
+            printf("Error! Failed to read with error: 0x%02X\n", ret);
+        } else {
+            if (readslot[0] == 0x42) {
+                printf("Good, slot 5 starts with 0x42.\n");
+            } else {
+                printf("I'll only read block 8 in slot 8 if block 5 in slot 8 starts with 0x42! Exiting...\n");
+                return 0;
+            }
+        }
+    }
     uint8_t readslot[ATCA_BLOCK_SIZE] = {0};
-    //int ret = atcab_read_bytes_zone(ATCA_ZONE_DATA, slot_id, 0, readslot, sizeof(readslot));
     int ret = atcab_read_zone(ATCA_ZONE_DATA, slot_id, block_id, 0, readslot, sizeof(readslot));
     if (ret != ATCA_SUCCESS) {
         printf("Error! Failed to read with error: 0x%02X\n", ret);
@@ -462,7 +486,7 @@ int crypto_write32_from_hex(int argc, char **argv) {
         if (ret != ATCA_SUCCESS) {
             printf("Failed to write with error: 0x%02X\n", ret);
         } else {
-            printf("Data written successfully on slot %d.\n", slot_id);
+            printf("Data written successfully on slot %d block %d.\n", slot_id, block_id);
         }
     } else {
         printf("Error! hex string is required as third parameter\n");
@@ -595,7 +619,7 @@ void register_crypto_atecc(void) {
 
     const esp_console_cmd_t cmd7 = {
         .command = "crypto_ECDH_premaster_secret",
-        .help = "Validate the provided hex string matches the calculated ECDH premaster secret. Using private key from slot 2 and a user provided public key in slot 13.\n",
+        .help = "Validate the provided hex string matches the calculated premaster secret. Using private key from slot 2 and user provided public key in slot 13.\n",
         .hint = "[hex chars]",
         .func = &ECDH_premaster_secret,
         .argtable = NULL,

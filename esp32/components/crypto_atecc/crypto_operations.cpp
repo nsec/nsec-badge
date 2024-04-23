@@ -98,32 +98,32 @@ void print_config(atecc608_config_t * pConfig, uint16_t custom_param) {
     uint16_t write_config = pConfig->SlotConfig[custom_param];
     write_config &= ATCA_SLOT_CONFIG_WRITE_CONFIG_MASK;
     write_config >>= ATCA_SLOT_CONFIG_WRITE_CONFIG_SHIFT;
-    printf("\tWriteConfig: 0x%02x\n", write_config);
+    printf("  WriteConfig:\t0x%02x\n", write_config);
 
     uint16_t write_key_id = pConfig->SlotConfig[custom_param];
     write_key_id &= ATCA_SLOT_CONFIG_WRITE_KEY_MASK;
     write_key_id >>= ATCA_SLOT_CONFIG_WRITE_KEY_SHIFT;
-    printf("\tWriteKey: 0x%02x\n", write_key_id);
+    printf("  WriteKey:\t0x%02x\n", write_key_id);
 
     uint16_t is_secret = pConfig->SlotConfig[custom_param];
     is_secret &= ATCA_SLOT_CONFIG_IS_SECRET_MASK;
     is_secret >>= ATCA_SLOT_CONFIG_IS_SECRET_SHIFT;
-    printf("\tIsSecret: 0x%02x\n", is_secret);
+    printf("  IsSecret:\t0x%02x\n", is_secret);
 
     // uint16_t encrypt_read = pConfig->SlotConfig[custom_param];
     // encrypt_read &= ATCA_SLOT_CONFIG_ENCRYPTED_READ_MASK;
     // encrypt_read >>= ATCA_SLOT_CONFIG_ENCRYPTED_READ_SHIFT;
-    // printf("\tencrypt_read: 0x%02x\n", encrypt_read);
+    // printf("  encrypt_read:\t0x%02x\n", encrypt_read);
 
     uint16_t no_mac = pConfig->SlotConfig[custom_param];
     no_mac &= ATCA_SLOT_CONFIG_NOMAC_MASK;
     no_mac >>= ATCA_SLOT_CONFIG_NOMAC_SHIFT;
-    printf("\tno_mac: 0x%02x\n", no_mac);
+    printf("  no_mac:\t0x%02x\n", no_mac);
 
     uint16_t readkey = pConfig->SlotConfig[custom_param];
     readkey &= ATCA_SLOT_CONFIG_READKEY_MASK;
     readkey >>= ATCA_SLOT_CONFIG_READKEY_SHIFT;
-    printf("\treadkey: 0x%02x\n", readkey);
+    printf("  readkey:\t0x%02x\n", readkey);
 
 /* Key Config */
 // #define ATCA_KEY_CONFIG_OFFSET(x)               (96UL + (x) * 2)
@@ -155,32 +155,32 @@ void print_config(atecc608_config_t * pConfig, uint16_t custom_param) {
     uint16_t cfgprivate = pConfig->KeyConfig[custom_param];
     cfgprivate &= ATCA_KEY_CONFIG_PRIVATE_MASK;
     cfgprivate >>= ATCA_KEY_CONFIG_PRIVATE_SHIFT;
-    printf("\tprivate: 0x%02x\n", cfgprivate);
+    printf("  private:\t0x%02x\n", cfgprivate);
 
     uint16_t pub_info = pConfig->KeyConfig[custom_param];
     pub_info &= ATCA_KEY_CONFIG_PUB_INFO_MASK;
     pub_info >>= ATCA_KEY_CONFIG_PUB_INFO_SHIFT;
-    printf("\tpub_info: 0x%02x\n", pub_info);
+    printf("  pub_info:\t0x%02x\n", pub_info);
 
     uint16_t key_type = pConfig->KeyConfig[custom_param];
     key_type &= ATCA_KEY_CONFIG_KEY_TYPE_MASK;
     key_type >>= ATCA_KEY_CONFIG_KEY_TYPE_SHIFT;
-    printf("\tkey_type: 0x%02x\n", key_type);
+    printf("  key_type:\t0x%02x\n", key_type);
 
     uint16_t req_auth = pConfig->KeyConfig[custom_param];
     req_auth &= ATCA_KEY_CONFIG_REQ_AUTH_MASK;
     req_auth >>= ATCA_KEY_CONFIG_REQ_AUTH_SHIFT;
-    printf("\treq_auth: 0x%02x\n", req_auth);
+    printf("  req_auth:\t0x%02x\n", req_auth);
 
     uint16_t req_random = pConfig->KeyConfig[custom_param];
     req_random &= ATCA_KEY_CONFIG_REQ_RANDOM_MASK;
     req_random >>= ATCA_KEY_CONFIG_REQ_RANDOM_SHIFT;
-    printf("\treq_random: 0x%02x\n", req_random);
+    printf("  req_random:\t0x%02x\n", req_random);
 
     uint16_t lockable = pConfig->KeyConfig[custom_param];
     lockable &= ATCA_KEY_CONFIG_LOCKABLE_MASK;
     lockable >>= ATCA_KEY_CONFIG_LOCKABLE_SHIFT;
-    printf("\tlockable: 0x%02x\n", lockable);
+    printf("  lockable:\t0x%02x\n", lockable);
 
     bool is_locked = false;
     atcab_is_slot_locked(custom_param, &is_locked);
