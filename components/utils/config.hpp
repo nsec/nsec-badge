@@ -92,7 +92,7 @@ constexpr nsec::scheduling::relative_time_ms
 
 namespace nsec::config::badge
 {
-constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 200;
+constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 1000;
 } // namespace nsec::config::badge
 
 namespace nsec::config::logging
