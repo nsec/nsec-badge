@@ -47,13 +47,7 @@ class badge
 
     void apply_score_change(uint8_t new_badges_discovered_count) noexcept;
 
-    void tick(nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
-
-    enum cycle_animation_direction : int8_t { PREVIOUS = -1, NEXT = 1 };
-    void cycle_selected_animation(cycle_animation_direction direction) noexcept;
-    void update_leds(button::id id, button::event event) noexcept;
-    void scroll_leds(button::id id, button::event event) noexcept;
-    void idle_social_level_and_health(uint8_t state) noexcept;
+    void tick(nsec::scheduling::absolute_time_ms current_time_ms);
 
     /*
      * Once the network layer has established a connection, "on pairing end" is
@@ -118,7 +112,7 @@ class badge
         void message_sent(badge &badge) noexcept;
         void reset() noexcept;
 
-        void tick(nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
+        void tick(nsec::scheduling::absolute_time_ms current_time_ms);
 
       private:
         void _animation_state(animation_state) noexcept;
@@ -132,6 +126,13 @@ class badge
     class pairing_completed_animator
     {
       public:
+        enum class animation_state : uint8_t {
+            SHOW_PAIRING_RESULT,
+            SHOW_NEW_LEVEL,
+            SHOW_HEALTH,
+            DONE,
+        };
+
         pairing_completed_animator() : _logger("pairing_completed_animator")
         {
         }
@@ -145,17 +146,12 @@ class badge
         ~pairing_completed_animator() = default;
 
         void start(badge &) noexcept;
-        void reset() noexcept;
+        void reset(badge &) noexcept;
         void tick(badge &,
-                  nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
+                  nsec::scheduling::absolute_time_ms current_time_ms);
 
       private:
-        enum class animation_state : uint8_t {
-            SHOW_PAIRING_COMPLETE_MESSAGE,
-            SHOW_NEW_LEVEL,
-        };
-
-        void _animation_state(animation_state) noexcept;
+        void _animation_state(badge &, animation_state new_state);
         animation_state _animation_state() const noexcept;
 
         animation_state _current_state;
@@ -203,7 +199,7 @@ class badge
     {
       public:
         explicit animation_task();
-        void tick(nsec::scheduling::absolute_time_ms current_time_ms) noexcept;
+        void tick(nsec::scheduling::absolute_time_ms current_time_ms);
 
       private:
         nsec::logging::logger _logger;
@@ -221,6 +217,15 @@ class badge
 
     // Handle new button event
     void on_button_event(button::id button, button::event event) noexcept;
+
+    enum cycle_animation_direction : int8_t { PREVIOUS = -1, NEXT = 1 };
+    void
+    _cycle_selected_animation(cycle_animation_direction direction) noexcept;
+    void _update_leds(button::id id, button::event event) noexcept;
+    void _scroll_leds(button::id id, button::event event) noexcept;
+
+    void _idle_social_level_and_health(uint8_t state) noexcept;
+
     void set_social_level(uint8_t new_level, bool save) noexcept;
 
     // Handle network events
@@ -248,8 +253,6 @@ class badge
     bool _is_expecting_factory_reset : 1;
     // Mask to prevent repeats after a screen transition, one bit per button.
     uint8_t _button_had_non_repeat_event_since_screen_focus_change;
-    uint8_t idle_led_next_state = 0;
-    uint16_t idle_led_processing = 0;
 
     button::watcher _button_watcher;
 

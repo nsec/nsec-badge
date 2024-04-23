@@ -92,7 +92,17 @@ template <class UserTask> class periodic_task
         auto &task = *static_cast<UserTask *>(task_ptr);
 
         while (true) {
-            task.tick(xTaskGetTickCount() * portTICK_PERIOD_MS);
+            try {
+                task.tick(xTaskGetTickCount() * portTICK_PERIOD_MS);
+            } catch (const std::exception &ex) {
+                nsec::logging::logger exception_logger("Task exception handler");
+
+                exception_logger.error("{}", ex.what());
+                vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+                // Die with an unhandled exception.
+                throw ex;
+            }
             vTaskDelay(task._period_ticks);
         }
     }

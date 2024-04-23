@@ -11,33 +11,21 @@
 #include <badge/globals.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cstring>
-#include <esp_log.h>
 
 /* Local debugging options. */
 // #define DEBUG_BADGE_BUTTON_CALLBACK
 // #define DEBUG_SWITCH_LEDS_PATTERN
 
-// Define the diffrent idle health display state.
-#define IDLE_HEALTH_DISPLAY_SOCIAL_LEVEL 0
-#define IDLE_HEALTH_DISPLAY_HEALTH_METER 1
-#define IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN 2
-#define IDLE_HEALTH_DISPLAY_IDLE 3
-
 #if defined(DEBUG_BADGE_BUTTON_CALLBACK) || defined(DEBUG_SWITCH_LEDS_PATTERN)
+#include <esp_log.h>
+
 const char *badge_button_label_table[] = {"UP",    "DOWN", "LEFT",
                                           "RIGHT", "OK",   "CANCEL"};
 
 const char *badge_button_event_table[] = {"SINGLE_CLICK", "LONG_PRESS"};
 #endif
-
-// Mapping of the social level to the health level
-// - The social level range is 0 to 200.
-// - The health range is 1 to 16.
-// - Table field for health mapping is the
-//   "Social Level Upper Boundary".
-const uint8_t health_mapping[] = {1,  1,  3,  6,   11,  17,  25,  34, 44,
-                                  57, 71, 88, 106, 127, 149, 174, 200};
 
 namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
@@ -97,6 +85,40 @@ struct fmt::formatter<nr::badge::network_app_state>
             break;
         case nr::badge::network_app_state::IDLE:
             name = "IDLE";
+            break;
+        default:
+            break;
+        }
+
+        return fmt::formatter<string_view>::format(name, ctx);
+    }
+};
+
+// pairing completed animator animation state formatter
+template <>
+struct fmt::formatter<nr::badge::pairing_completed_animator::animation_state>
+    : fmt::formatter<std::string> {
+    template <typename FormatContext>
+    auto format(
+        nr::badge::pairing_completed_animator::animation_state animation_state,
+        FormatContext &ctx)
+    {
+        string_view name = "unknown";
+        switch (animation_state) {
+        case nr::badge::pairing_completed_animator::animation_state::
+            SHOW_PAIRING_RESULT:
+            name = "SHOW_PAIRING_RESULT";
+            break;
+        case nr::badge::pairing_completed_animator::animation_state::
+            SHOW_NEW_LEVEL:
+            name = "SHOW_NEW_LEVEL";
+            break;
+        case nr::badge::pairing_completed_animator::animation_state::
+            SHOW_HEALTH:
+            name = "SHOW_HEALTH";
+            break;
+        case nr::badge::pairing_completed_animator::animation_state::DONE:
+            name = "DONE";
             break;
         default:
             break;
@@ -212,7 +234,7 @@ void nr::badge::on_button_event(nsec::button::id button,
     }
 
     // Send the received event to the LEDs function.
-    nsec::g::the_badge.update_leds(button, event);
+    nsec::g::the_badge._update_leds(button, event);
 }
 
 void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
@@ -285,7 +307,7 @@ void nr::badge::_set_network_app_state(
 
     _id_exchanger.reset();
     _pairing_animator.reset();
-    _pairing_completed_animator.reset();
+    _pairing_completed_animator.reset(*this);
 
     _current_network_app_state = new_state;
     switch (new_state) {
@@ -536,14 +558,12 @@ nr::badge::animation_task::animation_task()
     periodic_task::start();
 }
 
-void nr::badge::animation_task::tick(
-    ns::absolute_time_ms current_time_ms) noexcept
+void nr::badge::animation_task::tick(ns::absolute_time_ms current_time_ms)
 {
     nsec::g::the_badge.tick(current_time_ms);
 }
 
-void nr::badge::pairing_animator::tick(
-    ns::absolute_time_ms current_time_ms) noexcept
+void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
 {
     switch (_animation_state()) {
     case animation_state::DONE:
@@ -638,7 +658,7 @@ void nr::badge::pairing_animator::new_message(nr::badge &badge,
     }
 }
 
-void nr::badge::tick(ns::absolute_time_ms current_time_ms) noexcept
+void nr::badge::tick(ns::absolute_time_ms current_time_ms)
 {
     switch (_current_network_app_state) {
     case network_app_state::ANIMATE_PAIRING:
@@ -650,72 +670,121 @@ void nr::badge::tick(ns::absolute_time_ms current_time_ms) noexcept
     default:
         break;
     }
-
-    if (idle_led_processing != 0) {
-        // Increment "IDLE" LED processing counter.
-        idle_led_processing--;
-
-        // Verify if counter reach 0.
-        if (idle_led_processing == 0) {
-            nsec::g::the_badge.idle_social_level_and_health(
-                idle_led_next_state);
-        }
-    }
 }
 
 void nr::badge::pairing_completed_animator::start(nr::badge &badge) noexcept
 {
     _logger.info("Starting animation");
 
-    badge._timer.period_ms(100);
-    badge._strip_animator.set_pairing_completed_animation(
-        badge._badges_discovered_last_exchange > 0
-            ? nl::strip_animator::pairing_completed_animation_type::
-                  HAPPY_CLOWN_BARF
-            : nl::strip_animator::pairing_completed_animation_type::
-                  NO_NEW_FRIENDS);
+    badge._timer.period_ms(500);
     memset(current_message, 0, sizeof(current_message));
+    _animation_state(badge, animation_state::SHOW_PAIRING_RESULT);
 }
 
-void nr::badge::pairing_completed_animator::reset() noexcept
+void nr::badge::pairing_completed_animator::reset(nr::badge &badge) noexcept
 {
-    _animation_state(animation_state::SHOW_PAIRING_COMPLETE_MESSAGE);
+    _current_state = animation_state::DONE;
     _state_counter = 0;
 }
 
 void nr::badge::pairing_completed_animator::tick(
-    nr::badge &badge, ns::absolute_time_ms current_time_ms) noexcept
+    nr::badge &badge, ns::absolute_time_ms current_time_ms)
 {
-    _state_counter++;
-    if (_state_counter == 8) {
-        _state_counter = 0;
-        if (_animation_state() ==
-            animation_state::SHOW_PAIRING_COMPLETE_MESSAGE) {
-            _animation_state(animation_state::SHOW_NEW_LEVEL);
-            memset(current_message, 0, sizeof(current_message));
-
-            const auto new_level = _compute_new_social_level(
-                badge._social_level, badge._badges_discovered_last_exchange);
-
-            badge._strip_animator.set_show_level_animation(
-                badge._badges_discovered_last_exchange > 0
-                    ? nl::strip_animator::pairing_completed_animation_type::
-                          HAPPY_CLOWN_BARF
-                    : nl::strip_animator::pairing_completed_animation_type::
-                          NO_NEW_FRIENDS,
-                new_level, false);
-
-        } else {
-            badge.apply_score_change(badge._badges_discovered_last_exchange);
-            badge._set_network_app_state(network_app_state::IDLE);
+    switch (_animation_state()) {
+    case animation_state::SHOW_PAIRING_RESULT: {
+        if (_state_counter < 8) {
+            // Keep on showing the pairing result animation.
+            break;
         }
+
+        std::memset(current_message, 0, sizeof(current_message));
+
+        // Transition to showing the new social level.
+        _animation_state(badge, animation_state::SHOW_NEW_LEVEL);
+        break;
     }
+    case animation_state::SHOW_NEW_LEVEL:
+        if (_state_counter < 8) {
+            // Keep on showing the new level animation.
+            break;
+        }
+
+        // Transition to showing the new health status
+        _animation_state(badge, animation_state::SHOW_HEALTH);
+        break;
+    case animation_state::SHOW_HEALTH:
+        if (_state_counter < 8) {
+            // Keep on showing the current health.
+            break;
+        }
+
+        // Go back to the idle animation state.
+        badge.apply_score_change(badge._badges_discovered_last_exchange);
+        _animation_state(badge, animation_state::DONE);
+        break;
+    case animation_state::DONE:
+        _logger.warn("Animator still active after reaching the DONE state");
+        break;
+    }
+
+    _state_counter++;
 }
 
 void nr::badge::pairing_completed_animator::_animation_state(
-    nr::badge::pairing_completed_animator::animation_state new_state) noexcept
+    nr::badge &badge,
+    nr::badge::pairing_completed_animator::animation_state new_state)
 {
+    _logger.info("Animation state change: current={}, new={}", _current_state,
+                 new_state);
     _current_state = new_state;
+    _state_counter = 0;
+
+    switch (new_state) {
+    case nr::badge::pairing_completed_animator::animation_state::
+        SHOW_PAIRING_RESULT:
+        badge._strip_animator.set_pairing_completed_animation(
+            badge._badges_discovered_last_exchange > 0
+                ? nl::strip_animator::pairing_completed_animation_type::
+                      HAPPY_CLOWN_BARF
+                : nl::strip_animator::pairing_completed_animation_type::
+                      NO_NEW_FRIENDS);
+        break;
+    case nr::badge::pairing_completed_animator::animation_state::
+        SHOW_NEW_LEVEL: {
+        const auto new_level = _compute_new_social_level(
+            badge._social_level, badge._badges_discovered_last_exchange);
+
+        badge._strip_animator.set_show_level_animation(
+            badge._badges_discovered_last_exchange > 0
+                ? nl::strip_animator::pairing_completed_animation_type::
+                      HAPPY_CLOWN_BARF
+                : nl::strip_animator::pairing_completed_animation_type::
+                      NO_NEW_FRIENDS,
+            new_level, false);
+        break;
+    }
+    case nr::badge::pairing_completed_animator::animation_state::SHOW_HEALTH: {
+        // Mapping of the social level to the health level
+        // - The social level range is 0 to 200.
+        // - The health range is 1 to 16.
+        // - Table field for health mapping is the
+        //   "Social Level Upper Boundary".
+        const std::array<std::uint8_t, 16> health_mappings = {
+            1, 3, 6, 11, 17, 25, 34, 44, 57, 71, 88, 106, 127, 149, 174, 200};
+
+        const auto mapping_it =
+            std::upper_bound(health_mappings.begin(), health_mappings.end(),
+                             std::max<std::uint8_t>(badge._social_level, 1));
+        badge._strip_animator.set_health_meter_bar(mapping_it -
+                                                   health_mappings.begin());
+        break;
+    }
+    case nr::badge::pairing_completed_animator::animation_state::DONE:
+        badge._set_network_app_state(network_app_state::IDLE);
+        break;
+    default:
+        break;
+    }
 }
 
 nr::badge::pairing_completed_animator::animation_state
@@ -768,7 +837,7 @@ void nr::badge::_set_selected_animation(uint8_t animation_id,
     }
 }
 
-void nr::badge::cycle_selected_animation(
+void nr::badge::_cycle_selected_animation(
     nr::badge::cycle_animation_direction direction) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
@@ -781,44 +850,36 @@ void nr::badge::cycle_selected_animation(
     nsec::g::the_badge._strip_animator.set_idle_animation(selected_animation);
 }
 
-void nr::badge::update_leds(nsec::button::id id,
-                            nsec::button::event event) noexcept
+void nr::badge::_update_leds(nsec::button::id id,
+                             nsec::button::event event) noexcept
 {
     // Process "SINGLE_CLICK" event.
-    if (event == nsec::button::event::SINGLE_CLICK) {
-        switch (id) {
-        case nsec::button::id::LEFT:
-        case nsec::button::id::RIGHT:
-            // Reset the idle health LEDs process.
-            idle_led_next_state = IDLE_HEALTH_DISPLAY_IDLE;
-            idle_led_processing = 0;
+    if (event != nsec::button::event::SINGLE_CLICK) {
+        return;
+    }
 
-            nsec::g::the_badge.scroll_leds(id, event);
-            break;
-
-        case nsec::button::id::DOWN:
-            nsec::g::the_badge.idle_social_level_and_health(
-                IDLE_HEALTH_DISPLAY_SOCIAL_LEVEL);
-            break;
-
-        default:
-            // Reset the idle health LEDs process.
-            idle_led_next_state = IDLE_HEALTH_DISPLAY_IDLE;
-            idle_led_processing = 0;
-            break;
-        }
+    switch (id) {
+    case nsec::button::id::LEFT:
+    case nsec::button::id::RIGHT:
+        nsec::g::the_badge._scroll_leds(id, event);
+        break;
+    case nsec::button::id::DOWN:
+        // TODO Show health status
+        break;
+    default:
+        break;
     }
 }
 
-void nr::badge::scroll_leds(nsec::button::id id,
-                            nsec::button::event event) noexcept
+void nr::badge::_scroll_leds(nsec::button::id id,
+                             nsec::button::event event) noexcept
 {
 #ifdef DEBUG_SWITCH_LEDS_PATTERN
     uint8_t previous_level = _selected_animation;
 #endif
 
     // Process the "LEFT"/"RIGHT" "SINGLE_CLICK" event.
-    nsec::g::the_badge.cycle_selected_animation(
+    nsec::g::the_badge._cycle_selected_animation(
         id == nsec::button::id::LEFT
             ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
             : nsec::runtime::badge::cycle_animation_direction::NEXT);
@@ -828,73 +889,4 @@ void nr::badge::scroll_leds(nsec::button::id id,
              nsec::g::the_badge.level(), previous_level, _selected_animation,
              badge_button_label_table[(int)id]);
 #endif
-}
-
-void nr::badge::idle_social_level_and_health(uint8_t state) noexcept
-{
-    uint8_t selected_health = 1;
-    uint8_t current_level = nsec::g::the_badge.level();
-
-    // Process the different state.
-    switch (state) {
-    case IDLE_HEALTH_DISPLAY_SOCIAL_LEVEL:
-        // Display the social level on the LEDs.
-        nsec::g::the_badge._strip_animator.set_show_level_animation(
-            nsec::led::strip_animator::pairing_completed_animation_type::
-                IDLE_SOCIAL_LEVEL,
-            current_level, false);
-
-        // Setup the next state & the delay before the next state (3 seconds)
-        idle_led_next_state = IDLE_HEALTH_DISPLAY_HEALTH_METER;
-        idle_led_processing = 16;
-
-#ifdef DEBUG_SWITCH_LEDS_PATTERN
-        ESP_LOGI("SOCIAL LEVEL", "Level %u  - %s\n", current_level, "DOWN");
-#endif
-        break;
-
-    case IDLE_HEALTH_DISPLAY_HEALTH_METER:
-        // Retreive the health level for the social level.
-        // - Social Level 0 is processed outside the for loop.
-        if (current_level == 0) {
-            selected_health = 1;
-        } else {
-            for (unsigned int i = 16;; i--) {
-                if (current_level >= health_mapping[i]) {
-                    selected_health = (uint8_t)i;
-                    break;
-                }
-            }
-        }
-
-        // Display the Health level on the LEDs.
-        nsec::g::the_badge._strip_animator.set_health_meter_bar(
-            selected_health);
-
-        // Setup the next state & the delay before the next state (3 seconds)
-        idle_led_next_state = IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN;
-        idle_led_processing = 20;
-
-#ifdef DEBUG_SWITCH_LEDS_PATTERN
-        ESP_LOGI("LIFE HEALTH", "Level/health %u/%u\n", current_level,
-                 selected_health);
-#endif
-        break;
-
-    case IDLE_HEALTH_DISPLAY_RETURN_TO_LED_PATTERN:
-        // Restore the LEDs pattern.
-        nsec::g::the_badge._strip_animator.set_idle_animation(
-            _selected_animation);
-
-        // Reset the idle health LEDs process.
-        idle_led_next_state = IDLE_HEALTH_DISPLAY_IDLE;
-        idle_led_processing = 0;
-        break;
-
-    default:
-        // Reset the idle health LEDs process.
-        idle_led_next_state = IDLE_HEALTH_DISPLAY_IDLE;
-        idle_led_processing = 0;
-        break;
-    }
 }
