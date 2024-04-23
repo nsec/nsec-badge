@@ -1031,6 +1031,11 @@ void nl::strip_animator::set_show_level_animation(
 
     _set_keyframed_cycle_animation(keyframes, keyframe_count, 1, active_mask,
                                    cycle_offset, 40);
+
+    // Force brightness for "IDLE_SOCIAL_LEVEL".
+    if (animation_type == pairing_completed_animation_type::IDLE_SOCIAL_LEVEL) {
+        _config.keyframed.brightness = 150;
+    }
 }
 
 void nl::strip_animator::_set_shooting_star_animation(
