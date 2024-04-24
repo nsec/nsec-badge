@@ -13,7 +13,11 @@
 #define READSIZE (4096 * 1)
 #define FLASH_DEST_ADDR 0x400000
 
+#if CTF_ADDON_ADMIN_MODE
+static const char *TAG = "[ADMIN]ota_actions";
+#else
 static const char *TAG = "ota_actions";
+#endif
 
 std::string get_firmware_project_name(esp_partition_subtype_t subtype) {
     const esp_partition_t *partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);

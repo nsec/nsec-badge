@@ -61,7 +61,7 @@ void challenges_storage_init() {
 }
 
 #if CTF_ADDON_ADMIN_MODE
-static const char *TAG = "challenges_storage";
+static const char *TAG = "[ADMIN]ctf_addon";
 #else
 static const char *TAG = "ctf_addon";
 #endif
@@ -377,7 +377,7 @@ void register_challenges_storage(void) {
     #if CTF_ADDON_ADMIN_MODE
     const esp_console_cmd_t cmd = {
         .command = "storage",
-        .help = "Run the storage challenge stuff\n",
+        .help = "[ADMIN] Run the storage challenge stuff\n",
         .hint = "[4,11,12,13,17,19]",
         .func = &challenge_storage,
         .argtable = NULL,        

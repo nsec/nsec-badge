@@ -135,7 +135,7 @@ static int crypto_atecc(int argc, char **argv) {
     if (argc >= 2) {
         _select = atoi(argv[1]);
     }
-    ESP_LOGI(TAG, "Running crypto_atecc %d!", _select);
+    ESP_LOGI(TAG, "[ADMIN] Running crypto_atecc %d!", _select);
 
     uint16_t custom_param = 0;
     if (argc >= 3) {
@@ -163,26 +163,6 @@ static int crypto_atecc(int argc, char **argv) {
             printf("\n");
             }
         }
-    } else if (_select == 3) {
-        uint8_t digest[ATCA_SHA_DIGEST_SIZE];
-        memset(digest, 0, sizeof(digest));
-        uint8_t data[16];
-        for(int i=0; i<16; data[i++] = 0xAB);
-        int ret = 0;
-        ret = atcab_sha(sizeof(data), data, digest);
-        if (ret == ATCA_SUCCESS) {
-            ESP_LOGI(TAG, "atcab_sha:");
-            print_digest(digest, sizeof(digest));
-        } else {
-            ESP_LOGE(TAG, "err atcab_sha ret: %02x", ret);
-        }
-        memset(digest, 0, sizeof(digest));
-
-        ESP_LOGI(TAG, "atcab_mac:");
-        uint8_t challenge[32];
-        for (int i=0; i<32; challenge[i++] = 0x64);
-        if (atcab_mac(MAC_MODE_CHALLENGE, custom_param, challenge, digest) == ATCA_SUCCESS)
-            print_digest(digest, sizeof(digest));
     } else if (_select == 6) {
         uint8_t num_in[20];
         for (int i=0; i<20; num_in[i++] = 0x42);
@@ -192,31 +172,6 @@ static int crypto_atecc(int argc, char **argv) {
             print_32(rand_out);
             atcab_nonce(rand_out);
         }
-    } else if (_select == 7) {
-// #define GENDIG_ZONE_CONFIG   Use KeyID to specify any of the four 256-bit blocks of the Configuration zone.
-// #define GENDIG_ZONE_OTP      Use KeyID to specify either the first or second 256-bit block of the OTP zone.
-// #define GENDIG_ZONE_DATA     Use KeyID to specify a slot in the Data zone or a transport key in the hardware array.
-// #define GENDIG_ZONE_SHARED_NONCE KeyID specifies the location of the input value in the message generation.
-// #define GENDIG_ZONE_COUNTER      KeyID specifies the monotonic counter ID to be included in the message generation.
-// #define GENDIG_ZONE_KEY_CONFIG   KeyID specifies the slot for which the configuration information is to be included in the message generation.
-        atcab_gendig(GENDIG_ZONE_DATA, custom_param, NULL, 0);
-
-    } else if (_select == 8) {
-        // actual challenge
-        uint8_t bad_key[32];
-        memset(bad_key, 0, sizeof(bad_key));
-        // only the first 16bits will be used
-        for (int i=0; i<16; bad_key[i++] = 0x42);
-        // load into tempkey
-        atcab_nonce(bad_key);
-
-        uint8_t plaintext[17] = "FLAG-JFSDKJFKDSA";
-        uint8_t ciphertext[16];
-        atcab_aes_encrypt(ATCA_TEMPKEY_KEYID, custom_param, plaintext, ciphertext);
-        printf("plaintext:\n");
-        print_16(plaintext);
-        printf("ciphertext:\n");
-        print_16(ciphertext);
     } else if (_select == 999) {
         printf("validating crypto chip...\n");
         bool is_locked = false;
@@ -258,6 +213,7 @@ static int crypto_atecc(int argc, char **argv) {
 
         printf("All validations passed!, adding keys...\n");
 
+        printf("Provisionning for crypto_read_zone 8 8...\n");
         uint8_t data[32] = { 0x46, 0x4c, 0x41, 0x47, 0x2d, 0x51, 0x4b, 0x41, 0x4e, 0x44, 0x43, 0x4e, 0x44, 0x32, 0x58, 0x54 };
         int ret = atcab_write_zone(ATCA_ZONE_DATA, 8, 8, 0, data, ATCA_BLOCK_SIZE);
         if (ret != ATCA_SUCCESS) {
@@ -267,6 +223,7 @@ static int crypto_atecc(int argc, char **argv) {
             printf("Data written successfully on slot %d block %d.\n", 8, 8);
         }
 
+        printf("Provisionning for crypto_bad...\n");
         if (generate_bad_flag() == 0) {
             printf("Error: something went wrong with generate_bad_flag\n");
             return 0;
@@ -274,13 +231,6 @@ static int crypto_atecc(int argc, char **argv) {
 
         printf("Successfully completed crypto loadings!\n");
 
-    } else if (_select == 10) {
-        uint8_t public_key[ATCA_PUB_KEY_SIZE];
-        if (custom_param == 0)
-            atcab_genkey(2, public_key);
-        else
-            atcab_genkey(custom_param, public_key);
-        print_public_key(public_key);
     } else if (_select == 11) {
         uint32_t counter_value;
         if (custom_param == 666) {
@@ -291,14 +241,6 @@ static int crypto_atecc(int argc, char **argv) {
         printf("atcab_counter_read %d: %lu\n", custom_param, counter_value);
         atcab_counter_increment(custom_param, &counter_value);
         printf("++atcab_counter_read %d: %lu\n", custom_param, counter_value);
-    } else if (_select == 17) {
-        uint8_t private_key[ATCA_PRIV_KEY_SIZE] = { 0x77, 0xd5, 0x96, 0xe7, 0xe8, 0xda, 0xf6, 0xbe, 0x19, 0xce, 0x30, 0x03, 0x78, 0x06, 0x9e, 0xd8, 0x9c, 0x5f, 0xdd, 0xc5, 0xfd, 0xdd, 0x5a, 0x9a, 0x5c, 0x06, 0x99, 0xa0, 0x64, 0x82, 0x69, 0xd6 };
-        ret = atcab_write_zone(ATCA_ZONE_DATA, custom_param, 0, 0, private_key, ATCA_BLOCK_SIZE);
-        if (ret != ATCA_SUCCESS) {
-            printf("Failed to write with error: 0x%02X\n", ret);
-        } else {
-            printf("Data written successfully on slot %d.\n", custom_param);
-        }
     } else if (_select == 18) {
         uint8_t ones[ATCA_PRIV_KEY_SIZE] = {0xFF};
         memset(ones, 0xFF, sizeof(ones));
@@ -308,42 +250,6 @@ static int crypto_atecc(int argc, char **argv) {
         } else {
             printf("1s written successfully on slot %d.\n", custom_param);
         }
-    } else if (_select == 30) {
-        printf("encrypt flag\n");
-        uint8_t plaintext[17] = "FLAG-JFSDKJFKDAB";
-        uint8_t encrypted_flag[16] = {0x00};
-        encrypt_flag(plaintext, encrypted_flag);
-        print_16(encrypted_flag);
-
-        printf("decrypt flag\n");
-        uint8_t decrypted_flag[16] = {0x00};
-        decrypt_flag(encrypted_flag, decrypted_flag);
-        print_16(decrypted_flag);
-        printf("decypted flag: %.16s\n", decrypted_flag);
-
-        if (strncmp((char*)plaintext, (char*)decrypted_flag, 16) == 0) {
-            printf("SUCCESS: flag is decrypted correctly\n");
-        } else {
-            printf("ERROR: flag is not decrypted correctly\n");
-        }
-    } else if (_select == 55) {
-        // use atcab_ecdh to get the key
-        uint8_t pubkey[ATCA_PUB_KEY_SIZE];
-        /* {
-            0xb2, 0xbe, 0x34, 0x5a, 0xd7, 0x89, 0x93, 0x83,
-            0xa9, 0xaa, 0xb4, 0xfb, 0x96, 0x8b, 0x1c, 0x78,
-            0x35, 0xcb, 0x2c, 0xd4, 0x2c, 0x7e, 0x97, 0xc2,
-            0x6f, 0x85, 0xdf, 0x8e, 0x20, 0x1f, 0x3b, 0xe8,
-            0xa8, 0x29, 0x83, 0xf0, 0xa1, 0x1d, 0x6f, 0xf3,
-            0x1d, 0x66, 0xce, 0x99, 0x32, 0x46, 0x6f, 0x0f,
-            0x2c, 0xca, 0x21, 0xef, 0x96, 0xbe, 0xc9, 0xce,
-            0x23, 0x5b, 0x3d, 0x87, 0xb0, 0xf8, 0xfa, 0x9e
-        }; */
-        uint8_t shared_secret[ATCA_SHA_DIGEST_SIZE];
-        atcab_read_pubkey(13, pubkey);
-        atcab_ecdh(2, pubkey, shared_secret);
-        
-        print_digest(shared_secret, sizeof(shared_secret));
     }
     return 0;
 }
@@ -494,7 +400,7 @@ int ECDH_premaster_secret(int argc, char **argv) {
     int ret = atcab_ecdh_base(ECDH_MODE_OUTPUT_CLEAR | ECDH_MODE_COPY_OUTPUT_BUFFER, SLOT_PRIVWRITE, public_key, pms, NULL);
     if (ret == ATCA_SUCCESS) {
         #if CTF_ADDON_ADMIN_MODE
-        printf("Internally computed ECDH premaster secret:\n");
+        printf("[ADMIN] Internally computed ECDH premaster secret:\n");
         print_32(pms);
         #endif
 
@@ -588,7 +494,7 @@ int crypto_bad_key(int argc, char **argv) {
     uint8_t data[32] = { 0x00, 0x42, 0x65, 0x20, 0x73, 0x74, 0x72, 0x6f, 0x6e, 0x67, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x72, 0x65, 0x61, 0x64, 0x20, 0x64, 0x61, 0x74, 0x61, 0x73, 0x68, 0x65, 0x65, 0x74, 0x73, 0x20, 0x61 };
     print_bin2hex(data, 32);
 
-    printf("resulting encrypted flag cipher: 40878CBD30C22E590EFB1C9448A3B3AA\nCan you reproduce and decrypt the cipher?");
+    printf("resulting encrypted flag cipher: 40878CBD30C22E590EFB1C9448A3B3AA\nCan you reproduce and decrypt the cipher?\n");
 
     return 0;
 }
@@ -625,8 +531,8 @@ void register_crypto_atecc(void) {
     #if CTF_ADDON_ADMIN_MODE
     const esp_console_cmd_t cmd = {
         .command = "crypto",
-        .help = "Run the crypto test\n",
-        .hint = "[1-30]",
+        .help = "[ADMIN] Run the crypto test\n",
+        .hint = "[0,1,6,999,11,18]",
         .func = &crypto_atecc,
         .argtable = NULL,
     };
@@ -634,7 +540,7 @@ void register_crypto_atecc(void) {
 
     const esp_console_cmd_t cmd3 = {
         .command = "admin_symmetric_decrypt",
-        .help = "read hex and decrypt symmetrically 16 bytes\n",
+        .help = "[ADMIN] read hex and decrypt symmetrically 16 bytes\n",
         .hint = "[hex chars]",
         .func = &symmetric_decrypt,
         .argtable = NULL,
@@ -697,7 +603,7 @@ void register_crypto_atecc(void) {
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd8) );
 
     const esp_console_cmd_t cmd9 = {
-        .command = "crypto_bad",
+        .command = "crypto_bad_nonce",
         .help = "Print documentation of bad nonce initialized with 0x42s.\n",
         .hint = "",
         .func = &crypto_bad_key,
