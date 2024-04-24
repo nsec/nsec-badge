@@ -271,19 +271,3 @@ void buttons_register_ca( badge_button_event_cb_t cb )
 {
     cb_button_event = cb;
 }
-
-/******************************************************************************
- * Description: Badge buttons task.
- *
- * param: Task arguments (not used).
- *
- * return: N/A - never return.
- *
- *****************************************************************************/
-void buttons_task( void *arg __attribute__((unused)) )
-{
-    /* To do: call the callback function within buttons task upon events. */
-    while (true) {
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
-}

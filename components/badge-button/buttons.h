@@ -33,7 +33,6 @@ typedef void (* badge_button_event_cb_t)(badge_button_t, badge_button_event_t);
 
 void buttons_init(void);
 void buttons_register_ca(badge_button_event_cb_t cb);
-void buttons_task(void *arg __attribute__((unused)));
 
 #ifdef __cplusplus
 }

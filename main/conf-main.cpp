@@ -53,7 +53,6 @@ extern "C" void app_main(void)
     //const dummy_task the_task;
 
     buttons_init();
-    xTaskCreate(buttons_task, "buttons_task", 4096, NULL, 10, NULL);
 
     while (true) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
