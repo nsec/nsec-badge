@@ -211,6 +211,10 @@ class badge
         uint8_t social_level;
     };
 
+    struct badge_unique_id {
+        std::uint8_t value[6];
+    };
+
     void load_config();
     void save_config() const;
     void factory_reset();
@@ -243,6 +247,8 @@ class badge
     void _set_selected_animation(uint8_t animation_id, bool save) noexcept;
     // Setup hardware.
     void _setup();
+
+    badge_unique_id _get_unique_id();
 
     mutable SemaphoreHandle_t _public_access_semaphore;
     uint8_t _social_level;

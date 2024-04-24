@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <array>
 #include <cstring>
+#include <esp_mac.h>
 
 namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
@@ -191,6 +192,16 @@ void nr::badge::_setup()
     load_config();
 }
 
+nr::badge::badge_unique_id nr::badge::_get_unique_id()
+{
+    uint8_t mac_bytes[6] = {0};
+
+    esp_read_mac(mac_bytes, ESP_MAC_EFUSE_FACTORY);
+
+    return badge_unique_id{mac_bytes[0], mac_bytes[1], mac_bytes[2],
+                           mac_bytes[3], mac_bytes[4], mac_bytes[5]};
+}
+
 uint8_t nr::badge::level() const noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
@@ -357,7 +368,12 @@ void nr::badge::network_id_exchanger::start(nr::badge &badge) noexcept
     }
 
     // Left-most peer initiates the exchange.
-    nc::message::announce_badge_id msg = {.peer_id = our_id};
+    nc::message::announce_badge_id msg = {
+        .peer_id = our_id,
+        .board_unique_id = {
+            badge._get_unique_id().value[0], badge._get_unique_id().value[1],
+            badge._get_unique_id().value[2], badge._get_unique_id().value[3],
+            badge._get_unique_id().value[4], badge._get_unique_id().value[5]}};
 
     _logger.debug("Enqueueing message: type={}",
                   nc::message::type::ANNOUNCE_BADGE_ID);
@@ -404,8 +420,13 @@ void nr::badge::network_id_exchanger::new_message(
     case nc::network_handler::link_position::RIGHT_MOST:
         if (_message_received_count == peer_count - 1) {
             nc::message::announce_badge_id msg = {
-                .peer_id = badge._network_handler.peer_id()};
-            // FIXME Set unique ID.
+                .peer_id = badge._network_handler.peer_id(),
+                .board_unique_id = {badge._get_unique_id().value[0],
+                                    badge._get_unique_id().value[1],
+                                    badge._get_unique_id().value[2],
+                                    badge._get_unique_id().value[3],
+                                    badge._get_unique_id().value[4],
+                                    badge._get_unique_id().value[5]}};
 
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::ANNOUNCE_BADGE_ID);
@@ -448,9 +469,12 @@ void nr::badge::network_id_exchanger::message_sent(nr::badge &badge) noexcept
         return;
     }
 
-    nc::message::announce_badge_id msg = {.peer_id =
-                                              badge._network_handler.peer_id()};
-    // FIXME Set unique ID.
+    nc::message::announce_badge_id msg = {
+        .peer_id = badge._network_handler.peer_id(),
+        .board_unique_id = {
+            badge._get_unique_id().value[0], badge._get_unique_id().value[1],
+            badge._get_unique_id().value[2], badge._get_unique_id().value[3],
+            badge._get_unique_id().value[4], badge._get_unique_id().value[5]}};
 
     _logger.debug("Enqueueing message: type={}",
                   nc::message::type::ANNOUNCE_BADGE_ID);
