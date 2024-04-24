@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-void console_task(void *parm);
+void console_init(void);
 
 #ifdef __cplusplus
 }

@@ -39,5 +39,8 @@ extern "C" void app_main(void) {
         Wifi::getInstance().init();
     #endif
 
-    xTaskCreate(console_task, "console task", 4096, nullptr, 3, nullptr);
+    /* Wait a few seconds before enabling the console. */
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+
+    console_init();
 }

@@ -1,24 +1,10 @@
-/* Console example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
+// SPDX-FileCopyrightText: 2024 NorthSec
+//
+// SPDX-License-Identifier: MIT
 
 #include <stdio.h>
-#include <string.h>
-#include "esp_system.h"
 #include "esp_log.h"
 #include "esp_console.h"
-#include "esp_vfs_dev.h"
-#include "driver/uart.h"
-#include "linenoise/linenoise.h"
-#include "argtable3/argtable3.h"
-#include "nvs.h"
-#include "cmd_nvs.h"
-#include "console.h"
 
 #include "ota_init.h"
 #if CONFIG_NSEC_BUILD_CTF
@@ -28,144 +14,44 @@
 static const char* TAG = "console";
 #define PROMPT_STR "nsec"
 
-static void initialize_console(void)
+extern "C" void console_init()
 {
-    /* drain stdout before reconfiguring it */
-    fflush(stdout);
-    fsync(fileno(stdout));
+    ESP_LOGI(TAG, "Starting console initialization");
 
-    /* disable buffering on stdin */
-    setvbuf(stdin, NULL, _IONBF, 0);
-
-    /* minicom, screen, idf_monitor send cr when enter key is pressed */
-    esp_vfs_dev_uart_port_set_rx_line_endings(CONFIG_ESP_CONSOLE_UART_NUM, ESP_LINE_ENDINGS_CR);
-    /* move the caret to the beginning of the next line on '\n' */
-    esp_vfs_dev_uart_port_set_tx_line_endings(CONFIG_ESP_CONSOLE_UART_NUM, ESP_LINE_ENDINGS_CRLF);
-
-    /* configure uart. note that ref_tick is used so that the baud rate remains
-     * correct while apb frequency is changing in light sleep mode.
+    esp_console_repl_t *repl = nullptr;
+    esp_console_repl_config_t repl_config = ESP_CONSOLE_REPL_CONFIG_DEFAULT();
+    /* Prompt to be printed before each line.
+     * This can be customized, made dynamic, etc.
      */
-    const uart_config_t uart_config = {
-            .baud_rate = CONFIG_ESP_CONSOLE_UART_BAUDRATE,
-            .data_bits = UART_DATA_8_BITS,
-            .parity = UART_PARITY_DISABLE,
-            .stop_bits = UART_STOP_BITS_1,
-	    .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
-	    .rx_flow_ctrl_thresh = 0,
-            .source_clk = UART_SCLK_RTC,
-    };
-    /* install uart driver for interrupt-driven reads and writes */
-    ESP_ERROR_CHECK( uart_driver_install((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM,
-            256, 0, 0, NULL, 0) );
-    ESP_ERROR_CHECK( uart_param_config((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM, &uart_config) );
+    repl_config.prompt = PROMPT_STR ">";
+    repl_config.max_cmdline_length = 80;
 
-    /* tell vfs to use uart driver */
-    esp_vfs_dev_uart_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
-
-    /* initialize the console */
-    esp_console_config_t console_config = {
-            .max_cmdline_length = 256,
-            .max_cmdline_args = 8,
-#if config_log_colors
-            .hint_color = atoi(log_color_cyan),
-#else
-            .hint_color = 0,
-#endif
-	    .hint_bold = 0,
-    };
-    ESP_ERROR_CHECK( esp_console_init(&console_config) );
-
-    /* configure linenoise line completion library */
-    /* enable multiline editing. if not set, long commands will scroll within
-     * single line.
-     */
-    linenoiseSetMultiLine(1);
-
-    /* tell linenoise where to get command completions and hints */
-    linenoiseSetCompletionCallback(&esp_console_get_completion);
-    linenoiseSetHintsCallback((linenoiseHintsCallback*) &esp_console_get_hint);
-
-    /* set command history size */
-    linenoiseHistorySetMaxLen(100);
-
-    /* set command maximum length */
-    linenoiseSetMaxLineLen(console_config.max_cmdline_length);
-
-    /* don't return empty lines */
-    linenoiseAllowEmpty(true);
-
-    /* load command history from filesystem */
-    // linenoisehistoryload(history_path);
-}
-
-void console_task(void *args)
-{
-    initialize_console();
-
-    /* register commands */
+    /* Register commands */
     esp_console_register_help_command();
-
     register_ota_cmd();
 
-    /* prompt to be printed before each line.
-     * this can be customized, made dynamic, etc.
-     */
-    const char* prompt = LOG_COLOR_I PROMPT_STR "> " LOG_RESET_COLOR;
+#if defined(CONFIG_ESP_CONSOLE_UART_DEFAULT) || defined(CONFIG_ESP_CONSOLE_UART_CUSTOM)
+    esp_console_dev_uart_config_t hw_config = ESP_CONSOLE_DEV_UART_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_console_new_repl_uart(&hw_config, &repl_config, &repl));
+#elif defined(CONFIG_ESP_CONSOLE_USB_CDC)
+    esp_console_dev_usb_cdc_config_t hw_config = ESP_CONSOLE_DEV_CDC_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_console_new_repl_usb_cdc(&hw_config, &repl_config, &repl));
+#elif defined(CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG)
+    esp_console_dev_usb_serial_jtag_config_t hw_config = ESP_CONSOLE_DEV_USB_SERIAL_JTAG_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_console_new_repl_usb_serial_jtag(&hw_config, &repl_config, &repl));
+#else
+#error Unsupported console type
+#endif
 
     printf(
-        LOG_COLOR(LOG_COLOR_BLUE) ":::.    :::.    ...    :::::::.. :::::::::::: ::   .:  .::::::..,::::::   .,-:::::   \n" \
+        LOG_COLOR(LOG_COLOR_BLUE) "\n\n:::.    :::.    ...    :::::::.. :::::::::::: ::   .:  .::::::..,::::::   .,-:::::   \n" \
         LOG_COLOR(LOG_COLOR_BLUE) "`;;;;,  `;;; .;;;;;;;. ;;;;``;;;;;;;;;;;;'''',;;   ;;,;;;`    `;;;;'''' ,;;;'````'   " LOG_COLOR(LOG_COLOR_RED ";5") "    ,;'``;.   ,;;,   ,;'``;.;'`';;,  \n" \
         LOG_COLOR(LOG_COLOR_BLUE) "  [[[[[. '[[,[[     \\[[,[[[,/[[['     [[    ,[[[,,,[[['[==/[[[[,[[cccc  [[[         " LOG_COLOR(LOG_COLOR_RED ";5") "     ''  ,[[',['  [n  ''  ,[['  .n[[  \n" \
         LOG_COLOR(LOG_COLOR_BLUE) "  $$$ \"Y$c$$$$$,     $$$$$$$$$c       $$    \"$$$\"\"\"$$$  '''    $$$\"\"\"\"  $$$    " LOG_COLOR(LOG_COLOR_RED ";5") "          .c$$P'  $$    $$ .c$$P'   ``\"$$$.\n" \
         LOG_COLOR(LOG_COLOR_BLUE) "  888    Y88\"888,_ _,88P888b \"88bo,   88,    888   \"88o88b    dP888oo,__`88bo,__,o,  " LOG_COLOR(LOG_COLOR_RED ";5") "   d88 _,oo,Y8,  ,8\"d88 _,oo, ,,o888\"\n" \
-        LOG_COLOR(LOG_COLOR_BLUE) "  MMM     YM  \"YMMMMMP\" MMMM   \"W\"    MMM    MMM    YMM \"YMmMY\" \"\"\"\"YUMMM \"YUMMMMMP\"  " LOG_COLOR(LOG_COLOR_RED ";5") "  MMMUP*\"^^ \"YmmP  MMMUP*\"^^ YMMP\"  \n" LOG_RESET_COLOR);
+        LOG_COLOR(LOG_COLOR_BLUE) "  MMM     YM  \"YMMMMMP\" MMMM   \"W\"    MMM    MMM    YMM \"YMmMY\" \"\"\"\"YUMMM \"YUMMMMMP\"  " LOG_COLOR(LOG_COLOR_RED ";5") "  MMMUP*\"^^ \"YmmP  MMMUP*\"^^ YMMP\"  \n\n\n" LOG_RESET_COLOR);
 
-    /* figure out if the terminal supports escape sequences */
-    int probe_status = linenoiseProbe();
-    if (probe_status) { /* zero indicates success */
-        printf("\n"
-               "your terminal application does not support escape sequences.\n"
-               "line editing and history features are disabled.\n"
-               "on windows, try using putty instead.\n");
-        linenoiseSetDumbMode(1);
-#if config_log_colors
-        /* since the terminal doesn't support escape sequences,
-         * don't use color codes in the prompt.
-         */
-        prompt = PROMPT_STR "> ";
-#endif //config_log_colors
-    }
+    ESP_ERROR_CHECK(esp_console_start_repl(repl));
 
-    /* main loop */
-    while(true) {
-        /* get a line using linenoise.
-         * the line is returned when enter is pressed.
-         */
-        char* line = linenoise(prompt);
-        if (line == NULL) { /* break on eof or error */
-            break;
-        }
-        /* add the command to the history if not empty*/
-        if (strlen(line) > 0) {
-            linenoiseHistoryAdd(line);
-        }
-
-        /* Try to run the command */
-        int ret;
-        esp_err_t err = esp_console_run(line, &ret);
-        if (err == ESP_ERR_NOT_FOUND) {
-            printf("Unrecognized command\n");
-        } else if (err == ESP_ERR_INVALID_ARG) {
-            // command was empty
-        } else if (err == ESP_OK && ret != ESP_OK) {
-            printf("Command returned non-zero error code: 0x%x (%s)\n", ret, esp_err_to_name(ret));
-        } else if (err != ESP_OK) {
-            printf("Internal error: %s\n", esp_err_to_name(err));
-        }
-        /* linenoise allocates line buffer on the heap, so need to free it */
-        linenoiseFree(line);
-    }
-
-    ESP_LOGE(TAG, "Error or end-of-input, terminating console");
-    esp_console_deinit();
+    ESP_LOGI(TAG, "Console started");
 }

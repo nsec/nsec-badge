@@ -6,9 +6,7 @@ set(CONFIG_NSEC_BUILD_CONFERENCE $ENV{CONFIG_NSEC_BUILD_CONFERENCE} CACHE INTERN
 set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 set(CONFIG_NSEC_BUILD_ADDON $ENV{CONFIG_NSEC_BUILD_ADDON} CACHE INTERNAL "")
 
-if(CONFIG_NSEC_BUILD_ADDON OR CONFIG_NSEC_BUILD_CTF)
-
-set(requires_components console driver fatfs cmd_nvs off_the_addon)
+set(requires_components console driver cmd_nvs off_the_addon)
 
 if(CONFIG_NSEC_BUILD_CTF)
     list(APPEND requires_components modbus wifi)
@@ -18,4 +16,3 @@ idf_component_register(SRCS "console.cpp"
                     INCLUDE_DIRS "."
                     REQUIRES ${requires_components}
 )
-endif()

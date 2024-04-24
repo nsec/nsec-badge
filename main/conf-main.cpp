@@ -17,6 +17,8 @@
 #include <badge/globals.hpp>
 #include <scheduling/task.hpp>
 
+#include "console.h"
+
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 {
     friend class periodic_task<dummy_task>;
@@ -47,6 +49,11 @@ extern "C" void app_main(void)
     nsec::g::the_badge = &badge;
 
     badge.start();
+
+    /* Wait a few seconds before enabling the console. */
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+
+    console_init();
 
     while (true) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
