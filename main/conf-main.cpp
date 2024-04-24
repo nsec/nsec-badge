@@ -4,7 +4,6 @@
  * Copyright 2024 Jérémie Galarneau <jeremie.galarneau@gmail.com>
  */
 
-#include "buttons.h"
 #include "esp_task_wdt.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -51,8 +50,6 @@ class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 extern "C" void app_main(void)
 {
     //const dummy_task the_task;
-
-    buttons_init();
 
     while (true) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);

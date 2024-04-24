@@ -2,52 +2,41 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * Copyright 2024 NorthSec
  */
 
-#include <badge/globals.hpp>
+/******************************************************************************
+ *
+ * Description: Badge Button Processing.
+ *              - Espressif IOT_BUTTON interface is used to get the
+ *                different button events.
+ *                1) This interface handle the button debouncing.
+ *              - The badge buttons process only handle the "Single Click" &
+ *                the "Long Press Event" from the "IOT Button".
+ *                1) All other event are ignored.
+ *                2) In the current implementation, the "Double Click" &
+ *                   "Multiple Click" events is ignored.
+ *
+ * Process:
+ * - Setup all events callback for the differents buttons.
+ * - Process all received callback event and mapped to badge button
+ *   events (Single Click & Long Press) or ignored the events.
+ * - Send the event to the registered callback function
+ *   (on the received callback itself).
+ *
+ * Reference:
+ * - Espressif IOT Button documentation & API
+ *  https://docs.espressif.com/projects/esp-iot-solution/en/latest/input_device/button.html
+ *
+ *****************************************************************************/
+
+#include <array>
 #include <badge-button/watcher.hpp>
+#include <badge/globals.hpp>
+#include <esp_log.h>
+#include <iot_button.h>
 #include <utils/board.hpp>
 #include <utils/config.hpp>
-#include <esp_log.h>
-#include "buttons.h"
-
-/* Local debugging options. */
-//#define DEBUG_WATCHER_BUTTON_CALLBACK
-//#define DEBUG_WATCHER_TASK_BUTTON_CALLBACK
-
-static badge_button_event_t watcher_event[BUTTON_TOTAL_COUNT];
-
-#if defined(DEBUG_WATCHER_BUTTON_CALLBACK) || defined(DEBUG_WATCHER_TASK_BUTTON_CALLBACK)
-const char *watcher_button_label_table[] = {
-    "UP",
-    "DOWN",
-    "LEFT",    
-    "RIGHT",
-    "OK",
-    "CANCEL"
-};
-
-const char *watcher_button_event_table[] = {
-    "SINGLE_CLICK",
-    "LONG_PRESS"
-};
-#endif
-
-static void badge_button_event_cb_process( badge_button_t button,
-                                           badge_button_event_t event
-                                         )
-{
-    // Store the received event.
-    watcher_event[(int)button] = event;
-
-    #ifdef DEBUG_WATCHER_BUTTON_CALLBACK
-    /* Log button event on serial console. */
-    ESP_LOGI( "WATCHER BUTTON EVENT", "%s: %s\n",
-              watcher_button_label_table[button],
-              watcher_button_event_table[event]
-            );
-    #endif
-}
 
 namespace nb = nsec::button;
 namespace ns = nsec::scheduling;
@@ -55,46 +44,79 @@ namespace ng = nsec::g;
 namespace nbb = nsec::board::button;
 
 nb::watcher::watcher(nb::new_button_event_notifier new_button_notifier) noexcept
-    : ns::periodic_task<watcher>(nsec::config::button::polling_period_ms),
-      _notify_new_event{new_button_notifier}
+    : _notify_new_event{new_button_notifier}
 {
-    start();
 }
 
-void nb::watcher::setup() noexcept
+void nb::watcher::setup()
 {
-    // Reset the array used to store the button events.
-    for( int i = 0; i < BUTTON_TOTAL_COUNT; i++) {
-        watcher_event[i] = BADGE_BUTTON_NO_EVENT;
-    }
-    
-    // Register button callback.
-    buttons_register_ca(badge_button_event_cb_process);
-}
+    std::array<button_event_t, 2> monitored_events = {BUTTON_PRESS_DOWN,
+                                                      BUTTON_LONG_PRESS_HOLD};
 
-void nb::watcher::tick(
-    [[maybe_unused]] ns::absolute_time_ms current_time_ms) noexcept
-{
-    // Check the state of all button pins and debounce as needed
-      for( int i = 0; i < BUTTON_TOTAL_COUNT; i++) {
-        if( watcher_event[i] != BADGE_BUTTON_TOTAL_COUNT) {
-            const auto new_event = watcher_event[i];
-            
-            // Clear recorded event.
-            watcher_event[i] = BADGE_BUTTON_NO_EVENT;
-        
-            // Send the event to the badge notifier.
-            _notify_new_event( static_cast<id>(i),
-                               static_cast<event>(new_event)
-                              );
+    for (auto &btn_context : _button_callback_contexts) {
+        for (auto monitored_event : monitored_events) {
+            const auto ret = iot_button_register_cb(
+                reinterpret_cast<button_handle_t>(btn_context.button_handle),
+                monitored_event, _button_handler, &btn_context);
 
-            #ifdef DEBUG_WATCHER_TASK_BUTTON_CALLBACK
-            /* Log button event on serial console. */
-            ESP_LOGI( "WATCHER TASK BUTTON EVENT", "%s: %s\n",
-                      watcher_button_label_table[i],
-                      watcher_button_event_table[(int)new_event]
-                    );
-            #endif
+            if (ret != ESP_OK) {
+                NSEC_THROW_ERROR(fmt::format("Failed to register button event "
+                                             "callback: button_id={}, gpio={}",
+                                             btn_context.button_id,
+                                             btn_context.button_gpio));
+            }
         }
     }
+}
+
+void *nb::watcher::_create_button_handle(unsigned int gpio_number)
+{
+    // Configuration shared by all buttons.
+    const button_config_t gpio_btn_cfg = {
+        .type = BUTTON_TYPE_GPIO,
+        .long_press_time = CONFIG_BUTTON_LONG_PRESS_TIME_MS,
+        .short_press_time = CONFIG_BUTTON_SHORT_PRESS_TIME_MS,
+        .gpio_button_config =
+            {
+                .gpio_num = int32_t(gpio_number),
+                .active_level = 0,
+#if CONFIG_GPIO_BUTTON_SUPPORT_POWER_SAVE
+                .enable_power_save = true,
+#endif
+            },
+    };
+
+    auto handle = iot_button_create(&gpio_btn_cfg);
+    if (!handle) {
+        NSEC_THROW_ERROR("Failed to create button handle");
+    }
+
+    return handle;
+}
+
+void nb::watcher::_button_handler(void *button_handle, void *opaque_context)
+{
+    const auto *context =
+        static_cast<const button_callback_context *>(opaque_context);
+
+    const auto id = context->button_id;
+    const auto native_event = iot_button_get_event(context->button_handle);
+
+    // Convert ESP-IDF button event into our native events.
+    nb::event badge_button_event;
+    switch (native_event) {
+    case BUTTON_PRESS_DOWN:
+        badge_button_event = nb::event::SINGLE_CLICK;
+        break;
+    case BUTTON_LONG_PRESS_HOLD:
+        badge_button_event = nb::event::LONG_PRESS;
+        break;
+    default:
+        NSEC_THROW_ERROR(fmt::format(
+            "Unexpected native button event type: button_id={}, event_type={}",
+            id, native_event));
+    }
+
+    // Notify the badge of a new button event.
+    context->watcher_instance->_notify_new_event(id, badge_button_event);
 }

@@ -7,7 +7,7 @@ set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 set(CONFIG_NSEC_BUILD_ADDON $ENV{CONFIG_NSEC_BUILD_ADDON} CACHE INTERNAL "")
 
 if(CONFIG_NSEC_BUILD_CONFERENCE)
-        idf_component_register(SRCS "watcher.cpp" "buttons.c"
+        idf_component_register(SRCS "watcher.cpp"
                 INCLUDE_DIRS "." "../" "../../.pio/libdeps/conference/fmt/include"  "../../.pio/libdeps/conference/SmartLeds/src"
                 REQUIRES driver
         )

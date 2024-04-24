@@ -115,39 +115,6 @@ struct fmt::formatter<nr::badge::pairing_completed_animator::animation_state>
     }
 };
 
-// button id formatter
-template <> struct fmt::formatter<nb::id> : fmt::formatter<std::string> {
-    template <typename FormatContext>
-    auto format(nb::id button_id, FormatContext &ctx)
-    {
-        string_view name = "unknown";
-        switch (button_id) {
-        case nb::id::UP:
-            name = "UP";
-            break;
-        case nb::id::DOWN:
-            name = "DOWN";
-            break;
-        case nb::id::LEFT:
-            name = "LEFT";
-            break;
-        case nb::id::RIGHT:
-            name = "RIGHT";
-            break;
-        case nb::id::OK:
-            name = "OK";
-            break;
-        case nb::id::CANCEL:
-            name = "CANCEL";
-            break;
-        default:
-            break;
-        }
-
-        return fmt::formatter<string_view>::format(name, ctx);
-    }
-};
-
 // button event formatter
 template <> struct fmt::formatter<nb::event> : fmt::formatter<std::string> {
     template <typename FormatContext>
