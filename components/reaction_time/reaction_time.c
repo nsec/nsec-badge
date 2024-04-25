@@ -132,6 +132,17 @@ struct {
     struct arg_end *end;
 } rt_cmd_args;
 
+char rt_cmd_help[] = "Can you react as fast as a neutrophil?";
+
+void update_cmd_help(uint8_t max_level)
+{
+    if (max_level == 2) {
+        strncpy(rt_cmd_help + 27, "basophil?", 10);
+    } else if (max_level == 3) {
+        strncpy(rt_cmd_help + 27, "eosinophil?", 12);
+    }
+}
+
 int rt_cmd(int argc, char **argv)
 {
     const char *progname = argv[0];
@@ -185,13 +196,20 @@ void register_reaction_time_cmd(void)
     rt_cmd_args.level = arg_int0("l", "level", "<1-3>", "challenge level");
     rt_cmd_args.end = arg_end(1);
 
-    esp_console_cmd_t cmd = {
+    const esp_console_cmd_t cmd = {
         .command = "reaction_time",
-        .help = "Can you react as fast as a neutrophil?",
+        .help = rt_cmd_help,
         .hint = NULL,
         .func = &rt_cmd,
         .argtable = &rt_cmd_args,
     };
+
+    /* Updating white cell type in help text */
+    uint8_t max_level = 1;
+    esp_err_t err = read_level(&max_level);
+    if (err != ESP_ERR_NVS_NOT_FOUND)
+        ESP_ERROR_CHECK(err);
+    update_cmd_help(max_level);
 
     ESP_ERROR_CHECK(esp_console_cmd_register(&cmd));
 }
