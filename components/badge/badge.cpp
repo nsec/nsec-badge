@@ -140,6 +140,22 @@ template <> struct fmt::formatter<nb::event> : fmt::formatter<std::string> {
 namespace
 {
 constexpr uint16_t config_version_magic = 0xBAD8;
+
+unsigned int social_level_to_health_led_count(unsigned int level)
+{
+    // Mapping of the social level to the health level
+    // - The social level range is 0 to 200.
+    // - The health range is 1 to 16.
+    // - Table field for health mapping is the
+    //   "Social Level Upper Boundary".
+    const std::array<std::uint8_t, 16> health_mappings = {
+        1, 3, 6, 11, 17, 25, 34, 44, 57, 71, 88, 106, 127, 149, 174, 200};
+
+    const auto mapping_it =
+        std::upper_bound(health_mappings.begin(), health_mappings.end(),
+                         std::max<std::uint8_t>(level, 1));
+    return mapping_it - health_mappings.begin();
+}
 } // anonymous namespace
 
 nr::badge::badge()
@@ -791,19 +807,8 @@ void nr::badge::pairing_completed_animator::_animation_state(
         break;
     }
     case nr::badge::pairing_completed_animator::animation_state::SHOW_HEALTH: {
-        // Mapping of the social level to the health level
-        // - The social level range is 0 to 200.
-        // - The health range is 1 to 16.
-        // - Table field for health mapping is the
-        //   "Social Level Upper Boundary".
-        const std::array<std::uint8_t, 16> health_mappings = {
-            1, 3, 6, 11, 17, 25, 34, 44, 57, 71, 88, 106, 127, 149, 174, 200};
-
-        const auto mapping_it =
-            std::upper_bound(health_mappings.begin(), health_mappings.end(),
-                             std::max<std::uint8_t>(badge._social_level, 1));
-        badge._strip_animator.set_health_meter_bar(mapping_it -
-                                                   health_mappings.begin());
+        badge._strip_animator.set_health_meter_bar(
+            social_level_to_health_led_count(badge._social_level));
         break;
     }
     case nr::badge::pairing_completed_animator::animation_state::DONE:
@@ -887,7 +892,7 @@ void nr::badge::_cycle_selected_animation(
 void nr::badge::_update_leds(nsec::button::id id,
                              nsec::button::event event) noexcept
 {
-    // Process "SINGLE_CLICK" event.
+    // Only process "SINGLE_CLICK" events.
     if (event != nsec::button::event::SINGLE_CLICK) {
         return;
     }
@@ -895,22 +900,16 @@ void nr::badge::_update_leds(nsec::button::id id,
     switch (id) {
     case nsec::button::id::LEFT:
     case nsec::button::id::RIGHT:
-        nsec::g::the_badge._scroll_leds(id, event);
+        nsec::g::the_badge._cycle_selected_animation(
+        id == nsec::button::id::LEFT
+            ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
+            : nsec::runtime::badge::cycle_animation_direction::NEXT);
         break;
     case nsec::button::id::DOWN:
-        // TODO Show health status
+        _strip_animator.set_health_meter_bar(
+            social_level_to_health_led_count(_social_level));
         break;
     default:
         break;
     }
-}
-
-void nr::badge::_scroll_leds(nsec::button::id id,
-                             nsec::button::event event) noexcept
-{
-    // Process the "LEFT"/"RIGHT" "SINGLE_CLICK" event.
-    nsec::g::the_badge._cycle_selected_animation(
-        id == nsec::button::id::LEFT
-            ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
-            : nsec::runtime::badge::cycle_animation_direction::NEXT);
 }

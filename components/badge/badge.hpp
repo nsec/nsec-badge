@@ -226,7 +226,6 @@ class badge
     void
     _cycle_selected_animation(cycle_animation_direction direction) noexcept;
     void _update_leds(button::id id, button::event event) noexcept;
-    void _scroll_leds(button::id id, button::event event) noexcept;
 
     void _idle_social_level_and_health(uint8_t state) noexcept;
 
