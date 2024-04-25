@@ -44,12 +44,14 @@ namespace ng = nsec::g;
 namespace nbb = nsec::board::button;
 
 nb::watcher::watcher(nb::new_button_event_notifier new_button_notifier) noexcept
-    : _notify_new_event{new_button_notifier}
+    : _notify_new_event{new_button_notifier}, _logger{"Button watcher"}
 {
 }
 
 void nb::watcher::setup()
 {
+    _logger.info("Setting up button callbacks");
+
     std::array<button_event_t, 2> monitored_events = {BUTTON_PRESS_DOWN,
                                                       BUTTON_LONG_PRESS_HOLD};
 
@@ -58,6 +60,11 @@ void nb::watcher::setup()
             const auto ret = iot_button_register_cb(
                 reinterpret_cast<button_handle_t>(btn_context.button_handle),
                 monitored_event, _button_handler, &btn_context);
+
+            _logger.debug("Registered callback for button: native_event={}, "
+                          "gpio={}, id={}",
+                          monitored_event, btn_context.button_gpio,
+                          btn_context.button_id);
 
             if (ret != ESP_OK) {
                 NSEC_THROW_ERROR(fmt::format("Failed to register button event "
@@ -86,6 +93,7 @@ void *nb::watcher::_create_button_handle(unsigned int gpio_number)
             },
     };
 
+    _logger.debug("Creating button handle: gpio={}", gpio_number);
     auto handle = iot_button_create(&gpio_btn_cfg);
     if (!handle) {
         NSEC_THROW_ERROR("Failed to create button handle");
@@ -101,6 +109,10 @@ void nb::watcher::_button_handler(void *button_handle, void *opaque_context)
 
     const auto id = context->button_id;
     const auto native_event = iot_button_get_event(context->button_handle);
+
+    context->watcher_instance->_logger.info(
+        "Button handler called: button_id={}, native_event={}", id,
+        native_event);
 
     // Convert ESP-IDF button event into our native events.
     nb::event badge_button_event;

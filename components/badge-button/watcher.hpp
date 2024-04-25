@@ -12,6 +12,7 @@
 #include <fmt/format.h>
 #include <stdint.h>
 #include <utils/board.hpp>
+#include <utils/logging.hpp>
 
 namespace nsec::button
 {
@@ -86,6 +87,7 @@ class watcher
                  _create_button_handle(nsec::board::button::cancel)},
     }};
     new_button_event_notifier _notify_new_event;
+    nsec::logging::logger _logger;
 };
 
 } // namespace nsec::button

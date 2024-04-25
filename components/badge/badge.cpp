@@ -233,34 +233,13 @@ bool nr::badge::is_connected() const noexcept
 void nr::badge::on_button_event(nsec::button::id button,
                                 nsec::button::event event) noexcept
 {
-    const auto button_mask_position = static_cast<unsigned int>(button);
+    _logger.info("Button event: button={}, event={}", button, event);
 
     if (_current_network_app_state != network_app_state::UNCONNECTED &&
         _current_network_app_state != network_app_state::IDLE) {
         // Don't allow button press during "modal" states.
+        _logger.debug("Ignoring button press during modal animation");
         return;
-    }
-
-    _logger.info("Button event: button={}, event={}", button, event);
-
-    /*
-     * After a focus change, don't spam the newly focused screen with
-     * repeat events of the button. We want to let the user the time to react,
-     * take their meaty appendage off the button, and initiate new interactions.
-     */
-    if (event != nsec::button::event::SINGLE_CLICK) {
-        _button_had_non_repeat_event_since_screen_focus_change |=
-            1 << button_mask_position;
-    }
-
-    const auto filter_out_button_event =
-        event == nsec::button::event::SINGLE_CLICK &&
-        !(_button_had_non_repeat_event_since_screen_focus_change &
-          (1 << button_mask_position));
-
-    // Forward the event to the focused screen.
-    if (!filter_out_button_event) {
-        // FIXME Forward button to focused mode
     }
 
     // Send the received event to the LEDs function.
