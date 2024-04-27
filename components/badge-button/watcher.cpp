@@ -43,13 +43,6 @@ namespace ns = nsec::scheduling;
 namespace ng = nsec::g;
 namespace nbb = nsec::board::button;
 
-namespace
-{
-// Configuration shared by all buttons.
-button_config_t gpio_btn_cfg;
-
-} // namespace
-
 nb::watcher::watcher(nb::new_button_event_notifier new_button_notifier) noexcept
     : _notify_new_event{new_button_notifier}, _logger{"Button watcher"}
 {
@@ -69,11 +62,6 @@ nb::watcher::~watcher()
 void nb::watcher::setup()
 {
     _logger.info("Setting up button callbacks");
-
-    for (auto &btn_context : _button_callback_contexts) {
-        btn_context.button_handle =
-            _create_button_handle(btn_context.button_gpio);
-    }
 
     const std::array<button_event_t, 2> monitored_events = {
         {BUTTON_PRESS_DOWN, BUTTON_LONG_PRESS_HOLD}};
@@ -102,21 +90,19 @@ void nb::watcher::setup()
 
 void *nb::watcher::_create_button_handle(unsigned int gpio_number)
 {
-    std::memset(&gpio_btn_cfg, 0, sizeof(gpio_btn_cfg));
-
-    gpio_btn_cfg.type = BUTTON_TYPE_GPIO;
-    gpio_btn_cfg.long_press_time = CONFIG_BUTTON_LONG_PRESS_TIME_MS;
-    gpio_btn_cfg.short_press_time = CONFIG_BUTTON_SHORT_PRESS_TIME_MS;
-    gpio_btn_cfg.gpio_button_config.gpio_num = 0;
-    gpio_btn_cfg.gpio_button_config.active_level = 0;
+    const button_config_t gpio_btn_cfg = {
+        .type = BUTTON_TYPE_GPIO,
+        .long_press_time = CONFIG_BUTTON_LONG_PRESS_TIME_MS,
+        .short_press_time = CONFIG_BUTTON_SHORT_PRESS_TIME_MS,
+        .gpio_button_config = {
+            .gpio_num = std::int32_t(gpio_number),
+            .active_level = 0,
 #if CONFIG_GPIO_BUTTON_SUPPORT_POWER_SAVE
-    gpio_btn_cfg.enable_power_save = true;
+            .enable_power_save = true,
 #endif
+        }};
 
-    gpio_btn_cfg.gpio_button_config.gpio_num = gpio_number;
-
-    _logger.debug("Creating button handle: gpio={}", gpio_number);
-    auto handle = iot_button_create(&gpio_btn_cfg);
+    const auto handle = iot_button_create(&gpio_btn_cfg);
     if (!handle) {
         NSEC_THROW_ERROR("Failed to create button handle");
     }
