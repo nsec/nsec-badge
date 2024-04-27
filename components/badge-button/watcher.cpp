@@ -43,17 +43,40 @@ namespace ns = nsec::scheduling;
 namespace ng = nsec::g;
 namespace nbb = nsec::board::button;
 
+namespace
+{
+// Configuration shared by all buttons.
+button_config_t gpio_btn_cfg;
+
+} // namespace
+
 nb::watcher::watcher(nb::new_button_event_notifier new_button_notifier) noexcept
     : _notify_new_event{new_button_notifier}, _logger{"Button watcher"}
 {
+}
+
+nb::watcher::~watcher()
+{
+    for (auto &context : _button_callback_contexts) {
+        const auto ret = iot_button_delete(context.button_handle);
+        if (ret != ESP_OK) {
+            _logger.error("Failed to delete button handle: id={}",
+                          context.button_id);
+        }
+    }
 }
 
 void nb::watcher::setup()
 {
     _logger.info("Setting up button callbacks");
 
-    std::array<button_event_t, 2> monitored_events = {BUTTON_PRESS_DOWN,
-                                                      BUTTON_LONG_PRESS_HOLD};
+    for (auto &btn_context : _button_callback_contexts) {
+        btn_context.button_handle =
+            _create_button_handle(btn_context.button_gpio);
+    }
+
+    const std::array<button_event_t, 2> monitored_events = {
+        {BUTTON_PRESS_DOWN, BUTTON_LONG_PRESS_HOLD}};
 
     for (auto &btn_context : _button_callback_contexts) {
         for (auto monitored_event : monitored_events) {
@@ -67,8 +90,9 @@ void nb::watcher::setup()
                           btn_context.button_id);
 
             if (ret != ESP_OK) {
-                NSEC_THROW_ERROR(fmt::format("Failed to register button event "
-                                             "callback: button_id={}, gpio={}",
+                NSEC_THROW_ERROR(fmt::format("Failed to register button event"
+                                             "callback: button_id={},"
+                                             "gpio = {} ",
                                              btn_context.button_id,
                                              btn_context.button_gpio));
             }
@@ -78,20 +102,18 @@ void nb::watcher::setup()
 
 void *nb::watcher::_create_button_handle(unsigned int gpio_number)
 {
-    // Configuration shared by all buttons.
-    const button_config_t gpio_btn_cfg = {
-        .type = BUTTON_TYPE_GPIO,
-        .long_press_time = CONFIG_BUTTON_LONG_PRESS_TIME_MS,
-        .short_press_time = CONFIG_BUTTON_SHORT_PRESS_TIME_MS,
-        .gpio_button_config =
-            {
-                .gpio_num = int32_t(gpio_number),
-                .active_level = 0,
+    std::memset(&gpio_btn_cfg, 0, sizeof(gpio_btn_cfg));
+
+    gpio_btn_cfg.type = BUTTON_TYPE_GPIO;
+    gpio_btn_cfg.long_press_time = CONFIG_BUTTON_LONG_PRESS_TIME_MS;
+    gpio_btn_cfg.short_press_time = CONFIG_BUTTON_SHORT_PRESS_TIME_MS;
+    gpio_btn_cfg.gpio_button_config.gpio_num = 0;
+    gpio_btn_cfg.gpio_button_config.active_level = 0;
 #if CONFIG_GPIO_BUTTON_SUPPORT_POWER_SAVE
-                .enable_power_save = true,
+    gpio_btn_cfg.enable_power_save = true;
 #endif
-            },
-    };
+
+    gpio_btn_cfg.gpio_button_config.gpio_num = gpio_number;
 
     _logger.debug("Creating button handle: gpio={}", gpio_number);
     auto handle = iot_button_create(&gpio_btn_cfg);
@@ -124,9 +146,9 @@ void nb::watcher::_button_handler(void *button_handle, void *opaque_context)
         badge_button_event = nb::event::LONG_PRESS;
         break;
     default:
-        NSEC_THROW_ERROR(fmt::format(
-            "Unexpected native button event type: button_id={}, event_type={}",
-            id, native_event));
+        NSEC_THROW_ERROR(fmt::format("Unexpected native button event type: "
+                                     "button_id={}, event_type={}",
+                                     id, native_event));
     }
 
     // Notify the badge of a new button event.

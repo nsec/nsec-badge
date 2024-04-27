@@ -32,6 +32,11 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
     strip_animator &operator=(strip_animator &&) = delete;
     ~strip_animator() = default;
 
+    void start()
+    {
+        scheduling::periodic_task<strip_animator>::start();
+    }
+
     void set_idle_animation(uint8_t id) noexcept;
 
     void set_red_to_green_led_progress_bar(uint8_t led_count);
@@ -156,6 +161,8 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
             if (ret != ESP_OK) {
                 _logger.error("Failed to show LEDs");
             }
+
+            _leds.wait();
         }
 
         led_color get_color(unsigned int index) const

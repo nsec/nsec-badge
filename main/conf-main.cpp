@@ -17,13 +17,6 @@
 #include <badge/globals.hpp>
 #include <scheduling/task.hpp>
 
-namespace
-{
-// Prevent the linker from eliminating the badge instance by forcing a
-// reference to be accounted-for.
-const auto &_badge_ref __attribute__((__used__)) = &nsec::g::the_badge;
-} // namespace
-
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 {
     friend class periodic_task<dummy_task>;
@@ -50,6 +43,10 @@ class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 extern "C" void app_main(void)
 {
     //const dummy_task the_task;
+    nsec::runtime::badge badge;
+    nsec::g::the_badge = &badge;
+
+    badge.start();
 
     while (true) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);

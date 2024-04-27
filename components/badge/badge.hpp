@@ -33,6 +33,8 @@ class badge
     badge &operator=(badge &&) = delete;
     ~badge() = default;
 
+    void start();
+
     std::uint8_t level() const noexcept;
     bool is_connected() const noexcept;
 
@@ -147,8 +149,7 @@ class badge
 
         void start(badge &) noexcept;
         void reset(badge &) noexcept;
-        void tick(badge &,
-                  nsec::scheduling::absolute_time_ms current_time_ms);
+        void tick(badge &, nsec::scheduling::absolute_time_ms current_time_ms);
 
       private:
         void _animation_state(badge &, animation_state new_state);
@@ -199,6 +200,10 @@ class badge
     {
       public:
         explicit animation_task();
+        void start()
+        {
+            nsec::scheduling::periodic_task<animation_task>::start();
+        }
         void tick(nsec::scheduling::absolute_time_ms current_time_ms);
 
       private:
@@ -250,14 +255,13 @@ class badge
     badge_unique_id _get_unique_id();
 
     mutable SemaphoreHandle_t _public_access_semaphore;
-    uint8_t _social_level;
-    uint8_t _selected_animation;
+    uint8_t _social_level = 0;
+    uint8_t _selected_animation = 0;
 
-    network_app_state _current_network_app_state;
-    unsigned int _badges_discovered_last_exchange;
-    bool _is_expecting_factory_reset : 1;
-    // Mask to prevent repeats after a screen transition, one bit per button.
-    uint8_t _button_had_non_repeat_event_since_screen_focus_change;
+    network_app_state _current_network_app_state =
+        network_app_state::UNCONNECTED;
+    unsigned int _badges_discovered_last_exchange = 0;
+    bool _is_expecting_factory_reset : 1 = 0;
 
     button::watcher _button_watcher;
 

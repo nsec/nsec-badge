@@ -12,7 +12,7 @@
 
 namespace nsec::g
 {
-extern runtime::badge the_badge;
+extern runtime::badge *the_badge;
 } // namespace nsec::g
 
 #endif /* NSEC_GLOBALS_HPP */

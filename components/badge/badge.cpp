@@ -159,17 +159,25 @@ unsigned int social_level_to_health_led_count(unsigned int level)
 } // anonymous namespace
 
 nr::badge::badge()
-    : _button_watcher([](nsec::button::id id, nsec::button::event event) {
-          nsec::g::the_badge.on_button_event(id, event);
+    : _button_watcher
+    ([](nsec::button::id id, nsec::button::event event) {
+          nsec::g::the_badge->on_button_event(id, event);
       }),
       _network_handler(), _logger("badge")
 {
+    _setup();
     _public_access_semaphore = xSemaphoreCreateMutex();
     _set_network_app_state(network_app_state::UNCONNECTED);
     _id_exchanger.reset();
     set_social_level(nsec::config::social::initial_level, false);
     _set_selected_animation(0, false);
-    _setup();
+}
+
+void nr::badge::start()
+{
+    _strip_animator.start();
+    _network_handler.start();
+    _timer.start();
 }
 
 void nr::badge::load_config()
@@ -203,8 +211,8 @@ void nr::badge::factory_reset()
 
 void nr::badge::_setup()
 {
+    _logger.info("Running badge setup");
     _button_watcher.setup();
-
     load_config();
 }
 
@@ -243,7 +251,7 @@ void nr::badge::on_button_event(nsec::button::id button,
     }
 
     // Send the received event to the LEDs function.
-    nsec::g::the_badge._update_leds(button, event);
+    nsec::g::the_badge->_update_leds(button, event);
 }
 
 void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
@@ -565,7 +573,7 @@ void nr::badge::pairing_animator::start(nr::badge &badge) noexcept
 
     badge._timer.period_ms(
         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms);
-    nsec::g::the_badge._strip_animator.set_red_to_green_led_progress_bar(0);
+    nsec::g::the_badge->_strip_animator.set_red_to_green_led_progress_bar(0);
 }
 
 void nr::badge::pairing_animator::reset() noexcept
@@ -577,12 +585,11 @@ nr::badge::animation_task::animation_task()
     : periodic_task(250), _logger("Animation task")
 {
     _logger.info("Starting task");
-    periodic_task::start();
 }
 
 void nr::badge::animation_task::tick(ns::absolute_time_ms current_time_ms)
 {
-    nsec::g::the_badge.tick(current_time_ms);
+    nsec::g::the_badge->tick(current_time_ms);
 }
 
 void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
@@ -590,12 +597,12 @@ void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
     switch (_animation_state()) {
     case animation_state::DONE:
         if (_state_counter < 8 &&
-            nsec::g::the_badge._network_handler.position() ==
+            nsec::g::the_badge->_network_handler.position() ==
                 nc::network_handler::link_position::LEFT_MOST) {
             // Left-most badge waits for the neighbor to transition states.
             _state_counter++;
         } else {
-            nsec::g::the_badge._set_network_app_state(
+            nsec::g::the_badge->_set_network_app_state(
                 nr::badge::network_app_state::EXCHANGING_IDS);
         }
         break;
@@ -604,17 +611,17 @@ void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
     case animation_state::WAIT_DONE:
         break;
     case animation_state::LIGHT_UP_UPPER_BAR:
-        nsec::g::the_badge._strip_animator.set_red_to_green_led_progress_bar(
+        nsec::g::the_badge->_strip_animator.set_red_to_green_led_progress_bar(
             _state_counter);
         if (_state_counter < 8) {
             _state_counter++;
-        } else if (nsec::g::the_badge._network_handler.position() ==
+        } else if (nsec::g::the_badge->_network_handler.position() ==
                    nc::network_handler::link_position::RIGHT_MOST) {
             _animation_state(animation_state::LIGHT_UP_LOWER_BAR);
         } else {
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::PAIRING_ANIMATION_PART_1_DONE);
-            nsec::g::the_badge._network_handler.enqueue_app_message(
+            nsec::g::the_badge->_network_handler.enqueue_app_message(
                 nc::peer_relative_position::RIGHT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_PART_1_DONE),
                 nullptr);
@@ -623,16 +630,16 @@ void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
 
         break;
     case animation_state::LIGHT_UP_LOWER_BAR:
-        nsec::g::the_badge._strip_animator.set_red_to_green_led_progress_bar(
+        nsec::g::the_badge->_strip_animator.set_red_to_green_led_progress_bar(
             _state_counter + 8);
 
         if (_state_counter < 8) {
             _state_counter++;
-        } else if (nsec::g::the_badge._network_handler.position() ==
+        } else if (nsec::g::the_badge->_network_handler.position() ==
                    nc::network_handler::link_position::LEFT_MOST) {
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::PAIRING_ANIMATION_DONE);
-            nsec::g::the_badge._network_handler.enqueue_app_message(
+            nsec::g::the_badge->_network_handler.enqueue_app_message(
                 nc::peer_relative_position::RIGHT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_DONE), nullptr);
 
@@ -640,7 +647,7 @@ void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
         } else {
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::PAIRING_ANIMATION_PART_2_DONE);
-            nsec::g::the_badge._network_handler.enqueue_app_message(
+            nsec::g::the_badge->_network_handler.enqueue_app_message(
                 nc::peer_relative_position::LEFT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_PART_2_DONE),
                 nullptr);
@@ -663,12 +670,12 @@ void nr::badge::pairing_animator::new_message(nr::badge &badge,
         _animation_state(animation_state::LIGHT_UP_LOWER_BAR);
         break;
     case nc::message::type::PAIRING_ANIMATION_DONE:
-        if (nsec::g::the_badge._network_handler.position() !=
+        if (nsec::g::the_badge->_network_handler.position() !=
             nc::network_handler::link_position::RIGHT_MOST) {
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::PAIRING_ANIMATION_DONE);
 
-            nsec::g::the_badge._network_handler.enqueue_app_message(
+            nsec::g::the_badge->_network_handler.enqueue_app_message(
                 nc::peer_relative_position::RIGHT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_DONE), nullptr);
         }
@@ -864,7 +871,7 @@ void nr::badge::_cycle_selected_animation(
     _set_selected_animation(new_selected_animation, true);
 
     // Set the LEDs pattern.
-    nsec::g::the_badge._strip_animator.set_idle_animation(
+    nsec::g::the_badge->_strip_animator.set_idle_animation(
         new_selected_animation);
 }
 
@@ -879,7 +886,7 @@ void nr::badge::_update_leds(nsec::button::id id,
     switch (id) {
     case nsec::button::id::LEFT:
     case nsec::button::id::RIGHT:
-        nsec::g::the_badge._cycle_selected_animation(
+        nsec::g::the_badge->_cycle_selected_animation(
         id == nsec::button::id::LEFT
             ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
             : nsec::runtime::badge::cycle_animation_direction::NEXT);

@@ -168,6 +168,11 @@ class network_handler : public scheduling::periodic_task<network_handler>
     network_handler &operator=(network_handler &&) = delete;
     ~network_handler() = default;
 
+    void start()
+    {
+        scheduling::periodic_task<network_handler>::start();
+    }
+
     peer_id_t peer_id() const noexcept
     {
         return _peer_id;

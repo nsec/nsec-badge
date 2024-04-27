@@ -361,7 +361,6 @@ nc::network_handler::network_handler() noexcept
 {
     _reset();
     _setup();
-    start();
 }
 
 void nc::network_handler::_setup() noexcept
@@ -546,7 +545,7 @@ void nc::network_handler::_set_wire_protocol_state(
 
     if (_is_wire_protocol_in_a_running_state(previous_protocol_state) &&
         state == wire_protocol_state::UNCONNECTED) {
-        nsec::g::the_badge.on_disconnection();
+        nsec::g::the_badge->on_disconnection();
     }
 
     if (state == wire_protocol_state::UNCONNECTED) {
@@ -568,7 +567,7 @@ void nc::network_handler::_set_wire_protocol_state(
     if (!_is_wire_protocol_in_a_running_state(previous_protocol_state) &&
         _is_wire_protocol_in_a_running_state(state)) {
         // Discovery has completed.
-        nsec::g::the_badge.on_pairing_end(_peer_id, _peer_count);
+        nsec::g::the_badge->on_pairing_end(_peer_id, _peer_count);
     }
 }
 
@@ -1104,7 +1103,7 @@ void nc::network_handler::_run_wire_protocol(
         if (message_type >=
             nsec::config::communication::application_message_type_range_begin) {
             // Process app-level message
-            nsec::g::the_badge.on_message_received(
+            nsec::g::the_badge->on_message_received(
                 nc::message::type(message_type), message_payload);
         } else if (wire_msg_type(message_type) == wire_msg_type::MONITOR) {
             _set_wire_protocol_state(
@@ -1141,7 +1140,7 @@ void nc::network_handler::_run_wire_protocol(
         break;
     }
     case wire_protocol_state::RUNNING_CONFIRM_APP_MESSAGE:
-        nsec::g::the_badge.on_app_message_sent();
+        nsec::g::the_badge->on_app_message_sent();
         _set_wire_protocol_state(wire_protocol_state::RUNNING_SEND_MONITOR);
         break;
     case wire_protocol_state::RUNNING_SEND_MONITOR:

@@ -668,7 +668,6 @@ nl::strip_animator::strip_animator() noexcept
 {
     _setup();
     set_idle_animation(0);
-    start();
 }
 
 void nl::strip_animator::_setup() noexcept

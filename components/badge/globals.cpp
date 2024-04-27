@@ -4,4 +4,4 @@
 
 #include "globals.hpp"
 
-nsec::runtime::badge nsec::g::the_badge;
+nsec::runtime::badge *nsec::g::the_badge;

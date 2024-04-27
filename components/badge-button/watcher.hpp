@@ -36,7 +36,7 @@ class watcher
     watcher(watcher &&) = delete;
     watcher &operator=(const watcher &) = delete;
     watcher &operator=(watcher &&) = delete;
-    ~watcher() = default;
+    ~watcher();
 
     // Setup hardware.
     void setup();
@@ -46,46 +46,37 @@ class watcher
         const watcher *const watcher_instance;
         const nsec::button::id button_id;
         const unsigned int button_gpio;
-        void *const button_handle;
+        void *button_handle;
     };
 
     void *_create_button_handle(unsigned int gpio_number);
     static void _button_handler(void *button_handle, void *context);
 
-    std::array<button_callback_context, 6> _button_callback_contexts = {{
-        [std::size_t(nsec::button::id::UP)] =
-            {.watcher_instance = this,
-             .button_id = nsec::button::id::UP,
-             .button_gpio = nsec::board::button::up,
-             .button_handle = _create_button_handle(nsec::board::button::up)},
-        [std::size_t(nsec::button::id::DOWN)] =
-            {.watcher_instance = this,
-             .button_id = nsec::button::id::DOWN,
-             .button_gpio = nsec::board::button::down,
-             .button_handle = _create_button_handle(nsec::board::button::down)},
-        [std::size_t(nsec::button::id::LEFT)] =
-            {.watcher_instance = this,
-             .button_id = nsec::button::id::LEFT,
-             .button_gpio = nsec::board::button::left,
-             .button_handle = _create_button_handle(nsec::board::button::left)},
-        [std::size_t(nsec::button::id::RIGHT)] =
-            {.watcher_instance = this,
-             .button_id = nsec::button::id::RIGHT,
-             .button_gpio = nsec::board::button::right,
-             .button_handle =
-                 _create_button_handle(nsec::board::button::right)},
-        [std::size_t(nsec::button::id::OK)] =
-            {.watcher_instance = this,
-             .button_id = nsec::button::id::OK,
-             .button_gpio = nsec::board::button::ok,
-             .button_handle = _create_button_handle(nsec::board::button::ok)},
-        [std::size_t(nsec::button::id::CANCEL)] =
-            {.watcher_instance = this,
-             .button_id = nsec::button::id::CANCEL,
-             .button_gpio = nsec::board::button::cancel,
-             .button_handle =
-                 _create_button_handle(nsec::board::button::cancel)},
-    }};
+    button_callback_context _button_callback_contexts[6] = {
+        {.watcher_instance = this,
+         .button_id = nsec::button::id::UP,
+         .button_gpio = nsec::board::button::up,
+         .button_handle = nullptr},
+        {.watcher_instance = this,
+         .button_id = nsec::button::id::DOWN,
+         .button_gpio = nsec::board::button::down,
+         .button_handle = nullptr},
+        {.watcher_instance = this,
+         .button_id = nsec::button::id::LEFT,
+         .button_gpio = nsec::board::button::left,
+         .button_handle = nullptr},
+        {.watcher_instance = this,
+         .button_id = nsec::button::id::RIGHT,
+         .button_gpio = nsec::board::button::right,
+         .button_handle = nullptr},
+        {.watcher_instance = this,
+         .button_id = nsec::button::id::OK,
+         .button_gpio = nsec::board::button::ok,
+         .button_handle = nullptr},
+        {.watcher_instance = this,
+         .button_id = nsec::button::id::CANCEL,
+         .button_gpio = nsec::board::button::cancel,
+         .button_handle = nullptr}};
     new_button_event_notifier _notify_new_event;
     nsec::logging::logger _logger;
 };
