@@ -266,7 +266,7 @@ static int raw_read_register1(int argc, char **argv) {
 
 static int raw_write_register1(int argc, char **argv) {
     if (argc <= 1) {
-        printf("Usage: raw_write_register [value]\n");
+        printf("Usage: raw_write_register [hex value]\n");
         return 0;
     }
     full_duplex_spi_writeSRN(static_cast<uint8_t>(parse_address(argc, argv)), 1);
