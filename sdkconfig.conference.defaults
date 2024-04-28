@@ -1,0 +1,9 @@
+# This file was generated using idf.py save-defconfig. It can be edited manually.
+# Espressif IoT Development Framework (ESP-IDF)  Project Minimal Configuration
+#
+# Defaults specific to the Conference firmware
+#
+CONFIG_NSEC_BUILD_CONFERENCE=y
+
+CONFIG_COMPILER_CXX_EXCEPTIONS=y
+CONFIG_RMT_ISR_IRAM_SAFE=y

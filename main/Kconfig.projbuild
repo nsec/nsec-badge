@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2024 NorthSec
+#
+# SPDX-License-Identifier: MIT
+
+menu "NORTHSEC 2024"
+    choice
+
+        prompt "Firmware build selection"
+
+        config NSEC_BUILD_CONFERENCE
+            bool "NorthSec Conference"
+            help
+                Set this when building the conference firmware.
+
+        config NSEC_BUILD_CTF
+            bool "NorthSec CTF"
+            help
+                Set this when building firmware distributed at the admin table during CTF.
+
+        config NSEC_BUILD_ADDON
+            bool "NorthSec CTF Addon"
+            help
+                Set this when building firmware for the CTF Addcon that is available during CTF.
+
+    endchoice
+endmenu

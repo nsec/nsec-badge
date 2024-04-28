@@ -1,4 +1,4 @@
-NorthSec 2023 badge
+NorthSec 2024 badge
 ===================
 
 Brought to you by the Team badge of NorthSec.
@@ -11,54 +11,85 @@ Brought to you by the Team badge of NorthSec.
 
 ## Hardware
 
-The NorthSec 2023 badge is based on
-[ESP32 microcontroller](https://www.espressif.com/en/products/socs/esp32)
-(ESP32-WROOM-32-N4) which is used to drive several periphery devices:
+The NorthSec 2024 badge is loosely based on the ESP32-S3-DevKitC-1 design with an
+[ESP32-S3 microcontroller](https://www.espressif.com/en/products/socs/esp32-s3)
+(ESP32-S3-WROOM-1-N8R8) which is used to drive several periphery devices:
 
- - WiFi interface
- - BLE interface
- - [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel) RGB LEDs
+- Sixteen [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel) RGB LEDs
+- Six buttons
+- Two 'pairing' connectors
+- Four [Shitty Add-On V1.69bis](https://hackaday.com/2019/03/20/introducing-the-shitty-add-on-v1-69bis-standard/) connector
 
-The badge is powered through a USB-C port or through an external battery that
-can supply between 3.7V and 6V.
+The badge is powered through a USB-C port or through 3 AAA batteries.
 
 If you wish to hack your badge or create a new one based on the hardware. All
-the information [is available here](hw/2023/).
+the information [is available here](hw/2024/).
 
 ## Building the firmware
 
-The badge firmware is based on
-[ESP-IDF](https://www.espressif.com/en/products/sdks/esp-idf) v5.0.1
-framework. The exact commit is tracked as a submodule in `esp-idf`, and you
-can install it with these commands:
+The firmware is based on the [Espressif IoT Development
+Framework](https://docs.platformio.org/en/latest/frameworks/espidf.html). The
+build system uses
+[PlatformIO](https://docs.platformio.org/en/stable/what-is-platformio.html) to
+easily manage the dependencies.
+
+You can install it on Debian / Ubuntu in a python virtualenv with these
+commands:
 
 ```bash
-git clone https://github.com/nsec/nsec-badge.git
-cd nsec-badge/
-git submodule update --init
-./esp-idf/install.sh
+sudo apt install python3-virtualenv
+
+virtualenv .venv
+. .venv/bin/activate
+
+pip install platformio
 ```
 
 The installation procedure for your OS may differ a little, please consult the
-[documentation website](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html#installation-step-by-step)
+[PlatformIO
+documentation](https://docs.platformio.org/en/stable/core/installation/index.html)
 if you have any difficulties.
 
-Once the installation is complete you can build the firmware and flash it to
-the badge:
+Once the installation is complete you can build the firmware:
 
 ```bash
-source esp-idf/export.sh
-cd esp32/
-idf.py build flash monitor
+# Conference firmware
+pio run -e conference
+
+# CTF firmware
+pio run -e ctf
+
+# Addon firmware
+pio run -e addon
 ```
 
-If for some reason `idf.py` is not able to complete the operation, refer to the
-[ESP-IDF documentation](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html#step-9-flash-onto-the-device).
+## Flashing
+
+Flash the firmware with this command:
+
+```bash
+# Conference firmware
+pio run -t upload -e conference
+
+# CTF firmware
+pio run -t upload -e ctf
+
+# Addon firmware
+pio run -t upload -e addon
+```
+
+if multiple badges are connected, you can select which badge will be flash
+with the "--upload-port [port name]" option:
+
+```bash
+# Conference firmware
+pio run -t upload -e conference --upload-port [port name]
+```
 
 ## Debugging
 
 To read the logging statements output on the USB serial interface, it is
-possible to use `idf.py`'s `monitor` command.
+possible to use `pio device monitor` or `idf.py`'s `monitor` command.
 
 However, you can use your preferred terminal emulator by pointing it to the
 `/dev/ttyACM0` device. The badge is configured to output at 115'200 bauds,
@@ -73,7 +104,7 @@ without affecting the pseudo-terminal device, allowing you to read early-boot
 messages. This is supported by most terminal emulators.
 
 ## Credits
-NorthSec CTF badge 2023 is brought to you by the team work of:
+NorthSec CTF badge 2024 is brought to you by the team work of:
 
  - [EiNSTeiN-](https://github.com/EiNSTeiN-)
  - [Svieg](https://github.com/Svieg)
@@ -82,6 +113,7 @@ NorthSec CTF badge 2023 is brought to you by the team work of:
  - [lle](https://github.com/lle)
  - [mjeanson](https://github.com/mjeanson)
  - [nyx0](https://github.com/nyx0)
+ - [sylemieux](https://github.com/sylemieux)
 
 Special thanks to:
  - [20th](https://github.com/20th)
