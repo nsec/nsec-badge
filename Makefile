@@ -13,7 +13,7 @@ build:
 	pio run -e $(ENV) $(VERBOSE)
 
 flash:
-	pio run -e $(ENV) $(VERBOSE) -t upload -v
+	pio run -e $(ENV) $(VERBOSE) -t upload
 
 menuconfig:
 	pio run -e $(ENV) $(VERBOSE) -t menuconfig
@@ -25,7 +25,10 @@ check:
 	pio test -e native_tests $(VERBOSE)
 
 check-embedded:
-	pio test -e embedded_tests -v
+	pio test -e embedded_tests $(VERBOSE)
+
+monitor:
+	pio device monitor --filter=direct
 
 reuse:
 	reuse lint
