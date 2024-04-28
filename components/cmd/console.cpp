@@ -8,6 +8,7 @@
 #include "linenoise/linenoise.h"
 
 #include "ota_init.h"
+#include "cmd_sys.h"
 #if CONFIG_NSEC_BUILD_CTF
 #include "wifi.h"
 #endif
@@ -30,6 +31,7 @@ extern "C" void console_init()
     /* Register commands */
     esp_console_register_help_command();
     register_ota_cmd();
+    console_register_cmd_sys();
 #if CONFIG_NSEC_BUILD_CTF
     // CTF-only commands
     register_wifi_cmd();
