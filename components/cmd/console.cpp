@@ -10,6 +10,10 @@
 #if CONFIG_NSEC_BUILD_CTF
 #include "wifi.h"
 #endif
+#if CONFIG_NSEC_BUILD_ADDON
+#include "challenges_storage.h"
+#include "crypto_atecc_cmd.h"
+#endif
 
 static const char* TAG = "console";
 #define PROMPT_STR "nsec"
@@ -29,6 +33,10 @@ extern "C" void console_init()
     /* Register commands */
     esp_console_register_help_command();
     register_ota_cmd();
+    #if CONFIG_NSEC_BUILD_ADDON
+    register_challenges_storage();
+    register_crypto_atecc();
+    #endif
 
 #if defined(CONFIG_ESP_CONSOLE_UART_DEFAULT) || defined(CONFIG_ESP_CONSOLE_UART_CUSTOM)
     esp_console_dev_uart_config_t hw_config = ESP_CONSOLE_DEV_UART_CONFIG_DEFAULT();

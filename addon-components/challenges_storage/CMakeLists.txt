@@ -4,7 +4,7 @@ if(CONFIG_NSEC_BUILD_ADDON)
             "challenges_storage.cpp"
             "flash_operations.cpp"
             "spi_operations.cpp"
-        INCLUDE_DIRS "." "../save"
-        REQUIRES console spi_flash driver main esp_rom
+        INCLUDE_DIRS "."
+        REQUIRES crypto_atecc console save spi_flash driver main esp_rom
     )
 endif()

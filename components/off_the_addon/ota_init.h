@@ -1,6 +1,7 @@
 #pragma once
 
 #include "driver/gpio.h"
+#include "esp_flash.h"
 
 // Off the addon PINs (used in all firmware)
 #define SAO3_I01 GPIO_NUM_7

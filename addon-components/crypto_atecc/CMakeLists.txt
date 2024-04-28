@@ -4,7 +4,7 @@ if(CONFIG_NSEC_BUILD_ADDON)
             "crypto_atecc_cmd.cpp"
             "crypto_atecc_init.cpp"
             "crypto_operations.cpp"
-        INCLUDE_DIRS "." "../save"
-        REQUIRES console esp-cryptoauthlib
+        INCLUDE_DIRS "."
+        REQUIRES save console esp-cryptoauthlib
     )
 endif()
