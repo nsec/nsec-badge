@@ -186,14 +186,14 @@ void nr::badge::load_config()
     eeprom_config config{};
 
     set_social_level(config.social_level, false);
-    _set_selected_animation(config.favorite_animation_id, false);
+    _set_selected_animation(config.selected_animation_id, false);
 }
 
 void nr::badge::save_config() const
 {
     eeprom_config config;
     config.version_magic = config_version_magic;
-    config.favorite_animation_id = _selected_animation;
+    config.selected_animation_id = _selected_animation;
     config.social_level = _social_level;
 
     // FIXME Save config

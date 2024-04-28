@@ -212,7 +212,7 @@ class badge
 
     struct eeprom_config {
         uint16_t version_magic;
-        uint8_t favorite_animation_id;
+        uint8_t selected_animation_id;
         uint8_t social_level;
     };
 

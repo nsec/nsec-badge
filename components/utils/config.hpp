@@ -100,6 +100,15 @@ namespace nsec::config::logging
 {
 constexpr auto uart_interface_level = nsec::logging::logger::severity::INFO;
 constexpr auto network_handler_level = nsec::logging::logger::severity::INFO;
-}
+} // namespace nsec::config::logging
+
+namespace nsec::config::persistence
+{
+constexpr auto namespace_name = "badge2024";
+constexpr auto social_level_field_name = "social_lvl";
+constexpr auto selected_animation_field_name = "slctd_anim";
+constexpr auto badge_id_field_name_prefix = "b";
+constexpr auto badge_paired_count_field_name = "paired_count";
+} // namespace nsec::config::persistence
 
 #endif // NSEC_CONFIG_HPP
