@@ -41,17 +41,27 @@ void np::utils::initialize_storage()
                      init_ret);
         if (init_ret == ESP_ERR_NVS_NO_FREE_PAGES ||
             init_ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-            // NVS partition was truncated and needs to be erased. Retry
-            // nvs_flash_init.
-
+            // NVS partition was truncated and needs to be erased.
+            // Retry nvs_flash_init.
             logger.info("Erasing flash to attempt recovery", init_ret);
 
             const auto erase_ret = nvs_flash_erase();
             if (erase_ret != ESP_OK) {
-                logger.warn("Failed to erase flash: nvs_flash_erase returned {}", erase_ret);
+                logger.warn(
+                    "Failed to erase flash: nvs_flash_erase returned {}",
+                    erase_ret);
             }
 
             tried_to_recover = true;
         }
+    }
+}
+
+void np::utils::reset_storage()
+{
+    const auto erase_ret = nvs_flash_erase();
+    if (erase_ret != ESP_OK) {
+        NSEC_PERSISTENCE_THROW_ERROR(
+            fmt::format("Failed to reset storage: nvs_error={}", erase_ret));
     }
 }

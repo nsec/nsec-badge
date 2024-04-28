@@ -159,8 +159,7 @@ unsigned int social_level_to_health_led_count(unsigned int level)
 } // anonymous namespace
 
 nr::badge::badge()
-    : _button_watcher
-    ([](nsec::button::id id, nsec::button::event event) {
+    : _button_watcher([](nsec::button::id id, nsec::button::event event) {
           nsec::g::the_badge->on_button_event(id, event);
       }),
       _network_handler(), _logger("badge")
@@ -216,14 +215,14 @@ void nr::badge::_setup()
     load_config();
 }
 
-nr::badge::badge_unique_id nr::badge::_get_unique_id()
+nr::badge_unique_id nr::badge::_get_unique_id()
 {
     uint8_t mac_bytes[6] = {0};
 
     esp_read_mac(mac_bytes, ESP_MAC_EFUSE_FACTORY);
 
-    return badge_unique_id{mac_bytes[0], mac_bytes[1], mac_bytes[2],
-                           mac_bytes[3], mac_bytes[4], mac_bytes[5]};
+    return nr::badge_unique_id{mac_bytes[0], mac_bytes[1], mac_bytes[2],
+                               mac_bytes[3], mac_bytes[4], mac_bytes[5]};
 }
 
 uint8_t nr::badge::level() const noexcept
@@ -371,12 +370,11 @@ void nr::badge::network_id_exchanger::start(nr::badge &badge) noexcept
     }
 
     // Left-most peer initiates the exchange.
+    const auto badge_id = badge._get_unique_id();
     nc::message::announce_badge_id msg = {
         .peer_id = our_id,
-        .board_unique_id = {
-            badge._get_unique_id().value[0], badge._get_unique_id().value[1],
-            badge._get_unique_id().value[2], badge._get_unique_id().value[3],
-            badge._get_unique_id().value[4], badge._get_unique_id().value[5]}};
+        .board_unique_id = {badge_id[0], badge_id[1], badge_id[2], badge_id[3],
+                            badge_id[4], badge_id[5]}};
 
     _logger.debug("Enqueueing message: type={}",
                   nc::message::type::ANNOUNCE_BADGE_ID);
@@ -422,14 +420,12 @@ void nr::badge::network_id_exchanger::new_message(
         break;
     case nc::network_handler::link_position::RIGHT_MOST:
         if (_message_received_count == peer_count - 1) {
+            const auto badge_id = badge._get_unique_id();
+
             nc::message::announce_badge_id msg = {
                 .peer_id = badge._network_handler.peer_id(),
-                .board_unique_id = {badge._get_unique_id().value[0],
-                                    badge._get_unique_id().value[1],
-                                    badge._get_unique_id().value[2],
-                                    badge._get_unique_id().value[3],
-                                    badge._get_unique_id().value[4],
-                                    badge._get_unique_id().value[5]}};
+                .board_unique_id = {badge_id[0], badge_id[1], badge_id[2],
+                                    badge_id[3], badge_id[4], badge_id[5]}};
 
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::ANNOUNCE_BADGE_ID);
@@ -472,12 +468,11 @@ void nr::badge::network_id_exchanger::message_sent(nr::badge &badge) noexcept
         return;
     }
 
+    const auto badge_id = badge._get_unique_id();
     nc::message::announce_badge_id msg = {
         .peer_id = badge._network_handler.peer_id(),
-        .board_unique_id = {
-            badge._get_unique_id().value[0], badge._get_unique_id().value[1],
-            badge._get_unique_id().value[2], badge._get_unique_id().value[3],
-            badge._get_unique_id().value[4], badge._get_unique_id().value[5]}};
+        .board_unique_id = {badge_id[0], badge_id[1], badge_id[2], badge_id[3],
+                            badge_id[4], badge_id[5]}};
 
     _logger.debug("Enqueueing message: type={}",
                   nc::message::type::ANNOUNCE_BADGE_ID);
@@ -887,9 +882,9 @@ void nr::badge::_update_leds(nsec::button::id id,
     case nsec::button::id::LEFT:
     case nsec::button::id::RIGHT:
         nsec::g::the_badge->_cycle_selected_animation(
-        id == nsec::button::id::LEFT
-            ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
-            : nsec::runtime::badge::cycle_animation_direction::NEXT);
+            id == nsec::button::id::LEFT
+                ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
+                : nsec::runtime::badge::cycle_animation_direction::NEXT);
         break;
     case nsec::button::id::DOWN:
         _strip_animator.set_health_meter_bar(

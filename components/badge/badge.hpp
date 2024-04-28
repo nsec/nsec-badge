@@ -14,6 +14,7 @@
 #include <badge-network/network_handler.hpp>
 #include <cstdint>
 #include <utils/logging.hpp>
+#include <badge/id.hpp>
 
 namespace nsec::runtime
 {
@@ -214,10 +215,6 @@ class badge
         uint16_t version_magic;
         uint8_t selected_animation_id;
         uint8_t social_level;
-    };
-
-    struct badge_unique_id {
-        std::uint8_t value[6];
     };
 
     void load_config();

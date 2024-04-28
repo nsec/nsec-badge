@@ -71,6 +71,7 @@ class managed_nvs_handle
 };
 
 void initialize_storage();
+void reset_storage();
 
 } // namespace nsec::persistence::utils
 
