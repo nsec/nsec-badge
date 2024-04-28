@@ -256,6 +256,7 @@ class badge
     mutable SemaphoreHandle_t _public_access_semaphore;
     uint8_t _social_level = 0;
     uint8_t _selected_animation = 0;
+    uint8_t _idle_press_down_tracking = 0;
 
     network_app_state _current_network_app_state =
         network_app_state::UNCONNECTED;
