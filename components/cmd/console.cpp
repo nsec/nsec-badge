@@ -9,8 +9,10 @@
 
 #include "ota_init.h"
 #include "cmd_sys.h"
+
 #if CONFIG_NSEC_BUILD_CTF
 #include "wifi.h"
+#include "ir.h"
 #include "reaction_time.h"
 #endif
 #if CONFIG_NSEC_BUILD_ADDON
@@ -27,6 +29,7 @@ void register_commands() {
     register_ota_cmd();
 #if CONFIG_NSEC_BUILD_CTF
     register_wifi_cmd();
+    register_ir_cmd();
     register_reaction_time_cmd();
 #endif
 #if CONFIG_NSEC_BUILD_ADDON
