@@ -8,5 +8,5 @@ set(CONFIG_NSEC_BUILD_ADDON $ENV{CONFIG_NSEC_BUILD_ADDON} CACHE INTERNAL "")
 
 idf_component_register(SRCS "wifi.cpp"
                        INCLUDE_DIRS "."
-                       REQUIRES driver save modbus
+                       REQUIRES console driver save modbus
 )

@@ -13,9 +13,6 @@
 #include "console.h"
 #include "save.h"
 #include "ota_init.h"
-#if CONFIG_NSEC_BUILD_CTF
-#include "wifi.h"
-#endif
 
 static void initialize_nvs() {
     esp_err_t err = nvs_flash_init();
@@ -34,10 +31,6 @@ extern "C" void app_main(void) {
     Save::load_save();
 
     ota_init();
-
-    #if CONFIG_NSEC_BUILD_CTF
-        Wifi::getInstance().init();
-    #endif
 
     /* Wait a few seconds before enabling the console. */
     vTaskDelay(2000 / portTICK_PERIOD_MS);
