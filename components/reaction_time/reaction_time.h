@@ -8,12 +8,20 @@ extern "C" {
 #define NVS_LEVEL_KEY "rt_lvl"
 
 typedef enum {
-    BUTTON_UP = 0,
+    BUTTON_UP = 35,
     BUTTON_DOWN,
     BUTTON_LEFT,
     BUTTON_RIGHT,
-    BUTTON_COUNT, // Used to know number of buttons
 } button_t;
+
+const int32_t BUTTONS[] = {
+    BUTTON_UP,
+    BUTTON_DOWN,
+    BUTTON_LEFT,
+    BUTTON_RIGHT,
+};
+
+const int BUTTON_COUNT = sizeof(BUTTONS) / sizeof(*BUTTONS);
 
 void register_reaction_time_cmd(void);
 
