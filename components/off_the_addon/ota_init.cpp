@@ -139,11 +139,11 @@ esp_flash_t* init_ext_flash() {
     };
 
     ESP_LOGI(TAG, "Initializing external SPI Flash at %dMHz", device_config.freq_mhz);
-    /*ESP_LOGI(TAG, "Pin assignments:");
+    ESP_LOGI(TAG, "Pin assignments:");
     ESP_LOGI(TAG, "MOSI: %2d   MISO: %2d   SCLK: %2d   CS: %2d",
         bus_config.mosi_io_num, bus_config.miso_io_num,
         bus_config.sclk_io_num, device_config.cs_io_num
-    );*/
+    );
 
     // Add device to the SPI bus
     esp_flash_t* ext_flash;

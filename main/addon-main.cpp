@@ -29,11 +29,13 @@ extern "C" void app_main(void) {
     initialize_nvs();
     fflush(stdout);
     Save::load_save();
+
     crypto_atecc_init();
     challenges_storage_init();
-    
-    /* Wait a few seconds before enabling the console. */
-    vTaskDelay(4000 / portTICK_PERIOD_MS);
+
+    /* Wait a few seconds before enabling everything. */
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
 
     console_init();
+
 }
