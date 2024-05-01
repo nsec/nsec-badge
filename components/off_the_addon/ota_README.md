@@ -11,11 +11,11 @@
 
 ## Project names
 Use these projects names on the firmware to be loaded:
-| project name | purpose | target partition | flashed when |
-| ------------ | ------- | ---------------- | ---------------- |
-| nsec-badge | for the conference | `factory` | before the event by staff |
-| nsec-ctf | for the CTF | `ota_0` | during the CTF at the admin table |
-| nsec-ctf-addon | for the CTF Addon | `ota_1` | when the add-on is connected |
+| PIO_ENV_NAME | IDF_PROJECT_NAME | purpose | target partition | flashed when |
+| ----- | ------------ | ------- | ---------------- | ---------------- |
+| conference | nsec-badge | for the conference | `factory` | before the event by staff |
+| ctf | nsec-ctf | for the CTF | `ota_0` | during the CTF at the admin table |
+| addon | nsec-ctf-addon | for the CTF Addon | `ota_1` | when the add-on is connected |
 
 ## Loading firmware
 `firmware_select <project_name>` loads the firmware associated to the project
@@ -23,27 +23,20 @@ name. Without argument, the command shows available firmwares to boot.
 If there is only one firmware, the command is not available.
 
 ## Build
-You have to build 3 times to get 3 files as `project_name.bin` in the `build/`
-directory. Use `idf.py menuconfig` to select the firmware to build, it will be
-right there under "NORTHSEC 2024". You can switch and run them all without
-deleting `build/` because they will have different bin filenames. `menuconfig`
-is useful to change the options and you need to run it between builds. Also
-sometimes (fresh git clone or clean build) you need to build twice to get the
-right one (but not the conference this one acts like default). Use `idf.py
-build` to build.
+You have to build 3 times to get 3 `firmware.bin` files in the `.pio/build/IDF_PROJECT_NAME`
+directories. Use `pio run -e PIO_ENV_NAME` to select the firmware to build (conference|ctf|addon). Make sure you delete the `sdkconfig.PIO_ENV_NAME` files if `menuconfig` or any `sdkconfig.defaults` changes.
 
 ## Provisioning
+The .py scripts bellow can be executed inside ESP-IDF, or with the a path under your 
+platformio folder. Example :
+`~/.platformio/packages/framework-espidf/components/partition_table/parttool.py`.
+
 If order to flash your firmware:
-- Use `idf.py flash` for the conference firmware. This works like the default.
+- Use `pio run -t upload -e conference` for the conference firmware.
 - Use `parttool.py write_partition --partition-name=ota_0 --input
-  build\nsec-ctf.bin` for the CTF.
-- No need to flash the CTF Addon, it will take care of itself!
-- To load into the CTF Addon you need to use a test device, load the add-on
-  firmware into `ota_0`, uncomment the line `storage_read_from_ota(0, flash);`,
-  build, boot to load into external flash, uncomment the line, build, boot to
-  load into ota 1 and validate it works.
-- Most likely https://github.com/nsec/ctf-addon-prov will take care of that
-  alongside the crypto device and generation of flags.
+  .pio/build/ctf/firmware.bin` for the CTF.
+- No need to flash the CTF Addon firmware, off_the_addon  will take care of it!
+
 
 ## CTF Addon details
 - When the CTF Addon is connected, the `GPIO 12` is grounded and the message
@@ -59,20 +52,20 @@ If order to flash your firmware:
 - When the blue light on the CTF Addon is on, it means that the add-on has been
   detected.
 - When it's blinking very quickly, it means that the firmware is being copied.
-- When it's blinking at 500ms it means that it can't flash the firmware due to
+- When it's blinking at 100ms it means that it can't flash the firmware due to
   errors (see `ESP_LOGE` outputs); these shouldn't happen outside of
   provisioning testing.
-- When it's blinking at 1000ms it means that the flash is not detected but the
-  firmware was; this is prolly a hardware failure on the chip side.
+- When it's blinking at 1000ms it means that the flash is not detected;
+  this is prolly a hardware failure on the chip side (check connection).
 - When it's blinking 3 times and then stays on, it means that it won't flash
   the firmware from its flash because there's already one present.
 
-### Update existing addon firmware
+### Update existing addon firmware from addon flash memory
 - Disconnect the CTF Addon.
 - Execute `parttool.py erase_partition --partition-name=ota_1`.
-- Execute `idf.py flash monitor` if you want to reset the device to boot from
-  factory firmware.
-- Re-plug the add-on while the esp32s3 is on, then press the `RST` button.
+- Execute `pio run -t upload -e conference` if you want to reset the device
+  and boot from factory firmware.
+- Re-plug the add-on and `reboot` the badge using command line to see logs.
 - Check the logs, upon successful behavior you should see `ota_init: CTF Addon
   detected` and `ota_actions: Writing to OTA partition 1 from external
   flash...` and also the blue light will blink very quickly during the copy.
