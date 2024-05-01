@@ -36,4 +36,9 @@ extern "C" void app_main(void) {
     vTaskDelay(2000 / portTICK_PERIOD_MS);
 
     console_init();
+
+    /* Spin to prevent main task from exiting. */
+    while (true) {
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
 }
