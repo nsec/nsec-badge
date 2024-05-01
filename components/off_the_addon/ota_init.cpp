@@ -35,15 +35,12 @@ void ota_init() {
         gpio_set_level(ADDON_BLUE_LED, 1);
         flash = init_ext_flash();
         if (flash != NULL) {
-            // Use this to load the flash from OTA 0 at provisionning
-            // storage_read_from_ota(0, flash);
-            // return;
             if(write_flash_to_ota(flash)) {
                 // Addon plugged in and OTA already flashed
                 int times = 3;
                 xTaskCreate(blink_blueled_ntime_task, "Blink blue LED task", 1024, &times, 2, NULL);
             } else {
-                int ms_delay = 500;
+                int ms_delay = 100;
                 xTaskCreate(blink_blueled_task, "Blink blue LED task", 1024, &ms_delay, 2, NULL);
             }
         } else {
