@@ -83,15 +83,6 @@ int graphics_probe(void)
     return 0;
 }
 
-button_t get_random_button(button_t last_button)
-{
-    button_t new_button;
-    do {
-        new_button = esp_random() % BUTTON_COUNT;
-    } while (new_button == last_button);
-    return new_button;
-}
-
 esp_err_t write_level(uint8_t level)
 {
     nvs_handle_t nvs;
@@ -194,8 +185,30 @@ int rt_cmd(int argc, char **argv)
     return ESP_OK;
 }
 
+static int32_t btn_gpio;
+static SemaphoreHandle_t btn_mutex;
+
+button_t get_random_button(button_t last_button)
+{
+    button_t new_button;
+    do {
+        new_button = BUTTONS[esp_random() % BUTTON_COUNT];
+    } while (new_button == last_button);
+    return new_button;
+}
+
 void button_callback(void *button_handle, void *usr_data)
 {
+    if (xSemaphoreTake(btn_mutex, (TickType_t)0) == pdTRUE) {
+        btn_gpio = *(int32_t *)usr_data;
+
+        const char *buttons[] = {"UP", "DOWN", "LEFT", "RIGHT"};
+        ESP_LOGD(LOG_TAG, "Clicked %dx on %s button",
+                 1 + iot_button_get_repeat(button_handle),
+                 buttons[btn_gpio - BUTTON_UP]);
+
+        assert(xSemaphoreGive(btn_mutex) == pdTRUE);
+    }
 }
 
 esp_err_t iot_button_register(void)
@@ -231,7 +244,7 @@ void register_reaction_time_cmd(void)
     rt_cmd_args.end = arg_end(1);
 
     const esp_console_cmd_t cmd = {
-        .command = "reaction_time",
+        .command = CMD_NAME,
         .help = rt_cmd_help,
         .hint = NULL,
         .func = &rt_cmd,

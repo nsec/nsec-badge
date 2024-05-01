@@ -4,6 +4,8 @@
 extern "C" {
 #endif
 
+#define CMD_NAME "reaction_time"
+#define LOG_TAG CMD_NAME
 #define NVS_NAMESPACE "storage"
 #define NVS_LEVEL_KEY "rt_lvl"
 
