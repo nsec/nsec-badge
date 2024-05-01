@@ -9,6 +9,9 @@
 #include "badge-network/network_messages.hpp"
 #include "utils/lock.hpp"
 #include <badge/globals.hpp>
+#include <badge-persistence/utils.hpp>
+#include <badge-persistence/config_store.hpp>
+#include <badge-persistence/badge_store.hpp>
 
 #include <algorithm>
 #include <array>
@@ -168,8 +171,6 @@ nr::badge::badge()
     _public_access_semaphore = xSemaphoreCreateMutex();
     _set_network_app_state(network_app_state::UNCONNECTED);
     _id_exchanger.reset();
-    set_social_level(nsec::config::social::initial_level, false);
-    _set_selected_animation(0, false);
 }
 
 void nr::badge::start()
@@ -181,31 +182,35 @@ void nr::badge::start()
 
 void nr::badge::load_config()
 {
-    // FIXME Restore config
-    eeprom_config config{};
+    nsec::persistence::config_store config_store;
 
-    set_social_level(config.social_level, false);
-    _set_selected_animation(config.selected_animation_id, false);
+    std::uint8_t social_level = nsec::config::social::initial_level;
+    std::uint8_t selected_animation_id = social_level;
+
+    const auto loaded_config = config_store.load();
+    if (loaded_config) {
+        social_level = loaded_config->social_level;
+        selected_animation_id = loaded_config->selected_animation_id;
+    }
+
+    set_social_level(social_level, false);
+    _set_selected_animation(selected_animation_id, false);
 }
 
 void nr::badge::save_config() const
 {
-    eeprom_config config;
-    config.version_magic = config_version_magic;
-    config.selected_animation_id = _selected_animation;
-    config.social_level = _social_level;
+    nsec::persistence::config_store config_store;
 
-    // FIXME Save config
+    config_store.save_selected_animation_id(_selected_animation);
+    config_store.save_social_level(_social_level);
 }
 
 void nr::badge::factory_reset()
 {
-    // FIXME Clear stored config
-    // Set an invalid magic in the config to cause validation to fail
+    nsec::persistence::utils::reset_storage();
 
-    // FIXME There's surely a better way to do this on FreeRTOS
-    void (*so_looooong)(void) = nullptr;
-    so_looooong();
+    // Really hackish, but an unhandled exception causes a reset.
+    NSEC_THROW_ERROR("Factory reset");
 }
 
 void nr::badge::_setup()
@@ -338,7 +343,7 @@ void nr::badge::_set_network_app_state(
         break;
     case network_app_state::IDLE:
     case network_app_state::UNCONNECTED:
-        _strip_animator.set_idle_animation(_social_level);
+        _strip_animator.set_idle_animation(_selected_animation);
         break;
     }
 }
@@ -346,8 +351,21 @@ void nr::badge::_set_network_app_state(
 nr::badge::badge_discovered_result
 nr::badge::on_badge_discovered(const uint8_t *id) noexcept
 {
-    // FIXME How do we want to derive a unique badge ID?
-    _logger.info("Badge discovered event");
+    nsec::runtime::badge_unique_id new_id;
+
+    std::memcpy(new_id.data(), id, new_id.size());
+
+    _logger.info("Badge discovered event: badge_id={}", new_id);
+
+    nsec::persistence::badge_store badge_store;
+
+    for (const auto stored_id : badge_store) {
+        if (stored_id == new_id) {
+            return badge_discovered_result::ALREADY_KNOWN;
+        }
+    }
+
+    badge_store.save_id(new_id);
     return badge_discovered_result::NEW;
 }
 

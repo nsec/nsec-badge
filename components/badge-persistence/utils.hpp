@@ -7,13 +7,12 @@
 #ifndef NSEC_BADGE_PERSISTENCE_UTILS_HPP
 #define NSEC_BADGE_PERSISTENCE_UTILS_HPP
 
-#include <string_view>
-
 #include <nvs_flash.h>
 
 #include <utils/unique_wrapper.hpp>
 
 #include <memory>
+#include <string_view>
 
 namespace nsec::persistence::utils
 {

@@ -12,7 +12,7 @@
 
 #include <optional>
 
-#include <utils.hpp>
+#include <badge-persistence/utils.hpp>
 
 namespace nsec::persistence
 {

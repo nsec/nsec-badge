@@ -8,7 +8,7 @@
 #define NSEC_BADGE_PERSISTENCE_BADGE_STORE_HPP
 
 #include <badge/id.hpp>
-#include <utils.hpp>
+#include <badge-persistence/utils.hpp>
 #include <utils/board.hpp>
 #include <utils/logging.hpp>
 
@@ -74,7 +74,7 @@ class badge_store
         int _index;
     };
 
-    std::optional<unsigned int> count();
+    unsigned int count();
     void save_id(const nsec::runtime::badge_unique_id &id);
 
     iterator begin()
@@ -83,7 +83,7 @@ class badge_store
     }
     iterator end()
     {
-        return iterator(*count());
+        return iterator(count());
     }
 
   private:

@@ -30,7 +30,7 @@ np::utils::managed_nvs_handle np::badge_store::_open_nvs_handle()
     return np::utils::managed_nvs_handle(raw_nvs_handle);
 }
 
-std::optional<unsigned int> np::badge_store::count()
+unsigned int np::badge_store::count()
 {
 
     np::utils::initialize_storage();
@@ -46,7 +46,7 @@ std::optional<unsigned int> np::badge_store::count()
         _logger.warn("Failed to read value: field_name={}, ret={}",
                      nsec::config::persistence::badge_paired_count_field_name,
                      read_count_ret);
-        return std::nullopt;
+        return 0;
     }
 
     return count_value;
@@ -79,7 +79,7 @@ np::badge_store::iterator::operator*() const
 void np::badge_store::save_id(const nsec::runtime::badge_unique_id &id)
 {
     const auto badge_count = count();
-    const auto id_sequence_number = badge_count ? *badge_count : 0;
+    const auto id_sequence_number = badge_count;
 
     auto nvs = np::badge_store::_open_nvs_handle();
 
