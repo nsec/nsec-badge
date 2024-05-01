@@ -9,6 +9,7 @@
 #include "console.h"
 #include "save.h"
 #include "ota_init.h"
+#include "dbg-led.hpp"
 
 #if CONFIG_NSEC_BUILD_ADDON
     #include "challenges_storage.h"
@@ -28,6 +29,9 @@ extern "C" void app_main(void) {
 
     initialize_nvs();
     fflush(stdout);
+
+    xTaskCreate(dbg_led_task, "dbg_led_task", 2048, nullptr, 10, nullptr);
+
     Save::load_save();
 
     crypto_atecc_init();

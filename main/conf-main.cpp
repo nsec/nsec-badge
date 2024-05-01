@@ -19,6 +19,7 @@
 
 #include "console.h"
 #include "ota_init.h"
+#include "dbg-led.hpp"
 
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 {
@@ -47,7 +48,9 @@ extern "C" void app_main(void)
 {
     // Detect CTF Addon
     ota_init();
-    
+
+    xTaskCreate(dbg_led_task, "dbg_led_task", 2048, nullptr, 10, nullptr);
+
     //const dummy_task the_task;
     nsec::runtime::badge badge;
     nsec::g::the_badge = &badge;

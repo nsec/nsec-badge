@@ -14,6 +14,7 @@
 #include "save.h"
 #include "ota_init.h"
 #include "ir.h"
+#include "dbg-led.hpp"
 
 static void initialize_nvs() {
     esp_err_t err = nvs_flash_init();
@@ -28,6 +29,8 @@ extern "C" void app_main(void) {
 
     initialize_nvs();
     fflush(stdout);
+
+    xTaskCreate(dbg_led_task, "dbg_led_task", 2048, nullptr, 10, nullptr);
 
     Save::load_save();
 
