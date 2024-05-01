@@ -42,6 +42,8 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
     void set_red_to_green_led_progress_bar(uint8_t led_count);
     void set_health_meter_bar(uint8_t led_count);
 
+    void set_blank_animation();
+
     enum class pairing_completed_animation_type : uint8_t {
         HAPPY_CLOWN_BARF,
         NO_NEW_FRIENDS,

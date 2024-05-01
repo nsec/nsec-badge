@@ -10,6 +10,10 @@
 
 #include "ota_actions.h"
 
+#ifdef CONFIG_NSEC_BUILD_CONFERENCE
+#include <globals.hpp>
+#endif
+
 #define READSIZE (4096 * 1)
 #define FLASH_DEST_ADDR 0x400000
 
@@ -46,11 +50,11 @@ std::string get_firmware_select_string() {
     if (get_firmware_project_name(NSEC_CTF_PARTITION) == "nsec-ctf") {
         return_string += "|ctf";
     }
- 
+
     if (get_firmware_project_name(NSEC_OTA_PARTITION) == "nsec-ctf-addon") {
         return_string += "|addon";
     }
- 
+
     return return_string + "]";
 }
 
@@ -63,7 +67,7 @@ bool boot_partition(esp_partition_subtype_t subtype) {
     }
 
     ESP_LOGI(TAG, "Setting boot partition...");
-    
+
     esp_err_t err = esp_ota_set_boot_partition(partition);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "esp_ota_set_boot_partition failed, error=%d", err);
@@ -73,6 +77,11 @@ bool boot_partition(esp_partition_subtype_t subtype) {
     ESP_LOGI(TAG, "Restarting...");
     fflush(stdout);
     vTaskDelay(pdMS_TO_TICKS(200));
+
+#ifdef CONFIG_NSEC_BUILD_CONFERENCE
+    // Clear the neopixel before the softreboot
+    nsec::g::the_badge->clear_leds();
+#endif
     esp_restart();
 }
 
@@ -179,7 +188,7 @@ bool write_flash_to_ota(esp_flash_t* _flash) {
         ESP_LOGE(TAG, "esp_ota_end failed, error=%d", err);
         return false;
     }
-    
+
     // Set the OTA boot partition and restart
     return boot_partition(ota_partition->subtype);
 }
@@ -227,7 +236,7 @@ void storage_read_from_ota(int ota, esp_flash_t* _flash) {
         toggle = !toggle;
         memset(buffer, 0, READSIZE);
     }
-    
+
     free(buffer);
 }
 

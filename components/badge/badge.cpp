@@ -830,6 +830,11 @@ nr::badge::pairing_completed_animator::_animation_state() const noexcept
     return _current_state;
 }
 
+void nr::badge::clear_leds()
+{
+    _strip_animator.set_blank_animation();
+}
+
 void nr::badge::apply_score_change(uint8_t new_badges_discovered_count) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);

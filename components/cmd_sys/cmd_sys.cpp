@@ -9,6 +9,10 @@
 #include <esp_log.h>
 #include <esp_system.h>
 
+#ifdef CONFIG_NSEC_BUILD_CONFERENCE
+#include <globals.hpp>
+#endif
+
 #include "cmd_sys.h"
 
 static const char *TAG = "console";
@@ -20,6 +24,10 @@ static int sys_cmd_reboot(int argc __attribute__((unused)),
 
     fflush(stdout);
     vTaskDelay(pdMS_TO_TICKS(200));
+
+#ifdef CONFIG_NSEC_BUILD_CONFERENCE
+    nsec::g::the_badge->clear_leds();
+#endif
     esp_restart();
 
     // That's not gonna happen...

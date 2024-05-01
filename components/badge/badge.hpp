@@ -52,6 +52,8 @@ class badge
 
     void tick(nsec::scheduling::absolute_time_ms current_time_ms);
 
+    void clear_leds();
+
     /*
      * Once the network layer has established a connection, "on pairing end" is
      * invoked. This is when the badges start animating the user-visible

@@ -977,6 +977,14 @@ void nl::strip_animator::set_health_meter_bar(uint8_t led_count)
     }
 }
 
+void nl::strip_animator::set_blank_animation()
+{
+    _reset_keyframed_animation_state();
+    _config.keyframed.active = 0;
+
+    tick(xTaskGetTickCount() * portTICK_PERIOD_MS);
+}
+
 void nl::strip_animator::set_pairing_completed_animation(
     nl::strip_animator::pairing_completed_animation_type
         animation_type) noexcept
