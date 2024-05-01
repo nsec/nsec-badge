@@ -39,7 +39,7 @@
     "arduino",
     "espidf"
   ],
-  "name": "Nsec 2024 Proto V1 (8 MB QD, 8 MB PSRAM)",
+  "name": "Nsec 2024 (8 MB QD, 8 MB PSRAM)",
   "upload": {
     "flash_size": "8MB",
     "maximum_ram_size": 327680,
