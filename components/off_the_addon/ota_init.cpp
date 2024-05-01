@@ -60,10 +60,18 @@ void register_ota_cmd(void) {
         // Will show the command only if we find more than the conf firmware
         const esp_console_cmd_t cmd = {
             .command = "firmware_select",
-            .help = "Select which firmware to run\n",
+            #if CONFIG_NSEC_BUILD_CONFERENCE
+            .help = "Select which firmware to run. current: conf\n",
+            #endif
+            #if CONFIG_NSEC_BUILD_CTF
+            .help = "Select which firmware to run. current: ctf\n",
+            #endif
+            #if CONFIG_NSEC_BUILD_ADDON
+            .help = "Select which firmware to run. current: addon\n",
+            #endif
             .hint = firmware_select_string.c_str(),
             .func = &ota_cmd,
-            .argtable = NULL,        
+            .argtable = NULL,
         };
         ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
     }

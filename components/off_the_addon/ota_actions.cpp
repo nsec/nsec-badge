@@ -79,6 +79,15 @@ bool boot_partition(esp_partition_subtype_t subtype) {
 int ota_cmd(int argc, char **argv) {
     if (argc != 2) {
         printf("Usage: firmware_select %s\n", get_firmware_select_string().c_str());
+        #if CONFIG_NSEC_BUILD_CONFERENCE
+        printf("Currently on conf firmware\n");
+        #endif
+        #if CONFIG_NSEC_BUILD_CTF
+        printf("Currently on ctf firmware\n");
+        #endif
+        #if CONFIG_NSEC_BUILD_ADDON
+        printf("Currently on addon firmware\n");
+        #endif
         return ESP_OK;
     }
     // get argv into a string
