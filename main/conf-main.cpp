@@ -18,6 +18,7 @@
 #include <scheduling/task.hpp>
 
 #include "console.h"
+#include "ota_init.h"
 
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 {
@@ -44,6 +45,9 @@ class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 
 extern "C" void app_main(void)
 {
+    // Detect CTF Addon
+    ota_init();
+    
     //const dummy_task the_task;
     nsec::runtime::badge badge;
     nsec::g::the_badge = &badge;
