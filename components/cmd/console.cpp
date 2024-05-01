@@ -75,8 +75,17 @@ extern "C" void console_init()
         LOG_COLOR(LOG_COLOR_RED ";5") "                   ██╔═══╝ ████╔╝██║██╔═══╝ ╚════██║\n"
         LOG_COLOR(LOG_COLOR_RED ";5") "                   ███████╗╚██████╔╝███████╗     ██║\n"
         LOG_COLOR(LOG_COLOR_RED ";5") "                   ╚══════╝ ╚═════╝ ╚══════╝     ╚═╝\n"
-	LOG_RESET_COLOR
-	"\n\n\n");
+        #if !CONFIG_NSEC_BUILD_CONFERENCE
+        LOG_COLOR(LOG_COLOR_CYAN) "You are on "
+        #endif
+        #if CONFIG_NSEC_BUILD_CTF
+        "CTF firmware\n"
+        #endif
+        #if CONFIG_NSEC_BUILD_ADDON
+        "ADDON firmware\n"
+        #endif
+        LOG_RESET_COLOR
+        "\n\n\n");
 
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
 
