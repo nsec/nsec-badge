@@ -44,7 +44,8 @@ namespace ng = nsec::g;
 namespace nbb = nsec::board::button;
 
 nb::watcher::watcher(nb::new_button_event_notifier new_button_notifier) noexcept
-    : _notify_new_event{new_button_notifier}, _logger{"Button watcher"}
+    : _notify_new_event{new_button_notifier},
+      _logger{"Button watcher", nsec::config::logging::button_watcher_level}
 {
 }
 
