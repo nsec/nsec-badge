@@ -51,7 +51,9 @@ void ota_init() {
             xTaskCreate(blink_blueled_task, "Blink blue LED task", 1024, &ms_delay, 2, NULL);
         }
     } else {
+        #if !CONFIG_NSEC_BUILD_CONFERENCE
         ESP_LOGI(TAG, "CTF Addon not detected");
+        #endif
     }
 }
 

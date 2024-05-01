@@ -11,6 +11,9 @@ struct SaveData {
     bool bluetooth_enabled;
     char wifi_ssid[32];
     char wifi_password[32];
+    #if CONFIG_NSEC_BUILD_ADDON
+      bool raw_spi_mode;
+    #endif
 };
 
 class Save

@@ -12,6 +12,10 @@
 #if CONFIG_NSEC_BUILD_CTF
 #include "wifi.h"
 #endif
+#if CONFIG_NSEC_BUILD_ADDON
+#include "challenges_storage.h"
+#include "crypto_atecc_cmd.h"
+#endif
 
 static const char* TAG = "console";
 #define PROMPT_STR LOG_RESET_COLOR "nsec"
@@ -35,6 +39,10 @@ extern "C" void console_init()
 #if CONFIG_NSEC_BUILD_CTF
     // CTF-only commands
     register_wifi_cmd();
+#endif
+#if CONFIG_NSEC_BUILD_ADDON
+    register_challenges_storage();
+    register_crypto_atecc();
 #endif
 
 #if defined(CONFIG_ESP_CONSOLE_UART_DEFAULT) || defined(CONFIG_ESP_CONSOLE_UART_CUSTOM)

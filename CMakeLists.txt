@@ -22,6 +22,12 @@ if(CONFIG_NSEC_BUILD_CTF)
 list(APPEND EXTRA_COMPONENT_DIRS "./ctf-components/")
 endif()
 
+# Add Addon specific components to the build
+if(CONFIG_NSEC_BUILD_ADDON)
+list(APPEND EXTRA_COMPONENT_DIRS "./addon-components/")
+endif()
+
+
 # These project names are used for firmware detection, don't change without
 # refactor
 if(CONFIG_NSEC_BUILD_CTF)

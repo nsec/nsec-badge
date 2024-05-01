@@ -27,3 +27,5 @@ __pycache__/
 
 # Sublime Text project file
 *.sublime-*
+
+.vscode/

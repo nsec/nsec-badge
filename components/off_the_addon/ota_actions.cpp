@@ -11,9 +11,13 @@
 #include "ota_actions.h"
 
 #define READSIZE (4096 * 1)
-#define FLASH_DEST_ADDR 0x00000
+#define FLASH_DEST_ADDR 0x400000
 
+#if CTF_ADDON_ADMIN_MODE
+static const char *TAG = "[ADMIN]ota_actions";
+#else
 static const char *TAG = "ota_actions";
+#endif
 
 std::string get_firmware_project_name(esp_partition_subtype_t subtype) {
     const esp_partition_t *partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
@@ -100,7 +104,8 @@ int ota_cmd(int argc, char **argv) {
     return ESP_OK;
 }
 
-// returns true if OK and false if ERROR
+// Read firmware from flash and write it to NSEC_OTA_PARTITION
+// @returns true if OK and false if ERROR
 bool write_flash_to_ota(esp_flash_t* _flash) {
     // Check if OTA partition already has the firmware
     esp_partition_subtype_t subtype = NSEC_OTA_PARTITION;
@@ -170,8 +175,8 @@ bool write_flash_to_ota(esp_flash_t* _flash) {
     return boot_partition(ota_partition->subtype);
 }
 
-
-
+#if CTF_ADDON_ADMIN_MODE
+// Read data from an OTA partition and write it to flash
 void storage_read_from_ota(int ota, esp_flash_t* _flash) {
     // Get the OTA partition
     esp_partition_subtype_t subtype = ESP_PARTITION_SUBTYPE_APP_OTA_0;
@@ -216,3 +221,30 @@ void storage_read_from_ota(int ota, esp_flash_t* _flash) {
     
     free(buffer);
 }
+
+void erase_ota(int ota) {
+    // Get the OTA partition
+    esp_partition_subtype_t subtype = ESP_PARTITION_SUBTYPE_APP_OTA_0;
+    if (ota == 1) {
+        subtype = ESP_PARTITION_SUBTYPE_APP_OTA_1;
+    } else if(ota != 0) {
+        ESP_LOGE(TAG, "Invalid OTA partition number: %d", ota);
+        return;
+    }
+
+    const esp_partition_t *ota_partition = esp_partition_find_first(ESP_PARTITION_TYPE_APP, subtype, NULL);
+    if (ota_partition == NULL) {
+        ESP_LOGE(TAG, "Failed to get OTA partition!");
+        return;
+    }
+    size_t size = ota_partition->size;
+    ESP_LOGI(TAG, "Found OTA partition ota_%d! size: %d", ota, size);
+
+    esp_err_t err = esp_partition_erase_range(ota_partition, 0, ota_partition->size);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to erase OTA partition, error=%d", err);
+        return;
+    }
+}
+
+#endif
