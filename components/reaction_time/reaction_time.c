@@ -18,6 +18,8 @@
 #include "badge_png.h"
 #include "reaction_time.h"
 
+void play_level(int level);
+
 void flush_write(void)
 {
 #if !CONFIG_IDF_TARGET_LINUX
@@ -189,6 +191,8 @@ int rt_cmd(int argc, char **argv)
         ESP_LOGW(progname, "Capped to highest level unlocked: %d", max_level);
     }
 
+    play_level(*level);
+
     return ESP_OK;
 }
 
@@ -202,6 +206,62 @@ button_t get_random_button(button_t last_button)
         new_button = BUTTONS[esp_random() % BUTTON_COUNT];
     } while (new_button == last_button);
     return new_button;
+}
+
+void play_level(int level)
+{
+    /* Setting up the button pattern for the current level */
+    button_t pattern[16];
+    if (level == 2) {
+        assert(sizeof(pattern) == sizeof(LVL2PAT));
+        memcpy(pattern, LVL2PAT, sizeof(pattern));
+    } else if (level == 3) {
+        pattern[0] = BUTTONS[esp_random() % BUTTON_COUNT];
+        for (int i = 1; i < 16; i++) {
+            pattern[i] = get_random_button(pattern[i - 1]);
+        }
+    } else /* if (level == 1) */ {
+        assert(sizeof(pattern) == sizeof(LVL1PAT));
+        memcpy(pattern, LVL1PAT, sizeof(pattern));
+    }
+
+    // TODO Draw the badge
+
+    for (int i = 0; i < 16; i++) {
+        if (xSemaphoreTake(btn_mutex, portMAX_DELAY) == pdTRUE) {
+            btn_gpio = 0;
+            if (level > 1) {
+                vTaskDelay((2500 + (esp_random() % 1001)) / portTICK_PERIOD_MS);
+            }
+            assert(xSemaphoreGive(btn_mutex) == pdTRUE);
+        } else {
+            ESP_LOGE(LOG_TAG, "Failed to acquire a mutual exclusion lock");
+            return;
+        }
+
+        if (level == 1) {
+            // Allows the user plenty of time to set the button in advance
+            // Let's not forget that the pattern is deterministic
+            vTaskDelay((2500 + (esp_random() % 1001)) / portTICK_PERIOD_MS);
+        }
+
+        const char *buttons[] = {"UP", "DOWN", "LEFT", "RIGHT"};
+        ESP_LOGD(LOG_TAG, "Drawing %s button", buttons[pattern[i] - BUTTON_UP]);
+
+        // TODO Draw the badge's button
+
+        if (xSemaphoreTake(btn_mutex, portMAX_DELAY) == pdTRUE) {
+            if (btn_gpio != pattern[i]) {
+                printf(ERROR_MESSAGES[esp_random() % ERROR_MESSAGE_COUNT]);
+                assert(xSemaphoreGive(btn_mutex) == pdTRUE);
+                return;
+            }
+            assert(xSemaphoreGive(btn_mutex) == pdTRUE);
+        } else {
+            ESP_LOGE(LOG_TAG, "Failed to acquire a mutual exclusion lock");
+            return;
+        }
+    }
 }
 
 void button_callback(void *button_handle, void *usr_data)
