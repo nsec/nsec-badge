@@ -50,15 +50,16 @@ int graphics_probe(void)
     char sequence[4] = {0};
 
     while (timeout_ms > 0 && read_bytes < sizeof(sequence) - 1) {
-        usleep(retry_ms * 1000);
-        timeout_ms -= retry_ms;
-
         char c;
         int cb = read(stdin_fileno, &c, 1);
-        /* clang-format off */
+        // clang-format off
         if (cb == 0) break;
-        if (cb < 0) continue;
-        /* clang-format on */
+        // clang-format on
+        if (cb < 0) {
+            usleep(retry_ms * 1000);
+            timeout_ms -= retry_ms;
+            continue;
+        }
 
         if (read_bytes == 0 && c != '\e') {
             continue;
@@ -67,8 +68,14 @@ int graphics_probe(void)
         sequence[read_bytes++] = c;
     }
 
-    char c;
-    while (timeout_ms > 0 && read(stdin_fileno, &c, 1) != 0) {
+    while (timeout_ms > 0) {
+        char c;
+        int cb = read(stdin_fileno, &c, 1);
+        // clang-format off
+        if (cb == 0) break;
+        if (cb > 0) continue;
+        // clang-format on
+
         usleep(retry_ms * 1000);
         timeout_ms -= retry_ms;
     }
