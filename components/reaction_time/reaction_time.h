@@ -25,6 +25,7 @@ const int32_t BUTTONS[] = {
 
 const int BUTTON_COUNT = sizeof(BUTTONS) / sizeof(*BUTTONS);
 
+// TODO Generate a random pattern at compile time
 const button_t LVL1PAT[16] = {
     BUTTON_DOWN, BUTTON_UP,   BUTTON_RIGHT, BUTTON_LEFT,
     BUTTON_UP,   BUTTON_LEFT, BUTTON_RIGHT, BUTTON_DOWN,

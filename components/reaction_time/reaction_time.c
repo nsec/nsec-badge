@@ -191,12 +191,16 @@ int rt_cmd(int argc, char **argv)
         ESP_LOGW(progname, "Capped to highest level unlocked: %d", max_level);
     }
 
+    /* Running the core logic for the level */
     play_level(*level);
 
     return ESP_OK;
 }
 
-static int32_t btn_gpio;
+static struct {
+    int32_t gpio_num;
+    uint8_t repeat;
+} btn_status;
 static SemaphoreHandle_t btn_mutex;
 
 button_t get_random_button(button_t last_button)
@@ -212,24 +216,33 @@ void play_level(int level)
 {
     /* Setting up the button pattern for the current level */
     button_t pattern[16];
-    if (level == 2) {
+    switch (level) {
+    case 1:
+        assert(sizeof(pattern) == sizeof(LVL1PAT));
+        memcpy(pattern, LVL1PAT, sizeof(pattern));
+        break;
+    case 2:
         assert(sizeof(pattern) == sizeof(LVL2PAT));
         memcpy(pattern, LVL2PAT, sizeof(pattern));
-    } else if (level == 3) {
+        break;
+    case 3:
         pattern[0] = BUTTONS[esp_random() % BUTTON_COUNT];
         for (int i = 1; i < 16; i++) {
             pattern[i] = get_random_button(pattern[i - 1]);
         }
-    } else /* if (level == 1) */ {
-        assert(sizeof(pattern) == sizeof(LVL1PAT));
-        memcpy(pattern, LVL1PAT, sizeof(pattern));
+        break;
+    default:
+        ESP_LOGE(LOG_TAG, "Level %d is invalid. Must be between 1 and 3",
+                 level);
+        return;
     }
 
     // TODO Draw the badge
 
     for (int i = 0; i < 16; i++) {
         if (xSemaphoreTake(btn_mutex, portMAX_DELAY) == pdTRUE) {
-            btn_gpio = 0;
+            btn_status.gpio_num = 0;
+            btn_status.repeat = 0;
             if (level > 1) {
                 vTaskDelay((2500 + (esp_random() % 1001)) / portTICK_PERIOD_MS);
             }
@@ -240,8 +253,7 @@ void play_level(int level)
         }
 
         if (level == 1) {
-            // Allows the user plenty of time to set the button in advance
-            // Let's not forget that the pattern is deterministic
+            // Allows plenty of time to set the button in the first level
             vTaskDelay((2500 + (esp_random() % 1001)) / portTICK_PERIOD_MS);
         }
 
@@ -250,9 +262,19 @@ void play_level(int level)
 
         // TODO Draw the badge's button
 
+        // Value picked considering median is 273ms and average is 284ms
+        // humanbenchmark.com/tests/reactiontime/statistics
+        vTaskDelay(250 / portTICK_PERIOD_MS);
+
         if (xSemaphoreTake(btn_mutex, portMAX_DELAY) == pdTRUE) {
-            if (btn_gpio != pattern[i]) {
+            if (btn_status.gpio_num != pattern[i]) {
                 printf(ERROR_MESSAGES[esp_random() % ERROR_MESSAGE_COUNT]);
+                assert(xSemaphoreGive(btn_mutex) == pdTRUE);
+                return;
+            }
+            if (level > 2 && btn_status.repeat > 0) {
+                // Allows button mashing in the second level
+                printf("Multiple button clicks are not allowed\n");
                 assert(xSemaphoreGive(btn_mutex) == pdTRUE);
                 return;
             }
@@ -262,17 +284,40 @@ void play_level(int level)
             return;
         }
     }
+
+    // TODO Look into unlocking LED patterns
+    switch (level) {
+    case 1:
+        printf("FLAG-1\n"); // FIXME First flag
+        break;
+    case 2:
+        printf("FLAG-2\n"); // FIXME Second flag
+        break;
+    case 3:
+        printf("FLAG-3\n"); // FIXME Third flag
+        break;
+    }
+
+    /* Updating maximum level achieved in storage and the help text */
+    if (level < 3) {
+        esp_err_t err = write_level(level + 1);
+        if (err == ESP_OK) {
+            update_cmd_help(level + 1);
+        } else {
+            ESP_LOGE(LOG_TAG, "Failed to update the achieved level in storage");
+        }
+    }
 }
 
 void button_callback(void *button_handle, void *usr_data)
 {
     if (xSemaphoreTake(btn_mutex, (TickType_t)0) == pdTRUE) {
-        btn_gpio = *(int32_t *)usr_data;
+        btn_status.gpio_num = *(int32_t *)usr_data;
+        btn_status.repeat = iot_button_get_repeat(button_handle);
 
         const char *buttons[] = {"UP", "DOWN", "LEFT", "RIGHT"};
-        ESP_LOGD(LOG_TAG, "Clicked %dx on %s button",
-                 1 + iot_button_get_repeat(button_handle),
-                 buttons[btn_gpio - BUTTON_UP]);
+        ESP_LOGD(LOG_TAG, "Clicked %dx on %s button", 1 + btn_status.repeat,
+                 buttons[btn_status.gpio_num - BUTTON_UP]);
 
         assert(xSemaphoreGive(btn_mutex) == pdTRUE);
     }
