@@ -21,8 +21,7 @@ constexpr unsigned int default_stack_size_words = 4096;
 
 namespace nsec::config::social
 {
-// For animation testing purposes. The social level is 1-based.
-constexpr uint8_t initial_level = 1;
+constexpr uint8_t initial_level = 0;
 constexpr uint8_t max_level = 200;
 constexpr uint8_t multiple_badges_discovered_simultaneously_multiplier = 2;
 } // namespace nsec::config::social
