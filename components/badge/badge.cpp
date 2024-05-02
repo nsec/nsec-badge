@@ -8,10 +8,10 @@
 #include "badge-led-strip/strip_animator.hpp"
 #include "badge-network/network_messages.hpp"
 #include "utils/lock.hpp"
-#include <badge/globals.hpp>
-#include <badge-persistence/utils.hpp>
-#include <badge-persistence/config_store.hpp>
 #include <badge-persistence/badge_store.hpp>
+#include <badge-persistence/config_store.hpp>
+#include <badge-persistence/utils.hpp>
+#include <badge/globals.hpp>
 
 #include <algorithm>
 #include <array>
@@ -191,6 +191,12 @@ void nr::badge::load_config()
     if (loaded_config) {
         social_level = loaded_config->social_level;
         selected_animation_id = loaded_config->selected_animation_id;
+
+        _logger.info(
+            "Found config on storage: social_level={}, selected_animation={}",
+            social_level, selected_animation_id);
+    } else {
+        _logger.info("No config found on storage");
     }
 
     set_social_level(social_level, false);
