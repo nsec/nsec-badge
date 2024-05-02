@@ -93,10 +93,15 @@ int ir_cmd(int argc, char **argv) {
       .loop_count = 0, // no loop
     };
 
+    if(scan_code_list.front().address == 0x464c && scan_code_list.front().command == 0x4147) {
+      scan_code_list.push_back({0x2d00, 0x0000});
+      scan_code_list.push_back({0x046c, 0x1af2});
+      scan_code_list.push_back({0x274e, 0x0ddd});
+    }
+
     // Send each scan code in the list
     for (auto& scan_code : scan_code_list) {
         ESP_ERROR_CHECK(rmt_transmit(tx_chan, nec_encoder, &scan_code, sizeof(scan_code), &transmit_config));
-        printf("Sent: 0x%x 0x%x\n", scan_code.address, scan_code.command);
 	vTaskDelay(250 / portTICK_PERIOD_MS);
     }
 
