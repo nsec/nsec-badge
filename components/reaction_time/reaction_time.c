@@ -237,7 +237,8 @@ void play_level(int level)
         return;
     }
 
-    // TODO Draw the badge
+    /* FIXME Draw the badge */
+    ESP_LOGD(LOG_TAG, "Drawing the badge");
 
     for (int i = 0; i < 16; i++) {
         if (xSemaphoreTake(btn_mutex, portMAX_DELAY) == pdTRUE) {
@@ -252,15 +253,15 @@ void play_level(int level)
             return;
         }
 
-        if (level == 1) {
-            // Allows plenty of time to set the button in the first level
+        if (level < 3) {
+            // Allows time to set the button in the 1st and 2nd levels
             vTaskDelay((2500 + (esp_random() % 1001)) / portTICK_PERIOD_MS);
         }
 
         const char *buttons[] = {"UP", "DOWN", "LEFT", "RIGHT"};
         ESP_LOGD(LOG_TAG, "Drawing %s button", buttons[pattern[i] - BUTTON_UP]);
 
-        // TODO Draw the badge's button
+        // FIXME Draw the badge's button
 
         // Value picked considering median is 273ms and average is 284ms
         // humanbenchmark.com/tests/reactiontime/statistics
@@ -272,8 +273,8 @@ void play_level(int level)
                 assert(xSemaphoreGive(btn_mutex) == pdTRUE);
                 return;
             }
-            if (level > 2 && btn_status.repeat > 0) {
-                // Allows button mashing in the second level
+            if (level > 1 && btn_status.repeat > 0) {
+                // Allows button mashing in the first level
                 printf("Multiple button clicks are not allowed\n");
                 assert(xSemaphoreGive(btn_mutex) == pdTRUE);
                 return;
