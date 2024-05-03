@@ -285,20 +285,22 @@ void play_level(int level)
         }
     }
 
-    // TODO Look into unlocking LED patterns
+    /* Printing the corresponding flag */
     switch (level) {
     case 1:
-        printf("FLAG-1\n"); // FIXME First flag
+        printf("FLAG-N3U7R0PH1L_F1R57_R35P0ND3R\n");
         break;
     case 2:
-        printf("FLAG-2\n"); // FIXME Second flag
+        printf("FLAG-B4S0PH1L_CL0771NG_PR3V3NT10N\n");
         break;
     case 3:
-        printf("FLAG-3\n"); // FIXME Third flag
+        printf("FLAG-E0S1N0PH1L_L0NG3R_SURV1V4L\n");
         break;
     }
 
-    /* Updating maximum level achieved in storage and the help text */
+    // TODO Look into unlocking LED patterns
+
+    /* Updating maximum level achieved in storage and help text */
     if (level < 3) {
         esp_err_t err = write_level(level + 1);
         if (err == ESP_OK) {
