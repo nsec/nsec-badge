@@ -159,7 +159,7 @@ int rt_cmd(int argc, char **argv)
         return ESP_OK;
     } else if (probe_result == -2) {
         // ESP_LOGE(progname, "Graphics protocol not supported");
-        ESP_LOGI("trivia_time", "What are ASCII Escape Codes?");
+        printf("What are ASCII Escape Codes?\n");
         return ESP_OK;
     }
 
