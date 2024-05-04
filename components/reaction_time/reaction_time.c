@@ -15,7 +15,6 @@
 #include "iot_button.h"
 #include "nvs_flash.h"
 
-#include "badge_png.h"
 #include "reaction_time.h"
 
 void play_level(int level);
@@ -28,68 +27,6 @@ void flush_write(void)
     }
 #endif
     fsync(fileno(stdout));
-}
-
-int graphics_probe(void)
-{
-    /* Switch to non-blocking mode */
-    int stdin_fileno = fileno(stdin);
-    int flags = fcntl(stdin_fileno, F_GETFL);
-    if (fcntl(stdin_fileno, F_SETFL, flags | O_NONBLOCK) == -1) {
-        return -1;
-    }
-
-    /* Query for graphics protocol support */
-    uint32_t image_id = esp_random();
-    fprintf(stdout, "\e_Gi=%lu,a=q,s=1,v=1;AAAAAA\e\\", image_id);
-    fprintf(stdout, "\e[c");
-    flush_write();
-
-    /* Attempt to read response */
-    const int retry_ms = 10;
-    int timeout_ms = 500;
-    size_t read_bytes = 0;
-    char sequence[4] = {0};
-
-    while (timeout_ms > 0 && read_bytes < sizeof(sequence) - 1) {
-        char c;
-        int cb = read(stdin_fileno, &c, 1);
-        // clang-format off
-        if (cb == 0) break;
-        // clang-format on
-        if (cb < 0) {
-            usleep(retry_ms * 1000);
-            timeout_ms -= retry_ms;
-            continue;
-        }
-
-        if (read_bytes == 0 && c != '\e') {
-            continue;
-        }
-
-        sequence[read_bytes++] = c;
-    }
-
-    while (timeout_ms > 0) {
-        char c;
-        int cb = read(stdin_fileno, &c, 1);
-        // clang-format off
-        if (cb == 0) break;
-        if (cb > 0) continue;
-        // clang-format on
-
-        usleep(retry_ms * 1000);
-        timeout_ms -= retry_ms;
-    }
-
-    /* Restore previous mode */
-    if (fcntl(stdin_fileno, F_SETFL, flags) == -1) {
-        return -1;
-    }
-
-    if (strcmp(sequence, "\e_G") != 0)
-        return -2;
-    return 0;
 }
 
 esp_err_t write_level(uint8_t level)
@@ -150,19 +87,6 @@ int rt_cmd(int argc, char **argv)
 {
     const char *progname = argv[0];
 
-    /* Probing for graphics protocol support */
-    int probe_result = graphics_probe();
-    if (probe_result == -1) {
-        int errnum = errno;
-        ESP_LOGE(progname, "Failed querying for graphics protocol support: %s",
-                 strerror(errnum));
-        return ESP_OK;
-    } else if (probe_result == -2) {
-        // ESP_LOGE(progname, "Graphics protocol not supported");
-        printf("What are ASCII Escape Codes?\n");
-        return ESP_OK;
-    }
-
     /* Reading maximum level achieved from storage */
     uint8_t max_level = 1;
     esp_err_t err = read_level(&max_level);
@@ -212,6 +136,22 @@ button_t get_random_button(button_t last_button)
     return new_button;
 }
 
+void print_countdown(void)
+{
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    printf(" 3");
+    flush_write();
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    printf(", 2");
+    flush_write();
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    printf(", 1");
+    flush_write();
+    vTaskDelay((esp_random() % 501) / portTICK_PERIOD_MS); // Jitter
+    printf("!\n");
+    flush_write();
+}
+
 void play_level(int level)
 {
     /* Setting up the button pattern for the current level */
@@ -237,15 +177,15 @@ void play_level(int level)
         return;
     }
 
-    /* FIXME Draw the badge */
-    ESP_LOGD(LOG_TAG, "Drawing the badge");
-
+    const char *buttons[] = {"UP", "DOWN", "LEFT", "RIGHT"};
     for (int i = 0; i < 16; i++) {
+        printf("Get Ready...");
+
         if (xSemaphoreTake(btn_mutex, portMAX_DELAY) == pdTRUE) {
             btn_status.gpio_num = 0;
             btn_status.repeat = 0;
-            if (level > 1) {
-                vTaskDelay((2500 + (esp_random() % 1001)) / portTICK_PERIOD_MS);
+            if (level > 2) {
+                print_countdown();
             }
             assert(xSemaphoreGive(btn_mutex) == pdTRUE);
         } else {
@@ -255,13 +195,11 @@ void play_level(int level)
 
         if (level < 3) {
             // Allows time to set the button in the 1st and 2nd levels
-            vTaskDelay((2500 + (esp_random() % 1001)) / portTICK_PERIOD_MS);
+            print_countdown();
         }
 
-        const char *buttons[] = {"UP", "DOWN", "LEFT", "RIGHT"};
-        ESP_LOGD(LOG_TAG, "Drawing %s button", buttons[pattern[i] - BUTTON_UP]);
-
-        // FIXME Draw the badge's button
+        printf("Press %s!\n", buttons[pattern[i] - BUTTON_UP]);
+        flush_write(); // Making sure it's flushed before the small wait
 
         // Value picked considering median is 273ms and average is 284ms
         // humanbenchmark.com/tests/reactiontime/statistics
@@ -274,7 +212,7 @@ void play_level(int level)
                 return;
             }
             if (level > 1 && btn_status.repeat > 0) {
-                // Allows button mashing in the first level
+                // Allows button mashing in the 1st level
                 printf("Multiple button clicks are not allowed\n");
                 assert(xSemaphoreGive(btn_mutex) == pdTRUE);
                 return;
