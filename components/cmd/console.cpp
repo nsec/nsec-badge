@@ -14,6 +14,7 @@
 #include "wifi.h"
 #include "ir.h"
 #include "reaction_time.h"
+#include "reverse.h"
 #endif
 #if CONFIG_NSEC_BUILD_ADDON
 #include "challenges_storage.h"
@@ -31,6 +32,8 @@ void register_commands() {
     register_wifi_cmd();
     register_ir_cmd();
     register_reaction_time_cmd();
+    register_encrypt_cmd();
+    register_decrypt_cmd();
 #endif
 #if CONFIG_NSEC_BUILD_ADDON
     register_challenges_storage();
