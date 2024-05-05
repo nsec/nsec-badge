@@ -104,8 +104,8 @@ const nl::strip_animator::keyframe no_new_friends_keyframes[] = {
 
 const nl::strip_animator::keyframe idle_social_level_keyframes[] = {
     {{0, 0, 0}, 0},
-    {{255, 0, 255}, 1500},
-    {{0, 0, 64}, 1000},
+    {{0, 0, 255}, 500},
+    {{0, 0, 127}, 1000},
     {{0, 0, 255}, 1500},
 };
 
