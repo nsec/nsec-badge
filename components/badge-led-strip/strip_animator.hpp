@@ -53,7 +53,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         pairing_completed_animation_type) noexcept;
     void set_show_level_animation(pairing_completed_animation_type,
                                   uint8_t level,
-                                  bool set_lower_bar_on) noexcept;
+                                  bool set_upper_bar_on) noexcept;
 
     struct led_color {
         led_color() = default;

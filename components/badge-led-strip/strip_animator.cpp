@@ -1055,19 +1055,15 @@ void nl::strip_animator::set_pairing_completed_animation(
 
 void nl::strip_animator::set_show_level_animation(
     nl::strip_animator::pairing_completed_animation_type animation_type,
-    uint8_t level, bool set_lower_bar_on) noexcept
+    uint8_t level, bool set_upper_bar_on) noexcept
 {
     period_ms(40);
 
     uint8_t cycle_offset = 0;
     uint16_t active_mask = 0;
 
-    for (uint8_t i = 0; i < 8; i++) {
-        // LED at bit number one is the left-most, so we need to "invert" the
-        // level pattern.
-        const auto value_bit = (level >> i) & 1;
-        active_mask |= value_bit << (7 - i);
-    }
+    // Push social level to the lower LEDs (8 - 15).
+    active_mask = level << 8;
 
     const keyframe *keyframes = nullptr;
     uint8_t keyframe_count = 0;
@@ -1086,8 +1082,8 @@ void nl::strip_animator::set_show_level_animation(
         keyframes = keyframes::idle_social_level_keyframes;
     }
 
-    if (set_lower_bar_on) {
-        active_mask |= 0xFF00;
+    if (set_upper_bar_on) {
+        active_mask |= 0x00FF;
     }
 
     _set_keyframed_cycle_animation(keyframes, keyframe_count, 1, active_mask,
