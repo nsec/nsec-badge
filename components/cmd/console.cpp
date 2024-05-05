@@ -51,7 +51,7 @@ extern "C" void console_init()
      * This can be customized, made dynamic, etc.
      */
     repl_config.prompt = PROMPT_STR ">";
-    repl_config.max_cmdline_length = 80;
+    repl_config.max_cmdline_length = 200;
 
     register_commands();
 
