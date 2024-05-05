@@ -196,8 +196,8 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
                     uint8_t star_count;
                 } shooting_star;
             };
-            uint8_t keyframe_count : 4;
-            uint8_t loop_point_index : 4;
+            uint8_t keyframe_count;
+            uint8_t loop_point_index;
             keyframed_animation _animation;
             const keyframe *keyframes;
             // 1-bit per led. When inactive, the origin keyframe is repeated.
@@ -209,6 +209,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         struct {
             union {
                 struct {
+                    // Stored on 4 bits to wrap around at 15.
                     uint8_t position : 4;
                     uint8_t ticks_in_position;
                 } shooting_star;
