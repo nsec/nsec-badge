@@ -119,7 +119,6 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
 
   private:
     enum class animation_type : uint8_t {
-        LEGACY,
         KEYFRAMED,
     };
 
@@ -191,9 +190,6 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
 
     union {
         struct {
-            uint8_t level;
-        } legacy;
-        struct {
             union {
                 struct {
                     uint8_t ticks_before_advance;
@@ -210,9 +206,6 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         } keyframed;
     } _config;
     union {
-        struct {
-            uint8_t start_position;
-        } legacy;
         struct {
             union {
                 struct {
