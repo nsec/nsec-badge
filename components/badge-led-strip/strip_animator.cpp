@@ -760,7 +760,6 @@ void nl::strip_animator::_keyframe_animation_tick(
     }
 
     for (unsigned int i = 0; i < nsec::board::neopixel::count; i++) {
-
         const bool led_animation_is_active =
             (_config.keyframed.active >> i) & 1;
 
@@ -790,7 +789,10 @@ void nl::strip_animator::_keyframe_animation_tick(
         const auto time_since_animation_start =
             _state.keyframed.ticks_since_start_of_animation[i] * period_ms();
 
-        if (_state.keyframed.ticks_since_start_of_animation[i] != 255) {
+        if (_state.keyframed.ticks_since_start_of_animation[i] !=
+            std::numeric_limits<std::decay_t<
+                decltype(*_state.keyframed.ticks_since_start_of_animation)>>::
+                max()) {
             // Saturate counter.
             _state.keyframed.ticks_since_start_of_animation[i]++;
         }

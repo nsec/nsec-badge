@@ -193,7 +193,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         struct {
             union {
                 struct {
-                    uint8_t ticks_before_advance;
+                    uint16_t ticks_before_advance;
                     uint8_t star_count;
                 } shooting_star;
             };
@@ -218,7 +218,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
 
             indice_storage_element origin_keyframe_index[8];
             indice_storage_element destination_keyframe_index[8];
-            uint8_t ticks_since_start_of_animation[16];
+            uint16_t ticks_since_start_of_animation[16];
         } keyframed;
     } _state;
     nsec::logging::logger _logger;
