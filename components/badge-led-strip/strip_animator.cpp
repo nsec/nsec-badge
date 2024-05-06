@@ -7,6 +7,10 @@
 #include "badge-led-strip/strip_animator.hpp"
 #include "badge/globals.hpp"
 #include "utils/board.hpp"
+#include "utils/round_robin_consumer.hpp"
+
+#include <cmath>
+#include <numeric>
 
 namespace nl = nsec::led;
 namespace ns = nsec::scheduling;
@@ -57,6 +61,29 @@ keyframe_from_flash(const nl::strip_animator::keyframe *src_keyframe)
 }
 
 } // namespace
+
+namespace heartbeat
+{
+
+struct template_keyframe {
+    uint8_t intensity;
+    unsigned int time_ms;
+};
+
+const template_keyframe slow_template_keyframes[] = {
+    {0, 0}, {255, 1}, {0, 200}, {0, 350}, {255, 350}, {0, 800}, {0, 2000},
+};
+
+const nl::strip_animator::led_color colors[] = {
+    {255, 0, 0},   {0, 255, 0},   {0, 0, 255},   {255, 255, 255},
+    {255, 255, 0}, {0, 255, 255}, {255, 0, 255},
+};
+
+// Storage for the current heartbeat keyframes
+nl::strip_animator::keyframe
+    slow_keyframes[ARRAY_LENGTH(slow_template_keyframes)];
+
+} // namespace heartbeat
 
 namespace keyframes
 {
@@ -843,61 +870,93 @@ void nl::strip_animator::set_idle_animation(uint8_t id) noexcept
 {
     _logger.info("Idle animation set: id={}", id);
 
-    /*
-     * This looks pretty bad, but the goal is to alternate between animations
-     * of each type as 'id' increases.
-     */
     const auto shooting_star_animations_count =
         ARRAY_LENGTH(keyframes::shooting_star::params);
     const auto color_cycle_animations_count =
         ARRAY_LENGTH(keyframes::color_cycle::params);
+    const auto slow_heartbeat_animations_count =
+        ARRAY_LENGTH(heartbeat::colors);
 
-    id = id % (shooting_star_animations_count + color_cycle_animations_count);
+    constexpr std::array<std::size_t, 3> animation_counts = {
+        slow_heartbeat_animations_count, color_cycle_animations_count,
+        shooting_star_animations_count};
+    nsec::utils::array_round_robin_consumer<animation_counts.size()> consumer(
+        animation_counts);
 
-    if (id / 2 < shooting_star_animations_count &&
-        id / 2 < color_cycle_animations_count) {
-        if (id % 2) {
-            const auto cc_params =
-                keyframes::color_cycle::color_cycle_parameters_from_flash(
-                    &keyframes::color_cycle::params[id / 2]);
+    // Limit 'id' to the range of existing animations
+    id = id %
+         std::accumulate(animation_counts.begin(), animation_counts.end(), 0);
 
-            _set_keyframed_cycle_animation(
-                cc_params.keyframes, cc_params.keyframe_count, 1,
-                cc_params.active_pattern, cc_params.cycle_offset, 20);
-            return;
-        } else {
-            const auto ss_params =
-                keyframes::shooting_star::shooting_star_parameters_from_flash(
-                    &keyframes::shooting_star::params[id / 2]);
+    nsec::utils::array_round_robin_consumer<
+        animation_counts.size()>::element_description chosen_animation;
 
-            _set_shooting_star_animation(
-                ss_params.shooting_star_count, ss_params.delay_advance_ms,
-                ss_params.keyframes, ss_params.keyframe_count);
-            return;
-        }
+    for (auto i = 0; i <= id; i++) {
+        chosen_animation = consumer.consume();
     }
 
-    // Handle arrays being of different lengths.
-    if (shooting_star_animations_count > color_cycle_animations_count) {
-        id -= color_cycle_animations_count;
+    _logger.info("Selected animation: animation_type={}, animation_id={}",
+                 chosen_animation.array_id, chosen_animation.index);
+
+    switch (chosen_animation.array_id) {
+    case 0: {
+        const auto &color = heartbeat::colors[chosen_animation.index];
+
+        _logger.debug("Heartbeat color set: ({}, {}, {})", color.r(), color.g(),
+                      color.b());
+
+        // Build keyframes for the heartbeat animation
+        for (std::size_t keyframe_number = 0;
+             keyframe_number < ARRAY_LENGTH(heartbeat::slow_template_keyframes);
+             keyframe_number++) {
+            const auto &keyframe_template =
+                heartbeat::slow_template_keyframes[keyframe_number];
+
+            auto &keyframe = heartbeat::slow_keyframes[keyframe_number];
+            keyframe.time = keyframe_template.time_ms;
+
+            const auto intensity = keyframe_template.intensity;
+            for (unsigned int component_id = 0;
+                 component_id < ARRAY_LENGTH(color.components);
+                 component_id++) {
+                const auto blended_component =
+                    (float(intensity) / 255.0f) *
+                    float(color.components[component_id]);
+                keyframe.color.components[component_id] =
+                    std::uint8_t(std::lround(blended_component));
+            }
+
+            _logger.debug("Initialized keyframe: number={}, color=({}, {}, "
+                          "{}), intensity={}",
+                          keyframe_number, keyframe.color.r(),
+                          keyframe.color.g(), keyframe.color.b(), intensity);
+        }
+
+        _set_keyframed_cycle_animation(heartbeat::slow_keyframes,
+                                       ARRAY_LENGTH(heartbeat::slow_keyframes),
+                                       1, 0xFFFF, 0, 10);
+        _config.keyframed._animation = keyframed_animation::HEART_BEAT;
+        break;
+    }
+    case 1: {
+        const auto cc_params =
+            keyframes::color_cycle::color_cycle_parameters_from_flash(
+                &keyframes::color_cycle::params[chosen_animation.index]);
+
+        _set_keyframed_cycle_animation(
+            cc_params.keyframes, cc_params.keyframe_count, 1,
+            cc_params.active_pattern, cc_params.cycle_offset, 10);
+        break;
+    }
+    case 2: {
         const auto ss_params =
             keyframes::shooting_star::shooting_star_parameters_from_flash(
-                &keyframes::shooting_star::params[id]);
+                &keyframes::shooting_star::params[chosen_animation.index]);
 
         _set_shooting_star_animation(
             ss_params.shooting_star_count, ss_params.delay_advance_ms,
             ss_params.keyframes, ss_params.keyframe_count);
-        return;
-    } else {
-        id -= shooting_star_animations_count;
-        const auto cc_params =
-            keyframes::color_cycle::color_cycle_parameters_from_flash(
-                &keyframes::color_cycle::params[id]);
-
-        _set_keyframed_cycle_animation(
-            cc_params.keyframes, cc_params.keyframe_count, 1,
-            cc_params.active_pattern, cc_params.cycle_offset, 20);
-        return;
+        break;
+    }
     }
 }
 

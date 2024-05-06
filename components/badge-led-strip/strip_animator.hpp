@@ -126,6 +126,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
         PROGRESS_BAR,
         SHOOTING_STAR, // Shooting star running accross the LEDs
         SPARKS,        // Random sparks appearing
+        HEART_BEAT,    // Parametrized heart beat cycle
         CYCLE,
     };
 
