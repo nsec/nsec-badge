@@ -39,7 +39,8 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
 
     void set_idle_animation(uint8_t id) noexcept;
 
-    void set_red_to_green_led_progress_bar(uint8_t led_count);
+    void set_red_to_green_led_progress_bar(uint8_t led_count,
+                                           bool buttom_led = false);
     void set_health_meter_bar(uint8_t led_count);
 
     void set_blank_animation();
@@ -182,6 +183,9 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
 
     neopixel_controller _pixels;
     animation_type _current_animation_type;
+
+    // Management of color changing during the progress bar syncing.
+    uint8_t progress_bar_current_led_color = 0;
 
     // Keyframe indices of 4-bits each, use helpers to access.
     struct indice_storage_element {

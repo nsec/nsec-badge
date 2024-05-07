@@ -107,6 +107,26 @@ const nl::strip_animator::keyframe
              3},
 };
 
+const nl::strip_animator::keyframe
+    green_red_to_blue_progress_bar_keyframe_template[] = {
+        // Green (LEDs 0 - 7) / Red (LEDs 8 - 15)
+        {{0, 175, 0}, 0},
+        {{100, 20, 0}, 0},
+        {{0, 0, 0},
+         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms /
+             2},
+        // blue <- beginning of loop
+        {{0, 0, 255},
+         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms},
+        // dimmed blue to blue loop
+        {{10, 10, 120},
+         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms *
+             2},
+        {{0, 0, 255},
+         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms *
+             3},
+};
+
 const nl::strip_animator::keyframe health_meter_bar_keyframe_template[] = {
     // red
     {{125, 20, 0}, 0},
@@ -987,7 +1007,7 @@ void nl::strip_animator::_reset_keyframed_animation_state() noexcept
 }
 
 void nl::strip_animator::set_red_to_green_led_progress_bar(
-    uint8_t active_led_count)
+    uint8_t active_led_count, bool buttom_led)
 {
     const bool is_current_animation =
         _current_animation_type == animation_type::KEYFRAMED &&
@@ -1017,11 +1037,51 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
 
         // Clear its state.
         _reset_keyframed_animation_state();
+
+        // Keep the progress bar current color.
+        progress_bar_current_led_color = 0;
+    }
+
+    // Update LED progress color, if needed.
+    // 0 - Green
+    // 1 - Blue
+    switch (progress_bar_current_led_color) {
+    case 0:
+        if (buttom_led) {
+            // Switch to Blue.
+            _config.keyframed.keyframe_count = ARRAY_LENGTH(
+                keyframes::green_red_to_blue_progress_bar_keyframe_template);
+            _config.keyframed.keyframes =
+                keyframes::green_red_to_blue_progress_bar_keyframe_template;
+
+            progress_bar_current_led_color = 1;
+            _logger.debug("- green/red to blue");
+        }
+        break;
+    case 1:
+        if (!buttom_led) {
+            _config.keyframed.keyframe_count = ARRAY_LENGTH(
+                keyframes::red_red_to_green_progress_bar_keyframe_template);
+            _config.keyframed.keyframes =
+                keyframes::red_red_to_green_progress_bar_keyframe_template;
+
+            progress_bar_current_led_color = 0;
+            _logger.debug("- red/red to green");
+        }
+        break;
+    default:
+        break;
     }
 
     _config.keyframed.active = 0;
     for (uint8_t i = 0; i < 16; i++) {
-        // Inactive LEDs will repeat the origin keyframe (solid red)
+        // Bar progress is a different color for the upper portion,
+        // only activate the lower bar LEDs (8 to 15).
+        if( (i <= 7) && (active_led_count >= 8) && (buttom_led)) {
+            continue;
+        }
+
+        // Inactive LEDs will repeat the origin keyframe (solid red) 
         _config.keyframed.active |= ((i < active_led_count) << i);
     }
 }
