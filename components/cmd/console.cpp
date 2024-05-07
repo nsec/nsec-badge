@@ -21,11 +21,64 @@
 #include "crypto_atecc_cmd.h"
 #endif
 
-static const char* TAG = "console";
+static const char *TAG = "console";
 #define PROMPT_STR LOG_RESET_COLOR "nsec"
 
-void register_commands() {
+static void clear_and_print_banner()
+{
+    /* Clear the screen before printing the banner. */
+    linenoiseClearScreen();
+
+    printf(
+        "\n\n"
+        LOG_COLOR(LOG_COLOR_BLUE)     "        ███╗   ██╗ ██████╗ ██████╗ ████████╗██╗  ██╗███████╗███████╗ ██████╗\n"
+        LOG_COLOR(LOG_COLOR_BLUE)     "        ████╗  ██║██╔═══██╗██╔══██╗╚══██╔══╝██║  ██║██╔════╝██╔════╝██╔════╝\n"
+        LOG_COLOR(LOG_COLOR_BLUE)     "        ██╔██╗ ██║██║   ██║██████╔╝   ██║   ███████║███████╗█████╗  ██║     \n"
+        LOG_COLOR(LOG_COLOR_BLUE)     "        ██║╚██╗██║██║   ██║██╔══██╗   ██║   ██╔══██║╚════██║██╔══╝  ██║     \n"
+        LOG_COLOR(LOG_COLOR_BLUE)     "        ██║ ╚████║╚██████╔╝██║  ██║   ██║   ██║  ██║███████║███████╗╚██████╗\n"
+        LOG_COLOR(LOG_COLOR_BLUE)     "        ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝\n"
+        LOG_COLOR(LOG_COLOR_RED ";5") "                           ██████╗  ██████╗ ██████╗ ██╗  ██╗\n"
+        LOG_COLOR(LOG_COLOR_RED ";5") "                           ╚════██╗██╔═████╗╚════██╗██║  ██║\n"
+        LOG_COLOR(LOG_COLOR_RED ";5") "                            █████╔╝██║██╔██║ █████╔╝███████║\n"
+        LOG_COLOR(LOG_COLOR_RED ";5") "                           ██╔═══╝ ████╔╝██║██╔═══╝ ╚════██║\n"
+        LOG_COLOR(LOG_COLOR_RED ";5") "                           ███████╗╚██████╔╝███████╗     ██║\n"
+        LOG_COLOR(LOG_COLOR_RED ";5") "                           ╚══════╝ ╚═════╝ ╚══════╝     ╚═╝\n"
+#if !CONFIG_NSEC_BUILD_CONFERENCE
+        LOG_COLOR(LOG_COLOR_CYAN) "\n\nYou are on the "
+#endif
+#if CONFIG_NSEC_BUILD_CTF
+                                  "CTF firmware\n"
+#endif
+#if CONFIG_NSEC_BUILD_ADDON
+                                  "ADDON firmware\n"
+#endif
+        LOG_RESET_COLOR "\n\n\n");
+}
+
+static int cmd_clear(int argc __attribute__((unused)),
+                     char **argv __attribute__((unused)))
+{
+    clear_and_print_banner();
+
+    return ESP_OK;
+}
+
+static void console_register_cmd_clear()
+{
+    const esp_console_cmd_t cmd = {
+        .command = "clear",
+        .help = "Clear the console",
+        .hint = nullptr,
+        .func = &cmd_clear,
+        .argtable = nullptr,
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&cmd));
+}
+
+void register_commands()
+{
     esp_console_register_help_command();
+    console_register_cmd_clear();
     console_register_cmd_sys();
     register_ota_cmd();
 #if CONFIG_NSEC_BUILD_CTF
@@ -68,34 +121,7 @@ extern "C" void console_init()
 #error Unsupported console type
 #endif
 
-    /* Clear the screen before printing the banner. */
-    linenoiseClearScreen();
-
-    printf(
-        "\n\n"
-        LOG_COLOR(LOG_COLOR_BLUE)     "███╗   ██╗ ██████╗ ██████╗ ████████╗██╗  ██╗███████╗███████╗ ██████╗\n"
-        LOG_COLOR(LOG_COLOR_BLUE)     "████╗  ██║██╔═══██╗██╔══██╗╚══██╔══╝██║  ██║██╔════╝██╔════╝██╔════╝\n"
-        LOG_COLOR(LOG_COLOR_BLUE)     "██╔██╗ ██║██║   ██║██████╔╝   ██║   ███████║███████╗█████╗  ██║     \n"
-        LOG_COLOR(LOG_COLOR_BLUE)     "██║╚██╗██║██║   ██║██╔══██╗   ██║   ██╔══██║╚════██║██╔══╝  ██║     \n"
-        LOG_COLOR(LOG_COLOR_BLUE)     "██║ ╚████║╚██████╔╝██║  ██║   ██║   ██║  ██║███████║███████╗╚██████╗\n"
-        LOG_COLOR(LOG_COLOR_BLUE)     "╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                   ██████╗  ██████╗ ██████╗ ██╗  ██╗\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                   ╚════██╗██╔═████╗╚════██╗██║  ██║\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                    █████╔╝██║██╔██║ █████╔╝███████║\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                   ██╔═══╝ ████╔╝██║██╔═══╝ ╚════██║\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                   ███████╗╚██████╔╝███████╗     ██║\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                   ╚══════╝ ╚═════╝ ╚══════╝     ╚═╝\n"
-        #if !CONFIG_NSEC_BUILD_CONFERENCE
-        LOG_COLOR(LOG_COLOR_CYAN) "You are on "
-        #endif
-        #if CONFIG_NSEC_BUILD_CTF
-        "CTF firmware\n"
-        #endif
-        #if CONFIG_NSEC_BUILD_ADDON
-        "ADDON firmware\n"
-        #endif
-        LOG_RESET_COLOR
-        "\n\n\n");
+    clear_and_print_banner();
 
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
 
