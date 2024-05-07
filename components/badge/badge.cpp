@@ -885,8 +885,9 @@ void nr::badge::_cycle_selected_animation(
     nsync::lock_guard lock(_public_access_semaphore);
     const auto original_animation_id = _selected_animation;
 
-    const auto new_selected_animation = std::clamp(
-        _selected_animation + int8_t(direction), 0, _social_level - 1);
+    const auto new_selected_animation =
+        std::clamp(_selected_animation + int8_t(direction), 0,
+                   std::max(_social_level - 1, 0));
 
     _logger.info("Cycling selected animation: direction={}, "
                  "original_animation_id={}, new_animation_id={}",
