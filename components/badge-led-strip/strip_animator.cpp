@@ -88,8 +88,9 @@ nl::strip_animator::keyframe
 namespace keyframes
 {
 const nl::strip_animator::keyframe
-    red_to_green_progress_bar_keyframe_template[] = {
-        // red
+    red_red_to_green_progress_bar_keyframe_template[] = {
+        // Red (LEDs 0 - 7) / Red (LEDs 8 - 15)
+        {{100, 20, 0}, 0},
         {{100, 20, 0}, 0},
         {{0, 0, 0},
          nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms /
@@ -108,6 +109,7 @@ const nl::strip_animator::keyframe
 
 const nl::strip_animator::keyframe health_meter_bar_keyframe_template[] = {
     // red
+    {{125, 20, 0}, 0},
     {{125, 20, 0}, 0},
     // green <- beginning of loop
     {{0, 255, 0}, 750},
@@ -764,10 +766,27 @@ void nl::strip_animator::_keyframe_animation_tick(
             (_config.keyframed.active >> i) & 1;
 
         if (!led_animation_is_active) {
-            // Inactive, repeat the origin keyframe.
-            _set_keyframe_index(_state.keyframed.origin_keyframe_index, i, 0);
-            _set_keyframe_index(_state.keyframed.destination_keyframe_index, i,
-                                0);
+            if (_config.keyframed._animation != keyframed_animation::PROGRESS_BAR) {
+                // Inactive, repeat the origin keyframe.
+                _set_keyframe_index(_state.keyframed.origin_keyframe_index, i, 0);
+                _set_keyframe_index(_state.keyframed.destination_keyframe_index, i,
+                                    0);
+            } else {
+                // Inactive, repeat the origin keyframes
+                // (LED 0 - 7 -> index 0 / LED 8 - 15 -> index 1).
+                if (i <= 7) {
+                    _set_keyframe_index(_state.keyframed.origin_keyframe_index,
+                                        i, 0);
+                    _set_keyframe_index(_state.keyframed.destination_keyframe_index,
+                                        i, 0);
+                } else {
+                    _set_keyframe_index(_state.keyframed.origin_keyframe_index,
+                                        i, 1);
+                    _set_keyframe_index(_state.keyframed.destination_keyframe_index,
+                                        i, 1);
+                }
+            }
+
             const auto origin_keyframe_index =
                 _get_keyframe_index(_state.keyframed.origin_keyframe_index, i);
             const auto origin_keyframe = keyframe_from_flash(
@@ -990,10 +1009,10 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
         _current_animation_type = animation_type::KEYFRAMED;
         _config.keyframed._animation = keyframed_animation::PROGRESS_BAR;
         _config.keyframed.keyframe_count = ARRAY_LENGTH(
-            keyframes::red_to_green_progress_bar_keyframe_template);
+            keyframes::red_red_to_green_progress_bar_keyframe_template);
         _config.keyframed.keyframes =
-            keyframes::red_to_green_progress_bar_keyframe_template;
-        _config.keyframed.loop_point_index = 2;
+            keyframes::red_red_to_green_progress_bar_keyframe_template;
+        _config.keyframed.loop_point_index = 3;
         _config.keyframed.brightness = 120;
 
         // Clear its state.
@@ -1027,7 +1046,7 @@ void nl::strip_animator::set_health_meter_bar(uint8_t led_count)
     _config.keyframed.keyframe_count =
         ARRAY_LENGTH(keyframes::health_meter_bar_keyframe_template);
     _config.keyframed.keyframes = keyframes::health_meter_bar_keyframe_template;
-    _config.keyframed.loop_point_index = 1;
+    _config.keyframed.loop_point_index = 2;
     _config.keyframed.brightness = 120;
 
     // Clear its state.
