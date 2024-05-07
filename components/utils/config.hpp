@@ -69,7 +69,7 @@ namespace nsec::config::communication
 {
 // Size reserved for protocol messages
 constexpr size_t protocol_max_message_size = 16;
-constexpr unsigned int badge_serial_speed = 38400;
+constexpr unsigned int badge_serial_speed = 115200;
 constexpr bool invert_uart = true;
 
 /*
@@ -83,7 +83,7 @@ constexpr auto tx_buffer_size = 1024;
 constexpr auto uart_queue_length = 16;
 
 constexpr nsec::scheduling::relative_time_ms network_handler_base_period_ms =
-    50;
+    10;
 constexpr nsec::scheduling::relative_time_ms network_handler_timeout_ms = 10000;
 constexpr nsec::scheduling::relative_time_ms
     network_handler_retransmit_timeout_ms = 6 * network_handler_base_period_ms;
