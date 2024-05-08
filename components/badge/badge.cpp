@@ -757,6 +757,9 @@ void nr::badge::pairing_completed_animator::tick(
             break;
         }
 
+        // Store the new social level.
+        badge.apply_score_change(badge._badges_discovered_last_exchange);
+
         // Transition to showing the new health status
         _animation_state(badge, animation_state::SHOW_HEALTH);
         break;
@@ -767,7 +770,6 @@ void nr::badge::pairing_completed_animator::tick(
         }
 
         // Go back to the idle animation state.
-        badge.apply_score_change(badge._badges_discovered_last_exchange);
         _animation_state(badge, animation_state::DONE);
         break;
     case animation_state::DONE:
