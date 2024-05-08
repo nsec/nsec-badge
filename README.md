@@ -86,6 +86,14 @@ with the "--upload-port [port name]" option:
 pio run -t upload -e conference --upload-port [port name]
 ```
 
+To improve the upload speed, you can skip the build validation/process
+with the "-t nobuild" option:
+
+```bash
+# Conference firmware
+pio run -t upload -t nobuild -e conference
+```
+
 ## Debugging
 
 To read the logging statements output on the USB serial interface, it is
