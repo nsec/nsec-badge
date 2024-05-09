@@ -910,7 +910,7 @@ void nc::network_handler::_run_wire_protocol(
         _current_wire_protocol_state != wire_protocol_state ::UNCONNECTED) {
         // No activity for a while... reset.
         _logger.warn("Network activity timeout: went {}ms without activity",
-                     _last_message_received_time_ms - current_time_ms);
+                     current_time_ms - _last_message_received_time_ms);
         _reset();
         return;
     }
