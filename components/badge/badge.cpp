@@ -252,6 +252,7 @@ void nr::badge::on_button_event(nsec::button::id button,
                                 nsec::button::event event) noexcept
 {
     _logger.info("Button event: button={}, event={}", button, event);
+    nsync::lock_guard lock(_public_access_semaphore);
 
     if (_current_network_app_state != network_app_state::UNCONNECTED &&
         _current_network_app_state != network_app_state::IDLE) {
@@ -304,7 +305,6 @@ nc::network_handler::application_message_action
 nr::badge::on_message_received(communication::message::type message_type,
                                const uint8_t *message) noexcept
 {
-    nsync::lock_guard lock(_public_access_semaphore);
     _logger.debug("Received message: type={}", message_type);
 
     if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
@@ -357,8 +357,9 @@ void nr::badge::_set_network_app_state(
 nr::badge::badge_discovered_result
 nr::badge::on_badge_discovered(const uint8_t *id) noexcept
 {
-    nsec::runtime::badge_unique_id new_id;
+    nsync::lock_guard lock(_public_access_semaphore);
 
+    nsec::runtime::badge_unique_id new_id;
     std::memcpy(new_id.data(), id, new_id.size());
 
     _logger.info("Badge discovered event: badge_id={}", new_id);
@@ -377,6 +378,8 @@ nr::badge::on_badge_discovered(const uint8_t *id) noexcept
 
 void nr::badge::on_badge_discovery_completed() noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
+
     _logger.info("Badge discovery completed");
     _badges_discovered_last_exchange = _id_exchanger.new_badges_discovered();
     _set_network_app_state(network_app_state::ANIMATE_PAIRING_COMPLETED);
@@ -835,6 +838,7 @@ nr::badge::pairing_completed_animator::_animation_state() const noexcept
 
 void nr::badge::clear_leds()
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     _strip_animator.set_blank_animation();
 }
 
@@ -885,7 +889,6 @@ void nr::badge::_set_selected_animation(uint8_t animation_id,
 void nr::badge::_cycle_selected_animation(
     nr::badge::cycle_animation_direction direction) noexcept
 {
-    nsync::lock_guard lock(_public_access_semaphore);
     const auto original_animation_id = _selected_animation;
 
     const auto new_selected_animation = std::clamp<int>(
