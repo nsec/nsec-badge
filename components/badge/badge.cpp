@@ -262,7 +262,7 @@ void nr::badge::on_button_event(nsec::button::id button,
     }
 
     // Send the received event to the LEDs function.
-    nsec::g::the_badge->_update_leds(button, event);
+    _update_leds(button, event);
 }
 
 void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
