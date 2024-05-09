@@ -186,12 +186,12 @@ class badge
         void reset() noexcept;
         uint8_t new_badges_discovered() const noexcept
         {
-            return uint8_t(_new_badges_discovered);
+            return _new_badges_discovered;
         }
 
       private:
-        uint8_t _new_badges_discovered : 5;
-        uint8_t _message_received_count : 5;
+        uint8_t _new_badges_discovered;
+        uint8_t _message_received_count;
         bool _send_ours_on_next_send_complete : 1;
         uint8_t _direction : 1;
         bool _done_after_sending_ours : 1;
