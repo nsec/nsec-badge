@@ -786,25 +786,28 @@ void nl::strip_animator::_keyframe_animation_tick(
             (_config.keyframed.active >> i) & 1;
 
         if (!led_animation_is_active) {
-            if (_config.keyframed._animation != keyframed_animation::PROGRESS_BAR) {
+            if (_config.keyframed._animation !=
+                keyframed_animation::PROGRESS_BAR) {
                 // Inactive, repeat the origin keyframe.
-                _set_keyframe_index(_state.keyframed.origin_keyframe_index, i, 0);
-                _set_keyframe_index(_state.keyframed.destination_keyframe_index, i,
+                _set_keyframe_index(_state.keyframed.origin_keyframe_index, i,
                                     0);
+                _set_keyframe_index(_state.keyframed.destination_keyframe_index,
+                                    i, 0);
             } else {
                 // Inactive, repeat the origin keyframes
                 // (LED 0 - 7 -> index 0 / LED 8 - 15 -> index 1).
-                if (i <= 7) {
-                    _set_keyframe_index(_state.keyframed.origin_keyframe_index,
-                                        i, 0);
-                    _set_keyframe_index(_state.keyframed.destination_keyframe_index,
-                                        i, 0);
-                } else {
-                    _set_keyframe_index(_state.keyframed.origin_keyframe_index,
-                                        i, 1);
-                    _set_keyframe_index(_state.keyframed.destination_keyframe_index,
-                                        i, 1);
-                }
+                //
+                // The top and bottom rows use different start indices to
+                // begin the animation at different starting colors. Both
+                // beginning keyframes (0 and 1) are at time 0. Hence, the
+                // animation immediately progresses to keyframes 2+ when it is
+                // activated.
+                const unsigned int first_keyframe = i <= 7 ? 0 : 1;
+
+                _set_keyframe_index(_state.keyframed.origin_keyframe_index, i,
+                                    first_keyframe);
+                _set_keyframe_index(_state.keyframed.destination_keyframe_index,
+                                    i, first_keyframe);
             }
 
             const auto origin_keyframe_index =
@@ -1007,7 +1010,7 @@ void nl::strip_animator::_reset_keyframed_animation_state() noexcept
 }
 
 void nl::strip_animator::set_red_to_green_led_progress_bar(
-    uint8_t active_led_count, bool buttom_led)
+    uint8_t active_led_count, bool bottom_row_lighting_up)
 {
     const bool is_current_animation =
         _current_animation_type == animation_type::KEYFRAMED &&
@@ -1047,7 +1050,7 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
     // 1 - Blue
     switch (progress_bar_current_led_color) {
     case 0:
-        if (buttom_led) {
+        if (bottom_row_lighting_up) {
             // Switch to Blue.
             _config.keyframed.keyframe_count = ARRAY_LENGTH(
                 keyframes::green_red_to_blue_progress_bar_keyframe_template);
@@ -1059,7 +1062,7 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
         }
         break;
     case 1:
-        if (!buttom_led) {
+        if (!bottom_row_lighting_up) {
             _config.keyframed.keyframe_count = ARRAY_LENGTH(
                 keyframes::red_red_to_green_progress_bar_keyframe_template);
             _config.keyframed.keyframes =
@@ -1077,11 +1080,11 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
     for (uint8_t i = 0; i < 16; i++) {
         // Bar progress is a different color for the upper portion,
         // only activate the lower bar LEDs (8 to 15).
-        if( (i <= 7) && (active_led_count >= 8) && (buttom_led)) {
+        if ((i <= 7) && (active_led_count >= 8) && (bottom_row_lighting_up)) {
             continue;
         }
 
-        // Inactive LEDs will repeat the origin keyframe (solid red) 
+        // Inactive LEDs will repeat the origin keyframe (solid red)
         _config.keyframed.active |= ((i < active_led_count) << i);
     }
 }
