@@ -305,9 +305,6 @@ nc::network_handler::application_message_action
 nr::badge::on_message_received(communication::message::type message_type,
                                const uint8_t *message) noexcept
 {
-    // Don't acquire the public access lock since the handlers will actually
-    // call into the badge. This function simply forward the message to them
-    // so there is nothing to protect.
     _logger.debug("Received message: type={}", message_type);
 
     if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
@@ -322,10 +319,7 @@ nr::badge::on_message_received(communication::message::type message_type,
 
 void nr::badge::on_app_message_sent() noexcept
 {
-    // Taking the badge public access semaphore is not necessary here; this
-    // function merely forwards the event to the current focused handler.
-    // That handler, in turn, may use public entry points of the badge which
-    // will acquire the lock.
+    nsync::lock_guard lock(_public_access_semaphore);
 
     if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.message_sent(*this);
