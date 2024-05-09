@@ -21,7 +21,7 @@ enum class peer_relative_position : std::uint8_t {
     RIGHT,
 };
 
-using peer_id_t = std::uint8_t;
+using peer_id_t = std::uint16_t;
 
 class network_handler : public scheduling::periodic_task<network_handler>
 {
@@ -150,7 +150,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
     using disconnection_notifier = void (*)();
     using pairing_begin_notifier = void (*)();
     // void (our_peer_id, peer count)
-    using pairing_end_notifier = void (*)(peer_id_t, std::uint8_t);
+    using pairing_end_notifier = void (*)(peer_id_t, std::uint16_t);
 
     enum class application_message_action : std::uint8_t { OK, ERROR };
     // application_message_action (relative_position_of_peer, message_type,
@@ -178,7 +178,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
         return _peer_id;
     }
 
-    std::uint8_t peer_count() const noexcept
+    std::uint16_t peer_count() const noexcept
     {
         return _peer_count;
     }
@@ -319,7 +319,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
     // This node's unique id in the network.
     peer_id_t _peer_id;
     // Number of peers in the network (including this node).
-    std::uint8_t _peer_count;
+    std::uint16_t _peer_count;
 
     message_reception_state _current_message_reception_state;
     // Number of bytes left to receive for the current message

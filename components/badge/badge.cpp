@@ -847,7 +847,7 @@ void nr::badge::clear_leds()
     _strip_animator.set_blank_animation();
 }
 
-void nr::badge::apply_score_change(uint8_t new_badges_discovered_count) noexcept
+void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
 
@@ -863,7 +863,7 @@ void nr::badge::apply_score_change(uint8_t new_badges_discovered_count) noexcept
 }
 
 uint8_t nr::badge::_compute_new_social_level(
-    uint8_t current_social_level, uint8_t new_badges_discovered_count) noexcept
+    uint8_t current_social_level, uint16_t new_badges_discovered_count) noexcept
 {
     uint16_t new_social_level = current_social_level;
     uint16_t level_up = new_badges_discovered_count;

@@ -228,11 +228,11 @@ struct wire_msg_header {
 } __attribute__((packed));
 
 struct wire_msg_announce {
-    std::uint8_t peer_id;
+    std::uint16_t peer_id;
 } __attribute__((packed));
 
 struct wire_msg_announce_reply {
-    std::uint8_t peer_count;
+    std::uint16_t peer_count;
 } __attribute__((packed));
 
 std::uint8_t wire_msg_payload_size(std::uint8_t type)
