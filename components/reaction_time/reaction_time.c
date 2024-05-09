@@ -144,12 +144,14 @@ void print_countdown(void)
     vTaskDelay(500 / portTICK_PERIOD_MS);
     printf(", 2");
     flush_write();
+    xSemaphoreTake(btn_mutex, portMAX_DELAY); // Not too obvious
     vTaskDelay(500 / portTICK_PERIOD_MS);
     printf(", 1");
     flush_write();
-    vTaskDelay((esp_random() % 501) / portTICK_PERIOD_MS); // Jitter
+    vTaskDelay((250 + esp_random() % 251) / portTICK_PERIOD_MS); // Jitter
     printf("!\n");
     flush_write();
+    assert(xSemaphoreGive(btn_mutex) == pdTRUE);
 }
 
 void play_level(int level)
@@ -180,13 +182,14 @@ void play_level(int level)
     const char *buttons[] = {"UP", "DOWN", "LEFT", "RIGHT"};
     for (int i = 0; i < 16; i++) {
         printf("Get Ready...");
+        if (level > 2) {
+            print_countdown();
+        }
 
+        /* Resets which button was pressed and for how many times */
         if (xSemaphoreTake(btn_mutex, portMAX_DELAY) == pdTRUE) {
             btn_status.gpio_num = 0;
             btn_status.repeat = 0;
-            if (level > 2) {
-                print_countdown();
-            }
             assert(xSemaphoreGive(btn_mutex) == pdTRUE);
         } else {
             ESP_LOGE(LOG_TAG, "Failed to acquire a mutual exclusion lock");
@@ -203,7 +206,7 @@ void play_level(int level)
 
         // Value picked considering median is 273ms and average is 284ms
         // humanbenchmark.com/tests/reactiontime/statistics
-        vTaskDelay(250 / portTICK_PERIOD_MS);
+        vTaskDelay(200 / portTICK_PERIOD_MS);
 
         if (xSemaphoreTake(btn_mutex, portMAX_DELAY) == pdTRUE) {
             if (btn_status.gpio_num != pattern[i]) {
