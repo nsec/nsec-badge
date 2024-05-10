@@ -8,7 +8,9 @@
 # First usable offset is 0x9000
 
 # Non-Volatile Storage, 16kB
-nvs,      data, nvs,     0x9000,  0x4000,
+# Moved at the end, keep this empty so we don't change
+# the offsets of the other partitions.
+#nvs,      data, nvs,     0x9000,  0x4000,
 
 # OTA configuration, must be "0x2000" bytes
 otadata,  data, ota,     0xd000,  0x2000,
@@ -24,3 +26,6 @@ ota_0,    app,  ota_0,   0x110000, 1M,
 
 # Second OTA partition for the "addon" firmware
 ota_1,    app,  ota_1,   0x210000, 1M,
+
+# Non-Volatile Storage, 1M
+nvs,      data, nvs,     0x310000,  1M,
