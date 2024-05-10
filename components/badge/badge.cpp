@@ -758,6 +758,11 @@ void nr::badge::pairing_completed_animator::tick(
 {
     switch (_animation_state()) {
     case animation_state::SHOW_PAIRING_RESULT: {
+        if (_state_counter == 0) {
+            // Store the new social level.
+            badge.apply_score_change(badge._badges_discovered_last_exchange);
+	}
+
         if (_state_counter < 8) {
             // Keep on showing the pairing result animation.
             break;
@@ -774,9 +779,6 @@ void nr::badge::pairing_completed_animator::tick(
             // Keep on showing the new level animation.
             break;
         }
-
-        // Store the new social level.
-        badge.apply_score_change(badge._badges_discovered_last_exchange);
 
         // Transition to showing the new health status
         _animation_state(badge, animation_state::SHOW_HEALTH);
