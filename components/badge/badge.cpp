@@ -456,7 +456,7 @@ void nr::badge::network_id_exchanger::new_message(
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::ANNOUNCE_BADGE_ID);
             badge._network_handler.enqueue_app_message(
-                nc::peer_relative_position(_direction),
+                nc::peer_relative_position::LEFT,
                 uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
                 reinterpret_cast<const uint8_t *>(&msg));
 
