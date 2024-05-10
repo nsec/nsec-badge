@@ -214,7 +214,7 @@ void play_level(int level)
                 assert(xSemaphoreGive(btn_mutex) == pdTRUE);
                 return;
             }
-            if (level > 1 && btn_status.repeat > 0) {
+            if (level > 1 && btn_status.repeat > 1) {
                 // Allows button mashing in the 1st level
                 printf("Multiple button clicks are not allowed\n");
                 assert(xSemaphoreGive(btn_mutex) == pdTRUE);
