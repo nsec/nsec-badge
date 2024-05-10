@@ -852,7 +852,7 @@ nc::network_handler::enqueue_app_message(peer_relative_position direction,
 {
     const auto payload_size = wire_msg_payload_size(msg_type);
 
-    _logger.debug("Enqueuing application message: msg_type={}", msg_type);
+    _logger.info("Enqueuing application message: msg_type={}", msg_type);
 
     if (_has_pending_outgoing_app_message() ||
         payload_size > sizeof(_current_pending_outgoing_app_message_payload)) {
@@ -920,7 +920,7 @@ void nc::network_handler::_run_wire_protocol(
         message_payload[nsec::config::communication::protocol_max_message_size -
                         sizeof(wire_msg_header)];
 
-    _logger.info("Running wire protocol: state={}",
+    _logger.debug("Running wire protocol: state={}",
                  _current_wire_protocol_state);
 
     if (_is_wire_protocol_in_a_reception_state(_current_wire_protocol_state)) {

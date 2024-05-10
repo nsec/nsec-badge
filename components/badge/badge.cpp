@@ -326,6 +326,9 @@ void nr::badge::on_app_message_sent() noexcept
     // That handler, in turn, may use public entry points of the badge which
     // will acquire the lock.
 
+    _logger.info("Message sent notification: network_app_state={}",
+                 _current_network_app_state);
+
     if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.message_sent(*this);
     }
