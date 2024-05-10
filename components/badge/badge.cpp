@@ -314,6 +314,10 @@ nr::badge::on_message_received(communication::message::type message_type,
     } else if (_current_network_app_state ==
                network_app_state::ANIMATE_PAIRING) {
         _pairing_animator.new_message(*this, message_type, message);
+    } else {
+        _logger.error(
+            "Unexpected message received: app_state={}, message_type={}",
+            _current_network_app_state, message_type);
     }
 
     return nc::network_handler::application_message_action::OK;
@@ -708,6 +712,7 @@ void nr::badge::pairing_animator::new_message(nr::badge &badge,
         _animation_state(animation_state::DONE);
         break;
     default:
+        _logger.error("Unknown message received by pairing animator");
         break;
     }
 }
