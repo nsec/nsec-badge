@@ -252,7 +252,6 @@ void nr::badge::on_button_event(nsec::button::id button,
                                 nsec::button::event event) noexcept
 {
     _logger.info("Button event: button={}, event={}", button, event);
-    nsync::lock_guard lock(_public_access_semaphore);
 
     if (_current_network_app_state != network_app_state::UNCONNECTED &&
         _current_network_app_state != network_app_state::IDLE) {
@@ -895,6 +894,7 @@ void nr::badge::_set_selected_animation(uint8_t animation_id,
 void nr::badge::_cycle_selected_animation(
     nr::badge::cycle_animation_direction direction) noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     const auto original_animation_id = _selected_animation;
 
     const auto new_selected_animation = std::clamp<int>(
