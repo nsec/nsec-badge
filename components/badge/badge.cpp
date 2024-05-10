@@ -661,6 +661,9 @@ void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
                    nc::network_handler::link_position::LEFT_MOST) {
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::PAIRING_ANIMATION_DONE);
+
+            nsec::g::the_badge->_set_network_app_state(
+                nr::badge::network_app_state::EXCHANGING_IDS);
             nsec::g::the_badge->_network_handler.enqueue_app_message(
                 nc::peer_relative_position::RIGHT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_DONE), nullptr);
