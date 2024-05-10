@@ -15,7 +15,7 @@
 
 namespace nsec::config::scheduling
 {
-constexpr unsigned int default_task_priority = 1;
+constexpr unsigned int default_task_priority = 10;
 constexpr unsigned int default_stack_size_words = 8192;
 } // namespace nsec::config::scheduling
 
