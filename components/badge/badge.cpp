@@ -309,6 +309,13 @@ nr::badge::on_message_received(communication::message::type message_type,
     // so there is nothing to protect.
     _logger.debug("Received message: type={}", message_type);
 
+    if (message_type == communication::message::type::ANNOUNCE_BADGE_ID) {
+        if (_current_network_app_state != network_app_state::EXCHANGING_IDS) {
+            _logger.info("Forcing app state to EXCHANGING_IDS");
+            _set_network_app_state(network_app_state::EXCHANGING_IDS);
+        }
+    }
+
     if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.new_message(*this, message_type, message);
     } else if (_current_network_app_state ==
