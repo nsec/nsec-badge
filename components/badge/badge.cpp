@@ -401,19 +401,10 @@ void nr::badge::network_id_exchanger::start(nr::badge &badge) noexcept
         return;
     }
 
-    // Left-most peer initiates the exchange.
-    const auto badge_id = badge._get_unique_id();
-    nc::message::announce_badge_id msg = {
-        .peer_id = our_id,
-        .board_unique_id = {badge_id[0], badge_id[1], badge_id[2], badge_id[3],
-                            badge_id[4], badge_id[5]}};
-
-    _logger.debug("Enqueueing message: type={}",
-                  nc::message::type::ANNOUNCE_BADGE_ID);
-    badge._network_handler.enqueue_app_message(
-        nc::peer_relative_position::RIGHT,
-        uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
-        reinterpret_cast<const uint8_t *>(&msg));
+    _logger.info("Queueing up the send of our badge id after the transmission "
+                 "of the last queued message");
+    _send_ours_on_next_send_complete = true;
+    return;
 }
 
 void nr::badge::network_id_exchanger::new_message(
