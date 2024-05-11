@@ -74,16 +74,21 @@ template <class UserTask> class periodic_task
 
   protected:
     // Call once derived task is fully initialized.
-    void start()
+    void start_with_prio(int priority)
     {
         const auto result = xTaskCreatePinnedToCore(
             _tick_and_wait, name(),
             nsec::config::scheduling::default_stack_size_words, (void *)this,
-            nsec::config::scheduling::default_task_priority, &_handle, 0);
+            priority, &_handle, 0);
 
         if (result != pdPASS) {
             throw std::bad_alloc();
         }
+    }
+
+    void start()
+    {
+	    start_with_prio(nsec::config::scheduling::default_task_priority);
     }
 
   private:

@@ -170,7 +170,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
 
     void start()
     {
-        scheduling::periodic_task<network_handler>::start();
+        scheduling::periodic_task<network_handler>::start_with_prio(18);
     }
 
     peer_id_t peer_id() const noexcept
