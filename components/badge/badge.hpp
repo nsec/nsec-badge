@@ -247,7 +247,8 @@ class badge
     static uint8_t
     _compute_new_social_level(uint8_t current_social_level,
                               uint16_t new_badges_discovered_count) noexcept;
-    void _set_selected_animation(uint8_t animation_id, bool save) noexcept;
+    void _set_selected_animation(uint8_t animation_id, bool save,
+                                 bool set_idle_animation) noexcept;
     // Setup hardware.
     void _setup();
 

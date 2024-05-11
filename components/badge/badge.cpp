@@ -200,7 +200,7 @@ void nr::badge::load_config()
     }
 
     set_social_level(social_level, false);
-    _set_selected_animation(selected_animation_id, false);
+    _set_selected_animation(selected_animation_id, false, true);
 }
 
 void nr::badge::save_config() const
@@ -867,7 +867,7 @@ void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcep
 
     // Saves to configuration
     set_social_level(new_social_level, true);
-    _set_selected_animation(_social_level, true);
+    _set_selected_animation(_social_level, true, false);
 }
 
 uint8_t nr::badge::_compute_new_social_level(
@@ -889,10 +889,13 @@ uint8_t nr::badge::_compute_new_social_level(
 }
 
 void nr::badge::_set_selected_animation(uint8_t animation_id,
-                                        bool save_to_config) noexcept
+                                        bool save_to_config,
+                                        bool set_idle_animation) noexcept
 {
     _selected_animation = animation_id;
-    _strip_animator.set_idle_animation(animation_id);
+    if (set_idle_animation) {
+        _strip_animator.set_idle_animation(animation_id);
+    }
 
     if (save_to_config) {
         save_config();
@@ -912,7 +915,7 @@ void nr::badge::_cycle_selected_animation(
                  "original_animation_id={}, new_animation_id={}",
                  direction, original_animation_id, new_selected_animation);
 
-    _set_selected_animation(new_selected_animation, true);
+    _set_selected_animation(new_selected_animation, true, true);
 
     // Set the LEDs pattern.
     nsec::g::the_badge->_strip_animator.set_idle_animation(
