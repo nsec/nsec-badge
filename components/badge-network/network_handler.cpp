@@ -459,6 +459,7 @@ nc::network_handler::_check_connections() noexcept
         }
     }
 
+    _logger.error("Reset due to topology change");
     _reset();
 
     _is_left_connected = left_is_connected;
@@ -913,7 +914,7 @@ void nc::network_handler::_run_wire_protocol(
             nsec::config::communication::network_handler_timeout_ms &&
         _current_wire_protocol_state != wire_protocol_state ::UNCONNECTED) {
         // No activity for a while... reset.
-        _logger.warn("Network activity timeout: went {}ms without activity",
+        _logger.error("Network activity timeout: went {}ms without activity",
                      current_time_ms - _last_message_received_time_ms);
         _reset();
         return;
@@ -944,6 +945,7 @@ void nc::network_handler::_run_wire_protocol(
         send_wire_ok_msg(_logger, _listening_side_serial());
 
         if (wire_msg_type(message_type) == wire_msg_type::RESET) {
+            _logger.error("Received reset message, resetting...");
             _reset();
             return;
         }
@@ -974,6 +976,7 @@ void nc::network_handler::_run_wire_protocol(
     case wire_protocol_state::DISCOVERY_RECEIVE_ANNOUNCE: {
         if (wire_msg_type(message_type) != wire_msg_type::ANNOUNCE) {
             // Unexpected message: protocol error.
+            _logger.error("Received unexpected message: protocol_state={}, message_type={}", _current_wire_protocol_state, wire_msg_type(message_type));
             _reset();
             return;
         }
@@ -999,6 +1002,7 @@ void nc::network_handler::_run_wire_protocol(
     case wire_protocol_state::DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE:
         if (wire_msg_type(message_type) != wire_msg_type::MONITOR) {
             // Unexpected message: protocol error.
+            _logger.error("Received unexpected message: protocol_state={}, message_type={}", _current_wire_protocol_state, wire_msg_type(message_type));
             _reset();
             return;
         }
@@ -1059,6 +1063,7 @@ void nc::network_handler::_run_wire_protocol(
     case wire_protocol_state::DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE_REPLY:
         if (wire_msg_type(message_type) != wire_msg_type::MONITOR) {
             // Unexpected message: protocol error.
+            _logger.error("Received unexpected message: protocol_state={}, message_type={}", _current_wire_protocol_state, wire_msg_type(message_type));
             _reset();
             return;
         }
@@ -1114,6 +1119,7 @@ void nc::network_handler::_run_wire_protocol(
                 wire_protocol_state::RUNNING_SEND_APP_MESSAGE);
         } else {
             // Unexpected message or a reset message.
+            _logger.error("Received unexpected message: protocol_state={}, message_type={}", _current_wire_protocol_state, wire_msg_type(message_type));
             _reset();
             return;
         }
