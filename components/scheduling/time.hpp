@@ -8,11 +8,13 @@
 #ifndef NSEC_SCHEDULING_TIME_HPP
 #define NSEC_SCHEDULING_TIME_HPP
 
+#include <cstdint>
+
 namespace nsec::scheduling
 {
 
-using absolute_time_ms = unsigned long;
-using relative_time_ms = unsigned short;
+using absolute_time_ms = std::uint64_t;
+using relative_time_ms = std::uint64_t;
 
 } // namespace nsec::scheduling
 

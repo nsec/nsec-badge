@@ -345,6 +345,7 @@ class network_handler : public scheduling::periodic_task<network_handler>
         [nsec::config::communication::protocol_max_message_size];
     nsec::logging::logger _logger;
     SemaphoreHandle_t _app_message_enqueue_semaphore;
+    uint64_t _time_since_boot_ms = 0;
 };
 } // namespace nsec::communication
 

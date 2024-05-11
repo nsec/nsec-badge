@@ -338,11 +338,6 @@ void send_wire_ok_msg(const nsec::logging::logger &logger,
 {
     send_wire_msg(logger, serial, std::uint8_t(wire_msg_type::OK));
 }
-
-ns::absolute_time_ms get_current_absolute_time()
-{
-    return xTaskGetTickCount() * portTICK_PERIOD_MS;
-}
 } /* namespace */
 
 nc::network_handler::network_handler() noexcept
@@ -545,7 +540,7 @@ void nc::network_handler::_set_wire_protocol_state(
     _current_wire_protocol_state = state;
     _ticks_in_wire_state = 0;
     // Reset timeout timestamp.
-    _last_message_received_time_ms = get_current_absolute_time();
+    _last_message_received_time_ms = _time_since_boot_ms;
 
     if (_is_wire_protocol_in_a_running_state(previous_protocol_state) &&
         state == wire_protocol_state::UNCONNECTED) {
@@ -909,13 +904,12 @@ bool nc::network_handler::_is_wire_protocol_in_a_reception_state(
 void nc::network_handler::_run_wire_protocol(
     ns::absolute_time_ms current_time_ms) noexcept
 {
-    if (_last_message_received_time_ms < current_time_ms &&
-        (current_time_ms - _last_message_received_time_ms) >
-            nsec::config::communication::network_handler_timeout_ms &&
+    if (((current_time_ms - _last_message_received_time_ms) >
+             nsec::config::communication::network_handler_timeout_ms) &&
         _current_wire_protocol_state != wire_protocol_state ::UNCONNECTED) {
         // No activity for a while... reset.
         _logger.error("Network activity timeout: went {}ms without activity",
-                     current_time_ms - _last_message_received_time_ms);
+                      current_time_ms - _last_message_received_time_ms);
         _reset();
         return;
     }
@@ -1172,6 +1166,9 @@ void nc::network_handler::_run_wire_protocol(
 
 void nc::network_handler::tick(ns::absolute_time_ms current_time_ms) noexcept
 {
+    _time_since_boot_ms +=
+        nsec::config::communication::network_handler_base_period_ms;
+
     if (_check_connections() == check_connections_result::TOPOLOGY_CHANGED) {
         /*
          * The protocol state has been reset. Resume on the next tick
@@ -1185,5 +1182,5 @@ void nc::network_handler::tick(ns::absolute_time_ms current_time_ms) noexcept
         return;
     }
 
-    _run_wire_protocol(current_time_ms);
+    _run_wire_protocol(_time_since_boot_ms);
 }
