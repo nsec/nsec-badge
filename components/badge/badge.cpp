@@ -821,16 +821,13 @@ void nr::badge::pairing_completed_animator::_animation_state(
         break;
     case nr::badge::pairing_completed_animator::animation_state::
         SHOW_NEW_LEVEL: {
-        const auto new_level = _compute_new_social_level(
-            badge._social_level, badge._badges_discovered_last_exchange);
-
         badge._strip_animator.set_show_level_animation(
             badge._badges_discovered_last_exchange > 0
                 ? nl::strip_animator::pairing_completed_animation_type::
                       HAPPY_CLOWN_BARF
                 : nl::strip_animator::pairing_completed_animation_type::
                       NO_NEW_FRIENDS,
-            new_level, false);
+            badge._social_level, false);
         break;
     }
     case nr::badge::pairing_completed_animator::animation_state::SHOW_HEALTH: {
