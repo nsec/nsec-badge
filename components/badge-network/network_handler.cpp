@@ -7,6 +7,7 @@
 #include "network_handler.hpp"
 #include "scheduling/time.hpp"
 #include "utils/config.hpp"
+#include "utils/lock.hpp"
 #include <array>
 #include <cstdint>
 #include <utility>
@@ -19,6 +20,7 @@
 
 namespace ns = nsec::scheduling;
 namespace nc = nsec::communication;
+namespace nsync = nsec::synchro;
 
 enum class wire_msg_type : std::uint8_t {
     // Reserved.
@@ -359,6 +361,7 @@ nc::network_handler::network_handler() noexcept
           std::uint8_t(wire_protocol_state::UNCONNECTED)},
       _logger("Network handler", nsec::config::logging::network_handler_level)
 {
+    _app_message_enqueue_semaphore = xSemaphoreCreateMutex();
     _reset();
     _setup();
 }
@@ -852,6 +855,7 @@ nc::network_handler::enqueue_app_message(peer_relative_position direction,
 {
     const auto payload_size = wire_msg_payload_size(msg_type);
 
+    nsync::lock_guard lock(_app_message_enqueue_semaphore);
     _logger.info("Enqueuing application message: msg_type={}", msg_type);
 
     if (_has_pending_outgoing_app_message() ||
@@ -1117,6 +1121,8 @@ void nc::network_handler::_run_wire_protocol(
         break;
     }
     case wire_protocol_state::RUNNING_SEND_APP_MESSAGE: {
+        nsync::lock_guard lock(_app_message_enqueue_semaphore);
+
         const auto is_middle_peer =
             position() == nc::network_handler::link_position::MIDDLE;
         const auto pending_matches_wave_front_direction =
