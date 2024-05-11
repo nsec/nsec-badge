@@ -30,8 +30,6 @@ extern "C" void app_main(void) {
     initialize_nvs();
     fflush(stdout);
 
-    xTaskCreate(dbg_led_task, "dbg_led_task", 2048, nullptr, 1, nullptr);
-
     Save::load_save();
 
     ota_init();
