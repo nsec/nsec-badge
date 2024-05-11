@@ -10,6 +10,7 @@
 #include "sdkconfig.h"
 #include <inttypes.h>
 #include <stdio.h>
+#include "nvs_flash.h"
 
 #include <iostream>
 
@@ -44,8 +45,19 @@ class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
     }
 };
 
+static void initialize_nvs() {
+    esp_err_t err = nvs_flash_init();
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK( nvs_flash_erase() );
+        err = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(err);
+}
+
 extern "C" void app_main(void)
 {
+    initialize_nvs();
+
     // Detect CTF Addon
     ota_init();
 
