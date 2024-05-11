@@ -22,7 +22,7 @@ enum class type : uint8_t {
 };
 
 struct announce_badge_id {
-    std::uint8_t peer_id;
+    std::uint16_t peer_id;
     std::uint8_t board_unique_id[6];
 } __attribute__((packed));
 

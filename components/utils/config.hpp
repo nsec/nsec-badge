@@ -15,7 +15,7 @@
 
 namespace nsec::config::scheduling
 {
-constexpr unsigned int default_task_priority = 1;
+constexpr unsigned int default_task_priority = 10;
 constexpr unsigned int default_stack_size_words = 8192;
 } // namespace nsec::config::scheduling
 
@@ -83,7 +83,7 @@ constexpr auto tx_buffer_size = 1024;
 constexpr auto uart_queue_length = 16;
 
 constexpr nsec::scheduling::relative_time_ms network_handler_base_period_ms =
-    10;
+    20;
 constexpr nsec::scheduling::relative_time_ms network_handler_timeout_ms = 10000;
 constexpr nsec::scheduling::relative_time_ms
     network_handler_retransmit_timeout_ms = 6 * network_handler_base_period_ms;

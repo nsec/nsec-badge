@@ -7,6 +7,7 @@
 #include "network_handler.hpp"
 #include "scheduling/time.hpp"
 #include "utils/config.hpp"
+#include "utils/lock.hpp"
 #include <array>
 #include <cstdint>
 #include <utility>
@@ -19,6 +20,7 @@
 
 namespace ns = nsec::scheduling;
 namespace nc = nsec::communication;
+namespace nsync = nsec::synchro;
 
 enum class wire_msg_type : std::uint8_t {
     // Reserved.
@@ -228,11 +230,11 @@ struct wire_msg_header {
 } __attribute__((packed));
 
 struct wire_msg_announce {
-    std::uint8_t peer_id;
+    std::uint16_t peer_id;
 } __attribute__((packed));
 
 struct wire_msg_announce_reply {
-    std::uint8_t peer_count;
+    std::uint16_t peer_count;
 } __attribute__((packed));
 
 std::uint8_t wire_msg_payload_size(std::uint8_t type)
@@ -336,11 +338,6 @@ void send_wire_ok_msg(const nsec::logging::logger &logger,
 {
     send_wire_msg(logger, serial, std::uint8_t(wire_msg_type::OK));
 }
-
-ns::absolute_time_ms get_current_absolute_time()
-{
-    return xTaskGetTickCount() * portTICK_PERIOD_MS;
-}
 } /* namespace */
 
 nc::network_handler::network_handler() noexcept
@@ -359,6 +356,7 @@ nc::network_handler::network_handler() noexcept
           std::uint8_t(wire_protocol_state::UNCONNECTED)},
       _logger("Network handler", nsec::config::logging::network_handler_level)
 {
+    _app_message_enqueue_semaphore = xSemaphoreCreateMutex();
     _reset();
     _setup();
 }
@@ -456,6 +454,7 @@ nc::network_handler::_check_connections() noexcept
         }
     }
 
+    _logger.error("Reset due to topology change");
     _reset();
 
     _is_left_connected = left_is_connected;
@@ -541,7 +540,7 @@ void nc::network_handler::_set_wire_protocol_state(
     _current_wire_protocol_state = state;
     _ticks_in_wire_state = 0;
     // Reset timeout timestamp.
-    _last_message_received_time_ms = get_current_absolute_time();
+    _last_message_received_time_ms = _time_since_boot_ms;
 
     if (_is_wire_protocol_in_a_running_state(previous_protocol_state) &&
         state == wire_protocol_state::UNCONNECTED) {
@@ -852,7 +851,8 @@ nc::network_handler::enqueue_app_message(peer_relative_position direction,
 {
     const auto payload_size = wire_msg_payload_size(msg_type);
 
-    _logger.debug("Enqueuing application message: msg_type={}", msg_type);
+    nsync::lock_guard lock(_app_message_enqueue_semaphore);
+    _logger.info("Enqueuing application message: msg_type={}", msg_type);
 
     if (_has_pending_outgoing_app_message() ||
         payload_size > sizeof(_current_pending_outgoing_app_message_payload)) {
@@ -904,13 +904,12 @@ bool nc::network_handler::_is_wire_protocol_in_a_reception_state(
 void nc::network_handler::_run_wire_protocol(
     ns::absolute_time_ms current_time_ms) noexcept
 {
-    if (_last_message_received_time_ms < current_time_ms &&
-        (current_time_ms - _last_message_received_time_ms) >
-            nsec::config::communication::network_handler_timeout_ms &&
+    if (((current_time_ms - _last_message_received_time_ms) >
+             nsec::config::communication::network_handler_timeout_ms) &&
         _current_wire_protocol_state != wire_protocol_state ::UNCONNECTED) {
         // No activity for a while... reset.
-        _logger.warn("Network activity timeout: went {}ms without activity",
-                     current_time_ms - _last_message_received_time_ms);
+        _logger.error("Network activity timeout: went {}ms without activity",
+                      current_time_ms - _last_message_received_time_ms);
         _reset();
         return;
     }
@@ -920,7 +919,7 @@ void nc::network_handler::_run_wire_protocol(
         message_payload[nsec::config::communication::protocol_max_message_size -
                         sizeof(wire_msg_header)];
 
-    _logger.info("Running wire protocol: state={}",
+    _logger.debug("Running wire protocol: state={}",
                  _current_wire_protocol_state);
 
     if (_is_wire_protocol_in_a_reception_state(_current_wire_protocol_state)) {
@@ -940,6 +939,7 @@ void nc::network_handler::_run_wire_protocol(
         send_wire_ok_msg(_logger, _listening_side_serial());
 
         if (wire_msg_type(message_type) == wire_msg_type::RESET) {
+            _logger.error("Received reset message, resetting...");
             _reset();
             return;
         }
@@ -970,6 +970,7 @@ void nc::network_handler::_run_wire_protocol(
     case wire_protocol_state::DISCOVERY_RECEIVE_ANNOUNCE: {
         if (wire_msg_type(message_type) != wire_msg_type::ANNOUNCE) {
             // Unexpected message: protocol error.
+            _logger.error("Received unexpected message: protocol_state={}, message_type={}", _current_wire_protocol_state, wire_msg_type(message_type));
             _reset();
             return;
         }
@@ -995,6 +996,7 @@ void nc::network_handler::_run_wire_protocol(
     case wire_protocol_state::DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE:
         if (wire_msg_type(message_type) != wire_msg_type::MONITOR) {
             // Unexpected message: protocol error.
+            _logger.error("Received unexpected message: protocol_state={}, message_type={}", _current_wire_protocol_state, wire_msg_type(message_type));
             _reset();
             return;
         }
@@ -1055,6 +1057,7 @@ void nc::network_handler::_run_wire_protocol(
     case wire_protocol_state::DISCOVERY_RECEIVE_MONITOR_AFTER_ANNOUNCE_REPLY:
         if (wire_msg_type(message_type) != wire_msg_type::MONITOR) {
             // Unexpected message: protocol error.
+            _logger.error("Received unexpected message: protocol_state={}, message_type={}", _current_wire_protocol_state, wire_msg_type(message_type));
             _reset();
             return;
         }
@@ -1110,6 +1113,7 @@ void nc::network_handler::_run_wire_protocol(
                 wire_protocol_state::RUNNING_SEND_APP_MESSAGE);
         } else {
             // Unexpected message or a reset message.
+            _logger.error("Received unexpected message: protocol_state={}, message_type={}", _current_wire_protocol_state, wire_msg_type(message_type));
             _reset();
             return;
         }
@@ -1117,6 +1121,8 @@ void nc::network_handler::_run_wire_protocol(
         break;
     }
     case wire_protocol_state::RUNNING_SEND_APP_MESSAGE: {
+        nsync::lock_guard lock(_app_message_enqueue_semaphore);
+
         const auto is_middle_peer =
             position() == nc::network_handler::link_position::MIDDLE;
         const auto pending_matches_wave_front_direction =
@@ -1160,6 +1166,9 @@ void nc::network_handler::_run_wire_protocol(
 
 void nc::network_handler::tick(ns::absolute_time_ms current_time_ms) noexcept
 {
+    _time_since_boot_ms +=
+        nsec::config::communication::network_handler_base_period_ms;
+
     if (_check_connections() == check_connections_result::TOPOLOGY_CHANGED) {
         /*
          * The protocol state has been reset. Resume on the next tick
@@ -1173,5 +1182,5 @@ void nc::network_handler::tick(ns::absolute_time_ms current_time_ms) noexcept
         return;
     }
 
-    _run_wire_protocol(current_time_ms);
+    _run_wire_protocol(_time_since_boot_ms);
 }

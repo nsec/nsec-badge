@@ -48,7 +48,7 @@ class badge
                         const uint8_t *message) noexcept;
     void on_app_message_sent() noexcept;
 
-    void apply_score_change(uint8_t new_badges_discovered_count) noexcept;
+    void apply_score_change(uint16_t new_badges_discovered_count) noexcept;
 
     void tick(nsec::scheduling::absolute_time_ms current_time_ms);
 
@@ -184,17 +184,17 @@ class badge
                          const uint8_t *payload) noexcept;
         void message_sent(badge &badge) noexcept;
         void reset() noexcept;
-        uint8_t new_badges_discovered() const noexcept
+        uint16_t new_badges_discovered() const noexcept
         {
             return _new_badges_discovered;
         }
 
       private:
-        uint8_t _new_badges_discovered;
+        uint16_t _new_badges_discovered;
         uint8_t _message_received_count;
-        bool _send_ours_on_next_send_complete : 1;
-        uint8_t _direction : 1;
-        bool _done_after_sending_ours : 1;
+        bool _send_ours_on_next_send_complete;
+        uint8_t _direction;
+        bool _done_after_sending_ours;
         nsec::logging::logger _logger;
     };
 
@@ -246,8 +246,9 @@ class badge
 
     static uint8_t
     _compute_new_social_level(uint8_t current_social_level,
-                              uint8_t new_badges_discovered_count) noexcept;
-    void _set_selected_animation(uint8_t animation_id, bool save) noexcept;
+                              uint16_t new_badges_discovered_count) noexcept;
+    void _set_selected_animation(uint8_t animation_id, bool save,
+                                 bool set_idle_animation) noexcept;
     // Setup hardware.
     void _setup();
 

@@ -200,7 +200,7 @@ void nr::badge::load_config()
     }
 
     set_social_level(social_level, false);
-    _set_selected_animation(selected_animation_id, false);
+    _set_selected_animation(selected_animation_id, false, true);
 }
 
 void nr::badge::save_config() const
@@ -304,14 +304,27 @@ nc::network_handler::application_message_action
 nr::badge::on_message_received(communication::message::type message_type,
                                const uint8_t *message) noexcept
 {
-    nsync::lock_guard lock(_public_access_semaphore);
+    // Don't acquire the public access lock since the handlers will actually
+    // call into the badge. This function simply forward the message to them
+    // so there is nothing to protect.
     _logger.debug("Received message: type={}", message_type);
+
+    if (message_type == communication::message::type::ANNOUNCE_BADGE_ID) {
+        if (_current_network_app_state != network_app_state::EXCHANGING_IDS) {
+            _logger.info("Forcing app state to EXCHANGING_IDS");
+            _set_network_app_state(network_app_state::EXCHANGING_IDS);
+        }
+    }
 
     if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.new_message(*this, message_type, message);
     } else if (_current_network_app_state ==
                network_app_state::ANIMATE_PAIRING) {
         _pairing_animator.new_message(*this, message_type, message);
+    } else {
+        _logger.error(
+            "Unexpected message received: app_state={}, message_type={}",
+            _current_network_app_state, message_type);
     }
 
     return nc::network_handler::application_message_action::OK;
@@ -319,7 +332,13 @@ nr::badge::on_message_received(communication::message::type message_type,
 
 void nr::badge::on_app_message_sent() noexcept
 {
-    nsync::lock_guard lock(_public_access_semaphore);
+    // Taking the badge public access semaphore is not necessary here; this
+    // function merely forwards the event to the current focused handler.
+    // That handler, in turn, may use public entry points of the badge which
+    // will acquire the lock.
+
+    _logger.info("Message sent notification: network_app_state={}",
+                 _current_network_app_state);
 
     if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
         _id_exchanger.message_sent(*this);
@@ -357,8 +376,9 @@ void nr::badge::_set_network_app_state(
 nr::badge::badge_discovered_result
 nr::badge::on_badge_discovered(const uint8_t *id) noexcept
 {
-    nsec::runtime::badge_unique_id new_id;
+    nsync::lock_guard lock(_public_access_semaphore);
 
+    nsec::runtime::badge_unique_id new_id;
     std::memcpy(new_id.data(), id, new_id.size());
 
     _logger.info("Badge discovered event: badge_id={}", new_id);
@@ -377,6 +397,8 @@ nr::badge::on_badge_discovered(const uint8_t *id) noexcept
 
 void nr::badge::on_badge_discovery_completed() noexcept
 {
+    nsync::lock_guard lock(_public_access_semaphore);
+
     _logger.info("Badge discovery completed");
     _badges_discovered_last_exchange = _id_exchanger.new_badges_discovered();
     _set_network_app_state(network_app_state::ANIMATE_PAIRING_COMPLETED);
@@ -393,19 +415,10 @@ void nr::badge::network_id_exchanger::start(nr::badge &badge) noexcept
         return;
     }
 
-    // Left-most peer initiates the exchange.
-    const auto badge_id = badge._get_unique_id();
-    nc::message::announce_badge_id msg = {
-        .peer_id = our_id,
-        .board_unique_id = {badge_id[0], badge_id[1], badge_id[2], badge_id[3],
-                            badge_id[4], badge_id[5]}};
-
-    _logger.debug("Enqueueing message: type={}",
-                  nc::message::type::ANNOUNCE_BADGE_ID);
-    badge._network_handler.enqueue_app_message(
-        nc::peer_relative_position::RIGHT,
-        uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
-        reinterpret_cast<const uint8_t *>(&msg));
+    _logger.info("Queueing up the send of our badge id after the transmission "
+                 "of the last queued message");
+    _send_ours_on_next_send_complete = true;
+    return;
 }
 
 void nr::badge::network_id_exchanger::new_message(
@@ -454,7 +467,7 @@ void nr::badge::network_id_exchanger::new_message(
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::ANNOUNCE_BADGE_ID);
             badge._network_handler.enqueue_app_message(
-                nc::peer_relative_position(_direction),
+                nc::peer_relative_position::LEFT,
                 uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
                 reinterpret_cast<const uint8_t *>(&msg));
 
@@ -659,6 +672,9 @@ void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
                    nc::network_handler::link_position::LEFT_MOST) {
             _logger.debug("Enqueueing message: type={}",
                           nc::message::type::PAIRING_ANIMATION_DONE);
+
+            nsec::g::the_badge->_set_network_app_state(
+                nr::badge::network_app_state::EXCHANGING_IDS);
             nsec::g::the_badge->_network_handler.enqueue_app_message(
                 nc::peer_relative_position::RIGHT,
                 uint8_t(nc::message::type::PAIRING_ANIMATION_DONE), nullptr);
@@ -703,6 +719,7 @@ void nr::badge::pairing_animator::new_message(nr::badge &badge,
         _animation_state(animation_state::DONE);
         break;
     default:
+        _logger.error("Unknown message received by pairing animator");
         break;
     }
 }
@@ -741,6 +758,11 @@ void nr::badge::pairing_completed_animator::tick(
 {
     switch (_animation_state()) {
     case animation_state::SHOW_PAIRING_RESULT: {
+        if (_state_counter == 0) {
+            // Store the new social level.
+            badge.apply_score_change(badge._badges_discovered_last_exchange);
+	}
+
         if (_state_counter < 8) {
             // Keep on showing the pairing result animation.
             break;
@@ -757,9 +779,6 @@ void nr::badge::pairing_completed_animator::tick(
             // Keep on showing the new level animation.
             break;
         }
-
-        // Store the new social level.
-        badge.apply_score_change(badge._badges_discovered_last_exchange);
 
         // Transition to showing the new health status
         _animation_state(badge, animation_state::SHOW_HEALTH);
@@ -802,16 +821,13 @@ void nr::badge::pairing_completed_animator::_animation_state(
         break;
     case nr::badge::pairing_completed_animator::animation_state::
         SHOW_NEW_LEVEL: {
-        const auto new_level = _compute_new_social_level(
-            badge._social_level, badge._badges_discovered_last_exchange);
-
         badge._strip_animator.set_show_level_animation(
             badge._badges_discovered_last_exchange > 0
                 ? nl::strip_animator::pairing_completed_animation_type::
                       HAPPY_CLOWN_BARF
                 : nl::strip_animator::pairing_completed_animation_type::
                       NO_NEW_FRIENDS,
-            new_level, false);
+            badge._social_level, false);
         break;
     }
     case nr::badge::pairing_completed_animator::animation_state::SHOW_HEALTH: {
@@ -835,10 +851,11 @@ nr::badge::pairing_completed_animator::_animation_state() const noexcept
 
 void nr::badge::clear_leds()
 {
+    nsync::lock_guard lock(_public_access_semaphore);
     _strip_animator.set_blank_animation();
 }
 
-void nr::badge::apply_score_change(uint8_t new_badges_discovered_count) noexcept
+void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
 
@@ -850,11 +867,11 @@ void nr::badge::apply_score_change(uint8_t new_badges_discovered_count) noexcept
 
     // Saves to configuration
     set_social_level(new_social_level, true);
-    _set_selected_animation(_social_level, true);
+    _set_selected_animation(_social_level, true, false);
 }
 
 uint8_t nr::badge::_compute_new_social_level(
-    uint8_t current_social_level, uint8_t new_badges_discovered_count) noexcept
+    uint8_t current_social_level, uint16_t new_badges_discovered_count) noexcept
 {
     uint16_t new_social_level = current_social_level;
     uint16_t level_up = new_badges_discovered_count;
@@ -872,10 +889,13 @@ uint8_t nr::badge::_compute_new_social_level(
 }
 
 void nr::badge::_set_selected_animation(uint8_t animation_id,
-                                        bool save_to_config) noexcept
+                                        bool save_to_config,
+                                        bool set_idle_animation) noexcept
 {
     _selected_animation = animation_id;
-    _strip_animator.set_idle_animation(animation_id);
+    if (set_idle_animation) {
+        _strip_animator.set_idle_animation(animation_id);
+    }
 
     if (save_to_config) {
         save_config();
@@ -895,7 +915,7 @@ void nr::badge::_cycle_selected_animation(
                  "original_animation_id={}, new_animation_id={}",
                  direction, original_animation_id, new_selected_animation);
 
-    _set_selected_animation(new_selected_animation, true);
+    _set_selected_animation(new_selected_animation, true, true);
 
     // Set the LEDs pattern.
     nsec::g::the_badge->_strip_animator.set_idle_animation(

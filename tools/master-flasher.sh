@@ -31,6 +31,11 @@ USB_PORT1="/dev/serial/by-path/pci-0000:00:14.0-usb-0:1.3:1.0"
 USB_PORT2="/dev/serial/by-path/pci-0000:00:14.0-usb-0:1.2:1.0"
 USB_PORT3="/dev/serial/by-path/pci-0000:00:14.0-usb-0:1.1:1.0"
 
+USB_PORT4="/dev/serial/by-path/pci-0000:00:14.0-usb-0:2.4:1.0"
+USB_PORT5="/dev/serial/by-path/pci-0000:00:14.0-usb-0:2.3:1.0"
+USB_PORT6="/dev/serial/by-path/pci-0000:00:14.0-usb-0:2.2:1.0"
+USB_PORT7="/dev/serial/by-path/pci-0000:00:14.0-usb-0:2.1:1.0"
+
 # Set the path to esptool.py
 ESPTOOL="$HOME/Git/Nsec/pio/bin/esptool.py"
 
@@ -129,11 +134,20 @@ master_flasher() {
     tmux split-window -h -l 50% -t "$session:$window.0"
     tmux split-window -h -l 50% -t "$session:$window.2"
 
+    tmux split-window -v -l 50% -t "$session:$window.0"
+    tmux split-window -v -l 50% -t "$session:$window.2"
+    tmux split-window -v -l 50% -t "$session:$window.4"
+    tmux split-window -v -l 50% -t "$session:$window.6"
+
     # Start flash script in each pane
     tmux send-keys -t "$session:$window.0" "${BASH_SOURCE[0]} flash0" Enter
     tmux send-keys -t "$session:$window.1" "${BASH_SOURCE[0]} flash1" Enter
     tmux send-keys -t "$session:$window.2" "${BASH_SOURCE[0]} flash2" Enter
     tmux send-keys -t "$session:$window.3" "${BASH_SOURCE[0]} flash3" Enter
+    tmux send-keys -t "$session:$window.4" "${BASH_SOURCE[0]} flash4" Enter
+    tmux send-keys -t "$session:$window.5" "${BASH_SOURCE[0]} flash5" Enter
+    tmux send-keys -t "$session:$window.6" "${BASH_SOURCE[0]} flash6" Enter
+    tmux send-keys -t "$session:$window.7" "${BASH_SOURCE[0]} flash7" Enter
 
     # Attach to tmux session
     tmux a -t "$session:$window"
@@ -153,6 +167,18 @@ flash2)
     ;;
 flash3)
     flash_loop "${USB_PORT3}"
+    ;;
+flash4)
+    flash_loop "${USB_PORT4}"
+    ;;
+flash5)
+    flash_loop "${USB_PORT5}"
+    ;;
+flash6)
+    flash_loop "${USB_PORT6}"
+    ;;
+flash7)
+    flash_loop "${USB_PORT7}"
     ;;
 master)
     master_flasher

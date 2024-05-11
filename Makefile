@@ -34,7 +34,7 @@ reuse:
 	reuse lint
 
 factory_reset:
-	esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x9000 0x4000
+	esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x310000 0x100000
 
 erase_ota:
 	esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0xd000 0x2000
