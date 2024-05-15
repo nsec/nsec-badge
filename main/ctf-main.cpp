@@ -14,7 +14,6 @@
 #include "save.h"
 #include "ota_init.h"
 #include "ir.h"
-#include "dbg-led.hpp"
 
 static void initialize_nvs() {
     esp_err_t err = nvs_flash_init();
