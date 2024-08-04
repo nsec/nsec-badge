@@ -6,7 +6,13 @@ Brought to you by the Team badge of NorthSec.
 ## Overview
 
 <p align="center">
-  <img src="hw/2023/tie.gif" height="320"> <br>
+  <img src="hw/2024/cell.gif" height="320"
+       style="-webkit-transform: rotate(270deg);
+              -moz-transform: rotate(270deg);
+              -o-transform: rotate(270deg);
+              -ms-transform: rotate(270deg);
+              transform: rotate(270deg);"
+  > <br>
 </p>
 
 ## Hardware
@@ -114,15 +120,15 @@ messages. This is supported by most terminal emulators.
 ## Credits
 NorthSec CTF badge 2024 is brought to you by the team work of:
 
- - [EiNSTeiN-](https://github.com/EiNSTeiN-)
  - [Svieg](https://github.com/Svieg)
+ - [abdelq](https://github.com/abdelq)
  - [jgalar](https://github.com/jgalar)
  - [jmarcil](https://github.com/jmarcil)
  - [lle](https://github.com/lle)
  - [mjeanson](https://github.com/mjeanson)
  - [nyx0](https://github.com/nyx0)
+ - [p0ns](https://github.com/p0ns)
  - [sylemieux](https://github.com/sylemieux)
 
 Special thanks to:
  - [20th](https://github.com/20th)
- - [mtartare](https://github.com/mtartare)
