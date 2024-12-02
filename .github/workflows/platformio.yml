@@ -34,6 +34,3 @@ jobs:
 
       - name: Build 'ctf' firmware
         run: make ENV=ctf VERBOSE="-v"
-
-      - name: Build 'addon' firmware
-        run: make ENV=addon VERBOSE="-v"
