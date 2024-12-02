@@ -12,7 +12,6 @@
 #include "nvs_flash.h"
 #include "console.h"
 #include "save.h"
-#include "ota_init.h"
 #include "ir.h"
 
 static void initialize_nvs() {
@@ -30,8 +29,6 @@ extern "C" void app_main(void) {
     fflush(stdout);
 
     Save::load_save();
-
-    ota_init();
 
     /* Wait a few seconds before enabling the console. */
     vTaskDelay(2000 / portTICK_PERIOD_MS);
