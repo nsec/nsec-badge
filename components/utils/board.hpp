@@ -61,7 +61,7 @@ constexpr unsigned int signal_pin = 11;
 
 namespace right
 {
-constexpr auto uart_device = UART_NUM_2;
+constexpr auto uart_device = UART_NUM_1;
 constexpr unsigned int tx_pin = 17;
 constexpr unsigned int rx_pin = 18;
 constexpr unsigned int signal_pin = 12;
