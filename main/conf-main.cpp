@@ -19,7 +19,6 @@
 #include <scheduling/task.hpp>
 
 #include "console.h"
-#include "ota_init.h"
 #include "dbg-led.hpp"
 
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
@@ -57,9 +56,6 @@ static void initialize_nvs() {
 extern "C" void app_main(void)
 {
     initialize_nvs();
-
-    // Detect CTF Addon
-    ota_init();
 
     xTaskCreate(dbg_led_task, "dbg_led_task", 2048, nullptr, 1, nullptr);
 

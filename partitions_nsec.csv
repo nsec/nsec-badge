@@ -24,8 +24,5 @@ factory,  app,  factory, 0x10000,  1M,
 # First OTA partition for the "ctf" firmware
 ota_0,    app,  ota_0,   0x110000, 1M,
 
-# Second OTA partition for the "addon" firmware
-ota_1,    app,  ota_1,   0x210000, 1M,
-
 # Non-Volatile Storage, 1M
 nvs,      data, nvs,     0x310000,  1M,

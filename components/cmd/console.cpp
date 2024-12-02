@@ -7,7 +7,6 @@
 #include "esp_console.h"
 #include "linenoise/linenoise.h"
 
-#include "ota_init.h"
 #include "cmd_sys.h"
 
 #if CONFIG_NSEC_BUILD_CTF
@@ -15,10 +14,6 @@
 #include "ir.h"
 #include "reaction_time.h"
 #include "reverse.h"
-#endif
-#if CONFIG_NSEC_BUILD_ADDON
-#include "challenges_storage.h"
-#include "crypto_atecc_cmd.h"
 #endif
 
 static const char *TAG = "console";
@@ -80,7 +75,6 @@ void register_commands()
     esp_console_register_help_command();
     console_register_cmd_clear();
     console_register_cmd_sys();
-    register_ota_cmd();
 #if CONFIG_NSEC_BUILD_CTF
     register_wifi_cmd();
     register_ir_cmd();
