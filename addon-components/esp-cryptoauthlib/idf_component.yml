@@ -1,6 +1,0 @@
-version: "3.5.1~3"
-description: "esp-cryptoauthlib: The port of Microchip CryptoAuthentication Library for ESP-IDF"
-url: https://github.com/espressif/esp-cryptoauthlib
-dependencies:
-  idf:
-    version: ">=4.3"
