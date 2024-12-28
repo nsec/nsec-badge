@@ -34,3 +34,5 @@ jobs:
 
       - name: Build 'ctf' firmware
         run: make ENV=ctf VERBOSE="-v"
+      - name: Check for flags in the firmware
+        run: ! strings .pio/build/ctf/firmware.bin | grep FLAG- || strings .pio/build/ctf/firmware.bin | grep NSEC-
