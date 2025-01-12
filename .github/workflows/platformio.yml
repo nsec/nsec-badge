@@ -36,4 +36,4 @@ jobs:
         run: make ENV=ctf VERBOSE="-v"
 
       - name: Check for flags in the firmware
-        run: "! strings .pio/build/ctf/firmware.bin | grep FLAG- || strings .pio/build/ctf/firmware.bin | grep NSEC-"
+        run: "! strings .pio/build/ctf/firmware.bin | grep -E '(FLAG|NSEC)-'"
