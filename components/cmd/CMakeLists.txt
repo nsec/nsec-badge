@@ -9,7 +9,7 @@ set(CONFIG_NSEC_BUILD_ADDON $ENV{CONFIG_NSEC_BUILD_ADDON} CACHE INTERNAL "")
 set(requires_components console driver cmd_nvs cmd_sys)
 
 if(CONFIG_NSEC_BUILD_CTF)
-    list(APPEND requires_components modbus wifi ir reaction_time reverse)
+    list(APPEND requires_components modbus wifi ir)
 endif()
 
 idf_component_register(SRCS "console.cpp"

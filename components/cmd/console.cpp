@@ -12,8 +12,6 @@
 #if CONFIG_NSEC_BUILD_CTF
 #include "wifi.h"
 #include "ir.h"
-#include "reaction_time.h"
-#include "reverse.h"
 #endif
 
 static const char *TAG = "console";
@@ -78,13 +76,6 @@ void register_commands()
 #if CONFIG_NSEC_BUILD_CTF
     register_wifi_cmd();
     register_ir_cmd();
-    register_reaction_time_cmd();
-    register_encrypt_cmd();
-    register_decrypt_cmd();
-#endif
-#if CONFIG_NSEC_BUILD_ADDON
-    register_challenges_storage();
-    register_crypto_atecc();
 #endif
 }
 
