@@ -1,6 +1,0 @@
-# SPDX-FileCopyrightText: 2024 NorthSec
-#
-# SPDX-License-Identifier: MIT
-
-dependencies:
-  espressif/button: "^3.2.0"
