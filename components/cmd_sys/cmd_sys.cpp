@@ -61,14 +61,4 @@ extern "C" void console_register_cmd_sys(void)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&cmd_reboot));
 
-    #if !CONFIG_NSEC_BUILD_ADDON
-    const esp_console_cmd_t cmd_factory_reset = {
-        .command = "factory_reset",
-        .help = "Reset the system to factory defaults",
-        .hint = nullptr,
-        .func = &sys_cmd_factory_reset,
-        .argtable = nullptr,
-    };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&cmd_factory_reset));
-    #endif
 }

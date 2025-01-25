@@ -11,7 +11,6 @@ set (CMAKE_CXX_FLAGS "-Wno-array-bounds -Wno-stringop-overflow")
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 set(ENV{CONFIG_NSEC_BUILD_CTF} ${CONFIG_NSEC_BUILD_CTF})
-set(ENV{CONFIG_NSEC_BUILD_ADDON} ${CONFIG_NSEC_BUILD_ADDON})
 set(ENV{CONFIG_NSEC_BUILD_CONFERENCE} ${CONFIG_NSEC_BUILD_CONFERENCE})
 
 # Use an sdkconfig.defaults per environment and common sdkconfig.defaults
@@ -23,20 +22,11 @@ if(CONFIG_NSEC_BUILD_CTF)
 list(APPEND EXTRA_COMPONENT_DIRS "./ctf-components/")
 endif()
 
-# Add Addon specific components to the build
-if(CONFIG_NSEC_BUILD_ADDON)
-list(APPEND EXTRA_COMPONENT_DIRS "./addon-components/")
-endif()
-
-
 # These project names are used for firmware detection, don't change without
 # refactor
 if(CONFIG_NSEC_BUILD_CTF)
     message(STATUS "-- Building for CONFIG_NSEC_BUILD_CTF")
     project(nsec-ctf)
-elseif(CONFIG_NSEC_BUILD_ADDON)
-    message(STATUS "-- Building for CONFIG_NSEC_BUILD_ADDON")
-    project(nsec-ctf-addon)
 elseif(CONFIG_NSEC_BUILD_CONFERENCE)
     message(STATUS "-- Building for CONFIG_NSEC_BUILD_CONFERENCE")
     project(nsec-badge)

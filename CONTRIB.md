@@ -43,7 +43,6 @@ We have the following macro defined for code built exclusively for that
 firmware:
 - *CONFIG_NSEC_BUILD_CONFERENCE*
 - *CONFIG_NSEC_BUILD_CTF*
-- *CONFIG_NSEC_BUILD_ADDON*
 
 In your C or C++ files, you can do it like that:
 ```

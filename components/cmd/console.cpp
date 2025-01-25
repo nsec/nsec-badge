@@ -30,20 +30,17 @@ static void clear_and_print_banner()
         LOG_COLOR(LOG_COLOR_BLUE)     "        ██║╚██╗██║██║   ██║██╔══██╗   ██║   ██╔══██║╚════██║██╔══╝  ██║     \n"
         LOG_COLOR(LOG_COLOR_BLUE)     "        ██║ ╚████║╚██████╔╝██║  ██║   ██║   ██║  ██║███████║███████╗╚██████╗\n"
         LOG_COLOR(LOG_COLOR_BLUE)     "        ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                           ██████╗  ██████╗ ██████╗ ██╗  ██╗\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                           ╚════██╗██╔═████╗╚════██╗██║  ██║\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                            █████╔╝██║██╔██║ █████╔╝███████║\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                           ██╔═══╝ ████╔╝██║██╔═══╝ ╚════██║\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                           ███████╗╚██████╔╝███████╗     ██║\n"
-        LOG_COLOR(LOG_COLOR_RED ";5") "                           ╚══════╝ ╚═════╝ ╚══════╝     ╚═╝\n"
+        LOG_COLOR(LOG_COLOR_GREEN ";5") "                           ██████╗  ██████╗ ██████╗ ███████╗\n"
+        LOG_COLOR(LOG_COLOR_GREEN ";5") "                           ╚════██╗██╔═████╗╚════██╗██╔════╝\n"
+        LOG_COLOR(LOG_COLOR_GREEN ";5") "                            █████╔╝██║██╔██║ █████╔╝███████║\n"
+        LOG_COLOR(LOG_COLOR_GREEN ";5") "                           ██╔═══╝ ████╔╝██║██╔═══╝ ╚════██║\n"
+        LOG_COLOR(LOG_COLOR_GREEN ";5") "                           ███████╗╚██████╔╝███████╗███████║\n"
+        LOG_COLOR(LOG_COLOR_GREEN ";5") "                           ╚══════╝ ╚═════╝ ╚══════╝╚══════╝\n"
 #if !CONFIG_NSEC_BUILD_CONFERENCE
         LOG_COLOR(LOG_COLOR_CYAN) "\n\nYou are on the "
 #endif
 #if CONFIG_NSEC_BUILD_CTF
                                   "CTF firmware\n"
-#endif
-#if CONFIG_NSEC_BUILD_ADDON
-                                  "ADDON firmware\n"
 #endif
         LOG_RESET_COLOR "\n\n\n");
 }

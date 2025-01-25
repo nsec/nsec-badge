@@ -45,8 +45,4 @@ erase_conf:
 erase_ctf:
 	esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x110000 0x100000
 
-erase_addon:
-	esptool.py --chip esp32s3 --port /dev/ttyACM0 erase_region 0x210000 0x100000
-
-
 .PHONY: build flash menuconfig compiledb check check-embedded reuse
