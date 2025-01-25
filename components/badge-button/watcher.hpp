@@ -62,22 +62,9 @@ class watcher
           .button_gpio = nsec::board::button::down,
           .button_handle = _create_button_handle(nsec::board::button::down)},
          {.watcher_instance = this,
-          .button_id = nsec::button::id::LEFT,
-          .button_gpio = nsec::board::button::left,
-          .button_handle = _create_button_handle(nsec::board::button::left)},
-         {.watcher_instance = this,
-          .button_id = nsec::button::id::RIGHT,
-          .button_gpio = nsec::board::button::right,
-          .button_handle = _create_button_handle(nsec::board::button::right)},
-         {.watcher_instance = this,
           .button_id = nsec::button::id::OK,
           .button_gpio = nsec::board::button::ok,
-          .button_handle = _create_button_handle(nsec::board::button::ok)},
-         {.watcher_instance = this,
-          .button_id = nsec::button::id::CANCEL,
-          .button_gpio = nsec::board::button::cancel,
-          .button_handle =
-              _create_button_handle(nsec::board::button::cancel)}}};
+          .button_handle = _create_button_handle(nsec::board::button::ok)}}};
     new_button_event_notifier _notify_new_event;
     nsec::logging::logger _logger;
 };

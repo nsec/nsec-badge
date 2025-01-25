@@ -32,7 +32,7 @@
 
 #include <array>
 #include <badge-button/watcher.hpp>
-#include <badge/globals.hpp>
+//#include <badge/globals.hpp>
 #include <esp_log.h>
 #include <iot_button.h>
 #include <utils/board.hpp>
@@ -40,7 +40,7 @@
 
 namespace nb = nsec::button;
 namespace ns = nsec::scheduling;
-namespace ng = nsec::g;
+//namespace ng = nsec::g;
 namespace nbb = nsec::board::button;
 
 nb::watcher::watcher(nb::new_button_event_notifier new_button_notifier) noexcept

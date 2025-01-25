@@ -14,8 +14,8 @@
 
 #include <iostream>
 
-#include <badge/badge.hpp>
-#include <badge/globals.hpp>
+//#include <badge/badge.hpp>
+//#include <badge/globals.hpp>
 #include <scheduling/task.hpp>
 
 #include "console.h"
@@ -60,10 +60,10 @@ extern "C" void app_main(void)
     xTaskCreate(dbg_led_task, "dbg_led_task", 2048, nullptr, 1, nullptr);
 
     //const dummy_task the_task;
-    nsec::runtime::badge badge;
-    nsec::g::the_badge = &badge;
+    //nsec::runtime::badge badge;
+    //nsec::g::the_badge = &badge;
 
-    badge.start();
+    //badge.start();
 
     /* Wait a few seconds before enabling the console. */
     vTaskDelay(2000 / portTICK_PERIOD_MS);

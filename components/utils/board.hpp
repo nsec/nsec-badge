@@ -12,23 +12,22 @@ namespace nsec::board
 
 /*
  * LEDs
- */
 namespace led
 {
 constexpr unsigned int dbg_pin = 13;
 } // namespace led
-
+*/
 namespace button
 {
 /*
  * Buttons
  */
-constexpr unsigned int up = 35;
-constexpr unsigned int down = 36;
-constexpr unsigned int left = 37;
-constexpr unsigned int right = 38;
-constexpr unsigned int ok = 39;
-constexpr unsigned int cancel = 40;
+constexpr unsigned int up = 18;
+constexpr unsigned int down = 17;
+//constexpr unsigned int left = 37;
+//constexpr unsigned int right = 38;
+constexpr unsigned int ok = 8;
+//constexpr unsigned int cancel = 40;
 } // namespace button
 
 /*
@@ -36,8 +35,8 @@ constexpr unsigned int cancel = 40;
  */
 namespace neopixel
 {
-constexpr unsigned int ctrl_pin = 48;
-constexpr unsigned int count = 16;
+constexpr unsigned int ctrl_pin = 7;
+constexpr unsigned int count = 18;
 } // namespace neopixel
 
 /*
@@ -45,20 +44,22 @@ constexpr unsigned int count = 16;
  */
 namespace serial
 {
+/*
 namespace dev
 {
 constexpr unsigned int tx_pin = 43;
 constexpr unsigned int rx_pin = 44;
 } // namespace dev
-
-namespace left
+*/
+namespace uart
 {
 constexpr auto uart_device = UART_NUM_1;
-constexpr unsigned int tx_pin = 15;
-constexpr unsigned int rx_pin = 16;
-constexpr unsigned int signal_pin = 11;
-} // namespace left
+constexpr unsigned int tx_pin = 12;
+constexpr unsigned int rx_pin = 11;
+//constexpr unsigned int signal_pin = 11;
+} // namespace uart
 
+/*
 namespace right
 {
 constexpr auto uart_device = UART_NUM_1;
@@ -66,7 +67,7 @@ constexpr unsigned int tx_pin = 17;
 constexpr unsigned int rx_pin = 18;
 constexpr unsigned int signal_pin = 12;
 } // namespace right
-
+*/
 } // namespace serial
 
 } // namespace nsec::board
