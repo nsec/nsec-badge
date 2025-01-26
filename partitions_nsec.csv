@@ -19,10 +19,10 @@ otadata,  data, ota,     0xd000,  0x2000,
 phy_init, data, phy,     0xf000,  0x1000,
 
 # Factory partition for the "conference" firmware
-factory,  app,  factory, 0x10000,  1M,
+factory,  app,  factory, 0x10000,  0x180000,
 
 # First OTA partition for the "ctf" firmware
-ota_0,    app,  ota_0,   0x110000, 1M,
+ota_0,    app,  ota_0,   0x190000, 0x180000,
 
 # Non-Volatile Storage, 1M
-nvs,      data, nvs,     0x210000,  1M,
+nvs,      data, nvs,     0x370000,  200k,

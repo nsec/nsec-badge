@@ -20,6 +20,7 @@
 
 #include "console.h"
 #include "dbg-led.hpp"
+#include <badge_ssd1306_helper.hpp>
 
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
 {
@@ -68,6 +69,7 @@ extern "C" void app_main(void)
     /* Wait a few seconds before enabling the console. */
     vTaskDelay(2000 / portTICK_PERIOD_MS);
 
+    badge_ssd1306_init();
     console_init();
 
     /* Spin to prevent main task from exiting. */
