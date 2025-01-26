@@ -22,11 +22,11 @@ namespace button
 /*
  * Buttons
  */
-constexpr unsigned int up = 18;
-constexpr unsigned int down = 17;
+constexpr unsigned int up = 0;
+constexpr unsigned int down = 1;
 //constexpr unsigned int left = 37;
 //constexpr unsigned int right = 38;
-constexpr unsigned int ok = 8;
+constexpr unsigned int ok = 9;
 //constexpr unsigned int cancel = 40;
 } // namespace button
 
@@ -35,7 +35,7 @@ constexpr unsigned int ok = 8;
  */
 namespace neopixel
 {
-constexpr unsigned int ctrl_pin = 7;
+constexpr unsigned int ctrl_pin = 8;
 constexpr unsigned int count = 18;
 } // namespace neopixel
 
