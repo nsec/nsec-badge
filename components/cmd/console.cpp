@@ -13,9 +13,6 @@
 #if CONFIG_NSEC_BUILD_CTF
 #include "wifi.h"
 #include "ir.h"
-#include "quantum.h"
-#include "quantum_gates.h"
-#include "calibration.h"
 #endif
 
 static const char *TAG = "console";
@@ -115,8 +112,6 @@ void register_commands()
 #if CONFIG_NSEC_BUILD_CTF
     register_wifi_cmd();
     register_ir_cmd();
-    register_quantum_cmd();
-    register_calibrate_cmd();
 #endif
 }
 
