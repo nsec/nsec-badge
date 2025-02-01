@@ -16,6 +16,7 @@
 #include "quantum.h"
 #include "quantum_gates.h"
 #include "calibration.h"
+#include "qkd.h"
 #endif
 
 static const char *TAG = "console";
@@ -117,6 +118,7 @@ void register_commands()
     register_ir_cmd();
     register_quantum_cmd();
     register_calibrate_cmd();
+    register_qkd_cmd();
 #endif
 }
 

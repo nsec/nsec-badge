@@ -24,10 +24,10 @@ bool leds_on = true;
 
 void print_nvs_blob() {
     // Define the structure for calibration data
-    typedef struct {
-        uint8_t calib[6];       // Calibration integers (0 or 1)
-        char hashes[6][6];      // Corresponding hashes (5 chars + null terminator)
-    } CalibrationData;
+    //typedef struct {
+    //    uint8_t calib[6];       // Calibration integers (0 or 1)
+    //    char hashes[6][6];      // Corresponding hashes (5 chars + null terminator)
+    //} CalibrationData;
 
     CalibrationData calib_data; // Temporary variable to hold the NVS data
     size_t required_size = sizeof(CalibrationData);
@@ -59,7 +59,7 @@ void clear_nvs_data() {
     // Open NVS handle
     err = nvs_open(QUANTUM_NAMESPACE, NVS_READWRITE, &handle);
     if (err != ESP_OK) {
-        printf("Error (%s) opening NVS handle!\n", esp_err_to_name(err));
+        //printf("Error (%s) opening NVS handle!\n", esp_err_to_name(err));
         return;
     }
 
@@ -68,25 +68,25 @@ void clear_nvs_data() {
     if (err == ESP_OK) {
         printf("NVS data erased successfully.\n");
     } else if (err == ESP_ERR_NVS_NOT_FOUND) {
-        printf("No NVS data found to erase, initializing defaults.\n");
+        //printf("No NVS data found to erase, initializing defaults.\n");
     } else {
-        printf("Error erasing NVS data: %s\n", esp_err_to_name(err));
+        //printf("Error erasing NVS data: %s\n", esp_err_to_name(err));
     }
 
     // Write default calibration data back to NVS
     err = nvs_set_blob(handle, "calib_data", &default_calib_data, sizeof(default_calib_data));
     if (err != ESP_OK) {
-        printf("Failed to write default calibration data to NVS: %s\n", esp_err_to_name(err));
+        //printf("Failed to write default calibration data to NVS: %s\n", esp_err_to_name(err));
     } else {
-        printf("Default calibration data written to NVS.\n");
+        //printf("Default calibration data written to NVS.\n");
     }
 
     // Commit changes
     err = nvs_commit(handle);
     if (err != ESP_OK) {
-        printf("Failed to commit NVS changes: %s\n", esp_err_to_name(err));
+        //printf("Failed to commit NVS changes: %s\n", esp_err_to_name(err));
     } else {
-        printf("NVS changes committed.\n");
+       // printf("NVS changes committed.\n");
     }
 
     // Close NVS handle
@@ -98,7 +98,7 @@ void update_nvs()
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READWRITE, &nvs_handle);
     if (err != ESP_OK) {
-        printf("Failed to open NVS namespace: %s\n", esp_err_to_name(err));
+        //printf("Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
 
@@ -106,17 +106,17 @@ void update_nvs()
     err = nvs_set_blob(nvs_handle, "calib_data", &calib_data, sizeof(calib_data));
     if (err == ESP_ERR_NVS_NOT_FOUND) {
         // If no data found, initialize with defaults
-        printf("No calibration data found in NVS. Initializing with default values...\n");
+        //printf("No calibration data found in NVS. Initializing with default values...\n");
     } else if (err == ESP_OK) {
-        printf("Calibration data loaded from NVS successfully.\n");
+        //printf("Calibration data loaded from NVS successfully.\n");
     } else {
-        printf("Error reading NVS: %s\n", esp_err_to_name(err));
+        //printf("Error reading NVS: %s\n", esp_err_to_name(err));
     }
 
     // Commit changes
     err = nvs_commit(nvs_handle);
     if (err != ESP_OK) {
-        printf("Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
+        //printf("Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
     }
 
     nvs_close(nvs_handle);
@@ -127,7 +127,7 @@ void get_nvs()
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err != ESP_OK) {
-        printf("Failed to open NVS namespace: %s\n", esp_err_to_name(err));
+        //printf("Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
 
@@ -135,12 +135,12 @@ void get_nvs()
     size_t data_size = sizeof(calib_data);
     err = nvs_get_blob(nvs_handle, "calib_data", &calib_data, &data_size);
     if (err == ESP_ERR_NVS_NOT_FOUND) {
-        printf("Calibration data not found. Using default values.\n");
+        //printf("Calibration data not found. Using default values.\n");
         update_nvs();
     } else if (err != ESP_OK) {
-        printf("Error reading calibration data from NVS: %s\n", esp_err_to_name(err));
+        //printf("Error reading calibration data from NVS: %s\n", esp_err_to_name(err));
     } else {
-        printf("Calibration data retrieved successfully.\n");
+        //printf("Calibration data retrieved successfully.\n");
     }
 
     nvs_close(nvs_handle);
