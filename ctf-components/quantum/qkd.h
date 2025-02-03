@@ -13,6 +13,7 @@
 #include "board.hpp"
 #include <stdio.h>
 #include "badge_ssd1306_helper.hpp"
+#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {

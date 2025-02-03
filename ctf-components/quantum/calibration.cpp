@@ -1,6 +1,7 @@
 #include "calibration.h"
 
 #define QUANTUM_NAMESPACE "quantum"
+static const char *TAG = "Calibration";
 
 // Define the structure for calibration data
 typedef struct {
@@ -36,7 +37,7 @@ void print_nvs_blob() {
     nvs_handle_t nvs_handle;
     esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err2 != ESP_OK) {
-        printf("CHECKING - Failed to open NVS namespace: %s\n", esp_err_to_name(err2));
+        ESP_LOGE(TAG, "CHECKING - Failed to open NVS namespace: %s\n", esp_err_to_name(err2));
         return;
     }
     err2 = nvs_get_blob(nvs_handle, "calib_data", &calib_data, &required_size);
@@ -59,7 +60,7 @@ void clear_nvs_data() {
     // Open NVS handle
     err = nvs_open(QUANTUM_NAMESPACE, NVS_READWRITE, &handle);
     if (err != ESP_OK) {
-        //printf("Error (%s) opening NVS handle!\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Error (%s) opening NVS handle!\n", esp_err_to_name(err));
         return;
     }
 
@@ -84,7 +85,7 @@ void clear_nvs_data() {
     // Commit changes
     err = nvs_commit(handle);
     if (err != ESP_OK) {
-        //printf("Failed to commit NVS changes: %s\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Failed to commit NVS changes: %s\n", esp_err_to_name(err));
     } else {
        // printf("NVS changes committed.\n");
     }
@@ -98,7 +99,7 @@ void update_nvs()
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READWRITE, &nvs_handle);
     if (err != ESP_OK) {
-        //printf("Failed to open NVS namespace: %s\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
 
@@ -110,13 +111,13 @@ void update_nvs()
     } else if (err == ESP_OK) {
         //printf("Calibration data loaded from NVS successfully.\n");
     } else {
-        //printf("Error reading NVS: %s\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
     }
 
     // Commit changes
     err = nvs_commit(nvs_handle);
     if (err != ESP_OK) {
-        //printf("Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
     }
 
     nvs_close(nvs_handle);
@@ -127,7 +128,7 @@ void get_nvs()
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err != ESP_OK) {
-        //printf("Failed to open NVS namespace: %s\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
 
@@ -138,7 +139,7 @@ void get_nvs()
         //printf("Calibration data not found. Using default values.\n");
         update_nvs();
     } else if (err != ESP_OK) {
-        //printf("Error reading calibration data from NVS: %s\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Error reading calibration data from NVS: %s\n", esp_err_to_name(err));
     } else {
         //printf("Calibration data retrieved successfully.\n");
     }
