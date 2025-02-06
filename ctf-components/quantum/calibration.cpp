@@ -192,12 +192,15 @@ void calibrate_1()
     get_nvs();
     update_leds();
 
-    //TODO add explanation Text paragraph on what needs to be submitted
-
     if(calib_data.calib[0] != 1)
     {
         //If 1a is not completed
         badge_print_text(0, "Calibrate 1a: ", 14, false);
+
+        //TODO add explanation Text paragraph on what needs to be submitted
+        //
+        //
+
         input_hash = linenoise("Input Calibrate 1a hash: ");
         if (input_hash == nullptr) {
             printf("Error: Unable to read input\n");
@@ -212,12 +215,16 @@ void calibrate_1()
             calib_data.hashes[0][5] = '\0';
             update_nvs();
             get_nvs();
-            update_leds();
+            if (leds_on) {
+                update_leds();
+            }
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
             badge_print_text(0, "Calibrate 1a: X", 15, false);
-            update_leds();
+            if (leds_on) {
+                update_leds();
+            }
             linenoiseFree(input_hash);
             return;
         }
@@ -228,7 +235,10 @@ void calibrate_1()
 
     if(calib_data.calib[1] != 1)
     {   
-        //If 1b is not completed
+        //TODO add explanation Text paragraph on what needs to be submitted
+        //
+        //
+
         badge_print_text(1, "Calibrate 1b: ", 14, false);
         input_hash = linenoise("Input Calibrate 1b hash: ");
         if (input_hash == nullptr) {
@@ -244,12 +254,16 @@ void calibrate_1()
             calib_data.hashes[1][5] = '\0';
             update_nvs();
             get_nvs();
-            update_leds();
+            if (leds_on) {
+                update_leds();
+            }
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
             badge_print_text(1, "Calibrate 1b: X", 15, false);        
-            update_leds();
+            if (leds_on) {
+                update_leds();
+            }
             linenoiseFree(input_hash);
             return;
         }
@@ -260,7 +274,10 @@ void calibrate_1()
 
     if(calib_data.calib[2] != 1)
     {   
-        //If 1c is not completed
+        //TODO add explanation Text paragraph on what needs to be submitted
+        //
+        //
+
         badge_print_text(2, "Calibrate 1c: ", 14, false);
         input_hash = linenoise("Input Calibrate 1c hash: ");
         if (input_hash == nullptr) {
@@ -276,12 +293,16 @@ void calibrate_1()
             calib_data.hashes[2][5] = '\0';
             update_nvs();
             get_nvs();
-            update_leds();
+            if (leds_on) {
+                update_leds();
+            }
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
             badge_print_text(2, "Calibrate 1c: X", 15, false);
-            update_leds();
+            if (leds_on) {
+                update_leds();
+            }
             linenoiseFree(input_hash);
             return;
         }

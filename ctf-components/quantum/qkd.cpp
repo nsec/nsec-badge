@@ -41,10 +41,10 @@ void print_qkdnvs_blob() {
         printf("  noisy_bits: %s\n", qkd_data2.noisy_bits);
         printf("  badge_basis: %s\n", qkd_data2.badge_basis);
         printf("  dock_basis: %s\n", qkd_data2.dock_basis);
-        printf("  dock_bits: %s\n", qkd_data2.dock_bits);
+        //printf("  dock_bits: %s\n", qkd_data2.dock_bits);
         printf("  ciphertext: %s\n", qkd_data2.ciphertext);
-        printf("  noisy_key: %s\n", qkd_data2.noisykey);
-        printf("  dock_key: %s\n", qkd_data2.dockkey);          
+        //printf("  noisy_key: %s\n", qkd_data2.noisykey);
+        //printf("  dock_key: %s\n", qkd_data2.dockkey);          
     } else if (err2 == ESP_ERR_NVS_NOT_FOUND) { 
         printf("No QKD data found in NVS.\n");
     } else {
@@ -267,13 +267,15 @@ static void qkd_init(void)
     char noisybits[129];
     client_read_bits(noisybits, 128);
     std::memcpy(qkd_data.noisy_bits, noisybits, sizeof(qkd_data.noisy_bits));
-    printf("noisy_key: %s\n", noisybits);
+    printf("\nReceiving the qubit string from the dock...\n");
+    printf("Qubit string: %s\n", noisybits);
 
     // Send badge_basis
     // TODO: Random string of 128 1/0s
     char pongMsg[129];
     generate_random_bit_string(pongMsg, 128);
-    printf("badge_basis: %s\n", pongMsg);
+    printf("Sending the badge basis to the dock...\n");
+    printf("Badge chosen basis: %s\n", pongMsg);
     std::memcpy(qkd_data.badge_basis, pongMsg, sizeof(qkd_data.badge_basis));
     client_send_bits(pongMsg);
 
@@ -281,13 +283,14 @@ static void qkd_init(void)
     char dockbasis[129];
     client_read_bits(dockbasis, 128);
     std::memcpy(qkd_data.dock_basis, dockbasis, sizeof(qkd_data.dock_basis));
-    printf("dock_basis: %s\n", dockbasis);
+    printf("Receiving the dock basis from the dock...\n");
+    printf("Dock chosen basis: %s\n", dockbasis);
 
     // Receive dockbits
     char dockbit[129];
     client_read_bits(dockbit, 128);
     std::memcpy(qkd_data.dock_bits, dockbit, sizeof(qkd_data.dock_bits));
-    printf("dock_key: %s\n", dockbit);
+    //printf("dock_key: %s\n", dockbit);
 
     // TODO: get perfect and noisy keys based on above data
     // Insert noisy key
@@ -297,19 +300,25 @@ static void qkd_init(void)
     char dockcipher[129];
     client_read_bits(dockcipher, 128);
     std::memcpy(qkd_data.ciphertext, dockcipher, sizeof(qkd_data.ciphertext));
-    printf("ciphertext: %s\n", dockcipher);
+    printf("Receiving the ciphertext from the dock...\n");
+    printf("Ciphertext: %s\n", dockcipher);
 
     char shared_key[129];
     generate_key_from_basis(dockbit, pongMsg, dockbasis, shared_key);
     std::memcpy(qkd_data.dockkey, shared_key, sizeof(qkd_data.dockkey));
-    printf("shared_key: %s\n", shared_key);
+    //printf("shared_key: %s\n", shared_key);
 
     update_qkdnvs();
     get_qkdnvs();
 
     badge_ssd1306_clear();
-    badge_print_text(1, "Transfer Done!", 16, false);
     badge_print_text(1, "Quantumly Linked", 16, false);
+
+    printf("\nYour badge has now been quantumly linked!\n");
+    printf("To decrypt the flag, run 'qkd decrypt'\n");
+    printf("and follow the steps to derive the shared key and decrypt the flag.\n");
+    printf("\nTo clear the QKD data, run 'qkd clear'\n");
+    printf("at which point you wil need to re-run the quantum linking process to proceed.\n");
 }
 
 /*
@@ -388,6 +397,7 @@ void interactive_cascade_protocol(QKDData& qkd_data) {
 
 // Prompt player for the derived key and save it in NVS
 void input_and_store_key() {
+    printf("You now need to derive the key from the BB84 QKD exchange.\n");
     char *input_key = linenoise("Enter the derived key: ");
     if (input_key == nullptr) {
         printf("Error reading input.\n");
@@ -455,14 +465,15 @@ int cmd_qkd(int argc, char **argv)
 
     if (strcmp(argv[1], "init") == 0) {
         //printf("\n--- Init QKD WorkFlow ---\n");
+        esp_log_level_set("gpio", ESP_LOG_WARN);
         printf("Starting Quantum Linking with Dock and QKD data exchange...\n");
         bus_init();
 
         badge_ssd1306_clear();
-        badge_print_text(0, "Init QKD Flow", 16, false);
-        badge_print_text(1, "Plug in dock", 16, false);
-        badge_print_text(2, "and press", 16, false);
-        badge_print_text(3, "A to start", 16, false);
+        badge_print_text(0, " Init QKD Flow", 14, false);
+        badge_print_text(1, "  ------------  ", 16, false);
+        badge_print_text(2, "Plug in dock and", 16, false);
+        badge_print_text(3, "press A to start", 16, false);
 
         qkd_init();
     }
