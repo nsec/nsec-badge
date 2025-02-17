@@ -13,6 +13,7 @@
 #include "console.h"
 #include "save.h"
 #include "ir.h"
+#include <badge_ssd1306_helper.hpp>
 
 static void initialize_nvs() {
     esp_err_t err = nvs_flash_init();
@@ -33,6 +34,7 @@ extern "C" void app_main(void) {
     /* Wait a few seconds before enabling the console. */
     vTaskDelay(2000 / portTICK_PERIOD_MS);
 
+    badge_ssd1306_init();
     console_init();
 
     /* Spin to prevent main task from exiting. */

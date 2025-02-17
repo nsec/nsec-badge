@@ -44,13 +44,14 @@ constexpr unsigned int count = 18;
  */
 namespace serial
 {
-/*
-namespace dev
+
+namespace i2c
 {
-constexpr unsigned int tx_pin = 43;
-constexpr unsigned int rx_pin = 44;
-} // namespace dev
-*/
+constexpr unsigned int i2c_num = 0;
+constexpr unsigned int i2c_sda = 4;
+constexpr unsigned int i2c_scl = 5;
+} // namespace i2c
+
 namespace uart
 {
 constexpr auto uart_device = UART_NUM_1;
