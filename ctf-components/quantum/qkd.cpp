@@ -42,7 +42,7 @@ void print_qkdnvs_blob() {
     }
     err2 = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data2, &required_size);
     if (err2 == ESP_OK) {
-            printf("  noisy_bits: %s\n", qkd_data2.noisy_bits);
+            printf("  quantum_bits: %s\n", qkd_data2.noisy_bits);
             printf("  badge_basis: %s\n", qkd_data2.badge_basis);
             printf("  dock_basis: %s\n", qkd_data2.dock_basis);
             printf("  ciphertext: %s\n", qkd_data2.ciphertext);    
@@ -278,13 +278,11 @@ static void qkd_init(void)
     client_read_bits(noisybits, 128);
     std::memcpy(qkd_data.noisy_bits, noisybits, sizeof(qkd_data.noisy_bits));
     printf("\nReceiving the qubit string from the dock...\n");
-    printf("Qubit string: %s\n", noisybits);
 
     // Send badge_basis
     char pongMsg[129];
     generate_random_bit_string(pongMsg, 128);
     printf("Sending the badge basis to the dock...\n");
-    printf("Badge chosen basis: %s\n", pongMsg);
     std::memcpy(qkd_data.badge_basis, pongMsg, sizeof(qkd_data.badge_basis));
     client_send_bits(pongMsg);
 
@@ -293,30 +291,66 @@ static void qkd_init(void)
     client_read_bits(dockbasis, 128);
     std::memcpy(qkd_data.dock_basis, dockbasis, sizeof(qkd_data.dock_basis));
     printf("Receiving the dock basis from the dock...\n");
-    printf("Dock chosen basis: %s\n", dockbasis);
 
     // Receive dockbits
     char dockbit[129];
     client_read_bits(dockbit, 128);
     std::memcpy(qkd_data.dock_bits, dockbit, sizeof(qkd_data.dock_bits));
-    //printf("dock_key: %s\n", dockbit);
-    // TODO: get perfect and noisy keys based on above data
-    // Insert noisy key
-    // Insert dock key
-    // Receive dock_ciphertext
     char dockcipher[129];
     client_read_bits(dockcipher, 128);
     std::memcpy(qkd_data.ciphertext, dockcipher, sizeof(qkd_data.ciphertext));
     printf("Receiving the ciphertext from the dock...\n");
-    printf("Ciphertext: %s\n", dockcipher);
 
     char shared_key[129];
     generate_key_from_basis(dockbit, pongMsg, dockbasis, shared_key);
     std::memcpy(qkd_data.dockkey, shared_key, sizeof(qkd_data.dockkey));
-    //printf("shared_key: %s\n", shared_key);
+
+    /* Redo link, with noisy set now */
+    /*-------------------------------*/
+
+    // Receive noisybits - what the player will need to correct
+    char noisybits2[129];
+    client_read_bits(noisybits2, 128);
+    std::memcpy(qkd_data.noisy_bits2, noisybits2, sizeof(qkd_data.noisy_bits2));
+    printf("\nReceiving the noisy qubit string from the dock...\n");
+
+    // Send badge_basis - randomly chosen basis
+    char pongMsg2[129];
+    generate_random_bit_string(pongMsg2, 128);
+    printf("Sending the noisy badge basis to the dock...\n");
+    std::memcpy(qkd_data.badge_basis2, pongMsg2, sizeof(qkd_data.badge_basis2));
+    client_send_bits(pongMsg2);
+
+    // Receive dock_basis - randomly chosen basis
+    char dockbasis2[129];
+    client_read_bits(dockbasis2, 128);
+    std::memcpy(qkd_data.dock_basis2, dockbasis2, sizeof(qkd_data.dock_basis2));
+    printf("Receiving the noisy dock basis from the dock...\n");
+
+    // Receive dockbits - non-noisy set for calibrate comparison
+    char dockbit2[129];
+    client_read_bits(dockbit2, 128);
+    std::memcpy(qkd_data.dock_bits2, dockbit2, sizeof(qkd_data.dock_bits2));
+
+    // Receive dock_ciphertext - encrypted using non-noisy set
+    char dockcipher2[129];
+    client_read_bits(dockcipher2, 128);
+    std::memcpy(qkd_data.ciphertext2, dockcipher2, sizeof(qkd_data.ciphertext2));
+    printf("Receiving the ciphertext from the dock...\n");
+
+    // Generate shared key from non-noisy set, for cascade comparison
+    char shared_key2[129];
+    printf("test1\n");
+    generate_key_from_basis(dockbit2, pongMsg2, dockbasis2, shared_key2);
+    printf("test1 - post\n");
+    std::memcpy(qkd_data.dockkey2, shared_key2, sizeof(qkd_data.dockkey2));
+    printf("test2\n");
+    /*------- end of Noisy set -------*/
 
     update_qkdnvs();
-    get_qkdnvs();
+    printf("test3\n");
+    //get_qkdnvs();
+    printf("test4\n");
 
     badge_ssd1306_clear();
     badge_print_text(1, "Quantumly Linked", 16, false);
