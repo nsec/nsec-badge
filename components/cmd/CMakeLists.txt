@@ -12,6 +12,6 @@ if(CONFIG_NSEC_BUILD_CTF)
 endif()
 
 idf_component_register(SRCS "console.cpp"
-                    INCLUDE_DIRS "." "../"
+                    INCLUDE_DIRS "."
                     REQUIRES ${requires_components}
 )

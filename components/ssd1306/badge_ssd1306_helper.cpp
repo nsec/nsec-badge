@@ -25,6 +25,9 @@ void badge_ssd1306_init()
 // Clear the screen
 void badge_ssd1306_clear()
 {
+    if (dev == nullptr) {
+        badge_ssd1306_init();
+    }
     ssd1306_clear_screen(dev, false);
 }
 
