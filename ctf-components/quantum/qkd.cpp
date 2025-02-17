@@ -19,15 +19,20 @@ typedef struct {
     uint8_t ciphertext[129];
     uint8_t noisykey[129];
     uint8_t dockkey[129];
+    uint8_t noisy_bits2[129];
+    uint8_t dock_basis2[129];
+    uint8_t dock_bits2[129];
+    uint8_t badge_basis2[129];
+    uint8_t ciphertext2[129];
+    uint8_t noisykey2[129];
+    uint8_t dockkey2[129];
 } QKDData;
 
 QKDData qkd_data = {};
 
 void print_qkdnvs_blob() {
-
     QKDData qkd_data2; // Temporary variable to hold the NVS data
     size_t required_size = sizeof(qkd_data2);
-
     // Try to get the blob from NVS
     nvs_handle_t nvs_handle;
     esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
@@ -37,14 +42,34 @@ void print_qkdnvs_blob() {
     }
     err2 = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data2, &required_size);
     if (err2 == ESP_OK) {
-        //printf("--- CHECKING - NVS QKD Data: ---\n");
-        printf("  noisy_bits: %s\n", qkd_data2.noisy_bits);
-        printf("  badge_basis: %s\n", qkd_data2.badge_basis);
-        printf("  dock_basis: %s\n", qkd_data2.dock_basis);
-        //printf("  dock_bits: %s\n", qkd_data2.dock_bits);
-        printf("  ciphertext: %s\n", qkd_data2.ciphertext);
-        //printf("  noisy_key: %s\n", qkd_data2.noisykey);
-        //printf("  dock_key: %s\n", qkd_data2.dockkey);          
+            printf("  noisy_bits: %s\n", qkd_data2.noisy_bits);
+            printf("  badge_basis: %s\n", qkd_data2.badge_basis);
+            printf("  dock_basis: %s\n", qkd_data2.dock_basis);
+            printf("  ciphertext: %s\n", qkd_data2.ciphertext);    
+    } else if (err2 == ESP_ERR_NVS_NOT_FOUND) { 
+        printf("No QKD data found in NVS.\n");
+    } else {
+        printf("Error reading NVS blob: %s\n", esp_err_to_name(err2));
+    }
+}
+
+void print_qkdnvs_blobnoisy() {
+
+    QKDData qkd_data2; // Temporary variable to hold the NVS data
+    size_t required_size = sizeof(qkd_data2);
+    // Try to get the blob from NVS
+    nvs_handle_t nvs_handle;
+    esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
+    if (err2 != ESP_OK) {
+        ESP_LOGE(TAG, "CHECKING - Failed to open NVS namespace: %s\n", esp_err_to_name(err2));
+        return;
+    }
+    err2 = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data2, &required_size);
+    if (err2 == ESP_OK) {
+            printf("  noisy_bits: %s\n", qkd_data2.noisy_bits2);
+            printf("  badge_basis: %s\n", qkd_data2.badge_basis2);
+            printf("  dock_basis: %s\n", qkd_data2.dock_basis2);
+            printf("  ciphertext: %s\n", qkd_data2.ciphertext2);    
     } else if (err2 == ESP_ERR_NVS_NOT_FOUND) { 
         printf("No QKD data found in NVS.\n");
     } else {
@@ -62,7 +87,6 @@ void clear_qkdnvs_data() {
         ESP_LOGE(TAG, "Error (%s) opening NVS handle!\n", esp_err_to_name(err));
         return;
     }
-
     // Erase the blob from NVS
     err = nvs_erase_key(handle, "qkd_data");
     if (err == ESP_OK) {
@@ -72,7 +96,6 @@ void clear_qkdnvs_data() {
     } else {
         //printf("Error erasing NVS data: %s\n", esp_err_to_name(err));
     }
-
     // Write default calibration data back to NVS
     QKDData qkd_data = {};
     err = nvs_set_blob(handle, "qkd_data", &qkd_data, sizeof(qkd_data));
@@ -81,7 +104,6 @@ void clear_qkdnvs_data() {
     } else {
         //printf("Default calibration data written to NVS.\n");
     }
-
     // Commit changes
     err = nvs_commit(handle);
     if (err != ESP_OK) {
@@ -89,7 +111,6 @@ void clear_qkdnvs_data() {
     } else {
        // printf("NVS changes committed.\n");
     }
-
     // Close NVS handle
     nvs_close(handle);
 }
@@ -102,7 +123,6 @@ void update_qkdnvs()
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
-
     // Store the calibration data structure as a single blob
     err = nvs_set_blob(nvs_handle, "qkd_data", &qkd_data, sizeof(qkd_data));
     if (err == ESP_ERR_NVS_NOT_FOUND) {
@@ -113,13 +133,11 @@ void update_qkdnvs()
     } else {
         ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
     }
-
     // Commit changes
     err = nvs_commit(nvs_handle);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
     }
-
     nvs_close(nvs_handle);
 }
 
@@ -144,7 +162,6 @@ void get_qkdnvs()
     } else {
         //printf("Calibration data retrieved successfully.\n");
     }
-
     nvs_close(nvs_handle);
 }
 
@@ -159,12 +176,10 @@ static void bus_init(void)
         .intr_type = GPIO_INTR_DISABLE
     };
     gpio_config(&io_conf);
-
     // C2S_DATA as output
     io_conf.mode = GPIO_MODE_OUTPUT;
     io_conf.pin_bit_mask = (1ULL << PIN_C2S_DATA);
     gpio_config(&io_conf);
-
     // default low
     gpio_set_level(PIN_C2S_DATA, 0);
 }
@@ -177,15 +192,12 @@ static void client_read_bits(char *outBuf, size_t numBits)
         while (gpio_get_level(PIN_CLOCK) == 0) {
             vTaskDelay(pdMS_TO_TICKS(10));
         }
-
         // Read the data line
         int bitVal = gpio_get_level(PIN_S2C_DATA);
-
         // Wait for clock to go LOW
         while (gpio_get_level(PIN_CLOCK) == 1) {
             vTaskDelay(pdMS_TO_TICKS(10));
         }
-
         outBuf[i] = bitVal ? '1' : '0';
     }
     outBuf[numBits] = '\0';
@@ -231,12 +243,10 @@ void xor_with_key(const char *input, const char *key, char *output) {
         output[0] = '\0';  // Return an empty string in case of error
         return;
     }
-
     // XOR each character of the input with the key
     for (size_t i = 0; i < input_len; ++i) {
         output[i] = input[i] ^ key[i % key_len];  // Repeat the key if necessary
     }
-
     // Null-terminate the output string
     output[input_len] = '\0';
 }
@@ -271,7 +281,6 @@ static void qkd_init(void)
     printf("Qubit string: %s\n", noisybits);
 
     // Send badge_basis
-    // TODO: Random string of 128 1/0s
     char pongMsg[129];
     generate_random_bit_string(pongMsg, 128);
     printf("Sending the badge basis to the dock...\n");
@@ -291,11 +300,9 @@ static void qkd_init(void)
     client_read_bits(dockbit, 128);
     std::memcpy(qkd_data.dock_bits, dockbit, sizeof(qkd_data.dock_bits));
     //printf("dock_key: %s\n", dockbit);
-
     // TODO: get perfect and noisy keys based on above data
     // Insert noisy key
     // Insert dock key
-
     // Receive dock_ciphertext
     char dockcipher[129];
     client_read_bits(dockcipher, 128);
@@ -315,9 +322,12 @@ static void qkd_init(void)
     badge_print_text(1, "Quantumly Linked", 16, false);
 
     printf("\nYour badge has now been quantumly linked!\n");
-    printf("To decrypt the flag, run 'qkd decrypt'\n");
-    printf("and follow the steps to derive the shared key and decrypt the flag.\n");
-    printf("\nTo clear the QKD data, run 'qkd clear'\n");
+    printf("To decrypt the first flag, run 'qkd decrypt'\n");
+    printf("and follow the steps to derive the shared key and decrypt the flag.\n\n");
+    printf("The second flag was transmitted with a noisy set of qubits\n");
+    printf("You will need to derive the shared key from the noisy qubits using Cascade\n");
+    printf("and then manually correct the key bits to decrypt the flag.\n\n");
+    printf("\nTo clear the QKD data, run 'qkd-init clear'\n");
     printf("at which point you wil need to re-run the quantum linking process to proceed.\n");
 }
 
@@ -417,15 +427,9 @@ void input_and_store_key() {
 // XOR decrypt function
 void decrypt_flag() {
 
-   // printf("Test?\n");
     get_qkdnvs();
     update_qkdnvs();
-    //printf((char *)qkd_data.ciphertext);
-    //printf("Test?\n");
-    //for (int i = 0; i < 128; ++i) {
-    //    printf("%02X ", qkd_data.ciphertext[i]);
-    //}
-    //printf("Test?\n");
+
     if (strlen((char *)qkd_data.ciphertext) == 0) {
         printf("No ciphertext available - initialize Quantum link first.\n");
         return;
@@ -434,6 +438,22 @@ void decrypt_flag() {
     if (strlen((char *)qkd_data.noisykey) == 0) {
         printf("No key in storage - derive and enter QKD shared key.\n");
         input_and_store_key();
+    } else {
+        printf("Shared key already derived and stored in NVS.\n");
+        // create function to ask if they want to overwrite the key
+        char *input_option = linenoise("Key Detected, do you want to override key? (y/n): ");
+        if (input_option == nullptr || strlen(input_option) > 2) {
+            printf("Error reading input.\n");
+            return;
+        }
+        if (strcmp(input_option, "y") == 0) {
+            input_and_store_key();
+            free(input_option);
+            //return;
+        } else {
+            printf("Key not overwritten.\n");
+            free(input_option);
+        }
     }
 
     // Perform XOR decryption with wrapping key
@@ -462,8 +482,65 @@ void decrypt_flag() {
 
 int cmd_qkd(int argc, char **argv)
 {
+    if (argc > 1) {
+        if (strcmp(argv[1], "list") == 0) {
+            print_qkdnvs_blob();
+        }
+        else if (strcmp(argv[1], "decrypt") == 0) {
+            decrypt_flag();
+        }
+        else {
+            printf("\nInvalid QKD command\n");
+        }
+    }
+    else
+    {
+        printf("\nInvalid QKD command\n");
+    }
+    return ESP_OK;
+}
 
-    if (strcmp(argv[1], "init") == 0) {
+int cmd_qkd2(int argc, char **argv)
+{
+    if (argc > 1) {
+        if (strcmp(argv[1], "list") == 0) {
+            print_qkdnvs_blobnoisy();
+        }
+        else if (strcmp(argv[1], "decrypt") == 0) {
+            printf("\n--- QKD2 - Decrypt QKD WorkFlow ---\n");
+        }
+        else if (strcmp(argv[1], "cascade") == 0) {
+            printf("\n--- QKD2 - Cascade QKD WorkFlow ---\n");
+        }
+        else if (strcmp(argv[1], "correct") == 0) {
+            printf("\n--- QKD2 - Correct QKD WorkFlow ---\n");
+        }
+        else {
+            printf("\nInvalid QKD command\n");
+        }
+    } 
+    else
+    {
+        printf("\nInvalid QKD command\n");
+    }
+    return ESP_OK;
+}
+
+int cmd_qkd_init(int argc, char **argv)
+{
+    //Need to check if argv has something or is blank
+    if (argc > 1) {
+        if (strcmp(argv[1], "clear") == 0) 
+        {
+            clear_qkdnvs_data();
+        } 
+        else 
+        {
+            printf("\nInvalid QKD-Init command\n");
+        }
+    }
+    else 
+    {
         //printf("\n--- Init QKD WorkFlow ---\n");
         esp_log_level_set("gpio", ESP_LOG_WARN);
         printf("Starting Quantum Linking with Dock and QKD data exchange...\n");
@@ -477,31 +554,37 @@ int cmd_qkd(int argc, char **argv)
 
         qkd_init();
     }
-    else if (strcmp(argv[1], "list") == 0) {
-        print_qkdnvs_blob();
-    }
-    else if (strcmp(argv[1], "decrypt") == 0) {
-        decrypt_flag();
-    }
-    else if (strcmp(argv[1], "clear") == 0) {
-        clear_qkdnvs_data();
-    }
-    else if (strcmp(argv[1], "cascade") == 0) {
-        printf("\n--- Cascade QKD WorkFlow ---\n");
-    }
-    else {
-        printf("\nInvalid QKD command\n");
-    }
-
     return ESP_OK;
 }
 
 void register_qkd_cmd() {
     const esp_console_cmd_t cmd = {
         .command = "qkd",
-        .help = "Initiate QKD Key Exchange with dock\n",
-        .hint = "init | list | clear | cascade | decrypt",
+        .help = "BB84 Key Exchange with Dock\n",
+        .hint = "[list | decrypt]",
         .func = &cmd_qkd,
+        .argtable = NULL,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+}
+
+void register_qkdnoisy_cmd() {
+    const esp_console_cmd_t cmd = {
+        .command = "qkd2",
+        .help = "Noisy Error BB84 Key Exchange with Dock\n",
+        .hint = "[list | cascade | correct | decrypt]",
+        .func = &cmd_qkd2,
+        .argtable = NULL,
+    };
+    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+}
+
+void register_qkdinit_cmd() {
+    const esp_console_cmd_t cmd = {
+        .command = "qkd-init",
+        .help = "clear - Removes existing Quantum information\n Initiate Quantum Link with Dock",
+        .hint = "[clear]",
+        .func = &cmd_qkd_init,
         .argtable = NULL,
     };
     ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );

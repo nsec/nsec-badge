@@ -118,7 +118,9 @@ void register_commands()
     register_ir_cmd();
     register_quantum_cmd();
     register_calibrate_cmd();
+    register_qkdinit_cmd();
     register_qkd_cmd();
+    register_qkdnoisy_cmd();
 #endif
 }
 

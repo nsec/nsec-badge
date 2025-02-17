@@ -388,7 +388,7 @@ void register_calibrate_cmd(void) {
         const esp_console_cmd_t cmd = {
             .command = "calibrate",
             .help = " <1-2> - calibration challenges\n clear - reset calibration progress\n toggle - toggle LED progress on/off\n Calibrate the Quantum Kracken Device\n",
-            .hint = "<1-2> | clear | toggle",
+            .hint = "[<1-2> | clear | toggle]",
             .func = &cmd_calibrate,
             .argtable = NULL,
         };
