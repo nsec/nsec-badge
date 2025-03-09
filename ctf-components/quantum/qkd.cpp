@@ -340,17 +340,11 @@ static void qkd_init(void)
 
     // Generate shared key from non-noisy set, for cascade comparison
     char shared_key2[129];
-    printf("test1\n");
     generate_key_from_basis(dockbit2, pongMsg2, dockbasis2, shared_key2);
-    printf("test1 - post\n");
     std::memcpy(qkd_data.dockkey2, shared_key2, sizeof(qkd_data.dockkey2));
-    printf("test2\n");
     /*------- end of Noisy set -------*/
 
     update_qkdnvs();
-    printf("test3\n");
-    //get_qkdnvs();
-    printf("test4\n");
 
     badge_ssd1306_clear();
     badge_print_text(1, "Quantumly Linked", 16, false);
@@ -361,7 +355,7 @@ static void qkd_init(void)
     printf("The second flag was transmitted with a noisy set of qubits\n");
     printf("You will need to derive the shared key from the noisy qubits using Cascade\n");
     printf("and then manually correct the key bits to decrypt the flag.\n\n");
-    printf("\nTo clear the QKD data, run 'qkd-init clear'\n");
+    printf("To clear the QKD data, run 'qkd-init clear'\n");
     printf("at which point you wil need to re-run the quantum linking process to proceed.\n");
 }
 
