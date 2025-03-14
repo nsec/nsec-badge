@@ -14,6 +14,10 @@
 #include <stdio.h>
 #include "badge_ssd1306_helper.hpp"
 #include <time.h>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <string>
 
 #ifdef __cplusplus
 extern "C" {

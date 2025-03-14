@@ -45,7 +45,8 @@ void print_qkdnvs_blob() {
             printf("  quantum_bits: %s\n", qkd_data2.noisy_bits);
             printf("  badge_basis: %s\n", qkd_data2.badge_basis);
             printf("  dock_basis: %s\n", qkd_data2.dock_basis);
-            printf("  ciphertext: %s\n", qkd_data2.ciphertext);    
+            printf("  ciphertext: %s\n", qkd_data2.ciphertext);  
+            printf("  derived_key: %s\n", qkd_data2.noisykey); 
     } else if (err2 == ESP_ERR_NVS_NOT_FOUND) { 
         printf("No QKD data found in NVS.\n");
     } else {
@@ -66,10 +67,12 @@ void print_qkdnvs_blobnoisy() {
     }
     err2 = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data2, &required_size);
     if (err2 == ESP_OK) {
-            printf("  noisy_bits: %s\n", qkd_data2.noisy_bits2);
-            printf("  badge_basis: %s\n", qkd_data2.badge_basis2);
-            printf("  dock_basis: %s\n", qkd_data2.dock_basis2);
-            printf("  ciphertext: %s\n", qkd_data2.ciphertext2);    
+            //printf("  noisy_bits: %s\n", qkd_data2.noisy_bits2);
+            //printf("  badge_basis: %s\n", qkd_data2.badge_basis2);
+            //printf("  dock_basis: %s\n", qkd_data2.dock_basis2);
+            printf("  ciphertext: %s\n", qkd_data2.ciphertext2);   
+            printf("  derived_key: %s\n", qkd_data2.noisykey2);
+            printf("  [ADMIN] perfect_key: %s\n", qkd_data2.dockkey2);
     } else if (err2 == ESP_ERR_NVS_NOT_FOUND) { 
         printf("No QKD data found in NVS.\n");
     } else {
@@ -310,9 +313,10 @@ static void qkd_init(void)
 
     // Receive noisybits - what the player will need to correct
     char noisybits2[129];
-    client_read_bits(noisybits2, 128);
-    std::memcpy(qkd_data.noisy_bits2, noisybits2, sizeof(qkd_data.noisy_bits2));
     printf("\nReceiving the noisy qubit string from the dock...\n");
+    client_read_bits(noisybits2, 128);
+    // ------ function to modify input -----//
+    std::memcpy(qkd_data.noisy_bits2, noisybits2, sizeof(qkd_data.noisy_bits2));
 
     // Send badge_basis - randomly chosen basis
     char pongMsg2[129];
@@ -342,6 +346,26 @@ static void qkd_init(void)
     char shared_key2[129];
     generate_key_from_basis(dockbit2, pongMsg2, dockbasis2, shared_key2);
     std::memcpy(qkd_data.dockkey2, shared_key2, sizeof(qkd_data.dockkey2));
+
+    // Need to introduce random errors here to a ~10% ratio to the "key"
+    // MAYBE introduce known errors in the key to make sure that shuffle layers need to happen
+    // Actually yes, I like that idea a lot, will work on it.
+    char noisy_shared_key2[129];
+    std::memcpy(noisy_shared_key2, shared_key2, sizeof(noisy_shared_key2));
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < strlen((char *)noisy_shared_key2) - 1 ; i++) {
+        double r = (double)rand() / (double)RAND_MAX; // random in [0,1)
+        if(r < 0.10) {  // 10% threshold
+            // Flip the bit
+            if(noisy_shared_key2[i] == '0') {
+                noisy_shared_key2[i] = '1';
+            } else if(noisy_shared_key2[i] == '1') {
+                noisy_shared_key2[i] = '0';
+            }
+        }
+    }
+    std::memcpy(qkd_data.noisykey2, noisy_shared_key2, sizeof(qkd_data.noisykey2));
+
     /*------- end of Noisy set -------*/
 
     update_qkdnvs();
@@ -359,79 +383,265 @@ static void qkd_init(void)
     printf("at which point you wil need to re-run the quantum linking process to proceed.\n");
 }
 
-/*
-// Interactive parity check function
-void parity_check_round(QKDData& qkd_data, const uint8_t* perfect_key, int block_size) {
-    int blocks = 16 / block_size;
-    for (int i = 0; i < blocks; i++) {
-        int start = i * block_size;
-        int end = start + block_size;
+// Compute parity (0 if even # of 1's, 1 if odd)
+int computeParity(const std::vector<int>& bits, int start, int end) {
+    int sum = 0;
+    for(int i = start; i <= end; ++i) {
+        sum += bits[i];
+    }
+    return sum % 2;
+}
 
-        // Ask the player for the parity of this block
-        std::cout << "\nBlock " << i + 1 << " (" << start << "-" << end - 1 << ") - ";
-        std::cout << "Input the calculated parity (0 or 1): ";
-        int player_parity;
-        std::cin >> player_parity;
-
-        // Calculate the actual parity for comparison
-        int actual_parity = calculate_parity(perfect_key, start, end);
-
-        if (player_parity != actual_parity) {
-            std::cout << "Mismatch detected! Starting binary search to locate the error...\n";
-            int error_index = start;
-            int low = start, high = end - 1;
-
-            // Binary search to find the exact bit error
-            while (low < high) {
-                int mid = (low + high) / 2;
-                int left_parity = calculate_parity(perfect_key, low, mid + 1);
-                std::cout << "Checking parity for range [" << low << "-" << mid << "]... Enter parity: ";
-                std::cin >> player_parity;
-
-                if (player_parity != left_parity) {
-                    high = mid;
-                } else {
-                    low = mid + 1;
-                }
-            }
-
-            error_index = low;
-            std::cout << "Error found at bit " << error_index << ". Correcting...\n";
-
-            // Correct the bit in the noisy key
-            qkd_data.noisy_key[error_index] ^= 1;
+/**
+ * Recursively locate one erroneous bit within localKey[start..end].
+ * - keys might be shuffled relative to original positions.
+ * - indicesMap[i] = the original index of the bit currently at position i.
+ * Once we find exactly one bit, we show the *original* index to the player
+ * so they can flip it in the unshuffled coordinate system.
+ */
+void binarySearchError(const std::vector<int>& badgeKey, const std::vector<int>& dockKey, const std::vector<int>& indicesMap, int start, int end) 
+{
+    if(start == end) {
+        if (badgeKey[start] != dockKey[start]) {
+        // Found the single bit in local space
+        int originalIdx = indicesMap[start];
+        printf("==> Error found bit at index %i!\n\n",originalIdx);
+        return;
+        } else {
+            printf("No error found in this sub-block.\n");
+            return;
         }
     }
-}
 
-// Main interactive function
-void interactive_cascade_protocol(QKDData& qkd_data) {
-    uint8_t perfect_key[64];
-    generate_noisy_key(qkd_data.noisy_key, perfect_key);
+    int mid = (start + end) / 2;
 
-    std::cout << "Initial keys generated. Here are the keys:\n";
-    print_key(qkd_data.noisy_key, "Noisy Key");
-    print_key(perfect_key, "Perfect Key");
+    // Print the localKey bits in this sub-block
+    printf("Block Index [%i,%i]\n",start,mid);
+    printf("Left block bits: ");
+    for (int i = start; i <= mid; i++) {
+        printf("%d", badgeKey[i]);
+    }
+    printf("\n");
 
-    // Perform parity checks in multiple rounds with decreasing block sizes
-    std::vector<int> block_sizes = {16, 8, 4};  // Example block sizes for rounds
-    for (int block_size : block_sizes) {
-        std::cout << "\nStarting parity check round with block size " << block_size << "...\n";
-        parity_check_round(qkd_data, perfect_key, block_size);
+    // Prompt user for "badge parity" of the LEFT half [start..mid]
+    int leftParityBadge = 0;
+    {
+        char* line = linenoise("Enter parity for left half: ");
+        if(!line) {
+            printf("User cancelled input. Exiting.\n");
+            return;
+        }
+        leftParityBadge = std::atoi(line);
+        linenoiseFree(line);
     }
 
-    // Final corrected key result
-    std::cout << "\nFinal corrected key:\n";
-    print_key(qkd_data.noisy_key, "Corrected Key");
-
-    // Compare to perfect key to determine success
-    if (std::memcmp(qkd_data.noisy_key, perfect_key, 64) == 0) {
-        std::cout << "\nCongratulations! You have successfully corrected the key.\n";
+    // Compare with "dock parity" for the same sub-block
+    int leftParityDock = computeParity(dockKey, start, mid);
+    //printf("Left parity: badge=%d, dock=%d\n", leftParityBadge, leftParityDock);
+    if(leftParityDock != leftParityBadge) {
+        // Mismatch => error is in the left half
+        printf("=> Mismatch in Left sub-block searching.\n");
+        binarySearchError(badgeKey, dockKey, indicesMap, start, mid);
     } else {
-        std::cout << "\nThe key is still incorrect. Try again.\n";
+        // Must be in the right half
+        printf("=> Mismatch in Right sub-block searching.\n");
+        binarySearchError(badgeKey, dockKey, indicesMap, mid+1, end);
     }
 }
-*/
+
+/**
+ * Run a single pass of Cascade:
+ * 1) Ask user if they want to shuffle the key
+ * 2) Possibly shuffle keys + indicesMap
+ * 3) Partition the (shuffled) bits into blocks
+ * 4) For each block, ask user for server parity
+ * 5) If mismatch, do a binarySearchError to find the erroneous bit
+ */
+void runCascadeFlow() {
+    
+    get_qkdnvs();
+    update_qkdnvs();
+
+    const char* badgeString = reinterpret_cast<const char*>(qkd_data.noisykey2);
+
+    if(!badgeString) {
+        printf("Cascade Setup Error\n");
+        return;
+    }
+
+    // Measure the length
+    int size = strlen(badgeString) - 1;
+    if(size < 1) {
+        printf("Empty key?\n");
+        return;
+    }
+
+    // Now convert to vector<int>
+    std::vector<int> badgeKey;
+    badgeKey.reserve(size);
+
+    for(int i = 0; i < size; i++) {
+        if(badgeString[i] == '0') {
+            badgeKey.push_back(0);
+        } else if(badgeString[i] == '1') {
+            badgeKey.push_back(1);
+        } else {
+            // Any other character is invalid for a bitstring
+            printf("Invalid character '%c' in bitstring (index %d)\n", badgeString[i], i);
+            return;
+        }
+    }
+
+    std::vector<int> indicesMap(badgeKey.size());
+    for(size_t i=0; i<badgeKey.size(); i++) {
+        indicesMap[i] = i;
+    }
+
+    // Setup non-noisy dockkey for comparison
+    const char* dockString = reinterpret_cast<const char*>(qkd_data.dockkey2);
+    if(!dockString) {
+        printf("Cascade Setup Error\n");
+        return;
+    }
+    // Now convert to vector<int>
+    std::vector<int> dockKey;
+    dockKey.reserve(size);
+
+    for(int i = 0; i < size; i++) {
+        if(dockString[i] == '0') {
+            dockKey.push_back(0);
+        } else if(dockString[i] == '1') {
+            dockKey.push_back(1);
+        } else {
+            // Any other character is invalid for a bitstring
+            printf("Invalid character '%c' in bitstring (index %d)\n", dockString[i], i);
+            return;
+        }
+    }
+
+    //Now the setup is completed - hopefully
+
+    char* line = linenoise("Do you want to shuffle the derived key? (y/n): ");
+    if(!line) {
+        printf("User cancelled.\n");
+        return;
+    }
+    std::string answer(line);
+    linenoiseFree(line);
+
+    if(answer == "yes" || answer == "y") {
+        // Step 2) Shuffle (both localKey and indicesMap in tandem)
+        std::random_shuffle(indicesMap.begin(), indicesMap.end());
+
+        // Rebuild Keys in that new order
+        std::vector<int> shuffledBadgeKey(size);
+        std::vector<int> shuffledDockKey(size);
+
+        for(int i = 0; i < size; i++) {
+            shuffledBadgeKey[i] = badgeKey[indicesMap[i]];
+            shuffledDockKey[i] = dockKey[indicesMap[i]];
+        }
+        badgeKey = shuffledBadgeKey;
+        dockKey = shuffledDockKey;
+        printf("Key and index map have been shuffled.\n");
+    }
+
+    // For this example, let's define a block size in some simple manner.
+    // In real usage might base it on QBER or logic from earlier steps.
+    int blockSize = 8;
+    int numBlocks = (size + blockSize - 1) / blockSize;
+
+    printf("\n-- Starting Cascade pass with blockSize=%i, numBlocks=%i\n", blockSize, numBlocks);
+
+    bool foundAnyError = false;
+
+    for(int blockIndex = 0; blockIndex < numBlocks; blockIndex++) {
+        int start = blockIndex * blockSize;
+        int end = std::min(start + blockSize - 1, size - 1);
+
+        // Ask user for "badge parity" for this sub-block
+        printf("Block %i: local indices [%i,%i]\n",blockIndex,start,end);
+
+        // Print the localKey bits in this sub-block
+        printf("Block bits: ");
+        for (int i = start; i <= end; i++) {
+            printf("%d", badgeKey[i]);
+        }
+        printf("\n");
+
+        char* line = linenoise("Enter parity for this block (0 or 1): ");
+        if(!line) {
+            printf("User cancelled input.\n");
+            return;
+        }
+        int badgeParity = std::atoi(line);
+        linenoiseFree(line);
+        if(badgeParity != 0 && badgeParity != 1) {
+            printf("Invalid parity input. Skipping block.\n");
+            return;
+        }
+
+        // Compute local parity to see if there's a mismatch
+        int dockParity = computeParity(dockKey, start, end);
+
+        if(badgeParity != dockParity) {
+            printf("Parity mismatch => At least one error in this block.\n");
+            foundAnyError = true;
+            // Recursively locate that error
+            binarySearchError(badgeKey, dockKey, indicesMap, start, end);
+        } else {
+            printf("Parity matches => No error in this block.\n");
+        }
+    }
+
+    if(!foundAnyError) {
+        printf("\nNo bit errors found in this pass.\n");
+    } else {
+        printf("\nSome errors were found. Bits need flipping (via separate function).\n");
+    }
+}
+
+// Function to bitflip 1 or 0 in the noisy derived key
+/*void bitflip_noisy_key() {
+
+    get_qkdnvs();
+    update_qkdnvs();
+
+    char *bit_str = linenoise("Enter the bit index to flip: ");
+    int bit = atoi(bit_str);
+    if (bit < 0 || bit > (strlen((char *)qkd_data.noisykey2) - 1)) {
+        printf("Error: Bit index must be between 0 and %i!\n", strlen((char *)qkd_data.noisykey2) - 1);
+        free(bit_str);
+        return;
+    }
+    qkd_data.noisykey2[bit] = (qkd_data.noisykey2[bit] == '1') ? '0' : '1';
+    
+    update_qkdnvs();
+    get_qkdnvs();
+    
+    printf("Bit %d flipped!\n", bit);
+    free(bit_str);
+}*/
+
+// Prompt player for the derived key and save it in NVS
+void input_and_store_key2() {
+    printf("You now need to derive the key from the BB84 QKD exchange.\n");
+    char *input_key = linenoise("Enter the derived key: ");
+    if (input_key == nullptr) {
+        printf("Error reading input.\n");
+        return;
+    }
+    if (strlen(input_key) > 129) {
+        printf("Key is too long. Max length is %d bits.\n", 128);
+        free(input_key);
+        return;
+    }
+    strncpy((char *)qkd_data.noisykey2, input_key, 128);
+    update_qkdnvs();
+    get_qkdnvs();
+    printf("Key saved successfully!\n");
+    free(input_key);
+}
 
 // Prompt player for the derived key and save it in NVS
 void input_and_store_key() {
@@ -452,6 +662,62 @@ void input_and_store_key() {
     printf("Key saved successfully!\n");
     free(input_key);
 }
+
+// XOR decrypt function
+void decrypt_flag2() {
+
+    get_qkdnvs();
+    update_qkdnvs();
+
+    if (strlen((char *)qkd_data.ciphertext2) == 0) {
+        printf("No ciphertext available - initialize Quantum link first.\n");
+        return;
+    }
+
+    if (strlen((char *)qkd_data.noisykey2) == 0) {
+        printf("No key in storage - derive and enter QKD shared key.\n");
+        input_and_store_key2();
+    } else {
+        printf("Shared key already derived and stored in NVS.\n");
+        // create function to ask if they want to overwrite the key
+        char *input_option = linenoise("Key Detected, do you want to override key? (y/n): ");
+        if (input_option == nullptr || strlen(input_option) > 2) {
+            printf("Error reading input.\n");
+            return;
+        }
+        if (strcmp(input_option, "y") == 0) {
+            input_and_store_key2();
+            free(input_option);
+            //return;
+        } else {
+            printf("Key not overwritten.\n");
+            free(input_option);
+        }
+    }
+
+    // Perform XOR decryption with wrapping key
+    size_t cipher_len = strlen((char *)qkd_data.ciphertext2);
+    size_t key_len = strlen((char *)qkd_data.noisykey2);
+    uint8_t decrypted_binary[128 + 1] = {0};
+
+    for (size_t i = 0; i < cipher_len; ++i) {
+        decrypted_binary[i] = (qkd_data.ciphertext2[i] ^ qkd_data.noisykey2[i % key_len]) ? '1' : '0';
+    }
+
+    // Convert binary back to string
+    char decrypted_flag[128 / 8 + 1] = {0};
+    size_t char_index = 0;
+    for (size_t i = 0; i < cipher_len; i += 8) {
+        char byte = 0;
+        for (int bit = 0; bit < 8; ++bit) {
+            byte = (byte << 1) | (decrypted_binary[i + bit] - '0');
+        }
+        decrypted_flag[char_index++] = byte;
+    }
+
+    printf("Decrypted flag: %s\n", decrypted_flag);
+}
+
 // XOR decrypt function
 void decrypt_flag() {
 
@@ -535,13 +801,10 @@ int cmd_qkd2(int argc, char **argv)
             print_qkdnvs_blobnoisy();
         }
         else if (strcmp(argv[1], "decrypt") == 0) {
-            printf("\n--- QKD2 - Decrypt QKD WorkFlow ---\n");
+            decrypt_flag2();
         }
         else if (strcmp(argv[1], "cascade") == 0) {
-            printf("\n--- QKD2 - Cascade QKD WorkFlow ---\n");
-        }
-        else if (strcmp(argv[1], "correct") == 0) {
-            printf("\n--- QKD2 - Correct QKD WorkFlow ---\n");
+            runCascadeFlow();
         }
         else {
             printf("\nInvalid QKD command\n");
@@ -600,7 +863,7 @@ void register_qkdnoisy_cmd() {
     const esp_console_cmd_t cmd = {
         .command = "qkd2",
         .help = "Noisy Error BB84 Key Exchange with Dock\n",
-        .hint = "[list | cascade | correct | decrypt]",
+        .hint = "[list | cascade | decrypt]",
         .func = &cmd_qkd2,
         .argtable = NULL,
     };
