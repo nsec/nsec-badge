@@ -160,8 +160,11 @@ void update_leds()
         }
     }
 
-    leds.show();
-    leds.wait();
+    if (leds_on){
+        leds.show();
+        leds.wait();        
+    }
+    
 }
 
 void toggle_leds() {
@@ -186,7 +189,6 @@ void calibrate_1()
     char *input_hash;
     
     badge_ssd1306_clear();
-
     get_nvs();
     update_leds();
 
@@ -195,7 +197,7 @@ void calibrate_1()
         //If 1a is not completed
         badge_print_text(0, "Calibrate 1a: ", 14, false);
 
-        printf("Using a single qubit, initialize it to a |-⟩ state. Then print out the state vector hash and submit to compare the calibration.\n");
+        printf("=> Using a single qubit, initialize it to a |-⟩ state. Then print out the state vector hash and submit to compare the calibration.\n");
 
         input_hash = linenoise("Input Calibrate 1a hash: ");
         if (input_hash == nullptr) {
@@ -231,7 +233,7 @@ void calibrate_1()
 
     if(calib_data.calib[1] != 1)
     {   
-        printf("Using two qubits, initialize each into a superposition state |+⟩. This will put the two qubits into a superposition of all possible measurements. Once done print out the state vector hash and submit to compare the calibration.\n");
+        printf("=> Using two qubits, initialize each into a superposition state |+⟩. This will put the two qubits into a superposition of all possible measurements. Once done print out the state vector hash and submit to compare the calibration.\n");
 
         badge_print_text(1, "Calibrate 1b: ", 14, false);
         input_hash = linenoise("Input Calibrate 1b hash: ");
@@ -269,7 +271,7 @@ void calibrate_1()
     if(calib_data.calib[2] != 1)
     {   
 
-        printf("Using three qubits, initialize qubit 0 and 2 to a |-⟩ state, while qubit 1 should be initialized to a |+⟩ state. Once done print out the state vector hash and submit to compare the calibration.\n");
+        printf("=> Using three qubits, initialize qubit 0 and 2 to a |-⟩ state, while qubit 1 should be initialized to a |+⟩ state. Once done print out the state vector hash and submit to compare the calibration.\n");
         
         badge_print_text(2, "Calibrate 1c: ", 14, false);
         input_hash = linenoise("Input Calibrate 1c hash: ");
@@ -304,7 +306,16 @@ void calibrate_1()
         badge_print_text(2, "Calibrate 1c: O", 15, false);
     }
 
-    std::string flag = "FLAG-" +
+    // Obfuscated version of "FLAG"
+    std::string obfFlag = "\x55\x5F\x52\x54\x3E";  
+    // Decrypt it at runtime by XORing each byte again with 0x13
+    std::string flagstr;
+    flagstr.reserve(obfFlag.size());
+    for (char c : obfFlag) {
+        flagstr.push_back(c ^ 0x13);
+    }
+
+    std::string flag = flagstr +
                 std::string(calib_data.hashes[0]) +
                 std::string(calib_data.hashes[1]) +
                 std::string(calib_data.hashes[2]);
@@ -338,7 +349,7 @@ void calibrate_2()
         //If 2a is not completed
         badge_print_text(0, "Calibrate 2a: ", 14, false);
 
-        printf("Using two qubits, create a Bell Pair. Once done print out the state vector hash and submit to compare the calibration.\n");
+        printf("=> Using two qubits, create a Bell Pair. Once done print out the state vector hash and submit to compare the calibration.\n");
         
         input_hash = linenoise("Input Calibrate 2a hash: ");
         if (input_hash == nullptr) {
@@ -375,7 +386,7 @@ void calibrate_2()
     if(calib_data.calib[4] != 1)
     {   
 
-        printf("Using three qubits, create a three-qubit GHZ (Greenberger-Horne-Zeilinger) state. Once done print out the state vector hash and submit to compare the calibration.\n");
+        printf("=> Using three qubits, create a three-qubit GHZ (Greenberger-Horne-Zeilinger) state. Once done print out the state vector hash and submit to compare the calibration.\n");
 
         badge_print_text(1, "Calibrate 2b: ", 14, false);
         input_hash = linenoise("Input Calibrate 2b hash: ");
@@ -413,7 +424,7 @@ void calibrate_2()
     if(calib_data.calib[5] != 1)
     {   
 
-        printf("Using three qubits, create a superposition state similar to a GHZ/Bell-Pair that has the below state vector. There are multiple ways to accomplish this, however the specific state vector is what we are interested in. Once done print out the state vector hash and submit to compare the calibration.\n");
+        printf("=> Using three qubits, create a Cluster State that has the provided state vector. There are multiple ways to accomplish this. Once done print out the state vector hash and submit to compare the calibration.\n");
 
         badge_print_text(2, "Calibrate 2c: ", 14, false);
         input_hash = linenoise("Input Calibrate 2c hash: ");
@@ -448,7 +459,16 @@ void calibrate_2()
         badge_print_text(2, "Calibrate 2c: O", 15, false);
     }
 
-    std::string flag = "FLAG-" +
+    // Obfuscated version of "FLAG"
+    std::string obfFlag = "\x55\x5F\x52\x54\x3E";  
+    // Decrypt it at runtime by XORing each byte again with 0x13
+    std::string flagstr;
+    flagstr.reserve(obfFlag.size());
+    for (char c : obfFlag) {
+        flagstr.push_back(c ^ 0x13);
+    }
+
+    std::string flag = flagstr +
                 std::string(calib_data.hashes[3]) +
                 std::string(calib_data.hashes[4]) +
                 std::string(calib_data.hashes[5]);

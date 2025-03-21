@@ -114,8 +114,8 @@ void register_commands()
     console_register_cmd_clear();
     console_register_cmd_sys();
 #if CONFIG_NSEC_BUILD_CTF
-    register_wifi_cmd();
-    register_ir_cmd();
+    //register_wifi_cmd();
+    //register_ir_cmd();
     register_quantum_cmd();
     register_calibrate_cmd();
     register_qkdinit_cmd();
