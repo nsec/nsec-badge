@@ -30,16 +30,55 @@ typedef struct {
 
 QKDData qkd_data = {};
 
+// Optionally, define a default_qkd_data if you prefer an explicit "empty" struct
+QKDData default_qkd_data = {
+    {0}, {0}, {0}, {0}, {0}, {0}, {0},
+    {0}, {0}, {0}, {0}, {0}, {0}, {0}
+};
+
+void update_qkdnvs()
+{
+    nvs_handle_t nvs_handle;
+    esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READWRITE, &nvs_handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
+        return;
+    }
+    // Store the calibration data structure as a single blob
+    err = nvs_set_blob(nvs_handle, "qkd_data", &qkd_data, sizeof(qkd_data));
+    if (err == ESP_OK) {
+        //printf("Calibration data loaded from NVS successfully.\n");
+    } else {
+        ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
+    }
+    // Commit changes
+    err = nvs_commit(nvs_handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
+    }
+    nvs_close(nvs_handle);
+}
+
 void print_qkdnvs_blob() {
     QKDData qkd_data2; // Temporary variable to hold the NVS data
     size_t required_size = sizeof(qkd_data2);
     // Try to get the blob from NVS
     nvs_handle_t nvs_handle;
     esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
-    if (err2 != ESP_OK) {
+    if (err2 != ESP_OK && err2 != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "CHECKING - Failed to open NVS namespace: %s\n", esp_err_to_name(err2));
+        nvs_close(nvs_handle);
+        return;
+    } else if (err2 == ESP_ERR_NVS_NOT_FOUND) {
+        nvs_close(nvs_handle);
+        update_qkdnvs();
+        printf("Quantum Data was empty - initialized, you can now re-run list.\n");
+        //Recursive call, then exit
+        //print_qkdnvs_blob();
         return;
     }
+    //nvs_handle_t nvs_handle;
+    //esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
     err2 = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data2, &required_size);
     if (err2 == ESP_OK) {
             printf("  quantum_bits: %s\n", qkd_data2.noisy_bits);
@@ -52,6 +91,7 @@ void print_qkdnvs_blob() {
     } else {
         printf("Error reading NVS blob: %s\n", esp_err_to_name(err2));
     }
+    nvs_close(nvs_handle);
 }
 
 void print_qkdnvs_blobnoisy() {
@@ -61,10 +101,18 @@ void print_qkdnvs_blobnoisy() {
     // Try to get the blob from NVS
     nvs_handle_t nvs_handle;
     esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
-    if (err2 != ESP_OK) {
+    if (err2 != ESP_OK && err2 != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "CHECKING - Failed to open NVS namespace: %s\n", esp_err_to_name(err2));
         return;
+    } else if (err2 == ESP_ERR_NVS_NOT_FOUND) {
+        nvs_close(nvs_handle);
+        update_qkdnvs();
+        printf("Quantum Data was empty - initialized, you can now re-run list.\n");
+        //Recursive call, then exit
+        //print_qkdnvs_blobnoisy();
+        return;
     }
+
     err2 = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data2, &required_size);
     if (err2 == ESP_OK) {
             //printf("  noisy_bits: %s\n", qkd_data2.noisy_bits2);
@@ -93,7 +141,7 @@ void clear_qkdnvs_data() {
     // Erase the blob from NVS
     err = nvs_erase_key(handle, "qkd_data");
     if (err == ESP_OK) {
-        printf("NVS data erased successfully.\n");
+        printf("Quantum data erased successfully.\n");
     } else if (err == ESP_ERR_NVS_NOT_FOUND) {
         //printf("No NVS data found to erase, initializing defaults.\n");
     } else {
@@ -118,52 +166,23 @@ void clear_qkdnvs_data() {
     nvs_close(handle);
 }
 
-void update_qkdnvs()
-{
-    nvs_handle_t nvs_handle;
-    esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READWRITE, &nvs_handle);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
-        return;
-    }
-    // Store the calibration data structure as a single blob
-    err = nvs_set_blob(nvs_handle, "qkd_data", &qkd_data, sizeof(qkd_data));
-    if (err == ESP_ERR_NVS_NOT_FOUND) {
-        // If no data found, initialize with defaults
-        //printf("No calibration data found in NVS. Initializing with default values...\n");
-    } else if (err == ESP_OK) {
-        //printf("Calibration data loaded from NVS successfully.\n");
-    } else {
-        ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
-    }
-    // Commit changes
-    err = nvs_commit(nvs_handle);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
-    }
-    nvs_close(nvs_handle);
-}
-
 void get_qkdnvs()
 {
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
-    if (err != ESP_OK) {
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
+        return;
+    } else if (err == ESP_ERR_NVS_NOT_FOUND) {
+        update_qkdnvs();
         return;
     }
 
     // Retrieve the calibration data structure
     size_t data_size = sizeof(qkd_data);
     err = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data, &data_size);
-    if (err == ESP_ERR_NVS_NOT_FOUND) {
-        //printf("Calibration data not found. Using default values.\n");
-        QKDData qkd_data = {};
-        update_qkdnvs();
-    } else if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Error reading calibration data from NVS: %s\n", esp_err_to_name(err));
-    } else {
-        //printf("Calibration data retrieved successfully.\n");
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Error reading Cascade data from NVS: %s\n", esp_err_to_name(err));
     }
     nvs_close(nvs_handle);
 }
@@ -472,7 +491,7 @@ void runCascadeFlow() {
     // Measure the length
     int size = strlen(badgeString) - 1;
     if(size < 1) {
-        printf("Empty key?\n");
+        printf("Quantum Data seem empty\n");
         return;
     }
 
@@ -600,28 +619,6 @@ void runCascadeFlow() {
         printf("\nSome errors were found. Bits need flipping (via separate function).\n");
     }
 }
-
-// Function to bitflip 1 or 0 in the noisy derived key
-/*void bitflip_noisy_key() {
-
-    get_qkdnvs();
-    update_qkdnvs();
-
-    char *bit_str = linenoise("Enter the bit index to flip: ");
-    int bit = atoi(bit_str);
-    if (bit < 0 || bit > (strlen((char *)qkd_data.noisykey2) - 1)) {
-        printf("Error: Bit index must be between 0 and %i!\n", strlen((char *)qkd_data.noisykey2) - 1);
-        free(bit_str);
-        return;
-    }
-    qkd_data.noisykey2[bit] = (qkd_data.noisykey2[bit] == '1') ? '0' : '1';
-    
-    update_qkdnvs();
-    get_qkdnvs();
-    
-    printf("Bit %d flipped!\n", bit);
-    free(bit_str);
-}*/
 
 // Prompt player for the derived key and save it in NVS
 void input_and_store_key2() {

@@ -67,7 +67,7 @@ void clear_nvs_data() {
     // Erase the blob from NVS
     err = nvs_erase_key(handle, "calib_data");
     if (err == ESP_OK) {
-        printf("NVS data erased successfully.\n");
+        printf("Quantum calibration data erased successfully.\n");
     } else if (err == ESP_ERR_NVS_NOT_FOUND) {
         //printf("No NVS data found to erase, initializing defaults.\n");
     } else {
@@ -98,17 +98,14 @@ void update_nvs()
 {
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READWRITE, &nvs_handle);
-    if (err != ESP_OK) {
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
 
     // Store the calibration data structure as a single blob
     err = nvs_set_blob(nvs_handle, "calib_data", &calib_data, sizeof(calib_data));
-    if (err == ESP_ERR_NVS_NOT_FOUND) {
-        // If no data found, initialize with defaults
-        //printf("No calibration data found in NVS. Initializing with default values...\n");
-    } else if (err == ESP_OK) {
+    if (err == ESP_OK) {
         //printf("Calibration data loaded from NVS successfully.\n");
     } else {
         ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
@@ -127,21 +124,20 @@ void get_nvs()
 {
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
-    if (err != ESP_OK) {
+    if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
+        return;
+    } else if (err == ESP_ERR_NVS_NOT_FOUND) {
+        update_nvs();
+        //exit get_nvs() since it will have a different nvs handle and fail
         return;
     }
 
     // Retrieve the calibration data structure
     size_t data_size = sizeof(calib_data);
     err = nvs_get_blob(nvs_handle, "calib_data", &calib_data, &data_size);
-    if (err == ESP_ERR_NVS_NOT_FOUND) {
-        //printf("Calibration data not found. Using default values.\n");
-        update_nvs();
-    } else if (err != ESP_OK) {
+    if (err != ESP_OK) {
         ESP_LOGE(TAG, "Error reading calibration data from NVS: %s\n", esp_err_to_name(err));
-    } else {
-        //printf("Calibration data retrieved successfully.\n");
     }
 
     nvs_close(nvs_handle);
