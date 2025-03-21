@@ -21,7 +21,7 @@ OTA_DATA_ADDR="0xd000"
 FIRMWARE_BIN="${FIRMWARE_DIR}/firmware.bin"
 FIRMWARE_ADDR="0x10000"
 
-ESP_TYPE="esp32s3"
+ESP_TYPE="esp32c3"
 BAUD_RATE="460800"
 
 # Fixed path to the usb-serial device per usb port
