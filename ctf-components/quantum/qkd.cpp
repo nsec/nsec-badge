@@ -81,7 +81,7 @@ void print_qkdnvs_blob() {
     //esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
     err2 = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data2, &required_size);
     if (err2 == ESP_OK) {
-            printf("  quantum_bits: %s\n", qkd_data2.noisy_bits);
+            printf("  quantum_bits: %s\n", qkd_data2.dock_bits);
             printf("  badge_basis: %s\n", qkd_data2.badge_basis);
             printf("  dock_basis: %s\n", qkd_data2.dock_basis);
             printf("  ciphertext: %s\n", qkd_data2.ciphertext);  
@@ -120,7 +120,7 @@ void print_qkdnvs_blobnoisy() {
             //printf("  dock_basis: %s\n", qkd_data2.dock_basis2);
             printf("  ciphertext: %s\n", qkd_data2.ciphertext2);   
             printf("  derived_key: %s\n", qkd_data2.noisykey2);
-            printf("  [ADMIN] perfect_key: %s\n", qkd_data2.dockkey2);
+            //printf("  [ADMIN] perfect_key: %s\n", qkd_data2.dockkey2);
     } else if (err2 == ESP_ERR_NVS_NOT_FOUND) { 
         printf("No QKD data found in NVS.\n");
     } else {
@@ -369,9 +369,12 @@ static void qkd_init(void)
     // Need to introduce random errors here to a ~10% ratio to the "key"
     // MAYBE introduce known errors in the key to make sure that shuffle layers need to happen
     // Actually yes, I like that idea a lot, will work on it.
+    
     char noisy_shared_key2[129];
     std::memcpy(noisy_shared_key2, shared_key2, sizeof(noisy_shared_key2));
-    srand((unsigned)time(NULL));
+    
+    //Commenting out the "true random" error introduction for CTF purpose of specific error
+    /*srand((unsigned)time(NULL));
     for (int i = 0; i < strlen((char *)noisy_shared_key2) - 1 ; i++) {
         double r = (double)rand() / (double)RAND_MAX; // random in [0,1)
         if(r < 0.10) {  // 10% threshold
@@ -383,6 +386,30 @@ static void qkd_init(void)
             }
         }
     }
+    */
+    
+    //Need to flip specific bits in the shared key, to enforce the player to use Cascade
+    //and specifically have to run through at least a single iteration of shuffle
+    //This assumes a key around ~64 bits, and QBER of 10%, so need to flip 6-7 bits
+    
+    int keysize = strlen((char *)noisy_shared_key2) - 1;
+
+    //Iterate through specific indexes to be modified/flipped
+    // Indexes: block 1: 5,6
+    //          block 2: 14 
+    //          block 3: 18,20
+    //          block 4: 25 
+    //          block 6: 46
+
+    for (int i : {5,6,14,18,20,25,46})
+    {
+        if(noisy_shared_key2[i] == '0') {
+            noisy_shared_key2[i] = '1';
+        } else if(noisy_shared_key2[i] == '1') {
+            noisy_shared_key2[i] = '0';
+        }
+    }
+
     std::memcpy(qkd_data.noisykey2, noisy_shared_key2, sizeof(qkd_data.noisykey2));
 
     /*------- end of Noisy set -------*/
@@ -424,7 +451,7 @@ void binarySearchError(const std::vector<int>& badgeKey, const std::vector<int>&
         if (badgeKey[start] != dockKey[start]) {
         // Found the single bit in local space
         int originalIdx = indicesMap[start];
-        printf("==> Error found bit at index %i!\n\n",originalIdx);
+        printf("==> Potential Error found bit at index %i!\n\n",originalIdx);
         return;
         } else {
             printf("No error found in this sub-block.\n");
@@ -622,7 +649,7 @@ void runCascadeFlow() {
 
 // Prompt player for the derived key and save it in NVS
 void input_and_store_key2() {
-    printf("You now need to derive the key from the BB84 QKD exchange.\n");
+    printf("You now need to derive the key from the QKD exchange.\n");
     char *input_key = linenoise("Enter the derived key: ");
     if (input_key == nullptr) {
         printf("Error reading input.\n");
@@ -642,7 +669,7 @@ void input_and_store_key2() {
 
 // Prompt player for the derived key and save it in NVS
 void input_and_store_key() {
-    printf("You now need to derive the key from the BB84 QKD exchange.\n");
+    printf("You now need to derive the key from the QKD exchange.\n");
     char *input_key = linenoise("Enter the derived key: ");
     if (input_key == nullptr) {
         printf("Error reading input.\n");
@@ -712,7 +739,18 @@ void decrypt_flag2() {
         decrypted_flag[char_index++] = byte;
     }
 
-    printf("Decrypted flag: %s\n", decrypted_flag);
+    // Obfuscated version of "FLAG-"
+    std::string obfFlag = "\x55\x5F\x52\x54\x3E";  
+    // Decrypt it at runtime by XORing each byte again with 0x13
+    std::string flagstr;
+    flagstr.reserve(obfFlag.size());
+    for (char c : obfFlag) {
+        flagstr.push_back(c ^ 0x13);
+    }
+
+    std::string flag = flagstr + decrypted_flag;
+
+    printf("Decrypted flag: %s\n", flag.c_str());
 }
 
 // XOR decrypt function
@@ -767,7 +805,18 @@ void decrypt_flag() {
         decrypted_flag[char_index++] = byte;
     }
 
-    printf("Decrypted flag: %s\n", decrypted_flag);
+    // Obfuscated version of "FLAG-"
+    std::string obfFlag = "\x55\x5F\x52\x54\x3E";  
+    // Decrypt it at runtime by XORing each byte again with 0x13
+    std::string flagstr;
+    flagstr.reserve(obfFlag.size());
+    for (char c : obfFlag) {
+        flagstr.push_back(c ^ 0x13);
+    }
+
+    std::string flag = flagstr + decrypted_flag;
+
+    printf("Decrypted flag: %s\n", flag.c_str());
 }
 
 
@@ -848,7 +897,7 @@ int cmd_qkd_init(int argc, char **argv)
 void register_qkd_cmd() {
     const esp_console_cmd_t cmd = {
         .command = "qkd",
-        .help = "BB84 Key Exchange with Dock\n",
+        .help = "QKD Key Exchange with Dock\n",
         .hint = "[list | decrypt]",
         .func = &cmd_qkd,
         .argtable = NULL,
@@ -859,7 +908,7 @@ void register_qkd_cmd() {
 void register_qkdnoisy_cmd() {
     const esp_console_cmd_t cmd = {
         .command = "qkd2",
-        .help = "Noisy Error BB84 Key Exchange with Dock\n",
+        .help = "Noisy Error QKD Key Exchange with Dock\n",
         .hint = "[list | cascade | decrypt]",
         .func = &cmd_qkd2,
         .argtable = NULL,
