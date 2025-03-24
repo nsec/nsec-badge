@@ -191,7 +191,7 @@ void calibrate_1()
     if(calib_data.calib[0] != 1)
     {
         //If 1a is not completed
-        badge_print_text(0, "Calibrate 1a: ", 14, false);
+        badge_print_text(0, (char*)"Calibrate 1a: ", 14, false);
 
         printf("=> Using a single qubit, initialize it to a |-⟩ state. Then print out the state vector hash and submit to compare the calibration.\n");
 
@@ -203,7 +203,7 @@ void calibrate_1()
         // Validate 2f799a918c2578f275e94bc07739c9f8
         if (strcmp(input_hash, "2f799a918c2578f275e94bc07739c9f8") == 0) {
             printf("Correct!\n\n");
-            badge_print_text(0, "Calibrate 1a: O", 15, false);
+            badge_print_text(0, (char*)"Calibrate 1a: O", 15, false);
             calib_data.calib[0] = 1;
             strncpy(calib_data.hashes[0], input_hash, 5);
             calib_data.hashes[0][5] = '\0';
@@ -215,7 +215,7 @@ void calibrate_1()
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
-            badge_print_text(0, "Calibrate 1a: X", 15, false);
+            badge_print_text(0, (char*)"Calibrate 1a: X", 15, false);
             if (leds_on) {
                 update_leds();
             }
@@ -224,14 +224,14 @@ void calibrate_1()
         }
     } else {
         printf("Previously Correct Calibration 1a Detected!\n\n");
-        badge_print_text(0, "Calibrate 1a: O", 15, false);
+        badge_print_text(0, (char*)"Calibrate 1a: O", 15, false);
     }
 
     if(calib_data.calib[1] != 1)
     {   
         printf("=> Using two qubits, initialize each into a superposition state |+⟩. This will put the two qubits into a superposition of all possible measurements. Once done print out the state vector hash and submit to compare the calibration.\n");
 
-        badge_print_text(1, "Calibrate 1b: ", 14, false);
+        badge_print_text(1, (char*)"Calibrate 1b: ", 14, false);
         input_hash = linenoise("Input Calibrate 1b hash: ");
         if (input_hash == nullptr) {
             printf("Error: Unable to read input\n");
@@ -240,7 +240,7 @@ void calibrate_1()
         // Validate 2d5822b91586a076bb43686a7b56e893
         if (strcmp(input_hash, "2d5822b91586a076bb43686a7b56e893") == 0) {
             printf("Correct!\n\n");
-            badge_print_text(1, "Calibrate 1b: O", 15, false);
+            badge_print_text(1, (char*)"Calibrate 1b: O", 15, false);
             calib_data.calib[1] = 1;
             strncpy(calib_data.hashes[1], input_hash, 5);
             calib_data.hashes[1][5] = '\0';
@@ -252,7 +252,7 @@ void calibrate_1()
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
-            badge_print_text(1, "Calibrate 1b: X", 15, false);        
+            badge_print_text(1, (char*)"Calibrate 1b: X", 15, false);        
             if (leds_on) {
                 update_leds();
             }
@@ -261,7 +261,7 @@ void calibrate_1()
         }
     } else {
         printf("Previously Correct Calibration 1b Detected!\n\n");
-        badge_print_text(1, "Calibrate 1b: O", 15, false);
+        badge_print_text(1, (char*)"Calibrate 1b: O", 15, false);
     }
 
     if(calib_data.calib[2] != 1)
@@ -269,7 +269,7 @@ void calibrate_1()
 
         printf("=> Using three qubits, initialize qubit 0 and 2 to a |-⟩ state, while qubit 1 should be initialized to a |+⟩ state. Once done print out the state vector hash and submit to compare the calibration.\n");
         
-        badge_print_text(2, "Calibrate 1c: ", 14, false);
+        badge_print_text(2, (char*)"Calibrate 1c: ", 14, false);
         input_hash = linenoise("Input Calibrate 1c hash: ");
         if (input_hash == nullptr) {
             printf("Error: Unable to read input\n");
@@ -278,7 +278,7 @@ void calibrate_1()
         // Validate 0b374d293a6cbbc07cc52cec3b1419a5
         if (strcmp(input_hash, "0b374d293a6cbbc07cc52cec3b1419a5") == 0) {
             printf("Correct!\n\n");
-            badge_print_text(2, "Calibrate 1c: O", 15, false);
+            badge_print_text(2, (char*)"Calibrate 1c: O", 15, false);
             calib_data.calib[2] = 1;
             strncpy(calib_data.hashes[2], input_hash, 5);
             calib_data.hashes[2][5] = '\0';
@@ -290,7 +290,7 @@ void calibrate_1()
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
-            badge_print_text(2, "Calibrate 1c: X", 15, false);
+            badge_print_text(2, (char*)"Calibrate 1c: X", 15, false);
             if (leds_on) {
                 update_leds();
             }
@@ -299,7 +299,7 @@ void calibrate_1()
         }
     } else {
         printf("Previously Correct Calibration 1c Detected!\n\n");
-        badge_print_text(2, "Calibrate 1c: O", 15, false);
+        badge_print_text(2, (char*)"Calibrate 1c: O", 15, false);
     }
 
     // Obfuscated version of "FLAG"
@@ -343,7 +343,7 @@ void calibrate_2()
     if(calib_data.calib[3] != 1)
     {
         //If 2a is not completed
-        badge_print_text(0, "Calibrate 2a: ", 14, false);
+        badge_print_text(0, (char*)"Calibrate 2a: ", 14, false);
 
         printf("=> Using two qubits, create a Bell Pair. Once done print out the state vector hash and submit to compare the calibration.\n");
         
@@ -355,7 +355,7 @@ void calibrate_2()
         // Validate a253ff07533701a5749286e71c111451
         if (strcmp(input_hash, "a253ff07533701a5749286e71c111451") == 0) {
             printf("Correct!\n\n");
-            badge_print_text(0, "Calibrate 2a: O", 15, false);
+            badge_print_text(0, (char*)"Calibrate 2a: O", 15, false);
             calib_data.calib[3] = 1;
             strncpy(calib_data.hashes[3], input_hash, 5);
             calib_data.hashes[3][5] = '\0';
@@ -367,7 +367,7 @@ void calibrate_2()
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
-            badge_print_text(0, "Calibrate 2a: X", 15, false);
+            badge_print_text(0, (char*)"Calibrate 2a: X", 15, false);
             if (leds_on) {
                 update_leds();
             }
@@ -376,7 +376,7 @@ void calibrate_2()
         }
     } else {
         printf("Previously Correct Calibration 2a Detected!\n\n");
-        badge_print_text(0, "Calibrate 2a: O", 15, false);
+        badge_print_text(0, (char*)"Calibrate 2a: O", 15, false);
     }
 
     if(calib_data.calib[4] != 1)
@@ -384,7 +384,7 @@ void calibrate_2()
 
         printf("=> Using three qubits, create a three-qubit GHZ (Greenberger-Horne-Zeilinger) state. Once done print out the state vector hash and submit to compare the calibration.\n");
 
-        badge_print_text(1, "Calibrate 2b: ", 14, false);
+        badge_print_text(1, (char*)"Calibrate 2b: ", 14, false);
         input_hash = linenoise("Input Calibrate 2b hash: ");
         if (input_hash == nullptr) {
             printf("Error: Unable to read input\n");
@@ -393,7 +393,7 @@ void calibrate_2()
         // Validate ad5f29aebd7b59d71fdedaf48c85ea6b
         if (strcmp(input_hash, "ad5f29aebd7b59d71fdedaf48c85ea6b") == 0) {
             printf("Correct!\n\n");
-            badge_print_text(1, "Calibrate 2b: O", 15, false);
+            badge_print_text(1, (char*)"Calibrate 2b: O", 15, false);
             calib_data.calib[4] = 1;
             strncpy(calib_data.hashes[4], input_hash, 5);
             calib_data.hashes[4][5] = '\0';
@@ -405,7 +405,7 @@ void calibrate_2()
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
-            badge_print_text(1, "Calibrate 2b: X", 15, false);        
+            badge_print_text(1, (char*)"Calibrate 2b: X", 15, false);        
             if (leds_on) {
                 update_leds();
             }
@@ -414,7 +414,7 @@ void calibrate_2()
         }
     } else {
         printf("Previously Correct Calibration 2b Detected!\n\n");
-        badge_print_text(1, "Calibrate 2b: O", 15, false);
+        badge_print_text(1, (char*)"Calibrate 2b: O", 15, false);
     }
 
     if(calib_data.calib[5] != 1)
@@ -422,7 +422,7 @@ void calibrate_2()
 
         printf("=> Using three qubits, create a Cluster State that has the provided state vector. There are multiple ways to accomplish this. Once done print out the state vector hash and submit to compare the calibration.\n");
 
-        badge_print_text(2, "Calibrate 2c: ", 14, false);
+        badge_print_text(2, (char*)"Calibrate 2c: ", 14, false);
         input_hash = linenoise("Input Calibrate 2c hash: ");
         if (input_hash == nullptr) {
             printf("Error: Unable to read input\n");
@@ -431,7 +431,7 @@ void calibrate_2()
         // Validate 354f15b993224f5ff5592b6e6715365f
         if (strcmp(input_hash, "354f15b993224f5ff5592b6e6715365f") == 0) {
             printf("Correct!\n\n");
-            badge_print_text(2, "Calibrate 2c: O", 15, false);
+            badge_print_text(2, (char*)"Calibrate 2c: O", 15, false);
             calib_data.calib[5] = 1;
             strncpy(calib_data.hashes[5], input_hash, 5);
             calib_data.hashes[5][5] = '\0';
@@ -443,7 +443,7 @@ void calibrate_2()
             linenoiseFree(input_hash);
         } else {
             printf("Error: Invalid input. Please provide the correct hash.\n");
-            badge_print_text(2, "Calibrate 2c: X", 15, false);
+            badge_print_text(2, (char*)"Calibrate 2c: X", 15, false);
             if (leds_on) {
                 update_leds();
             }
@@ -452,7 +452,7 @@ void calibrate_2()
         }
     } else {
         printf("Previously Correct Calibration 2c Detected!\n\n");
-        badge_print_text(2, "Calibrate 2c: O", 15, false);
+        badge_print_text(2, (char*)"Calibrate 2c: O", 15, false);
     }
 
     // Obfuscated version of "FLAG"

@@ -392,7 +392,7 @@ static void qkd_init(void)
     //and specifically have to run through at least a single iteration of shuffle
     //This assumes a key around ~64 bits, and QBER of 10%, so need to flip 6-7 bits
     
-    int keysize = strlen((char *)noisy_shared_key2) - 1;
+    //int keysize = strlen((char *)noisy_shared_key2) - 1;
 
     //Iterate through specific indexes to be modified/flipped
     // Indexes: block 1: 5,6
@@ -417,7 +417,7 @@ static void qkd_init(void)
     update_qkdnvs();
 
     badge_ssd1306_clear();
-    badge_print_text(1, "Quantumly Linked", 16, false);
+    badge_print_text(1, (char*)"Quantumly Linked", 16, false);
 
     printf("\nYour badge has now been quantumly linked!\n");
     printf("To decrypt the first flag, run 'qkd decrypt'\n");
@@ -884,10 +884,10 @@ int cmd_qkd_init(int argc, char **argv)
         bus_init();
 
         badge_ssd1306_clear();
-        badge_print_text(0, " Init QKD Flow", 14, false);
-        badge_print_text(1, "  ------------  ", 16, false);
-        badge_print_text(2, "Plug in dock and", 16, false);
-        badge_print_text(3, "press A to start", 16, false);
+        badge_print_text(0, (char*)" Init QKD Flow", 14, false);
+        badge_print_text(1, (char*)"  ------------  ", 16, false);
+        badge_print_text(2, (char*)"Plug in dock and", 16, false);
+        badge_print_text(3, (char*)"press A to start", 16, false);
 
         qkd_init();
     }
