@@ -24,11 +24,6 @@ CalibrationData default_calib_data = {
 bool leds_on = true;
 
 void print_nvs_blob() {
-    // Define the structure for calibration data
-    //typedef struct {
-    //    uint8_t calib[6];       // Calibration integers (0 or 1)
-    //    char hashes[6][6];      // Corresponding hashes (5 chars + null terminator)
-    //} CalibrationData;
 
     CalibrationData calib_data; // Temporary variable to hold the NVS data
     size_t required_size = sizeof(CalibrationData);
@@ -496,13 +491,11 @@ int cmd_calibrate(int argc, char **argv) {
             printf("Calibration data reset to defaults.\n");
             get_nvs();
             update_leds();
-            esp_log_level_set("gpio", ESP_LOG_INFO);
             return 0;
         }
 
         if (strcmp(argv[1], "toggle") == 0) {
             toggle_leds();
-            esp_log_level_set("gpio", ESP_LOG_INFO);
             return 0;
         }
 
@@ -514,7 +507,7 @@ int cmd_calibrate(int argc, char **argv) {
             return 0;
         }
 
-        int calibration = std::strtol(argv[1], nullptr, 10);  // Convert string to integer
+        int calibration = strtol(argv[1], nullptr, 10);
 
         if (calibration == 1) {
             calibrate_1();

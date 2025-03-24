@@ -67,18 +67,14 @@ void print_qkdnvs_blob() {
     esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err2 != ESP_OK && err2 != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "CHECKING - Failed to open NVS namespace: %s\n", esp_err_to_name(err2));
-        nvs_close(nvs_handle);
         return;
     } else if (err2 == ESP_ERR_NVS_NOT_FOUND) {
         nvs_close(nvs_handle);
         update_qkdnvs();
         printf("Quantum Data was empty - initialized, you can now re-run list.\n");
-        //Recursive call, then exit
-        //print_qkdnvs_blob();
         return;
     }
-    //nvs_handle_t nvs_handle;
-    //esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
+
     err2 = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data2, &required_size);
     if (err2 == ESP_OK) {
             printf("  quantum_bits: %s\n", qkd_data2.dock_bits);
@@ -126,6 +122,7 @@ void print_qkdnvs_blobnoisy() {
     } else {
         printf("Error reading NVS blob: %s\n", esp_err_to_name(err2));
     }
+    nvs_close(nvs_handle);
 }
 
 void clear_qkdnvs_data() {
