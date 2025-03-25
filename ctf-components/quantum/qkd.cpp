@@ -878,6 +878,8 @@ int cmd_qkd_init(int argc, char **argv)
         //printf("\n--- Init QKD WorkFlow ---\n");
         esp_log_level_set("gpio", ESP_LOG_WARN);
         printf("Starting Quantum Linking with Dock and QKD data exchange...\n");
+        printf("Let the exchange complete before resuming.\n");
+        printf("Alternatively, press the BOOT button to reset and resume normal operations.\n");
         bus_init();
 
         badge_ssd1306_clear();
