@@ -52,7 +52,7 @@ class watcher
     static void *_create_button_handle(unsigned int gpio_number);
     static void _button_handler(void *button_handle, void *context);
 
-    std::array<button_callback_context, 6> _button_callback_contexts = {
+    std::array<button_callback_context, 3> _button_callback_contexts = {
         {{.watcher_instance = this,
           .button_id = nsec::button::id::UP,
           .button_gpio = nsec::board::button::up,
