@@ -144,7 +144,7 @@ uint8_t nr::badge::level() const noexcept
 void nr::badge::on_button_event(nsec::button::id button,
                                 nsec::button::event event) noexcept
 {
-    _logger.info("Button event: button={}, event={}", button, event);
+    _logger.info("Button event: button={}, event={}", (int)button, (int)event);
 
     // Send the received event to the LEDs function.
     _update_leds(button, event);
