@@ -49,20 +49,20 @@ namespace
 {
 constexpr uint16_t config_version_magic = 0xBAD8;
 
-unsigned int social_level_to_health_led_count(unsigned int level)
+unsigned int social_level_to_clearance_led_count(unsigned int level)
 {
-    // Mapping of the social level to the health level
+    // Mapping of the social level to the clearance level
     // - The social level range is 0 to 200.
-    // - The health range is 1 to 16.
-    // - Table field for health mapping is the
+    // - The clearance range is 1 to 6.
+    // - Table field for clearance mapping is the
     //   "Social Level Upper Boundary".
-    const std::array<std::uint8_t, 16> health_mappings = {
-        1, 3, 6, 11, 17, 25, 34, 44, 57, 71, 88, 106, 127, 149, 174, 200};
+    const std::array<std::uint8_t, 16> clearance_mappings = {
+        1, 6, 17, 57, 106, 149};
 
     const auto mapping_it =
-        std::upper_bound(health_mappings.begin(), health_mappings.end(),
+        std::upper_bound(clearance_mappings.begin(), clearance_mappings.end(),
                          std::max<std::uint8_t>(level, 1));
-    return mapping_it - health_mappings.begin();
+    return mapping_it - clearance_mappings.begin();
 }
 } // anonymous namespace
 
