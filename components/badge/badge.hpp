@@ -125,42 +125,6 @@ class badge
         nsec::logging::logger _logger;
     };
 
-    class pairing_completed_animator
-    {
-      public:
-        enum class animation_state : uint8_t {
-            SHOW_PAIRING_RESULT,
-            SHOW_NEW_LEVEL,
-            SHOW_HEALTH,
-            DONE,
-        };
-
-        pairing_completed_animator() : _logger("pairing_completed_animator")
-        {
-        }
-
-        pairing_completed_animator(const pairing_completed_animator &) = delete;
-        pairing_completed_animator(pairing_completed_animator &&) = delete;
-        pairing_completed_animator &
-        operator=(const pairing_completed_animator &) = delete;
-        pairing_completed_animator &
-        operator=(pairing_completed_animator &&) = delete;
-        ~pairing_completed_animator() = default;
-
-        void start(badge &) noexcept;
-        void reset(badge &) noexcept;
-        void tick(badge &, nsec::scheduling::absolute_time_ms current_time_ms);
-
-      private:
-        void _animation_state(badge &, animation_state new_state);
-        animation_state _animation_state() const noexcept;
-
-        animation_state _current_state;
-        uint8_t _state_counter;
-        char current_message[32];
-        nsec::logging::logger _logger;
-    };
-
   private:
 
     class animation_task
@@ -234,7 +198,6 @@ class badge
     // network
     communication::network_handler _network_handler;
     pairing_animator _pairing_animator;
-    pairing_completed_animator _pairing_completed_animator;
 
     nsec::led::strip_animator _strip_animator;
 

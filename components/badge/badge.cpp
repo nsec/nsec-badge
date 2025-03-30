@@ -85,40 +85,6 @@ struct fmt::formatter<nr::badge::network_app_state>
     }
 };
 
-// pairing completed animator animation state formatter
-template <>
-struct fmt::formatter<nr::badge::pairing_completed_animator::animation_state>
-    : fmt::formatter<std::string> {
-    template <typename FormatContext>
-    auto format(
-        nr::badge::pairing_completed_animator::animation_state animation_state,
-        FormatContext &ctx)
-    {
-        string_view name = "unknown";
-        switch (animation_state) {
-        case nr::badge::pairing_completed_animator::animation_state::
-            SHOW_PAIRING_RESULT:
-            name = "SHOW_PAIRING_RESULT";
-            break;
-        case nr::badge::pairing_completed_animator::animation_state::
-            SHOW_NEW_LEVEL:
-            name = "SHOW_NEW_LEVEL";
-            break;
-        case nr::badge::pairing_completed_animator::animation_state::
-            SHOW_HEALTH:
-            name = "SHOW_HEALTH";
-            break;
-        case nr::badge::pairing_completed_animator::animation_state::DONE:
-            name = "DONE";
-            break;
-        default:
-            break;
-        }
-
-        return fmt::formatter<string_view>::format(name, ctx);
-    }
-};
-
 // button event formatter
 template <> struct fmt::formatter<nb::event> : fmt::formatter<std::string> {
     template <typename FormatContext>
@@ -306,7 +272,7 @@ void nr::badge::_set_network_app_state(
 
     //_id_exchanger.reset();
     _pairing_animator.reset();
-    _pairing_completed_animator.reset(*this);
+    //_pairing_completed_animator.reset(*this);
 
     _current_network_app_state = new_state;
     switch (new_state) {
@@ -317,7 +283,7 @@ void nr::badge::_set_network_app_state(
     //    _id_exchanger.start(*this);
         break;
     case network_app_state::ANIMATE_PAIRING_COMPLETED:
-        _pairing_completed_animator.start(*this);
+    //    _pairing_completed_animator.start(*this);
         break;
     case network_app_state::IDLE:
     case network_app_state::UNCONNECTED:
@@ -555,122 +521,11 @@ void nr::badge::tick(ns::absolute_time_ms current_time_ms)
         _pairing_animator.tick(current_time_ms);
         break;
     case network_app_state::ANIMATE_PAIRING_COMPLETED:
-        _pairing_completed_animator.tick(*this, current_time_ms);
+    //    _pairing_completed_animator.tick(*this, current_time_ms);
         break;
     default:
         break;
     }
-}
-
-void nr::badge::pairing_completed_animator::start(nr::badge &badge) noexcept
-{
-    _logger.info("Starting animation");
-
-    badge._timer.period_ms(500);
-    memset(current_message, 0, sizeof(current_message));
-    _animation_state(badge, animation_state::SHOW_PAIRING_RESULT);
-}
-
-void nr::badge::pairing_completed_animator::reset(nr::badge &badge) noexcept
-{
-    _current_state = animation_state::DONE;
-    _state_counter = 0;
-}
-
-void nr::badge::pairing_completed_animator::tick(
-    nr::badge &badge, ns::absolute_time_ms current_time_ms)
-{
-    switch (_animation_state()) {
-    case animation_state::SHOW_PAIRING_RESULT: {
-        if (_state_counter == 0) {
-            // Store the new social level.
-            badge.apply_score_change(badge._badges_discovered_last_exchange);
-	}
-
-        if (_state_counter < 8) {
-            // Keep on showing the pairing result animation.
-            break;
-        }
-
-        std::memset(current_message, 0, sizeof(current_message));
-
-        // Transition to showing the new social level.
-        _animation_state(badge, animation_state::SHOW_NEW_LEVEL);
-        break;
-    }
-    case animation_state::SHOW_NEW_LEVEL:
-        if (_state_counter < 8) {
-            // Keep on showing the new level animation.
-            break;
-        }
-
-        // Transition to showing the new health status
-        _animation_state(badge, animation_state::SHOW_HEALTH);
-        break;
-    case animation_state::SHOW_HEALTH:
-        if (_state_counter < 8) {
-            // Keep on showing the current health.
-            break;
-        }
-
-        // Go back to the idle animation state.
-        _animation_state(badge, animation_state::DONE);
-        break;
-    case animation_state::DONE:
-        _logger.warn("Animator still active after reaching the DONE state");
-        break;
-    }
-
-    _state_counter++;
-}
-
-void nr::badge::pairing_completed_animator::_animation_state(
-    nr::badge &badge,
-    nr::badge::pairing_completed_animator::animation_state new_state)
-{
-    _logger.info("Animation state change: current={}, new={}", _current_state,
-                 new_state);
-    _current_state = new_state;
-    _state_counter = 0;
-
-    switch (new_state) {
-    case nr::badge::pairing_completed_animator::animation_state::
-        SHOW_PAIRING_RESULT:
-        badge._strip_animator.set_pairing_completed_animation(
-            badge._badges_discovered_last_exchange > 0
-                ? nl::strip_animator::pairing_completed_animation_type::
-                      HAPPY_CLOWN_BARF
-                : nl::strip_animator::pairing_completed_animation_type::
-                      NO_NEW_FRIENDS);
-        break;
-    case nr::badge::pairing_completed_animator::animation_state::
-        SHOW_NEW_LEVEL: {
-        badge._strip_animator.set_show_level_animation(
-            badge._badges_discovered_last_exchange > 0
-                ? nl::strip_animator::pairing_completed_animation_type::
-                      HAPPY_CLOWN_BARF
-                : nl::strip_animator::pairing_completed_animation_type::
-                      NO_NEW_FRIENDS,
-            badge._social_level, false);
-        break;
-    }
-    case nr::badge::pairing_completed_animator::animation_state::SHOW_HEALTH: {
-        badge._strip_animator.set_health_meter_bar(
-            social_level_to_health_led_count(badge._social_level));
-        break;
-    }
-    case nr::badge::pairing_completed_animator::animation_state::DONE:
-        badge._set_network_app_state(network_app_state::IDLE);
-        break;
-    default:
-        break;
-    }
-}
-
-nr::badge::pairing_completed_animator::animation_state
-nr::badge::pairing_completed_animator::_animation_state() const noexcept
-{
-    return _current_state;
 }
 
 void nr::badge::clear_leds()
