@@ -11,8 +11,6 @@
 #include "freertos/semphr.h"
 #include <badge-button/watcher.hpp>
 #include <badge-led-strip/strip_animator.hpp>
-#include <badge-network/network_handler.hpp>
-#include "badge-network/network_messages.hpp"
 #include <cstdint>
 #include <utils/logging.hpp>
 #include <badge/id.hpp>
@@ -38,72 +36,9 @@ class badge
     void start();
 
     std::uint8_t level() const noexcept;
-    bool is_connected() const noexcept;
-
-    void on_disconnection() noexcept;
-    void on_pairing_begin() noexcept;
-    void on_pairing_end(nsec::communication::peer_id_t our_peer_id,
-                        uint8_t peer_count) noexcept;
-
     void apply_score_change(uint16_t new_badges_discovered_count) noexcept;
 
-    void tick(nsec::scheduling::absolute_time_ms current_time_ms);
-
-    void clear_leds();
-
-    /*
-     * Once the network layer has established a connection, "on pairing end" is
-     * invoked. This is when the badges start animating the user-visible
-     * "pairing" animations and exchanging IDs.
-     *
-     * When this occurs, the application network layer transitions from
-     * the UNCONNECTED to the ANIMATE_PAIRING state.
-     *
-     * During the ANIMATE_PAIRING state, the "pairing_animator" takes over the
-     * actions of the badge. It drives the progress bar forward and sends
-     * the PAIRING_ANIMATION_PART_1_DONE once it has lit up the top row of LEDs.
-     * It then waits to receive the PAIRING_ANIMATION_PART_2_DONE from its
-     * right-side peer.
-     *
-     * When it receives PAIRING_ANIMATION_PART_2_DONE (or if it is the
-     * right-most peer), it starts animating the bottom row of LEDs. Once the
-     * bottom-row LED animation has completed, it forwards the
-     * PAIRING_ANIMATION_PART_2_DONE message to its left-side peer. It then
-     * enters the EXCHANGING_IDS state.
-     *
-     * In the EXCHANGING_IDS, the network_id_exchanger takes over the control
-     * of the badge. The left-most badge starts the exchange by sending an
-     * ANNOUNCE_BADGE_ID message. This message contains the badge's peer_id (in
-     * the current badge chain) and it's unique ID.
-     *
-     * This message is forwarded to the right by the various badges in the
-     * chain.
-     */
-    enum class network_app_state : uint8_t {
-        UNCONNECTED,
-        EXCHANGING_IDS,
-        ANIMATE_PAIRING,
-        ANIMATE_PAIRING_COMPLETED,
-        IDLE,
-    };
-
   private:
-
-    class animation_task
-        : public nsec::scheduling::periodic_task<animation_task>
-    {
-      public:
-        explicit animation_task();
-        void start()
-        {
-            nsec::scheduling::periodic_task<animation_task>::start();
-        }
-        void tick(nsec::scheduling::absolute_time_ms current_time_ms);
-
-      private:
-        nsec::logging::logger _logger;
-    };
-
     struct eeprom_config {
         uint16_t version_magic;
         uint8_t selected_animation_id;
@@ -126,15 +61,6 @@ class badge
 
     void set_social_level(uint8_t new_level, bool save) noexcept;
 
-    // Handle network events
-    enum class badge_discovered_result : uint8_t { NEW, ALREADY_KNOWN };
-    badge_discovered_result on_badge_discovered(const uint8_t *id) noexcept;
-    void on_badge_discovery_completed() noexcept;
-
-    void _set_network_app_state(network_app_state) noexcept;
-
-    void _set_user_name_scroll_screen() noexcept;
-
     static uint8_t
     _compute_new_social_level(uint8_t current_social_level,
                               uint16_t new_badges_discovered_count) noexcept;
@@ -150,19 +76,11 @@ class badge
     uint8_t _selected_animation = 0;
     uint8_t _idle_press_down_tracking = 0;
 
-    network_app_state _current_network_app_state =
-        network_app_state::UNCONNECTED;
-    unsigned int _badges_discovered_last_exchange = 0;
     bool _is_expecting_factory_reset : 1 = 0;
 
     button::watcher _button_watcher;
 
-    // network
-    communication::network_handler _network_handler;
     nsec::led::strip_animator _strip_animator;
-
-    // animation timer
-    animation_task _timer;
 
     nsec::logging::logger _logger;
 };

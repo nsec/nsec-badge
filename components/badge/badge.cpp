@@ -6,7 +6,6 @@
 
 #include "badge.hpp"
 #include "badge-led-strip/strip_animator.hpp"
-#include "badge-network/network_messages.hpp"
 #include "utils/lock.hpp"
 #include <badge-persistence/badge_store.hpp>
 #include <badge-persistence/config_store.hpp>
@@ -19,71 +18,9 @@
 #include <esp_mac.h>
 
 namespace nr = nsec::runtime;
-namespace nc = nsec::communication;
 namespace nb = nsec::button;
 namespace nl = nsec::led;
-namespace ns = nsec::scheduling;
 namespace nsync = nsec::synchro;
-
-// Wire message type formatter
-template <>
-struct fmt::formatter<nc::message::type> : fmt::formatter<std::string> {
-    template <typename FormatContext>
-    auto format(nc::message::type msg_type, FormatContext &ctx)
-    {
-        string_view name = "unknown";
-        switch (msg_type) {
-        case nc::message::type::ANNOUNCE_BADGE_ID:
-            name = "ANNOUNCE_BADGE_ID";
-            break;
-        case nc::message::type::PAIRING_ANIMATION_PART_1_DONE:
-            name = "PAIRING_ANIMATION_PART_1_DONE";
-            break;
-        case nc::message::type::PAIRING_ANIMATION_PART_2_DONE:
-            name = "PAIRING_ANIMATION_PART_2_DONE";
-            break;
-        case nc::message::type::PAIRING_ANIMATION_DONE:
-            name = "PAIRING_ANIMATION_DONE";
-            break;
-        default:
-            break;
-        }
-
-        return fmt::formatter<string_view>::format(name, ctx);
-    }
-};
-
-// Network app state formatter
-template <>
-struct fmt::formatter<nr::badge::network_app_state>
-    : fmt::formatter<std::string> {
-    template <typename FormatContext>
-    auto format(nr::badge::network_app_state app_state, FormatContext &ctx)
-    {
-        string_view name = "unknown";
-        switch (app_state) {
-        case nr::badge::network_app_state::UNCONNECTED:
-            name = "UNCONNECTED";
-            break;
-        case nr::badge::network_app_state::EXCHANGING_IDS:
-            name = "EXCHANGING_IDS";
-            break;
-        case nr::badge::network_app_state::ANIMATE_PAIRING:
-            name = "ANIMATE_PAIRING";
-            break;
-        case nr::badge::network_app_state::ANIMATE_PAIRING_COMPLETED:
-            name = "ANIMATE_PAIRING_COMPLETED";
-            break;
-        case nr::badge::network_app_state::IDLE:
-            name = "IDLE";
-            break;
-        default:
-            break;
-        }
-
-        return fmt::formatter<string_view>::format(name, ctx);
-    }
-};
 
 // button event formatter
 template <> struct fmt::formatter<nb::event> : fmt::formatter<std::string> {
@@ -131,17 +68,15 @@ nr::badge::badge()
     : _button_watcher([](nsec::button::id id, nsec::button::event event) {
           nsec::g::the_badge->on_button_event(id, event);
       }),
-      _network_handler(), _logger("badge")
+      _logger("badge")
 {
     _setup();
     _public_access_semaphore = xSemaphoreCreateMutex();
-    _set_network_app_state(network_app_state::UNCONNECTED);
 }
 
 void nr::badge::start()
 {
     _strip_animator.start();
-    _timer.start();
 }
 
 void nr::badge::load_config()
@@ -206,23 +141,10 @@ uint8_t nr::badge::level() const noexcept
     return _social_level;
 }
 
-bool nr::badge::is_connected() const noexcept
-{
-    nsync::lock_guard lock(_public_access_semaphore);
-    return _current_network_app_state != network_app_state::UNCONNECTED;
-}
-
 void nr::badge::on_button_event(nsec::button::id button,
                                 nsec::button::event event) noexcept
 {
     _logger.info("Button event: button={}, event={}", button, event);
-
-    if (_current_network_app_state != network_app_state::UNCONNECTED &&
-        _current_network_app_state != network_app_state::IDLE) {
-        // Don't allow button press during "modal" states.
-        _logger.debug("Ignoring button press during modal animation");
-        return;
-    }
 
     // Send the received event to the LEDs function.
     _update_leds(button, event);
@@ -237,120 +159,6 @@ void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
     if (save) {
         save_config();
     }
-}
-
-void nr::badge::on_disconnection() noexcept
-{
-    nsync::lock_guard lock(_public_access_semaphore);
-    _logger.info("Badge network disconnected");
-    _set_network_app_state(network_app_state::UNCONNECTED);
-}
-
-void nr::badge::on_pairing_begin() noexcept
-{
-    nsync::lock_guard lock(_public_access_semaphore);
-    _logger.info("Network layer pairing begin event");
-}
-
-void nr::badge::on_pairing_end(nc::peer_id_t our_peer_id,
-                               uint8_t peer_count) noexcept
-{
-    // The network is up: the application layer takes over to perform the
-    // pairing animations.
-    nsync::lock_guard lock(_public_access_semaphore);
-
-//    _logger.info("Network layer pairing end event: peer_id={}, peer_count={}",
-//                 _network_handler.peer_id(), peer_count);
-    _set_network_app_state(network_app_state::ANIMATE_PAIRING);
-}
-
-void nr::badge::_set_network_app_state(
-    nr::badge::network_app_state new_state) noexcept
-{
-    _logger.info("Network application state changed: previous={}, new={}",
-                 _current_network_app_state, new_state);
-
-    //_id_exchanger.reset();
-    //_pairing_animator.reset();
-    //_pairing_completed_animator.reset(*this);
-
-    _current_network_app_state = new_state;
-    switch (new_state) {
-    case network_app_state::ANIMATE_PAIRING:
-    //    _pairing_animator.start(*this);
-        break;
-    case network_app_state::EXCHANGING_IDS:
-    //    _id_exchanger.start(*this);
-        break;
-    case network_app_state::ANIMATE_PAIRING_COMPLETED:
-    //    _pairing_completed_animator.start(*this);
-        break;
-    case network_app_state::IDLE:
-    case network_app_state::UNCONNECTED:
-        _strip_animator.set_idle_animation(_selected_animation);
-        break;
-    }
-}
-
-nr::badge::badge_discovered_result
-nr::badge::on_badge_discovered(const uint8_t *id) noexcept
-{
-    nsync::lock_guard lock(_public_access_semaphore);
-
-    nsec::runtime::badge_unique_id new_id;
-    std::memcpy(new_id.data(), id, new_id.size());
-
-    _logger.info("Badge discovered event: badge_id={}", new_id);
-
-    nsec::persistence::badge_store badge_store;
-
-    for (const auto stored_id : badge_store) {
-        if (stored_id == new_id) {
-            return badge_discovered_result::ALREADY_KNOWN;
-        }
-    }
-
-    badge_store.save_id(new_id);
-    return badge_discovered_result::NEW;
-}
-
-void nr::badge::on_badge_discovery_completed() noexcept
-{
-    nsync::lock_guard lock(_public_access_semaphore);
-
-    _logger.info("Badge discovery completed");
-    //_badges_discovered_last_exchange = _id_exchanger.new_badges_discovered();
-    _set_network_app_state(network_app_state::ANIMATE_PAIRING_COMPLETED);
-}
-nr::badge::animation_task::animation_task()
-    : periodic_task(250), _logger("Animation task")
-{
-    _logger.info("Starting task");
-}
-
-void nr::badge::animation_task::tick(ns::absolute_time_ms current_time_ms)
-{
-    nsec::g::the_badge->tick(current_time_ms);
-}
-
-void nr::badge::tick(ns::absolute_time_ms current_time_ms)
-{
-    switch (_current_network_app_state) {
-    case network_app_state::ANIMATE_PAIRING:
-    //    _pairing_animator.tick(current_time_ms);
-        break;
-    case network_app_state::ANIMATE_PAIRING_COMPLETED:
-    //    _pairing_completed_animator.tick(*this, current_time_ms);
-        break;
-    default:
-        break;
-    }
-}
-
-void nr::badge::clear_leds()
-{
-    nsync::lock_guard lock(_public_access_semaphore);
-    _strip_animator.set_blank_animation();
 }
 
 void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcept
