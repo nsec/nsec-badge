@@ -249,19 +249,10 @@ void nr::badge::_update_leds(nsec::button::id id,
         break;
     case nsec::button::id::DOWN:
         if (_idle_press_down_tracking == 0) {
-            // Display the Health level on the LEDs.
-            _strip_animator.set_health_meter_bar(
-                social_level_to_health_led_count(_social_level));
-
             // Reset press down tracking.
             _idle_press_down_tracking = 1;
         } else {
             // Display the social level on the LEDs.
-            _strip_animator.set_show_level_animation(
-                nsec::led::strip_animator::pairing_completed_animation_type::
-                    IDLE_SOCIAL_LEVEL,
-                level(), false);
-
             // Setup next entry.
             _idle_press_down_tracking = 0;
         }
