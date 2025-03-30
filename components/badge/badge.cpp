@@ -170,13 +170,11 @@ nr::badge::badge()
     _setup();
     _public_access_semaphore = xSemaphoreCreateMutex();
     _set_network_app_state(network_app_state::UNCONNECTED);
-//    _id_exchanger.reset();
 }
 
 void nr::badge::start()
 {
     _strip_animator.start();
-//    _network_handler.start();
     _timer.start();
 }
 
@@ -300,55 +298,6 @@ void nr::badge::on_pairing_end(nc::peer_id_t our_peer_id,
     _set_network_app_state(network_app_state::ANIMATE_PAIRING);
 }
 
-#if 0
-nc::network_handler::application_message_action
-nr::badge::on_message_received(communication::message::type message_type,
-                               const uint8_t *message) noexcept
-{
-    // Don't acquire the public access lock since the handlers will actually
-    // call into the badge. This function simply forward the message to them
-    // so there is nothing to protect.
-    _logger.debug("Received message: type={}", message_type);
-
-    if (message_type == communication::message::type::ANNOUNCE_BADGE_ID) {
-        if (_current_network_app_state != network_app_state::EXCHANGING_IDS) {
-            _logger.info("Forcing app state to EXCHANGING_IDS");
-            _set_network_app_state(network_app_state::EXCHANGING_IDS);
-        }
-    }
-
-    if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
-        _id_exchanger.new_message(*this, message_type, message);
-    } else if (_current_network_app_state ==
-               network_app_state::ANIMATE_PAIRING) {
-        _pairing_animator.new_message(*this, message_type, message);
-    } else {
-        _logger.error(
-            "Unexpected message received: app_state={}, message_type={}",
-            _current_network_app_state, message_type);
-    }
-
-    return nc::network_handler::application_message_action::OK;
-}
-#endif
-
-#if 0
-void nr::badge::on_app_message_sent() noexcept
-{
-    // Taking the badge public access semaphore is not necessary here; this
-    // function merely forwards the event to the current focused handler.
-    // That handler, in turn, may use public entry points of the badge which
-    // will acquire the lock.
-
-    _logger.info("Message sent notification: network_app_state={}",
-                 _current_network_app_state);
-
-    if (_current_network_app_state == network_app_state::EXCHANGING_IDS) {
-        _id_exchanger.message_sent(*this);
-    }
-}
-#endif
-
 void nr::badge::_set_network_app_state(
     nr::badge::network_app_state new_state) noexcept
 {
@@ -407,137 +356,6 @@ void nr::badge::on_badge_discovery_completed() noexcept
     //_badges_discovered_last_exchange = _id_exchanger.new_badges_discovered();
     _set_network_app_state(network_app_state::ANIMATE_PAIRING_COMPLETED);
 }
-
-#if 0
-void nr::badge::network_id_exchanger::start(nr::badge &badge) noexcept
-{
-    _logger.info("Starting");
-
-    const auto our_id = badge._network_handler.peer_id();
-
-    if (our_id != 0) {
-        // Wait for messages from left neighbors.
-        return;
-    }
-
-    _logger.info("Queueing up the send of our badge id after the transmission "
-                 "of the last queued message");
-    _send_ours_on_next_send_complete = true;
-    return;
-}
-
-void nr::badge::network_id_exchanger::new_message(
-    nr::badge &badge, nc::message::type msg_type,
-    const uint8_t *payload) noexcept
-{
-    if (msg_type != nc::message::type::ANNOUNCE_BADGE_ID) {
-        _logger.debug("Ignoring message: type={}", msg_type);
-        return;
-    }
-
-    _logger.info("Handling ANNOUNCE_BADGE_ID message in "
-                 "network_id_exchanger::new_message");
-    const auto *announce_badge_id =
-        reinterpret_cast<const nc::message::announce_badge_id *>(payload);
-
-    if (badge.on_badge_discovered(announce_badge_id->board_unique_id) ==
-        badge_discovered_result::NEW) {
-        _new_badges_discovered++;
-    }
-
-    _message_received_count++;
-
-    const auto our_position = badge._network_handler.position();
-    const auto our_peer_id = badge._network_handler.peer_id();
-    const auto msg_origin_peer_id = announce_badge_id->peer_id;
-    const auto peer_count = badge._network_handler.peer_count();
-
-    switch (our_position) {
-    case nc::network_handler::link_position::LEFT_MOST:
-        if (_message_received_count == peer_count - 1) {
-            // Done!
-            badge.on_badge_discovery_completed();
-        }
-
-        break;
-    case nc::network_handler::link_position::RIGHT_MOST:
-        if (_message_received_count == peer_count - 1) {
-            const auto badge_id = badge._get_unique_id();
-
-            nc::message::announce_badge_id msg = {
-                .peer_id = badge._network_handler.peer_id(),
-                .board_unique_id = {badge_id[0], badge_id[1], badge_id[2],
-                                    badge_id[3], badge_id[4], badge_id[5]}};
-
-            _logger.debug("Enqueueing message: type={}",
-                          nc::message::type::ANNOUNCE_BADGE_ID);
-            badge._network_handler.enqueue_app_message(
-                nc::peer_relative_position::LEFT,
-                uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
-                reinterpret_cast<const uint8_t *>(&msg));
-
-            badge.on_badge_discovery_completed();
-        }
-
-        break;
-    case nc::network_handler::link_position::MIDDLE: {
-        if (abs(our_peer_id - msg_origin_peer_id) == 1) {
-            _send_ours_on_next_send_complete = true;
-            _done_after_sending_ours = msg_origin_peer_id > our_peer_id;
-            _direction = msg_origin_peer_id < our_peer_id
-                             ? uint8_t(nc::peer_relative_position::RIGHT)
-                             : uint8_t(nc::peer_relative_position::LEFT);
-        }
-
-        // Forward messages from other badges.
-        _logger.debug("Forwarding message from other badge: type={}", msg_type);
-        badge._network_handler.enqueue_app_message(
-            msg_origin_peer_id < our_peer_id ? nc::peer_relative_position::RIGHT
-                                             : nc::peer_relative_position::LEFT,
-            uint8_t(msg_type), payload);
-    }
-    default:
-        // Unreachable.
-        return;
-    }
-}
-
-void nr::badge::network_id_exchanger::message_sent(nr::badge &badge) noexcept
-{
-    _logger.debug("Message sent");
-
-    if (!_send_ours_on_next_send_complete) {
-        return;
-    }
-
-    const auto badge_id = badge._get_unique_id();
-    nc::message::announce_badge_id msg = {
-        .peer_id = badge._network_handler.peer_id(),
-        .board_unique_id = {badge_id[0], badge_id[1], badge_id[2], badge_id[3],
-                            badge_id[4], badge_id[5]}};
-
-    _logger.debug("Enqueueing message: type={}",
-                  nc::message::type::ANNOUNCE_BADGE_ID);
-    badge._network_handler.enqueue_app_message(
-        nc::peer_relative_position(_direction),
-        uint8_t(nc::message::type::ANNOUNCE_BADGE_ID),
-        reinterpret_cast<const uint8_t *>(&msg));
-
-    _send_ours_on_next_send_complete = false;
-
-    if (_done_after_sending_ours) {
-        badge.on_badge_discovery_completed();
-    }
-}
-
-void nr::badge::network_id_exchanger::reset() noexcept
-{
-    _new_badges_discovered = 0;
-    _message_received_count = 0;
-    _send_ours_on_next_send_complete = false;
-    _done_after_sending_ours = false;
-}
-#endif
 
 nr::badge::pairing_animator::pairing_animator() : _logger("pairing_animator")
 {

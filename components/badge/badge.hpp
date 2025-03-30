@@ -44,10 +44,6 @@ class badge
     void on_pairing_begin() noexcept;
     void on_pairing_end(nsec::communication::peer_id_t our_peer_id,
                         uint8_t peer_count) noexcept;
-//    nsec::communication::network_handler::application_message_action
-//    on_message_received(communication::message::type message_type,
-//                        const uint8_t *message) noexcept;
-//    void on_app_message_sent() noexcept;
 
     void apply_score_change(uint16_t new_badges_discovered_count) noexcept;
 
@@ -166,40 +162,6 @@ class badge
     };
 
   private:
-#if 0
-    class network_id_exchanger
-    {
-      public:
-        network_id_exchanger() : _logger("network_id_exchanger")
-        {
-        }
-
-        network_id_exchanger(const network_id_exchanger &) = delete;
-        network_id_exchanger(network_id_exchanger &&) = delete;
-        network_id_exchanger &operator=(const network_id_exchanger &) = delete;
-        network_id_exchanger &operator=(network_id_exchanger &&) = delete;
-        ~network_id_exchanger() = default;
-
-        void start(badge &) noexcept;
-        void new_message(badge &badge,
-                         nsec::communication::message::type msg_type,
-                         const uint8_t *payload) noexcept;
-        void message_sent(badge &badge) noexcept;
-        void reset() noexcept;
-        uint16_t new_badges_discovered() const noexcept
-        {
-            return _new_badges_discovered;
-        }
-
-      private:
-        uint16_t _new_badges_discovered;
-        uint8_t _message_received_count;
-        bool _send_ours_on_next_send_complete;
-        uint8_t _direction;
-        bool _done_after_sending_ours;
-        nsec::logging::logger _logger;
-    };
-#endif
 
     class animation_task
         : public nsec::scheduling::periodic_task<animation_task>
@@ -271,7 +233,6 @@ class badge
 
     // network
     communication::network_handler _network_handler;
-    //network_id_exchanger _id_exchanger;
     pairing_animator _pairing_animator;
     pairing_completed_animator _pairing_completed_animator;
 
