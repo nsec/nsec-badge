@@ -217,8 +217,7 @@ void nr::badge::_cycle_selected_animation(
     const auto new_selected_animation = std::clamp<int>(
         _selected_animation + int8_t(direction), 0, _social_level);
 
-    _logger.info("Cycling selected animation: direction={}, "
-                 "original_animation_id={}, new_animation_id={}",
+    _logger.info("Cycling animation: direction={}, orig ID={}, new ID={}",
                  direction, original_animation_id, new_selected_animation);
 
     _set_selected_animation(new_selected_animation, true, true);
