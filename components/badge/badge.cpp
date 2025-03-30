@@ -6,6 +6,8 @@
 
 #include "badge.hpp"
 #include "badge-led-strip/strip_animator.hpp"
+#include "badge_ssd1306_helper.hpp"
+#include "badge_nsec_logo.h"
 #include "utils/lock.hpp"
 #include <badge-persistence/badge_store.hpp>
 #include <badge-persistence/config_store.hpp>
@@ -174,6 +176,8 @@ void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcep
     // Saves to configuration
     set_social_level(new_social_level, true);
     _set_selected_animation(_social_level, true, false);
+
+    // Update Clearance level.
 }
 
 uint8_t nr::badge::_compute_new_social_level(
@@ -230,33 +234,76 @@ void nr::badge::_cycle_selected_animation(
 void nr::badge::_update_leds(nsec::button::id id,
                              nsec::button::event event) noexcept
 {
-    // Only process "SINGLE_CLICK" events.
-    if (event != nsec::button::event::SINGLE_CLICK) {
-        return;
-    }
-
-    switch (id) {
+    // Verify the event type.
+    if (event == nsec::button::event::SINGLE_CLICK) {
+        // Process "SINGLE_CLICK" events.
+        switch (id) {
         case nsec::button::id::DOWN:
         case nsec::button::id::UP:
-        nsec::g::the_badge->_cycle_selected_animation(
+            nsec::g::the_badge->_cycle_selected_animation(
             id == nsec::button::id::DOWN
-            ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
-            : nsec::runtime::badge::cycle_animation_direction::NEXT);
+                ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
+                : nsec::runtime::badge::cycle_animation_direction::NEXT);
 
-        // Reset press down tracking.
-        _idle_press_down_tracking = 0;
-        break;
-    case nsec::button::id::OK:
-        if (_idle_press_down_tracking == 0) {
-            // Reset press down tracking.
-            _idle_press_down_tracking = 1;
-        } else {
-            // Display the social level on the LEDs.
-            // Setup next entry.
-            _idle_press_down_tracking = 0;
+            // Update current animation value, on LCD, if applicable.
+            _lcd_display_current_animation();
+            break;
+        case nsec::button::id::OK:
+            // Update selected LCD screen to display.
+            _lcd_display_update_current_screen();
+            break;
+        default:
+            break;
         }
-        break;
-    default:
-        break;
+    } else if(event == nsec::button::event::LONG_PRESS) {
+        // Process "LONG_PRESS" events.
+        if (id == nsec::button::id::OK) {
+            // Send master sync IR ready.
+        }
+    }
+}
+
+void nr::badge::_lcd_display_social_level()
+{
+    char lcd_print[17];
+
+    // Display current social level on LCD.
+    sprintf(lcd_print, "Social Level %3u", _social_level);
+    badge_print_text(0, lcd_print, 16, 0);
+}
+
+void nr::badge::_lcd_display_current_animation()
+{
+    char lcd_print[17];
+
+    // Display current animation on LCD (idle screen nb. 1).
+    if( _idle_lcd_screen_nb == 1 ) {
+        sprintf(lcd_print, "Animation    %3u", _selected_animation);
+        badge_print_text(1, lcd_print, 16, 0);
+    }
+}
+
+void nr::badge::_lcd_display_update_current_screen()
+{
+    if (_idle_press_down_tracking == 0) {
+        // Display Idle LCD Screen 0:
+        // * NorthSec logo
+        _idle_lcd_screen_nb = 0;
+        badge_ssd1306_clear();
+        badge_lcd_nsec_logo();
+
+        // Reset press OK tracking.
+        _idle_press_down_tracking = 1;
+    } else {
+        // Display Idle LCD Screen 1:
+        // * Current social level.
+        // * Selected animation.
+        _idle_lcd_screen_nb = 1;
+        badge_ssd1306_clear();
+        _lcd_display_social_level();
+        _lcd_display_current_animation();
+
+       // Setup next entry.
+       _idle_press_down_tracking = 0;
     }
 }

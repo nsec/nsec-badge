@@ -66,6 +66,11 @@ class badge
                               uint16_t new_badges_discovered_count) noexcept;
     void _set_selected_animation(uint8_t animation_id, bool save,
                                  bool set_idle_animation) noexcept;
+
+    void _lcd_display_social_level();
+    void _lcd_display_current_animation();
+    void _lcd_display_update_current_screen();
+
     // Setup hardware.
     void _setup();
 
@@ -74,7 +79,8 @@ class badge
     mutable SemaphoreHandle_t _public_access_semaphore;
     uint8_t _social_level = 0;
     uint8_t _selected_animation = 0;
-    uint8_t _idle_press_down_tracking = 0;
+    uint8_t _idle_press_down_tracking = 1;
+    uint8_t _idle_lcd_screen_nb = 0;
 
     bool _is_expecting_factory_reset : 1 = 0;
 
