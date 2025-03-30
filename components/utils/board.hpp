@@ -37,6 +37,7 @@ namespace neopixel
 {
 constexpr unsigned int ctrl_pin = 8;
 constexpr unsigned int count = 18;
+constexpr unsigned int anim_count = 12;
 } // namespace neopixel
 
 /*
