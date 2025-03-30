@@ -55,7 +55,7 @@ nb::watcher::~watcher()
         const auto ret = iot_button_delete(context.button_handle);
         if (ret != ESP_OK) {
             _logger.error("Failed to delete button handle: id={}",
-                          context.button_id);
+                          (int)context.button_id);
         }
     }
 }
@@ -75,15 +75,15 @@ void nb::watcher::setup()
 
             _logger.debug("Registered callback for button: native_event={}, "
                           "gpio={}, id={}",
-                          monitored_event, btn_context.button_gpio,
-                          btn_context.button_id);
+                          monitored_event, (int)btn_context.button_gpio,
+                          (int)btn_context.button_id);
 
             if (ret != ESP_OK) {
                 NSEC_THROW_ERROR(fmt::format("Failed to register button event"
                                              "callback: button_id={},"
                                              "gpio = {} ",
-                                             btn_context.button_id,
-                                             btn_context.button_gpio));
+                                             (int)btn_context.button_id,
+                                             (int)btn_context.button_gpio));
             }
         }
     }
@@ -120,7 +120,7 @@ void nb::watcher::_button_handler(void *button_handle, void *opaque_context)
     const auto native_event = iot_button_get_event(context->button_handle);
 
     context->watcher_instance->_logger.info(
-        "Button handler called: button_id={}, native_event={}", id,
+        "Button handler called: button_id={}, native_event={}", (int)id,
         native_event);
 
     // Convert ESP-IDF button event into our native events.
@@ -135,7 +135,7 @@ void nb::watcher::_button_handler(void *button_handle, void *opaque_context)
     default:
         NSEC_THROW_ERROR(fmt::format("Unexpected native button event type: "
                                      "button_id={}, event_type={}",
-                                     id, native_event));
+                                     (int)id, native_event));
     }
 
     // Notify the badge of a new button event.
