@@ -68,7 +68,7 @@ nr::badge::badge()
     : _button_watcher([](nsec::button::id id, nsec::button::event event) {
           nsec::g::the_badge->on_button_event(id, event);
       }),
-      _logger("badge")
+      _logger("badge", nsec::config::logging::badge_level)
 {
     _setup();
     _public_access_semaphore = xSemaphoreCreateMutex();
