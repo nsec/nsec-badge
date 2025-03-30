@@ -236,17 +236,17 @@ void nr::badge::_update_leds(nsec::button::id id,
     }
 
     switch (id) {
-    case nsec::button::id::LEFT:
-    case nsec::button::id::RIGHT:
+        case nsec::button::id::DOWN:
+        case nsec::button::id::UP:
         nsec::g::the_badge->_cycle_selected_animation(
-        id == nsec::button::id::LEFT
+            id == nsec::button::id::DOWN
             ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
             : nsec::runtime::badge::cycle_animation_direction::NEXT);
 
         // Reset press down tracking.
         _idle_press_down_tracking = 0;
         break;
-    case nsec::button::id::DOWN:
+    case nsec::button::id::OK:
         if (_idle_press_down_tracking == 0) {
             // Reset press down tracking.
             _idle_press_down_tracking = 1;
