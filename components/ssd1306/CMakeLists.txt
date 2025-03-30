@@ -5,7 +5,7 @@
 set(CONFIG_NSEC_BUILD_CONFERENCE $ENV{CONFIG_NSEC_BUILD_CONFERENCE} CACHE INTERNAL "")
 set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 
-set(component_srcs "ssd1306.c" "ssd1306_spi.c" "badge_ssd1306_helper.cpp")
+set(component_srcs "ssd1306.c" "ssd1306_spi.c" "badge_ssd1306_helper.cpp" "badge_nsec_logo.cpp")
 
 # get IDF version for comparison
 set(idf_version "${IDF_VERSION_MAJOR}.${IDF_VERSION_MINOR}")
