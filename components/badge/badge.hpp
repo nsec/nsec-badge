@@ -87,44 +87,6 @@ class badge
         IDLE,
     };
 
-    class pairing_animator
-    {
-      public:
-        enum class animation_state : uint8_t {
-            WAIT_MESSAGE_ANIMATION_PART_1,
-            LIGHT_UP_UPPER_BAR,
-            LIGHT_UP_LOWER_BAR,
-            WAIT_MESSAGE_ANIMATION_PART_2,
-            WAIT_DONE,
-            DONE,
-        };
-
-        pairing_animator();
-
-        pairing_animator(const pairing_animator &) = delete;
-        pairing_animator(pairing_animator &&) = delete;
-        pairing_animator &operator=(const pairing_animator &) = delete;
-        pairing_animator &operator=(pairing_animator &&) = delete;
-        ~pairing_animator() = default;
-
-        void start(badge &) noexcept;
-        void new_message(badge &badge,
-                         nsec::communication::message::type msg_type,
-                         const uint8_t *payload) noexcept;
-        void message_sent(badge &badge) noexcept;
-        void reset() noexcept;
-
-        void tick(nsec::scheduling::absolute_time_ms current_time_ms);
-
-      private:
-        void _animation_state(animation_state) noexcept;
-        animation_state _animation_state() const noexcept;
-
-        animation_state _current_state;
-        uint8_t _state_counter;
-        nsec::logging::logger _logger;
-    };
-
   private:
 
     class animation_task
@@ -197,8 +159,6 @@ class badge
 
     // network
     communication::network_handler _network_handler;
-    pairing_animator _pairing_animator;
-
     nsec::led::strip_animator _strip_animator;
 
     // animation timer

@@ -271,13 +271,13 @@ void nr::badge::_set_network_app_state(
                  _current_network_app_state, new_state);
 
     //_id_exchanger.reset();
-    _pairing_animator.reset();
+    //_pairing_animator.reset();
     //_pairing_completed_animator.reset(*this);
 
     _current_network_app_state = new_state;
     switch (new_state) {
     case network_app_state::ANIMATE_PAIRING:
-        _pairing_animator.start(*this);
+    //    _pairing_animator.start(*this);
         break;
     case network_app_state::EXCHANGING_IDS:
     //    _id_exchanger.start(*this);
@@ -322,88 +322,6 @@ void nr::badge::on_badge_discovery_completed() noexcept
     //_badges_discovered_last_exchange = _id_exchanger.new_badges_discovered();
     _set_network_app_state(network_app_state::ANIMATE_PAIRING_COMPLETED);
 }
-
-nr::badge::pairing_animator::pairing_animator() : _logger("pairing_animator")
-{
-    _animation_state(animation_state::DONE);
-}
-
-// Animation state formatter
-template <>
-struct fmt::formatter<nr::badge::pairing_animator::animation_state>
-    : fmt::formatter<std::string> {
-    template <typename FormatContext>
-    auto format(nr::badge::pairing_animator::animation_state animation_state,
-                FormatContext &ctx)
-    {
-        string_view name = "unknown";
-        switch (animation_state) {
-        case nr::badge::pairing_animator::animation_state::
-            WAIT_MESSAGE_ANIMATION_PART_1:
-            name = "WAIT_MESSAGE_ANIMATION_PART_1";
-            break;
-        case nr::badge::pairing_animator::animation_state::LIGHT_UP_UPPER_BAR:
-            name = "LIGHT_UP_UPPER_BAR";
-            break;
-        case nr::badge::pairing_animator::animation_state::LIGHT_UP_LOWER_BAR:
-            name = "LIGHT_UP_LOWER_BAR";
-            break;
-        case nr::badge::pairing_animator::animation_state::
-            WAIT_MESSAGE_ANIMATION_PART_2:
-            name = "WAIT_MESSAGE_ANIMATION_PART_2";
-            break;
-        case nr::badge::pairing_animator::animation_state::WAIT_DONE:
-            name = "WAIT_DONE";
-            break;
-        case nr::badge::pairing_animator::animation_state::DONE:
-            name = "DONE";
-            break;
-        default:
-            break;
-        }
-
-        return fmt::formatter<string_view>::format(name, ctx);
-    }
-};
-
-void nr::badge::pairing_animator::_animation_state(
-    animation_state new_state) noexcept
-{
-    _logger.info(
-        "Transitionning animation state: previous_state={}, new_state={}",
-        _current_state, new_state);
-    _current_state = new_state;
-    _state_counter = 0;
-}
-
-nr::badge::pairing_animator::animation_state
-nr::badge::pairing_animator::_animation_state() const noexcept
-{
-    return animation_state(_current_state);
-}
-
-void nr::badge::pairing_animator::start(nr::badge &badge) noexcept
-{
-    _logger.info("Starting animation");
-
-    if (nsec::g::the_badge->_network_handler.position() ==
-        nc::network_handler::link_position::LEFT_MOST) {
-        _animation_state(animation_state::LIGHT_UP_UPPER_BAR);
-    } else {
-        _animation_state(animation_state::WAIT_MESSAGE_ANIMATION_PART_1);
-    }
-
-    badge._timer.period_ms(
-        nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms);
-    nsec::g::the_badge->_strip_animator.set_red_to_green_led_progress_bar(
-        0, false);
-}
-
-void nr::badge::pairing_animator::reset() noexcept
-{
-    _animation_state(animation_state::DONE);
-}
-
 nr::badge::animation_task::animation_task()
     : periodic_task(250), _logger("Animation task")
 {
@@ -415,110 +333,11 @@ void nr::badge::animation_task::tick(ns::absolute_time_ms current_time_ms)
     nsec::g::the_badge->tick(current_time_ms);
 }
 
-void nr::badge::pairing_animator::tick(ns::absolute_time_ms current_time_ms)
-{
-    switch (_animation_state()) {
-    case animation_state::DONE:
-        if (_state_counter < 8 &&
-            nsec::g::the_badge->_network_handler.position() ==
-                nc::network_handler::link_position::LEFT_MOST) {
-            // Left-most badge waits for the neighbor to transition states.
-            _state_counter++;
-        } else {
-            nsec::g::the_badge->_set_network_app_state(
-                nr::badge::network_app_state::EXCHANGING_IDS);
-        }
-        break;
-    case animation_state::WAIT_MESSAGE_ANIMATION_PART_1:
-    case animation_state::WAIT_MESSAGE_ANIMATION_PART_2:
-    case animation_state::WAIT_DONE:
-        break;
-    case animation_state::LIGHT_UP_UPPER_BAR:
-        nsec::g::the_badge->_strip_animator.set_red_to_green_led_progress_bar(
-            _state_counter, false);
-        if (_state_counter < 8) {
-            _state_counter++;
-        } else if (nsec::g::the_badge->_network_handler.position() ==
-                   nc::network_handler::link_position::RIGHT_MOST) {
-            _animation_state(animation_state::LIGHT_UP_LOWER_BAR);
-        } else {
-            _logger.debug("Enqueueing message: type={}",
-                          nc::message::type::PAIRING_ANIMATION_PART_1_DONE);
-//            nsec::g::the_badge->_network_handler.enqueue_app_message(
-//                nc::peer_relative_position::RIGHT,
-//                uint8_t(nc::message::type::PAIRING_ANIMATION_PART_1_DONE),
-//                nullptr);
-            _animation_state(animation_state::WAIT_MESSAGE_ANIMATION_PART_2);
-        }
-
-        break;
-    case animation_state::LIGHT_UP_LOWER_BAR:
-        nsec::g::the_badge->_strip_animator.set_red_to_green_led_progress_bar(
-            _state_counter + 8, true);
-
-        if (_state_counter < 8) {
-            _state_counter++;
-        } else if (nsec::g::the_badge->_network_handler.position() ==
-                   nc::network_handler::link_position::LEFT_MOST) {
-            _logger.debug("Enqueueing message: type={}",
-                          nc::message::type::PAIRING_ANIMATION_DONE);
-
-            nsec::g::the_badge->_set_network_app_state(
-                nr::badge::network_app_state::EXCHANGING_IDS);
-//            nsec::g::the_badge->_network_handler.enqueue_app_message(
-//                nc::peer_relative_position::RIGHT,
-//                uint8_t(nc::message::type::PAIRING_ANIMATION_DONE), nullptr);
-
-            _animation_state(animation_state::DONE);
-        } else {
-            _logger.debug("Enqueueing message: type={}",
-                          nc::message::type::PAIRING_ANIMATION_PART_2_DONE);
-//            nsec::g::the_badge->_network_handler.enqueue_app_message(
-//                nc::peer_relative_position::LEFT,
-//                uint8_t(nc::message::type::PAIRING_ANIMATION_PART_2_DONE),
-//                nullptr);
-            _animation_state(animation_state::WAIT_DONE);
-        }
-
-        break;
-    }
-}
-
-void nr::badge::pairing_animator::new_message(nr::badge &badge,
-                                              nc::message::type msg_type,
-                                              const uint8_t *payload) noexcept
-{
-    switch (msg_type) {
-    case nc::message::type::PAIRING_ANIMATION_PART_1_DONE:
-        _animation_state(animation_state::LIGHT_UP_UPPER_BAR);
-        break;
-    case nc::message::type::PAIRING_ANIMATION_PART_2_DONE:
-        _animation_state(animation_state::LIGHT_UP_LOWER_BAR);
-        break;
-    case nc::message::type::PAIRING_ANIMATION_DONE:
-        if (nsec::g::the_badge->_network_handler.position() !=
-            nc::network_handler::link_position::RIGHT_MOST) {
-            _logger.debug("Enqueueing message: type={}",
-                          nc::message::type::PAIRING_ANIMATION_DONE);
-
-//            nsec::g::the_badge->_network_handler.enqueue_app_message(
-//                nc::peer_relative_position::RIGHT,
-//                uint8_t(nc::message::type::PAIRING_ANIMATION_DONE), nullptr);
-        }
-
-        _animation_state(animation_state::DONE);
-        break;
-    default:
-        _logger.error("Unknown message received by pairing animator");
-        break;
-    }
-}
-
 void nr::badge::tick(ns::absolute_time_ms current_time_ms)
 {
     switch (_current_network_app_state) {
     case network_app_state::ANIMATE_PAIRING:
-        _pairing_animator.tick(current_time_ms);
+    //    _pairing_animator.tick(current_time_ms);
         break;
     case network_app_state::ANIMATE_PAIRING_COMPLETED:
     //    _pairing_completed_animator.tick(*this, current_time_ms);
