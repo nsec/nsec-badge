@@ -79,6 +79,9 @@ nr::badge::badge()
 void nr::badge::start()
 {
     _strip_animator.start();
+
+    // Set initial Clearance level.
+    _led_update_clearance_level();
 }
 
 void nr::badge::load_config()
@@ -178,6 +181,7 @@ void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcep
     _set_selected_animation(_social_level, true, false);
 
     // Update Clearance level.
+    _led_update_clearance_level();
 }
 
 uint8_t nr::badge::_compute_new_social_level(
@@ -260,6 +264,24 @@ void nr::badge::_update_leds(nsec::button::id id,
         if (id == nsec::button::id::OK) {
             // Send master sync IR ready.
         }
+    }
+}
+
+void nr::badge::_led_update_clearance_level()
+{
+    uint8_t new_clearence_level =
+        social_level_to_clearance_led_count(_social_level);
+
+    // Only update clearance level, if there is a change.
+    if( new_clearence_level != _clearance_level) {
+        // Update Clearance level (only if changed).
+        nsec::g::the_badge->_strip_animator
+            .set_clearance_meter_bar(new_clearence_level);
+
+        _logger.info("Clearance level: orig level={}, new level={}",
+                     _clearance_level, new_clearence_level);
+
+        _clearance_level = new_clearence_level;
     }
 }
 
