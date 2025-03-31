@@ -56,7 +56,7 @@ unsigned int social_level_to_clearance_led_count(unsigned int level)
     // - The clearance range is 1 to 6.
     // - Table field for clearance mapping is the
     //   "Social Level Upper Boundary".
-    const std::array<std::uint8_t, 16> clearance_mappings = {
+    const std::array<std::uint8_t, 6> clearance_mappings = {
         1, 6, 17, 57, 106, 149};
 
     const auto mapping_it =
