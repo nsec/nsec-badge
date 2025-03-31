@@ -153,6 +153,11 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
             }
         }
 
+        void setPixelBrightness(std::uint8_t pixel_id, std::uint8_t brightness)
+        {
+            _leds[pixel_id].stretchChannels(brightness, brightness, brightness);
+        }
+
         void setPixelColor(std::uint8_t pixel_id, std::uint8_t r,
                            std::uint8_t g, std::uint8_t b)
         {
