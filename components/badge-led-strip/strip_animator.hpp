@@ -148,8 +148,8 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
 
         void setBrightness(std::uint8_t brightness)
         {
-            for (auto &led : _leds) {
-                led.stretchChannels(brightness, brightness, brightness);
+            for (uint8_t i = 0; i < nsec::board::neopixel::anim_count; i++) {
+                _leds[i].stretchChannels(brightness, brightness, brightness);
             }
         }
 
