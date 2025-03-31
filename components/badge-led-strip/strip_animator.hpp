@@ -42,6 +42,7 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
     void set_red_to_green_led_progress_bar(uint8_t led_count,
                                            bool bottom_row_lighting_up = false);
     void set_health_meter_bar(uint8_t led_count);
+    void set_clearance_meter_bar(uint8_t led_count);
 
     void set_blank_animation();
 

@@ -1120,6 +1120,23 @@ void nl::strip_animator::set_health_meter_bar(uint8_t led_count)
     }
 }
 
+void nl::strip_animator::set_clearance_meter_bar(uint8_t led_count)
+{
+    if ((nsec::board::neopixel::anim_count + led_count) > nsec::board::neopixel::count) {
+        NSEC_THROW_ERROR(
+            fmt::format("Invalid LED count provided to set_clearance_meter_bar: "
+                        "led_count={}, max_allowed_count={}",
+                        led_count, nsec::board::neopixel::count));
+    }
+
+    _logger.info("Setting clearance meter bar animation: led_count={}", led_count);
+
+    for (uint8_t i = 0; i < led_count; i++) {
+            _pixels.setPixelColor(nsec::board::neopixel::anim_count + i, 0x00, 0xFF, 0x00);
+            _pixels.setPixelBrightness(nsec::board::neopixel::anim_count + i, 150);
+    }
+}
+
 void nl::strip_animator::set_blank_animation()
 {
     _reset_keyframed_animation_state();
