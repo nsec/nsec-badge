@@ -781,7 +781,7 @@ void nl::strip_animator::_keyframe_animation_tick(
         break;
     }
 
-    for (unsigned int i = 0; i < nsec::board::neopixel::count; i++) {
+    for (unsigned int i = 0; i < nsec::board::neopixel::anim_count; i++) {
         const bool led_animation_is_active =
             (_config.keyframed.active >> i) & 1;
 
@@ -1016,11 +1016,11 @@ void nl::strip_animator::set_red_to_green_led_progress_bar(
         _current_animation_type == animation_type::KEYFRAMED &&
         _config.keyframed._animation == keyframed_animation::PROGRESS_BAR;
 
-    if (active_led_count > nsec::board::neopixel::count) {
+    if (active_led_count > nsec::board::neopixel::anim_count) {
         NSEC_THROW_ERROR(fmt::format(
             "Invalid LED count provided to set_red_to_green_led_progress_bar: "
             "led_count={}, max_allowed_count={}",
-            active_led_count, nsec::board::neopixel::count));
+            active_led_count, nsec::board::neopixel::anim_count));
     }
 
     _logger.info("Progress bar updated: active_led_count={}", active_led_count);
@@ -1093,11 +1093,11 @@ void nl::strip_animator::set_health_meter_bar(uint8_t led_count)
 {
     period_ms(40);
 
-    if (led_count > nsec::board::neopixel::count) {
+    if (led_count > nsec::board::neopixel::anim_count) {
         NSEC_THROW_ERROR(
             fmt::format("Invalid LED count provided to set_health_meter_bar: "
                         "led_count={}, max_allowed_count={}",
-                        led_count, nsec::board::neopixel::count));
+                        led_count, nsec::board::neopixel::anim_count));
     }
 
     _logger.info("Setting health meter bar animation: led_count={}", led_count);

@@ -100,6 +100,7 @@ namespace nsec::config::logging
 constexpr auto uart_interface_level = nsec::logging::logger::severity::ERROR;
 constexpr auto network_handler_level = nsec::logging::logger::severity::ERROR;
 constexpr auto button_watcher_level = nsec::logging::logger::severity::ERROR;
+constexpr auto badge_level = nsec::logging::logger::severity::ERROR;
 } // namespace nsec::config::logging
 
 namespace nsec::config::persistence
