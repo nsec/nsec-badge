@@ -224,6 +224,9 @@ void nr::badge::apply_new_sponsor(uint8_t sponsor_id) noexcept
 
         // Save to configuration
         set_sponsor_flag(new_sponsor_flag, true);
+
+        // Update LCD, if applicable.
+        _lcd_display_sponsor_count();
     }
 }
 
@@ -348,6 +351,17 @@ void nr::badge::_lcd_display_current_animation()
     }
 }
 
+void nr::badge::_lcd_display_sponsor_count()
+{
+    char lcd_print[17];
+
+    // Display sponsor count on LCD (idle screen nb. 1).
+    if( _idle_lcd_screen_nb == 1 ) {
+        sprintf(lcd_print, "Sponsor      %3u", _sponsor_count);
+        badge_print_text(2, lcd_print, 16, 0);
+    }
+}
+
 void nr::badge::_lcd_display_update_current_screen()
 {
     if (_idle_press_down_tracking == 0) {
@@ -367,6 +381,7 @@ void nr::badge::_lcd_display_update_current_screen()
         badge_ssd1306_clear();
         _lcd_display_social_level();
         _lcd_display_current_animation();
+        _lcd_display_sponsor_count();
 
        // Setup next entry.
        _idle_press_down_tracking = 0;

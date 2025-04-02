@@ -72,6 +72,7 @@ class badge
 
     void _lcd_display_social_level();
     void _lcd_display_current_animation();
+    void _lcd_display_sponsor_count();
     void _lcd_display_update_current_screen();
 
     // Setup hardware.
