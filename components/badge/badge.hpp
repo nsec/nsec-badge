@@ -37,6 +37,7 @@ class badge
 
     std::uint8_t level() const noexcept;
     void apply_score_change(uint16_t new_badges_discovered_count) noexcept;
+    void apply_new_sponsor(uint8_t sponsor_id) noexcept;
 
   private:
     struct eeprom_config {

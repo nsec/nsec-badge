@@ -208,6 +208,25 @@ void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcep
     _led_update_clearance_level();
 }
 
+void nr::badge::apply_new_sponsor(uint8_t sponsor_id) noexcept
+{
+    nsync::lock_guard lock(_public_access_semaphore);
+
+    // Update the sponsor flag with the new ID.
+    uint16_t new_sponsor_flag = _sponsor_flag | (1 << (sponsor_id - 1));
+    _logger.info("New sponsor ID={0}: old_flag=0x{1:04X}, new_flag=0x{2:04X}",
+                 sponsor_id, _sponsor_flag, new_sponsor_flag);
+
+    // If new sponsor detected; increment count
+    if( new_sponsor_flag != _sponsor_flag) {
+        _sponsor_count = _sponsor_count + 1;
+        _logger.info("New sponsor detected: new_count={}", _sponsor_count);
+
+        // Save to configuration
+        set_sponsor_flag(new_sponsor_flag, true);
+    }
+}
+
 uint8_t nr::badge::_compute_new_social_level(
     uint8_t current_social_level, uint16_t new_badges_discovered_count) noexcept
 {
