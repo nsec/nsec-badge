@@ -90,21 +90,35 @@ void nr::badge::load_config()
 
     std::uint8_t social_level = nsec::config::social::initial_level;
     std::uint8_t selected_animation_id = social_level;
-
+    std::uint16_t sponsor_flag = 0;
+    std::uint8_t sponsor_count = 0;
+    
     const auto loaded_config = config_store.load();
     if (loaded_config) {
         social_level = loaded_config->social_level;
         selected_animation_id = loaded_config->selected_animation_id;
+        sponsor_flag = loaded_config->sponsor_flag;
+
+        // Retreive sponsor counts.
+        std::uint16_t tmp_sponsor_flag = sponsor_flag;
+        for (unsigned int i = 0; i < 16; i++) {
+            if ((tmp_sponsor_flag & 0x0001) == 0x0001) {
+                sponsor_count++;
+            }
+            tmp_sponsor_flag = tmp_sponsor_flag >> 1;
+        }
 
         _logger.info(
-            "Found config on storage: social_level={}, selected_animation={}",
-            social_level, selected_animation_id);
+            "Found config on storage: social_level={0}, selected_animation={1}, sponsor_flag={2:04X}",
+            social_level, selected_animation_id, sponsor_flag);
     } else {
         _logger.info("No config found on storage");
     }
 
     set_social_level(social_level, false);
     _set_selected_animation(selected_animation_id, false, true);
+    set_sponsor_flag(sponsor_flag, false);
+    _sponsor_count = sponsor_count;
 }
 
 void nr::badge::save_config() const
@@ -113,6 +127,7 @@ void nr::badge::save_config() const
 
     config_store.save_selected_animation_id(_selected_animation);
     config_store.save_social_level(_social_level);
+    config_store.save_sponsor_flag(_sponsor_flag);
 }
 
 void nr::badge::factory_reset()
@@ -165,6 +180,15 @@ void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
         save_config();
     }
 }
+
+void nr::badge::set_sponsor_flag(uint16_t new_level, bool save) noexcept
+{
+    _sponsor_flag = new_level;
+    if (save) {
+        save_config();
+    }
+}
+
 
 void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcept
 {

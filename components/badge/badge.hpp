@@ -60,6 +60,7 @@ class badge
     void _idle_social_level_and_health(uint8_t state) noexcept;
 
     void set_social_level(uint8_t new_level, bool save) noexcept;
+    void set_sponsor_flag(uint16_t new_level, bool save) noexcept;
 
     static uint8_t
     _compute_new_social_level(uint8_t current_social_level,
@@ -79,6 +80,8 @@ class badge
 
     mutable SemaphoreHandle_t _public_access_semaphore;
     uint8_t _social_level = 0;
+    uint8_t _sponsor_count = 0;
+    uint16_t _sponsor_flag = 0;
     uint8_t _clearance_level = 0;
     uint8_t _selected_animation = 0;
     uint8_t _idle_press_down_tracking = 1;
