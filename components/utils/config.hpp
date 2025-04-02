@@ -108,6 +108,7 @@ namespace nsec::config::persistence
 constexpr auto namespace_name = "badge2024";
 constexpr auto social_level_field_name = "social_lvl";
 constexpr auto selected_animation_field_name = "slctd_anim";
+constexpr auto sponsor_flag_field_name = "sponsor";
 constexpr auto badge_id_field_name_prefix = "b";
 constexpr auto badge_paired_count_field_name = "paired_count";
 } // namespace nsec::config::persistence
