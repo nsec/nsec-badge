@@ -23,6 +23,7 @@ class config_store
     struct config {
         std::uint8_t selected_animation_id;
         std::uint8_t social_level;
+        std::uint16_t sponsor_flag;
     };
 
     explicit config_store() noexcept;
@@ -38,10 +39,12 @@ class config_store
 
     void save_selected_animation_id(std::uint8_t id);
     void save_social_level(std::uint8_t level);
+    void save_sponsor_flag(std::uint16_t flag);
 
   private:
   utils::managed_nvs_handle _open_nvs_handle();
   void _save_u8_field(const char *field_name, std::uint8_t value);
+  void _save_u16_field(const char *field_name, std::uint16_t value);
 
 
     nsec::logging::logger _logger;
