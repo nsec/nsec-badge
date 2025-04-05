@@ -6,8 +6,8 @@
 
 #include "badge.hpp"
 #include "badge-led-strip/strip_animator.hpp"
-#include "badge_ssd1306_helper.hpp"
 #include "badge_nsec_logo.h"
+#include "badge_ssd1306_helper.hpp"
 #include "utils/lock.hpp"
 #include <badge-persistence/badge_store.hpp>
 #include <badge-persistence/config_store.hpp>
@@ -191,8 +191,14 @@ void nr::badge::on_button_event(nsec::button::id button,
 {
     _logger.info("Button event: button={}, event={}", (int)button, (int)event);
 
-    // Send the received event to the LEDs function.
-    _update_leds(button, event);
+    if (event == nsec::button::event::SINGLE_CLICK) {
+        // Send the received event to the LEDs function.
+        _update_leds(button, event);
+    } else if (event == nsec::button::event::LONG_PRESS) {
+        if (button == nsec::button::id::OK) {
+            // Send master sync IR ready.
+        }
+    }
 }
 
 void nr::badge::set_social_level(uint8_t new_level, bool save) noexcept
@@ -312,32 +318,23 @@ void nr::badge::_cycle_selected_animation(
 void nr::badge::_update_leds(nsec::button::id id,
                              nsec::button::event event) noexcept
 {
-    // Verify the event type.
-    if (event == nsec::button::event::SINGLE_CLICK) {
-        // Process "SINGLE_CLICK" events.
-        switch (id) {
-        case nsec::button::id::DOWN:
-        case nsec::button::id::UP:
-            nsec::g::the_badge->_cycle_selected_animation(
+    switch (id) {
+    case nsec::button::id::DOWN:
+    case nsec::button::id::UP:
+        nsec::g::the_badge->_cycle_selected_animation(
             id == nsec::button::id::DOWN
                 ? nsec::runtime::badge::cycle_animation_direction::PREVIOUS
                 : nsec::runtime::badge::cycle_animation_direction::NEXT);
 
-            // Update current animation value, on LCD, if applicable.
-            _lcd_display_current_animation();
-            break;
-        case nsec::button::id::OK:
-            // Update selected LCD screen to display.
-            _lcd_display_update_current_screen();
-            break;
-        default:
-            break;
-        }
-    } else if(event == nsec::button::event::LONG_PRESS) {
-        // Process "LONG_PRESS" events.
-        if (id == nsec::button::id::OK) {
-            // Send master sync IR ready.
-        }
+        // Update current animation value, on LCD, if applicable.
+        _lcd_display_current_animation();
+        break;
+    case nsec::button::id::OK:
+        // Update selected LCD screen to display.
+        _lcd_display_update_current_screen();
+        break;
+    default:
+        break;
     }
 }
 
