@@ -61,8 +61,8 @@ unsigned int social_level_to_clearance_led_count(unsigned int level)
     // - The clearance range is 1 to 6.
     // - Table field for clearance mapping is the
     //   "Social Level Upper Boundary".
-    const std::array<std::uint8_t, 6> clearance_mappings = {
-        1, 6, 17, 57, 106, 149};
+    const std::array<std::uint8_t, 6> clearance_mappings = {1,  6,   17,
+                                                            57, 106, 149};
 
     const auto mapping_it =
         std::upper_bound(clearance_mappings.begin(), clearance_mappings.end(),
@@ -133,9 +133,9 @@ void nr::badge::load_config()
             tmp_sponsor_flag = tmp_sponsor_flag >> 1;
         }
 
-        _logger.info(
-            "Found config on storage: social_level={0}, selected_animation={1}, sponsor_flag={2:04X}",
-            social_level, selected_animation_id, sponsor_flag);
+        _logger.info("Found config on storage: social_level={0}, "
+                     "selected_animation={1}, sponsor_flag=0x{2:04X}",
+                     social_level, selected_animation_id, sponsor_flag);
     } else {
         _logger.info("No config found on storage");
     }
@@ -214,8 +214,8 @@ void nr::badge::set_sponsor_flag(uint16_t new_level, bool save) noexcept
     }
 }
 
-
-void nr::badge::apply_score_change(uint16_t new_badges_discovered_count) noexcept
+void nr::badge::apply_score_change(
+    uint16_t new_badges_discovered_count) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
 
@@ -243,7 +243,7 @@ void nr::badge::apply_new_sponsor(uint8_t sponsor_id) noexcept
                  sponsor_id, _sponsor_flag, new_sponsor_flag);
 
     // If new sponsor detected; increment count
-    if( new_sponsor_flag != _sponsor_flag) {
+    if (new_sponsor_flag != _sponsor_flag) {
         _sponsor_count = _sponsor_count + 1;
         _logger.info("New sponsor detected: new_count={}", _sponsor_count);
 
@@ -354,10 +354,10 @@ void nr::badge::_led_update_clearance_level()
 #endif
 
     // Only update clearance level, if there is a change.
-    if( new_clearence_level != _clearance_level) {
+    if (new_clearence_level != _clearance_level) {
         // Update Clearance level (only if changed).
-        nsec::g::the_badge->_strip_animator
-            .set_clearance_meter_bar(new_clearence_level);
+        nsec::g::the_badge->_strip_animator.set_clearance_meter_bar(
+            new_clearence_level);
 
         _logger.info("Clearance level: orig level={}, new level={}",
                      _clearance_level, new_clearence_level);
@@ -380,7 +380,7 @@ void nr::badge::_lcd_display_current_animation()
     char lcd_print[17];
 
     // Display current animation on LCD (idle screen nb. 1).
-    if( _idle_lcd_screen_nb == 1 ) {
+    if (_idle_lcd_screen_nb == 1) {
         sprintf(lcd_print, "Animation    %3u", _selected_animation);
         badge_print_text(1, lcd_print, 16, 0);
     }
@@ -391,7 +391,7 @@ void nr::badge::_lcd_display_sponsor_count()
     char lcd_print[17];
 
     // Display sponsor count on LCD (idle screen nb. 1).
-    if( _idle_lcd_screen_nb == 1 ) {
+    if (_idle_lcd_screen_nb == 1) {
         sprintf(lcd_print, "Sponsor      %3u", _sponsor_count);
         badge_print_text(2, lcd_print, 16, 0);
     }
@@ -418,7 +418,7 @@ void nr::badge::_lcd_display_update_current_screen()
         _lcd_display_current_animation();
         _lcd_display_sponsor_count();
 
-       // Setup next entry.
-       _idle_press_down_tracking = 0;
+        // Setup next entry.
+        _idle_press_down_tracking = 0;
     }
 }
