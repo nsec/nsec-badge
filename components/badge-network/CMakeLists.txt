@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 NorthSec
+# SPDX-FileCopyrightText: 2025 NorthSec
 #
 # SPDX-License-Identifier: MIT
 
@@ -8,6 +8,6 @@ set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 if(CONFIG_NSEC_BUILD_CONFERENCE)
         idf_component_register(SRCS "uart_interface.cpp"
                         INCLUDE_DIRS "." "../" "../../.pio/libdeps/conference/fmt/include" "../../.pio/libdeps/conference/SmartLeds/src"
-                        REQUIRES driver
+                        REQUIRES driver esp_driver_rmt
         )
 endif()

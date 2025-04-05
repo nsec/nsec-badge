@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * Copyright 2025 Abdelhakim Qbaich <abdelhakim@qbaich.com>
  */
 
 #ifndef NSEC_NETWORK_MESSAGES_HPP
@@ -13,17 +14,19 @@
 namespace nsec::communication::message
 {
 
-enum class type : uint8_t {
-    ANNOUNCE_BADGE_ID =
+enum class ir_packet_type : uint8_t {
+    SYNC_REQUEST =
         nsec::config::communication::application_message_type_range_begin,
-    PAIRING_ANIMATION_PART_1_DONE,
-    PAIRING_ANIMATION_PART_2_DONE,
-    PAIRING_ANIMATION_DONE,
+    SYNC_ACCEPT,
+    ID_DATA,
+    ACK,
+    CANCEL,
 };
 
-struct announce_badge_id {
-    std::uint8_t peer_id;
-    std::uint8_t board_unique_id[6];
+struct ir_packet {
+    ir_packet_type type;
+    uint8_t mac[6];
+    uint16_t checksum;
 } __attribute__((packed));
 
 } // namespace nsec::communication::message
