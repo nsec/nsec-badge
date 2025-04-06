@@ -30,7 +30,7 @@ typedef struct {
 
 QKDData qkd_data = {};
 
-// Optionally, define a default_qkd_data if you prefer an explicit "empty" struct
+// Optionally, define a default_qkd_data
 QKDData default_qkd_data = {
     {0}, {0}, {0}, {0}, {0}, {0}, {0},
     {0}, {0}, {0}, {0}, {0}, {0}, {0}
@@ -331,7 +331,6 @@ static void qkd_init(void)
     char noisybits2[129];
     printf("\nReceiving the noisy qubit string from the dock...\n");
     client_read_bits(noisybits2, 128);
-    // ------ function to modify input -----//
     std::memcpy(qkd_data.noisy_bits2, noisybits2, sizeof(qkd_data.noisy_bits2));
 
     // Send badge_basis - randomly chosen basis
@@ -365,7 +364,7 @@ static void qkd_init(void)
 
     // Need to introduce random errors here to a ~10% ratio to the "key"
     // MAYBE introduce known errors in the key to make sure that shuffle layers need to happen
-    // Actually yes, I like that idea a lot, will work on it.
+    // Actually yes, I like that idea a lot, will implement it.
     
     char noisy_shared_key2[129];
     std::memcpy(noisy_shared_key2, shared_key2, sizeof(noisy_shared_key2));
@@ -391,7 +390,7 @@ static void qkd_init(void)
     
     //int keysize = strlen((char *)noisy_shared_key2) - 1;
 
-    //Iterate through specific indexes to be modified/flipped
+    // Iterate through specific indexes to be modified/flipped
     // Indexes: block 1: 5,6
     //          block 2: 14 
     //          block 3: 18,20

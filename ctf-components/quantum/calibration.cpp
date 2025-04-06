@@ -312,6 +312,8 @@ void calibrate_1()
                 std::string(calib_data.hashes[2]);
 
     printf("Your flag is: %s\n", flag.c_str());
+
+    //TODO: This should always be correct, as it would return if incorrect before this step.
     if(calib_data.calib[0] == 1 && calib_data.calib[1] == 1 && calib_data.calib[2] == 1)
     {
         printf("Congratulations, the first set of calibrations is correct!\n");
@@ -321,6 +323,7 @@ void calibrate_1()
         printf("Oops... Calibrations are not correct, try again\n");
     }
         
+    //TODO: Async call as it locks up the badge during scrolling display. Minor inconvenience.
     badge_print_textbox(3,  0, const_cast<char*>(flag.c_str()), 16, 16, false, 100);
     badge_print_textbox(3,  0, const_cast<char*>(flag.c_str()), 16, 20, false, 6);
 }
@@ -340,7 +343,7 @@ void calibrate_2()
         //If 2a is not completed
         badge_print_text(0, (char*)"Calibrate 2a: ", 14, false);
 
-        printf("=> Using two qubits, create a Bell Pair. Once done print out the state vector hash and submit to compare the calibration.\n");
+        printf("=> Using two qubits, create a Bell Pair |00⟩+|11⟩. Once done print out the state vector hash and submit to compare the calibration.\n");
         
         input_hash = linenoise("Input Calibrate 2a hash: ");
         if (input_hash == nullptr) {
@@ -415,7 +418,7 @@ void calibrate_2()
     if(calib_data.calib[5] != 1)
     {   
 
-        printf("=> Using three qubits, create a Cluster State that has the provided state vector. There are multiple ways to accomplish this. Once done print out the state vector hash and submit to compare the calibration.\n");
+        printf("=> Using three qubits, create a Cluster State that has the provided state vector. All qubits must be entangled together. Once done print out the state vector hash and submit to compare the calibration.\n");
 
         badge_print_text(2, (char*)"Calibrate 2c: ", 14, false);
         input_hash = linenoise("Input Calibrate 2c hash: ");
