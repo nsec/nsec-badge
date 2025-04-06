@@ -14,9 +14,9 @@
 #include <badge-led-strip/strip_animator.hpp>
 #include <badge-network/network_handler.hpp>
 #include <badge-dock/dock_detector.hpp>
+#include <badge/id.hpp>
 #include <cstdint>
 #include <utils/logging.hpp>
-#include <badge/id.hpp>
 
 namespace nsec::runtime
 {
@@ -45,6 +45,12 @@ class badge
     void apply_dock_status(bool detected) noexcept;
     void apply_i2c_command(uint8_t cmd, uint8_t value) noexcept;
     bool is_docked() noexcept;
+
+    void update_ir_exchange_status(
+        nsec::communication::network_handler::ir_protocol_state state) noexcept;
+    void handle_ir_timeout() noexcept;
+    badge_unique_id get_unique_id();
+    void update_display() noexcept;
 
   private:
     struct eeprom_config {
@@ -79,7 +85,7 @@ class badge
     uint32_t _check_social_level(uint8_t social_level);
     uint32_t _process_check1(uint8_t social_level);
     uint32_t _process_check2(uint8_t social_level);
-    
+
     void _lcd_display_social_level();
     void _lcd_display_current_animation();
     void _lcd_display_sponsor_count();

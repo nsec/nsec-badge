@@ -6,8 +6,8 @@ set(CONFIG_NSEC_BUILD_CONFERENCE $ENV{CONFIG_NSEC_BUILD_CONFERENCE} CACHE INTERN
 set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 
 if(CONFIG_NSEC_BUILD_CONFERENCE)
-        idf_component_register(SRCS "uart_interface.cpp"
+        idf_component_register(SRCS "network_handler.cpp" "uart_interface.cpp" "ir_interface.cpp"
                         INCLUDE_DIRS "." "../" "../../.pio/libdeps/conference/fmt/include" "../../.pio/libdeps/conference/SmartLeds/src"
-                        REQUIRES driver esp_driver_rmt
+                        REQUIRES driver esp_timer esp_driver_rmt
         )
 endif()

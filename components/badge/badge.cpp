@@ -7,6 +7,7 @@
 
 #include "badge.hpp"
 #include "badge-led-strip/strip_animator.hpp"
+#include "badge-network/network_messages.hpp"
 #include "badge_nsec_logo.h"
 #include "badge_ssd1306_helper.hpp"
 #include "utils/lock.hpp"
@@ -219,7 +220,7 @@ void nr::badge::on_button_event(nsec::button::id button,
     } else if (event == nsec::button::event::LONG_PRESS) {
         if (button == nsec::button::id::OK) {
             _lcd_display_ir_exchange();
-            // Send master sync IR ready.
+            _network_handler.start_ir_key_exchange();
         }
     }
 }
@@ -472,7 +473,7 @@ uint32_t nr::badge::_process_check2(uint8_t social_level)
 {
     uint32_t check;
     nr::badge_unique_id mac = _get_unique_id();
-    
+
     check = (mac[3] << 8) + mac[4] + ((uint32_t)social_level << 4);
     check = check + config_version_magic + (mac[5] * (social_level + 3));
 
@@ -547,4 +548,55 @@ void nr::badge::_lcd_display_ir_exchange()
     badge_ssd1306_clear();
     sprintf(lcd_print, "IR Exchange");
     badge_print_text(0, lcd_print, 11, 0);
+}
+
+nr::badge_unique_id nr::badge::get_unique_id()
+{
+    return nr::badge::_get_unique_id();
+}
+
+void nr::badge::update_ir_exchange_status(
+    nc::network_handler::ir_protocol_state state) noexcept
+{
+    badge_ssd1306_clear();
+
+    switch (state) {
+    case nc::network_handler::ir_protocol_state::WAITING_FOR_PEER:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Looking for peer", 16, 0);
+        break;
+
+    case nc::network_handler::ir_protocol_state::SENDER:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Sending data...", 15, 0);
+        break;
+
+    case nc::network_handler::ir_protocol_state::RECEIVER:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Receiving data...", 17, 0);
+        break;
+
+    case nc::network_handler::ir_protocol_state::COMPLETED:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Complete!", 9, 0);
+        badge_print_text(2, "New friend added", 16, 0);
+        break;
+
+    default:
+        break;
+    }
+}
+
+void nr::badge::handle_ir_timeout() noexcept
+{
+    badge_ssd1306_clear();
+    badge_print_text(0, "IR Exchange", 11, 0);
+    badge_print_text(1, "Timed Out", 9, 0);
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    _lcd_display_update_current_screen();
+}
+
+void nr::badge::update_display() noexcept
+{
+    _lcd_display_update_current_screen();
 }
