@@ -45,10 +45,15 @@ template <> struct fmt::formatter<nb::event> : fmt::formatter<std::string> {
     }
 };
 
+// Select how the clearance level LEDs are mapped.
+//#define CLEARANCE_LED_MAP_TO_SOCIAL_LEVEL
+#define CLEARANCE_LED_MAP_TO_SPONSOR_COUNT
+
 namespace
 {
 constexpr uint16_t config_version_magic = 0xBAD8;
 
+#ifdef CLEARANCE_LED_MAP_TO_SOCIAL_LEVEL
 unsigned int social_level_to_clearance_led_count(unsigned int level)
 {
     // Mapping of the social level to the clearance level
@@ -64,6 +69,26 @@ unsigned int social_level_to_clearance_led_count(unsigned int level)
                          std::max<std::uint8_t>(level, 1));
     return mapping_it - clearance_mappings.begin();
 }
+#endif
+
+#ifdef CLEARANCE_LED_MAP_TO_SPONSOR_COUNT
+unsigned int sponsor_count_to_clearance_led_count(unsigned int level)
+{
+    // Mapping of the social level to the clearance level
+    // - The sponser count range is 0 to 14.
+    // - The clearance range is 1 to 6.
+    // - Table field for clearance mapping is the
+    //   "Social Level Upper Boundary".
+    const std::array<std::uint8_t, 6> clearance_mappings = {
+        1, 3, 5, 8, 11, 14};
+
+    const auto mapping_it =
+        std::upper_bound(clearance_mappings.begin(), clearance_mappings.end(),
+                         std::max<std::uint8_t>(level, 1));
+    return mapping_it - clearance_mappings.begin();
+}
+#endif
+
 } // anonymous namespace
 
 nr::badge::badge()
@@ -227,6 +252,9 @@ void nr::badge::apply_new_sponsor(uint8_t sponsor_id) noexcept
 
         // Update LCD, if applicable.
         _lcd_display_sponsor_count();
+
+        // Update Clearance level.
+        _led_update_clearance_level();
     }
 }
 
@@ -315,8 +343,15 @@ void nr::badge::_update_leds(nsec::button::id id,
 
 void nr::badge::_led_update_clearance_level()
 {
+#if defined(CLEARANCE_LED_MAP_TO_SOCIAL_LEVEL)
     uint8_t new_clearence_level =
         social_level_to_clearance_led_count(_social_level);
+#elif defined(CLEARANCE_LED_MAP_TO_SPONSOR_COUNT)
+    uint8_t new_clearence_level =
+        sponsor_count_to_clearance_led_count(_sponsor_count);
+#else
+    uint8_t new_clearence_level = 0;
+#endif
 
     // Only update clearance level, if there is a change.
     if( new_clearence_level != _clearance_level) {
