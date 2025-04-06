@@ -72,5 +72,11 @@ constexpr unsigned int signal_pin = 12;
 */
 } // namespace serial
 
+namespace ir
+{
+constexpr unsigned int tx_pin = 10;
+constexpr unsigned int rx_pin = 3;
+} // namespace ir
+
 } // namespace nsec::board
 #endif /* NSEC_BOARD_HPP */

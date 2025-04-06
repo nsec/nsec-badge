@@ -71,6 +71,8 @@ namespace nsec::config::communication
 constexpr size_t protocol_max_message_size = 16;
 constexpr unsigned int badge_serial_speed = 115200;
 constexpr bool invert_uart = true;
+constexpr unsigned int ir_resolution_hz = 1000000;
+constexpr unsigned int ir_frequency_hz = 38000;
 
 /*
  * Applications may define messages >= application_message_type_range_begin.
@@ -98,6 +100,7 @@ constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 1000;
 namespace nsec::config::logging
 {
 constexpr auto uart_interface_level = nsec::logging::logger::severity::ERROR;
+constexpr auto ir_interface_level = nsec::logging::logger::severity::ERROR;
 constexpr auto network_handler_level = nsec::logging::logger::severity::ERROR;
 constexpr auto button_watcher_level = nsec::logging::logger::severity::ERROR;
 constexpr auto badge_level = nsec::logging::logger::severity::ERROR;
