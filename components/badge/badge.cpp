@@ -75,7 +75,7 @@ unsigned int social_level_to_clearance_led_count(unsigned int level)
 unsigned int sponsor_count_to_clearance_led_count(unsigned int level)
 {
     // Mapping of the social level to the clearance level
-    // - The sponser count range is 0 to 14.
+    // - The sponsor count range is 0 to 14.
     // - The clearance range is 1 to 6.
     // - Table field for clearance mapping is the
     //   "Social Level Upper Boundary".
@@ -117,7 +117,7 @@ void nr::badge::load_config()
     std::uint8_t selected_animation_id = social_level;
     std::uint16_t sponsor_flag = 0;
     std::uint8_t sponsor_count = 0;
-    
+
     const auto loaded_config = config_store.load();
     if (loaded_config) {
         social_level = loaded_config->social_level;
