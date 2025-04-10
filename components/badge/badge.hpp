@@ -75,6 +75,7 @@ class badge
     void _lcd_display_current_animation();
     void _lcd_display_sponsor_count();
     void _lcd_display_update_current_screen();
+    void _lcd_display_ir_exchange();
 
     // Setup hardware.
     void _setup();

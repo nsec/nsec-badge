@@ -203,6 +203,7 @@ void nr::badge::on_button_event(nsec::button::id button,
         }
     } else if (event == nsec::button::event::LONG_PRESS) {
         if (button == nsec::button::id::OK) {
+            _lcd_display_ir_exchange();
             // Send master sync IR ready.
         }
     }
@@ -425,4 +426,15 @@ void nr::badge::_lcd_display_update_current_screen()
         // Setup next entry.
         _idle_press_down_tracking = 0;
     }
+}
+
+void nr::badge::_lcd_display_ir_exchange()
+{
+    char lcd_print[17];
+
+    // Display the IR Exchange screen.
+    // * Status is updated by "update_ir_exchange_status" function.
+    badge_ssd1306_clear();
+    sprintf(lcd_print, "IR Exchange");
+    badge_print_text(0, lcd_print, 11, 0);
 }
