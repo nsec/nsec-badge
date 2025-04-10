@@ -18,6 +18,7 @@
 #include "badge_ssd1306_helper.hpp"
 #include "nvs.h"
 #include "nvs_flash.h"
+#include "mbedtls/md5.h"
 
 #ifdef __cplusplus
 extern "C" {

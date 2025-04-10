@@ -173,6 +173,20 @@ void toggle_leds() {
     }
 }
 
+// Function to compute MD5 hash
+std::string compute_md5(const char *input) {
+    unsigned char md5_result[16];
+    mbedtls_md5((const unsigned char *)input, strlen(input), md5_result);
+
+    char md5_string[33];
+    for (int i = 0; i < 16; i++) {
+        sprintf(md5_string + (i * 2), "%02x", md5_result[i]);
+    }
+    md5_string[32] = '\0';
+
+    return std::string(md5_string);
+}
+
 void calibrate_1()
 {
     printf("Initializing First Calibration Set... \n\n");
@@ -195,8 +209,12 @@ void calibrate_1()
             printf("Error: Unable to read input\n");
             return;
         }
-        // Validate 2f799a918c2578f275e94bc07739c9f8
-        if (strcmp(input_hash, "2f799a918c2578f275e94bc07739c9f8") == 0) {
+
+        // Compute MD5 hash of the input
+        std::string hashed_input = compute_md5(input_hash);
+
+        // Validate against the computed hash 2f799a918c2578f275e94bc07739c9f8
+        if (strcmp(hashed_input.c_str(), "b3475f92e32c7257d9a7e90482155cff") == 0) {
             printf("Correct!\n\n");
             badge_print_text(0, (char*)"Calibrate 1a: O", 15, false);
             calib_data.calib[0] = 1;
@@ -232,8 +250,12 @@ void calibrate_1()
             printf("Error: Unable to read input\n");
             return;
         }
+
+        // Compute MD5 hash of the input
+        std::string hashed_input = compute_md5(input_hash);
+
         // Validate 2d5822b91586a076bb43686a7b56e893
-        if (strcmp(input_hash, "2d5822b91586a076bb43686a7b56e893") == 0) {
+        if (strcmp(hashed_input.c_str(), "b2fe3f26c99b7b7afeb46307b3997df9") == 0) {
             printf("Correct!\n\n");
             badge_print_text(1, (char*)"Calibrate 1b: O", 15, false);
             calib_data.calib[1] = 1;
@@ -270,8 +292,12 @@ void calibrate_1()
             printf("Error: Unable to read input\n");
             return;
         }
+
+        // Compute MD5 hash of the input
+        std::string hashed_input = compute_md5(input_hash);
+
         // Validate 0b374d293a6cbbc07cc52cec3b1419a5
-        if (strcmp(input_hash, "0b374d293a6cbbc07cc52cec3b1419a5") == 0) {
+        if (strcmp(hashed_input.c_str(), "429dec50dd0cc413f795725854f00d9e") == 0) {
             printf("Correct!\n\n");
             badge_print_text(2, (char*)"Calibrate 1c: O", 15, false);
             calib_data.calib[2] = 1;
@@ -350,8 +376,12 @@ void calibrate_2()
             printf("Error: Unable to read input\n");
             return;
         }
+
+        // Compute MD5 hash of the input
+        std::string hashed_input = compute_md5(input_hash);
+
         // Validate a253ff07533701a5749286e71c111451
-        if (strcmp(input_hash, "a253ff07533701a5749286e71c111451") == 0) {
+        if (strcmp(hashed_input.c_str(), "b3d13ca081da00184eea7c5301225300") == 0) {
             printf("Correct!\n\n");
             badge_print_text(0, (char*)"Calibrate 2a: O", 15, false);
             calib_data.calib[3] = 1;
@@ -388,8 +418,12 @@ void calibrate_2()
             printf("Error: Unable to read input\n");
             return;
         }
+
+        // Compute MD5 hash of the input
+        std::string hashed_input = compute_md5(input_hash);
+
         // Validate ad5f29aebd7b59d71fdedaf48c85ea6b
-        if (strcmp(input_hash, "ad5f29aebd7b59d71fdedaf48c85ea6b") == 0) {
+        if (strcmp(hashed_input.c_str(), "d7bb61cd60df69f24814ed2080e2760c") == 0) {
             printf("Correct!\n\n");
             badge_print_text(1, (char*)"Calibrate 2b: O", 15, false);
             calib_data.calib[4] = 1;
@@ -426,8 +460,12 @@ void calibrate_2()
             printf("Error: Unable to read input\n");
             return;
         }
+    
+        // Compute MD5 hash of the input
+        std::string hashed_input = compute_md5(input_hash);
+    
         // Validate 354f15b993224f5ff5592b6e6715365f
-        if (strcmp(input_hash, "354f15b993224f5ff5592b6e6715365f") == 0) {
+        if (strcmp(hashed_input.c_str(), "2594e54d8434e67b394cbbe9e1a68148") == 0) {
             printf("Correct!\n\n");
             badge_print_text(2, (char*)"Calibrate 2c: O", 15, false);
             calib_data.calib[5] = 1;
