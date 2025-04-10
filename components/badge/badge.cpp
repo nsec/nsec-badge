@@ -194,8 +194,13 @@ void nr::badge::on_button_event(nsec::button::id button,
     _logger.info("Button event: button={}, event={}", (int)button, (int)event);
 
     if (event == nsec::button::event::SINGLE_CLICK) {
-        // Send the received event to the LEDs function.
-        _update_leds(button, event);
+        // Prevent updating the LCD display (and animation selection)
+        // during the IR synchronization process.
+        if (_network_handler.get_ir_protocol_state() ==
+            nc::network_handler::ir_protocol_state::IDLE) {
+            // Send the received event to the LEDs function.
+            _update_leds(button, event);
+        }
     } else if (event == nsec::button::event::LONG_PRESS) {
         if (button == nsec::button::id::OK) {
             // Send master sync IR ready.
