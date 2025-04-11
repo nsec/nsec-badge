@@ -65,7 +65,7 @@ void nb::watcher::setup()
     _logger.info("Setting up button callbacks");
 
     const std::array<button_event_t, 2> monitored_events = {
-        {BUTTON_PRESS_DOWN, BUTTON_LONG_PRESS_HOLD}};
+        {BUTTON_PRESS_DOWN, BUTTON_LONG_PRESS_START}};
 
     for (auto &btn_context : _button_callback_contexts) {
         for (auto monitored_event : monitored_events) {
@@ -129,7 +129,7 @@ void nb::watcher::_button_handler(void *button_handle, void *opaque_context)
     case BUTTON_PRESS_DOWN:
         badge_button_event = nb::event::SINGLE_CLICK;
         break;
-    case BUTTON_LONG_PRESS_HOLD:
+    case BUTTON_LONG_PRESS_START:
         badge_button_event = nb::event::LONG_PRESS;
         break;
     default:
