@@ -11,6 +11,7 @@
 #include "freertos/semphr.h"
 #include <badge-button/watcher.hpp>
 #include <badge-led-strip/strip_animator.hpp>
+#include <badge-network/network_handler.hpp>
 #include <cstdint>
 #include <utils/logging.hpp>
 #include <badge/id.hpp>
@@ -92,6 +93,8 @@ class badge
     bool _is_expecting_factory_reset : 1 = 0;
 
     button::watcher _button_watcher;
+
+    nsec::communication::network_handler _network_handler;
 
     nsec::led::strip_animator _strip_animator;
 

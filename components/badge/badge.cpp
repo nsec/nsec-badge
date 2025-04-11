@@ -9,6 +9,7 @@
 #include "badge_nsec_logo.h"
 #include "badge_ssd1306_helper.hpp"
 #include "utils/lock.hpp"
+#include <badge-network/network_handler.hpp>
 #include <badge-persistence/badge_store.hpp>
 #include <badge-persistence/config_store.hpp>
 #include <badge-persistence/utils.hpp>
@@ -20,6 +21,7 @@
 #include <esp_mac.h>
 
 namespace nr = nsec::runtime;
+namespace nc = nsec::communication;
 namespace nb = nsec::button;
 namespace nl = nsec::led;
 namespace nsync = nsec::synchro;
@@ -95,7 +97,7 @@ nr::badge::badge()
     : _button_watcher([](nsec::button::id id, nsec::button::event event) {
           nsec::g::the_badge->on_button_event(id, event);
       }),
-      _logger("badge", nsec::config::logging::badge_level)
+      _network_handler(), _logger("badge", nsec::config::logging::badge_level)
 {
     _setup();
     _public_access_semaphore = xSemaphoreCreateMutex();
