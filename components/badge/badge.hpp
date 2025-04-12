@@ -38,6 +38,8 @@ class badge
 
     void start();
 
+    badge_unique_id get_unique_id();
+
     std::uint8_t level() const noexcept;
     void apply_score_change(uint16_t new_badges_discovered_count) noexcept;
     void apply_new_sponsor(uint8_t sponsor_id) noexcept;
@@ -46,11 +48,8 @@ class badge
     void apply_i2c_command(uint8_t cmd, uint8_t value) noexcept;
     bool is_docked() noexcept;
 
-    void update_ir_exchange_status(
+    void lcd_display_ir_exchange_status(
         nsec::communication::network_handler::ir_protocol_state state) noexcept;
-    void handle_ir_timeout() noexcept;
-    badge_unique_id get_unique_id();
-    void update_display() noexcept;
 
   private:
     struct eeprom_config {
@@ -94,8 +93,6 @@ class badge
 
     // Setup hardware.
     void _setup();
-
-    badge_unique_id _get_unique_id();
 
     mutable SemaphoreHandle_t _public_access_semaphore;
     uint8_t _social_level = 0;

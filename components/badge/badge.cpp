@@ -7,7 +7,6 @@
 
 #include "badge.hpp"
 #include "badge-led-strip/strip_animator.hpp"
-#include "badge-network/network_messages.hpp"
 #include "badge_nsec_logo.h"
 #include "badge_ssd1306_helper.hpp"
 #include "utils/lock.hpp"
@@ -50,7 +49,7 @@ template <> struct fmt::formatter<nb::event> : fmt::formatter<std::string> {
 };
 
 // Select how the clearance level LEDs are mapped.
-//#define CLEARANCE_LED_MAP_TO_SOCIAL_LEVEL
+// #define CLEARANCE_LED_MAP_TO_SOCIAL_LEVEL
 #define CLEARANCE_LED_MAP_TO_SPONSOR_COUNT
 
 namespace
@@ -83,8 +82,7 @@ unsigned int sponsor_count_to_clearance_led_count(unsigned int level)
     // - The clearance range is 1 to 6.
     // - Table field for clearance mapping is the
     //   "Social Level Upper Boundary".
-    const std::array<std::uint8_t, 6> clearance_mappings = {
-        1, 3, 5, 8, 11, 14};
+    const std::array<std::uint8_t, 6> clearance_mappings = {1, 3, 5, 8, 11, 14};
 
     const auto mapping_it =
         std::upper_bound(clearance_mappings.begin(), clearance_mappings.end(),
@@ -188,7 +186,7 @@ void nr::badge::_setup()
     load_config();
 }
 
-nr::badge_unique_id nr::badge::_get_unique_id()
+nr::badge_unique_id nr::badge::get_unique_id()
 {
     uint8_t mac_bytes[6] = {0};
 
@@ -544,59 +542,42 @@ void nr::badge::_lcd_display_ir_exchange()
     char lcd_print[17];
 
     // Display the IR Exchange screen.
-    // * Status is updated by "update_ir_exchange_status" function.
+    // * Status is updated by "lcd_display_ir_exchange_status" function.
     badge_ssd1306_clear();
     sprintf(lcd_print, "IR Exchange");
     badge_print_text(0, lcd_print, 11, 0);
 }
 
-nr::badge_unique_id nr::badge::get_unique_id()
-{
-    return nr::badge::_get_unique_id();
-}
-
-void nr::badge::update_ir_exchange_status(
+void nr::badge::lcd_display_ir_exchange_status(
     nc::network_handler::ir_protocol_state state) noexcept
 {
     badge_ssd1306_clear();
 
     switch (state) {
+    case nc::network_handler::ir_protocol_state::IDLE:
+        _lcd_display_update_current_screen();
+        break;
     case nc::network_handler::ir_protocol_state::WAITING_FOR_PEER:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Looking for peer", 16, 0);
         break;
-
     case nc::network_handler::ir_protocol_state::SENDER:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Sending data...", 15, 0);
         break;
-
     case nc::network_handler::ir_protocol_state::RECEIVER:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Receiving data...", 17, 0);
         break;
-
     case nc::network_handler::ir_protocol_state::COMPLETED:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Complete!", 9, 0);
-        badge_print_text(2, "New friend added", 16, 0);
         break;
-
+    case nc::network_handler::ir_protocol_state::TIMEOUT:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Timed out", 9, 0);
+        break;
     default:
         break;
     }
-}
-
-void nr::badge::handle_ir_timeout() noexcept
-{
-    badge_ssd1306_clear();
-    badge_print_text(0, "IR Exchange", 11, 0);
-    badge_print_text(1, "Timed Out", 9, 0);
-    vTaskDelay(pdMS_TO_TICKS(2000));
-    _lcd_display_update_current_screen();
-}
-
-void nr::badge::update_display() noexcept
-{
-    _lcd_display_update_current_screen();
 }

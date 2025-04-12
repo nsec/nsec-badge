@@ -24,7 +24,8 @@ class network_handler
         WAITING_FOR_PEER,
         SENDER,
         RECEIVER,
-        COMPLETED
+        COMPLETED,
+        TIMEOUT,
     };
 
     network_handler() noexcept;

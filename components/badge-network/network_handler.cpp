@@ -43,6 +43,7 @@ void nc::network_handler::_set_ir_protocol_state(
                      static_cast<int>(_current_ir_protocol_state),
                      static_cast<int>(next_state));
         _current_ir_protocol_state = next_state;
+        nsec::g::the_badge->lcd_display_ir_exchange_status(_current_ir_protocol_state);
     }
 }
 
@@ -118,13 +119,11 @@ void nc::network_handler::_process_received_ir_packet(
 
     // Get our badge ID
     nsec::runtime::badge_unique_id my_id = nsec::g::the_badge->get_unique_id();
-    bool update_display = false;
 
     // Handle CANCEL messages in any state
     if (packet->type == message::ir_packet_type::CANCEL) {
         _logger.info("Received CANCEL from peer");
         _set_ir_protocol_state(ir_protocol_state::IDLE);
-        nsec::g::the_badge->handle_ir_timeout();
         return;
     }
 
@@ -134,7 +133,6 @@ void nc::network_handler::_process_received_ir_packet(
             _logger.info("Received SYNC_REQUEST while IDLE, becoming RECEIVER");
             _peer_id = sender_id;
             _set_ir_protocol_state(ir_protocol_state::RECEIVER);
-            update_display = true;
 
             _ir_timeout_timestamp = esp_timer_get_time() / 1000 + 5000;
 
@@ -154,7 +152,6 @@ void nc::network_handler::_process_received_ir_packet(
                 // Lower ID becomes receiver
                 _peer_id = sender_id;
                 _set_ir_protocol_state(ir_protocol_state::RECEIVER);
-                update_display = true;
 
                 _ir_timeout_timestamp = esp_timer_get_time() / 1000 + 5000;
 
@@ -167,7 +164,6 @@ void nc::network_handler::_process_received_ir_packet(
             _logger.info("Received SYNC_ACCEPT, becoming SENDER");
             _peer_id = sender_id;
             _set_ir_protocol_state(ir_protocol_state::SENDER);
-            update_display = true;
 
             _ir_timeout_timestamp = esp_timer_get_time() / 1000 + 5000;
 
@@ -182,11 +178,8 @@ void nc::network_handler::_process_received_ir_packet(
             nsec::g::the_badge->apply_score_change(1);
 
             _set_ir_protocol_state(ir_protocol_state::COMPLETED);
-            update_display = true;
-
             vTaskDelay(pdMS_TO_TICKS(3000));
             _set_ir_protocol_state(ir_protocol_state::IDLE);
-            nsec::g::the_badge->update_display();
         } else if (packet->type == message::ir_packet_type::SYNC_ACCEPT) {
             _logger.info("Received duplicate SYNC_ACCEPT, resending ID_DATA");
             _send_ir_packet(message::ir_packet_type::ID_DATA, my_id);
@@ -202,11 +195,8 @@ void nc::network_handler::_process_received_ir_packet(
             nsec::g::the_badge->apply_score_change(1);
 
             _set_ir_protocol_state(ir_protocol_state::COMPLETED);
-            update_display = true;
-
             vTaskDelay(pdMS_TO_TICKS(3000));
             _set_ir_protocol_state(ir_protocol_state::IDLE);
-            nsec::g::the_badge->update_display();
         } else if (packet->type == message::ir_packet_type::SYNC_REQUEST) {
             _logger.info(
                 "Received duplicate SYNC_REQUEST, resending SYNC_ACCEPT");
@@ -217,18 +207,18 @@ void nc::network_handler::_process_received_ir_packet(
     case ir_protocol_state::COMPLETED:
         _logger.debug("Ignoring packet in COMPLETED state");
         break;
-    }
 
-    if (update_display) {
-        nsec::g::the_badge->update_ir_exchange_status(
-            _current_ir_protocol_state);
+    case ir_protocol_state::TIMEOUT:
+        _logger.debug("Ignoring packet in TIMEOUT state");
+        break;
     }
 }
 
 void nc::network_handler::_check_ir_timeouts() noexcept
 {
     if (_current_ir_protocol_state != ir_protocol_state::IDLE &&
-        _current_ir_protocol_state != ir_protocol_state::COMPLETED) {
+        _current_ir_protocol_state != ir_protocol_state::COMPLETED &&
+        _current_ir_protocol_state != ir_protocol_state::TIMEOUT) {
 
         uint32_t current_time = esp_timer_get_time() / 1000;
         if (current_time > _ir_timeout_timestamp) {
@@ -242,8 +232,9 @@ void nc::network_handler::_check_ir_timeouts() noexcept
                 _send_ir_packet(message::ir_packet_type::CANCEL, my_id);
             }
 
+            _set_ir_protocol_state(ir_protocol_state::TIMEOUT);
+            vTaskDelay(pdMS_TO_TICKS(3000));
             _set_ir_protocol_state(ir_protocol_state::IDLE);
-            nsec::g::the_badge->handle_ir_timeout();
         }
     }
 }
