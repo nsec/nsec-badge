@@ -173,10 +173,10 @@ void nc::ir_interface::receive(uint8_t *buffer, size_t buffer_size)
     };
 
     // Use smart pointer to ensure cleanup in case of exceptions
-    std::unique_ptr<rmt_symbol_word_t[]> symbols(new rmt_symbol_word_t[64]);
+    std::unique_ptr<rmt_symbol_word_t[]> symbols(new rmt_symbol_word_t[512]);
 
     esp_err_t err = rmt_receive(_ir_rx_channel, symbols.get(),
-                                sizeof(rmt_symbol_word_t) * 64, &rx_config);
+                                sizeof(rmt_symbol_word_t) * 512, &rx_config);
 
     if (err != ESP_OK) {
         _logger.error("Failed to start IR reception: {}", esp_err_to_name(err));
