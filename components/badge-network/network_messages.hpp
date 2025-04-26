@@ -26,7 +26,7 @@ enum class ir_packet_type : uint8_t {
 struct ir_packet {
     ir_packet_type type;
     uint8_t mac[6];
-    uint16_t checksum;
+    uint8_t checksum;
 } __attribute__((packed));
 
 } // namespace nsec::communication::message
