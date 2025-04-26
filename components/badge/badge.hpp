@@ -49,7 +49,7 @@ class badge
     bool is_docked() noexcept;
 
     void lcd_display_ir_exchange_status(
-        nsec::communication::network_handler::ir_protocol_state state) noexcept;
+        nsec::communication::ir_protocol_state state) noexcept;
 
   private:
     struct eeprom_config {

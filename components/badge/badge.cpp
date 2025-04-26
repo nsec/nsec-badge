@@ -211,7 +211,7 @@ void nr::badge::on_button_event(nsec::button::id button,
         // Prevent updating the LCD display (and animation selection)
         // during the IR synchronization process.
         if (_network_handler.get_ir_protocol_state() ==
-            nc::network_handler::ir_protocol_state::IDLE) {
+            nc::ir_protocol_state::IDLE) {
             // Send the received event to the LEDs function.
             _update_leds(button, event);
         }
@@ -549,31 +549,31 @@ void nr::badge::_lcd_display_ir_exchange()
 }
 
 void nr::badge::lcd_display_ir_exchange_status(
-    nc::network_handler::ir_protocol_state state) noexcept
+    nc::ir_protocol_state state) noexcept
 {
     badge_ssd1306_clear();
 
     switch (state) {
-    case nc::network_handler::ir_protocol_state::IDLE:
+    case nc::ir_protocol_state::IDLE:
         _lcd_display_update_current_screen();
         break;
-    case nc::network_handler::ir_protocol_state::WAITING_FOR_PEER:
+    case nc::ir_protocol_state::WAITING_FOR_PEER:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Looking for peer", 16, 0);
         break;
-    case nc::network_handler::ir_protocol_state::SENDER:
+    case nc::ir_protocol_state::SENDER:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Sending data...", 15, 0);
         break;
-    case nc::network_handler::ir_protocol_state::RECEIVER:
+    case nc::ir_protocol_state::RECEIVER:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Receiving data...", 17, 0);
         break;
-    case nc::network_handler::ir_protocol_state::COMPLETED:
+    case nc::ir_protocol_state::COMPLETED:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Complete!", 9, 0);
         break;
-    case nc::network_handler::ir_protocol_state::TIMEOUT:
+    case nc::ir_protocol_state::TIMEOUT:
         badge_print_text(0, "IR Exchange", 11, 0);
         badge_print_text(1, "Timed out", 9, 0);
         break;
