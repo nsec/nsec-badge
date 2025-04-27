@@ -29,6 +29,9 @@ namespace nc = nsec::communication;
 namespace np = nsec::persistence;
 namespace cfg = nsec::config::communication;
 
+#define NSEC_THROW_COMMUNICATION_ERROR(msg)                                    \
+    throw nc::exception::communication_error(msg, __FILE__, __func__, __LINE__)
+
 template <>
 struct fmt::formatter<nc::ir_protocol_state>
     : fmt::formatter<std::string_view> {
@@ -171,8 +174,8 @@ void nc::network_handler::_initialize_timer()
 
     esp_err_t err = esp_timer_create(&timer_args, &_ir_timeout_handle);
     if (err != ESP_OK) {
-        NSEC_THROW_ERROR(fmt::format("Failed to create IR timeout timer: {}",
-                                     esp_err_to_name(err)));
+        NSEC_THROW_COMMUNICATION_ERROR(fmt::format(
+            "Failed to create IR timeout timer: {}", esp_err_to_name(err)));
     }
 
     err = esp_timer_start_periodic(_ir_timeout_handle,
@@ -180,8 +183,8 @@ void nc::network_handler::_initialize_timer()
     if (err != ESP_OK) {
         esp_timer_delete(_ir_timeout_handle);
         _ir_timeout_handle = nullptr;
-        NSEC_THROW_ERROR(fmt::format("Failed to start IR timeout timer: {}",
-                                     esp_err_to_name(err)));
+        NSEC_THROW_COMMUNICATION_ERROR(fmt::format(
+            "Failed to start IR timeout timer: {}", esp_err_to_name(err)));
     }
     _logger.debug("IR timeout timer started");
 }

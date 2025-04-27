@@ -22,6 +22,21 @@
 namespace nsec::communication
 {
 
+namespace exception
+{
+
+class communication_error : public nsec::exception::runtime_error
+{
+  public:
+    communication_error(const std::string &message, const char *file,
+                        const char *func, int line)
+        : nsec::exception::runtime_error(message, file, func, line)
+    {
+    }
+};
+
+} // namespace exception
+
 /**
  * @brief Represents the states of the IR communication protocol.
  */
