@@ -11,7 +11,7 @@
 #include <cstdint>
 #include <mutex>
 
-#include "esp_timer.h"
+#include <esp_timer.h>
 
 #include <badge/id.hpp>
 #include <utils/logging.hpp>

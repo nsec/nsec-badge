@@ -6,23 +6,10 @@
 
 #include "network_handler.hpp"
 
-#include <cstring>
-#include <mutex>
-
-#include "esp_random.h"
-#include "esp_timer.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include <esp_random.h>
 
 #include <badge-persistence/badge_store.hpp>
 #include <badge/globals.hpp>
-#include <esp_err.h>
-#include <fmt/core.h>
-#include <utils/board.hpp>
-#include <utils/config.hpp>
-#include <utils/exception.hpp>
-
-#include "network_messages.hpp"
 
 namespace nr = nsec::runtime;
 namespace nc = nsec::communication;
