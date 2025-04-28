@@ -284,9 +284,10 @@ void nc::network_handler::_send_ir_packet(message::ir_packet_type type) noexcept
     packet.type = type;
 
     const nr::badge_unique_id our_id = nsec::g::the_badge->get_unique_id();
-    static_assert(sizeof(packet.mac) == sizeof(nr::badge_unique_id),
-                  "Packet MAC size must match badge unique ID size");
-    memcpy(packet.mac, our_id.data(), sizeof(packet.mac));
+    static_assert(sizeof(packet.mac) <= sizeof(nr::badge_unique_id),
+                  "Packet MAC size must be smaller or equal to ID size");
+    memcpy(packet.mac, our_id.data() + (sizeof(our_id) - sizeof(packet.mac)),
+           sizeof(packet.mac));
 
     packet.checksum = calculate_checksum(packet);
 
@@ -311,10 +312,11 @@ void nc::network_handler::_handle_received_ir_packet(
 {
     std::lock_guard<std::mutex> lock(_state_mutex);
 
-    nr::badge_unique_id sender_id;
-    static_assert(sizeof(packet.mac) == sizeof(nr::badge_unique_id),
-                  "Packet MAC size must match badge unique ID size");
-    memcpy(sender_id.data(), packet.mac, sizeof(sender_id));
+    nr::badge_unique_id sender_id{0};
+    static_assert(sizeof(packet.mac) <= sizeof(nr::badge_unique_id),
+                  "Packet MAC size must be smaller or equal to ID size");
+    memcpy(sender_id.data() + (sizeof(sender_id) - sizeof(packet.mac)),
+           packet.mac, sizeof(packet.mac));
 
     const ir_protocol_state current_state =
         _current_ir_state.load(std::memory_order_relaxed);
