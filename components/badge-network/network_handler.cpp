@@ -5,6 +5,7 @@
  */
 
 #include "network_handler.hpp"
+#include "utils/config.hpp"
 
 #include <esp_random.h>
 
@@ -109,7 +110,8 @@ uint8_t calculate_checksum(const nc::message::ir_packet &packet)
 
 nc::network_handler::network_handler()
     : _ir_interface(nsec::board::ir::tx_pin, nsec::board::ir::rx_pin,
-                    cfg::ir_resolution_hz, cfg::ir_frequency_hz),
+                    cfg::ir_resolution_hz, cfg::ir_frequency_hz,
+                    cfg::ir_mem_block_symbols),
       _current_ir_state{ir_protocol_state::IDLE}, _peer_id{},
       _ir_timeout_timestamp_ms{0},
       _logger("Network handler", nsec::config::logging::network_handler_level)
@@ -141,6 +143,7 @@ nc::network_handler::~network_handler()
 nc::ir_protocol_state
 nc::network_handler::get_ir_protocol_state() const noexcept
 {
+    // FIXME Should probably remove relaxed here
     return _current_ir_state.load(std::memory_order_relaxed);
 }
 

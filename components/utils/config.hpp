@@ -76,7 +76,7 @@ constexpr unsigned int ir_resolution_hz = 1000000;
 constexpr unsigned int ir_frequency_hz = 38000;
 constexpr unsigned int ir_mem_block_symbols = 48;
 constexpr unsigned int ir_idle_delay_ms = 3000;
-constexpr unsigned int ir_timeout_ms = 5000;
+constexpr unsigned int ir_timeout_ms = 10000;
 constexpr unsigned int ir_timeout_check_interval_us = 500000;
 constexpr unsigned int ir_sync_request_jitter_max = 200;
 
@@ -106,8 +106,8 @@ constexpr unsigned int pairing_animation_time_per_led_progress_bar_ms = 1000;
 namespace nsec::config::logging
 {
 constexpr auto uart_interface_level = nsec::logging::logger::severity::ERROR;
-constexpr auto ir_interface_level = nsec::logging::logger::severity::ERROR;
-constexpr auto network_handler_level = nsec::logging::logger::severity::ERROR;
+constexpr auto ir_interface_level = nsec::logging::logger::severity::DEBUG;
+constexpr auto network_handler_level = nsec::logging::logger::severity::DEBUG;
 constexpr auto button_watcher_level = nsec::logging::logger::severity::ERROR;
 constexpr auto badge_level = nsec::logging::logger::severity::ERROR;
 constexpr auto animator_level = nsec::logging::logger::severity::ERROR;

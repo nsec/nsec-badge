@@ -217,6 +217,7 @@ void nr::badge::on_button_event(nsec::button::id button,
         }
     } else if (event == nsec::button::event::LONG_PRESS) {
         if (button == nsec::button::id::OK) {
+            // FIXME Should probably also have a check for IDLE
             _lcd_display_ir_exchange();
             _network_handler.start_ir_key_exchange();
         }

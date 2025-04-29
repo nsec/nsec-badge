@@ -1,87 +1,106 @@
 /*
  * SPDX-License-Identifier: MIT
  *
- * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
  * Copyright 2025 Abdelhakim Qbaich <abdelhakim@qbaich.com>
  */
 
 #ifndef NSEC_COMMUNICATION_IR_INTERFACE_HPP
 #define NSEC_COMMUNICATION_IR_INTERFACE_HPP
 
-#include "driver/rmt_encoder.h"
-#include "driver/rmt_rx.h"
-#include "driver/rmt_tx.h"
-
 #include <cstdint>
 #include <functional>
-#include <string>
 
-#include <badge/id.hpp>
+#include "driver/gpio.h"
+#include "driver/rmt_rx.h"
+#include "driver/rmt_tx.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+#include "freertos/task.h"
+
+#include <utils/config.hpp>
 #include <utils/exception.hpp>
 #include <utils/logging.hpp>
 
 #include "network_messages.hpp"
-#include <utils/logging.hpp>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
 
-#include "network_messages.hpp"
+#define NEC_DECODE_MARGIN_US 200 // Tolerance for decoding pulses (microseconds)
+
+#define NEC_LEADING_HIGH_US 9000
+#define NEC_LEADING_LOW_US 4500
+#define NEC_DATA_HIGH_US 560
+#define NEC_DATA_ZERO_LOW_US 560
+#define NEC_DATA_ONE_LOW_US 1690
+#define NEC_ENDING_HIGH_US 560
 
 namespace nsec::communication
 {
 
 namespace exception
 {
-class communication_error : public nsec::exception::runtime_error
+
+class protocol_error : public nsec::exception::runtime_error
 {
   public:
-    communication_error(const std::string &msg, const char *file_name,
-                        const char *function_name, unsigned int line_number);
+    protocol_error(const std::string &message, const char *file,
+                   const char *func, int line)
+        : nsec::exception::runtime_error(message, file, func, line)
+    {
+    }
 };
-class protocol_error : public communication_error
-{
-  public:
-    protocol_error(const std::string &msg, const char *file_name,
-                   const char *function_name, unsigned int line_number);
-};
+
 } // namespace exception
+
+using rmt_custom_ir_encoder_t = struct {
+    rmt_encoder_t base;
+    rmt_encoder_t *copy_encoder; // To encode the leading and ending pulse
+    rmt_encoder_t *bytes_encoder;
+    rmt_symbol_word_t nec_leading_symbol;
+    rmt_symbol_word_t nec_ending_symbol;
+    int state;
+};
 
 class ir_interface
 {
   public:
-  ir_interface(gpio_num_t tx_gpio_num, gpio_num_t rx_gpio_num,
-               uint32_t resolution_hz, uint32_t frequency_hz);
-  ~ir_interface();
+    // Callback function type for handling received packets
+    using ir_packet_handler_t =
+        std::function<void(const message::ir_packet *packet)>;
 
-    size_t send(const uint8_t *payload, size_t payload_size);
-    void receive(uint8_t *buffer, size_t buffer_size);
+    ir_interface(gpio_num_t tx_gpio_num, gpio_num_t rx_gpio_num,
+                 uint32_t resolution_hz, uint32_t frequency_hz,
+                 size_t mem_block_symbols);
+    ~ir_interface();
 
-    using ir_packet_handler_t = std::function<void(const message::ir_packet *)>;
+    ir_interface(const ir_interface &) = delete;
+    ir_interface &operator=(const ir_interface &) = delete;
+    ir_interface(ir_interface &&) = delete;
+    ir_interface &operator=(ir_interface &&) = delete;
+
+    bool send(const uint8_t *payload, size_t payload_size);
+
     void register_packet_handler(ir_packet_handler_t handler);
 
-
-private:
-    rmt_channel_handle_t _ir_tx_channel;
-    rmt_channel_handle_t _ir_rx_channel;
-    rmt_encoder_handle_t _ir_encoder;
+  private:
+    std::vector<rmt_symbol_word_t> _rx_symbols;
 
     nsec::logging::logger _logger;
-    ir_packet_handler_t _packet_handler;
 
-    // Queue for processing packets outside of ISR context
-    QueueHandle_t _packet_queue;
-    TaskHandle_t _packet_task;
+    rmt_channel_handle_t _tx_channel = nullptr;
+    rmt_channel_handle_t _rx_channel = nullptr;
+    rmt_encoder_handle_t _custom_encoder = nullptr;
 
-    static void packet_processing_task(void* arg);
+    QueueHandle_t _receive_queue = nullptr;
+    TaskHandle_t _reception_task_handle = nullptr;
+    ir_packet_handler_t _packet_handler = nullptr;
 
-    IRAM_ATTR bool _handle_rx_done(const rmt_rx_done_event_data_t *edata);
-    IRAM_ATTR bool _decode_rmt_symbols(const rmt_symbol_word_t *symbols,
-                                      size_t symbol_count, uint8_t *data,
-                                      size_t *data_len, size_t max_len);
-    static IRAM_ATTR bool rmt_rx_done_callback(rmt_channel_handle_t rx_chan,
-                                               const rmt_rx_done_event_data_t *edata,
-                                               void *user_data);
+    void _initialize_reception_task();
+
+    static void _reception_task_entry(void *arg);
+    void _reception_task_impl();
+
+    IRAM_ATTR bool
+    _decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
+                            size_t symbol_count, std::vector<uint8_t> &data);
 };
 
 } // namespace nsec::communication
