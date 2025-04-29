@@ -81,9 +81,6 @@ struct fmt::formatter<nc::message::ir_packet_type>
     }
 };
 
-namespace
-{
-
 int64_t get_current_time_ms()
 {
     return esp_timer_get_time() / 1000;
@@ -109,8 +106,6 @@ uint8_t calculate_checksum(const nc::message::ir_packet &packet)
     }
     return checksum;
 }
-
-} // namespace
 
 nc::network_handler::network_handler()
     : _ir_interface(nsec::board::ir::tx_pin, nsec::board::ir::rx_pin,
