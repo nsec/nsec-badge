@@ -106,6 +106,7 @@ nr::badge::badge()
 void nr::badge::start()
 {
     _strip_animator.start();
+    _dock_detector.start();
 
     // Set initial Clearance level.
     _led_update_clearance_level();

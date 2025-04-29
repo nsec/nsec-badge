@@ -102,3 +102,23 @@ void badge_print_textbox(int line, int seg, char* text, int boxsize, int textsiz
     }
     ssd1306_display_text_box1(dev, line, seg, text, boxsize, textsize, invert, speed);
 }
+
+// Deinitialize the SSD1306 device and clean up resources
+void badge_ssd1306_deinit()
+{
+    if (dev != nullptr) {
+        // First remove the device from the I2C bus
+        if (dev->_i2c_dev_handle != nullptr) {
+            i2c_master_bus_rm_device(dev->_i2c_dev_handle);
+        }
+        
+        // Then delete the I2C master bus
+        if (dev->_i2c_bus_handle != nullptr) {
+            i2c_del_master_bus(dev->_i2c_bus_handle);
+        }
+        
+        // Delete the device and set pointer to null
+        delete dev;
+        dev = nullptr;
+    }
+}

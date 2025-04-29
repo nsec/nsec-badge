@@ -12,6 +12,7 @@
 #include <badge-button/watcher.hpp>
 #include <badge-led-strip/strip_animator.hpp>
 #include <badge-network/network_handler.hpp>
+#include <badge-dock/dock_detector.hpp>
 #include <cstdint>
 #include <utils/logging.hpp>
 #include <badge/id.hpp>
@@ -39,7 +40,10 @@ class badge
     std::uint8_t level() const noexcept;
     void apply_score_change(uint16_t new_badges_discovered_count) noexcept;
     void apply_new_sponsor(uint8_t sponsor_id) noexcept;
-
+    nsec::dock::dock_detector _dock_detector;
+    void _set_selected_animation(uint8_t animation_id, bool save,
+    bool set_idle_animation) noexcept;
+    uint8_t _selected_animation = 0;
   private:
     struct eeprom_config {
         uint16_t version_magic;
@@ -67,8 +71,7 @@ class badge
     static uint8_t
     _compute_new_social_level(uint8_t current_social_level,
                               uint16_t new_badges_discovered_count) noexcept;
-    void _set_selected_animation(uint8_t animation_id, bool save,
-                                 bool set_idle_animation) noexcept;
+
     void _led_update_clearance_level();
 
     void _lcd_display_social_level();
@@ -87,7 +90,6 @@ class badge
     uint8_t _sponsor_count = 0;
     uint16_t _sponsor_flag = 0;
     uint8_t _clearance_level = 0;
-    uint8_t _selected_animation = 0;
     uint8_t _idle_press_down_tracking = 1;
     uint8_t _idle_lcd_screen_nb = 0;
 

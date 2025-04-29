@@ -8,6 +8,6 @@ set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 if(CONFIG_NSEC_BUILD_CONFERENCE)
         idf_component_register(SRCS "watcher.cpp"
                 INCLUDE_DIRS "." "../" "../../.pio/libdeps/conference/fmt/include"  "../../.pio/libdeps/conference/SmartLeds/src"
-                REQUIRES driver
+                REQUIRES driver console driver cmd_nvs cmd_sys
         )
 endif()
