@@ -17,7 +17,7 @@ CodenamesState default_codenames_data = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
-void print_nvs_blob() {
+void print_nvs_blob_codenames() {
 
     CodenamesState codenames_data; // Temporary variable to hold the NVS data
     size_t required_size = sizeof(CodenamesState);
@@ -43,7 +43,7 @@ void print_nvs_blob() {
     }
 }
 
-void update_nvs()
+void update_nvs_codenames()
 {
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(NAMESPACE, NVS_READWRITE, &nvs_handle);
@@ -69,7 +69,7 @@ void update_nvs()
     nvs_close(nvs_handle);
 }
 
-void get_nvs()
+void get_nvs_codenames()
 {
     nvs_handle_t nvs_handle;
     esp_err_t err = nvs_open(NAMESPACE, NVS_READONLY, &nvs_handle);
@@ -77,7 +77,7 @@ void get_nvs()
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     } else if (err == ESP_ERR_NVS_NOT_FOUND) {
-        update_nvs();
+        update_nvs_codenames();
         //exit get_nvs() since it will have a different nvs handle and fail
         return;
     }
