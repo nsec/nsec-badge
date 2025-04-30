@@ -99,6 +99,7 @@ int cmd_codenames(int argc, char **argv) {
     if (argc == 1) {
         printf("Codenames command executed\n");
         //TODO: Call function for player to input values
+        return 0;
     } else {
         printf("Usage: codenames\n");
         return 0;
