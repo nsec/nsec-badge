@@ -123,7 +123,7 @@ void nb::watcher::_button_handler(void *button_handle, void *opaque_context)
         "Button handler called: button_id={}, native_event={}", (int)id,
         native_event);
 
-    if(ng::the_badge->_dock_detector._dock_detected) return;
+    if(ng::the_badge->is_docked()) return;
     // Convert ESP-IDF button event into our native events.
     nb::event badge_button_event;
     switch (native_event) {

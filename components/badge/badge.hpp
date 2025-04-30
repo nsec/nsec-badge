@@ -40,10 +40,11 @@ class badge
     std::uint8_t level() const noexcept;
     void apply_score_change(uint16_t new_badges_discovered_count) noexcept;
     void apply_new_sponsor(uint8_t sponsor_id) noexcept;
-    nsec::dock::dock_detector _dock_detector;
-    void _set_selected_animation(uint8_t animation_id, bool save,
-    bool set_idle_animation) noexcept;
-    uint8_t _selected_animation = 0;
+    void apply_animation(uint8_t animation_id) noexcept;
+    void apply_dock_status(bool detected) noexcept;
+    void apply_i2c_command(uint8_t cmd, uint8_t value) noexcept;
+    bool is_docked() noexcept;
+
   private:
     struct eeprom_config {
         uint16_t version_magic;
@@ -71,7 +72,8 @@ class badge
     static uint8_t
     _compute_new_social_level(uint8_t current_social_level,
                               uint16_t new_badges_discovered_count) noexcept;
-
+    void _set_selected_animation(uint8_t animation_id, bool save,
+                              bool set_idle_animation) noexcept;
     void _led_update_clearance_level();
 
     void _lcd_display_social_level();
@@ -90,8 +92,11 @@ class badge
     uint8_t _sponsor_count = 0;
     uint16_t _sponsor_flag = 0;
     uint8_t _clearance_level = 0;
+    uint8_t _selected_animation = 0;
+    uint8_t _prev_selected_animation = 0;
     uint8_t _idle_press_down_tracking = 1;
     uint8_t _idle_lcd_screen_nb = 0;
+    bool _docked = false;
 
     bool _is_expecting_factory_reset : 1 = 0;
 
@@ -102,6 +107,8 @@ class badge
     nsec::led::strip_animator _strip_animator;
 
     nsec::logging::logger _logger;
+
+    nsec::dock::dock_detector _dock_detector;
 };
 } // namespace nsec::runtime
 

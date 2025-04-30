@@ -51,6 +51,7 @@ namespace i2c
 constexpr unsigned int i2c_num = 0;
 constexpr unsigned int i2c_sda = 4;
 constexpr unsigned int i2c_scl = 5;
+constexpr unsigned int i2c_slave_addr = 0x68;
 } // namespace i2c
 
 namespace uart
@@ -77,6 +78,14 @@ namespace ir
 constexpr unsigned int tx_pin = 10;
 constexpr unsigned int rx_pin = 3;
 } // namespace ir
+
+
+namespace dock
+{
+constexpr unsigned int input1_pin = 2;
+constexpr unsigned int input2_pin = 6;
+constexpr unsigned int output_pin = 7;
+}
 
 } // namespace nsec::board
 #endif /* NSEC_BOARD_HPP */

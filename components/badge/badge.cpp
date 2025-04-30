@@ -273,6 +273,49 @@ void nr::badge::apply_new_sponsor(uint8_t sponsor_id) noexcept
     }
 }
 
+void nr::badge::apply_animation(uint8_t animation_id) noexcept
+{
+    _set_selected_animation(animation_id, false, true);
+}
+
+void nr::badge::apply_dock_status(bool detected) noexcept
+{
+    _docked = detected;
+    _idle_lcd_screen_nb = 0; // Avoid changes 
+    if(_docked){
+        _prev_selected_animation = _selected_animation;
+        badge_ssd1306_clear();
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        badge_ssd1306_deinit();
+        vTaskDelay(500/portTICK_PERIOD_MS);
+    }
+    else{
+        apply_animation(_prev_selected_animation);
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        _idle_press_down_tracking = 1;
+        badge_lcd_nsec_logo();
+    }
+}
+
+void nr::badge::apply_i2c_command(uint8_t cmd, uint8_t value) noexcept
+{
+
+    switch(cmd){
+        case nsec::config::i2c::sponsor_cmd:
+            apply_new_sponsor(value);
+            break;
+        case nsec::config::i2c::animation_cmd:
+            apply_animation(value);
+            break;
+    }
+
+}
+
+bool nr::badge::is_docked() noexcept
+{
+    return _docked;
+}
+
 uint8_t nr::badge::_compute_new_social_level(
     uint8_t current_social_level, uint16_t new_badges_discovered_count) noexcept
 {

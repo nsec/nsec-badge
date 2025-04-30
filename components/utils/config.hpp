@@ -104,6 +104,7 @@ constexpr auto ir_interface_level = nsec::logging::logger::severity::ERROR;
 constexpr auto network_handler_level = nsec::logging::logger::severity::ERROR;
 constexpr auto button_watcher_level = nsec::logging::logger::severity::ERROR;
 constexpr auto badge_level = nsec::logging::logger::severity::ERROR;
+constexpr auto dock_detector_level = nsec::logging::logger::severity::ERROR;
 } // namespace nsec::config::logging
 
 namespace nsec::config::persistence
@@ -115,5 +116,11 @@ constexpr auto sponsor_flag_field_name = "sponsor";
 constexpr auto badge_id_field_name_prefix = "b";
 constexpr auto badge_paired_count_field_name = "paired_count";
 } // namespace nsec::config::persistence
+
+namespace nsec::config::i2c
+{
+constexpr uint8_t sponsor_cmd = 0x69;
+constexpr uint8_t animation_cmd = 0x45;
+}
 
 #endif // NSEC_CONFIG_HPP
