@@ -366,6 +366,7 @@ void nc::network_handler::_handle_received_ir_packet(
     case ir_protocol_state::WAITING_FOR_PEER:
         if (packet.type == message::ir_packet_type::SYNC_REQUEST) {
             nr::badge_unique_id our_id = nsec::g::the_badge->get_unique_id();
+            // FIXME This is likely wrong after truncation to 3 bytes...
             bool i_am_lower =
                 memcmp(our_id.data(), sender_id.data(), sizeof(our_id)) < 0;
 

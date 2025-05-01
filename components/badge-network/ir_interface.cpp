@@ -313,7 +313,7 @@ nc::ir_interface::~ir_interface()
 void nc::ir_interface::_initialize_reception_task()
 {
     BaseType_t task_created =
-        xTaskCreate(_reception_task_entry, "ir_reception_task", 4096, this,
+        xTaskCreate(_reception_task_entry, "ir_reception_task", 8192, this,
                     configMAX_PRIORITIES - 2, &_reception_task_handle);
 
     if (task_created != pdPASS) {
@@ -423,12 +423,13 @@ void nc::ir_interface::_reception_task_impl()
 
                 if (decoded_data_buffer.size() ==
                     sizeof(nc::message::ir_packet)) {
-                    const nc::message::ir_packet *packet =
-                        reinterpret_cast<nc::message::ir_packet *>(
-                            decoded_data_buffer.data());
+                    nc::message::ir_packet local_packet;
+                    std::memcpy(&local_packet, decoded_data_buffer.data(),
+                                sizeof(nc::message::ir_packet));
 
                     if (_packet_handler) {
-                        _packet_handler(packet);
+                        _logger.debug("Calling packet handler");
+                        _packet_handler(&local_packet);
                     } else {
                         _logger.warn(
                             "Received packet but no handler registered");
@@ -464,13 +465,22 @@ bool nc::ir_interface::_decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
 
     size_t current_symbol_idx = 0;
     const rmt_symbol_word_t *current_symbol = &symbols[current_symbol_idx];
+    _logger.debug("Symbol {}: level0: {}, duration0: {}, level1: {}, "
+                  "duration1: {}",
+                  current_symbol_idx, current_symbol->level0,
+                  current_symbol->duration0, current_symbol->level1,
+                  current_symbol->duration1);
 
     // Check leader code
-    if (!(current_symbol->level0 == 1 &&
-          // FIXME tick to us conversion of durations?
-          nec_check_in_range(current_symbol->duration0, NEC_LEADING_HIGH_US) &&
-          current_symbol->level1 == 0 &&
-          nec_check_in_range(current_symbol->duration1, NEC_LEADING_LOW_US))) {
+    if (!(
+            // current_symbol->level0 == 1 &&
+            // FIXME tick to us conversion of durations?
+            nec_check_in_range(current_symbol->duration0,
+                               NEC_LEADING_HIGH_US) &&
+            // current_symbol->level1 == 0 &&
+            nec_check_in_range(current_symbol->duration1,
+                               NEC_LEADING_LOW_US))) {
+        _logger.debug("Failed to find leader code");
         return false;
     }
     current_symbol_idx++;
@@ -480,11 +490,19 @@ bool nc::ir_interface::_decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
 
     while (current_symbol_idx < symbol_count) {
         current_symbol = &symbols[current_symbol_idx];
+        _logger.debug("Symbol {}: level0: {}, duration0: {}, level1: {}, "
+                      "duration1: {}",
+                      current_symbol_idx, current_symbol->level0,
+                      current_symbol->duration0, current_symbol->level1,
+                      current_symbol->duration1);
 
         // Check stop bit
-        if (current_symbol->level0 == 1 &&
-            nec_check_in_range(current_symbol->duration0, NEC_ENDING_HIGH_US) &&
-            current_symbol->level1 == 0) {
+        if (
+            // current_symbol->level0 == 1 &&
+            nec_check_in_range(current_symbol->duration0, NEC_ENDING_HIGH_US)
+            // nec_check_in_range(current_symbol->duration1, 0)
+            // && current_symbol->level1 == 0
+        ) {
             if (bit_index == 0) {
                 return true;
             } else {
@@ -496,10 +514,11 @@ bool nc::ir_interface::_decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
         }
 
         // Check Data Bit
-        if (current_symbol->level0 == 1 &&
-            nec_check_in_range(current_symbol->duration0, NEC_DATA_HIGH_US) &&
-            current_symbol->level1 == 0) {
-
+        if (
+            // current_symbol->level0 == 1 &&
+            nec_check_in_range(current_symbol->duration0, NEC_DATA_HIGH_US)
+            // && current_symbol->level1 == 0
+        ) {
             bool is_one = nec_check_in_range(current_symbol->duration1,
                                              NEC_DATA_ONE_LOW_US);
             bool is_zero = nec_check_in_range(current_symbol->duration1,

@@ -23,14 +23,14 @@
 
 #include "network_messages.hpp"
 
-#define NEC_DECODE_MARGIN_US 200 // Tolerance for decoding pulses (microseconds)
+#define NEC_DECODE_MARGIN_US 300 // Tolerance for decoding pulses (microseconds)
 
 #define NEC_LEADING_HIGH_US 9000
 #define NEC_LEADING_LOW_US 4500
 #define NEC_DATA_HIGH_US 560
 #define NEC_DATA_ZERO_LOW_US 560
 #define NEC_DATA_ONE_LOW_US 1690
-#define NEC_ENDING_HIGH_US 560
+#define NEC_ENDING_HIGH_US 4000
 
 namespace nsec::communication
 {
