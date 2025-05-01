@@ -199,7 +199,7 @@ rmt_rx_done_callback(rmt_channel_handle_t channel,
 nc::ir_interface::ir_interface(gpio_num_t tx_gpio_num, gpio_num_t rx_gpio_num,
                                uint32_t resolution_hz, uint32_t frequency_hz,
                                size_t mem_block_symbols)
-    : _rx_symbols(mem_block_symbols * 4), // FIXME
+    : _rx_symbols(mem_block_symbols * 4),
       _logger("IR Interface", nsec::config::logging::ir_interface_level)
 {
     _logger.debug("Setting up IR communication (TX: {}, RX: {})", tx_gpio_num,
@@ -312,6 +312,7 @@ nc::ir_interface::~ir_interface()
 
 void nc::ir_interface::_initialize_reception_task()
 {
+    // FIXME Giving this higher priority?
     BaseType_t task_created =
         xTaskCreate(_reception_task_entry, "ir_reception_task", 8192, this,
                     configMAX_PRIORITIES - 2, &_reception_task_handle);
@@ -353,7 +354,6 @@ bool nc::ir_interface::send(const uint8_t *payload, size_t payload_size)
         return false;
     }
 
-    // FIXME Should have a cfg value for timeout
     err = rmt_tx_wait_all_done(_tx_channel, pdMS_TO_TICKS(5000));
     if (err == ESP_ERR_TIMEOUT) {
         _logger.warn("Timeout waiting for IR transmission completion");
@@ -383,14 +383,13 @@ void nc::ir_interface::_reception_task_entry(void *arg)
 void nc::ir_interface::_reception_task_impl()
 {
     rmt_rx_done_event_data_t rx_data;
-    // FIXME Should have constants for these
     rmt_receive_config_t rx_config = {
         .signal_range_min_ns = 1250,
         .signal_range_max_ns = 12500000,
     };
 
     std::vector<uint8_t> decoded_data_buffer;
-    decoded_data_buffer.reserve(sizeof(nc::message::ir_packet) * 2); // FIXME
+    decoded_data_buffer.reserve(sizeof(nc::message::ir_packet) * 4);
 
     _logger.debug("Reception task started, entering main loop.");
 
@@ -399,6 +398,8 @@ void nc::ir_interface::_reception_task_impl()
             vTaskDelay(pdMS_TO_TICKS(200));
             continue;
         }
+
+        // FIXME Skip if idle?
 
         esp_err_t err = rmt_receive(
             _rx_channel, _rx_symbols.data(),
@@ -471,10 +472,12 @@ bool nc::ir_interface::_decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
                   current_symbol->duration0, current_symbol->level1,
                   current_symbol->duration1);
 
+    // FIXME Be more flexible by looping until we see a leader code
+    // FIXME Repeating signal when sending as a copy?
+    // FIXME Flipping bits and trying against checksum?
     // Check leader code
     if (!(
             // current_symbol->level0 == 1 &&
-            // FIXME tick to us conversion of durations?
             nec_check_in_range(current_symbol->duration0,
                                NEC_LEADING_HIGH_US) &&
             // current_symbol->level1 == 0 &&

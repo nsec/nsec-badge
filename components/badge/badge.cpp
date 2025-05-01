@@ -215,9 +215,8 @@ void nr::badge::on_button_event(nsec::button::id button,
             // Send the received event to the LEDs function.
             _update_leds(button, event);
         }
-    } else if (event == nsec::button::event::LONG_PRESS) {
-        if (button == nsec::button::id::OK) {
-            // FIXME Should probably also have a check for IDLE
+    } else if (event == nsec::button::event::LONG_PRESS && button == nsec::button::id::OK) {
+        if (_network_handler.get_ir_protocol_state() == nc::ir_protocol_state::IDLE) {
             _lcd_display_ir_exchange();
             _network_handler.start_ir_key_exchange();
         }
@@ -448,7 +447,7 @@ uint32_t nr::badge::_check_social_level(uint8_t social_level)
     uint32_t check1;
     uint32_t check2;
 
-    nr::badge_unique_id mac = _get_unique_id();
+    nr::badge_unique_id mac = get_unique_id();
 
     check1 = _process_check1(social_level);
     check2 = _process_check2(social_level);
@@ -460,7 +459,7 @@ uint32_t nr::badge::_check_social_level(uint8_t social_level)
 uint32_t nr::badge::_process_check1(uint8_t social_level)
 {
     uint32_t check;
-    nr::badge_unique_id mac = _get_unique_id();
+    nr::badge_unique_id mac = get_unique_id();
 
     check = (mac[5] << 8) + mac[3];
     check = check + ((social_level + 51) << 8) + (social_level & 0xFE);
@@ -471,7 +470,7 @@ uint32_t nr::badge::_process_check1(uint8_t social_level)
 uint32_t nr::badge::_process_check2(uint8_t social_level)
 {
     uint32_t check;
-    nr::badge_unique_id mac = _get_unique_id();
+    nr::badge_unique_id mac = get_unique_id();
 
     check = (mac[3] << 8) + mac[4] + ((uint32_t)social_level << 4);
     check = check + config_version_magic + (mac[5] * (social_level + 3));

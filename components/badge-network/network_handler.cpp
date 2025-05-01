@@ -143,8 +143,7 @@ nc::network_handler::~network_handler()
 nc::ir_protocol_state
 nc::network_handler::get_ir_protocol_state() const noexcept
 {
-    // FIXME Should probably remove relaxed here
-    return _current_ir_state.load(std::memory_order_relaxed);
+    return _current_ir_state.load();
 }
 
 void nc::network_handler::_initialize_timer()
@@ -366,9 +365,11 @@ void nc::network_handler::_handle_received_ir_packet(
     case ir_protocol_state::WAITING_FOR_PEER:
         if (packet.type == message::ir_packet_type::SYNC_REQUEST) {
             nr::badge_unique_id our_id = nsec::g::the_badge->get_unique_id();
-            // FIXME This is likely wrong after truncation to 3 bytes...
             bool i_am_lower =
-                memcmp(our_id.data(), sender_id.data(), sizeof(our_id)) < 0;
+                memcmp(our_id.data() + (sizeof(our_id) - sizeof(packet.mac)),
+                       sender_id.data() +
+                           (sizeof(sender_id) - sizeof(packet.mac)),
+                       sizeof(packet.mac)) < 0;
 
             _logger.info("Received {} from {}", static_cast<int>(packet.type),
                          sender_id);
@@ -490,7 +491,7 @@ void nc::network_handler::_check_ir_timeouts() noexcept
         // Send CANCEL if we were actively exchanging with a known peer
         if (current_state == ir_protocol_state::SENDER ||
             current_state == ir_protocol_state::RECEIVER) {
-            _send_ir_packet(message::ir_packet_type::CANCEL);
+            // _send_ir_packet(message::ir_packet_type::CANCEL);
         }
 
         _set_ir_protocol_state(ir_protocol_state::TIMEOUT);

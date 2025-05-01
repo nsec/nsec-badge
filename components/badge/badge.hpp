@@ -11,9 +11,9 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include <badge-button/watcher.hpp>
+#include <badge-dock/dock_detector.hpp>
 #include <badge-led-strip/strip_animator.hpp>
 #include <badge-network/network_handler.hpp>
-#include <badge-dock/dock_detector.hpp>
 #include <badge/id.hpp>
 #include <cstdint>
 #include <utils/logging.hpp>
