@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 #include "badge-led-strip/strip_animator.hpp"
@@ -87,77 +88,6 @@ nl::strip_animator::keyframe
 
 namespace keyframes
 {
-const nl::strip_animator::keyframe
-    red_red_to_green_progress_bar_keyframe_template[] = {
-        // Red (LEDs 0 - 7) / Red (LEDs 8 - 15)
-        {{100, 20, 0}, 0},
-        {{100, 20, 0}, 0},
-        {{0, 0, 0},
-         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms /
-             2},
-        // green <- beginning of loop
-        {{0, 255, 0},
-         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms},
-        // dimmed green to green loop
-        {{48, 120, 19},
-         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms *
-             2},
-        {{0, 255, 0},
-         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms *
-             3},
-};
-
-const nl::strip_animator::keyframe
-    green_red_to_blue_progress_bar_keyframe_template[] = {
-        // Green (LEDs 0 - 7) / Red (LEDs 8 - 15)
-        {{0, 175, 0}, 0},
-        {{100, 20, 0}, 0},
-        {{0, 0, 0},
-         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms /
-             2},
-        // blue <- beginning of loop
-        {{0, 0, 255},
-         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms},
-        // dimmed blue to blue loop
-        {{10, 10, 120},
-         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms *
-             2},
-        {{0, 0, 255},
-         nsec::config::badge::pairing_animation_time_per_led_progress_bar_ms *
-             3},
-};
-
-const nl::strip_animator::keyframe health_meter_bar_keyframe_template[] = {
-    // red
-    {{125, 20, 0}, 0},
-    {{125, 20, 0}, 0},
-    // green <- beginning of loop
-    {{0, 255, 0}, 750},
-    // dimmed green to green loop
-    {{15, 120, 15}, 1500},
-    {{0, 255, 0}, 2250},
-};
-
-const nl::strip_animator::keyframe happy_clown_barf_keyframes[] = {
-    {{0, 0, 0}, 0},         {{161, 255, 181}, 100}, {{255, 128, 140}, 200},
-    {{255, 188, 110}, 300}, {{255, 255, 110}, 400}, {{110, 192, 255}, 500},
-    {{161, 255, 181}, 600},
-};
-
-const nl::strip_animator::keyframe no_new_friends_keyframes[] = {
-    {{0, 0, 0}, 0},
-    {{255, 0, 0}, 200},
-    {{0, 0, 0}, 400},
-    {{255, 0, 0}, 600},
-};
-
-const nl::strip_animator::keyframe idle_social_level_keyframes[] = {
-    {{0, 0, 0}, 0},
-    {{0, 0, 255}, 500},
-    {{0, 0, 127}, 1000},
-    {{0, 0, 255}, 1500},
-};
-
 namespace shooting_star
 {
 // Colors evoking a tungten flash
@@ -713,7 +643,7 @@ nl::strip_animator::strip_animator() noexcept
     : ns::periodic_task<strip_animator>(
           100) /* Set by the various animations. */,
       _pixels(nsec::board::neopixel::count, nsec::board::neopixel::ctrl_pin, 0),
-      _logger("Strip animator")
+      _logger("Strip animator", nsec::config::logging::animator_level)
 {
     _setup();
     set_idle_animation(0);
@@ -786,29 +716,11 @@ void nl::strip_animator::_keyframe_animation_tick(
             (_config.keyframed.active >> i) & 1;
 
         if (!led_animation_is_active) {
-            if (_config.keyframed._animation !=
-                keyframed_animation::PROGRESS_BAR) {
-                // Inactive, repeat the origin keyframe.
-                _set_keyframe_index(_state.keyframed.origin_keyframe_index, i,
-                                    0);
-                _set_keyframe_index(_state.keyframed.destination_keyframe_index,
-                                    i, 0);
-            } else {
-                // Inactive, repeat the origin keyframes
-                // (LED 0 - 7 -> index 0 / LED 8 - 15 -> index 1).
-                //
-                // The top and bottom rows use different start indices to
-                // begin the animation at different starting colors. Both
-                // beginning keyframes (0 and 1) are at time 0. Hence, the
-                // animation immediately progresses to keyframes 2+ when it is
-                // activated.
-                const unsigned int first_keyframe = i <= 7 ? 0 : 1;
-
-                _set_keyframe_index(_state.keyframed.origin_keyframe_index, i,
-                                    first_keyframe);
-                _set_keyframe_index(_state.keyframed.destination_keyframe_index,
-                                    i, first_keyframe);
-            }
+            // Inactive, repeat the origin keyframe.
+            _set_keyframe_index(_state.keyframed.origin_keyframe_index, i,
+                                0);
+            _set_keyframe_index(_state.keyframed.destination_keyframe_index,
+                                i, 0);
 
             const auto origin_keyframe_index =
                 _get_keyframe_index(_state.keyframed.origin_keyframe_index, i);
@@ -1009,116 +921,6 @@ void nl::strip_animator::_reset_keyframed_animation_state() noexcept
     memset(&_state.keyframed, 0, sizeof(_state.keyframed));
 }
 
-void nl::strip_animator::set_red_to_green_led_progress_bar(
-    uint8_t active_led_count, bool bottom_row_lighting_up)
-{
-    const bool is_current_animation =
-        _current_animation_type == animation_type::KEYFRAMED &&
-        _config.keyframed._animation == keyframed_animation::PROGRESS_BAR;
-
-    if (active_led_count > nsec::board::neopixel::anim_count) {
-        NSEC_THROW_ERROR(fmt::format(
-            "Invalid LED count provided to set_red_to_green_led_progress_bar: "
-            "led_count={}, max_allowed_count={}",
-            active_led_count, nsec::board::neopixel::anim_count));
-    }
-
-    _logger.info("Progress bar updated: active_led_count={}", active_led_count);
-
-    if (!is_current_animation) {
-        period_ms(40);
-
-        // Setup animation parameters.
-        _current_animation_type = animation_type::KEYFRAMED;
-        _config.keyframed._animation = keyframed_animation::PROGRESS_BAR;
-        _config.keyframed.keyframe_count = ARRAY_LENGTH(
-            keyframes::red_red_to_green_progress_bar_keyframe_template);
-        _config.keyframed.keyframes =
-            keyframes::red_red_to_green_progress_bar_keyframe_template;
-        _config.keyframed.loop_point_index = 3;
-        _config.keyframed.brightness = 120;
-
-        // Clear its state.
-        _reset_keyframed_animation_state();
-
-        // Keep the progress bar current color.
-        progress_bar_current_led_color = 0;
-    }
-
-    // Update LED progress color, if needed.
-    // 0 - Green
-    // 1 - Blue
-    switch (progress_bar_current_led_color) {
-    case 0:
-        if (bottom_row_lighting_up) {
-            // Switch to Blue.
-            _config.keyframed.keyframe_count = ARRAY_LENGTH(
-                keyframes::green_red_to_blue_progress_bar_keyframe_template);
-            _config.keyframed.keyframes =
-                keyframes::green_red_to_blue_progress_bar_keyframe_template;
-
-            progress_bar_current_led_color = 1;
-            _logger.debug("- green/red to blue");
-        }
-        break;
-    case 1:
-        if (!bottom_row_lighting_up) {
-            _config.keyframed.keyframe_count = ARRAY_LENGTH(
-                keyframes::red_red_to_green_progress_bar_keyframe_template);
-            _config.keyframed.keyframes =
-                keyframes::red_red_to_green_progress_bar_keyframe_template;
-
-            progress_bar_current_led_color = 0;
-            _logger.debug("- red/red to green");
-        }
-        break;
-    default:
-        break;
-    }
-
-    _config.keyframed.active = 0;
-    for (uint8_t i = 0; i < 16; i++) {
-        // Bar progress is a different color for the upper portion,
-        // only activate the lower bar LEDs (8 to 15).
-        if ((i <= 7) && (active_led_count >= 8) && (bottom_row_lighting_up)) {
-            continue;
-        }
-
-        // Inactive LEDs will repeat the origin keyframe (solid red)
-        _config.keyframed.active |= ((i < active_led_count) << i);
-    }
-}
-
-void nl::strip_animator::set_health_meter_bar(uint8_t led_count)
-{
-    period_ms(40);
-
-    if (led_count > nsec::board::neopixel::anim_count) {
-        NSEC_THROW_ERROR(
-            fmt::format("Invalid LED count provided to set_health_meter_bar: "
-                        "led_count={}, max_allowed_count={}",
-                        led_count, nsec::board::neopixel::anim_count));
-    }
-
-    _logger.info("Setting health meter bar animation: led_count={}", led_count);
-
-    // Setup animation parameters.
-    _current_animation_type = animation_type::KEYFRAMED;
-    _config.keyframed._animation = keyframed_animation::PROGRESS_BAR;
-    _config.keyframed.active = 0;
-    _config.keyframed.keyframe_count =
-        ARRAY_LENGTH(keyframes::health_meter_bar_keyframe_template);
-    _config.keyframed.keyframes = keyframes::health_meter_bar_keyframe_template;
-    _config.keyframed.loop_point_index = 2;
-    _config.keyframed.brightness = 120;
-
-    // Clear its state.
-    _reset_keyframed_animation_state();
-
-    for (uint8_t i = 0; i < led_count; i++) {
-        _config.keyframed.active |= (1 << i);
-    }
-}
 
 void nl::strip_animator::set_clearance_meter_bar(uint8_t led_count)
 {
@@ -1143,55 +945,6 @@ void nl::strip_animator::set_blank_animation()
     _config.keyframed.active = 0;
 
     tick(xTaskGetTickCount() * portTICK_PERIOD_MS);
-}
-
-void nl::strip_animator::set_pairing_completed_animation(
-    nl::strip_animator::pairing_completed_animation_type
-        animation_type) noexcept
-{
-    set_show_level_animation(animation_type, 0xFF, true);
-}
-
-void nl::strip_animator::set_show_level_animation(
-    nl::strip_animator::pairing_completed_animation_type animation_type,
-    uint8_t level, bool set_upper_bar_on) noexcept
-{
-    period_ms(40);
-
-    uint8_t cycle_offset = 0;
-    uint16_t active_mask = 0;
-
-    // Push social level to the lower LEDs (8 - 15).
-    active_mask = level << 8;
-
-    const keyframe *keyframes = nullptr;
-    uint8_t keyframe_count = 0;
-
-    if (animation_type == pairing_completed_animation_type::HAPPY_CLOWN_BARF) {
-        keyframe_count = ARRAY_LENGTH(keyframes::happy_clown_barf_keyframes);
-        keyframes = keyframes::happy_clown_barf_keyframes;
-        // Apply a slight offset between LEDs to achieve a "sparkle" effect.
-        cycle_offset = 10;
-    } else if (animation_type ==
-               pairing_completed_animation_type::NO_NEW_FRIENDS) {
-        keyframe_count = ARRAY_LENGTH(keyframes::no_new_friends_keyframes);
-        keyframes = keyframes::no_new_friends_keyframes;
-    } else {
-        keyframe_count = ARRAY_LENGTH(keyframes::idle_social_level_keyframes);
-        keyframes = keyframes::idle_social_level_keyframes;
-    }
-
-    if (set_upper_bar_on) {
-        active_mask |= 0x00FF;
-    }
-
-    _set_keyframed_cycle_animation(keyframes, keyframe_count, 1, active_mask,
-                                   cycle_offset, 40);
-
-    // Force brightness for "IDLE_SOCIAL_LEVEL".
-    if (animation_type == pairing_completed_animation_type::IDLE_SOCIAL_LEVEL) {
-        _config.keyframed.brightness = 150;
-    }
 }
 
 void nl::strip_animator::_set_shooting_star_animation(

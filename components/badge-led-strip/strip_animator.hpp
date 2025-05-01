@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 #ifndef NSEC_LED_STRIP_ANIMATOR_HPP
@@ -38,24 +39,9 @@ class strip_animator : public scheduling::periodic_task<strip_animator>
     }
 
     void set_idle_animation(uint8_t id) noexcept;
-
-    void set_red_to_green_led_progress_bar(uint8_t led_count,
-                                           bool bottom_row_lighting_up = false);
-    void set_health_meter_bar(uint8_t led_count);
     void set_clearance_meter_bar(uint8_t led_count);
 
     void set_blank_animation();
-
-    enum class pairing_completed_animation_type : uint8_t {
-        HAPPY_CLOWN_BARF,
-        NO_NEW_FRIENDS,
-        IDLE_SOCIAL_LEVEL
-    };
-    void set_pairing_completed_animation(
-        pairing_completed_animation_type) noexcept;
-    void set_show_level_animation(pairing_completed_animation_type,
-                                  uint8_t level,
-                                  bool set_upper_bar_on) noexcept;
 
     struct led_color {
         led_color() = default;

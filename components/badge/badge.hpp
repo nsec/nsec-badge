@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2023-2024 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 #ifndef NSEC_RUNTIME_BADGE_HPP
@@ -75,7 +76,10 @@ class badge
     void _set_selected_animation(uint8_t animation_id, bool save,
                               bool set_idle_animation) noexcept;
     void _led_update_clearance_level();
-
+    uint32_t _check_social_level(uint8_t social_level);
+    uint32_t _process_check1(uint8_t social_level);
+    uint32_t _process_check2(uint8_t social_level);
+    
     void _lcd_display_social_level();
     void _lcd_display_current_animation();
     void _lcd_display_sponsor_count();
@@ -99,6 +103,7 @@ class badge
     bool _docked = false;
 
     bool _is_expecting_factory_reset : 1 = 0;
+    uint32_t _social_level_check;
 
     button::watcher _button_watcher;
 

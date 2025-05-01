@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 #ifndef NSEC_CONFIG_HPP
@@ -104,6 +105,7 @@ constexpr auto ir_interface_level = nsec::logging::logger::severity::ERROR;
 constexpr auto network_handler_level = nsec::logging::logger::severity::ERROR;
 constexpr auto button_watcher_level = nsec::logging::logger::severity::ERROR;
 constexpr auto badge_level = nsec::logging::logger::severity::ERROR;
+constexpr auto animator_level = nsec::logging::logger::severity::ERROR;
 constexpr auto dock_detector_level = nsec::logging::logger::severity::ERROR;
 } // namespace nsec::config::logging
 
@@ -111,6 +113,7 @@ namespace nsec::config::persistence
 {
 constexpr auto namespace_name = "badge2024";
 constexpr auto social_level_field_name = "social_lvl";
+constexpr auto social_level_check_field_name = "check_lvl";
 constexpr auto selected_animation_field_name = "slctd_anim";
 constexpr auto sponsor_flag_field_name = "sponsor";
 constexpr auto badge_id_field_name_prefix = "b";

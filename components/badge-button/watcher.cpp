@@ -3,6 +3,7 @@
  *
  * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
  * Copyright 2024 NorthSec
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 /******************************************************************************
