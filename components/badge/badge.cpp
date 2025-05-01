@@ -281,7 +281,6 @@ void nr::badge::apply_animation(uint8_t animation_id) noexcept
 void nr::badge::apply_dock_status(bool detected) noexcept
 {
     _docked = detected;
-    _idle_lcd_screen_nb = 0; // Avoid changes 
     if(_docked){
         _prev_selected_animation = _selected_animation;
         badge_ssd1306_clear();
@@ -292,14 +291,13 @@ void nr::badge::apply_dock_status(bool detected) noexcept
     else{
         apply_animation(_prev_selected_animation);
         vTaskDelay(500/portTICK_PERIOD_MS);
-        _idle_press_down_tracking = 1;
-        badge_lcd_nsec_logo();
+        _idle_press_down_tracking = 0;
+        _lcd_display_update_current_screen();
     }
 }
 
 void nr::badge::apply_i2c_command(uint8_t cmd, uint8_t value) noexcept
 {
-
     switch(cmd){
         case nsec::config::i2c::sponsor_cmd:
             apply_new_sponsor(value);
@@ -308,7 +306,6 @@ void nr::badge::apply_i2c_command(uint8_t cmd, uint8_t value) noexcept
             apply_animation(value);
             break;
     }
-
 }
 
 bool nr::badge::is_docked() noexcept
@@ -429,7 +426,7 @@ void nr::badge::_lcd_display_current_animation()
     char lcd_print[17];
 
     // Display current animation on LCD (idle screen nb. 1).
-    if (_idle_lcd_screen_nb == 1) {
+    if (_idle_lcd_screen_nb == 1 && !_docked) {
         sprintf(lcd_print, "Animation    %3u", _selected_animation);
         badge_print_text(1, lcd_print, 16, 0);
     }
@@ -440,7 +437,7 @@ void nr::badge::_lcd_display_sponsor_count()
     char lcd_print[17];
 
     // Display sponsor count on LCD (idle screen nb. 1).
-    if (_idle_lcd_screen_nb == 1) {
+    if (_idle_lcd_screen_nb == 1 && !_docked) {
         sprintf(lcd_print, "Sponsor      %3u", _sponsor_count);
         badge_print_text(2, lcd_print, 16, 0);
     }

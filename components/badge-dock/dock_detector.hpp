@@ -65,7 +65,7 @@ namespace nsec::dock
         bool _prev_dock_detected;
         i2c_slave_dev_handle_t _i2c_slave_handle = nullptr;
         QueueHandle_t _receive_queue = nullptr;
-        uint8_t *data_rd = (uint8_t *) malloc(MSG_SIZE);
+        uint8_t data_rd[MSG_SIZE] = {0};
         uint32_t size_rd = 0;
         i2c_slave_rx_done_event_data_t rx_data;
         uint8_t command_rx[MSG_SIZE] = {0};
