@@ -256,7 +256,6 @@ void nr::badge::apply_score_change(
 
     // Saves to configuration
     set_social_level(new_social_level, true);
-    _set_selected_animation(_social_level, true, false);
 
     // Update Clearance level.
     _led_update_clearance_level();
