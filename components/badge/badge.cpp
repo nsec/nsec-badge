@@ -257,6 +257,9 @@ void nr::badge::apply_score_change(
     // Saves to configuration
     set_social_level(new_social_level, true);
 
+    // Update LCD, if applicable.
+    _lcd_display_social_level();
+
     // Update Clearance level.
     _led_update_clearance_level();
 }
