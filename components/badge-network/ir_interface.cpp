@@ -5,7 +5,6 @@
  */
 
 #include "ir_interface.hpp"
-#include "esp_attr.h"
 
 #include <esp_log.h>
 
@@ -14,92 +13,98 @@ namespace nc = nsec::communication;
 #define NSEC_THROW_PROTOCOL_ERROR(msg)                                         \
     throw nc::exception::protocol_error(msg, __FILE__, __func__, __LINE__)
 
-static size_t rmt_encode_custom_ir(rmt_encoder_t *encoder,
-                                   rmt_channel_handle_t channel,
+static const char *TAG = "IR Interface";
+
+IRAM_ATTR
+static esp_err_t rmt_ir_packet_encoder_reset(rmt_encoder_t *encoder)
+{
+    nc::rmt_ir_packet_encoder_t *packet_encoder =
+        __containerof(encoder, nc::rmt_ir_packet_encoder_t, base);
+    rmt_encoder_reset(packet_encoder->copy_encoder);
+    rmt_encoder_reset(packet_encoder->bytes_encoder);
+    packet_encoder->state = 0;
+    return ESP_OK;
+}
+
+IRAM_ATTR
+static size_t rmt_encode_ir_packet(rmt_encoder_t *encoder,
+                                   rmt_channel_handle_t tx_channel,
                                    const void *data, size_t data_size,
                                    rmt_encode_state_t *ret_state)
 {
     size_t encoded_symbols = 0;
 
-    rmt_encode_state_t current_state = RMT_ENCODING_RESET;
+    rmt_encode_state_t state = RMT_ENCODING_RESET;
     rmt_encode_state_t session_state = RMT_ENCODING_RESET;
 
-    nc::rmt_custom_ir_encoder_t *custom_encoder =
-        __containerof(encoder, nc::rmt_custom_ir_encoder_t, base);
-    rmt_encoder_handle_t copy_encoder = custom_encoder->copy_encoder;
-    rmt_encoder_handle_t bytes_encoder = custom_encoder->bytes_encoder;
+    nc::rmt_ir_packet_encoder_t *packet_encoder =
+        __containerof(encoder, nc::rmt_ir_packet_encoder_t, base);
+    rmt_encoder_handle_t copy_encoder = packet_encoder->copy_encoder;
+    rmt_encoder_handle_t bytes_encoder = packet_encoder->bytes_encoder;
 
-    switch (custom_encoder->state) {
-    case 0: // Send leader code
+    switch (packet_encoder->state) {
+    case 0:
         encoded_symbols += copy_encoder->encode(
-            copy_encoder, channel, &custom_encoder->nec_leading_symbol,
+            copy_encoder, tx_channel, &packet_encoder->leading_symbol,
             sizeof(rmt_symbol_word_t), &session_state);
+
         if (session_state & RMT_ENCODING_COMPLETE) {
-            custom_encoder->state = 1;
+            packet_encoder->state = 1;
         }
         if (session_state & RMT_ENCODING_MEM_FULL) {
-            current_state = static_cast<rmt_encode_state_t>(
-                current_state | RMT_ENCODING_MEM_FULL);
+            state =
+                static_cast<rmt_encode_state_t>(state | RMT_ENCODING_MEM_FULL);
             goto out;
         }
         [[fallthrough]];
-
-    case 1: // Send data
+    case 1:
         encoded_symbols += bytes_encoder->encode(
-            bytes_encoder, channel, static_cast<const uint8_t *>(data),
-            data_size, &session_state);
+            bytes_encoder, tx_channel, data, data_size, &session_state);
+
         if (session_state & RMT_ENCODING_COMPLETE) {
-            custom_encoder->state = 2;
+            packet_encoder->state = 2;
         }
         if (session_state & RMT_ENCODING_MEM_FULL) {
-            current_state = static_cast<rmt_encode_state_t>(
-                current_state | RMT_ENCODING_MEM_FULL);
+            state =
+                static_cast<rmt_encode_state_t>(state | RMT_ENCODING_MEM_FULL);
             goto out;
         }
         [[fallthrough]];
-
-    case 2: // Send ending code
+    case 2:
         encoded_symbols += copy_encoder->encode(
-            copy_encoder, channel, &custom_encoder->nec_ending_symbol,
+            copy_encoder, tx_channel, &packet_encoder->ending_symbol,
             sizeof(rmt_symbol_word_t), &session_state);
+
         if (session_state & RMT_ENCODING_COMPLETE) {
-            custom_encoder->state = RMT_ENCODING_RESET;
-            current_state = static_cast<rmt_encode_state_t>(
-                current_state | RMT_ENCODING_COMPLETE);
+            packet_encoder->state = 0;
+            state =
+                static_cast<rmt_encode_state_t>(state | RMT_ENCODING_COMPLETE);
         }
         if (session_state & RMT_ENCODING_MEM_FULL) {
-            current_state = static_cast<rmt_encode_state_t>(
-                current_state | RMT_ENCODING_MEM_FULL);
+            state =
+                static_cast<rmt_encode_state_t>(state | RMT_ENCODING_MEM_FULL);
+            goto out;
         }
     }
 
 out:
-    *ret_state = current_state;
+    *ret_state = state;
     return encoded_symbols;
 }
 
-static esp_err_t rmt_custom_ir_encoder_reset(rmt_encoder_t *encoder)
+static esp_err_t rmt_del_ir_packet_encoder(rmt_encoder_t *encoder)
 {
-    nc::rmt_custom_ir_encoder_t *custom_encoder =
-        __containerof(encoder, nc::rmt_custom_ir_encoder_t, base);
-    rmt_encoder_reset(custom_encoder->copy_encoder);
-    rmt_encoder_reset(custom_encoder->bytes_encoder);
-    custom_encoder->state = RMT_ENCODING_RESET;
+    nc::rmt_ir_packet_encoder_t *packet_encoder =
+        __containerof(encoder, nc::rmt_ir_packet_encoder_t, base);
+    rmt_del_encoder(packet_encoder->copy_encoder);
+    rmt_del_encoder(packet_encoder->bytes_encoder);
+    free(packet_encoder);
     return ESP_OK;
 }
 
-static esp_err_t rmt_del_custom_ir_encoder(rmt_encoder_t *encoder)
-{
-    nc::rmt_custom_ir_encoder_t *custom_encoder =
-        __containerof(encoder, nc::rmt_custom_ir_encoder_t, base);
-    rmt_del_encoder(custom_encoder->copy_encoder);
-    rmt_del_encoder(custom_encoder->bytes_encoder);
-    free(custom_encoder);
-    return ESP_OK;
-}
-
-static esp_err_t rmt_new_custom_ir_encoder(uint32_t resolution_hz,
-                                           rmt_encoder_handle_t *ret_encoder)
+// FIXME Keep working down below...
+esp_err_t rmt_new_ir_packet_encoder(uint32_t resolution_hz,
+                                    rmt_encoder_handle_t *ret_encoder)
 {
     auto calculate_ticks = [&](uint32_t duration_us) -> uint16_t {
         uint32_t ticks = ((uint64_t)duration_us * resolution_hz) / 1000000ULL;
@@ -114,17 +119,17 @@ static esp_err_t rmt_new_custom_ir_encoder(uint32_t resolution_hz,
         return ESP_ERR_INVALID_ARG;
     }
 
-    nc::rmt_custom_ir_encoder_t *custom_encoder =
-        static_cast<nc::rmt_custom_ir_encoder_t *>(
-            rmt_alloc_encoder_mem(sizeof(nc::rmt_custom_ir_encoder_t)));
-    if (!custom_encoder) {
+    nc::rmt_ir_packet_encoder_t *packet_encoder =
+        static_cast<nc::rmt_ir_packet_encoder_t *>(
+            rmt_alloc_encoder_mem(sizeof(nc::rmt_ir_packet_encoder_t)));
+    if (!packet_encoder) {
         return ESP_ERR_NO_MEM;
     }
 
-    custom_encoder->base.encode = rmt_encode_custom_ir;
-    custom_encoder->base.reset = rmt_custom_ir_encoder_reset;
-    custom_encoder->base.del = rmt_del_custom_ir_encoder;
-    custom_encoder->state = RMT_ENCODING_RESET;
+    packet_encoder->base.encode = rmt_encode_ir_packet;
+    packet_encoder->base.reset = rmt_ir_packet_encoder_reset;
+    packet_encoder->base.del = rmt_del_ir_packet_encoder;
+    packet_encoder->state = RMT_ENCODING_RESET;
 
     rmt_copy_encoder_config_t copy_encoder_config = {};
     rmt_bytes_encoder_config_t bytes_encoder_config = {
@@ -145,44 +150,44 @@ static esp_err_t rmt_new_custom_ir_encoder(uint32_t resolution_hz,
     };
 
     esp_err_t ret = rmt_new_copy_encoder(&copy_encoder_config,
-                                         &custom_encoder->copy_encoder);
+                                         &packet_encoder->copy_encoder);
     if (ret != ESP_OK) {
-        ESP_LOGE("IR Encoder", "Failed to create copy encoder: %s",
+        ESP_LOGE(TAG, "Failed to create copy encoder: %s",
                  esp_err_to_name(ret));
         goto err;
     }
     ret = rmt_new_bytes_encoder(&bytes_encoder_config,
-                                &custom_encoder->bytes_encoder);
+                                &packet_encoder->bytes_encoder);
     if (ret != ESP_OK) {
-        ESP_LOGE("IR Encoder", "Failed to create bytes encoder: %s",
+        ESP_LOGE(TAG, "Failed to create bytes encoder: %s",
                  esp_err_to_name(ret));
         goto err;
     }
 
-    custom_encoder->nec_leading_symbol = (rmt_symbol_word_t){
+    packet_encoder->leading_symbol = (rmt_symbol_word_t){
         .duration0 = calculate_ticks(NEC_LEADING_HIGH_US),
         .level0 = 1,
         .duration1 = calculate_ticks(NEC_LEADING_LOW_US),
         .level1 = 0,
     };
-    custom_encoder->nec_ending_symbol = (rmt_symbol_word_t){
+    packet_encoder->ending_symbol = (rmt_symbol_word_t){
         .duration0 = calculate_ticks(NEC_ENDING_HIGH_US),
         .level0 = 1,
         .duration1 = 0x7FFF,
         .level1 = 0,
     };
 
-    *ret_encoder = &custom_encoder->base;
+    *ret_encoder = &packet_encoder->base;
     return ESP_OK;
 
 err:
-    if (custom_encoder->bytes_encoder) {
-        rmt_del_encoder(custom_encoder->bytes_encoder);
+    if (packet_encoder->copy_encoder) {
+        rmt_del_encoder(packet_encoder->copy_encoder);
     }
-    if (custom_encoder->copy_encoder) {
-        rmt_del_encoder(custom_encoder->copy_encoder);
+    if (packet_encoder->bytes_encoder) {
+        rmt_del_encoder(packet_encoder->bytes_encoder);
     }
-    free(custom_encoder);
+    free(packet_encoder);
     return ret;
 }
 
@@ -200,7 +205,7 @@ nc::ir_interface::ir_interface(gpio_num_t tx_gpio_num, gpio_num_t rx_gpio_num,
                                uint32_t resolution_hz, uint32_t frequency_hz,
                                size_t mem_block_symbols)
     : _rx_symbols(mem_block_symbols * 4),
-      _logger("IR Interface", nsec::config::logging::ir_interface_level)
+      _logger(TAG, nsec::config::logging::ir_interface_level)
 {
     _logger.debug("Setting up IR communication (TX: {}, RX: {})", tx_gpio_num,
                   rx_gpio_num);
@@ -253,7 +258,7 @@ nc::ir_interface::ir_interface(gpio_num_t tx_gpio_num, gpio_num_t rx_gpio_num,
             "Failed to register RX callbacks: {}", esp_err_to_name(err)));
     }
 
-    err = rmt_new_custom_ir_encoder(resolution_hz, &_custom_encoder);
+    err = rmt_new_ir_packet_encoder(resolution_hz, &_custom_encoder);
     if (err != ESP_OK) {
         NSEC_THROW_PROTOCOL_ERROR(fmt::format(
             "Failed to create custom IR encoder: {}", esp_err_to_name(err)));
@@ -475,7 +480,9 @@ bool nc::ir_interface::_decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
     // FIXME Be more flexible by looping until we see a leader code
     // FIXME Repeating signal when sending as a copy?
     // FIXME Flipping bits and trying against checksum?
-    // Check leader code
+    // FIXME Maybe transmit a byte and it's inverse for every byte of the
+    // https://sibotic.wordpress.com/wp-content/uploads/2013/12/adoh-necinfraredtransmissionprotocol-281113-1713-47344.pdf
+    // packet? Check leader code
     if (!(
             // current_symbol->level0 == 1 &&
             nec_check_in_range(current_symbol->duration0,

@@ -50,12 +50,12 @@ class protocol_error : public nsec::exception::runtime_error
 
 } // namespace exception
 
-using rmt_custom_ir_encoder_t = struct {
+using rmt_ir_packet_encoder_t = struct {
     rmt_encoder_t base;
     rmt_encoder_t *copy_encoder; // To encode the leading and ending pulse
     rmt_encoder_t *bytes_encoder;
-    rmt_symbol_word_t nec_leading_symbol;
-    rmt_symbol_word_t nec_ending_symbol;
+    rmt_symbol_word_t leading_symbol;
+    rmt_symbol_word_t ending_symbol;
     int state;
 };
 
