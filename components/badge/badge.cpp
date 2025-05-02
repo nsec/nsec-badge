@@ -341,12 +341,19 @@ uint8_t nr::badge::_compute_new_social_level(
     uint8_t current_social_level, uint16_t new_badges_discovered_count) noexcept
 {
     uint16_t new_social_level = current_social_level;
-    uint16_t level_up = new_badges_discovered_count;
+    uint16_t level_up = 0;
 
-    if (new_badges_discovered_count > 1) {
-        level_up = new_badges_discovered_count *
-                   nsec::config::social::
-                       multiple_badges_discovered_simultaneously_multiplier;
+    // New badge count is always 1 for the 2025 badge.
+    if (new_badges_discovered_count == 1) {
+        if (current_social_level <= 20) {
+            level_up = 5;
+        } else if (current_social_level <= 75) {
+            level_up = 4;
+        } else if (current_social_level <= 125) {
+            level_up = 3;
+        } else {
+            level_up = 2;
+        }
     }
 
     new_social_level += level_up;
