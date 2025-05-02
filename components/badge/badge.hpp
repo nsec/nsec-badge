@@ -74,7 +74,7 @@ class badge
     _compute_new_social_level(uint8_t current_social_level,
                               uint16_t new_badges_discovered_count) noexcept;
     void _set_selected_animation(uint8_t animation_id, bool save,
-                              bool set_idle_animation) noexcept;
+                                 bool set_idle_animation) noexcept;
     void _led_update_clearance_level();
     uint32_t _check_social_level(uint8_t social_level);
     uint32_t _process_check1(uint8_t social_level);
