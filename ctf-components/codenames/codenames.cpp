@@ -1,6 +1,6 @@
 #include "codenames.h"
 
-#define NAMESPACE "codenames"
+#define CODENAMES_NAMESPACE "codenames"
 static const char *TAG = "codenames";
 
 static const char *questions[] = {
@@ -58,12 +58,12 @@ typedef struct {
     uint8_t key[25][1];
 } CodenamesState;
 
-// Using values for calibration data
+// Using values for codenames key data
 CodenamesState codenames_data = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
-// Using values for calibration data
+// Using values for codenames key data
 CodenamesState default_codenames_data = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
@@ -76,20 +76,19 @@ void print_nvs_blob_codenames() {
 
     // Try to get the blob from NVS
     nvs_handle_t nvs_handle;
-    esp_err_t err2 = nvs_open(NAMESPACE, NVS_READONLY, &nvs_handle);
+    esp_err_t err2 = nvs_open(CODENAMES_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err2 != ESP_OK) {
         ESP_LOGE(TAG, "CHECKING - Failed to open NVS namespace: %s\n", esp_err_to_name(err2));
         return;
     }
     err2 = nvs_get_blob(nvs_handle, "codenames_data", &codenames_data, &required_size);
     if (err2 == ESP_OK) {
-        printf("CHECKING - NVS Calibration Data:\n");
-        //for (int i = 0; i < 6; i++) {
-        //    printf("  codena[%d]: %d, hash[%d]: %s\n", i, calib_data.calib[i], i, calib_data.hashes[i]);
-        //}
-        printf("TBD - To fill out\n");
+        printf("CHECKING - NVS Key Data:\n");
+        for (int i = 0; i < 25; i++) {
+            printf("  %d : [%d] \n", i, codenames_data.key[i][0]);
+        }
     } else if (err2 == ESP_ERR_NVS_NOT_FOUND) {
-        printf("No calibration data found in NVS.\n");
+        printf("No key data found in NVS.\n");
     } else {
         printf("Error reading NVS blob: %s\n", esp_err_to_name(err2));
     }
@@ -98,16 +97,16 @@ void print_nvs_blob_codenames() {
 void update_nvs_codenames()
 {
     nvs_handle_t nvs_handle;
-    esp_err_t err = nvs_open(NAMESPACE, NVS_READWRITE, &nvs_handle);
+    esp_err_t err = nvs_open(CODENAMES_NAMESPACE, NVS_READWRITE, &nvs_handle);
     if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
 
-    // Store the calibration data structure as a single blob
+    // Store the codenames key data structure as a single blob
     err = nvs_set_blob(nvs_handle, "codenames_data", &codenames_data, sizeof(codenames_data));
     if (err == ESP_OK) {
-        //printf("Calibration data loaded from NVS successfully.\n");
+        //printf("Codenames key data loaded from NVS successfully.\n");
     } else {
         ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
     }
@@ -124,7 +123,7 @@ void update_nvs_codenames()
 void get_nvs_codenames()
 {
     nvs_handle_t nvs_handle;
-    esp_err_t err = nvs_open(NAMESPACE, NVS_READONLY, &nvs_handle);
+    esp_err_t err = nvs_open(CODENAMES_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
@@ -134,20 +133,40 @@ void get_nvs_codenames()
         return;
     }
 
-    // Retrieve the calibration data structure
+    // Retrieve the codenames key data structure
     size_t data_size = sizeof(codenames_data);
     err = nvs_get_blob(nvs_handle, "codenames_data", &codenames_data, &data_size);
     if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Error reading calibration data from NVS: %s\n", esp_err_to_name(err));
+        ESP_LOGE(TAG, "Error reading key from NVS: %s\n", esp_err_to_name(err));
     }
 
     nvs_close(nvs_handle);
 }
 
+void clear_nvs_codenames(){
+    nvs_handle_t handle;
+    esp_err_t err;
 
-//TODO FUNCTION
+     // Open NVS handle
+     err = nvs_open(CODENAMES_NAMESPACE, NVS_READWRITE, &handle);
+     if (err != ESP_OK) {
+         ESP_LOGE(TAG, "Error (%s) opening NVS handle!\n", esp_err_to_name(err));
+         return;
+     }
+ 
+     // Erase the blob from NVS
+     err = nvs_erase_key(handle, "codenames_data");
+     if (err == ESP_OK) {
+         printf("Key erased successfully.\n");
+     } else if (err == ESP_ERR_NVS_NOT_FOUND) {
+         //printf("No NVS data found to erase, initializing defaults.\n");
+     } else {
+         //printf("Error erasing NVS data: %s\n", esp_err_to_name(err));
+     }
+}
+
+
 int validate(char* c){
-    printf("INPUT: %s\n\n",c);
     char *endptr;
     long i = strtol(c, &endptr, 10);
     
@@ -163,31 +182,52 @@ int validate(char* c){
 
 int cmd_codenames(int argc, char **argv) {
     char* input_val;
+    get_nvs_codenames();
 
     if (argc == 1) {
+        
         printf("Usage: codenames\n");
         for (int i = 0; i < 20; i++) {
             printf("Question %d: %s\n", i, questions[i]);
         }
         printf("\n");
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 25; i++) {
             printf("Answer %s\n", answers[i]);
         }
         return 0;
 
     }else if(argc == 2 ){
         char *endptr;
-        long question_index = strtol(argv[1], &endptr, 10);
+        int question_index = strtol(argv[1], &endptr, 10);
         
-        if (*endptr != '\0' && strcmp(endptr, "--all") == 0) {
-            for (int i = 0; i < 20; i++) {
-                input_val = linenoise(questions[i]);
-                if(validate(input_val)){
-                    return 1;
+        if (*endptr != '\0') {
+            if(strcmp(endptr, "--all") == 0){
+                for (int i = 0; i < 20; i++) {
+                    input_val = linenoise(questions[i]);
+                    if(validate(input_val)){
+                        return 1;
+                    }
                 }
+                printf("\n\nEND\n\n");
+            } else if(strcmp(endptr, "--clear") == 0){
+                clear_nvs_codenames();
+            } else if(strcmp(endptr, "--show-questions") == 0){
+                for (int i = 0; i < 20; i++) {
+                    printf("Question %d: %s\n", i, questions[i]);
+                }
+                printf("\n");
+            } else if(strcmp(endptr, "--show-answers") == 0){
+                for (int i = 0; i < 25; i++) {
+                    printf("Answer %s\n", answers[i]);
+                }
+                printf("\n");
+            } else {
+                printf("Invalid question number. Please choose a number between 0 and 19 - or --all to run all 20 questions.\n");
+                print_nvs_blob_codenames();
+                return 1;
             }
 
-        } else if (question_index < 0 || question_index > 19) {
+        }  else if (question_index < 0 || question_index > 19) {
             printf("Invalid question number. Please choose a number between 0 and 19 - or --all to run all 20 questions.\n");
             return 1;
         } else {
@@ -205,8 +245,15 @@ int cmd_codenames(int argc, char **argv) {
 void register_codenames_cmd(void) {
     const esp_console_cmd_t cmd = {
         .command = "codenames",
-        .help = " tbd\n",
-        .hint = "tbd",
+        .help = "This challenge set a key on your badge. \n"
+                "Answer every questions with the proper answer's index \n"
+                "and the key will be set properly\n"
+                "<0-19>     - Answer a specific question by its index \n"
+                "--all      - Answer all 20 questions \n"
+                "--clear    - Reset key data \n"
+                "--show-questions   - Display questions and their index \n"
+                "--show-answers     - Display answers and their index \n",
+        .hint = "[<0-19> | --all | --clear | --show-questions | --show-answers] \n",
         .func = &cmd_codenames,
         .argtable = NULL,
     };
