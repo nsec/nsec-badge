@@ -3,6 +3,7 @@
  *
  * Copyright 2023 Jérémie Galarneau <jeremie.galarneau@gmail.com>
  * Copyright 2024 NorthSec
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 /******************************************************************************
@@ -32,7 +33,7 @@
 
 #include <array>
 #include <badge-button/watcher.hpp>
-//#include <badge/globals.hpp>
+#include <badge/globals.hpp>
 #include <esp_log.h>
 #include <iot_button.h>
 #include <utils/board.hpp>
@@ -40,7 +41,7 @@
 
 namespace nb = nsec::button;
 namespace ns = nsec::scheduling;
-//namespace ng = nsec::g;
+namespace ng = nsec::g;
 namespace nbb = nsec::board::button;
 
 nb::watcher::watcher(nb::new_button_event_notifier new_button_notifier) noexcept
@@ -123,6 +124,7 @@ void nb::watcher::_button_handler(void *button_handle, void *opaque_context)
         "Button handler called: button_id={}, native_event={}", (int)id,
         native_event);
 
+    if(ng::the_badge->is_docked()) return;
     // Convert ESP-IDF button event into our native events.
     nb::event badge_button_event;
     switch (native_event) {

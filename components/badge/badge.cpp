@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2023-2024 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 #include "badge.hpp"
@@ -106,6 +107,7 @@ nr::badge::badge()
 void nr::badge::start()
 {
     _strip_animator.start();
+    _dock_detector.start();
 
     // Set initial Clearance level.
     _led_update_clearance_level();
@@ -119,12 +121,14 @@ void nr::badge::load_config()
     std::uint8_t selected_animation_id = social_level;
     std::uint16_t sponsor_flag = 0;
     std::uint8_t sponsor_count = 0;
+    std::uint32_t nvs_social_check;
 
     const auto loaded_config = config_store.load();
     if (loaded_config) {
         social_level = loaded_config->social_level;
         selected_animation_id = loaded_config->selected_animation_id;
         sponsor_flag = loaded_config->sponsor_flag;
+        nvs_social_check = loaded_config->social_level_check;
 
         // Retreive sponsor counts.
         std::uint16_t tmp_sponsor_flag = sponsor_flag;
@@ -135,9 +139,18 @@ void nr::badge::load_config()
             tmp_sponsor_flag = tmp_sponsor_flag >> 1;
         }
 
-        _logger.info("Found config on storage: social_level={0}, "
-                     "selected_animation={1}, sponsor_flag=0x{2:04X}",
-                     social_level, selected_animation_id, sponsor_flag);
+        _logger.info("Found config on storage:");
+        _logger.info("- social_level={0}, social_level_check=0x{1:08X}",
+                     social_level, nvs_social_check);
+        _logger.info("- selected_animation={0}, sponsor_flag=0x{1:04X}",
+                     selected_animation_id, sponsor_flag);
+
+        // Check social level.
+        if (_check_social_level(social_level) != nvs_social_check) {
+            _logger.info("'social level check' error");
+            social_level = nsec::config::social::initial_level;
+            selected_animation_id = social_level;
+        };
     } else {
         _logger.info("No config found on storage");
     }
@@ -155,6 +168,8 @@ void nr::badge::save_config() const
     config_store.save_selected_animation_id(_selected_animation);
     config_store.save_social_level(_social_level);
     config_store.save_sponsor_flag(_sponsor_flag);
+    config_store.save_social_level_check(
+        nsec::g::the_badge->_check_social_level(_social_level));
 }
 
 void nr::badge::factory_reset()
@@ -251,6 +266,14 @@ void nr::badge::apply_new_sponsor(uint8_t sponsor_id) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
 
+    // Only accept ID between 1 & 14.
+    if( (sponsor_id == 0) || (sponsor_id > 14)) {
+        _logger.info("Received invalid sponsor ID={}", sponsor_id);
+
+        // Ignore the request.
+        return;
+    }
+
     // Update the sponsor flag with the new ID.
     uint16_t new_sponsor_flag = _sponsor_flag | (1 << (sponsor_id - 1));
     _logger.info("New sponsor ID={0}: old_flag=0x{1:04X}, new_flag=0x{2:04X}",
@@ -270,6 +293,46 @@ void nr::badge::apply_new_sponsor(uint8_t sponsor_id) noexcept
         // Update Clearance level.
         _led_update_clearance_level();
     }
+}
+
+void nr::badge::apply_animation(uint8_t animation_id) noexcept
+{
+    _set_selected_animation(animation_id, false, true);
+}
+
+void nr::badge::apply_dock_status(bool detected) noexcept
+{
+    _docked = detected;
+    if(_docked){
+        _prev_selected_animation = _selected_animation;
+        badge_ssd1306_clear();
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        badge_ssd1306_deinit();
+        vTaskDelay(500/portTICK_PERIOD_MS);
+    }
+    else{
+        apply_animation(_prev_selected_animation);
+        vTaskDelay(500/portTICK_PERIOD_MS);
+        _idle_press_down_tracking = 0;
+        _lcd_display_update_current_screen();
+    }
+}
+
+void nr::badge::apply_i2c_command(uint8_t cmd, uint8_t value) noexcept
+{
+    switch(cmd){
+        case nsec::config::i2c::sponsor_cmd:
+            apply_new_sponsor(value);
+            break;
+        case nsec::config::i2c::animation_cmd:
+            apply_animation(value);
+            break;
+    }
+}
+
+bool nr::badge::is_docked() noexcept
+{
+    return _docked;
 }
 
 uint8_t nr::badge::_compute_new_social_level(
@@ -371,6 +434,42 @@ void nr::badge::_led_update_clearance_level()
     }
 }
 
+uint32_t nr::badge::_check_social_level(uint8_t social_level)
+{
+    uint32_t check1;
+    uint32_t check2;
+
+    nr::badge_unique_id mac = _get_unique_id();
+
+    check1 = _process_check1(social_level);
+    check2 = _process_check2(social_level);
+    check1 = check1 + check2 + (check2 << 15) + (mac[5] & 0xFC);
+
+    return check1;
+}
+
+uint32_t nr::badge::_process_check1(uint8_t social_level)
+{
+    uint32_t check;
+    nr::badge_unique_id mac = _get_unique_id();
+
+    check = (mac[5] << 8) + mac[3];
+    check = check + ((social_level + 51) << 8) + (social_level & 0xFE);
+
+    return check;
+}
+
+uint32_t nr::badge::_process_check2(uint8_t social_level)
+{
+    uint32_t check;
+    nr::badge_unique_id mac = _get_unique_id();
+    
+    check = (mac[3] << 8) + mac[4] + ((uint32_t)social_level << 4);
+    check = check + config_version_magic + (mac[5] * (social_level + 3));
+
+    return check;
+}
+
 void nr::badge::_lcd_display_social_level()
 {
     char lcd_print[17];
@@ -385,7 +484,7 @@ void nr::badge::_lcd_display_current_animation()
     char lcd_print[17];
 
     // Display current animation on LCD (idle screen nb. 1).
-    if (_idle_lcd_screen_nb == 1) {
+    if (_idle_lcd_screen_nb == 1 && !_docked) {
         sprintf(lcd_print, "Animation    %3u", _selected_animation);
         badge_print_text(1, lcd_print, 16, 0);
     }
@@ -396,7 +495,7 @@ void nr::badge::_lcd_display_sponsor_count()
     char lcd_print[17];
 
     // Display sponsor count on LCD (idle screen nb. 1).
-    if (_idle_lcd_screen_nb == 1) {
+    if (_idle_lcd_screen_nb == 1 && !_docked) {
         sprintf(lcd_print, "Sponsor      %3u", _sponsor_count);
         badge_print_text(2, lcd_print, 16, 0);
     }
