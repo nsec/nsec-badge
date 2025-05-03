@@ -340,8 +340,8 @@ bool nr::badge::is_docked() noexcept
 uint8_t nr::badge::_compute_new_social_level(
     uint8_t current_social_level, uint16_t new_badges_discovered_count) noexcept
 {
-    uint16_t new_social_level = current_social_level;
-    uint16_t level_up = 0;
+    uint8_t new_social_level = current_social_level;
+    uint8_t level_up = 0;
 
     // New badge count is always 1 for the 2025 badge.
     if (new_badges_discovered_count == 1) {
