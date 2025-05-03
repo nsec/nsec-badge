@@ -256,7 +256,9 @@ void nr::badge::apply_score_change(
 
     // Saves to configuration
     set_social_level(new_social_level, true);
-    _set_selected_animation(_social_level, true, false);
+
+    // Update LCD, if applicable.
+    _lcd_display_social_level();
 
     // Update Clearance level.
     _led_update_clearance_level();
@@ -338,13 +340,20 @@ bool nr::badge::is_docked() noexcept
 uint8_t nr::badge::_compute_new_social_level(
     uint8_t current_social_level, uint16_t new_badges_discovered_count) noexcept
 {
-    uint16_t new_social_level = current_social_level;
-    uint16_t level_up = new_badges_discovered_count;
+    uint8_t new_social_level = current_social_level;
+    uint8_t level_up = 0;
 
-    if (new_badges_discovered_count > 1) {
-        level_up = new_badges_discovered_count *
-                   nsec::config::social::
-                       multiple_badges_discovered_simultaneously_multiplier;
+    // New badge count is always 1 for the 2025 badge.
+    if (new_badges_discovered_count == 1) {
+        if (current_social_level <= 20) {
+            level_up = 5;
+        } else if (current_social_level <= 75) {
+            level_up = 4;
+        } else if (current_social_level <= 125) {
+            level_up = 3;
+        } else {
+            level_up = 2;
+        }
     }
 
     new_social_level += level_up;
@@ -474,9 +483,11 @@ void nr::badge::_lcd_display_social_level()
 {
     char lcd_print[17];
 
-    // Display current social level on LCD.
-    sprintf(lcd_print, "Social Level %3u", _social_level);
-    badge_print_text(0, lcd_print, 16, 0);
+    // Display current social level on LCD (idle screen nb. 1).
+    if (_idle_lcd_screen_nb == 1 && !_docked) {
+        sprintf(lcd_print, "Social Level %3u", _social_level);
+        badge_print_text(0, lcd_print, 16, 0);
+    }
 }
 
 void nr::badge::_lcd_display_current_animation()
