@@ -246,6 +246,7 @@ void nr::badge::apply_score_change(
     uint16_t new_badges_discovered_count) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
+    uint8_t _idle_lcd_screen_nb_backup = _idle_lcd_screen_nb;
 
     if (new_badges_discovered_count > 0) {
         const auto new_social_level = _compute_new_social_level(
@@ -259,10 +260,17 @@ void nr::badge::apply_score_change(
         set_social_level(new_social_level, true);
     }
 
-    // Update LCD, if applicable.
-    badge_ssd1306_clear();
-    _lcd_display_social_level();
-    if (_idle_lcd_screen_nb == 1 && !_docked) {
+    // Always display the sync status, unless badge dock.
+    // * Note: the idle screen is restore by the "Network Handler" process.
+    if (!_docked) {
+         badge_ssd1306_clear();
+
+        // For the display of the social level.
+        _idle_lcd_screen_nb = 1;
+        _lcd_display_social_level();
+        _idle_lcd_screen_nb = _idle_lcd_screen_nb_backup;
+
+        // Display the sync result.
         badge_print_text(
             2, (new_badges_discovered_count > 0) ? "New badge" : "No new badge",
             12, 0);
