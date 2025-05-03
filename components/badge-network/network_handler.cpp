@@ -216,6 +216,7 @@ void nc::network_handler::_set_ir_protocol_state(
     if (next_state == ir_protocol_state::IDLE) {
         _reset_exchange_state();
     } else if (next_state == ir_protocol_state::COMPLETED) {
+        vTaskDelay(pdMS_TO_TICKS(1500));
         _handle_successful_sync();
     }
 }
