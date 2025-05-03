@@ -263,8 +263,8 @@ void nc::network_handler::start_ir_key_exchange() noexcept
     _reset_exchange_state();
     _set_ir_protocol_state(ir_protocol_state::WAITING_FOR_PEER);
 
-    // Stagger initial transmission slightly to reduce collision probability
-    uint32_t delay_ms = esp_random() % cfg::ir_sync_request_jitter_max;
+    // Wait a couple seconds to reduce collision probability
+    uint32_t delay_ms = 2000;
     if (delay_ms > 0) {
         vTaskDelay(pdMS_TO_TICKS(delay_ms));
     }
@@ -433,6 +433,7 @@ void nc::network_handler::_handle_received_ir_packet(
 
             _ir_timeout_timestamp_ms =
                 get_current_time_ms() + get_timeout_duration_ms();
+            vTaskDelay(500/portTICK_PERIOD_MS); // Wait half a second before sending ACK
             _send_ir_packet(message::ir_packet_type::ACK);
             _set_ir_protocol_state(ir_protocol_state::COMPLETED);
             _ir_timeout_timestamp_ms =
