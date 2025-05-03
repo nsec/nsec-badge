@@ -247,17 +247,27 @@ void nr::badge::apply_score_change(
 {
     nsync::lock_guard lock(_public_access_semaphore);
 
-    const auto new_social_level =
-        _compute_new_social_level(_social_level, new_badges_discovered_count);
-    _logger.info("Applying score change: new_badges_discovered_count={}, "
-                 "new_social_level={}",
-                 new_badges_discovered_count, new_social_level);
+    if (new_badges_discovered_count > 0) {
+        const auto new_social_level = _compute_new_social_level(
+            _social_level, new_badges_discovered_count);
 
-    // Saves to configuration
-    set_social_level(new_social_level, true);
+        _logger.info("Applying score change: new_badges_discovered_count={}, "
+                     "new_social_level={}",
+                     new_badges_discovered_count, new_social_level);
+
+        // Saves to configuration
+        set_social_level(new_social_level, true);
+    }
 
     // Update LCD, if applicable.
+    badge_ssd1306_clear();
     _lcd_display_social_level();
+    if (_idle_lcd_screen_nb == 1 && !_docked) {
+        badge_print_text(
+            2, (new_badges_discovered_count > 0) ? "New badge" : "No new badge",
+            12, 0);
+        badge_print_text(3, "discovered", 10, 0);
+    }
 
     // Update Clearance level.
     _led_update_clearance_level();

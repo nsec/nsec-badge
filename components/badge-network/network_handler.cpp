@@ -232,6 +232,7 @@ void nc::network_handler::_handle_successful_sync() noexcept
 
         if (store.has_id(_peer_id)) {
             _logger.info("Peer already synced {}", _peer_id);
+            nsec::g::the_badge->apply_score_change(0);
         } else {
             _logger.info("New peer synced {}", _peer_id);
             store.save_id(_peer_id);
