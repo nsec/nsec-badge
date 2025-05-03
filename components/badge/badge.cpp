@@ -483,9 +483,11 @@ void nr::badge::_lcd_display_social_level()
 {
     char lcd_print[17];
 
-    // Display current social level on LCD.
-    sprintf(lcd_print, "Social Level %3u", _social_level);
-    badge_print_text(0, lcd_print, 16, 0);
+    // Display current social level on LCD (idle screen nb. 1).
+    if (_idle_lcd_screen_nb == 1 && !_docked) {
+        sprintf(lcd_print, "Social Level %3u", _social_level);
+        badge_print_text(0, lcd_print, 16, 0);
+    }
 }
 
 void nr::badge::_lcd_display_current_animation()
