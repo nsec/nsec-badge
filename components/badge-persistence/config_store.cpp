@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2024 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 #include <badge-persistence/config_store.hpp>
@@ -55,6 +56,16 @@ std::optional<np::config_store::config> np::config_store::load()
         return std::nullopt;
     }
 
+    auto read_social_check_ret = nvs_get_u32(
+        nvs, nsec::config::persistence::social_level_check_field_name,
+        &cfg.social_level_check);
+    if (read_social_check_ret != ESP_OK) {
+        _logger.warn("Failed to read value: field_name={}, ret={}",
+                     nsec::config::persistence::social_level_check_field_name,
+                     read_social_check_ret);
+        return std::nullopt;
+    }
+
     return cfg;
 }
 
@@ -90,6 +101,11 @@ void np::config_store::save_sponsor_flag(std::uint16_t level)
     _save_u16_field(nsec::config::persistence::sponsor_flag_field_name, level);
 }
 
+void np::config_store::save_social_level_check(std::uint32_t level_check)
+{
+    _save_u32_field(nsec::config::persistence::social_level_check_field_name, level_check);
+}
+
 void np::config_store::_save_u8_field(const char *field_name,
                                       std::uint8_t value)
 {
@@ -109,7 +125,7 @@ void np::config_store::_save_u8_field(const char *field_name,
 }
 
 void np::config_store::_save_u16_field(const char *field_name,
-                                      std::uint16_t value)
+                                       std::uint16_t value)
 {
     auto nvs = _open_nvs_handle();
 
@@ -118,6 +134,24 @@ void np::config_store::_save_u16_field(const char *field_name,
                  nsec::config::persistence::namespace_name, field_name, value);
 
     const auto write_ret = nvs_set_u16(nvs, field_name, value);
+    if (write_ret != ESP_OK) {
+        _logger.error("Failed to save field to namespace: namespace_name={}, "
+                      "field_name={}, value={}, nvs_error={}",
+                      nsec::config::persistence::namespace_name, field_name,
+                      value, write_ret);
+    }
+}
+
+void np::config_store::_save_u32_field(const char *field_name,
+                                       std::uint32_t value)
+{
+    auto nvs = _open_nvs_handle();
+
+    _logger.info("Saving field to namespace: namespace_name={}, "
+                 "field_name={}, value={}",
+                 nsec::config::persistence::namespace_name, field_name, value);
+
+    const auto write_ret = nvs_set_u32(nvs, field_name, value);
     if (write_ret != ESP_OK) {
         _logger.error("Failed to save field to namespace: namespace_name={}, "
                       "field_name={}, value={}, nvs_error={}",

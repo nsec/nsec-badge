@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright 2023-2024 Jérémie Galarneau <jeremie.galarneau@gmail.com>
+ * SPDX-FileCopyrightText: 2025 NorthSec
  */
 
 #ifndef NSEC_RUNTIME_BADGE_HPP
@@ -12,6 +13,7 @@
 #include <badge-button/watcher.hpp>
 #include <badge-led-strip/strip_animator.hpp>
 #include <badge-network/network_handler.hpp>
+#include <badge-dock/dock_detector.hpp>
 #include <cstdint>
 #include <utils/logging.hpp>
 #include <badge/id.hpp>
@@ -39,6 +41,10 @@ class badge
     std::uint8_t level() const noexcept;
     void apply_score_change(uint16_t new_badges_discovered_count) noexcept;
     void apply_new_sponsor(uint8_t sponsor_id) noexcept;
+    void apply_animation(uint8_t animation_id) noexcept;
+    void apply_dock_status(bool detected) noexcept;
+    void apply_i2c_command(uint8_t cmd, uint8_t value) noexcept;
+    bool is_docked() noexcept;
 
   private:
     struct eeprom_config {
@@ -70,7 +76,10 @@ class badge
     void _set_selected_animation(uint8_t animation_id, bool save,
                                  bool set_idle_animation) noexcept;
     void _led_update_clearance_level();
-
+    uint32_t _check_social_level(uint8_t social_level);
+    uint32_t _process_check1(uint8_t social_level);
+    uint32_t _process_check2(uint8_t social_level);
+    
     void _lcd_display_social_level();
     void _lcd_display_current_animation();
     void _lcd_display_sponsor_count();
@@ -88,10 +97,13 @@ class badge
     uint16_t _sponsor_flag = 0;
     uint8_t _clearance_level = 0;
     uint8_t _selected_animation = 0;
+    uint8_t _prev_selected_animation = 0;
     uint8_t _idle_press_down_tracking = 1;
     uint8_t _idle_lcd_screen_nb = 0;
+    bool _docked = false;
 
     bool _is_expecting_factory_reset : 1 = 0;
+    uint32_t _social_level_check;
 
     button::watcher _button_watcher;
 
@@ -100,6 +112,8 @@ class badge
     nsec::led::strip_animator _strip_animator;
 
     nsec::logging::logger _logger;
+
+    nsec::dock::dock_detector _dock_detector;
 };
 } // namespace nsec::runtime
 
