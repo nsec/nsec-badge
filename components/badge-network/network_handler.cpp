@@ -264,7 +264,7 @@ void nc::network_handler::start_ir_key_exchange() noexcept
     _set_ir_protocol_state(ir_protocol_state::WAITING_FOR_PEER);
 
     // Wait a couple seconds to reduce collision probability
-    uint32_t delay_ms = 2000;
+    uint32_t delay_ms = 2000 + esp_random() % cfg::ir_sync_request_jitter_max;
     if (delay_ms > 0) {
         vTaskDelay(pdMS_TO_TICKS(delay_ms));
     }
