@@ -12,17 +12,16 @@ set -eu
 # Path to the firmware directory
 FIRMWARE_DIR="binaries/conference"
 
-BOOTLOADER_BIN="${FIRMWARE_DIR}/bootloader.bin"
-BOOTLOADER_ADDR="0x0"
-PARTITIONS_BIN="${FIRMWARE_DIR}/partitions.bin"
-PARTITIONS_ADDR="0x8000"
-OTA_DATA_BIN="${FIRMWARE_DIR}/ota_data_initial.bin"
-OTA_DATA_ADDR="0xd000"
+#BOOTLOADER_BIN="${FIRMWARE_DIR}/bootloader.bin"
+#BOOTLOADER_ADDR="0x0"
+#PARTITIONS_BIN="${FIRMWARE_DIR}/partitions.bin"
+#PARTITIONS_ADDR="0x8000"
 FIRMWARE_BIN="${FIRMWARE_DIR}/firmware.bin"
-FIRMWARE_ADDR="0x10000"
+#FIRMWARE_ADDR="0x10000"
+FIRMWARE_ADDR="0x0"
 
 ESP_TYPE="esp32c3"
-BAUD_RATE="460800"
+BAUD_RATE="115200"
 
 # Fixed path to the usb-serial device per usb port
 # Can be found with 'udevadm info /dev/ttyACMX'
@@ -41,18 +40,18 @@ ESPTOOL="$HOME/Git/Nsec/pio/bin/esptool.py"
 
 
 check_firmware() {
-    if [ ! -f "$BOOTLOADER_BIN" ]; then
-        echo "Missing firmware file: $BOOTLOADER_BIN"
-        exit 1
-    fi
-    if [ ! -f "$PARTITIONS_BIN" ]; then
-        echo "Missing firmware file: $PARTITIONS_BIN"
-        exit 1
-    fi
-    if [ ! -f "$OTA_DATA_BIN" ]; then
-        echo "Missing firmware file: $OTA_DATA_BIN"
-        exit 1
-    fi
+    #if [ ! -f "$BOOTLOADER_BIN" ]; then
+    #    echo "Missing firmware file: $BOOTLOADER_BIN"
+    #    exit 1
+    #fi
+    #if [ ! -f "$PARTITIONS_BIN" ]; then
+    #    echo "Missing firmware file: $PARTITIONS_BIN"
+    #    exit 1
+    #fi
+    #if [ ! -f "$OTA_DATA_BIN" ]; then
+    #    echo "Missing firmware file: $OTA_DATA_BIN"
+    #    exit 1
+    #fi
     if [ ! -f "$FIRMWARE_BIN" ]; then
         echo "Missing firmware file: $FIRMWARE_BIN"
         exit 1
@@ -98,9 +97,9 @@ flash_loop() {
 	            --flash_mode dio \
 	            --flash_freq 80m \
 	            --flash_size 8MB \
-                "$BOOTLOADER_ADDR" "$BOOTLOADER_BIN" \
-                "$PARTITIONS_ADDR" "$PARTITIONS_BIN" \
-                "$OTA_DATA_ADDR" "$OTA_DATA_BIN" \
+                #"$BOOTLOADER_ADDR" "$BOOTLOADER_BIN" \
+                #"$PARTITIONS_ADDR" "$PARTITIONS_BIN" \
+                #"$OTA_DATA_ADDR" "$OTA_DATA_BIN" \
                 "$FIRMWARE_ADDR" "$FIRMWARE_BIN"; then
 
             echo "Failed to flash firmare. Press any key to retry."
