@@ -6,6 +6,7 @@
 #ifndef NSEC_BOARD_HPP
 #define NSEC_BOARD_HPP
 
+#include "soc/gpio_num.h"
 #include <driver/uart.h>
 
 namespace nsec::board
@@ -76,8 +77,8 @@ constexpr unsigned int signal_pin = 12;
 
 namespace ir
 {
-constexpr unsigned int tx_pin = 10;
-constexpr unsigned int rx_pin = 3;
+constexpr gpio_num_t tx_pin = static_cast<gpio_num_t>(10);
+constexpr gpio_num_t rx_pin = static_cast<gpio_num_t>(3);
 } // namespace ir
 
 

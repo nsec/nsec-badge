@@ -77,8 +77,8 @@ void badge_print_bitmap(uint8_t* bitmap, int x, int y, int width, int height, bo
 // Print text to specific line to ssd1306 screen
 // Line is between 0-3, 0 being the top line
 // size is len(text) - one line being max 16 chars (see textbox func for longer text)
-// Invert being false is white text on black background, true is black text on white background 
-void badge_print_text(int line, char* text, int size, bool invert)
+// Invert being false is white text on black background, true is black text on white background
+void badge_print_text(int line, const char* text, int size, bool invert)
 {
     // Check if initialized
     if (dev == nullptr) {
@@ -111,12 +111,12 @@ void badge_ssd1306_deinit()
         if (dev->_i2c_dev_handle != nullptr) {
             i2c_master_bus_rm_device(dev->_i2c_dev_handle);
         }
-        
+
         // Then delete the I2C master bus
         if (dev->_i2c_bus_handle != nullptr) {
             i2c_del_master_bus(dev->_i2c_bus_handle);
         }
-        
+
         // Delete the device and set pointer to null
         delete dev;
         dev = nullptr;

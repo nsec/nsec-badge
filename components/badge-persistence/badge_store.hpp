@@ -76,6 +76,7 @@ class badge_store
 
     unsigned int count();
     void save_id(const nsec::runtime::badge_unique_id &id);
+    bool has_id(const nsec::runtime::badge_unique_id &id);
 
     iterator begin()
     {

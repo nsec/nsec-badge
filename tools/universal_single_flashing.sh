@@ -1,0 +1,2 @@
+### 2025 flashing script for ESP32-C3 ###
+esptool.py --chip esp32c3 --baud 460800 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size 4MB 0x0 .\binaries\conference\bootloader.bin 0x8000 .\binaries\conference\partitions.bin 0xd000 .\binaries\conference\ota_data_initial.bin 0x10000 .\binaries\conference\firmware.bin

@@ -8,7 +8,6 @@ set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
 if(CONFIG_NSEC_BUILD_CONFERENCE)
         idf_component_register(SRCS "badge.cpp" "globals.cpp"
                 INCLUDE_DIRS "." "../" "../../.pio/libdeps/conference/fmt/include"  "../../.pio/libdeps/conference/SmartLeds/src"
-                REQUIRES driver nvs_flash ssd1306 console cmd_nvs cmd_sys
-
+                REQUIRES driver nvs_flash ssd1306 console cmd_nvs cmd_sys badge-network
         )
 endif()

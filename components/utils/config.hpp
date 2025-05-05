@@ -74,6 +74,11 @@ constexpr unsigned int badge_serial_speed = 115200;
 constexpr bool invert_uart = true;
 constexpr unsigned int ir_resolution_hz = 1000000;
 constexpr unsigned int ir_frequency_hz = 38000;
+constexpr unsigned int ir_mem_block_symbols = 48;
+constexpr unsigned int ir_idle_delay_ms = 3000;
+constexpr unsigned int ir_timeout_ms = 10000;
+constexpr unsigned int ir_timeout_check_interval_us = 500000;
+constexpr unsigned int ir_sync_request_jitter_max = 1000;
 
 /*
  * Applications may define messages >= application_message_type_range_begin.
