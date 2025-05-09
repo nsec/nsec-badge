@@ -81,11 +81,14 @@ void print_nvs_blob_codenames() {
 
     // Try to get the blob from NVS
     nvs_handle_t nvs_handle;
+
     esp_err_t err2 = nvs_open(CODENAMES_NAMESPACE, NVS_READONLY, &nvs_handle);
+
     if (err2 != ESP_OK) {
         ESP_LOGE(TAG, "CHECKING - Failed to open NVS namespace: %s\n", esp_err_to_name(err2));
         return;
     }
+  
     err2 = nvs_get_blob(nvs_handle, "codenames_data", &codenames_data, &required_size);
     if (err2 == ESP_OK) {
         printf("CHECKING - NVS Key Data:\n");
@@ -102,16 +105,20 @@ void print_nvs_blob_codenames() {
 void update_nvs_codenames()
 {
     nvs_handle_t nvs_handle;
+
     esp_err_t err = nvs_open(CODENAMES_NAMESPACE, NVS_READWRITE, &nvs_handle);
+
     if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
 
+
     // Store the codenames key data structure as a single blob
     err = nvs_set_blob(nvs_handle, "codenames_data", &codenames_data, sizeof(codenames_data));
     if (err == ESP_OK) {
         //printf("Codenames key data loaded from NVS successfully.\n");
+
     } else {
         ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
     }
@@ -128,7 +135,9 @@ void update_nvs_codenames()
 void get_nvs_codenames()
 {
     nvs_handle_t nvs_handle;
+
     esp_err_t err = nvs_open(CODENAMES_NAMESPACE, NVS_READONLY, &nvs_handle);
+
     if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
@@ -138,11 +147,13 @@ void get_nvs_codenames()
         return;
     }
 
+
     // Retrieve the codenames key data structure
     size_t data_size = sizeof(codenames_data);
     err = nvs_get_blob(nvs_handle, "codenames_data", &codenames_data, &data_size);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Error reading key from NVS: %s\n", esp_err_to_name(err));
+
     }
 
     nvs_close(nvs_handle);
@@ -305,6 +316,7 @@ int cmd_codenames(int argc, char **argv) {
         printf("Usage: codenames\n");
     }
     return 0;
+
 }
 
 void register_codenames_cmd(void) {
