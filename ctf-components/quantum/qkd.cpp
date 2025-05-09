@@ -4,7 +4,7 @@
 #define PIN_S2C_DATA  GPIO_NUM_7  // input (server -> client)
 #define PIN_C2S_DATA  GPIO_NUM_6  // output (client -> server)
 
-#define BIT_DELAY_US  75
+#define BIT_DELAY_US  30
 
 #define QUANTUM_NAMESPACE "qkd"
 static const char *TAG = "QKD";
@@ -328,23 +328,21 @@ static void qkd_init(void)
     client_read_bits(noisybits, 128);
     std::memcpy(qkd_data.noisy_bits, noisybits, sizeof(qkd_data.noisy_bits));
     update_display_progress("R: Dock Qubits", ++current_step, total_steps);
-    //printf("\nReceiving the qubit string from the dock...\n");
 
     // Send badge_basis
     
     char pongMsg[129];
     generate_random_bit_string(pongMsg, 128);
     //printf("Sending the badge basis to the dock...\n");
-    update_display_progress("S: Badge basis", ++current_step, total_steps);
     std::memcpy(qkd_data.badge_basis, pongMsg, sizeof(qkd_data.badge_basis));
     client_send_bits(pongMsg);
+    update_display_progress("S: Badge basis", ++current_step, total_steps);
 
     // Receive dock_basis
     
     char dockbasis[129];
     client_read_bits(dockbasis, 128);
     std::memcpy(qkd_data.dock_basis, dockbasis, sizeof(qkd_data.dock_basis));
-    //printf("Receiving the dock basis from the dock...\n");
     update_display_progress("R: Dock basis", ++current_step, total_steps);
 
     // Receive dockbits
@@ -355,7 +353,6 @@ static void qkd_init(void)
     char dockcipher[129];
     client_read_bits(dockcipher, 128);
     std::memcpy(qkd_data.ciphertext, dockcipher, sizeof(qkd_data.ciphertext));
-    //printf("Receiving the ciphertext from the dock...\n");
     update_display_progress("R: Ciphertext", ++current_step, total_steps);
 
     char shared_key[129];
@@ -369,24 +366,22 @@ static void qkd_init(void)
     
     char noisybits2[129];
     //printf("\nReceiving the noisy qubit string from the dock...\n");
-    update_display_progress("R: Noisy Qubits", ++current_step, total_steps);
     client_read_bits(noisybits2, 128);
     std::memcpy(qkd_data.noisy_bits2, noisybits2, sizeof(qkd_data.noisy_bits2));
-
+    update_display_progress("R: Noisy Qubits", ++current_step, total_steps);
     // Send badge_basis - randomly chosen basis
     
     char pongMsg2[129];
     generate_random_bit_string(pongMsg2, 128);
     //printf("Sending the noisy badge basis to the dock...\n");
-    update_display_progress("S: Badge basis 2", ++current_step, total_steps);
     std::memcpy(qkd_data.badge_basis2, pongMsg2, sizeof(qkd_data.badge_basis2));
     client_send_bits(pongMsg2);
+    update_display_progress("S: Badge basis 2", ++current_step, total_steps);
 
     // Receive dock_basis - randomly chosen basis
-    char dockbasis2[129];
+    char dockbasis2[129];   
     client_read_bits(dockbasis2, 128);
     std::memcpy(qkd_data.dock_basis2, dockbasis2, sizeof(qkd_data.dock_basis2));
-    //printf("Receiving the noisy dock basis from the dock...\n");
     update_display_progress("R: Dock Basis 2", ++current_step, total_steps);
 
     // Receive dockbits - non-noisy set for calibrate comparison
@@ -398,7 +393,6 @@ static void qkd_init(void)
     char dockcipher2[129];
     client_read_bits(dockcipher2, 128);
     std::memcpy(qkd_data.ciphertext2, dockcipher2, sizeof(qkd_data.ciphertext2));
-    //printf("Receiving the ciphertext from the dock...\n");
     update_display_progress("R: Ciphertext 2", ++current_step, total_steps);
 
     // Generate shared key from non-noisy set, for cascade comparison
