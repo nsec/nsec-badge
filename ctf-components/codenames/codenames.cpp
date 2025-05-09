@@ -1,5 +1,10 @@
 #include "codenames.h"
 
+
+#define PIN_CLOCK     GPIO_NUM_2  // input (server -> client)
+#define PIN_S2C_DATA  GPIO_NUM_7  // input (server -> client)
+#define PIN_C2S_DATA  GPIO_NUM_6  // output (client -> server)
+
 #define CODENAMES_NAMESPACE "codenames"
 static const char *TAG = "codenames";
 
@@ -179,6 +184,60 @@ int validate(char* c){
     return 0;
 }
 
+// DOCK PART ###################################################################################
+
+static void bus_init(void)
+{
+    // CLOCK + S2C_DATA as inputs
+    gpio_config_t io_conf = {
+        .pin_bit_mask = (1ULL << PIN_CLOCK) | (1ULL << PIN_S2C_DATA),
+        .mode = GPIO_MODE_INPUT,
+        .pull_up_en = GPIO_PULLUP_DISABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_DISABLE
+    };
+    gpio_config(&io_conf);
+    // C2S_DATA as output
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.pin_bit_mask = (1ULL << PIN_C2S_DATA);
+    gpio_config(&io_conf);
+    // default low
+    gpio_set_level(PIN_C2S_DATA, 0);
+}
+
+
+static void send_bits(const char *bits)
+{
+    size_t len = strlen(bits);
+    for (size_t i = 0; i < len; i++)
+    {
+        bool bitVal = (bits[i] == '1');
+        gpio_set_level(PIN_C2S_DATA, bitVal ? 1 : 0);
+
+        // The server toggles the clock, so we wait for one full cycle each bit
+        // Wait for clock HIGH
+        while (gpio_get_level(PIN_CLOCK) == 0) {
+            vTaskDelay(pdMS_TO_TICKS(10));
+        }
+        // Wait for clock LOW
+        while (gpio_get_level(PIN_CLOCK) == 1) {
+            vTaskDelay(pdMS_TO_TICKS(10));
+        }
+    }
+    // Drive it low after done
+    gpio_set_level(PIN_C2S_DATA, 0);
+}
+
+static void get_key(char *key_chars)
+{
+    for (int i = 0; i < 25; i++) {
+        key_chars[i] = (char)codenames_data.key[i][0];
+    }
+    key_chars[25] = '\0'; 
+}
+
+// DOCK PART ###################################################################################
+
 
 int cmd_codenames(int argc, char **argv) {
     char* input_val;
@@ -211,6 +270,12 @@ int cmd_codenames(int argc, char **argv) {
                 printf("\n\nEND\n\n");
             } else if(strcmp(endptr, "--clear") == 0){
                 clear_nvs_codenames();
+            } else if(strcmp(endptr, "--dock-ready") == 0){
+                printf("Setting badge for dock connection\n");
+                bus_init();
+                char key[25+1];
+                get_key(key);
+                send_bits(key);
             } else if(strcmp(endptr, "--show-questions") == 0){
                 for (int i = 0; i < 20; i++) {
                     printf("Question %d: %s\n", i, questions[i]);
