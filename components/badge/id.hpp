@@ -21,7 +21,7 @@ using badge_unique_id = std::array<std::uint8_t, 6>;
 
 template <>
 struct fmt::formatter<nsec::runtime::badge_unique_id>
-    : fmt::formatter<std::string> {
+    : fmt::formatter<std::string_view> {
     template <typename FormatContext>
     auto format(nsec::runtime::badge_unique_id badge_id, FormatContext &ctx)
     {

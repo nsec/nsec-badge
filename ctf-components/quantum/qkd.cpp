@@ -4,7 +4,7 @@
 #define PIN_S2C_DATA  GPIO_NUM_7  // input (server -> client)
 #define PIN_C2S_DATA  GPIO_NUM_6  // output (client -> server)
 
-#define BIT_DELAY_US  50
+#define BIT_DELAY_US  75
 
 #define QUANTUM_NAMESPACE "qkd"
 static const char *TAG = "QKD";
@@ -290,35 +290,73 @@ void generate_key_from_basis(const char *key, const char *basis1, const char *ba
     shared_key[j] = '\0';
 }
 
+static void update_display_progress(const char* status, int step, int total_steps)
+{
+    char progress[17] = {0};
+    char percentage[17] = {0};
+    int percent = (step * 100) / total_steps;
+    
+    // Create progress bar
+    int bar_length = 16;
+    int filled = (step * bar_length) / total_steps;
+    
+    for (int i = 0; i < bar_length; i++) {
+        progress[i] = (i < filled) ? '*' : '-';
+    }
+    progress[bar_length] = '\0';
+    
+    // Create percentage text
+    snprintf(percentage, sizeof(percentage), "Progress: %d%%", percent);
+    
+    badge_ssd1306_clear();
+    badge_print_text(0, (char*)"Quantum Link", 12, false);
+    badge_print_text(1, (char*)status, strlen(status), false);
+    badge_print_text(2, (char*)progress, strlen(progress), false);
+    badge_print_text(3, (char*)percentage, strlen(percentage), false);
+}
+
 static void qkd_init(void)
 {
+    // Define total steps for the entire process (2 complete exchanges)
+    const int total_steps = 10;
+    int current_step = 0;
+    
     // Receive noisybits
+    update_display_progress("Press A to Start", current_step, total_steps);
+    
     char noisybits[129];
     client_read_bits(noisybits, 128);
     std::memcpy(qkd_data.noisy_bits, noisybits, sizeof(qkd_data.noisy_bits));
-    printf("\nReceiving the qubit string from the dock...\n");
+    update_display_progress("R: Dock Qubits", ++current_step, total_steps);
+    //printf("\nReceiving the qubit string from the dock...\n");
 
     // Send badge_basis
+    
     char pongMsg[129];
     generate_random_bit_string(pongMsg, 128);
-    printf("Sending the badge basis to the dock...\n");
+    //printf("Sending the badge basis to the dock...\n");
+    update_display_progress("S: Badge basis", ++current_step, total_steps);
     std::memcpy(qkd_data.badge_basis, pongMsg, sizeof(qkd_data.badge_basis));
     client_send_bits(pongMsg);
 
     // Receive dock_basis
+    
     char dockbasis[129];
     client_read_bits(dockbasis, 128);
     std::memcpy(qkd_data.dock_basis, dockbasis, sizeof(qkd_data.dock_basis));
-    printf("Receiving the dock basis from the dock...\n");
+    //printf("Receiving the dock basis from the dock...\n");
+    update_display_progress("R: Dock basis", ++current_step, total_steps);
 
     // Receive dockbits
+    
     char dockbit[129];
     client_read_bits(dockbit, 128);
     std::memcpy(qkd_data.dock_bits, dockbit, sizeof(qkd_data.dock_bits));
     char dockcipher[129];
     client_read_bits(dockcipher, 128);
     std::memcpy(qkd_data.ciphertext, dockcipher, sizeof(qkd_data.ciphertext));
-    printf("Receiving the ciphertext from the dock...\n");
+    //printf("Receiving the ciphertext from the dock...\n");
+    update_display_progress("R: Ciphertext", ++current_step, total_steps);
 
     char shared_key[129];
     generate_key_from_basis(dockbit, pongMsg, dockbasis, shared_key);
@@ -328,15 +366,19 @@ static void qkd_init(void)
     /*-------------------------------*/
 
     // Receive noisybits - what the player will need to correct
+    
     char noisybits2[129];
-    printf("\nReceiving the noisy qubit string from the dock...\n");
+    //printf("\nReceiving the noisy qubit string from the dock...\n");
+    update_display_progress("R: Noisy Qubits", ++current_step, total_steps);
     client_read_bits(noisybits2, 128);
     std::memcpy(qkd_data.noisy_bits2, noisybits2, sizeof(qkd_data.noisy_bits2));
 
     // Send badge_basis - randomly chosen basis
+    
     char pongMsg2[129];
     generate_random_bit_string(pongMsg2, 128);
-    printf("Sending the noisy badge basis to the dock...\n");
+    //printf("Sending the noisy badge basis to the dock...\n");
+    update_display_progress("S: Badge basis 2", ++current_step, total_steps);
     std::memcpy(qkd_data.badge_basis2, pongMsg2, sizeof(qkd_data.badge_basis2));
     client_send_bits(pongMsg2);
 
@@ -344,7 +386,8 @@ static void qkd_init(void)
     char dockbasis2[129];
     client_read_bits(dockbasis2, 128);
     std::memcpy(qkd_data.dock_basis2, dockbasis2, sizeof(qkd_data.dock_basis2));
-    printf("Receiving the noisy dock basis from the dock...\n");
+    //printf("Receiving the noisy dock basis from the dock...\n");
+    update_display_progress("R: Dock Basis 2", ++current_step, total_steps);
 
     // Receive dockbits - non-noisy set for calibrate comparison
     char dockbit2[129];
@@ -355,17 +398,18 @@ static void qkd_init(void)
     char dockcipher2[129];
     client_read_bits(dockcipher2, 128);
     std::memcpy(qkd_data.ciphertext2, dockcipher2, sizeof(qkd_data.ciphertext2));
-    printf("Receiving the ciphertext from the dock...\n");
+    //printf("Receiving the ciphertext from the dock...\n");
+    update_display_progress("R: Ciphertext 2", ++current_step, total_steps);
 
     // Generate shared key from non-noisy set, for cascade comparison
     char shared_key2[129];
     generate_key_from_basis(dockbit2, pongMsg2, dockbasis2, shared_key2);
     std::memcpy(qkd_data.dockkey2, shared_key2, sizeof(qkd_data.dockkey2));
-
-    // Need to introduce random errors here to a ~10% ratio to the "key"
-    // MAYBE introduce known errors in the key to make sure that shuffle layers need to happen
-    // Actually yes, I like that idea a lot, will implement it.
     
+    // Process finished - now add noise
+    
+    update_display_progress("Processing data", ++current_step, total_steps);
+
     char noisy_shared_key2[129];
     std::memcpy(noisy_shared_key2, shared_key2, sizeof(noisy_shared_key2));
     
@@ -410,19 +454,34 @@ static void qkd_init(void)
 
     /*------- end of Noisy set -------*/
 
+    update_display_progress("Saving data", current_step, total_steps);
+
+    //Not sure why, but making sure noisykey1 is blank...
+    //char derivedkey1[129];
+    //std::memset(derivedkey1, 0, sizeof(derivedkey1));
+    //std::memcpy(qkd_data.noisykey, derivedkey1, sizeof(qkd_data.noisykey));
+    std::memset(qkd_data.noisykey, 0, sizeof(qkd_data.noisykey));
+
     update_qkdnvs();
 
+    // Display completion message on screen
+    update_display_progress("Process complete", total_steps, total_steps);
+    vTaskDelay(pdMS_TO_TICKS(1500)); // Show 100% for a moment
+    
     badge_ssd1306_clear();
-    badge_print_text(1, (char*)"Quantumly Linked", 16, false);
+    badge_print_text(0, (char*)"Quantum Link", 12, false);
+    badge_print_text(1, (char*)"Complete!", 10, false);
+    badge_print_text(2, (char*)"Run 'qkd decrypt'", 17, false);
+    badge_print_text(3, (char*)"to continue", 11, false);
 
-    printf("\nYour badge has now been quantumly linked!\n");
-    printf("To decrypt the first flag, run 'qkd decrypt'\n");
-    printf("and follow the steps to derive the shared key and decrypt the flag.\n\n");
-    printf("The second flag was transmitted with a noisy set of qubits\n");
-    printf("You will need to derive the shared key from the noisy qubits using Cascade\n");
-    printf("and then manually correct the key bits to decrypt the flag.\n\n");
-    printf("To clear the QKD data, run 'qkd-init clear'\n");
-    printf("at which point you wil need to re-run the quantum linking process to proceed.\n");
+    //printf("\nYour badge has now been quantumly linked!\n");
+    //printf("To decrypt the first flag, run 'qkd decrypt'\n");
+    //printf("and follow the steps to derive the shared key and decrypt the flag.\n\n");
+    //printf("The second flag was transmitted with a noisy set of qubits\n");
+    //printf("You will need to derive the shared key from the noisy qubits using Cascade\n");
+    //printf("and then manually correct the key bits to decrypt the flag.\n\n");
+    //printf("To clear the QKD data, run 'qkd-init clear'\n");
+    //printf("at which point you wil need to re-run the quantum linking process to proceed.\n");
 }
 
 // Compute parity (0 if even # of 1's, 1 if odd)
@@ -878,14 +937,10 @@ int cmd_qkd_init(int argc, char **argv)
         esp_log_level_set("gpio", ESP_LOG_WARN);
         printf("Starting Quantum Linking with Dock and QKD data exchange...\n");
         printf("Let the exchange complete before resuming.\n");
-        printf("Alternatively, press the BOOT button to reset and resume normal operations.\n");
+        printf("Alternatively, press the RESET button to reset and resume normal operations.\n");
         bus_init();
 
         badge_ssd1306_clear();
-        badge_print_text(0, (char*)" Init QKD Flow", 14, false);
-        badge_print_text(1, (char*)"  ------------  ", 16, false);
-        badge_print_text(2, (char*)"Plug in dock and", 16, false);
-        badge_print_text(3, (char*)"press A to start", 16, false);
 
         qkd_init();
     }

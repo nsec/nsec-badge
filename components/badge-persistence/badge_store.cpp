@@ -108,3 +108,40 @@ void np::badge_store::save_id(const nsec::runtime::badge_unique_id &id)
                         badge_id_key_name, new_badge_count, write_count_ret));
     }
 }
+
+bool np::badge_store::has_id(const nsec::runtime::badge_unique_id &id)
+{
+    const auto badge_count = count();
+
+    nsec::runtime::badge_unique_id stored_id;
+    const size_t id_size = stored_id.size();
+
+    const auto nvs = _open_nvs_handle();
+    for (unsigned int i = 0; i < badge_count; ++i) {
+        const auto stored_id_key_name = fmt::format(
+            "{}-{}", nsec::config::persistence::badge_id_field_name_prefix, i);
+
+        size_t read_length = id_size;
+        const esp_err_t read_id_ret = nvs_get_blob(
+            nvs, stored_id_key_name.c_str(), stored_id.data(), &read_length);
+
+        if (read_id_ret == ESP_OK) {
+            if (read_length == id_size &&
+                memcmp(stored_id.data(), id.data(), id_size) == 0) {
+                _logger.debug("ID found at index {}", i);
+                return true;
+            }
+
+            if (read_length != id_size) {
+                _logger.warn("Read badge id with unexpected size: key_name={}, "
+                             "expected={}, actual={}",
+                             stored_id_key_name, id_size, read_length);
+            }
+        } else {
+            _logger.error("Failed to read badge id: key_name={}, error={}",
+                          stored_id_key_name, esp_err_to_name(read_id_ret));
+        }
+    }
+
+    return false;
+}

@@ -41,18 +41,18 @@ ESPTOOL="$HOME/Git/Nsec/pio/bin/esptool.py"
 
 
 check_firmware() {
-    if [ ! -f "$BOOTLOADER_BIN" ]; then
-        echo "Missing firmware file: $BOOTLOADER_BIN"
-        exit 1
-    fi
-    if [ ! -f "$PARTITIONS_BIN" ]; then
-        echo "Missing firmware file: $PARTITIONS_BIN"
-        exit 1
-    fi
-    if [ ! -f "$OTA_DATA_BIN" ]; then
-        echo "Missing firmware file: $OTA_DATA_BIN"
-        exit 1
-    fi
+    #if [ ! -f "$BOOTLOADER_BIN" ]; then
+    #    echo "Missing firmware file: $BOOTLOADER_BIN"
+    #    exit 1
+    #fi
+    #if [ ! -f "$PARTITIONS_BIN" ]; then
+    #    echo "Missing firmware file: $PARTITIONS_BIN"
+    #    exit 1
+    #fi
+    #if [ ! -f "$OTA_DATA_BIN" ]; then
+    #    echo "Missing firmware file: $OTA_DATA_BIN"
+    #    exit 1
+    #fi
     if [ ! -f "$FIRMWARE_BIN" ]; then
         echo "Missing firmware file: $FIRMWARE_BIN"
         exit 1
@@ -97,7 +97,7 @@ flash_loop() {
 	            -z \
 	            --flash_mode dio \
 	            --flash_freq 80m \
-	            --flash_size 8MB \
+	            --flash_size 4MB \
                 "$BOOTLOADER_ADDR" "$BOOTLOADER_BIN" \
                 "$PARTITIONS_ADDR" "$PARTITIONS_BIN" \
                 "$OTA_DATA_ADDR" "$OTA_DATA_BIN" \

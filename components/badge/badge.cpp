@@ -49,7 +49,7 @@ template <> struct fmt::formatter<nb::event> : fmt::formatter<std::string> {
 };
 
 // Select how the clearance level LEDs are mapped.
-//#define CLEARANCE_LED_MAP_TO_SOCIAL_LEVEL
+// #define CLEARANCE_LED_MAP_TO_SOCIAL_LEVEL
 #define CLEARANCE_LED_MAP_TO_SPONSOR_COUNT
 
 namespace
@@ -82,8 +82,7 @@ unsigned int sponsor_count_to_clearance_led_count(unsigned int level)
     // - The clearance range is 1 to 6.
     // - Table field for clearance mapping is the
     //   "Social Level Upper Boundary".
-    const std::array<std::uint8_t, 6> clearance_mappings = {
-        1, 3, 5, 8, 11, 14};
+    const std::array<std::uint8_t, 6> clearance_mappings = {1, 3, 5, 8, 11, 14};
 
     const auto mapping_it =
         std::upper_bound(clearance_mappings.begin(), clearance_mappings.end(),
@@ -187,7 +186,7 @@ void nr::badge::_setup()
     load_config();
 }
 
-nr::badge_unique_id nr::badge::_get_unique_id()
+nr::badge_unique_id nr::badge::get_unique_id()
 {
     uint8_t mac_bytes[6] = {0};
 
@@ -212,14 +211,14 @@ void nr::badge::on_button_event(nsec::button::id button,
         // Prevent updating the LCD display (and animation selection)
         // during the IR synchronization process.
         if (_network_handler.get_ir_protocol_state() ==
-            nc::network_handler::ir_protocol_state::IDLE) {
+            nc::ir_protocol_state::IDLE) {
             // Send the received event to the LEDs function.
             _update_leds(button, event);
         }
-    } else if (event == nsec::button::event::LONG_PRESS) {
-        if (button == nsec::button::id::OK) {
+    } else if (event == nsec::button::event::LONG_PRESS && button == nsec::button::id::OK) {
+        if (_network_handler.get_ir_protocol_state() == nc::ir_protocol_state::IDLE) {
             _lcd_display_ir_exchange();
-            // Send master sync IR ready.
+            _network_handler.start_ir_key_exchange();
         }
     }
 }
@@ -247,16 +246,36 @@ void nr::badge::apply_score_change(
     uint16_t new_badges_discovered_count) noexcept
 {
     nsync::lock_guard lock(_public_access_semaphore);
+    uint8_t _idle_lcd_screen_nb_backup = _idle_lcd_screen_nb;
 
-    const auto new_social_level =
-        _compute_new_social_level(_social_level, new_badges_discovered_count);
-    _logger.info("Applying score change: new_badges_discovered_count={}, "
-                 "new_social_level={}",
-                 new_badges_discovered_count, new_social_level);
+    if (new_badges_discovered_count > 0) {
+        const auto new_social_level = _compute_new_social_level(
+            _social_level, new_badges_discovered_count);
 
-    // Saves to configuration
-    set_social_level(new_social_level, true);
-    _set_selected_animation(_social_level, true, false);
+        _logger.info("Applying score change: new_badges_discovered_count={}, "
+                     "new_social_level={}",
+                     new_badges_discovered_count, new_social_level);
+
+        // Saves to configuration
+        set_social_level(new_social_level, true);
+    }
+
+    // Always display the sync status, unless badge dock.
+    // * Note: the idle screen is restore by the "Network Handler" process.
+    if (!_docked) {
+         badge_ssd1306_clear();
+
+        // For the display of the social level.
+        _idle_lcd_screen_nb = 1;
+        _lcd_display_social_level();
+        _idle_lcd_screen_nb = _idle_lcd_screen_nb_backup;
+
+        // Display the sync result.
+        badge_print_text(
+            2, (new_badges_discovered_count > 0) ? "New badge" : "No new badge",
+            12, 0);
+        badge_print_text(3, "discovered", 10, 0);
+    }
 
     // Update Clearance level.
     _led_update_clearance_level();
@@ -338,13 +357,20 @@ bool nr::badge::is_docked() noexcept
 uint8_t nr::badge::_compute_new_social_level(
     uint8_t current_social_level, uint16_t new_badges_discovered_count) noexcept
 {
-    uint16_t new_social_level = current_social_level;
-    uint16_t level_up = new_badges_discovered_count;
+    uint8_t new_social_level = current_social_level;
+    uint8_t level_up = 0;
 
-    if (new_badges_discovered_count > 1) {
-        level_up = new_badges_discovered_count *
-                   nsec::config::social::
-                       multiple_badges_discovered_simultaneously_multiplier;
+    // New badge count is always 1 for the 2025 badge.
+    if (new_badges_discovered_count == 1) {
+        if (current_social_level <= 20) {
+            level_up = 5;
+        } else if (current_social_level <= 75) {
+            level_up = 4;
+        } else if (current_social_level <= 125) {
+            level_up = 3;
+        } else {
+            level_up = 2;
+        }
     }
 
     new_social_level += level_up;
@@ -439,7 +465,7 @@ uint32_t nr::badge::_check_social_level(uint8_t social_level)
     uint32_t check1;
     uint32_t check2;
 
-    nr::badge_unique_id mac = _get_unique_id();
+    nr::badge_unique_id mac = get_unique_id();
 
     check1 = _process_check1(social_level);
     check2 = _process_check2(social_level);
@@ -451,7 +477,7 @@ uint32_t nr::badge::_check_social_level(uint8_t social_level)
 uint32_t nr::badge::_process_check1(uint8_t social_level)
 {
     uint32_t check;
-    nr::badge_unique_id mac = _get_unique_id();
+    nr::badge_unique_id mac = get_unique_id();
 
     check = (mac[5] << 8) + mac[3];
     check = check + ((social_level + 51) << 8) + (social_level & 0xFE);
@@ -462,8 +488,8 @@ uint32_t nr::badge::_process_check1(uint8_t social_level)
 uint32_t nr::badge::_process_check2(uint8_t social_level)
 {
     uint32_t check;
-    nr::badge_unique_id mac = _get_unique_id();
-    
+    nr::badge_unique_id mac = get_unique_id();
+
     check = (mac[3] << 8) + mac[4] + ((uint32_t)social_level << 4);
     check = check + config_version_magic + (mac[5] * (social_level + 3));
 
@@ -474,9 +500,11 @@ void nr::badge::_lcd_display_social_level()
 {
     char lcd_print[17];
 
-    // Display current social level on LCD.
-    sprintf(lcd_print, "Social Level %3u", _social_level);
-    badge_print_text(0, lcd_print, 16, 0);
+    // Display current social level on LCD (idle screen nb. 1).
+    if (_idle_lcd_screen_nb == 1 && !_docked) {
+        sprintf(lcd_print, "Social Level %3u", _social_level);
+        badge_print_text(0, lcd_print, 16, 0);
+    }
 }
 
 void nr::badge::_lcd_display_current_animation()
@@ -532,8 +560,42 @@ void nr::badge::_lcd_display_ir_exchange()
     char lcd_print[17];
 
     // Display the IR Exchange screen.
-    // * Status is updated by "update_ir_exchange_status" function.
+    // * Status is updated by "lcd_display_ir_exchange_status" function.
     badge_ssd1306_clear();
     sprintf(lcd_print, "IR Exchange");
     badge_print_text(0, lcd_print, 11, 0);
+}
+
+void nr::badge::lcd_display_ir_exchange_status(
+    nc::ir_protocol_state state) noexcept
+{
+    badge_ssd1306_clear();
+
+    switch (state) {
+    case nc::ir_protocol_state::IDLE:
+        _lcd_display_update_current_screen();
+        break;
+    case nc::ir_protocol_state::WAITING_FOR_PEER:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Looking for peer", 16, 0);
+        break;
+    case nc::ir_protocol_state::SENDER:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Sending data...", 15, 0);
+        break;
+    case nc::ir_protocol_state::RECEIVER:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Receiving data...", 17, 0);
+        break;
+    case nc::ir_protocol_state::COMPLETED:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Complete!", 9, 0);
+        break;
+    case nc::ir_protocol_state::TIMEOUT:
+        badge_print_text(0, "IR Exchange", 11, 0);
+        badge_print_text(1, "Timed out", 9, 0);
+        break;
+    default:
+        break;
+    }
 }
