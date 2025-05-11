@@ -5,6 +5,8 @@
 #define PIN_S2C_DATA  GPIO_NUM_7  // input (server -> client)
 #define PIN_C2S_DATA  GPIO_NUM_6  // output (client -> server)
 
+#define BIT_DELAY_US  30
+
 #define CODENAMES_NAMESPACE "codenames"
 static const char *TAG = "codenames";
 
@@ -60,17 +62,12 @@ static const char *answers[] = {
 };
 
 typedef struct {
-    uint8_t key[25][1];
+    uint8_t key[25];
 } CodenamesState;
 
 // Using values for codenames key data
 CodenamesState codenames_data = {
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-};
-
-// Using values for codenames key data
-CodenamesState default_codenames_data = {
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+    .key = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
 
@@ -93,7 +90,7 @@ void print_nvs_blob_codenames() {
     if (err2 == ESP_OK) {
         printf("CHECKING - NVS Key Data:\n");
         for (int i = 0; i < 25; i++) {
-            printf("  %d : [%d] \n", i, codenames_data.key[i][0]);
+            printf("  %d : [%d] \n", i, codenames_data.key[i]);
         }
     } else if (err2 == ESP_ERR_NVS_NOT_FOUND) {
         printf("No key data found in NVS.\n");
@@ -181,6 +178,13 @@ void clear_nvs_codenames(){
      }
 }
 
+void reset_nvs_codenames(){
+    for(int i=0; i<25; i++){
+        codenames_data.key[i] = 0;
+    }
+    update_nvs_codenames();
+}
+
 
 int validate(char* c){
     char *endptr;
@@ -189,7 +193,7 @@ int validate(char* c){
     if (*endptr != '\0' ) {
         return 1;
     }
-    codenames_data.key[i][0] = 1;
+    codenames_data.key[i] = 1;
     update_nvs_codenames();
 
     return 0;
@@ -217,7 +221,26 @@ static void bus_init(void)
 }
 
 
-static void send_bits(const char *bits)
+static void cn_read_bits(char *outBuf, size_t numBits)
+{
+    for (size_t i = 0; i < numBits; i++)
+    {
+        // Wait for clock to go HIGH
+        while (gpio_get_level(PIN_CLOCK) == 0) {
+            vTaskDelay(pdMS_TO_TICKS(BIT_DELAY_US));
+        }
+        // Read the data line
+        int bitVal = gpio_get_level(PIN_S2C_DATA);
+        // Wait for clock to go LOW
+        while (gpio_get_level(PIN_CLOCK) == 1) {
+            vTaskDelay(pdMS_TO_TICKS(BIT_DELAY_US));
+        }
+        outBuf[i] = bitVal ? '1' : '0';
+    }
+    outBuf[numBits] = '\0';
+}
+
+static void cn_send_bits(const char *bits)
 {
     size_t len = strlen(bits);
     for (size_t i = 0; i < len; i++)
@@ -228,11 +251,11 @@ static void send_bits(const char *bits)
         // The server toggles the clock, so we wait for one full cycle each bit
         // Wait for clock HIGH
         while (gpio_get_level(PIN_CLOCK) == 0) {
-            vTaskDelay(pdMS_TO_TICKS(10));
+            vTaskDelay(pdMS_TO_TICKS(BIT_DELAY_US));
         }
         // Wait for clock LOW
         while (gpio_get_level(PIN_CLOCK) == 1) {
-            vTaskDelay(pdMS_TO_TICKS(10));
+            vTaskDelay(pdMS_TO_TICKS(BIT_DELAY_US));
         }
     }
     // Drive it low after done
@@ -242,7 +265,7 @@ static void send_bits(const char *bits)
 static void get_key(char *key_chars)
 {
     for (int i = 0; i < 25; i++) {
-        key_chars[i] = (char)codenames_data.key[i][0];
+        key_chars[i] = (char)codenames_data.key[i];
     }
     key_chars[25] = '\0'; 
 }
@@ -252,7 +275,7 @@ static void get_key(char *key_chars)
 
 int cmd_codenames(int argc, char **argv) {
     char* input_val;
-    get_nvs_codenames();
+    
 
     if (argc == 1) {
         
@@ -272,6 +295,7 @@ int cmd_codenames(int argc, char **argv) {
         
         if (*endptr != '\0') {
             if(strcmp(endptr, "--all") == 0){
+                get_nvs_codenames();
                 for (int i = 0; i < 20; i++) {
                     input_val = linenoise(questions[i]);
                     if(validate(input_val)){
@@ -280,13 +304,16 @@ int cmd_codenames(int argc, char **argv) {
                 }
                 printf("\n\nEND\n\n");
             } else if(strcmp(endptr, "--clear") == 0){
-                clear_nvs_codenames();
+                reset_nvs_codenames();
             } else if(strcmp(endptr, "--dock-ready") == 0){
+                get_nvs_codenames();
                 printf("Setting badge for dock connection\n");
                 bus_init();
+                char initdata[2];
+                cn_read_bits(initdata, 1);
                 char key[25+1];
                 get_key(key);
-                send_bits(key);
+                cn_send_bits(key);
             } else if(strcmp(endptr, "--show-questions") == 0){
                 for (int i = 0; i < 20; i++) {
                     printf("Question %d: %s\n", i, questions[i]);
@@ -303,17 +330,16 @@ int cmd_codenames(int argc, char **argv) {
                 return 1;
             }
 
-        }  else if (question_index < 0 || question_index > 19) {
-            printf("Invalid question number. Please choose a number between 0 and 19 - or --all to run all 20 questions.\n");
-            return 1;
-        } else {
+        }  else if (question_index >= 0 && question_index <= 19) {
+            get_nvs_codenames();
             input_val = linenoise(questions[question_index]);
             if(validate(input_val)){
                 return 1;
             }
+        } else {
+            printf("Invalid question number. Please choose a number between 0 and 19 - or --all to run all 20 questions. \n");
+            return 0;
         }
-     } else {
-        printf("Usage: codenames\n");
     }
     return 0;
 
@@ -328,9 +354,10 @@ void register_codenames_cmd(void) {
                 "<0-19>     - Answer a specific question by its index \n"
                 "--all      - Answer all 20 questions \n"
                 "--clear    - Reset key data \n"
+                "--dock-ready       - Put the badge in a state ready to share the key \n"
                 "--show-questions   - Display questions and their index \n"
                 "--show-answers     - Display answers and their index \n",
-        .hint = "[<0-19> | --all | --clear | --show-questions | --show-answers] \n",
+        .hint = "[<0-19> | --all | --clear | --dock-ready | --show-questions | --show-answers] \n",
         .func = &cmd_codenames,
         .argtable = NULL,
     };
