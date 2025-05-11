@@ -4,7 +4,7 @@
 #define PIN_S2C_DATA  GPIO_NUM_7  // input (server -> client)
 #define PIN_C2S_DATA  GPIO_NUM_6  // output (client -> server)
 
-#define BIT_DELAY_US  75
+#define BIT_DELAY_US  30
 
 #define QUANTUM_NAMESPACE "qkd"
 static const char *TAG = "SAFE_UNLOCK";
@@ -169,26 +169,28 @@ static void safe_init(std::string flag)
     badge_print_text(0, (char*)"--Safe Unlock!--", 16, false);
     // To avoid complications keeping receiving initial step.
     // This helps with the badge being plugged in and controlling the flow
-    badge_print_text(2, (char*)"R: Init Data", 12, false);
+    badge_print_text(2, (char*)"SAO Lock Code", 13, false);
+
     char initdata[2];
     safe_read_bits(initdata, 1);
+
     // do nothing with it
     
-    badge_print_text(2, (char*)"S: Sending Flag", 15, false);
+    badge_print_text(2, (char*)"S: Send QKD2 Flg", 16, false);
     char flag_binary[129] = {0};
     string_to_binary(flag.c_str(), flag_binary);
     safe_send_bits(flag_binary);
     //vTaskDelay(pdMS_TO_TICKS(1500)); // Show 100% for a moment
     
-    badge_print_text(2, (char*)"R: Unlock State", 15, false);
+    badge_print_text(2, (char*)"R: Unlock State6", 15, false);
     char unlockstate[2];
     safe_read_bits(unlockstate, 1);
     //printf("test unlockstate: %s\n", unlockstate);
     //badge_ssd1306_clear();
     if (unlockstate[0] == '1') {
-        badge_print_text(2, (char*)"Safe Unlocked!", 14, false);
+        badge_print_text(2, (char*)"Safe Unlocked!  ", 16, false);
     } else {
-        badge_print_text(2, (char*)"Incorrect Flag!", 15, false);
+        badge_print_text(2, (char*)"Incorrect Flag! ", 16, false);
     }
     vTaskDelay(pdMS_TO_TICKS(1500)); // Show 100% for a moment
 }
