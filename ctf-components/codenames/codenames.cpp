@@ -262,16 +262,25 @@ static void cn_send_bits(const char *bits)
     gpio_set_level(PIN_C2S_DATA, 0);
 }
 
-static void get_key(char *key_chars)
+static char* get_key()
 {
+    // Get the latest key data from NVS
+    get_nvs_codenames();
+    
+    // Allocate memory for the key string (25 bits + null terminator)
+    static char key_string[26];
+    
+    // Convert each key bit to a character ('0' or '1')
     for (int i = 0; i < 25; i++) {
-        key_chars[i] = (char)codenames_data.key[i];
+        key_string[i] = (codenames_data.key[i] == 0) ? '0' : '1';
     }
-    key_chars[25] = '\0'; 
+    
+    // Null-terminate the string
+    key_string[25] = '\0';
+    
+    return key_string;
 }
-
 // DOCK PART ###################################################################################
-
 
 int cmd_codenames(int argc, char **argv) {
     char* input_val;
@@ -306,13 +315,18 @@ int cmd_codenames(int argc, char **argv) {
             } else if(strcmp(endptr, "--clear") == 0){
                 reset_nvs_codenames();
             } else if(strcmp(endptr, "--dock-ready") == 0){
+                esp_log_level_set("gpio", ESP_LOG_WARN);
                 get_nvs_codenames();
                 printf("Setting badge for dock connection\n");
                 bus_init();
                 char initdata[2];
                 cn_read_bits(initdata, 1);
-                char key[25+1];
-                get_key(key);
+                printf("Receive: %s\n", initdata);
+
+                // Get the key and send it to the dock
+                char* key = get_key();
+                
+                printf("Sending key: %s\n", key);
                 cn_send_bits(key);
             } else if(strcmp(endptr, "--show-questions") == 0){
                 for (int i = 0; i < 20; i++) {
@@ -357,7 +371,7 @@ void register_codenames_cmd(void) {
                 "--dock-ready       - Put the badge in a state ready to share the key \n"
                 "--show-questions   - Display questions and their index \n"
                 "--show-answers     - Display answers and their index \n",
-        .hint = "[<0-19> | --all | --clear | --dock-ready | --show-questions | --show-answers] \n",
+        .hint = "[<0-19> | --all | --clear | --dock-ready | --show-questions | --show-answers]",
         .func = &cmd_codenames,
         .argtable = NULL,
     };
