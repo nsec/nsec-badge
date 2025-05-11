@@ -66,8 +66,9 @@ typedef struct {
 } CodenamesState;
 
 // Using values for codenames key data
-CodenamesState codenames_data = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
+CodenamesState codenames_data = {
+    .key = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+};
 
 
 void print_nvs_blob_codenames() {
@@ -318,18 +319,16 @@ int cmd_codenames(int argc, char **argv) {
                 return 1;
             }
 
-        }  else if (question_index >= 0 || question_index <= 19) {
+        }  else if (question_index >= 0 && question_index <= 19) {
             get_nvs_codenames();
             input_val = linenoise(questions[question_index]);
             if(validate(input_val)){
                 return 1;
             }
         } else {
-            printf("Invalid question number. Please choose a number between 0 and 19 - or --all to run all 20 questions.\n");
-            return 1;
+            printf("Invalid question number. Please choose a number between 0 and 19 - or --all to run all 20 questions. \n");
+            return 0;
         }
-     } else {
-        printf("Usage: codenames\n");
     }
     return 0;
 }
@@ -343,9 +342,10 @@ void register_codenames_cmd(void) {
                 "<0-19>     - Answer a specific question by its index \n"
                 "--all      - Answer all 20 questions \n"
                 "--clear    - Reset key data \n"
+                "--dock-ready       - Put the badge in a state ready to share the key \n"
                 "--show-questions   - Display questions and their index \n"
                 "--show-answers     - Display answers and their index \n",
-        .hint = "[<0-19> | --all | --clear | --show-questions | --show-answers] \n",
+        .hint = "[<0-19> | --all | --clear | --dock-ready | --show-questions | --show-answers] \n",
         .func = &cmd_codenames,
         .argtable = NULL,
     };
