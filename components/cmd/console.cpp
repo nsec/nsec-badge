@@ -88,6 +88,7 @@ void register_commands()
     register_qkdinit_cmd();
     register_qkd_cmd();
     register_qkdnoisy_cmd();
+    register_codenames_cmd();
 #endif
 }
 
