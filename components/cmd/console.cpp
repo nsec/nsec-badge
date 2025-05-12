@@ -19,6 +19,7 @@
 #include "quantum_gates.h"
 #include "calibration.h"
 #include "qkd.h"
+#include "codenames.h"
 #include "safe_unlock.h"
 #endif
 
@@ -87,6 +88,7 @@ void register_commands()
     register_qkdinit_cmd();
     register_qkd_cmd();
     register_qkdnoisy_cmd();
+    register_codenames_cmd();
     register_qkd_safe_cmd();
 #endif
 }
