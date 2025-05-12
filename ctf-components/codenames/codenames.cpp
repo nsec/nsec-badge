@@ -317,8 +317,12 @@ int cmd_codenames(int argc, char **argv) {
             } else if(strcmp(endptr, "--dock-ready") == 0){
                 esp_log_level_set("gpio", ESP_LOG_WARN);
                 get_nvs_codenames();
-                printf("Setting badge for dock connection\n");
+                printf("Setting badge for ONE dock connection, you can disconnect the serial connection\n");
                 bus_init();
+                printf("Step 1: Put the badge in the dock at the bar\n");
+                printf("Step 2: Once the light is blue, press the A button (right)\n");
+                printf("Step 3: The light will show green for success\n");
+                printf("Note : If it failed, initiate --dock-ready again");
                 char initdata[2];
                 cn_read_bits(initdata, 1);
                 printf("Receive: %s\n", initdata);
@@ -340,7 +344,6 @@ int cmd_codenames(int argc, char **argv) {
                 printf("\n");
             } else {
                 printf("Invalid question number. Please choose a number between 0 and 19 - or --all to run all 20 questions.\n");
-                print_nvs_blob_codenames();
                 return 1;
             }
 
