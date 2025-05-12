@@ -191,10 +191,16 @@ int validate(char* c){
     long i = strtol(c, &endptr, 10);
     
     if (*endptr != '\0' ) {
+        printf("Invalid answer index");
         return 1;
     }
-    codenames_data.key[i] = 1;
-    update_nvs_codenames();
+    if(i>=0 && i<=24){
+        codenames_data.key[i] = 1;
+        update_nvs_codenames();
+        printf(answers[i]);
+    }else{
+        printf("Invalid answer index");
+    }
 
     return 0;
 }
@@ -321,7 +327,7 @@ int cmd_codenames(int argc, char **argv) {
                 bus_init();
                 printf("Step 1: Put the badge in the dock at the bar\n");
                 printf("Step 2: Once the light is blue, press the A button (right)\n");
-                printf("Step 3: The light will show green for success\n");
+                printf("Step 3: The light will show green if the proper key is presented\n");
                 printf("Note : If it failed, initiate --dock-ready again");
                 char initdata[2];
                 cn_read_bits(initdata, 1);
