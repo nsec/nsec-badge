@@ -113,11 +113,11 @@ static int sys_cmd_firmware_select(int argc, char **argv)
         }
         
         printf("Successfully set boot partition to conference firmware\n");
-        printf("Rebooting in 2 seconds...\n");
+        printf("Rebooting...\n");
         
         // Delay to allow serial output to finish
         fflush(stdout);
-        vTaskDelay(pdMS_TO_TICKS(2000));
+        vTaskDelay(pdMS_TO_TICKS(100));
         
         // Reboot to apply changes
         esp_restart();
