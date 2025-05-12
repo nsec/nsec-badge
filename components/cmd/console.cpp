@@ -89,7 +89,7 @@ void register_commands()
     register_qkd_cmd();
     register_qkdnoisy_cmd();
     register_codenames_cmd();
-    register_safe_unlock_cmd();
+    register_qkd_safe_cmd();
 #endif
 }
 
