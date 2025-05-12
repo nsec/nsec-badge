@@ -328,10 +328,9 @@ int cmd_codenames(int argc, char **argv) {
                 printf("Step 1: Put the badge in the dock at the bar\n");
                 printf("Step 2: Once the light is blue, press the A button (right)\n");
                 printf("Step 3: The light will show green if the proper key is presented\n");
-                printf("Note : If it failed, initiate --dock-ready again");
+                printf("Note : If it failed, initiate --dock-ready again\n\n");
                 char initdata[2];
                 cn_read_bits(initdata, 1);
-                printf("Receive: %s\n", initdata);
 
                 // Get the key and send it to the dock
                 char* key = get_key();
