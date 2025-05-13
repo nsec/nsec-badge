@@ -1,3 +1,0 @@
-Oneliner to flash both firmwares to the right addresses:
-
-python -m esptool --chip esp32c3 --baud 460800 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 80m --flash_size 4MB 0x0 .\binaries\experimental\bootloader.bin 0x8000 .\binaries\experimental\partitions.bin 0xd000 .\binaries\experimental\ota_data_initial.bin 0x10000 .\binaries\experimental\conf-firmware.bin 0x190000 .\binaries\experimental\ctf-firmware.bin
