@@ -23,6 +23,9 @@
 #include "safe_unlock.h"
 #endif
 
+#include <SmartLeds.h>
+//#include <badge/globals.hpp>
+
 static const char *TAG = "console";
 #define PROMPT_STR LOG_RESET_COLOR "nsec"
 
@@ -121,7 +124,18 @@ extern "C" void console_init()
 #endif
 
     clear_and_print_banner();
-
+    
+    //Weird hack to account for firmware swap. making sure leds are initialized
+    #if CONFIG_NSEC_BUILD_CTF
+        esp_log_level_set("gpio", ESP_LOG_WARN);
+        SmartLed leds(LED_WS2812B, 18, 8, 0);
+        for (int i = 0; i < 18; i++) {
+            leds[i] = Rgb{0, 0, 0};
+        }
+        leds.show();
+        leds.wait();      
+    #endif  
+    
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
 
     ESP_LOGD(TAG, "Console started");
