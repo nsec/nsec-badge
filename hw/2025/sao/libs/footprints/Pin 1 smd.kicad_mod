@@ -1,0 +1,89 @@
+(footprint "Pin 1 smd"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "Through hole straight socket strip, 1x01, 2.00mm pitch, single row (from Kicad 4.0.7), script generated")
+	(tags "Through hole socket strip THT 1x01 2.00mm single row")
+	(property "Reference" "REF**"
+		(at 0 -2.5 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "8312c75f-a6c7-4376-bcaa-78a2d5a6879a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "Pin 1 smd"
+		(at 0 2.5 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f9abafc3-14bd-4e54-a470-f27c38b66c92")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" "Connector_PinSocket_2.00mm:PinSocket_1x01_P2.00mm_Vertical"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "387539ae-7a08-4a4f-afa6-f57550f00358")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "60032bed-68e7-45a3-b270-4b1cf0749208")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "17d4e37c-3607-420a-8af6-fb7eef0c9f1e")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole board_only exclude_from_pos_files exclude_from_bom dnp)
+	(pad "1" smd circle
+		(at 0 0)
+		(size 1.35 1.35)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "eb7e0531-0103-4275-845d-51bf5fd6e59f")
+	)
+	(model "${KICAD8_3DMODEL_DIR}/Connector_PinSocket_2.00mm.3dshapes/PinSocket_1x01_P2.00mm_Vertical.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

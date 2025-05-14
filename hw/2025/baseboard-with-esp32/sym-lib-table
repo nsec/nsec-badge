@@ -1,0 +1,12 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "AP2112K-3_3TRG1")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/AP2112K-3_3TRG1.kicad_sym")(options "")(descr ""))
+  (lib (name "SSSS811101")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/SSSS811101.kicad_sym")(options "")(descr ""))
+  (lib (name "GT-TC018A-H0375-L1")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/GT-TC018A-H0375-L1.kicad_sym")(options "")(descr ""))
+  (lib (name "TYPE-C-31-M-12")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/TYPE-C-31-M-12.kicad_sym")(options "")(descr ""))
+  (lib (name "TPSMF05CT1G")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/TPSMF05CT1G.kicad_sym")(options "")(descr ""))
+  (lib (name "XT4054K421MR-G")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/XT4054K421MR-G.kicad_sym")(options "")(descr ""))
+  (lib (name "XDWF-0920-02P")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/XDWF-0920-02P.kicad_sym")(options "")(descr ""))
+  (lib (name "K2-1102SP-Z4SC-04")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/K2-1102SP-Z4SC-04.kicad_sym")(options "")(descr ""))
+  (lib (name "LTST-S220KRKT")(type "KiCad")(uri "${KIPRJMOD}/library/symbols/LTST-S220KRKT.kicad_sym")(options "")(descr ""))
+)

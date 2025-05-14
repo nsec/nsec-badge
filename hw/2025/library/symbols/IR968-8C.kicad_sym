@@ -1,0 +1,107 @@
+(kicad_symbol_lib (version 20210201) (generator TousstNicolas/JLC2KiCad_lib)
+  (symbol "IR968-8C" (pin_names hide)  (in_bom yes) (on_board yes)
+    (property "Reference" "U" (id 0) (at 0 1.27 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "IR968-8C" (id 1) (at 0 -2.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "footprints:LED-TH_L2.9-W2.9-P2.54-FD" (id 2) (at 0 -10.16 0)
+      (effects (font (size 1.27 1.27) italic) hide)
+    )
+    (property "Datasheet" "https://item.szlcsc.com/601866.html?ref=editor&logined=true" (id 3) (at -2.286 0.127 0)
+      (effects (font (size 1.27 1.27)) (justify left) hide)
+    )
+    (property "ki_keywords" "C475375" (id 4) (at 0 0 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "LCSC" "C475375" (id 5) (at 0 0 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    
+    (symbol "IR968-8C_0_1"
+      (polyline
+        (pts
+          (xy -4.0640081280162565 3.3020066040132083)
+          (xy -3.048006096012192 2.794005588011176)
+          (xy -3.5560071120142243 2.286004572009144)
+          (xy -4.0640081280162565 3.3020066040132083)
+        )
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type background))
+      )
+      (polyline
+        (pts
+          (xy -3.048006096012192 4.3180086360172725)
+          (xy -2.0320040640081283 3.81000762001524)
+          (xy -2.54000508001016 3.3020066040132083)
+          (xy -3.048006096012192 4.3180086360172725)
+        )
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type background))
+      )
+      (polyline
+        (pts
+          (xy -2.286004572009144 1.524003048006096)
+          (xy -3.3020066040132083 2.54000508001016)
+        )
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type none))
+      )
+      (polyline
+        (pts
+          (xy -1.27000254000508 2.54000508001016)
+          (xy -2.286004572009144 3.5560071120142243)
+        )
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type none))
+      )
+      (polyline
+        (pts
+          (xy -1.27000254000508 -0.0)
+          (xy -2.54000508001016 -0.0)
+        )
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type none))
+      )
+      (polyline
+        (pts
+          (xy 2.54000508001016 -0.0)
+          (xy 1.27000254000508 -0.0)
+        )
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type none))
+      )
+      (polyline
+        (pts
+          (xy -1.27000254000508 1.7780035560071121)
+          (xy -1.27000254000508 -1.7780035560071121)
+        )
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type none))
+      )
+      (polyline
+        (pts
+          (xy 1.27000254000508 1.7780035560071121)
+          (xy -1.27000254000508 -0.0)
+          (xy 1.27000254000508 -1.7780035560071121)
+          (xy 1.27000254000508 1.7780035560071121)
+        )
+        (stroke (width 0) (type default) (color 0 0 0 0))
+        (fill (type background))
+      )
+      (pin unspecified line
+        (at -5.08 -0.0 0)
+        (length 2.54)
+        (name "K" (effects (font (size 1 1))))
+        (number "1" (effects (font (size 1 1))))
+      )
+      (pin unspecified line
+        (at 5.08 -0.0 180)
+        (length 2.54)
+        (name "A" (effects (font (size 1 1))))
+        (number "2" (effects (font (size 1 1))))
+      )
+    )
+  )
+)

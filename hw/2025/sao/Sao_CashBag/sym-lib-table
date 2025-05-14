@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "SAO Connector SMD")(type "KiCad")(uri "C:/Users/Boris/Documents/Nsec2025/Sao/libs/symbols/SAO Connector SMD.kicad_sym")(options "")(descr ""))
+)

@@ -1,0 +1,5 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "footprints")(type "KiCad")(uri "${KIPRJMOD}/library/footprints")(options "")(descr ""))
+  (lib (name "Pinheader28x6")(type "KiCad")(uri "/Users/pons/projects/nsec-badge-dev/hw/2025/library/footprints/Pinheader28x6.pretty")(options "")(descr ""))
+)

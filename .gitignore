@@ -29,3 +29,9 @@ __pycache__/
 *.sublime-*
 
 .vscode/
+
+# KiCad
+hw/**/*.lck
+hw/**/*-backups/
+hw/**/_autosave*
+hw/**/#auto_saved_files#

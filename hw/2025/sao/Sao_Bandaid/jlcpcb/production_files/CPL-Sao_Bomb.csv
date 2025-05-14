@@ -1,0 +1,18 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+D1,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,128.0,-90.975,0.0,top
+D2,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,128.0,-100.975,0.0,top
+D3,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,170.0,-91.025,180.0,top
+D4,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,170.0,-101.025,180.0,top
+J1,SAO Connector SMD,SAO Connector SMD,149.0,-95.975001,0.0,bottom
+J2,Conn_01x01_Socket,PinSocket_1x01_P1.27mm_Vertical,143.0,-85.0,0.0,top
+J3,Conn_01x01_Socket,PinSocket_1x01_P1.27mm_Vertical,130.5,-82.5,180.0,top
+J4,Conn_01x01_Socket,PinSocket_1x01_P1.27mm_Vertical,154.5,-85.0,0.0,top
+J5,Conn_01x01_Socket,PinSocket_1x01_P1.27mm_Vertical,130.5,-109.5,0.0,top
+J6,Conn_01x01_Socket,PinSocket_1x01_P1.27mm_Vertical,143.5,-107.5,180.0,top
+J7,Conn_01x01_Socket,PinSocket_1x01_P1.27mm_Vertical,168.5,-82.5,0.0,top
+J8,Conn_01x01_Socket,PinSocket_1x01_P1.27mm_Vertical,155.0,-107.5,180.0,top
+J9,Conn_01x01_Socket,PinSocket_1x01_P1.27mm_Vertical,168.0,-109.5,0.0,top
+R1,330,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,136.5,-88.5,-100.0,top
+R2,330,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,136.0,-102.5,95.0,top
+R3,330,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,162.0,-88.0,-80.0,top
+R4,330,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,162.5,-102.5,80.0,top

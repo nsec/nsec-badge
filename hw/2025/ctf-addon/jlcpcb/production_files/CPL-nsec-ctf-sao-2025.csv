@@ -1,0 +1,21 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+D1,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,85.445,-89.0,180.0,top
+D10,MBR120LSF,SOD-123_L2.8-W1.8-LS3.7-RD,102.575,-92.825,180.0,top
+D2,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,93.575,-96.75,180.0,top
+D3,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,102.75,-89.0,0.0,top
+D4,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,111.9375,-96.75,0.0,top
+D5,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,119.75,-89.0,180.0,top
+D6,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,127.5,-96.75,0.0,top
+D7,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,134.25,-89.0,0.0,top
+D8,LED,LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder,140.475,-96.75,0.0,top
+R1,75,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,85.5,-96.75,0.0,top
+R10,10K,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,116.125,-100.0,0.0,top
+R2,75,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,93.825,-89.0,0.0,top
+R3,75,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,102.7,-96.75,180.0,top
+R4,75,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,111.875,-88.9875,180.0,top
+R5,75,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,119.625,-96.75,0.0,top
+R6,1,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,127.575,-89.0,180.0,top
+R7,75,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,133.75,-96.75,180.0,top
+R8,75,R_1206_3216Metric_Pad1.30x1.75mm_HandSolder,140.45,-89.0,180.0,top
+R9,10K,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,123.05,-100.0,0.0,top
+U1,MMBT3906,SOT-23-3_L3.0-W1.7-P0.95-LS2.9-BR,118.4,-92.6,270.0,top

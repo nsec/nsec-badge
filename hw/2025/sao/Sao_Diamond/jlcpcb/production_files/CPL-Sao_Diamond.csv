@@ -1,0 +1,6 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+D1,LED,LED_D3.0mm,170.73,-50.5,180.0,top
+D2,LED,LED_D3.0mm,187.73,-50.5,0.0,top
+J1,SAO Connector SMD,SAO Connector SMD,178.96,-51.475001,0.0,bottom
+R1,330,R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal,174.208931,-61.363113,71.5,bottom
+R2,330,R_Axial_DIN0204_L3.6mm_D1.6mm_P7.62mm_Horizontal,183.791069,-61.363113,108.5,bottom

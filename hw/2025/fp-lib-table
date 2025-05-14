@@ -1,0 +1,7 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "footprints")(type "KiCad")(uri "${KIPRJMOD}/library/footprints")(options "")(descr ""))
+  (lib (name "PCI")(type "KiCad")(uri "${KIPRJMOD}/library/footprints/PCI.pretty")(options "")(descr ""))
+  (lib (name "Pinheader28x6")(type "KiCad")(uri "${KIPRJMOD}/library/footprints/Pinheader28x6.pretty")(options "")(descr ""))
+  (lib (name "Graph_Design")(type "KiCad")(uri "${KIPRJMOD}/library/Graph_Design.pretty")(options "")(descr ""))
+)
