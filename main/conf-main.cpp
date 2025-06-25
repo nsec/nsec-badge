@@ -19,7 +19,7 @@
 #include <scheduling/task.hpp>
 
 #include "console.h"
-#include "dbg-led.hpp"
+// #include "dbg-led.hpp"
 #include <badge_ssd1306_helper.hpp>
 
 class dummy_task : public nsec::scheduling::periodic_task<dummy_task>
@@ -58,7 +58,7 @@ extern "C" void app_main(void)
 {
     initialize_nvs();
 
-    xTaskCreate(dbg_led_task, "dbg_led_task", 2048, nullptr, 1, nullptr);
+    // xTaskCreate(dbg_led_task, "dbg_led_task", 2048, nullptr, 1, nullptr);
 
     /* Wait a few seconds before enabling the console. */
     vTaskDelay(2000 / portTICK_PERIOD_MS);
