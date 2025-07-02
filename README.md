@@ -107,7 +107,7 @@ without affecting the pseudo-terminal device, allowing you to read early-boot
 messages. This is supported by most terminal emulators.
 
 ## Credits
-NorthSec CTF badge 2025 is brought to you by the team work of:
+NorthSec CTF badge 2025 is brought to you by the teamwork of:
 
  - [abdelq](https://github.com/abdelq)
  - [IterateMe](https://github.com/IterateMe)

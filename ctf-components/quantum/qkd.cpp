@@ -802,6 +802,29 @@ void decrypt_flag() {
     printf("Decrypted flag: %s\n", flag.c_str());
 }
 
+void qkd_mock_data(){
+    const char *quantum_bits =  "01111001011100101010001101101100011011101010001100010011001100001100001111011001000100101110111100101100011001100101100000110101";
+    const char *badge_basis  =  "01011110011110010001010011011110100011111100011000110001111110010011001111110111100000010100011011101111001110001001101010101010";
+    const char *dock_basis   =  "11110100010001000111100000000000011000110010111010111001000111101000001111100011110111100010101001011110011011101010010101100011";
+    const char *ciphertext   =  "10000110001110010111011010100001100011110011001001010000101011101011110100100011001111100100100000011001010101110011111101111100";
+
+    const char *input_bits2  =  "111011101001110100100000001100011101011001100011111100000101001000";
+    const char *dock_key2   =   "111010001001111100001000011100011101011001100001111100000101001000";
+    const char *ciphertext2  =  "10100110111100000011100100000010101011110011000010111011000101100111111101011111101000010111010000110001101010000001001001110001";
+
+    std::memcpy(qkd_data.dock_basis, dock_basis, sizeof(qkd_data.dock_basis));
+    std::memcpy(qkd_data.dock_bits, quantum_bits, sizeof(qkd_data.dock_bits));
+    std::memcpy(qkd_data.badge_basis, badge_basis, sizeof(qkd_data.badge_basis));
+    std::memcpy(qkd_data.ciphertext, ciphertext, sizeof(qkd_data.ciphertext));
+
+    std::memcpy(qkd_data.ciphertext2, ciphertext2, sizeof(qkd_data.ciphertext2));
+    std::memcpy(qkd_data.noisykey2, input_bits2, sizeof(qkd_data.noisykey2));
+    std::memcpy(qkd_data.dockkey2, dock_key2, sizeof(qkd_data.dockkey2));
+
+    update_qkdnvs();
+    get_qkdnvs();
+    printf("QKD mock data loaded.\n");
+}
 
 int cmd_qkd(int argc, char **argv)
 {
@@ -852,7 +875,12 @@ int cmd_qkd_init(int argc, char **argv)
         if (strcmp(argv[1], "clear") == 0) 
         {
             clear_qkdnvs_data();
-        } 
+        }
+        else if (strcmp(argv[1], "mock") == 0) 
+        {
+            printf("Setting up post NSEC mock QKD data...\n");
+            qkd_mock_data();
+        }
         else 
         {
             printf("\nInvalid QKD-Init command\n");
@@ -898,8 +926,8 @@ void register_qkdnoisy_cmd() {
 void register_qkdinit_cmd() {
     const esp_console_cmd_t cmd = {
         .command = "qkd-init",
-        .help = "clear - Removes existing Quantum information\n Initiate Quantum Link with Dock",
-        .hint = "[clear]",
+        .help = "clear - Removes existing Quantum information\nmock - Initializes mock data without dock\n Initiate Quantum Link with Dock",
+        .hint = "[clear | mock]",
         .func = &cmd_qkd_init,
         .argtable = NULL,
     };
