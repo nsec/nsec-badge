@@ -6,12 +6,7 @@ Brought to you by the Team badge of NorthSec.
 ## Overview
 
 <p align="center">
-  <img src="hw/2025/cell.gif" height="320"
-       style="-webkit-transform: rotate(270deg);
-              -moz-transform: rotate(270deg);
-              -o-transform: rotate(270deg);
-              -ms-transform: rotate(270deg);
-              transform: rotate(270deg);"
+  <img src="hw/2025/badge2025.png" height="320"
   > <br>
 </p>
 
@@ -19,17 +14,17 @@ Brought to you by the Team badge of NorthSec.
 
 The NorthSec 2025 badge is loosely based on the ESP32-C3 design with an
 [ESP32-C3 microcontroller](https://www.espressif.com/en/products/socs/esp32-c3)
-(ESP32-C3-WROOM-1-N8R8) which is used to drive several periphery devices:
+(ESP32-C3-WROOM-02-N4) which is used to drive several periphery devices:
 
-- Sixteen [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel) RGB LEDs
-- Six buttons
-- Two 'pairing' connectors
-- Four [Shitty Add-On V1.69bis](https://hackaday.com/2019/03/20/introducing-the-shitty-add-on-v1-69bis-standard/) connector
+- Eighteen [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel) RGB LEDs
+- Five buttons
+- One IR 'pairing' connector
+- Two [Shitty Add-On V1.69bis](https://hackaday.com/2019/03/20/introducing-the-shitty-add-on-v1-69bis-standard/) connector
 
 The badge is powered through a USB-C port or through 3 AAA batteries.
 
 If you wish to hack your badge or create a new one based on the hardware. All
-the information [is available here](hw/2024/).
+the information [is available here](hw/2025/).
 
 ## Building the firmware
 
@@ -64,9 +59,6 @@ pio run -e conference
 
 # CTF firmware
 pio run -e ctf
-
-# Addon firmware
-pio run -e addon
 ```
 
 ## Flashing
@@ -79,9 +71,6 @@ pio run -t upload -e conference
 
 # CTF firmware
 pio run -t upload -e ctf
-
-# Addon firmware
-pio run -t upload -e addon
 ```
 
 if multiple badges are connected, you can select which badge will be flash
@@ -106,7 +95,7 @@ To read the logging statements output on the USB serial interface, it is
 possible to use `pio device monitor` or `idf.py`'s `monitor` command.
 
 However, you can use your preferred terminal emulator by pointing it to the
-`/dev/ttyACM0` device. The badge is configured to output at 115'200 bauds,
+`/dev/ttyACM0` device. The badge is configured to output at 115200 bauds,
 without parity, and with one stop bit per character.
 
 Note that electrically resetting the board using the hardware switch will
@@ -118,17 +107,19 @@ without affecting the pseudo-terminal device, allowing you to read early-boot
 messages. This is supported by most terminal emulators.
 
 ## Credits
-NorthSec CTF badge 2024 is brought to you by the team work of:
+NorthSec CTF badge 2025 is brought to you by the team work of:
 
- - [Svieg](https://github.com/Svieg)
  - [abdelq](https://github.com/abdelq)
- - [jgalar](https://github.com/jgalar)
- - [jmarcil](https://github.com/jmarcil)
+ - [IterateMe](https://github.com/IterateMe)
  - [lle](https://github.com/lle)
- - [mjeanson](https://github.com/mjeanson)
  - [nyx0](https://github.com/nyx0)
  - [p0ns](https://github.com/p0ns)
+ - [padraignix](https://github.com/padraignix)
+ - [Svieg](https://github.com/Svieg)
  - [sylemieux](https://github.com/sylemieux)
+ - [TheKGBSpy](https://github.com/TheKGBSpy)
 
 Special thanks to:
  - [20th](https://github.com/20th)
+ - [jgalar](https://github.com/jgalar)
+ - [mjeanson](https://github.com/mjeanson)
