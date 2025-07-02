@@ -24,7 +24,6 @@
 extern "C" {
 #endif
 
-// Register the calibration command
 void register_calibrate_cmd();
 
 #ifdef __cplusplus

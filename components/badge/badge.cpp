@@ -91,7 +91,7 @@ unsigned int sponsor_count_to_clearance_led_count(unsigned int level)
 }
 #endif
 
-} // anonymous namespace
+}
 
 nr::badge::badge()
     : _button_watcher([](nsec::button::id id, nsec::button::event event) {

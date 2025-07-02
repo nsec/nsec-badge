@@ -46,14 +46,12 @@ nc::uart_interface::uart_interface(uart_port_t hw_uart_id,
 {
     // Match the defaults of last year's badge (AVR SoftwareSerial).
     const uart_config_t config = {
-        // Apparently accepts negative baud rates, probably for time travelers.
         .baud_rate = int(baud_rate),
         .data_bits = UART_DATA_8_BITS,
         .parity = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
         .rx_flow_ctrl_thresh = 0,
-        // Source clock is undocumented... assuming DEFAULT makes sense.
         .source_clk = UART_SCLK_DEFAULT,
     };
 

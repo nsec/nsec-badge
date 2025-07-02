@@ -11,6 +11,5 @@
 #include "linenoise/linenoise.h"
 #include "mbedtls/md5.h"
 
-// Function to register the quantum console command
 void register_quantum_cmd();
 

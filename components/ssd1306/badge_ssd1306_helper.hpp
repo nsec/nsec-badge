@@ -11,8 +11,6 @@
 #include "linenoise/linenoise.h"
 #include "cmd_sys.h"
 
-//static const char *TAG = "badge_ssd1306_helper";
-
 void badge_ssd1306_init();
 void badge_ssd1306_clear();
 void badge_print_bitmap(uint8_t* bitmap, int x, int y, int width, int height, bool invert);

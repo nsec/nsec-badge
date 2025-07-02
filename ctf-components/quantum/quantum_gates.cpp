@@ -1,12 +1,17 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright 2025 Patrick Downing <padraignix@gmail.com>
+ */
+
 #include "quantum_gates.h"
 
 // Quantum system variables
 static Quantum quantum;
-static std::vector<Complex> state;     // Qubit system state
-static int num_qubits = 0;             // Number of qubits initialized
-static std::vector<std::string> history;  // History of applied gates
+static std::vector<Complex> state;
+static int num_qubits = 0;
+static std::vector<std::string> history;
 
-// Function to initialize N qubits (1-5)
 void initialize_n_qubits(int qubits) {
     if (qubits < 1 || qubits > 8) {
         printf("Error: You can only initialize between 1 and 8 qubits.\n");
@@ -14,19 +19,20 @@ void initialize_n_qubits(int qubits) {
     }
     num_qubits = qubits;
     state = quantum.multiQubitState(num_qubits, 0);  // Initialize |000...0>
-    printf("Initialized %d-qubit state: |%0*d>\n", num_qubits, num_qubits, 0);  // Print |000...0>
-    history.clear();  // Clear the gate history for the new state
+    printf("Initialized %d-qubit state: |%0*d>\n", num_qubits, num_qubits, 0);
+    history.clear();
 }
 
 // Function to apply a single-qubit gate (X, Y, Z, H) to the given qubit
+// --------------------------------------------------------------------
 void apply_single_qubit_gate(char gate_type, int qubit) {
     if (qubit >= num_qubits || qubit < 0) {
         printf("Error: Invalid qubit. You have initialized %d qubits.\n", num_qubits);
         return;
     }
 
-    quantum.apply_single_qubit_gate(gate_type, qubit, state);  // Call the framework method
-    printf("Applying gate %c to qubit %d...\n", gate_type, qubit);  // Move print statements here
+    quantum.apply_single_qubit_gate(gate_type, qubit, state);
+    printf("Applying gate %c to qubit %d...\n", gate_type, qubit);
     history.push_back("gate " + std::string(1, gate_type) + " " + std::to_string(qubit));
 }
 
@@ -45,13 +51,11 @@ void apply_cnot_gate(int control_qubit, int target_qubit) {
         return;
     }
 
-    // Apply CNOT gate
     quantum.apply_cnot_gate(control_qubit, target_qubit, num_qubits, state);
     printf("Applying CNOT gate (control: %d, target: %d)...\n", control_qubit, target_qubit);
     history.push_back("gate CNOT " + std::to_string(control_qubit) + " " + std::to_string(target_qubit));
 }
 
-// Function to print the history of gate operations
 void print_gate_history() {
     if (history.empty()) {
         printf("No gates have been applied yet.\n");
@@ -63,47 +67,34 @@ void print_gate_history() {
     }
 }
 
-// Function to print the current state vector
 void print_statevector() {
-    std::string state_str = quantum.statevector(state);  // Get the statevector as a string
-    printf("%s", state_str.c_str());  // Print the formatted statevector string
+    std::string state_str = quantum.statevector(state);
+    printf("%s", state_str.c_str());
 }
 
-// Function to compute the MD5 hash
 void compute_md5(const char *input, char *output) {
-    unsigned char digest[16];  // MD5 produces a 16-byte hash
+    unsigned char digest[16];
     mbedtls_md5_context ctx;
 
-    // Initialize MD5 context
     mbedtls_md5_init(&ctx);
     mbedtls_md5_starts(&ctx);
-
-    // Update MD5 with input data
     mbedtls_md5_update(&ctx, (const unsigned char *)input, strlen(input));
-
-    // Finalize the hash computation
     mbedtls_md5_finish(&ctx, digest);
-
-    // Free the context
     mbedtls_md5_free(&ctx);
 
-    // Convert the digest to a hexadecimal string
     for (int i = 0; i < 16; i++) {
         sprintf(output + (i * 2), "%02x", digest[i]);
     }
-    output[32] = '\0';  // Null-terminate the output string
+    output[32] = '\0';
 }
 
 void print_hash() {
     std::string state_str = quantum.statevector(state);
-    char md5_output[33];  // 32 characters for MD5 + 1 for null-terminator
-    // Compute the MD5 hash
+    char md5_output[33];
     compute_md5(state_str.c_str(), md5_output);
-    // Print the hash value
     printf("Hash: %s\n", md5_output);
 }
 
-// Function to measure the qubits and collapse the state
 void measure_qubits() {
     std::string result = quantum.measure(state, num_qubits);
     printf("Measured qubit state: |%s>\n", result.c_str());
@@ -116,24 +107,22 @@ void quantum_interactive_mode() {
     printf("Quantum interactive mode. Type 'exit' to quit, 'help' for commands, or 'list' to show applied gates.\n");
 
     while (true) {
-        input = linenoise("q>: ");  // Dynamically capture input with linenoise
+        input = linenoise("q>: ");
 
-        if (!input) {  // Check for null (e.g., EOF or Ctrl+D)
+        if (!input) {
             printf("\nExiting quantum mode...\n");
             break;
         }
 
-        // Trim whitespace
         while (*input == ' ') ++input;
 
-        // Add non-empty commands to history
         if (*input) {
             linenoiseHistoryAdd(input);
         }
 
         if (strcmp(input, "exit") == 0) {
             printf("Exiting quantum mode...\n");
-            free(input);  // Free buffer
+            free(input);
             break;
         }
 
@@ -150,35 +139,30 @@ void quantum_interactive_mode() {
             continue;
         }
 
-        // Handle 'list' command to show gate history
         if (strcmp(input, "list") == 0) {
             print_gate_history();
             free(input);
             continue;
         }
 
-        // Handle 'sv' command to print the current state vector
         if (strcmp(input, "sv") == 0) {
             print_statevector();
             free(input);
             continue;
         }
 
-        // Handle 'measure' command to collapse the state and return classical result
         if (strcmp(input, "measure") == 0) {
             measure_qubits();
             free(input);
             continue;
         }
 
-        // Handle 'measure' command to collapse the state and return classical result
         if (strcmp(input, "hash") == 0) {
             print_hash();
             free(input);
             continue;
         }
 
-        // Parse other commands (e.g., gate operations)
         std::istringstream iss(input);
         std::string command;
         iss >> command;
@@ -187,7 +171,6 @@ void quantum_interactive_mode() {
             std::string gate_name;
             iss >> gate_name;
 
-            // Handle CNOT separately
             if (gate_name == "CNOT") {
                 int control_qubit, target_qubit;
                 if (!(iss >> control_qubit >> target_qubit)) {
@@ -212,31 +195,27 @@ void quantum_interactive_mode() {
             printf("Unknown command. Type 'help' for available commands.\n");
         }
 
-        free(input);  // Free the memory allocated by linenoise
+        free(input);
     }
 
     printf("Quantum state cleared.\n");
 }
 
-// Helper function to check if a string represents a valid number
 bool is_valid_number(const char* str) {
     char* endptr;
-    long val = strtol(str, &endptr, 10);  // Convert string to long
-    return *endptr == '\0';  // Check if the entire string was a valid number
+    long val = strtol(str, &endptr, 10);
+    return *endptr == '\0';
 }
 
-// Console command to handle quantum gate application and interactive mode
 int cmd_quantum(int argc, char **argv) {
     if (argc == 2) {
-        // Validate if the input is a valid number
         if (!is_valid_number(argv[1])) {
             printf("Error: Invalid input. Please provide a number between 1 and 8 for qubits.\n");
             return 0;
         }
 
-        int qubits = std::strtol(argv[1], nullptr, 10);  // Convert string to integer
+        int qubits = std::strtol(argv[1], nullptr, 10);
 
-        // Validate that it stays between 1 and 5
         if (qubits < 1 || qubits > 8) {
             printf("Error: You must initialize between 1 and 8 qubits.\n");
             return 0;
@@ -251,7 +230,6 @@ int cmd_quantum(int argc, char **argv) {
     }
 }
 
-// Register the quantum command
 void register_quantum_cmd() {
     const esp_console_cmd_t cmd = {
         .command = "quantum",

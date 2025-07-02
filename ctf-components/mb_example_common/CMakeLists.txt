@@ -1,9 +1,0 @@
-# SPDX-FileCopyrightText: 2024 NorthSec
-#
-# SPDX-License-Identifier: MIT
-
-set(CONFIG_NSEC_BUILD_CONFERENCE $ENV{CONFIG_NSEC_BUILD_CONFERENCE} CACHE INTERNAL "")
-set(CONFIG_NSEC_BUILD_CTF $ENV{CONFIG_NSEC_BUILD_CTF} CACHE INTERNAL "")
-
-idf_component_register(SRCS "modbus_params.c"
-                    INCLUDE_DIRS "include")

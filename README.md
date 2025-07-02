@@ -1,4 +1,4 @@
-NorthSec 2024 badge
+NorthSec 2025 badge
 ===================
 
 Brought to you by the Team badge of NorthSec.
@@ -6,7 +6,7 @@ Brought to you by the Team badge of NorthSec.
 ## Overview
 
 <p align="center">
-  <img src="hw/2024/cell.gif" height="320"
+  <img src="hw/2025/cell.gif" height="320"
        style="-webkit-transform: rotate(270deg);
               -moz-transform: rotate(270deg);
               -o-transform: rotate(270deg);
@@ -17,9 +17,9 @@ Brought to you by the Team badge of NorthSec.
 
 ## Hardware
 
-The NorthSec 2024 badge is loosely based on the ESP32-S3-DevKitC-1 design with an
-[ESP32-S3 microcontroller](https://www.espressif.com/en/products/socs/esp32-s3)
-(ESP32-S3-WROOM-1-N8R8) which is used to drive several periphery devices:
+The NorthSec 2025 badge is loosely based on the ESP32-C3 design with an
+[ESP32-C3 microcontroller](https://www.espressif.com/en/products/socs/esp32-c3)
+(ESP32-C3-WROOM-1-N8R8) which is used to drive several periphery devices:
 
 - Sixteen [NeoPixel](https://en.wikipedia.org/wiki/Adafruit_Industries#NeoPixel) RGB LEDs
 - Six buttons

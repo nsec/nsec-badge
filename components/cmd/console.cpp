@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 NorthSec
+// SPDX-FileCopyrightText: 2025 NorthSec
 // SPDX-FileCopyrightText: 2025 NorthSec
 //
 // SPDX-License-Identifier: MIT
@@ -24,7 +24,6 @@
 #endif
 
 #include <SmartLeds.h>
-//#include <badge/globals.hpp>
 
 static const char *TAG = "console";
 #define PROMPT_STR LOG_RESET_COLOR "nsec"
@@ -84,8 +83,6 @@ void register_commands()
     console_register_cmd_clear();
     console_register_cmd_sys();
 #if CONFIG_NSEC_BUILD_CTF
-    //register_wifi_cmd();
-    //register_ir_cmd();
     register_quantum_cmd();
     register_calibrate_cmd();
     register_qkdinit_cmd();
@@ -102,9 +99,6 @@ extern "C" void console_init()
 
     esp_console_repl_t *repl = nullptr;
     esp_console_repl_config_t repl_config = ESP_CONSOLE_REPL_CONFIG_DEFAULT();
-    /* Prompt to be printed before each line.
-     * This can be customized, made dynamic, etc.
-     */
     repl_config.prompt = PROMPT_STR ">";
     repl_config.max_cmdline_length = 200;
 

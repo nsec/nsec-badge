@@ -1,6 +1,8 @@
-// SPDX-FileCopyrightText: 2025 NorthSec
-//
-// SPDX-License-Identifier: MIT
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright 2025 Patrick Downing <padraignix@gmail.com>
+ */
 
 #include "badge_ssd1306_helper.hpp"
 #include "utils/board.hpp"

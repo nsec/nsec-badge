@@ -317,7 +317,6 @@ nc::ir_interface::~ir_interface()
 
 void nc::ir_interface::_initialize_reception_task()
 {
-    // FIXME Giving this higher priority?
     BaseType_t task_created =
         xTaskCreate(_reception_task_entry, "ir_reception_task", 8192, this,
                     configMAX_PRIORITIES - 2, &_reception_task_handle);
@@ -404,8 +403,6 @@ void nc::ir_interface::_reception_task_impl()
             continue;
         }
 
-        // FIXME Skip if idle?
-
         esp_err_t err = rmt_receive(
             _rx_channel, _rx_symbols.data(),
             _rx_symbols.size() * sizeof(rmt_symbol_word_t), &rx_config);
@@ -477,12 +474,6 @@ bool nc::ir_interface::_decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
                   current_symbol->duration0, current_symbol->level1,
                   current_symbol->duration1);
 
-    // FIXME Be more flexible by looping until we see a leader code
-    // FIXME Repeating signal when sending as a copy?
-    // FIXME Flipping bits and trying against checksum?
-    // FIXME Maybe transmit a byte and it's inverse for every byte of the
-    // https://sibotic.wordpress.com/wp-content/uploads/2013/12/adoh-necinfraredtransmissionprotocol-281113-1713-47344.pdf
-    // packet? Check leader code
     if (!(
             // current_symbol->level0 == 1 &&
             nec_check_in_range(current_symbol->duration0,
@@ -508,10 +499,7 @@ bool nc::ir_interface::_decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
 
         // Check stop bit
         if (
-            // current_symbol->level0 == 1 &&
             nec_check_in_range(current_symbol->duration0, NEC_ENDING_HIGH_US)
-            // nec_check_in_range(current_symbol->duration1, 0)
-            // && current_symbol->level1 == 0
         ) {
             if (bit_index == 0) {
                 return true;
@@ -525,9 +513,7 @@ bool nc::ir_interface::_decode_rmt_symbols_nec(const rmt_symbol_word_t *symbols,
 
         // Check Data Bit
         if (
-            // current_symbol->level0 == 1 &&
             nec_check_in_range(current_symbol->duration0, NEC_DATA_HIGH_US)
-            // && current_symbol->level1 == 0
         ) {
             bool is_one = nec_check_in_range(current_symbol->duration1,
                                              NEC_DATA_ONE_LOW_US);
