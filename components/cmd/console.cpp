@@ -13,8 +13,6 @@
 #include "badge_nsec_logo.h"
 
 #if CONFIG_NSEC_BUILD_CTF
-#include "wifi.h"
-#include "ir.h"
 #include "quantum.h"
 #include "quantum_gates.h"
 #include "calibration.h"
