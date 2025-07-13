@@ -73,16 +73,16 @@ pio run -t upload -e conference
 pio run -t upload -e ctf
 ```
 
-if multiple badges are connected, you can select which badge will be flash
-with the "--upload-port [port name]" option:
+If multiple badges are connected, you can select which badge will be flash with
+the `--upload-port <port_name>` option:
 
 ```bash
 # Conference firmware
-pio run -t upload -e conference --upload-port [port name]
+pio run -t upload -e conference --upload-port <port_name>
 ```
 
-To improve the upload speed, you can skip the build validation/process
-with the "-t nobuild" option:
+To improve the upload speed, you can skip the build validation/process with the
+`-t nobuild` option:
 
 ```bash
 # Conference firmware
@@ -95,12 +95,12 @@ To read the logging statements output on the USB serial interface, it is
 possible to use `pio device monitor` or `idf.py`'s `monitor` command.
 
 However, you can use your preferred terminal emulator by pointing it to the
-`/dev/ttyACM0` device. The badge is configured to output at 115200 bauds,
+`/dev/ttyACM0` device. The badge is configured to output at `115200` bauds,
 without parity, and with one stop bit per character.
 
-Note that electrically resetting the board using the hardware switch will
-cause the pseudo-terminal device to disappear, making it hard to read the
-logs emitted during boot.
+Note that electrically resetting the board using the hardware switch will cause
+the pseudo-terminal device to disappear, making it hard to read the logs
+emitted during boot.
 
 Pulsing the DTR signal (lowering it for 1 second) will cause the board to reset
 without affecting the pseudo-terminal device, allowing you to read early-boot
@@ -118,8 +118,8 @@ NorthSec CTF badge 2025 is brought to you by the teamwork of:
  - [Svieg](https://github.com/Svieg)
  - [sylemieux](https://github.com/sylemieux)
  - [TheKGBSpy](https://github.com/TheKGBSpy)
+ - [mjeanson](https://github.com/mjeanson)
 
 Special thanks to:
  - [20th](https://github.com/20th)
  - [jgalar](https://github.com/jgalar)
- - [mjeanson](https://github.com/mjeanson)
