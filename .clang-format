@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 NorthSec
+# SPDX-FileCopyrightText: 2025 NorthSec
 #
 # SPDX-License-Identifier: MIT
 

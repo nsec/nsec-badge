@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright 2025 Patrick Downing <padraignix@gmail.com>
+ */
+
 #include "safe_unlock.h"
 
 #define PIN_CLOCK     GPIO_NUM_2  // input (server -> client)
@@ -36,11 +42,9 @@ void get_qkdnvs_safe()
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     } else if (err == ESP_ERR_NVS_NOT_FOUND) {
-        // Don't initialize here, just return - maybe print out helpful message
         return;
     }
 
-    // Retrieve the calibration data structure
     size_t data_size = sizeof(qkd_safe_data);
     err = nvs_get_blob(nvs_handle, "qkd_data", &qkd_safe_data, &data_size);
     if (err != ESP_OK) {
@@ -124,7 +128,6 @@ std::string decrypt_safe_flag() {
         return "nothing";
     }
 
-    // Perform XOR decryption with wrapping key
     size_t cipher_len = strlen((char *)qkd_safe_data.ciphertext2);
     size_t key_len = strlen((char *)qkd_safe_data.noisykey2);
     uint8_t decrypted_binary[128 + 1] = {0};
@@ -133,7 +136,6 @@ std::string decrypt_safe_flag() {
         decrypted_binary[i] = (qkd_safe_data.ciphertext2[i] ^ qkd_safe_data.noisykey2[i % key_len]) ? '1' : '0';
     }
 
-    // Convert binary back to string
     char decrypted_flag[128 / 8 + 1] = {0};
     size_t char_index = 0;
     for (size_t i = 0; i < cipher_len; i += 8) {
@@ -149,9 +151,8 @@ std::string decrypt_safe_flag() {
     return flag;
 }
 
-// Function to convert a string to a binary string representation
 void string_to_binary(const char *input, char *output) {
-    output[0] = '\0';  // Start with an empty string
+    output[0] = '\0';
 
     for (size_t i = 0; i < strlen(input); ++i) {
         char binary[9];
@@ -180,30 +181,25 @@ static void safe_init(std::string flag)
     char flag_binary[129] = {0};
     string_to_binary(flag.c_str(), flag_binary);
     safe_send_bits(flag_binary);
-    //vTaskDelay(pdMS_TO_TICKS(1500)); // Show 100% for a moment
     
     badge_print_text(2, (char*)"R: Unlock State6", 15, false);
     char unlockstate[2];
     safe_read_bits(unlockstate, 1);
-    //printf("test unlockstate: %s\n", unlockstate);
-    //badge_ssd1306_clear();
     if (unlockstate[0] == '1') {
         badge_print_text(2, (char*)"Safe Unlocked!  ", 16, false);
     } else {
         badge_print_text(2, (char*)"Incorrect Flag! ", 16, false);
     }
-    vTaskDelay(pdMS_TO_TICKS(1500)); // Show 100% for a moment
+    vTaskDelay(pdMS_TO_TICKS(1500));
 }
 
 int cmd_qkd_safe(int argc, char **argv)
 {
-    //Need to check if argv has something or is blank
     if (argc > 1) {
         printf("\nInvalid Safe Unlock Attempt\n");
     }
     else 
     {
-        //Check that flag exists on the badge first
         std::string flag = decrypt_safe_flag();
         if (flag == "nothing") {
             printf("No flag available - initialize Quantum link first.\n");

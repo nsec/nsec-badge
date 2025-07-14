@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 NorthSec
+// SPDX-FileCopyrightText: 2025 NorthSec
 //
 // SPDX-License-Identifier: MIT
 
@@ -12,7 +12,6 @@
 #include "nvs_flash.h"
 #include "console.h"
 #include "save.h"
-#include "ir.h"
 #include <badge_ssd1306_helper.hpp>
 
 static void initialize_nvs() {

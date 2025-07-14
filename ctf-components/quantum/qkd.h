@@ -23,7 +23,6 @@
 extern "C" {
 #endif
 
-// Register the QKD command
 void register_qkd_cmd();
 void register_qkdinit_cmd();
 void register_qkdnoisy_cmd();

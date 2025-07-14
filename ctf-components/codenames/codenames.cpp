@@ -73,12 +73,9 @@ CodenamesState codenames_data = {
 
 void print_nvs_blob_codenames() {
 
-    CodenamesState codenames_data; // Temporary variable to hold the NVS data
+    CodenamesState codenames_data;
     size_t required_size = sizeof(CodenamesState);
-
-    // Try to get the blob from NVS
     nvs_handle_t nvs_handle;
-
     esp_err_t err2 = nvs_open(CODENAMES_NAMESPACE, NVS_READONLY, &nvs_handle);
 
     if (err2 != ESP_OK) {
@@ -102,7 +99,6 @@ void print_nvs_blob_codenames() {
 void update_nvs_codenames()
 {
     nvs_handle_t nvs_handle;
-
     esp_err_t err = nvs_open(CODENAMES_NAMESPACE, NVS_READWRITE, &nvs_handle);
 
     if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
@@ -110,8 +106,6 @@ void update_nvs_codenames()
         return;
     }
 
-
-    // Store the codenames key data structure as a single blob
     err = nvs_set_blob(nvs_handle, "codenames_data", &codenames_data, sizeof(codenames_data));
     if (err == ESP_OK) {
         //printf("Codenames key data loaded from NVS successfully.\n");
@@ -120,7 +114,6 @@ void update_nvs_codenames()
         ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
     }
 
-    // Commit changes
     err = nvs_commit(nvs_handle);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
@@ -132,7 +125,6 @@ void update_nvs_codenames()
 void get_nvs_codenames()
 {
     nvs_handle_t nvs_handle;
-
     esp_err_t err = nvs_open(CODENAMES_NAMESPACE, NVS_READONLY, &nvs_handle);
 
     if (err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND) {
@@ -140,12 +132,9 @@ void get_nvs_codenames()
         return;
     } else if (err == ESP_ERR_NVS_NOT_FOUND) {
         update_nvs_codenames();
-        //exit get_nvs() since it will have a different nvs handle and fail
         return;
     }
 
-
-    // Retrieve the codenames key data structure
     size_t data_size = sizeof(codenames_data);
     err = nvs_get_blob(nvs_handle, "codenames_data", &codenames_data, &data_size);
     if (err != ESP_OK) {
@@ -160,14 +149,12 @@ void clear_nvs_codenames(){
     nvs_handle_t handle;
     esp_err_t err;
 
-     // Open NVS handle
      err = nvs_open(CODENAMES_NAMESPACE, NVS_READWRITE, &handle);
      if (err != ESP_OK) {
          ESP_LOGE(TAG, "Error (%s) opening NVS handle!\n", esp_err_to_name(err));
          return;
      }
  
-     // Erase the blob from NVS
      err = nvs_erase_key(handle, "codenames_data");
      if (err == ESP_OK) {
          printf("Key erased successfully.\n");
@@ -204,8 +191,6 @@ int validate(char* c){
 
     return 0;
 }
-
-// DOCK PART ###################################################################################
 
 static void bus_init(void)
 {
@@ -286,12 +271,10 @@ static char* get_key()
     
     return key_string;
 }
-// DOCK PART ###################################################################################
 
 int cmd_codenames(int argc, char **argv) {
     char* input_val;
     
-
     if (argc == 1) {
         
         printf("Usage: codenames\n");
@@ -332,7 +315,6 @@ int cmd_codenames(int argc, char **argv) {
                 char initdata[2];
                 cn_read_bits(initdata, 1);
 
-                // Get the key and send it to the dock
                 char* key = get_key();
                 
                 printf("Sending key: %s\n", key);

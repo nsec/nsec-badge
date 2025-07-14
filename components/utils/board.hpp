@@ -1,4 +1,3 @@
-// SPDX-FileCopyrightText: 2024 NorthSec
 // SPDX-FileCopyrightText: 2025 NorthSec
 //
 // SPDX-License-Identifier: MIT
@@ -12,13 +11,6 @@
 namespace nsec::board
 {
 
-/*
- * LEDs
-namespace led
-{
-constexpr unsigned int dbg_pin = 13;
-} // namespace led
-*/
 namespace button
 {
 /*
@@ -26,10 +18,7 @@ namespace button
  */
 constexpr unsigned int up = 0;
 constexpr unsigned int down = 1;
-//constexpr unsigned int left = 37;
-//constexpr unsigned int right = 38;
 constexpr unsigned int ok = 9;
-//constexpr unsigned int cancel = 40;
 } // namespace button
 
 /*
@@ -61,18 +50,8 @@ namespace uart
 constexpr auto uart_device = UART_NUM_1;
 constexpr unsigned int tx_pin = 12;
 constexpr unsigned int rx_pin = 11;
-//constexpr unsigned int signal_pin = 11;
 } // namespace uart
 
-/*
-namespace right
-{
-constexpr auto uart_device = UART_NUM_1;
-constexpr unsigned int tx_pin = 17;
-constexpr unsigned int rx_pin = 18;
-constexpr unsigned int signal_pin = 12;
-} // namespace right
-*/
 } // namespace serial
 
 namespace ir

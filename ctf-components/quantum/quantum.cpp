@@ -1,14 +1,18 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright 2025 Patrick Downing <padraignix@gmail.com>
+ */
+
 #include "quantum.h"
 #include <iostream>
 #include <random>
 
-/// Constructor
 Quantum::Quantum() {}
 
-// Initialize multi-qubit state
 std::vector<Complex> Quantum::multiQubitState(int num_qubits, int initial_state) {
     std::vector<Complex> state(1 << num_qubits, Complex(0, 0));
-    state[initial_state] = Complex(1, 0);  // Set the initial state
+    state[initial_state] = Complex(1, 0);
     return state;
 }
 
@@ -19,12 +23,10 @@ std::string Quantum::statevector(const std::vector<Complex>& state) {
 
     std::string result = "Statevector:\n";
 
-    // Loop through all possible states (2^num_qubits)
     for (int i = 0; i < num_states; ++i) {
         result += "|";
-        // Create the binary representation of the state (e.g., |000>, |001>, etc.)
         for (int j = num_qubits - 1; j >= 0; --j) {
-            result += std::to_string((i >> j) & 1);  // Extract each qubit as binary
+            result += std::to_string((i >> j) & 1);
         }
         result += "> : (" + std::to_string(state[i].real()) + " + " + std::to_string(state[i].imag()) + "i)\n";
     }
@@ -32,40 +34,37 @@ std::string Quantum::statevector(const std::vector<Complex>& state) {
     return result;
 }
 
-// Measure qubits, collapse the state, and return the classical measurement result
 std::string Quantum::measure(std::vector<Complex>& state, int num_qubits) {
     if (num_qubits == 0) {
         return "";
     }
 
     std::string measurement_result;
-    int total_states = 1 << num_qubits;  // 2^num_qubits possible states
+    int total_states = 1 << num_qubits;
 
     for (int qubit_index = 0; qubit_index < num_qubits; ++qubit_index) {
         double prob_zero = 0.0;
 
         for (int i = 0; i < total_states; ++i) {
-            if (((i >> qubit_index) & 1) == 0) {  // Check if the qubit is 0
+            if (((i >> qubit_index) & 1) == 0) {
                 prob_zero += std::norm(state[i]);
             }
         }
 
-        // Generate a random value to simulate the measurement outcome
         float random_value = (float)esp_random() / UINT32_MAX;
 
-        // Collapse state and record the result
         if (random_value < prob_zero) {
             measurement_result += "0";
             for (int i = 0; i < total_states; ++i) {
                 if (((i >> qubit_index) & 1) == 1) {
-                    state[i] = Complex(0, 0);  // Collapse the state
+                    state[i] = Complex(0, 0);
                 }
             }
         } else {
             measurement_result += "1";
             for (int i = 0; i < total_states; ++i) {
                 if (((i >> qubit_index) & 1) == 0) {
-                    state[i] = Complex(0, 0);  // Collapse the state
+                    state[i] = Complex(0, 0);
                 }
             }
         }
@@ -86,14 +85,14 @@ std::string Quantum::measure(std::vector<Complex>& state, int num_qubits) {
     std::reverse(measurement_result.begin(), measurement_result.end());
 
     // Reinitialize the quantum state after measurement
-    state = multiQubitState(num_qubits, 0);  // Reset to |000...0>
+    state = multiQubitState(num_qubits, 0);
 
     return measurement_result;
 }
 
 // Reinitialize the quantum state after measurement
 void Quantum::reinitialize(std::vector<Complex>& state, int num_qubits) {
-    state = multiQubitState(num_qubits, 0);  // Reset to |000...0> state
+    state = multiQubitState(num_qubits, 0);
 }
 
 // Pauli-X Gate (bit flip)
@@ -131,7 +130,7 @@ std::vector<std::vector<Complex>> Quantum::hadamardGate() {
 
 // CNOT Gate for multi-qubit system
 std::vector<std::vector<Complex>> Quantum::cnotGate(int control_qubit, int target_qubit, int total_qubits) {
-    int size = 1 << total_qubits;  // 2^total_qubits
+    int size = 1 << total_qubits;
     std::vector<std::vector<Complex>> cnot_matrix(size, std::vector<Complex>(size, {0.0, 0.0}));
 
     for (int i = 0; i < size; ++i) {
@@ -140,7 +139,7 @@ std::vector<std::vector<Complex>> Quantum::cnotGate(int control_qubit, int targe
             int target_flip = i ^ (1 << target_qubit);  // XOR to flip the target qubit bit
             cnot_matrix[target_flip][i] = {1.0, 0.0};   // Swap |control, target> with |control, !target>
         } else {
-            cnot_matrix[i][i] = {1.0, 0.0};  // No change for control = 0
+            cnot_matrix[i][i] = {1.0, 0.0};
         }
     }
 
@@ -210,7 +209,7 @@ void Quantum::apply_cnot_gate(int control_qubit, int target_qubit, int num_qubit
             int target_flip = i ^ (1 << target_qubit);  // XOR to flip the target qubit bit
             new_state[target_flip] = state[i];  // Swap |control, target> with |control, !target>
         } else {
-            new_state[i] = state[i];  // No change for control = 0
+            new_state[i] = state[i];
         }
     }
 

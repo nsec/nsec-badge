@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright 2025 Patrick Downing <padraignix@gmail.com>
+ */
+
 #include "calibration.h"
 
 #define QUANTUM_NAMESPACE "quantum"
@@ -18,14 +24,14 @@ CalibrationData calib_data = {
 // Default values for calibration data
 CalibrationData default_calib_data = {
     {0, 0, 0, 0, 0, 0},     // Default calibration values
-    {"00000", "00000", "00000", "00000", "00000", "00000"} // Default hashes
+    {"00000", "00000", "00000", "00000", "00000", "00000"}
 };
 
 bool leds_on = true;
 
 void print_nvs_blob() {
 
-    CalibrationData calib_data; // Temporary variable to hold the NVS data
+    CalibrationData calib_data;
     size_t required_size = sizeof(CalibrationData);
 
     // Try to get the blob from NVS
@@ -159,7 +165,7 @@ void update_leds()
 }
 
 void toggle_leds() {
-    leds_on = !leds_on; // Toggle the state
+    leds_on = !leds_on;
     
     if (leds_on) {
         update_leds();
@@ -210,10 +216,8 @@ void calibrate_1()
             return;
         }
 
-        // Compute MD5 hash of the input
         std::string hashed_input = compute_md5(input_hash);
 
-        // Validate against the computed hash 2f799a918c2578f275e94bc07739c9f8
         if (strcmp(hashed_input.c_str(), "b3475f92e32c7257d9a7e90482155cff") == 0) {
             printf("Correct!\n\n");
             badge_print_text(0, (char*)"Calibrate 1a: O", 15, false);
@@ -251,10 +255,8 @@ void calibrate_1()
             return;
         }
 
-        // Compute MD5 hash of the input
         std::string hashed_input = compute_md5(input_hash);
 
-        // Validate 2d5822b91586a076bb43686a7b56e893
         if (strcmp(hashed_input.c_str(), "b2fe3f26c99b7b7afeb46307b3997df9") == 0) {
             printf("Correct!\n\n");
             badge_print_text(1, (char*)"Calibrate 1b: O", 15, false);
@@ -293,10 +295,8 @@ void calibrate_1()
             return;
         }
 
-        // Compute MD5 hash of the input
         std::string hashed_input = compute_md5(input_hash);
 
-        // Validate 0b374d293a6cbbc07cc52cec3b1419a5
         if (strcmp(hashed_input.c_str(), "429dec50dd0cc413f795725854f00d9e") == 0) {
             printf("Correct!\n\n");
             badge_print_text(2, (char*)"Calibrate 1c: O", 15, false);
@@ -323,9 +323,8 @@ void calibrate_1()
         badge_print_text(2, (char*)"Calibrate 1c: O", 15, false);
     }
 
-    // Obfuscated version of "FLAG"
+    // Required to pass CI job
     std::string obfFlag = "\x55\x5F\x52\x54\x3E";  
-    // Decrypt it at runtime by XORing each byte again with 0x13
     std::string flagstr;
     flagstr.reserve(obfFlag.size());
     for (char c : obfFlag) {
@@ -339,7 +338,6 @@ void calibrate_1()
 
     printf("Your flag is: %s\n", flag.c_str());
 
-    //TODO: This should always be correct, as it would return if incorrect before this step.
     if(calib_data.calib[0] == 1 && calib_data.calib[1] == 1 && calib_data.calib[2] == 1)
     {
         printf("Congratulations, the first set of calibrations is correct!\n");
@@ -349,7 +347,6 @@ void calibrate_1()
         printf("Oops... Calibrations are not correct, try again\n");
     }
         
-    //TODO: Async call as it locks up the badge during scrolling display. Minor inconvenience.
     badge_print_textbox(3,  0, const_cast<char*>(flag.c_str()), 16, 16, false, 100);
     badge_print_textbox(3,  0, const_cast<char*>(flag.c_str()), 16, 20, false, 6);
 }
@@ -377,10 +374,8 @@ void calibrate_2()
             return;
         }
 
-        // Compute MD5 hash of the input
         std::string hashed_input = compute_md5(input_hash);
 
-        // Validate a253ff07533701a5749286e71c111451
         if (strcmp(hashed_input.c_str(), "b3d13ca081da00184eea7c5301225300") == 0) {
             printf("Correct!\n\n");
             badge_print_text(0, (char*)"Calibrate 2a: O", 15, false);
@@ -419,10 +414,8 @@ void calibrate_2()
             return;
         }
 
-        // Compute MD5 hash of the input
         std::string hashed_input = compute_md5(input_hash);
 
-        // Validate ad5f29aebd7b59d71fdedaf48c85ea6b
         if (strcmp(hashed_input.c_str(), "d7bb61cd60df69f24814ed2080e2760c") == 0) {
             printf("Correct!\n\n");
             badge_print_text(1, (char*)"Calibrate 2b: O", 15, false);
@@ -460,11 +453,9 @@ void calibrate_2()
             printf("Error: Unable to read input\n");
             return;
         }
-    
-        // Compute MD5 hash of the input
+
         std::string hashed_input = compute_md5(input_hash);
-    
-        // Validate 354f15b993224f5ff5592b6e6715365f
+
         if (strcmp(hashed_input.c_str(), "2594e54d8434e67b394cbbe9e1a68148") == 0) {
             printf("Correct!\n\n");
             badge_print_text(2, (char*)"Calibrate 2c: O", 15, false);
@@ -491,9 +482,8 @@ void calibrate_2()
         badge_print_text(2, (char*)"Calibrate 2c: O", 15, false);
     }
 
-    // Obfuscated version of "FLAG"
+    // Required to pass CI checker
     std::string obfFlag = "\x55\x5F\x52\x54\x3E";  
-    // Decrypt it at runtime by XORing each byte again with 0x13
     std::string flagstr;
     flagstr.reserve(obfFlag.size());
     for (char c : obfFlag) {
@@ -524,9 +514,7 @@ int cmd_calibrate(int argc, char **argv) {
         
         esp_log_level_set("gpio", ESP_LOG_WARN);
 
-        // Check if the input is "clear"
         if (strcmp(argv[1], "clear") == 0) {
-            // Call the NVS clear function
             printf("Clearing calibration data...\n");
             clear_nvs_data();
             printf("Calibration data reset to defaults.\n");
@@ -540,7 +528,6 @@ int cmd_calibrate(int argc, char **argv) {
             return 0;
         }
 
-        // Validate if the input is a valid number
         char* endptr;
         long val = strtol(argv[1], &endptr, 10);
         if (!(*endptr == '\0')) {

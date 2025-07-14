@@ -6,7 +6,6 @@
  */
 
 #include "badge-led-strip/strip_animator.hpp"
-//#include "badge/globals.hpp"
 #include "utils/board.hpp"
 #include "utils/round_robin_consumer.hpp"
 
@@ -15,7 +14,6 @@
 
 namespace nl = nsec::led;
 namespace ns = nsec::scheduling;
-//namespace ng = nsec::g;
 
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof(*(array)))
 

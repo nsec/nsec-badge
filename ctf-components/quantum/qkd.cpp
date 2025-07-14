@@ -1,4 +1,10 @@
-#include "qkd.h"
+/*
+ * SPDX-License-Identifier: MIT
+ *
+ * Copyright 2025 Patrick Downing <padraignix@gmail.com>
+ */
+
+ #include "qkd.h"
 
 #define PIN_CLOCK     GPIO_NUM_2  // input (server -> client)
 #define PIN_S2C_DATA  GPIO_NUM_7  // input (server -> client)
@@ -8,8 +14,6 @@
 
 #define QUANTUM_NAMESPACE "qkd"
 static const char *TAG = "QKD";
-
-// Define the structure for calibration data
 
 typedef struct {
     uint8_t noisy_bits[129];
@@ -30,7 +34,6 @@ typedef struct {
 
 QKDData qkd_data = {};
 
-// Optionally, define a default_qkd_data
 QKDData default_qkd_data = {
     {0}, {0}, {0}, {0}, {0}, {0}, {0},
     {0}, {0}, {0}, {0}, {0}, {0}, {0}
@@ -44,14 +47,12 @@ void update_qkdnvs()
         ESP_LOGE(TAG, "Failed to open NVS namespace: %s\n", esp_err_to_name(err));
         return;
     }
-    // Store the calibration data structure as a single blob
     err = nvs_set_blob(nvs_handle, "qkd_data", &qkd_data, sizeof(qkd_data));
     if (err == ESP_OK) {
         //printf("Calibration data loaded from NVS successfully.\n");
     } else {
         ESP_LOGE(TAG, "Error reading NVS: %s\n", esp_err_to_name(err));
     }
-    // Commit changes
     err = nvs_commit(nvs_handle);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Failed to commit changes to NVS: %s\n", esp_err_to_name(err));
@@ -60,9 +61,8 @@ void update_qkdnvs()
 }
 
 void print_qkdnvs_blob() {
-    QKDData qkd_data2; // Temporary variable to hold the NVS data
+    QKDData qkd_data2;
     size_t required_size = sizeof(qkd_data2);
-    // Try to get the blob from NVS
     nvs_handle_t nvs_handle;
     esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err2 != ESP_OK && err2 != ESP_ERR_NVS_NOT_FOUND) {
@@ -92,9 +92,8 @@ void print_qkdnvs_blob() {
 
 void print_qkdnvs_blobnoisy() {
 
-    QKDData qkd_data2; // Temporary variable to hold the NVS data
+    QKDData qkd_data2;
     size_t required_size = sizeof(qkd_data2);
-    // Try to get the blob from NVS
     nvs_handle_t nvs_handle;
     esp_err_t err2 = nvs_open(QUANTUM_NAMESPACE, NVS_READONLY, &nvs_handle);
     if (err2 != ESP_OK && err2 != ESP_ERR_NVS_NOT_FOUND) {
@@ -104,8 +103,6 @@ void print_qkdnvs_blobnoisy() {
         nvs_close(nvs_handle);
         update_qkdnvs();
         printf("Quantum Data was empty - initialized, you can now re-run list.\n");
-        //Recursive call, then exit
-        //print_qkdnvs_blobnoisy();
         return;
     }
 
@@ -129,13 +126,12 @@ void clear_qkdnvs_data() {
     nvs_handle_t handle;
     esp_err_t err;
 
-    // Open NVS handle
     err = nvs_open(QUANTUM_NAMESPACE, NVS_READWRITE, &handle);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Error (%s) opening NVS handle!\n", esp_err_to_name(err));
         return;
     }
-    // Erase the blob from NVS
+
     err = nvs_erase_key(handle, "qkd_data");
     if (err == ESP_OK) {
         printf("Quantum data erased successfully.\n");
@@ -144,7 +140,6 @@ void clear_qkdnvs_data() {
     } else {
         //printf("Error erasing NVS data: %s\n", esp_err_to_name(err));
     }
-    // Write default calibration data back to NVS
     QKDData qkd_data = {};
     err = nvs_set_blob(handle, "qkd_data", &qkd_data, sizeof(qkd_data));
     if (err != ESP_OK) {
@@ -152,14 +147,12 @@ void clear_qkdnvs_data() {
     } else {
         //printf("Default calibration data written to NVS.\n");
     }
-    // Commit changes
     err = nvs_commit(handle);
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Failed to commit NVS changes: %s\n", esp_err_to_name(err));
     } else {
        // printf("NVS changes committed.\n");
     }
-    // Close NVS handle
     nvs_close(handle);
 }
 
@@ -175,7 +168,6 @@ void get_qkdnvs()
         return;
     }
 
-    // Retrieve the calibration data structure
     size_t data_size = sizeof(qkd_data);
     err = nvs_get_blob(nvs_handle, "qkd_data", &qkd_data, &data_size);
     if (err != ESP_OK) {
@@ -245,48 +237,40 @@ static void client_send_bits(const char *bits)
 }
 
 void generate_random_bit_string(char *buffer, int length) {
-    srand(time(NULL));  // Seed the random number generator
+    srand(time(NULL));
     for (int i = 0; i < length; ++i) {
-        buffer[i] = (rand() % 2) ? '1' : '0';  // Add '0' or '1' to the buffer
+        buffer[i] = (rand() % 2) ? '1' : '0';
     }
-    buffer[length] = '\0';  // Null-terminate the string
+    buffer[length] = '\0';
 }
 
-// Function to XOR a UTF-8 string with a shared key
 void xor_with_key(const char *input, const char *key, char *output) {
     size_t input_len = strlen(input);
     size_t key_len = strlen(key);
 
     if (key_len == 0) {
         printf("Error: Key length is zero!\n");
-        output[0] = '\0';  // Return an empty string in case of error
+        output[0] = '\0';
         return;
     }
-    // XOR each character of the input with the key
     for (size_t i = 0; i < input_len; ++i) {
-        output[i] = input[i] ^ key[i % key_len];  // Repeat the key if necessary
+        output[i] = input[i] ^ key[i % key_len];
     }
-    // Null-terminate the output string
     output[input_len] = '\0';
 }
 
-// Function to generate the shared key from basis bits
 void generate_key_from_basis(const char *key, const char *basis1, const char *basis2, char *shared_key) {
-    int j = 0;  // Index for the shared key
-    // Ensure all strings are of the same length
+    int j = 0;
     if (strlen(key) != strlen(basis1) || strlen(basis1) != strlen(basis2)) {
         printf("Error: Input strings must have the same length!\n");
-        shared_key[0] = '\0';  // Return an empty string in case of error
+        shared_key[0] = '\0';
         return;
     }
-    // Loop through each bit and compare the basis
     for (size_t i = 0; i < strlen(key); ++i) {
         if (basis1[i] == basis2[i]) {
-            // Basis match, keep the corresponding key bit
             shared_key[j++] = key[i];
         }
     }
-    // Null-terminate the shared key string
     shared_key[j] = '\0';
 }
 
@@ -296,7 +280,6 @@ static void update_display_progress(const char* status, int step, int total_step
     char percentage[17] = {0};
     int percent = (step * 100) / total_steps;
     
-    // Create progress bar
     int bar_length = 16;
     int filled = (step * bar_length) / total_steps;
     
@@ -305,7 +288,6 @@ static void update_display_progress(const char* status, int step, int total_step
     }
     progress[bar_length] = '\0';
     
-    // Create percentage text
     snprintf(percentage, sizeof(percentage), "Progress: %d%%", percent);
     
     badge_ssd1306_clear();
@@ -317,7 +299,6 @@ static void update_display_progress(const char* status, int step, int total_step
 
 static void qkd_init(void)
 {
-    // Define total steps for the entire process (2 complete exchanges)
     const int total_steps = 10;
     int current_step = 0;
     
@@ -333,7 +314,6 @@ static void qkd_init(void)
     
     char pongMsg[129];
     generate_random_bit_string(pongMsg, 128);
-    //printf("Sending the badge basis to the dock...\n");
     std::memcpy(qkd_data.badge_basis, pongMsg, sizeof(qkd_data.badge_basis));
     client_send_bits(pongMsg);
     update_display_progress("S: Badge basis", ++current_step, total_steps);
@@ -359,21 +339,17 @@ static void qkd_init(void)
     generate_key_from_basis(dockbit, pongMsg, dockbasis, shared_key);
     std::memcpy(qkd_data.dockkey, shared_key, sizeof(qkd_data.dockkey));
 
-    /* Redo link, with noisy set now */
-    /*-------------------------------*/
+    /* Redo transfer, with noisy set now */
 
     // Receive noisybits - what the player will need to correct
     
     char noisybits2[129];
-    //printf("\nReceiving the noisy qubit string from the dock...\n");
     client_read_bits(noisybits2, 128);
     std::memcpy(qkd_data.noisy_bits2, noisybits2, sizeof(qkd_data.noisy_bits2));
     update_display_progress("R: Noisy Qubits", ++current_step, total_steps);
-    // Send badge_basis - randomly chosen basis
     
     char pongMsg2[129];
     generate_random_bit_string(pongMsg2, 128);
-    //printf("Sending the noisy badge basis to the dock...\n");
     std::memcpy(qkd_data.badge_basis2, pongMsg2, sizeof(qkd_data.badge_basis2));
     client_send_bits(pongMsg2);
     update_display_progress("S: Badge basis 2", ++current_step, total_steps);
@@ -450,35 +426,21 @@ static void qkd_init(void)
 
     update_display_progress("Saving data", current_step, total_steps);
 
-    //Not sure why, but making sure noisykey1 is blank...
-    //char derivedkey1[129];
-    //std::memset(derivedkey1, 0, sizeof(derivedkey1));
-    //std::memcpy(qkd_data.noisykey, derivedkey1, sizeof(qkd_data.noisykey));
     std::memset(qkd_data.noisykey, 0, sizeof(qkd_data.noisykey));
 
     update_qkdnvs();
 
-    // Display completion message on screen
     update_display_progress("Process complete", total_steps, total_steps);
-    vTaskDelay(pdMS_TO_TICKS(1500)); // Show 100% for a moment
+    vTaskDelay(pdMS_TO_TICKS(1500));
     
     badge_ssd1306_clear();
     badge_print_text(0, (char*)"Quantum Link", 12, false);
     badge_print_text(1, (char*)"Complete!", 10, false);
     badge_print_text(2, (char*)"Run 'qkd decrypt'", 17, false);
     badge_print_text(3, (char*)"to continue", 11, false);
-
-    //printf("\nYour badge has now been quantumly linked!\n");
-    //printf("To decrypt the first flag, run 'qkd decrypt'\n");
-    //printf("and follow the steps to derive the shared key and decrypt the flag.\n\n");
-    //printf("The second flag was transmitted with a noisy set of qubits\n");
-    //printf("You will need to derive the shared key from the noisy qubits using Cascade\n");
-    //printf("and then manually correct the key bits to decrypt the flag.\n\n");
-    //printf("To clear the QKD data, run 'qkd-init clear'\n");
-    //printf("at which point you wil need to re-run the quantum linking process to proceed.\n");
 }
 
-// Compute parity (0 if even # of 1's, 1 if odd)
+
 int computeParity(const std::vector<int>& bits, int start, int end) {
     int sum = 0;
     for(int i = start; i <= end; ++i) {
@@ -498,7 +460,6 @@ void binarySearchError(const std::vector<int>& badgeKey, const std::vector<int>&
 {
     if(start == end) {
         if (badgeKey[start] != dockKey[start]) {
-        // Found the single bit in local space
         int originalIdx = indicesMap[start];
         printf("==> Potential Error found bit at index %i!\n\n",originalIdx);
         return;
@@ -510,7 +471,6 @@ void binarySearchError(const std::vector<int>& badgeKey, const std::vector<int>&
 
     int mid = (start + end) / 2;
 
-    // Print the localKey bits in this sub-block
     printf("Block Index [%i,%i]\n",start,mid);
     printf("Left block bits: ");
     for (int i = start; i <= mid; i++) {
@@ -532,7 +492,6 @@ void binarySearchError(const std::vector<int>& badgeKey, const std::vector<int>&
 
     // Compare with "dock parity" for the same sub-block
     int leftParityDock = computeParity(dockKey, start, mid);
-    //printf("Left parity: badge=%d, dock=%d\n", leftParityBadge, leftParityDock);
     if(leftParityDock != leftParityBadge) {
         // Mismatch => error is in the left half
         printf("=> Mismatch in Left sub-block searching.\n");
@@ -564,14 +523,11 @@ void runCascadeFlow() {
         return;
     }
 
-    // Measure the length
     int size = strlen(badgeString) - 1;
     if(size < 1) {
         printf("Quantum Data seem empty\n");
         return;
     }
-
-    // Now convert to vector<int>
     std::vector<int> badgeKey;
     badgeKey.reserve(size);
 
@@ -581,7 +537,6 @@ void runCascadeFlow() {
         } else if(badgeString[i] == '1') {
             badgeKey.push_back(1);
         } else {
-            // Any other character is invalid for a bitstring
             printf("Invalid character '%c' in bitstring (index %d)\n", badgeString[i], i);
             return;
         }
@@ -592,13 +547,11 @@ void runCascadeFlow() {
         indicesMap[i] = i;
     }
 
-    // Setup non-noisy dockkey for comparison
     const char* dockString = reinterpret_cast<const char*>(qkd_data.dockkey2);
     if(!dockString) {
         printf("Cascade Setup Error\n");
         return;
     }
-    // Now convert to vector<int>
     std::vector<int> dockKey;
     dockKey.reserve(size);
 
@@ -608,13 +561,10 @@ void runCascadeFlow() {
         } else if(dockString[i] == '1') {
             dockKey.push_back(1);
         } else {
-            // Any other character is invalid for a bitstring
             printf("Invalid character '%c' in bitstring (index %d)\n", dockString[i], i);
             return;
         }
     }
-
-    //Now the setup is completed - hopefully
 
     char* line = linenoise("Do you want to shuffle the derived key? (y/n): ");
     if(!line) {
@@ -625,10 +575,7 @@ void runCascadeFlow() {
     linenoiseFree(line);
 
     if(answer == "yes" || answer == "y") {
-        // Step 2) Shuffle (both localKey and indicesMap in tandem)
         std::random_shuffle(indicesMap.begin(), indicesMap.end());
-
-        // Rebuild Keys in that new order
         std::vector<int> shuffledBadgeKey(size);
         std::vector<int> shuffledDockKey(size);
 
@@ -657,7 +604,6 @@ void runCascadeFlow() {
         // Ask user for "badge parity" for this sub-block
         printf("Block %i: local indices [%i,%i]\n",blockIndex,start,end);
 
-        // Print the localKey bits in this sub-block
         printf("Block bits: ");
         for (int i = start; i <= end; i++) {
             printf("%d", badgeKey[i]);
@@ -696,7 +642,6 @@ void runCascadeFlow() {
     }
 }
 
-// Prompt player for the derived key and save it in NVS
 void input_and_store_key2() {
     printf("You now need to derive the key from the QKD exchange.\n");
     char *input_key = linenoise("Enter the derived key: ");
@@ -716,7 +661,6 @@ void input_and_store_key2() {
     free(input_key);
 }
 
-// Prompt player for the derived key and save it in NVS
 void input_and_store_key() {
     printf("You now need to derive the key from the QKD exchange.\n");
     char *input_key = linenoise("Enter the derived key: ");
@@ -736,7 +680,6 @@ void input_and_store_key() {
     free(input_key);
 }
 
-// XOR decrypt function
 void decrypt_flag2() {
 
     get_qkdnvs();
@@ -768,7 +711,6 @@ void decrypt_flag2() {
         }
     }
 
-    // Perform XOR decryption with wrapping key
     size_t cipher_len = strlen((char *)qkd_data.ciphertext2);
     size_t key_len = strlen((char *)qkd_data.noisykey2);
     uint8_t decrypted_binary[128 + 1] = {0};
@@ -777,7 +719,6 @@ void decrypt_flag2() {
         decrypted_binary[i] = (qkd_data.ciphertext2[i] ^ qkd_data.noisykey2[i % key_len]) ? '1' : '0';
     }
 
-    // Convert binary back to string
     char decrypted_flag[128 / 8 + 1] = {0};
     size_t char_index = 0;
     for (size_t i = 0; i < cipher_len; i += 8) {
@@ -788,9 +729,8 @@ void decrypt_flag2() {
         decrypted_flag[char_index++] = byte;
     }
 
-    // Obfuscated version of "FLAG-"
+    // Required to pass CI checker
     std::string obfFlag = "\x55\x5F\x52\x54\x3E";  
-    // Decrypt it at runtime by XORing each byte again with 0x13
     std::string flagstr;
     flagstr.reserve(obfFlag.size());
     for (char c : obfFlag) {
@@ -802,7 +742,6 @@ void decrypt_flag2() {
     printf("Decrypted flag: %s\n", flag.c_str());
 }
 
-// XOR decrypt function
 void decrypt_flag() {
 
     get_qkdnvs();
@@ -818,7 +757,6 @@ void decrypt_flag() {
         input_and_store_key();
     } else {
         printf("Shared key already derived and stored in NVS.\n");
-        // create function to ask if they want to overwrite the key
         char *input_option = linenoise("Key Detected, do you want to override key? (y/n): ");
         if (input_option == nullptr || strlen(input_option) > 2) {
             printf("Error reading input.\n");
@@ -827,14 +765,12 @@ void decrypt_flag() {
         if (strcmp(input_option, "y") == 0) {
             input_and_store_key();
             free(input_option);
-            //return;
         } else {
             printf("Key not overwritten.\n");
             free(input_option);
         }
     }
 
-    // Perform XOR decryption with wrapping key
     size_t cipher_len = strlen((char *)qkd_data.ciphertext);
     size_t key_len = strlen((char *)qkd_data.noisykey);
     uint8_t decrypted_binary[128 + 1] = {0};
@@ -843,7 +779,6 @@ void decrypt_flag() {
         decrypted_binary[i] = (qkd_data.ciphertext[i] ^ qkd_data.noisykey[i % key_len]) ? '1' : '0';
     }
 
-    // Convert binary back to string
     char decrypted_flag[128 / 8 + 1] = {0};
     size_t char_index = 0;
     for (size_t i = 0; i < cipher_len; i += 8) {
@@ -854,9 +789,8 @@ void decrypt_flag() {
         decrypted_flag[char_index++] = byte;
     }
 
-    // Obfuscated version of "FLAG-"
+    // Required to pass CI checker
     std::string obfFlag = "\x55\x5F\x52\x54\x3E";  
-    // Decrypt it at runtime by XORing each byte again with 0x13
     std::string flagstr;
     flagstr.reserve(obfFlag.size());
     for (char c : obfFlag) {
@@ -868,6 +802,29 @@ void decrypt_flag() {
     printf("Decrypted flag: %s\n", flag.c_str());
 }
 
+void qkd_mock_data(){
+    const char *quantum_bits =  "01111001011100101010001101101100011011101010001100010011001100001100001111011001000100101110111100101100011001100101100000110101";
+    const char *badge_basis  =  "01011110011110010001010011011110100011111100011000110001111110010011001111110111100000010100011011101111001110001001101010101010";
+    const char *dock_basis   =  "11110100010001000111100000000000011000110010111010111001000111101000001111100011110111100010101001011110011011101010010101100011";
+    const char *ciphertext   =  "10000110001110010111011010100001100011110011001001010000101011101011110100100011001111100100100000011001010101110011111101111100";
+
+    const char *input_bits2  =  "111011101001110100100000001100011101011001100011111100000101001000";
+    const char *dock_key2   =   "111010001001111100001000011100011101011001100001111100000101001000";
+    const char *ciphertext2  =  "10100110111100000011100100000010101011110011000010111011000101100111111101011111101000010111010000110001101010000001001001110001";
+
+    std::memcpy(qkd_data.dock_basis, dock_basis, sizeof(qkd_data.dock_basis));
+    std::memcpy(qkd_data.dock_bits, quantum_bits, sizeof(qkd_data.dock_bits));
+    std::memcpy(qkd_data.badge_basis, badge_basis, sizeof(qkd_data.badge_basis));
+    std::memcpy(qkd_data.ciphertext, ciphertext, sizeof(qkd_data.ciphertext));
+
+    std::memcpy(qkd_data.ciphertext2, ciphertext2, sizeof(qkd_data.ciphertext2));
+    std::memcpy(qkd_data.noisykey2, input_bits2, sizeof(qkd_data.noisykey2));
+    std::memcpy(qkd_data.dockkey2, dock_key2, sizeof(qkd_data.dockkey2));
+
+    update_qkdnvs();
+    get_qkdnvs();
+    printf("QKD mock data loaded.\n");
+}
 
 int cmd_qkd(int argc, char **argv)
 {
@@ -914,12 +871,16 @@ int cmd_qkd2(int argc, char **argv)
 
 int cmd_qkd_init(int argc, char **argv)
 {
-    //Need to check if argv has something or is blank
     if (argc > 1) {
         if (strcmp(argv[1], "clear") == 0) 
         {
             clear_qkdnvs_data();
-        } 
+        }
+        else if (strcmp(argv[1], "mock") == 0) 
+        {
+            printf("Setting up post NSEC mock QKD data...\n");
+            qkd_mock_data();
+        }
         else 
         {
             printf("\nInvalid QKD-Init command\n");
@@ -927,7 +888,6 @@ int cmd_qkd_init(int argc, char **argv)
     }
     else 
     {
-        //printf("\n--- Init QKD WorkFlow ---\n");
         esp_log_level_set("gpio", ESP_LOG_WARN);
         printf("Starting Quantum Linking with Dock and QKD data exchange...\n");
         printf("Let the exchange complete before resuming.\n");
@@ -966,8 +926,8 @@ void register_qkdnoisy_cmd() {
 void register_qkdinit_cmd() {
     const esp_console_cmd_t cmd = {
         .command = "qkd-init",
-        .help = "clear - Removes existing Quantum information\n Initiate Quantum Link with Dock",
-        .hint = "[clear]",
+        .help = "clear - Removes existing Quantum information\nmock - Initializes mock data without dock\n Initiate Quantum Link with Dock",
+        .hint = "[clear | mock]",
         .func = &cmd_qkd_init,
         .argtable = NULL,
     };

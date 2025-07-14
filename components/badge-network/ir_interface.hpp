@@ -23,7 +23,7 @@
 
 #include "network_messages.hpp"
 
-#define NEC_DECODE_MARGIN_US 300 // Tolerance for decoding pulses (microseconds)
+#define NEC_DECODE_MARGIN_US 300
 
 #define NEC_LEADING_HIGH_US 9000
 #define NEC_LEADING_LOW_US 4500
@@ -52,7 +52,7 @@ class protocol_error : public nsec::exception::runtime_error
 
 using rmt_ir_packet_encoder_t = struct {
     rmt_encoder_t base;
-    rmt_encoder_t *copy_encoder; // To encode the leading and ending pulse
+    rmt_encoder_t *copy_encoder;
     rmt_encoder_t *bytes_encoder;
     rmt_symbol_word_t leading_symbol;
     rmt_symbol_word_t ending_symbol;
