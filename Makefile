@@ -33,6 +33,7 @@ monitor:
 reuse:
 	reuse lint
 
+# requires `pip install esptool` in venv
 factory_reset:
 	esptool.py --chip esp32c3 --port /dev/ttyACM0 erase_region 0x310000 0x100000
 
